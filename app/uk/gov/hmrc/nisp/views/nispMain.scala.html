@@ -1,0 +1,52 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(browserTitle: String = Messages("nisp.title"),
+    loginDetailsHeader: Option[Html] = None,
+    pageTitle: Option[String] = None,
+    userLoggedIn : Boolean = false,
+    serviceInfoContent : Option[Html] = None,
+    sidebarLinks: Option[Html] = None,
+    sidebarClasses: Option[String] = None,
+    h1Classes:Option[String]=None,
+    showTitleHeaderNav: Boolean = true,
+    showBetaBanner: Boolean = true,
+    pageScripts: Option[Html] = None,
+    contentHeaderExtra: Option[Html] = None,
+    articleClasses: Option[String] = None)(mainContent: Html)(implicit request:Request[_])
+
+@contentHeader = {
+    @loginDetailsHeader
+    @contentHeaderExtra
+}
+
+@main(
+    title = browserTitle,
+    sidebarLinks = sidebarLinks,
+    sidebarClasses = sidebarClasses,
+    contentHeader = Some(contentHeader),
+    userLoggedIn = userLoggedIn,
+    serviceInfoContent = serviceInfoContent,
+    showTitleHeaderNav = showTitleHeaderNav,
+    showBetaBanner = showBetaBanner,
+    pageScripts = pageScripts,
+    articleClasses = articleClasses) {
+        @if(pageTitle.isDefined) {
+        <h1 class="heading-large @h1Classes"> @pageTitle </h1>
+        }
+
+        @mainContent
+}

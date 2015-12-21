@@ -1,0 +1,331 @@
+
+
+/**
+ * CONTENTS
+ *
+ * General section
+ *
+ * Landing Page
+ *
+ * User Account Details + NINO
+ *
+ * Amount Box
+ *
+ * Final Done Page
+ *
+ * Exception Errors
+ *
+ * Messaging
+ *
+ * Questionnaire
+ *
+ * Chart lines
+ *
+ */
+
+
+$help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.png';
+
+$secondary-text-colour:#6F777B;
+
+
+@mixin font-weight($num) {
+
+    font-weight:$num;
+}
+
+
+/*------------------------------------*\
+    #General Section
+\*------------------------------------*/
+
+
+
+.report-error {
+
+  float:none;
+  
+}
+
+/*------------------------------------*\
+    #Landing Page
+\*------------------------------------*/
+
+
+.heading-large.landingpagetitle {
+    margin-bottom: 0;
+}
+
+.heading-medium {
+    margin-top:0.5em;
+}
+
+div.panel-indent{
+    margin:30px 15px 45px 0;
+}
+
+
+/*------------------------------------*\
+    #User Account Details + NINO
+\*------------------------------------*/
+
+
+.service-info {
+    .service-info__help {
+        margin-top: 5px;
+         @media only screen and (max-width: 800px) {
+              font-size:16px;
+        }
+    }
+}
+
+
+
+/*------------------------------------*\
+    #Amount Box
+\*------------------------------------*/
+
+.mainpage {
+    width:66.6667%;
+
+    @media only screen and (max-width: 640px) {
+        width:100%;
+    }
+}
+
+.highlighted-event {
+   padding: 1.75em 0.75em 1em;
+   margin: 0px 0 1em;
+
+    @media only screen and (max-width: 640px) {
+        padding: 0.5em 0.75em 0.25em 0.75em;
+        margin:0 -15px;
+    }
+
+    #amount-intro {
+        color: #fff;            
+        @include font-weight(800);
+        line-height: 1.25;
+        margin:0;
+        padding:0;
+        font-size:24px;
+        @media only screen and (max-width: 640px) {
+            font-size: 20px;
+            line-height: 1.2;
+        }
+    }
+    
+    p {
+         
+        color: #fff;            
+        @include font-weight(800);
+        line-height: 1.25;
+        margin:0;
+        padding:0;
+        font-size:24px;
+        @media only screen and (max-width: 640px) {
+            font-size: 20px;
+        }
+            em { 
+                    padding: 0.2em 0px 0.1em;
+                    display: block;
+                    font-size:80px;
+                    line-height: 1;
+                    font-style: normal;
+                    margin-bottom: 0;
+                    @include font-weight(800);        
+                    @media only screen and (max-width: 640px) {
+                        font-size: 53px;
+                        margin:0;
+                    }
+                    @media only screen and (max-width: 320px) {
+                        font-size: 43px;
+                        margin:0;
+                    }        
+                }
+      }
+ 
+    #amount-perweek {
+           
+            padding-bottom: 4px;
+            display: block;
+            font-family: "nta",Arial,sans-serif;
+            font-size: 24px;
+            line-height: 1.25;
+            text-transform: none;          
+            padding-bottom: 6px;
+            @include font-weight(800); 
+
+             @media only screen and (max-width: 640px) {
+                padding-bottom:0px;
+             }
+    }  
+
+}
+
+h1.title-spa {
+    line-height: 1.09375;
+    text-transform: none;    
+    padding-bottom: 10px;
+    background-repeat: no-repeat;
+    color: #0B0C0C;
+    font-weight: 600;
+    
+     @media only screen and (max-width: 640px) {
+          margin-top:0; 
+     }
+}
+
+/*------------------------------------*\
+    #Exception Errors
+\*------------------------------------*/
+
+
+
+.errorMessage {
+
+    background-color:rgba(223,48,52,0.05);
+    border-left:5px solid #df3034;
+    margin-bottom:30px;
+
+}
+
+.icon-x {
+    float:left;
+    margin:15px 0 0 15px;
+    width:30px;
+    height:30px;
+}
+
+.errorMessageContent {
+    padding:10px;
+    width:80%;
+    margin-left:65px;
+}
+
+
+
+/*------------------------------------*\
+    #Messaging
+\*------------------------------------*/
+
+article h2.putting-off-header {
+        padding-top:20px;
+}
+
+
+
+
+/*------------------------------------*\
+    #Questionnaire
+\*------------------------------------*/
+
+@media (min-width : 641px) {
+
+    .form-field--error {
+        width: inherit;
+    }
+
+}
+
+
+@import 'nirecord';
+
+@import 'tabs';
+
+
+/*----------------------------------*\
+    # Chart lines
+\*----------------------------------*/
+
+
+.chart-block {
+  clear: both;
+  margin-top: 25px;
+}
+
+
+.chart-block span.graph-title {
+  font-weight: 800;
+  font-size: 19px;
+   @media only screen and (max-width: 640px) {
+    font-size:16px;
+   }
+}
+
+.chart-block .footnote {
+  float:left;
+  margin-top: -15px;
+  margin-bottom: 25px;
+}
+
+.graph
+{
+  float: left; 
+  width: 100%;
+  margin-top: -2px;
+}
+  
+.graph li
+{
+  position: relative;
+  display: block;   
+  background:#C1DFE4;
+  height:37px;
+  @media only screen and (max-width: 640px) {
+      height: 27px;
+      margin-left: 0;
+  }
+}
+  
+  
+.graph  li .amount
+{
+  display: block;   
+  height: 100%; 
+  background: #28A197;   
+  line-height: 1.6em;
+  color:#fff;
+  text-align: right;
+  font-size: 25px;
+  font-weight: 800;
+  @media only screen and (max-width: 640px) {
+      font-size: 20px;
+  }
+}
+
+.graph  li .amount > * {
+    padding-right:10px;
+}
+
+/*----------------------------------*\
+    # Minimum Qualifying Period
+\*----------------------------------*/
+
+.panel-indent.mqp {
+  margin-top: 30px;
+  margin-bottom: 45px;
+}
+  
+.summary{
+    margin-bottom: 0px;
+    padding-bottom:0px
+}
+
+
+h2.cope-title {
+    
+    margin-top:1.87em !important;
+    
+}
+
+table.cope-table p{
+    
+    font-size:19px;
+     @media only screen and (max-width: 647px) {
+        font-size: 16px;
+     }
+     
+     
+}
+

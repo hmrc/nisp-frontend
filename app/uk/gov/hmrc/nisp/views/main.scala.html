@@ -1,0 +1,129 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import layouts.govuk_template
+@import uk.gov.hmrc.play.views.html.layouts
+@import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.nisp.config._
+@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+
+@(title: String,
+    sidebarLinks: Option[Html] = None,
+    sidebarClasses: Option[String] = None,
+    userLoggedIn: Boolean = false,
+    serviceInfoContent: Option[Html] = None,
+    contentHeader: Option[Html] = None,
+    gaCalls: Option[(String,String) => Html] = None,
+    applicationConfig: ApplicationConfig = ApplicationConfig,
+    showTitleHeaderNav: Boolean = true,
+    showBetaBanner: Boolean = true,
+    pageScripts: Option[Html] = None,
+    articleClasses: Option[String] = None)(mainContent: Html)(implicit request : Request[_])
+
+
+@linkElement = {
+    <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/nisp.css")'/>   
+    <script src='@controllers.routes.Assets.at("jquery.js")'></script>
+}
+
+@links = { 
+  <li><a href="@Constants.logoutUrl" role="button">Sign out</a></li>
+}
+
+
+@head = {
+    @layouts.head(applicationConfig.assetsPrefix, Some(linkElement), None)
+}
+
+@insideHeader = {
+    @if(showTitleHeaderNav) {
+        @header_nav(Some(Messages("nisp.title")), None, false, if (userLoggedIn) Some(links) else None)
+    } else {
+        @header_nav(None, None, false, if (userLoggedIn) Some(links) else None)
+    }
+}
+
+@afterHeader = {
+}
+
+@actingAttorneyBanner = {
+}
+
+@betaBanner = {
+    @if(showBetaBanner) {
+        @layouts.betaBanner(userLoggedIn,
+            applicationConfig.betaFeedbackUrl,
+            applicationConfig.betaFeedbackUnauthenticatedUrl,
+            true)
+    }
+}
+
+@serviceInfoHtml = {
+    @serviceInfo(betaBanner, false,  serviceInfoContent)
+}
+
+@getHelpForm = {
+    @uiHelpers.reportAProblemLink(applicationConfig.reportAProblemPartialUrl, applicationConfig.reportAProblemNonJSUrl)
+}
+
+@sidebar = {
+    @if(sidebarLinks.isDefined) {
+        @if(sidebarClasses.isDefined) {
+            @layouts.sidebar(sidebarLinks.get, Some(s"sidebar ${sidebarClasses.get}"))
+        } else {
+            @layouts.sidebar(sidebarLinks.get, Some("sidebar"))
+        }
+    }
+}
+
+@article = {
+    @layouts.article(mainContent, false, articleClasses)
+}
+
+@mainContentHeader = {
+   
+   @if( contentHeader.isDefined ) {
+        @layouts.main_content_header(contentHeader.getOrElse(Html("")))
+    }
+}
+
+@content = {
+    @layouts.main_content(article,
+        None,
+        None,
+        mainContentHeader,
+        serviceInfoHtml,
+        actingAttorneyBanner,
+        sidebar,
+        getHelpForm)
+}
+
+@footerTop = {
+}
+
+@bodyEnd = {
+    @layouts.footer(analyticsToken = applicationConfig.analyticsToken,
+        analyticsHost = applicationConfig.analyticsHost,
+        assetsPrefix = applicationConfig.assetsPrefix,
+        ssoUrl = applicationConfig.ssoUrl,
+        scriptElem = None,
+        gaCalls = gaCalls,
+        analyticsAnonymizeIp = true
+    )
+    @pageScripts
+}
+
+@govuk_template(Some(title), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uk.gov.hmrc.play.views.html.layouts.footer_links()), true)(content)

@@ -1,0 +1,95 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.nisp.views.formatting.Time
+@import uk.gov.hmrc.play.views.formatting.Dates
+@import uk.gov.hmrc.nisp.models.SPSummaryModel
+@import uk.gov.hmrc.nisp.controllers.routes
+
+@(nino: String, spSummary: SPSummaryModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, canGetPension: Boolean, numberOfYearsMissing: Int)(implicit request: Request[_])
+
+@nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title")) {
+
+
+<div class="grid services">
+    <h1 class="heading-large title-spa">@Messages("nisp.main.description.mqp")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>, @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h1>
+    <div class="panel-indent mqp">
+        <p><strong>
+           @if(spSummary.numberOfQualifyingYears == 1) {
+               @Messages("nisp.mqp.youcurrentlyhave.singular", spSummary.numberOfQualifyingYears, spSummary.lastProcessedDate.localDate.getYear().toString())
+           } else {
+               @Messages("nisp.mqp.youcurrentlyhave.plural", spSummary.numberOfQualifyingYears, spSummary.lastProcessedDate.localDate.getYear().toString())
+           }
+        </strong></p>
+    </div>
+
+    @if(canGetPension) {
+        <h2 class="heading-medium">@Messages("nisp.mqp.possible")</h2>
+    } else {
+        <h2 class="heading-medium">@Messages("nisp.mqp.notpossible")</h2>
+    }
+
+    <p>
+        @Messages("nisp.mqp.youneedtoadd",
+                  Time.years(numberOfYearsMissing),
+                  Time.years(spSummary.yearsToContributeUntilPensionAge),
+                  Dates.formatDate(spSummary.statePensionAge.date.localDate))
+
+        @if(canGetPension == false) {
+            @Messages("nisp.mqp.afterthis")
+        }
+    </p>
+
+    @if(spSummary.numberOfGaps > 0) {
+        <p>
+            @if(spSummary.numberOfGaps == 1) {
+                @Messages("nisp.mqp.gaps.singular")
+                @if(canGetPension) {
+                    @Messages("nisp.mqp.gaps.fill.singular")
+                }
+            } else {
+                @Messages("nisp.mqp.gaps.plural", spSummary.numberOfGaps)
+                @if(canGetPension) {
+                    @Messages("nisp.mqp.gaps.fill.plural")
+                }
+            }
+
+        </p>
+    }
+
+    @if(canGetPension) {
+        <p>
+            @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate))
+        </p>
+    }
+
+    <div class="panel-indent mqp">
+        @Html(Messages("nisp.mqp.overseas"))
+    </div>
+
+    @if(!canGetPension) {
+    <p>
+        @Html(Messages("nisp.mqp.never.para1"))
+    </p>
+    <p>
+        @Html(Messages("nisp.mqp.never.para2"))
+    </p>
+    }
+
+    <a href='@routes.NIRecordController.showFull.url' role="button" class="button">@Messages("nisp.main.showyourrecord")</a>
+</div>
+}

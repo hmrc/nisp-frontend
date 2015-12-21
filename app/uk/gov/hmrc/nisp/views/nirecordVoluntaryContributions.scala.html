@@ -1,0 +1,77 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.controllers.routes
+
+@(user: uk.gov.hmrc.nisp.controllers.auth.NispUser)(implicit request: Request[_])
+
+@nispMain(pageTitle=None, browserTitle = Messages("nisp.nirecord.voluntarycontributions.title"),
+serviceInfoContent=Some(includes.loginInfo(user)),
+userLoggedIn = true,
+h1Classes=Some("account-heading"),
+sidebarLinks = None) {
+
+<div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a>
+</div>
+
+<h1 class="heading-large gapsinyourrecord">@Messages("nisp.nirecord.voluntarycontributions.heading")</h1>
+<p class="lede">@Messages("nisp.nirecord.voluntarycontributions.title.message")</p>
+
+<h2 class="heading-medium gapsinyourrecord"> @Messages("nisp.nirecord.voluntarycontributions.h2title.1")</h2>
+<p>@Messages("nisp.nirecord.voluntarycontributions.h2title.1.message")</p>
+<details class="helptext">
+    <summary>
+        <span class="summary">@Messages("nisp.nirecord.voluntarycontributions.h2title.1.help.title")</span>
+    </summary>
+    <div class="panel-indent">
+        <p>@Messages("nisp.nirecord.voluntarycontributions.h2title.2.linktitle1.heading")</p>
+        <ul class="list-bullet">
+            <li><a href="http://www.pensionsadvisoryservice.org.uk/"  rel="external" target="_blank">@Messages("nisp.nirecord.voluntarycontributions.h2title.1.help.link1")</a></li>
+            <li><a href="https://www.pensionwise.gov.uk/"  rel="external" target="_blank">@Messages("nisp.nirecord.voluntarycontributions.h2title.1.help.link2")</a>&nbsp;@Messages("nisp.nirecord.voluntarycontributions.h2title.1.help.link2.message")</li>
+            <li><a href="https://www.citizensadvice.org.uk/"  rel="external" target="_blank">@Messages("nisp.nirecord.voluntarycontributions.h2title.1.help.link3")</a></li>
+        </ul>
+    </div>
+</details>
+
+<h2 class="heading-medium gapsinyourrecord"> @Messages("nisp.nirecord.voluntarycontributions.h2title.2")</h2>
+<details class="helptext">
+    <summary>
+        <span class="summary">@Messages("nisp.nirecord.voluntarycontributions.h2title.2.linktitle1")</span>
+    </summary>
+    <div class="panel-indent">
+        <p>@Messages("nisp.nirecord.voluntarycontributions.h2title.2.linktitle1.heading")</p>
+        <ul class="list-bullet">
+            <li>@Messages("nisp.nirecord.voluntarycontributions.h2title.2.linktitle1.message1")</li>
+            <li>@Messages("nisp.nirecord.voluntarycontributions.h2title.2.linktitle1.message2")</li>
+        </ul>
+    </div>
+</details>
+<details class="helptext">
+    <summary>
+        <span class="summary">@Messages("nisp.nirecord.voluntarycontributions.h2title.2.linktitle2")</span>
+    </summary>
+    <div class="panel-indent">
+        <p>@Messages("nisp.nirecord.voluntarycontributions.h2title.2.linktitle2.message")</p>
+    </div>
+</details>
+
+<h2 class="heading-medium gapsinyourrecord"> @Messages("nisp.nirecord.voluntarycontributions.h2title.3") </h2>
+<p><a href="https://www.gov.uk/future-pension-centre"  rel="external" target="_blank">@Messages("nisp.nirecord.voluntarycontributions.h2title.3.link1")</a>&nbsp;@Messages("nisp.nirecord.voluntarycontributions.h2title.3.message")</p>
+
+<div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a>
+</div>
+
+}
