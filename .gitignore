@@ -18,5 +18,5 @@ dist
 /.settings
 *.iws
 node_modules
-
+.idea
     
