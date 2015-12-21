@@ -1,0 +1,138 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.play.views.formatting.Dates
+@import uk.gov.hmrc.nisp.models.NISummary
+@import uk.gov.hmrc.nisp.models.NIRecord
+@import uk.gov.hmrc.nisp.models.NpsDate
+@import uk.gov.hmrc.nisp.views.formatting.SinglePlural
+
+@(nino: String, niRecord: NIRecord, niSummary: NISummary, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, niGaps: Boolean = false,
+    form: Form[_])(implicit request: Request[_])
+
+@sidebar = {
+<div class="sidebar-border" >   
+
+    <h2 aria-hidden="true">@Messages("nisp.nirecord.summary.yourrecord")</h2>
+
+    <p aria-hidden="true" class="nisummary-number">@niSummary.noOfQualifyingYears</p>
+
+    <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullcontributions")</p>
+
+    <p aria-hidden="true" class="nisummary-number">@niSummary.yearsToContributeUntilPensionAge</p>
+
+    <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsremaining", niSummary.spaYear.toString)</p>
+
+    <p aria-hidden="true" class="nisummary-number">@niSummary.noOfNonQualifyingYears</p>
+
+    <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps")</p>
+
+    <hr class="summary-nirecord-feedback">
+    <h2>@Messages("nisp.nifeedback.comments.feedback.heading")</h2>
+
+    <p class="nisummary-text">@Messages("nisp.nirecord.summary.yourfeedback.description")</p>
+
+    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordFeedbackController.show.url">@Messages("nisp.nirecord.summary.yourfeedback.linktext")</a></p>
+    
+</div>
+}
+
+@pageScripts = {
+<script src="@routes.Assets.at("javascript/nirecord.js")" type="text/javascript"></script>
+}
+
+@nispMain(  pageTitle=None, browserTitle = Messages("nisp.nirecord.title"),
+serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true,
+h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
+sidebarLinks = Some(sidebar)) {
+
+
+<p><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}#how-to-increase-it">@Messages("nisp.back")</a></p>
+
+
+<h1 class="heading-large nirecord-heading">@Messages("nisp.nirecord.heading")</h1>
+
+<div class="sidebar-mobile">
+      
+    <h2>@Messages("nisp.nirecord.summary.yourrecord.mobile")</h2>
+    <p>You have:</p>
+    <ul class="list-bullet">
+        <li>@niSummary.noOfQualifyingYears @Messages("nisp.nirecord.summary.fullcontributions")</li>
+        <li>
+            @niSummary.yearsToContributeUntilPensionAge @Messages("nisp.nirecord.summary.yearsremaining",niSummary.spaYear.toString)
+        </li>
+        <li>@niSummary.noOfNonQualifyingYears @Messages("nisp.nirecord.summary.gaps")</li>
+    </ul>
+</div>
+
+@if(!niGaps){
+    <p class="lede">@Messages("nisp.nirecord.yournirecordallyears")</p>
+}
+@if(niSummary.noOfNonQualifyingYears > 0 && !niGaps){
+    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niSummary.noOfNonQualifyingYears)</a></p>
+}
+@if(niGaps) {
+    <p class="lede">@Messages("nisp.nirecord.yournirecordgapyears")</p>
+    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
+}
+
+<dl class="accordion">
+
+    @if(niGaps) {
+        @for(niRecordTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
+            @includes.nirecordtaxyear(niRecordTaxYear)
+        }
+    } else {
+        @for(taxYear <- niSummary.earningsIncludedUpTo.taxYear + 1 to niRecord.taxYears.map(p => p.taxYear).min by -1) {
+          @niRecord.taxYears.find(p => p.taxYear == taxYear).map(includes.nirecordtaxyear(_)).getOrElse{
+            <dt>
+                <div class="ni-wrapper">
+                    <div class="ni-years"> @{(taxYear)}-@{(taxYear+1).toString.substring(2,4)}</div>
+                    <div class="inactive">@Messages("nisp.nirecord.unavailableyear",Dates.formatDate(NpsDate.taxYearStartDate(taxYear).localDate),Dates.formatDate(NpsDate.taxYearEndDate(taxYear).localDate))</div>
+                </div>
+            </dt>
+          }
+        }
+
+      @for(pre75Years <- niSummary.pre75QualifyingYears){
+      <dt>
+        <div class="ni-wrapper">
+            <div class="ni-years">@Messages("nisp.nirecord.pre75Years")</div>
+            <div class="ni-full">@Messages("nisp.nirecord.pre75QualifyingYears", pre75Years)</div>
+        </div>
+      </dt>
+      }
+    }
+</dl>
+
+@if(niSummary.noOfNonQualifyingYears > 0 && !niGaps){
+<p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niSummary.noOfNonQualifyingYears)</a></p>
+}
+@if(niGaps) {
+<p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
+}
+<p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}#how-to-increase-it">@Messages("nisp.back")</a></p>
+
+<div class="sidebar-mobile"> 
+
+    <h2>@Messages("nisp.nifeedback.comments.feedback.heading")</h2>
+    <p class="nisummary-text">@Messages("nisp.nirecord.summary.yourfeedback.description")</p>
+    <p>
+        <a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordFeedbackController.show.url">@Messages("nisp.nirecord.summary.yourfeedback.linktext")</a>
+    </p>
+</div>
+
+}

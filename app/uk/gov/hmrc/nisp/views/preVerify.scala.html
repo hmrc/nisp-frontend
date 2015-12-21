@@ -1,0 +1,38 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.nisp.controllers.routes
+
+@()(implicit request: Request[_])
+
+@nispMain(browserTitle = Messages("nisp.preverify.title"), pageTitle = Some(Messages("nisp.landing.title"))) {
+
+<h2 class="heading-medium text">
+  @Messages("nisp.verify.title")
+</h2>
+
+<p>@Html(Messages("nisp.verify.para1"))</p>
+<p>@Messages("nisp.verify.para2")</p>
+<p>@Messages("nisp.verify.para3")</p>
+<p>@Messages("nisp.verify.para4")</p>
+<p>
+    <a href="https://www.gov.uk/government/publications/introducing-govuk-verify/introducing-govuk-verify" rel="external" target="_blank" data-journey-click="checkmystatepension:external:introducing-govuk-verify">@Messages("nisp.verify.para5.link")</a>
+</p>
+
+<a id="verify-now" href='@routes.AccountController.show.url' role="button" tabindex="0" data-journey-click="checkmystatepension:landing:start"  class="button button--get-started">@Messages("nisp.verify.button")</a>
+
+}

@@ -1,0 +1,33 @@
+# microservice specific routes
+
+GET         /assets/*file                          controllers.Assets.at(path="/public", file)
+
+GET         /                                      uk.gov.hmrc.nisp.controllers.LandingController.show
+
+GET         /pre-verify                            uk.gov.hmrc.nisp.controllers.LandingController.showPreVerify
+GET         /guidancenotes                         uk.gov.hmrc.nisp.controllers.LandingController.showGuidanceNotes
+GET         /service-unavailable                   uk.gov.hmrc.nisp.controllers.LandingController.showNpsUnavailable
+
+GET         /account                               uk.gov.hmrc.nisp.controllers.AccountController.show
+GET         /signout                               uk.gov.hmrc.nisp.controllers.AccountController.signOut
+GET         /timeout                               uk.gov.hmrc.nisp.controllers.AccountController.timeout
+
+GET         /exclusion                             uk.gov.hmrc.nisp.controllers.ExclusionController.show
+
+GET         /account/nirecord                      uk.gov.hmrc.nisp.controllers.NIRecordController.showFull
+GET         /account/nirecord/gaps                 uk.gov.hmrc.nisp.controllers.NIRecordController.showGaps
+GET         /account/nirecord/gapsandhowtocheck    uk.gov.hmrc.nisp.controllers.NIRecordController.showGapsAndHowToCheckThem
+GET         /account/nirecord/voluntarycontribs    uk.gov.hmrc.nisp.controllers.NIRecordController.showVoluntaryContributions
+
+GET         /account/nirecord/feedback             uk.gov.hmrc.nisp.controllers.NIRecordFeedbackController.show
+POST        /account/nirecord/feedback             uk.gov.hmrc.nisp.controllers.NIRecordFeedbackController.submit
+GET         /account/nirecord/feedback/thankyou    uk.gov.hmrc.nisp.controllers.NIRecordFeedbackController.showThankYou
+
+GET         /questionnaire                         uk.gov.hmrc.nisp.controllers.QuestionnaireController.show
+POST        /questionnaire                         uk.gov.hmrc.nisp.controllers.QuestionnaireController.submit
+GET         /finished                              uk.gov.hmrc.nisp.controllers.QuestionnaireController.showFinished
+
+GET         /feedback                              uk.gov.hmrc.nisp.controllers.FeedbackController.show
+POST        /feedback                              uk.gov.hmrc.nisp.controllers.FeedbackController.submit
+GET         /feedback/thankyou                     uk.gov.hmrc.nisp.controllers.FeedbackController.showThankYou
+

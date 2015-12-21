@@ -1,0 +1,192 @@
+// nirecord.scss
+
+
+.ni-action {
+  width: 40%;
+  float: left;
+  text-align: right;
+}
+
+.ni-years {
+  width: 20%;
+  @media only screen and (max-width: 640px) {
+    width: 25%;
+  }
+  float: left;
+}
+
+.ni-notfull {
+  width: 40%;
+  @media only screen and (max-width: 640px) {
+     width: 35%;
+  }
+  float: left;
+}
+
+.contributions-wrapper {
+  display: block;
+  clear: both;
+  padding: 0px 0px 0px 20%;
+  margin-bottom: 5px;
+  font-size: 16px;
+  @media only screen and (max-width: 640px) {
+    padding: 0;
+  }
+}
+
+
+
+
+.contributions-wrapper .contributions-header {
+    font-weight: 700;
+    color: #6F777B;
+    margin: 25px 0 0 0;
+}
+
+.accordion dd, .ni-table dd {
+  padding-bottom: 5px;
+}
+
+.accordion dd p {
+  font-size: 16px;
+  margin-top: 5px;
+  @media only screen and (max-width: 640px) {
+    font-size: 14px;
+  }
+}
+
+.accordion dd p.contributions-header {
+    font-weight: 700;
+    color: #6F777B;
+    margin: 25px 0 0 0;
+}
+
+.accordion dt:not(:first-child), .ni-table dt {
+  border-top: 1px solid #BFC1C3; 
+}
+  
+  
+.ni-wrapper {
+  display: inline-block;
+  clear: both;
+  width: 100%;
+  padding: 18px 0 5px 0;
+}
+
+
+
+aside {
+    padding-top: 30px;
+    width:30%;
+}
+
+aside h2 {
+    padding-top: 15px;
+    font-weight: bold;
+}
+
+.sidebar-border {
+
+    border-top: 10px solid #005EA5;
+    @media only screen and (max-width:640px){
+        display:none;
+
+    }
+}
+
+.form-label{
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.full-width {
+    width:100%;
+}
+
+.sidebar-mobile {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    @media only screen and (max-width:640px){
+
+        position: inherit;
+        width: inherit;
+        height: inherit;
+        padding: inherit;
+        margin: inherit;
+        overflow: inherit;
+        clip: inherit;
+        border: inherit;
+    }
+
+}
+
+ul.listbullets {
+    list-style-type: disc;
+    padding-left: 20px;
+    li {
+        font-size: 16px;
+    }
+}
+
+
+
+
+.inactive {
+  color: #6F777B;
+}
+
+.backlink {
+  margin-top: 14px;
+}
+
+.nirecord-heading {
+  margin-bottom: 0;
+}
+
+.nisummary-text {
+  font-size: 16px;
+  margin-top: 0;
+
+
+}
+
+.nisummary-number {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.nirecord-taxyear {
+  white-space:nowrap;
+}
+
+hr.summary-nirecord-feedback {
+  margin-top: 35px;
+  border-style: solid;
+  border-top: 1px;
+  border-color: #BFC1C3;
+}
+
+
+
+
+/*----------------------------------*\
+    # Gaps and how to check
+\*----------------------------------*/
+
+
+h1.gapsinyourrecord {
+  margin-top:0.5em;
+  margin-bottom:0;
+}
+
+h2.gapsinyourrecord {
+  margin-top:1.87em !important;
+  margin-bottom:0.83em;
+}
