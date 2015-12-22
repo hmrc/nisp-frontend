@@ -19,25 +19,17 @@
 
 @(nino: String,spExclusions: SPExclusionsModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser)(implicit request: Request[_])
 
-@nispMain(browserTitle=Messages("nisp.main.title"), serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true) {
+@nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true) {
 
-    @if(spExclusions.spExclusions.contains(SPExclusion.LessThan10QualifyingYears)) {
-        @exclusions.lessThanTenQualifyingYears()
-    }
+
     @if(spExclusions.spExclusions.contains(SPExclusion.Abroad)) {
         @exclusions.overseas()
-    }
-    @if(spExclusions.spExclusions.contains(SPExclusion.PSOD)) {
-        @exclusions.psod()
     }
     @if(spExclusions.spExclusions.contains(SPExclusion.MWRRE)) {
         @exclusions.mwrre()
     }
     @if(spExclusions.spExclusions.contains(SPExclusion.CustomerTooOld)) {
         @exclusions.spaBefore5April2016()
-    }
-    @if(spExclusions.spExclusions.contains(SPExclusion.ContractedOut)) {
-        @exclusions.contractedOut()
     }
     @if(spExclusions.spExclusions.contains(SPExclusion.Dead)) {
         @exclusions.dead()
