@@ -20,7 +20,7 @@ $(document).ready(function(){
         .next()
         .hide();
 
-      $(this).find("a").html("View <span class=\"visuallyhidden\">" + taxYear + "</span> details");
+      $(this).find("a").html("View <span class=\"visuallyhidden\"><abbr title=\""+taxYear+"\">" + taxYear + "</abbr></span> details");
 
       $(this).attr({'aria-expanded':'false'});
     }
