@@ -51,5 +51,5 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-  override val excludeCopeTab: Boolean = configuration.getBoolean(s"services.exclusions.copetab").getOrElse(true)
+  override val excludeCopeTab: Boolean = configuration.getBoolean(s"microservice.services.exclusions.copetab").getOrElse(true)
 }
