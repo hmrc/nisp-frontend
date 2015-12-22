@@ -11,7 +11,7 @@ $(document).ready(function(){
         .next()
         .show();
 
-      $(this).find("a").html("Hide <span class=\"visuallyhidden\">" + taxYear + "</span> details");
+      $(this).find("a").html("Hide <span class=\"visuallyhidden\"><abbr title=\""+taxYear+"\">" + taxYear + "</span> details");
 
       $(this).attr({'aria-expanded':'true'});
     } else {
