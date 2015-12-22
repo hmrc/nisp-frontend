@@ -3,7 +3,7 @@ $(document).ready(function(){
   var allHeaders = $('.accordion > dt');
 
   $('.accordion > dt.expandable').click(function() {
-    var taxYear = $(this).find(".ni-years").text()
+    var taxYear = $(this).find(".ni-years > abbr:first-child").text()
 
     if(!$(this).hasClass('active')) {
       $(this)

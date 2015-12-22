@@ -253,7 +253,7 @@ nisp.nirecord.gapsinyourrecord.line1= in paid employment and had low earnings
 nisp.nirecord.gapsinyourrecord.line2= unemployed and not claiming benefit
 nisp.nirecord.gapsinyourrecord.line3= self-employed but did not pay contributions because of small profits
 nisp.nirecord.gapsinyourrecord.line4= living abroad
-nisp.nirecord.gap.viewdetails = View <span class="visuallyhidden">{0} </span>details
+nisp.nirecord.gap.viewdetails = View <span class="visuallyhidden"><abbr title="{0}">{0}</abbr></span>details
 nisp.nirecord.gapsinyourrecord.howtocheckrecord= How to check your record
 nisp.nirecord.gapsinyourrecord.paidemployment.title = Paid employment
 nisp.nirecord.gapsinyourrecord.paidemployment.desc = Check the contributions you made against P60s from your employers.
