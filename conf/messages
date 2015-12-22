@@ -126,8 +126,7 @@ nisp.main.context.improve.para1.priya.singular = You have {0} year on your Natio
 
 # Exclusion Messages
 #**************************
-
-
+nisp.excluded.title=You are unable to use this service
 nisp.excluded.lessThanTenQualifyingYears = You need to have at least 10 years on your National Insurance record that counts towards your State Pension.
 nisp.excluded.overseas.line1=If you''ve worked in the UK and abroad, you must send an international claim form to the International Pension Centre (IPC).
 nisp.excluded.overseas.line2=If you''ve only worked, lived or are working abroad, you must claim your State Pension through the relevant authority of the country you''re in if you currently live and have worked in:
