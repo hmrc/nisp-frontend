@@ -1,7 +1,7 @@
 Frontend of the National Insurance and new State Pension application
 ====================================================================
 
-[![Apache-2.0 license](http://img.shields.io/badge/license-Apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Build Status](https://travis-ci.org/hmrc/nisp-frontend.svg)](https://travis-ci.org/hmrc/nisp-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/nisp-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/nisp-frontend/_latestVersion)
+[![Build Status](https://travis-ci.org/hmrc/nisp-frontend.svg)](https://travis-ci.org/hmrc/nisp-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/nisp-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/nisp-frontend/_latestVersion)
 
 This service provides the frontend endpoint for the [National Insurance and State Pensions project](https://github.com/hmrc/nisp).
 
