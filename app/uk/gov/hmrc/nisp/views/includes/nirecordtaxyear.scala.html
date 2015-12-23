@@ -28,7 +28,7 @@
         <dt class="expandable" aria-expanded="false" aria-controls="tax-year-@niRecordTaxYear.taxYear">
     }
         <div class="ni-wrapper">
-            <div class="ni-years"><abbr>@niRecordTaxYear.taxYear</abbr> - <abbr>@{{niRecordTaxYear.taxYear+1}.toString.substring(2,4)}</abbr></div>
+            <div class="ni-years"><time datetime="@niRecordTaxYear.taxYear">@niRecordTaxYear.taxYear</time> - <time datetime="@{niRecordTaxYear.taxYear+1}.toString">@{{niRecordTaxYear.taxYear+1}.toString.substring(2,4)}</time></div>
             @if(niRecordTaxYear.qualifying){
                 <div class="inactive">@Messages("nisp.nirecord.fullyear")</div>
             } else {
