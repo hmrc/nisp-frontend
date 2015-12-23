@@ -50,7 +50,6 @@ and technology.
 
 * [URL]: Uniform Resource Locator
 
-
 License
 ---
 
