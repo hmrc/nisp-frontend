@@ -235,6 +235,7 @@ nisp.nirecord.yourcontributionfrom= You have contributions from
 nisp.nirecord.gap.findoutmoreabout= Find out more about <a href="{0}">gaps in your record and how to check them</a>.
 nisp.nirecord.gap.youcanmakeupshortfall= You can make up the shortfall
 nisp.nirecord.gap.payvoluntarycontrib= Pay a voluntary contribution of <strong>{0}</strong> by <strong>{1}</strong>.
+nisp.nirecord.gap.payselfemployedcontrib = You can make this year full.</br>Pay your self-employed contributions.
 nisp.nirecord.gap.findoutmore= Find out more about <a href="{0}">voluntary contributions</a>.
 nisp.nirecord.gap.latepaymentmessage= It''s too late to pay for this year. You can usually only pay for the last 6 years.
 nisp.nirecord.gap.underinvestigation = Currently we do not know if this year counts towards your pension, as there is ongoing account activity. Once complete, your record will be updated. You do not need to take any action now.
