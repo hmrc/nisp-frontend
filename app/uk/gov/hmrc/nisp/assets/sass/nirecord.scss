@@ -38,13 +38,23 @@
 
 
 .contributions-wrapper .contributions-header {
-    font-weight: 700;
-    color: #6F777B;
-    margin: 25px 0 0 0;
+  font-weight: 700;
+  color: #6F777B;
+  margin: 25px 0 0 0;
 }
+
+.accordion {
+  border-top:none;
+  
+}
+
 
 .accordion dd, .ni-table dd {
   padding-bottom: 5px;
+}
+
+.accordion dt {
+  border-top:1px solid #bfc1c3;
 }
 
 .accordion dd p {
@@ -56,15 +66,12 @@
 }
 
 .accordion dd p.contributions-header {
-    font-weight: 700;
-    color: #6F777B;
-    margin: 25px 0 0 0;
+  font-weight: 700;
+  color: #6F777B;
+  margin: 25px 0 0 0;
 }
 
-.accordion dt:not(:first-child), .ni-table dt {
-  border-top: 1px solid #BFC1C3; 
-}
-  
+ 
   
 .ni-wrapper {
   display: inline-block;
@@ -76,62 +83,61 @@
 
 
 aside {
-    padding-top: 30px;
-    width:30%;
+  padding-top: 30px;
+  width:30%;
 }
 
 aside h2 {
-    padding-top: 15px;
-    font-weight: bold;
+  padding-top: 15px;
+  font-weight: bold;
 }
 
 .sidebar-border {
+  border-top: 10px solid #005EA5;
+  @media only screen and (max-width:640px){
+      display:none;
 
-    border-top: 10px solid #005EA5;
-    @media only screen and (max-width:640px){
-        display:none;
-
-    }
+  }
 }
 
 .form-label{
-    font-size: 17px;
-    font-weight: bold;
+  font-size: 17px;
+  font-weight: bold;
 }
 
 .full-width {
-    width:100%;
+  width:100%;
 }
 
 .sidebar-mobile {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-    @media only screen and (max-width:640px){
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  @media only screen and (max-width:640px){
 
-        position: inherit;
-        width: inherit;
-        height: inherit;
-        padding: inherit;
-        margin: inherit;
-        overflow: inherit;
-        clip: inherit;
-        border: inherit;
-    }
+      position: inherit;
+      width: inherit;
+      height: inherit;
+      padding: inherit;
+      margin: inherit;
+      overflow: inherit;
+      clip: inherit;
+      border: inherit;
+  }
 
 }
 
 ul.listbullets {
-    list-style-type: disc;
-    padding-left: 20px;
-    li {
-        font-size: 16px;
-    }
+  list-style-type: disc;
+  padding-left: 20px;
+  li {
+      font-size: 16px;
+  }
 }
 
 
