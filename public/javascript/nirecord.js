@@ -3,7 +3,7 @@ $(document).ready(function(){
   var allHeaders = $('.accordion > dt');
 
   $('.accordion > dt.expandable').click(function() {
-    var taxYear = $(this).find(".ni-years").text()
+    var taxYear = $(this).find(".ni-years > time:first-child").text()
 
     if(!$(this).hasClass('active')) {
       $(this)
@@ -11,7 +11,7 @@ $(document).ready(function(){
         .next()
         .show();
 
-      $(this).find("a").html("Hide <span class=\"visuallyhidden\">" + taxYear + "</span> details");
+      $(this).find("a").html("Hide <span class=\"visuallyhidden\"><time datetime=\""+taxYear+"\">" + taxYear + "</time></span> details");
 
       $(this).attr({'aria-expanded':'true'});
     } else {
@@ -20,7 +20,7 @@ $(document).ready(function(){
         .next()
         .hide();
 
-      $(this).find("a").html("View <span class=\"visuallyhidden\">" + taxYear + "</span> details");
+      $(this).find("a").html("View <span class=\"visuallyhidden\"><time datetime=\""+taxYear+"\">" + taxYear + "</time></span> details");
 
       $(this).attr({'aria-expanded':'false'});
     }
