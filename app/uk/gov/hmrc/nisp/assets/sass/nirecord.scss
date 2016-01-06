@@ -18,7 +18,7 @@
 .ni-notfull {
   width: 40%;
   @media only screen and (max-width: 640px) {
-     width: 35%;
+    width: 35%;
   }
   float: left;
 }
@@ -120,14 +120,14 @@ aside h2 {
   border: 0;
   @media only screen and (max-width:640px){
 
-      position: inherit;
-      width: inherit;
-      height: inherit;
-      padding: inherit;
-      margin: inherit;
-      overflow: inherit;
-      clip: inherit;
-      border: inherit;
+    position: inherit;
+    width: inherit;
+    height: inherit;
+    padding: inherit;
+    margin: inherit;
+    overflow: inherit;
+    clip: inherit;
+    border: inherit;
   }
 
 }
