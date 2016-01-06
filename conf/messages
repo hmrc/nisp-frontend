@@ -240,28 +240,6 @@ nisp.nirecord.gap.findoutmore= Find out more about <a href="{0}">voluntary contr
 nisp.nirecord.gap.latepaymentmessage= It''s too late to pay for this year. You can usually only pay for the last 6 years.
 nisp.nirecord.gap.underinvestigation = Currently we do not know if this year counts towards your pension, as there is ongoing account activity. Once complete, your record will be updated. You do not need to take any action now.
 nisp.nirecord.youdidnotmakeanycontrib= You did not make any contributions this year
-nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them: Check my State Pension
-nisp.nirecord.gapsinyourrecord.heading = Gaps in your record and how to check them
-nisp.nirecord.gapsinyourrecord.title.message = In most cases, you will have a gap in your record as you did not contribute enough National Insurance.
-nisp.nirecord.gapsinyourrecord.line1= in paid employment and had low earnings
-nisp.nirecord.gapsinyourrecord.line2= unemployed and not claiming benefit
-nisp.nirecord.gapsinyourrecord.line3= self-employed but did not pay contributions because of small profits
-nisp.nirecord.gapsinyourrecord.line4= living abroad
-nisp.nirecord.gap.viewdetails = View <span class="visuallyhidden">{0} </span>details
-nisp.nirecord.gapsinyourrecord.howtocheckrecord= How to check your record
-nisp.nirecord.gapsinyourrecord.paidemployment.title = Paid employment
-nisp.nirecord.gapsinyourrecord.paidemployment.desc = Check the contributions you made against P60s from your employers.
-nisp.nirecord.gapsinyourrecord.donothavep60.title = If you do not have P60s
-nisp.nirecord.gapsinyourrecord.donothavep60.desc = You can get a replacement P60 from your employer. Alternatively, you can find your National Insurance contributions on your payslips.
-nisp.nirecord.gapsinyourrecord.selfemployment.title = Self-employment and voluntary contributions
-nisp.nirecord.gapsinyourrecord.selfemployment.desc = Check the contributions you made against your personal accounts. For instance if you made payments by cheque or through your bank.
-nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.title = If you have evidence that your record is wrong
-nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.desc1 = You may be able to correct your record,
-nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.desc2 = call HMRC to find out more (opens in new tab)
-nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title = National Insurance credits
-nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc = If you were claiming benefits because you were unable to work, unemployed or caring for someone full time, these should have been credited automatically. If you think you were entitled to credits that are not on your record, check your eligibility and find out how to get them.
-nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc1 = More on <a href="https://www.gov.uk/national-insurance-credits/eligibility" rel="external" target="_blank">National Insurance credits (opens in new tab)</a>.
-
 nisp.nirecord.summary.yourrecord = Summary
 nisp.nirecord.summary.yourrecord.mobile = Summary
 nisp.nirecord.summary.yourfeedback.description = Please let us know what you think is good, what is bad and what is missing from this page.
@@ -271,6 +249,36 @@ nisp.nirecord.summary.gaps = years when you did not contribute enough
 nisp.nirecord.summary.yearsremaining = years to contribute before {0}
 nisp.nirecord.pre75Years = Up to 1975
 nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to 5 April 1975
+
+#**************************
+# Gaps In Your Record Page
+#**************************
+
+nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them: Check my State Pension
+nisp.nirecord.gapsinyourrecord.heading = Gaps in your record and how to check them
+nisp.nirecord.gapsinyourrecord.title.message = In most cases, you will have a gap in your record as you did not contribute enough National Insurance.
+nisp.nirecord.gapsinyourrecord.listheader = This could be because you were:
+nisp.nirecord.gapsinyourrecord.line1 = in paid employment and had low earnings
+nisp.nirecord.gapsinyourrecord.line2 = unemployed and not claiming benefit
+nisp.nirecord.gapsinyourrecord.line3 = self-employed but did not pay contributions because of small profits
+nisp.nirecord.gapsinyourrecord.line4 = living abroad
+nisp.nirecord.gap.viewdetails = View <span class="visuallyhidden">{0} </span>details
+nisp.nirecord.gapsinyourrecord.howtocheckrecord= How to check your record
+nisp.nirecord.gapsinyourrecord.paidemployment.title = Paid employment
+nisp.nirecord.gapsinyourrecord.paidemployment.desc = Check the contributions you made against P60s from your employers.
+nisp.nirecord.gapsinyourrecord.donothavep60.title = If you do not have P60s
+nisp.nirecord.gapsinyourrecord.donothavep60.desc = You can get a replacement P60 from your employer. Alternatively, you can find your National Insurance contributions on your payslips.
+nisp.nirecord.gapsinyourrecord.selfemployment.title = Self-employment and voluntary contributions
+nisp.nirecord.gapsinyourrecord.selfemployment.desc = Check the contributions you made against your personal accounts. For instance if you made payments by cheque or through your bank.
+nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.title = If you have evidence that your record is wrong
+nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1 = You may be able to correct your record. Send the necessary evidence with a covering letter to:
+nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1 = Individuals Caseworker
+nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2 = National Insurance contributions and Employers Office
+nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3 = HM Revenue and Customs
+nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4 = BX9 1AN
+nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title = National Insurance credits
+nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc = If you were claiming benefits because you were unable to work, unemployed or caring for someone full time, these should have been credited automatically. If you think you were entitled to credits that are not on your record, check your eligibility and find out how to get them.
+nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = More on National Insurance credits (opens in new tab)
 
 #***************************
 # NI VoluntaryContribution
