@@ -25,19 +25,19 @@ import scala.io.Source
 import scala.util.Random
 
 object TestAccountBuilder {
-  val randomNino = () => new Generator(new Random()).nextNino.nino.replaceFirst("MA", "QQ")
+  def randomNino = new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA")
 
-  val nonExistentNino: String = randomNino()
-  val excludedNino: String = randomNino()
-  val regularNino: String = randomNino()
-  val mqpNino: String = randomNino()
-  val contractedOutBTestNino: String = randomNino().replaceAll("[02468]", "1")
-  val fullUserNino: String = randomNino()
-  val blankNino: String = randomNino()
-  val notFoundNino: String = randomNino()
-  val invalidKeyNino: String = randomNino()
-  val cachedNino: String = randomNino()
-  val noNameNino: String = randomNino()
+  val nonExistentNino: String = randomNino
+  val excludedNino: String = randomNino
+  val regularNino: String = randomNino
+  val mqpNino: String = randomNino
+  val contractedOutBTestNino: String = randomNino.replaceAll("[02468]", "1")
+  val fullUserNino: String = randomNino
+  val blankNino: String = randomNino
+  val notFoundNino: String = randomNino
+  val invalidKeyNino: String = randomNino
+  val cachedNino: String = randomNino
+  val noNameNino: String = randomNino
 
   val mappedTestAccounts = Map(
     excludedNino -> "excluded",
