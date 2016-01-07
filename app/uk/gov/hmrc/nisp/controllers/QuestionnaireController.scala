@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 HM Revenue & Customs
+ * Copyright 2016 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ trait QuestionnaireController extends FrontendController with Actions with Authe
             value.recommend,
             value.satisfied,
             value.takePart,
-            value.nextSteps.getOrElse(""),
+            value.nextSteps,
             request.session.get(NAME).getOrElse(""),
             request.session.get(NINO).getOrElse(""),
             request.session.get(ABTEST).getOrElse("")
