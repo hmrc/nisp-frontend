@@ -118,7 +118,7 @@
             <div class="content-block">
                 @scenarios.viewScenarioForecast(spSummary.contextMessage, spSummary.lastProcessedDate.localDate.getYear().toString(), spSummary)
 
-                @if(spSummary.numberOfQualifyingYears > Constants.minimumQualifyingYearsNSP) {
+                @if(spSummary.numberOfQualifyingYears >= Constants.minimumQualifyingYearsNSP) {
 
                     @if(spSummary.hasPsod) {<p>@Messages("nisp.main.psod")</p>}
                     <h2 class="heading-medium" style="margin-top: 2em !important">@Messages("nisp.main.h2.title")</h2>
