@@ -25,7 +25,7 @@ import scala.io.Source
 import scala.util.Random
 
 object TestAccountBuilder {
-  def randomNino = new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA")
+  def randomNino: String = new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA")
 
   val nonExistentNino: String = randomNino
   val excludedNino: String = randomNino
