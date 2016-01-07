@@ -30,7 +30,7 @@ sidebarLinks = None) {
 
 <p class="lede">@Messages("nisp.nirecord.gapsinyourrecord.title.message")</p>
 
-<p>This could be because you were:</p>
+<p>@Messages("nisp.nirecord.gapsinyourrecord.listheader")</p>
 <ul class="list-bullet">
     <li>@Messages("nisp.nirecord.gapsinyourrecord.line1")</li>
     <li>@Messages("nisp.nirecord.gapsinyourrecord.line2")</li>
@@ -54,11 +54,11 @@ sidebarLinks = None) {
 <h3>@Messages("nisp.nirecord.gapsinyourrecord.selfemployment.title")</h3>
 <p>@Messages("nisp.nirecord.gapsinyourrecord.selfemployment.desc")</p>
 <h2 class="heading-medium gapsinyourrecord">@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.title")</h2>
-<p>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.desc1")
-<a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-deficiency-enquiries"  rel="external" target="_blank">@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.desc2")</a>.</p>
+<p>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1")</p>
+<p>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1")<br/>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2")<br/>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3")<br/>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4")</p>
 
 <h2 class="heading-medium gapsinyourrecord">@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title")</h2>
 <p>@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc")</p>
-<p>@Html(Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc1"))</p>
+<p><a href="https://www.gov.uk/national-insurance-credits/eligibility" rel="external" target="_blank">@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")</a></p>
 <div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a></div>
 }
