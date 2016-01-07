@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 HM Revenue & Customs
+ * Copyright 2016 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,8 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
   }
 
   "POST /questionnaire" should {
-    "return form with errors for invalid selections" in {
-      val result = QuestionnaireController.submit(fakeRequest)
-      contentAsString(result).contains("This field is required") shouldBe true
-    }
 
-    "return thank you page for valid form" in {
+    "return thank you page for submitted form" in {
       val result = QuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
         ("easytouse", "2"),
         ("useitbyyourself", "2"),
