@@ -19,20 +19,20 @@ package uk.gov.hmrc.nisp.models.forms
 import play.api.data.Form
 import play.api.data.Forms._
 
-case class QuestionnaireForm(easyToUse: Int, useItByYourself: Int, likelyToUse: Int, likelyToSeek : Int,
-                             recommend : Int, satisfied: Int, takePart: Int, nextSteps: Option[String])
+case class QuestionnaireForm(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int], likelyToSeek : Option[Int],
+                             recommend : Option[Int], satisfied: Option[Int], takePart: Option[Int], nextSteps: Option[String])
 
 object QuestionnaireForm {
   val form = Form[QuestionnaireForm](
     // scalastyle:off magic.number
     mapping(
-      "easytouse" -> number(0, 3),
-      "useitbyyourself" -> number(0, 2),
-      "likelytouse" -> number(0, 3),
-      "likelytoseek" -> number(0, 3),
-      "recommend" -> number(0, 1),
-      "satisfied" -> number(0, 3),
-      "takepart" -> number(0, 1),
+      "easytouse" -> optional(number(0, 3)),
+      "useitbyyourself" -> optional(number(0, 2)),
+      "likelytouse" -> optional(number(0, 3)),
+      "likelytoseek" -> optional(number(0, 3)),
+      "recommend" -> optional(number(0, 1)),
+      "satisfied" -> optional(number(0, 3)),
+      "takepart" -> optional(number(0, 1)),
       "nextsteps" -> optional(text(maxLength = 1200))
     )(QuestionnaireForm.apply)(QuestionnaireForm.unapply)
   )

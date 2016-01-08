@@ -52,7 +52,7 @@ trait QuestionnaireController extends FrontendController with Actions with Authe
             value.recommend,
             value.satisfied,
             value.takePart,
-            value.nextSteps.getOrElse(""),
+            value.nextSteps,
             request.session.get(NAME).getOrElse(""),
             request.session.get(NINO).getOrElse(""),
             request.session.get(ABTEST).getOrElse("")
