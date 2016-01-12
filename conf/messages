@@ -16,7 +16,7 @@ nisp.textentry.warning =  Please do not include any personal or financial inform
 nisp.textentry.charlimit =  Limit is 1,200 characters.
 nisp.useagain = To use the service again you''ll need to <a href="{0}">sign in</a>.
 
-
+#**************************
 #  Landing Page Messages
 #**************************
 
@@ -39,7 +39,7 @@ nisp.landing.warning = This service is currently being developed, at the moment 
 nisp.landing.guidance = Guidance notes for the service
 nisp.preverify.title = Verify your identity: Check my State Pension
 
-#
+#**************************
 #  Guidance Notes Messages
 #**************************
 
@@ -49,7 +49,7 @@ nisp.guidance.para2 = This forecast is provided for your information only, you s
 nisp.guidance.para3 = We cannot guarantee the amount in your forecast as it is based on information currently available and the rules when it was produced. We are not responsible for any losses or damages you incur by any reliance on this forecast and you should not enter into any financial commitment based on it.
 nisp.guidance.para4 = You will pay Income Tax if your State Pension, along with other sources of income, exceeds your tax-free personal allowance.
 
-
+#**************************
 #  Main Page Messages
 #**************************
 nisp.main.title=Summary: Check my State Pension
@@ -100,8 +100,7 @@ nisp.main.chart.week=a week
 nisp.main.chart.month=a month
 nisp.main.chart.year=a year
 
-
-
+#**************************
 # Scenario Messages
 #**************************
 
@@ -124,20 +123,27 @@ nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, 
 nisp.main.context.improve.para1.priya.plural = You have {0} years on your National Insurance record which do not count towards your State Pension. You cannot improve your forecast by filling them.
 nisp.main.context.improve.para1.priya.singular = You have {0} year on your National Insurance record which does not count towards your State Pension. You cannot improve your forecast by filling it.
 
+#**************************
 # Exclusion Messages
 #**************************
 
-nisp.excluded.title=You are unable to use this service
-nisp.excluded.overseas.line1=If you''ve worked in the UK and abroad, you must send an international claim form to the International Pension Centre (IPC).
-nisp.excluded.overseas.line2=If you''ve only worked, lived or are working abroad, you must claim your State Pension through the relevant authority of the country you''re in if you currently live and have worked in:
-nisp.excluded.overseas.line3=Austria, Belgium, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Gibraltar, Greece, Hungary, Iceland, Ireland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Netherlands, Norway, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden or Switzerland.
-nisp.excluded.overseas.line4=<a href="https://www.gov.uk/state-pension-if-you-retire-abroad/how-to-claim" rel="external" target="_blank" data-journey-click="checkmystatepension:external:howtoclaimabroad">Contact the IPC (opens in new tab)</a> if you''ve worked or lived in a country not listed above.
-nisp.excluded.mwrre.line1 = You chose to pay a <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">reduced rate of National Insurance as a married woman (opens in new tab)</a> and your State Pension has been reduced. You may be able to claim a pension benefit based on your husband''s contributions.
-nisp.excluded.mwrre.line2 = As this is a new service, we have yet to include this condition but we are looking to do so.
+nisp.excluded.title = You are unable to use this service
+
+nisp.excluded.overseas.line1 = If you''ve worked in the UK and abroad, you must send an international claim form to the International Pension Centre (IPC).
+nisp.excluded.overseas.line2 = If you''ve only worked, lived or are working abroad, you must claim your State Pension through the relevant authority of the country you''re in if you currently live and have worked in:
+nisp.excluded.overseas.line3 = Austria, Belgium, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Gibraltar, Greece, Hungary, Iceland, Ireland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Netherlands, Norway, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden or Switzerland.
+nisp.excluded.overseas.line4 = <a href="https://www.gov.uk/state-pension-if-you-retire-abroad/how-to-claim" rel="external" target="_blank" data-journey-click="checkmystatepension:external:howtoclaimabroad">Contact the IPC (opens in new tab)</a> if you''ve worked or lived in a country not listed above.
+
+nisp.excluded.mwrre.line1 = You chose to pay a <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">reduced rate of National Insurance as a married woman (opens in new tab)</a> and your State Pension has been reduced. You may be able to claim a pension benefit based on your partner''s contributions.
+nisp.excluded.mwrre.line2 = To get a married women''s reduced rate elective pension statement, you will need to <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a>.
+
 nisp.excluded.spaBefore5April2016 = You will have reached State Pension age before the new scheme starts. You must refer to the <a href="https://www.gov.uk/state-pension/overview" rel="external" data-journey-click="checkmystatepension:external:statepensionoverview" target="_blank">information about the old scheme (opens in new tab)</a>.
+
 nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
+
 nisp.excluded.isleOfMan = The Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the State Pension reforms from 6 April 2016. For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
 
+#**************************
 #  NPS Unavailable Page Messages
 #**************************
 
@@ -145,8 +151,10 @@ nisp.npsUnavailable.title = Service is unavailable: Check my State Pension
 nisp.npsUnavailable.heading = The service is unavailable due to maintenance
 nisp.npsUnavailable.message = Try again after 5am.
 
+#**************************
 # Questionnaire Messages
 #**************************
+
 nisp.questionnaire.title =  You''ve signed out of your account: Check my State Pension
 nisp.questionnaire.header = You''ve signed out of your account
 
@@ -182,7 +190,6 @@ nisp.questionnaire.satisfied.3 = Very dissatisfied
 
 nisp.questionnaire.nextsteps.question = Now that you''ve used the service, is there anything else you want to do within the service but cannot at the moment?
 
-
 #*******************
 # Thank you Messages
 #*******************
@@ -190,7 +197,6 @@ nisp.questionnaire.nextsteps.question = Now that you''ve used the service, is th
 nisp.thankyou.title = Thank you
 nisp.thankyou.received = We''ve received your feedback.
 nisp.finishpage.title = We''ve received your feedback: Check my State Pension
-
 
 #****************
 # Session Timeout
@@ -203,6 +209,7 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 #***************
 # NI Record Page
 #***************
+
 nisp.nirecord.title = Your National Insurance record: Check my State Pension
 nisp.nirecord.heading = Your National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.
@@ -309,6 +316,7 @@ nisp.nirecord.voluntarycontributions.h2title.3.message =  to find out more about
 #***************************
 # NI Feedback Page feedback
 #***************************
+
 nisp.nifeedback.title = National Insurance record feedback: Check my State Pension
 nisp.nifeedback.comments.feedback.heading = National Insurance record feedback
 nisp.nifeedback.comments.feedback.description = We are currently developing the National Insurance record and would really like your thoughts on how we can build a better service.
@@ -329,7 +337,6 @@ nisp.feedback.return = Go back
 # Minimum Qualifying Period
 #***************
 
-
 nisp.main.description.mqp=You will reach State Pension age on
 nisp.mqp.youneedatleast = You currently have {0} on your record and you need at least 10 years to get any State Pension.
 nisp.mqp.overseas=If you have lived or worked overseas, you may be able to use your time abroad to make your years in the UK qualify for the purposes of getting any State Pension. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>.
@@ -347,9 +354,10 @@ nisp.mqp.gaps.fill.plural=You can fill some of these years to get the 10 years y
 nisp.mqp.never.para1 =You may have a private pension. For more details about your private pension you will need to contact your pension provider. Use the free service to<a href="https://www.gov.uk/find-lost-pension"> find pension contact details (opens in new tab)</a>.
 nisp.mqp.never.para2 =You may be eligible for <a href="https://www.gov.uk/pension-credit/overview">Pension Credit (opens in new tab)</a> if your retirement income is low.
 
-
+#**************************
 #  Cope Page Messages
 #**************************
+
 nisp.cope.title1=You were contracted out
 nisp.cope.inthepast=In the past you''ve been part of one or more contracted out pension schemes, such as workplace or personal pension schemes.
 nisp.cope.why=When you were contracted out:
