@@ -135,7 +135,7 @@ nisp.excluded.overseas.line3 = Austria, Belgium, Bulgaria, Croatia, Cyprus, Czec
 nisp.excluded.overseas.line4 = <a href="https://www.gov.uk/state-pension-if-you-retire-abroad/how-to-claim" rel="external" target="_blank" data-journey-click="checkmystatepension:external:howtoclaimabroad">Contact the IPC (opens in new tab)</a> if you''ve worked or lived in a country not listed above.
 
 nisp.excluded.mwrre.line1 = You chose to pay a <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">reduced rate of National Insurance as a married woman (opens in new tab)</a> and your State Pension has been reduced. You may be able to claim a pension benefit based on your partner''s contributions.
-nisp.excluded.mwrre.line2 = To get a pension statement, you will need to <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">contact the Future Pension Centre (opens in new tab)</a>.
+nisp.excluded.mwrre.line2 = To get a married women’s reduced rate elective pension statement, you will need to <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a>.
 
 nisp.excluded.spaBefore5April2016 = You will have reached State Pension age before the new scheme starts. You must refer to the <a href="https://www.gov.uk/state-pension/overview" rel="external" data-journey-click="checkmystatepension:external:statepensionoverview" target="_blank">information about the old scheme (opens in new tab)</a>.
 
