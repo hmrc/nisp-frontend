@@ -60,14 +60,13 @@ object MetricsService extends MetricsService {
   )
 
   val exclusionMeters: Map[SPExclusion, Meter] = Map(
-    SPExclusion.LessThan10QualifyingYears -> MetricsRegistry.defaultRegistry.meter("exclusion-mqp"),
     SPExclusion.Abroad -> MetricsRegistry.defaultRegistry.meter("exclusion-abroad"),
-    SPExclusion.PSOD -> MetricsRegistry.defaultRegistry.meter("exclusion-psod"),
     SPExclusion.MWRRE -> MetricsRegistry.defaultRegistry.meter("exclusion-mwrre"),
     SPExclusion.CustomerTooOld -> MetricsRegistry.defaultRegistry.meter("exclusion-too-old"),
     SPExclusion.ContractedOut -> MetricsRegistry.defaultRegistry.meter("exclusion-contracted-out"),
     SPExclusion.Dead -> MetricsRegistry.defaultRegistry.meter("exclusion-dead"),
-    SPExclusion.IOM -> MetricsRegistry.defaultRegistry.meter("exclusion-isle-of-man")
+    SPExclusion.IOM -> MetricsRegistry.defaultRegistry.meter("exclusion-isle-of-man"),
+    SPExclusion.AmountDissonance -> MetricsRegistry.defaultRegistry.meter("amount-dissonance")
   )
 
   val abTestA = MetricsRegistry.defaultRegistry.meter("abtest-a")

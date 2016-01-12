@@ -21,14 +21,13 @@ import play.api.libs.json._
 
 object SPExclusion extends Enumeration {
   type SPExclusion = Value
-  val LessThan10QualifyingYears = Value
   val Abroad = Value
-  val PSOD = Value
   val MWRRE = Value
   val CustomerTooOld = Value
   val ContractedOut = Value
   val Dead = Value
   val IOM = Value
+  val AmountDissonance = Value
 
   implicit val formats = new Format[SPExclusion] {
     def reads(json: JsValue): JsResult[SPExclusion] = JsSuccess(SPExclusion.withName(json.as[String]) )

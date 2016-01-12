@@ -142,6 +142,7 @@ nisp.excluded.spaBefore5April2016 = You will have reached State Pension age befo
 nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
 
 nisp.excluded.isleOfMan = The Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the State Pension reforms from 6 April 2016. For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
+nisp.excluded.amountdissonance = We are having problems calculating your State Pension forecast. We are currently investigating this matter. You do not need to take any action.
 
 #**************************
 #  NPS Unavailable Page Messages
