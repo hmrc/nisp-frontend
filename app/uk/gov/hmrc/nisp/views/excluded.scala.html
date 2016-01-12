@@ -36,5 +36,8 @@
     }
     @if(spExclusions.spExclusions.contains(SPExclusion.IOM)) {
         @exclusions.isleOfMan()
-}
+    }
+    @if(spExclusions.spExclusions.contains(SPExclusion.AmountDissonance)) {
+        @exclusions.amountDissonance()
+    }
 }
