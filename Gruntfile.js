@@ -15,6 +15,15 @@ module.exports = function(grunt){
         }]
       }
     },
+    scsslint: {
+      allFiles: [
+        'app/uk/gov/hmrc/nisp/assets/sass'
+      ],
+      options: {
+        bundleExec: false,
+        reporterOutput: null
+      }
+    },
     // Watches styles and specs for changes
     watch: {
       css: {
@@ -37,7 +46,8 @@ module.exports = function(grunt){
     'grunt-contrib-watch',
     'grunt-contrib-sass',
     'grunt-contrib-clean',
-    'grunt-plato'
+    'grunt-plato',
+    'grunt-scss-lint'
   ].forEach(function (task) {
     grunt.loadNpmTasks(task);
   });
