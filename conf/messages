@@ -340,7 +340,7 @@ nisp.feedback.return = Go back
 
 nisp.main.description.mqp=You will reach State Pension age on
 nisp.mqp.youneedatleast = You have {0} on your record and you need at least 10 years to get any State Pension.
-nisp.mqp.overseas=If you have lived or worked overseas, you may be able to use your time abroad to make your years in the UK qualify for the purposes of getting any State Pension. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>.
+nisp.mqp.overseas=If you have lived or worked overseas, you may be able to use your time abroad to make your years in the UK qualify for the purposes of getting any State Pension. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>
 nisp.mqp.youcurrentlyhave.singular=You have {0} year on your National Insurance record, using the latest complete tax year available, up to 5 April {1}. You need at least 10 years to get any State Pension.
 nisp.mqp.youcurrentlyhave.plural=You have {0} years on your National Insurance record, using the latest complete tax year available, up to 5 April {1}. You need at least 10 years to get any State Pension.
 nisp.mqp.possible=It may be possible for you to get some State Pension
