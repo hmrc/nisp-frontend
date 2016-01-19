@@ -55,7 +55,7 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "have a start button" in {
       val result = LandingController.show(fakeRequest)
-      val buttonText = Messages("nisp.start")
+      val buttonText = Messages("nisp.continue")
       contentAsString(result) should include (s"$buttonText</a>")
     }
   }
