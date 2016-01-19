@@ -5,7 +5,6 @@ GET         /assets/*file                          controllers.Assets.at(path="/
 GET         /                                      uk.gov.hmrc.nisp.controllers.LandingController.show
 
 GET         /pre-verify                            uk.gov.hmrc.nisp.controllers.LandingController.showPreVerify
-GET         /guidancenotes                         uk.gov.hmrc.nisp.controllers.LandingController.showGuidanceNotes
 GET         /service-unavailable                   uk.gov.hmrc.nisp.controllers.LandingController.showNpsUnavailable
 
 GET         /account                               uk.gov.hmrc.nisp.controllers.AccountController.show
