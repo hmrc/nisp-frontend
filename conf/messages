@@ -20,9 +20,9 @@ nisp.useagain = To use the service again you''ll need to <a href="{0}">sign in</
 #  Landing Page Messages
 #**************************
 
-nisp.title = Check my State Pension
+nisp.title = Check your State Pension
 nisp.continue = Continue
-nisp.landing.title = Check my State Pension
+nisp.landing.title = Check your State Pension
 nisp.landing.estimateprovided = This estimate is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
 nisp.landing.eligibility.heading = You can use this service if you''re
 nisp.landing.eligibility1 = a man born after 5 April 1951
