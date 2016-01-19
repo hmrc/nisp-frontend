@@ -20,7 +20,7 @@ nisp.useagain = To use the service again you''ll need to <a href="{0}">sign in</
 #  Landing Page Messages
 #**************************
 
-nisp.title = Check my State Pension
+nisp.title = Check your State Pension
 nisp.start = Start now
 nisp.verify.button = Verify now
 nisp.verify.title = Verify your identity
@@ -29,7 +29,7 @@ nisp.verify.para2 = Government-approved companies match your information to thei
 nisp.verify.para3 = You will also need a mobile phone that can receive text messages or an email address, to receive a security code every time you log in.
 nisp.verify.para4 = You only need to do this once. Then you can sign in with your username and password and use other government services.
 nisp.verify.para5.link = More information about how Verify works (opens in a new tab)
-nisp.landing.title = Check my State Pension
+nisp.landing.title = Check your State Pension
 nisp.landing.summary = Check how much you may get based on your current National Insurance record.
 nisp.landing.features.heading = Use this service to find out:
 nisp.landing.features.one = how much you may receive
@@ -37,13 +37,13 @@ nisp.landing.features.two = the earliest date you may get it
 nisp.landing.features.three = options for improving your State Pension
 nisp.landing.warning = This service is currently being developed, at the moment we are unable to guarantee its accuracy. You should not take any action on the basis of this information.
 nisp.landing.guidance = Guidance notes for the service
-nisp.preverify.title = Verify your identity: Check my State Pension
+nisp.preverify.title = Verify your identity: Check your State Pension
 
 #**************************
 #  Guidance Notes Messages
 #**************************
 
-nisp.guidance.title = Guidance notes: Check my State Pension
+nisp.guidance.title = Guidance notes: Check your State Pension
 nisp.guidance.para1 = The information provided is based on the rules of the new State Pension, which starts on 6 April 2016. In working out your forecast we have used a figure of £151.25 a week as the full rate of the new State Pension. The full rate has yet to be finalised.
 nisp.guidance.para2 = This forecast is provided for your information only, you should not rely on it and it does not amount to financial advice. When planning for your retirement, you should seek professional advice.
 nisp.guidance.para3 = We cannot guarantee the amount in your forecast as it is based on information currently available and the rules when it was produced. We are not responsible for any losses or damages you incur by any reliance on this forecast and you should not enter into any financial commitment based on it.
@@ -52,7 +52,7 @@ nisp.guidance.para4 = You will pay Income Tax if your State Pension, along with 
 #**************************
 #  Main Page Messages
 #**************************
-nisp.main.title=Summary: Check my State Pension
+nisp.main.title=Summary: Check your State Pension
 nisp.main.h1.title= Your State Pension
 nisp.main.title.estimate.is= your estimate is
 nisp.main.forecast = Forecast
@@ -148,7 +148,7 @@ nisp.excluded.amountdissonance = We are having problems calculating your State P
 #  NPS Unavailable Page Messages
 #**************************
 
-nisp.npsUnavailable.title = Service is unavailable: Check my State Pension
+nisp.npsUnavailable.title = Service is unavailable: Check your State Pension
 nisp.npsUnavailable.heading = The service is unavailable due to maintenance
 nisp.npsUnavailable.message = Try again after 5am.
 
@@ -156,12 +156,12 @@ nisp.npsUnavailable.message = Try again after 5am.
 # Questionnaire Messages
 #**************************
 
-nisp.questionnaire.title =  You''ve signed out of your account: Check my State Pension
+nisp.questionnaire.title =  You''ve signed out of your account: Check your State Pension
 nisp.questionnaire.header = You''ve signed out of your account
 
 nisp.questionnaire.please = Give us feedback to help us improve this service. It will take no more than 2&nbsp;minutes.
 
-nisp.questionnaire.easytouse.question = How easy was it to use Check my State Pension?
+nisp.questionnaire.easytouse.question = How easy was it to use Check your State Pension?
 nisp.questionnaire.easytouse.0 = Very easy
 nisp.questionnaire.easytouse.1 = Easy
 nisp.questionnaire.easytouse.2 = Difficult
@@ -197,13 +197,13 @@ nisp.questionnaire.nextsteps.question = Now that you''ve used the service, is th
 
 nisp.thankyou.title = Thank you
 nisp.thankyou.received = We''ve received your feedback.
-nisp.finishpage.title = We''ve received your feedback: Check my State Pension
+nisp.finishpage.title = We''ve received your feedback: Check your State Pension
 
 #****************
 # Session Timeout
 #****************
 
-nisp.timeout.title = You''ve been signed out: Check my State Pension
+nisp.timeout.title = You''ve been signed out: Check your State Pension
 nisp.timeout.heading = You''ve been signed out
 nisp.timeout.body = For your security we signed you out because you did not use the service for 15 minutes or more.
 
@@ -211,7 +211,7 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 # NI Record Page
 #***************
 
-nisp.nirecord.title = Your National Insurance record: Check my State Pension
+nisp.nirecord.title = Your National Insurance record: Check your State Pension
 nisp.nirecord.heading = Your National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.
 nisp.nirecord.yournirecordallyears = All years.
@@ -262,7 +262,7 @@ nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up
 # Gaps In Your Record Page
 #**************************
 
-nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them: Check my State Pension
+nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them: Check your State Pension
 nisp.nirecord.gapsinyourrecord.heading = Gaps in your record and how to check them
 nisp.nirecord.gapsinyourrecord.title.message = In most cases, you will have a gap in your record as you did not contribute enough National Insurance.
 nisp.nirecord.gapsinyourrecord.listheader = This could be because you were:
@@ -292,7 +292,7 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = More on National 
 # Voluntary Contribution page
 #****************************
 
-nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check my State Pension
+nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check your State Pension
 nisp.nirecord.voluntarycontributions.heading = Voluntary contributions
 nisp.nirecord.voluntarycontributions.title.message = Before considering paying voluntary contributions you should:
 nisp.nirecord.voluntarycontributions.h2title.1 = 1.  Seek guidance or financial advice
@@ -318,7 +318,7 @@ nisp.nirecord.voluntarycontributions.h2title.3.message =  to find out more about
 # NI Feedback Page feedback
 #***************************
 
-nisp.nifeedback.title = National Insurance record feedback: Check my State Pension
+nisp.nifeedback.title = National Insurance record feedback: Check your State Pension
 nisp.nifeedback.comments.feedback.heading = National Insurance record feedback
 nisp.nifeedback.comments.feedback.description = We are currently developing the National Insurance record and would really like your thoughts on how we can build a better service.
 nisp.nifeedback.comments.feedback = Please let us know what you think is good, what is bad and what is missing.
@@ -326,7 +326,7 @@ nisp.nifeedback.thankyou.header = Thank you
 nisp.nifeedback.thankyou.description =We''ve received your feedback.
 nisp.nifeedback.thankyou.button.description = Return to your National Insurance record
 nisp.nifeedback.question.updatingrecord = How can you go about updating your record?
-nisp.nifeedback.thankyou.title=We''ve received your feedback: Check my State Pension
+nisp.nifeedback.thankyou.title=We''ve received your feedback: Check your State Pension
 
 #***************
 # Feedback Page
