@@ -60,13 +60,6 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
     }
   }
 
-  "GET /guidancenotes" should {
-    "return guidance notes page" in {
-      val result = LandingController.showGuidanceNotes(fakeRequest)
-      contentAsString(result) should include ("The information provided is based on the rules of the new State Pension, which starts on 6 April 2016.")
-    }
-  }
-
   "GET /pre-verify" should {
     "return pre-verify page" in {
       val result = LandingController.showPreVerify(fakeRequest)
