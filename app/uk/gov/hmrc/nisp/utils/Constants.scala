@@ -35,10 +35,6 @@ object Constants {
 
   val minimumQualifyingYearsNSP = 10
 
-  val NAME = "customerName"
-  val NINO = "customerNino"
-  val ABTEST = "customerABTest"
-
   val ninoWithoutSuffixLength: Int = 8
 
   val shortYearStartCharacter = 2

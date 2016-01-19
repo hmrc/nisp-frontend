@@ -154,7 +154,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
     "GET /signout" should {
       "redirect to the questionnaire page" in {
         val result = MockAccountController.signOut(fakeRequest)
-        redirectLocation(result).get shouldBe routes.QuestionnaireController.show().url
+        redirectLocation(result).get shouldBe "mockGovUkPage"
       }
     }
 
