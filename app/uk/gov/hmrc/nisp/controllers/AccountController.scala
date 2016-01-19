@@ -65,11 +65,10 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
           val canGetPension = spSummary.numberOfQualifyingYears +
             spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
           val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-          Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing)).withSession(storeUserInfoInSession(user, contractedOut = false))
+          Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing))
         } else {
           val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
           Ok(account(nino, spSummary, user, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart))
-            .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
 
         }
       case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) =>
@@ -80,7 +79,7 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
           user.name,
           spExclusions.spExclusions
         ))
-        Redirect(routes.ExclusionController.show()).withSession(storeUserInfoInSession(user, contractedOut = false))
+        Redirect(routes.ExclusionController.show())
       case _ => throw new RuntimeException("SP Response Model is empty")
     }
   }
@@ -97,25 +96,12 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
       (currentChart, forecastChart)
     }
   }
-  private def storeUserInfoInSession(user: NispUser, contractedOut: Boolean)(implicit request: Request[AnyContent]): Session = {
-    val abTest: Option[ABTest] = getABTest(user.nino.getOrElse(""), contractedOut)
-    request.session +
-      (NAME -> user.name.getOrElse("N/A")) +
-      (NINO -> user.nino.getOrElse("")) +
-      (ABTEST -> abTest.map(_.toString).getOrElse("None"))
-  }
 
   private def getABTest(nino: String, isContractedOut: Boolean): Option[ABTest] =
     if(isContractedOut && !applicationConfig.excludeCopeTab) Some(ABService.test(nino)) else None
 
   def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>
-    val name = request.session.get(NAME).getOrElse("")
-    val nino = request.session.get(NINO).getOrElse("")
-    val abTest = request.session.get(ABTEST).getOrElse("None")
-    Redirect(routes.QuestionnaireController.show()).withNewSession.withSession(
-      NAME -> name,
-      NINO -> nino,
-      ABTEST -> abTest)
+    Redirect(applicationConfig.govUkFinishedPageUrl).withNewSession
   }
 
   def timeout: Action[AnyContent] = UnauthorisedAction { implicit request =>

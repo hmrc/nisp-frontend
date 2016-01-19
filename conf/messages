@@ -152,45 +152,6 @@ nisp.npsUnavailable.title = Service is unavailable: Check your State Pension
 nisp.npsUnavailable.heading = The service is unavailable due to maintenance
 nisp.npsUnavailable.message = Try again after 5am.
 
-#**************************
-# Questionnaire Messages
-#**************************
-
-nisp.questionnaire.title =  You''ve signed out of your account: Check your State Pension
-nisp.questionnaire.header = You''ve signed out of your account
-
-nisp.questionnaire.please = Give us feedback to help us improve this service. It will take no more than 2&nbsp;minutes.
-
-nisp.questionnaire.easytouse.question = How easy was it to use Check your State Pension?
-nisp.questionnaire.easytouse.0 = Very easy
-nisp.questionnaire.easytouse.1 = Easy
-nisp.questionnaire.easytouse.2 = Difficult
-nisp.questionnaire.easytouse.3 = Very difficult
-
-nisp.questionnaire.useitbyyourself.question = When you used this service, did you:
-nisp.questionnaire.useitbyyourself.0 = use it by yourself
-nisp.questionnaire.useitbyyourself.1 = use the service with someone
-nisp.questionnaire.useitbyyourself.2 = have someone use the service for you
-
-nisp.questionnaire.likelytouse.question = How likely would you be to use this service next time?
-nisp.questionnaire.likelytoseek.question = After using this service, how likely are you to seek more information on pensions and retirement in general
-nisp.questionnaire.likely.0 = Very likely
-nisp.questionnaire.likely.1 = Likely
-nisp.questionnaire.likely.2 = Unlikely
-nisp.questionnaire.likely.3 = Very unlikely
-
-nisp.questionnaire.recommend.question = Would you recommend this service to your family and friends?
-
-nisp.questionnaire.takepart.question = Would you like to take part in any further research to help shape the future direction of the service?
-
-nisp.questionnaire.satisfied.question = Overall, how satisfied were you with the service?
-nisp.questionnaire.satisfied.0 = Very satisfied
-nisp.questionnaire.satisfied.1 = Satisfied
-nisp.questionnaire.satisfied.2 = Dissatisfied
-nisp.questionnaire.satisfied.3 = Very dissatisfied
-
-nisp.questionnaire.nextsteps.question = Now that you''ve used the service, is there anything else you want to do within the service but cannot at the moment?
-
 #*******************
 # Thank you Messages
 #*******************
