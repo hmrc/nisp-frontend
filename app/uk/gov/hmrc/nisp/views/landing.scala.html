@@ -23,17 +23,16 @@
 <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
 
 
-<h2 class="heading-medium">@Messages("nisp.landing.eligibility.heading")</h2>
+<p class="heading-medium">@Messages("nisp.landing.eligibility.heading")</p>
 
 <ul class="list-bullet" role="list">
     <li role="listitem">@Messages("nisp.landing.eligibility1")</li>
     <li role="listitem">@Messages("nisp.landing.eligibility2")</li>
 </ul>
 
-
 <a id="continue" href='@routes.AccountController.show.url' data-journey-click="checkmystatepension:landing:start" role="button" tabindex="0" class="button">@Messages("nisp.continue")</a>
 
-<h2 class="heading-medium noteligible">@Messages("nisp.landing.noteligible.heading")</h2>
+<p class="heading-medium noteligible">@Messages("nisp.landing.noteligible.heading")</p>
 <p>@Html(Messages("nisp.landing.noteligible"))</p>
 
 }
