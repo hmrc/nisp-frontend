@@ -36,18 +36,8 @@ nisp.landing.features.one = how much you may receive
 nisp.landing.features.two = the earliest date you may get it
 nisp.landing.features.three = options for improving your State Pension
 nisp.landing.warning = This service is currently being developed, at the moment we are unable to guarantee its accuracy. You should not take any action on the basis of this information.
-nisp.landing.guidance = Guidance notes for the service
 nisp.preverify.title = Verify your identity: Check my State Pension
 
-#**************************
-#  Guidance Notes Messages
-#**************************
-
-nisp.guidance.title = Guidance notes: Check my State Pension
-nisp.guidance.para1 = The information provided is based on the rules of the new State Pension, which starts on 6 April 2016. In working out your forecast we have used a figure of £151.25 a week as the full rate of the new State Pension. The full rate has yet to be finalised.
-nisp.guidance.para2 = This forecast is provided for your information only, you should not rely on it and it does not amount to financial advice. When planning for your retirement, you should seek professional advice.
-nisp.guidance.para3 = We cannot guarantee the amount in your forecast as it is based on information currently available and the rules when it was produced. We are not responsible for any losses or damages you incur by any reliance on this forecast and you should not enter into any financial commitment based on it.
-nisp.guidance.para4 = You will pay Income Tax if your State Pension, along with other sources of income, exceeds your tax-free personal allowance.
 
 #**************************
 #  Main Page Messages
