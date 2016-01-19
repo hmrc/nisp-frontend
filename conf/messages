@@ -21,7 +21,7 @@ nisp.useagain = To use the service again you''ll need to <a href="{0}">sign in</
 #**************************
 
 nisp.title = Check my State Pension
-nisp.start = Start now
+nisp.continue = Continue
 nisp.verify.button = Verify now
 nisp.verify.title = Verify your identity
 nisp.verify.para1 = To check your State Pension you''ll need to use GOV.UK Verify. It''s the new way for you to prove who you are online, to use government services securely.
