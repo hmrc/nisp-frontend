@@ -34,7 +34,7 @@ nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pensio
 #**************************
 #  Main Page Messages
 #**************************
-nisp.main.title=Summary: Check my State Pension
+nisp.main.title=Summary: Check your State Pension
 nisp.main.h1.title= Your State Pension
 nisp.main.title.estimate.is= your estimate is
 nisp.main.forecast = Forecast
@@ -130,7 +130,7 @@ nisp.excluded.amountdissonance = We are having problems calculating your State P
 #  NPS Unavailable Page Messages
 #**************************
 
-nisp.npsUnavailable.title = Service is unavailable: Check my State Pension
+nisp.npsUnavailable.title = Service is unavailable: Check your State Pension
 nisp.npsUnavailable.heading = The service is unavailable due to maintenance
 nisp.npsUnavailable.message = Try again after 5am.
 
@@ -138,12 +138,12 @@ nisp.npsUnavailable.message = Try again after 5am.
 # Questionnaire Messages
 #**************************
 
-nisp.questionnaire.title =  You''ve signed out of your account: Check my State Pension
+nisp.questionnaire.title =  You''ve signed out of your account: Check your State Pension
 nisp.questionnaire.header = You''ve signed out of your account
 
 nisp.questionnaire.please = Give us feedback to help us improve this service. It will take no more than 2&nbsp;minutes.
 
-nisp.questionnaire.easytouse.question = How easy was it to use Check my State Pension?
+nisp.questionnaire.easytouse.question = How easy was it to use Check your State Pension?
 nisp.questionnaire.easytouse.0 = Very easy
 nisp.questionnaire.easytouse.1 = Easy
 nisp.questionnaire.easytouse.2 = Difficult
@@ -179,13 +179,13 @@ nisp.questionnaire.nextsteps.question = Now that you''ve used the service, is th
 
 nisp.thankyou.title = Thank you
 nisp.thankyou.received = We''ve received your feedback.
-nisp.finishpage.title = We''ve received your feedback: Check my State Pension
+nisp.finishpage.title = We''ve received your feedback: Check your State Pension
 
 #****************
 # Session Timeout
 #****************
 
-nisp.timeout.title = You''ve been signed out: Check my State Pension
+nisp.timeout.title = You''ve been signed out: Check your State Pension
 nisp.timeout.heading = You''ve been signed out
 nisp.timeout.body = For your security we signed you out because you did not use the service for 15 minutes or more.
 
@@ -193,7 +193,7 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 # NI Record Page
 #***************
 
-nisp.nirecord.title = Your National Insurance record: Check my State Pension
+nisp.nirecord.title = Your National Insurance record: Check your State Pension
 nisp.nirecord.heading = Your National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.
 nisp.nirecord.yournirecordallyears = All years.
@@ -228,7 +228,7 @@ nisp.nirecord.gap.payvoluntarycontrib= Pay a voluntary contribution of <strong>{
 nisp.nirecord.gap.payselfemployedcontrib = You can make this year full.</br>Pay your self-employed contributions.
 nisp.nirecord.gap.findoutmore= Find out more about <a href="{0}">voluntary contributions</a>.
 nisp.nirecord.gap.latepaymentmessage= It''s too late to pay for this year. You can usually only pay for the last 6 years.
-nisp.nirecord.gap.underinvestigation = Currently we do not know if this year counts towards your pension, as there is ongoing account activity. Once complete, your record will be updated. You do not need to take any action now.
+nisp.nirecord.gap.underinvestigation = We are checking this year to see if it counts towards your pension. We''ll update your record when this is finished, you do not need to do anything.
 nisp.nirecord.youdidnotmakeanycontrib= You did not make any contributions this year
 nisp.nirecord.summary.yourrecord = Summary
 nisp.nirecord.summary.yourrecord.mobile = Summary
@@ -244,7 +244,7 @@ nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up
 # Gaps In Your Record Page
 #**************************
 
-nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them: Check my State Pension
+nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them: Check your State Pension
 nisp.nirecord.gapsinyourrecord.heading = Gaps in your record and how to check them
 nisp.nirecord.gapsinyourrecord.title.message = In most cases, you will have a gap in your record as you did not contribute enough National Insurance.
 nisp.nirecord.gapsinyourrecord.listheader = This could be because you were:
@@ -274,7 +274,7 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = More on National 
 # Voluntary Contribution page
 #****************************
 
-nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check my State Pension
+nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check your State Pension
 nisp.nirecord.voluntarycontributions.heading = Voluntary contributions
 nisp.nirecord.voluntarycontributions.title.message = Before considering paying voluntary contributions you should:
 nisp.nirecord.voluntarycontributions.h2title.1 = 1.  Seek guidance or financial advice
@@ -300,7 +300,7 @@ nisp.nirecord.voluntarycontributions.h2title.3.message =  to find out more about
 # NI Feedback Page feedback
 #***************************
 
-nisp.nifeedback.title = National Insurance record feedback: Check my State Pension
+nisp.nifeedback.title = National Insurance record feedback: Check your State Pension
 nisp.nifeedback.comments.feedback.heading = National Insurance record feedback
 nisp.nifeedback.comments.feedback.description = We are currently developing the National Insurance record and would really like your thoughts on how we can build a better service.
 nisp.nifeedback.comments.feedback = Please let us know what you think is good, what is bad and what is missing.
@@ -308,7 +308,7 @@ nisp.nifeedback.thankyou.header = Thank you
 nisp.nifeedback.thankyou.description =We''ve received your feedback.
 nisp.nifeedback.thankyou.button.description = Return to your National Insurance record
 nisp.nifeedback.question.updatingrecord = How can you go about updating your record?
-nisp.nifeedback.thankyou.title=We''ve received your feedback: Check my State Pension
+nisp.nifeedback.thankyou.title=We''ve received your feedback: Check your State Pension
 
 #***************
 # Feedback Page
