@@ -18,9 +18,10 @@ package uk.gov.hmrc.nisp.connectors
 
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
-import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsRequest
+import uk.gov.hmrc.nisp.models.citizen.{CitizenDetailsResponse, CitizenDetailsRequest}
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
 
@@ -33,8 +34,12 @@ trait CitizenDetailsConnector {
   val serviceUrl: String
   def http: HttpPost
 
-  def connectToGetPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+  private def url(nino: String) = s"$serviceUrl/citizen-details/$nino/designatory-details/summary"
+
+  def connectToGetPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
     val jsonRequest = Json.toJson(CitizenDetailsRequest(Set(nino)))
-    http.POST[JsValue, HttpResponse](s"$serviceUrl/citizen-details/$nino/designatory-details/summary", jsonRequest)
+    http.POST[JsValue, HttpResponse](url(nino), jsonRequest).map {
+      _.json.as[CitizenDetailsResponse]
+    }
   }
 }
