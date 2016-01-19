@@ -23,10 +23,6 @@ GET         /account/nirecord/feedback             uk.gov.hmrc.nisp.controllers.
 POST        /account/nirecord/feedback             uk.gov.hmrc.nisp.controllers.NIRecordFeedbackController.submit
 GET         /account/nirecord/feedback/thankyou    uk.gov.hmrc.nisp.controllers.NIRecordFeedbackController.showThankYou
 
-GET         /questionnaire                         uk.gov.hmrc.nisp.controllers.QuestionnaireController.show
-POST        /questionnaire                         uk.gov.hmrc.nisp.controllers.QuestionnaireController.submit
-GET         /finished                              uk.gov.hmrc.nisp.controllers.QuestionnaireController.showFinished
-
 GET         /feedback                              uk.gov.hmrc.nisp.controllers.FeedbackController.show
 POST        /feedback                              uk.gov.hmrc.nisp.controllers.FeedbackController.submit
 GET         /feedback/thankyou                     uk.gov.hmrc.nisp.controllers.FeedbackController.showThankYou
