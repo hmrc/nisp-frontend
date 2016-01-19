@@ -20,22 +20,20 @@
 @()(implicit request: Request[_])
 
 @nispMain(pageTitle = Some(Messages("nisp.landing.title")),h1Classes=Some("welcome-msg")) {
-<p class="lede">
-    @Messages("nisp.landing.summary")
-</p>
+<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
 
-<p>@Messages("nisp.landing.features.heading")</p>
+
+<h2 class="heading-medium">@Messages("nisp.landing.eligibility.heading")</h2>
 
 <ul class="list-bullet" role="list">
-    <li role="listitem">@Messages("nisp.landing.features.one")</li>
-    <li role="listitem">@Messages("nisp.landing.features.two")</li>
-    <li role="listitem">@Messages("nisp.landing.features.three")</li>
+    <li role="listitem">@Messages("nisp.landing.eligibility1")</li>
+    <li role="listitem">@Messages("nisp.landing.eligibility2")</li>
 </ul>
 
-<div class="panel-indent">
-    @Messages("nisp.landing.warning")
-</div>
 
-<a id="Continue" href='@routes.LandingController.showPreVerify.url' role="button" tabindex="0" class="button button--get-started">@Messages("nisp.continue")</a>
+<a id="continue" href='@routes.AccountController.show.url' data-journey-click="checkmystatepension:landing:start" role="button" tabindex="0" class="button">@Messages("nisp.continue")</a>
+
+<h2 class="heading-medium noteligible">@Messages("nisp.landing.noteligible.heading")</h2>
+<p>@Html(Messages("nisp.landing.noteligible"))</p>
 
 }
