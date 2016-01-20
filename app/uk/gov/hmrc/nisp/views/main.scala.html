@@ -31,7 +31,8 @@
     showTitleHeaderNav: Boolean = true,
     showBetaBanner: Boolean = true,
     pageScripts: Option[Html] = None,
-    articleClasses: Option[String] = None)(mainContent: Html)(implicit request : Request[_])
+    articleClasses: Option[String] = None,
+    analyticsAdditionalJs: Option[Html] = None)(mainContent: Html)(implicit request : Request[_])
 
 
 @linkElement = {
@@ -121,7 +122,8 @@
         ssoUrl = applicationConfig.ssoUrl,
         scriptElem = None,
         gaCalls = gaCalls,
-        analyticsAnonymizeIp = true
+        analyticsAnonymizeIp = true,
+        analyticsAdditionalJs = analyticsAdditionalJs
     )
     @pageScripts
 }
