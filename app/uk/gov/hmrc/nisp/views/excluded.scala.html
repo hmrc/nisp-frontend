@@ -40,4 +40,12 @@
     @if(spExclusions.spExclusions.contains(SPExclusion.AmountDissonance)) {
         @exclusions.amountDissonance()
     }
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        ga('send', 'pageview', {
+            'dimension20': '@spExclusions.spExclusions.map(_.toString).mkString(" ") '
+        });
+    });
+</script>
 }
