@@ -21,33 +21,15 @@ nisp.useagain = To use the service again you''ll need to <a href="{0}">sign in</
 #**************************
 
 nisp.title = Check your State Pension
-nisp.start = Start now
-nisp.verify.button = Verify now
-nisp.verify.title = Verify your identity
-nisp.verify.para1 = To check your State Pension you''ll need to use GOV.UK Verify. It''s the new way for you to prove who you are online, to use government services securely.
-nisp.verify.para2 = Government-approved companies match your information to their records. They ask for information about your passport or driving licence, and ask some personal questions. This is to make sure that it''s not someone pretending to be you. It should take around 10 minutes to complete.
-nisp.verify.para3 = You will also need a mobile phone that can receive text messages or an email address, to receive a security code every time you log in.
-nisp.verify.para4 = You only need to do this once. Then you can sign in with your username and password and use other government services.
-nisp.verify.para5.link = More information about how Verify works (opens in a new tab)
+nisp.continue = Continue
 nisp.landing.title = Check your State Pension
-nisp.landing.summary = Check how much you may get based on your current National Insurance record.
-nisp.landing.features.heading = Use this service to find out:
-nisp.landing.features.one = how much you may receive
-nisp.landing.features.two = the earliest date you may get it
-nisp.landing.features.three = options for improving your State Pension
-nisp.landing.warning = This service is currently being developed, at the moment we are unable to guarantee its accuracy. You should not take any action on the basis of this information.
-nisp.landing.guidance = Guidance notes for the service
-nisp.preverify.title = Verify your identity: Check your State Pension
+nisp.landing.estimateprovided = This estimate is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
+nisp.landing.eligibility.heading = You can use this service if you''re
+nisp.landing.eligibility1 = a man born after 5 April 1951
+nisp.landing.eligibility2 = a woman born after 5 April 1953
+nisp.landing.noteligible.heading = If you were born before these dates
+nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pension-centre" rel="external">Pension Service</a> to get a statement of your current pension by post.
 
-#**************************
-#  Guidance Notes Messages
-#**************************
-
-nisp.guidance.title = Guidance notes: Check your State Pension
-nisp.guidance.para1 = The information provided is based on the rules of the new State Pension, which starts on 6 April 2016. In working out your forecast we have used a figure of £151.25 a week as the full rate of the new State Pension. The full rate has yet to be finalised.
-nisp.guidance.para2 = This forecast is provided for your information only, you should not rely on it and it does not amount to financial advice. When planning for your retirement, you should seek professional advice.
-nisp.guidance.para3 = We cannot guarantee the amount in your forecast as it is based on information currently available and the rules when it was produced. We are not responsible for any losses or damages you incur by any reliance on this forecast and you should not enter into any financial commitment based on it.
-nisp.guidance.para4 = You will pay Income Tax if your State Pension, along with other sources of income, exceeds your tax-free personal allowance.
 
 #**************************
 #  Main Page Messages

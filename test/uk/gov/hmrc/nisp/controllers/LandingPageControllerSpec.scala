@@ -49,28 +49,14 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "load the landing page" in {
       val result = LandingController.show(fakeRequest)
-      val headingText = Messages("nisp.landing.summary")
+      val headingText = Messages("nisp.landing.estimateprovided")
       contentAsString(result) should include (headingText)
     }
 
     "have a start button" in {
       val result = LandingController.show(fakeRequest)
-      val buttonText = Messages("nisp.start")
+      val buttonText = Messages("nisp.continue")
       contentAsString(result) should include (s"$buttonText</a>")
-    }
-  }
-
-  "GET /guidancenotes" should {
-    "return guidance notes page" in {
-      val result = LandingController.showGuidanceNotes(fakeRequest)
-      contentAsString(result) should include ("The information provided is based on the rules of the new State Pension, which starts on 6 April 2016.")
-    }
-  }
-
-  "GET /pre-verify" should {
-    "return pre-verify page" in {
-      val result = LandingController.showPreVerify(fakeRequest)
-      contentAsString(result) should include ("Verify your identity")
     }
   }
 
