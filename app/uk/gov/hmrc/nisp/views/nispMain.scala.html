@@ -26,7 +26,8 @@
     showBetaBanner: Boolean = true,
     pageScripts: Option[Html] = None,
     contentHeaderExtra: Option[Html] = None,
-    articleClasses: Option[String] = None)(mainContent: Html)(implicit request:Request[_])
+    articleClasses: Option[String] = None,
+    analyticsAdditionalJs: Option[Html] = None)(mainContent: Html)(implicit request:Request[_])
 
 @contentHeader = {
     @loginDetailsHeader
@@ -43,7 +44,8 @@
     showTitleHeaderNav = showTitleHeaderNav,
     showBetaBanner = showBetaBanner,
     pageScripts = pageScripts,
-    articleClasses = articleClasses) {
+    articleClasses = articleClasses,
+    analyticsAdditionalJs = analyticsAdditionalJs) {
         @if(pageTitle.isDefined) {
         <h1 class="heading-large @h1Classes"> @pageTitle </h1>
         }

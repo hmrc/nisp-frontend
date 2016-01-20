@@ -19,7 +19,15 @@
 
 @(nino: String,spExclusions: SPExclusionsModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser)(implicit request: Request[_])
 
-@nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true) {
+
+@analyticsAdditionalJs = {
+    ga('set', {
+        'dimension20': '@spExclusions.spExclusions.map(_.toString).mkString(" ") '
+    });
+}
+
+@nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), serviceInfoContent=Some(includes.loginInfo(user)),
+            userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 
     @if(spExclusions.spExclusions.contains(SPExclusion.Abroad)) {
@@ -40,12 +48,4 @@
     @if(spExclusions.spExclusions.contains(SPExclusion.AmountDissonance)) {
         @exclusions.amountDissonance()
     }
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        ga('send', 'pageview', {
-            'dimension20': '@spExclusions.spExclusions.map(_.toString).mkString(" ") '
-        });
-    });
-</script>
 }

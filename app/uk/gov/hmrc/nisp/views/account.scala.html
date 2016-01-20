@@ -34,8 +34,23 @@
 <script src="@routes.Assets.at("javascript/account.js")" type="text/javascript"></script>
 }
 
+@analyticsAdditionalJs = {
+    ga('set', {
+        'dimension7':  '@spSummary.contextMessage.getOrElse("")',
+        'dimension8':  '@spSummary.forecastAmount.week.toInt',
+        @Html(abTest.map (p => s"'dimension9':  '${p.toString}',").getOrElse(""))
+        'dimension10': '@spSummary.numberOfQualifyingYears',
+        'dimension11': '@spSummary.numberOfGaps',
+        'dimension12': '@spSummary.numberOfGapsPayable',
+        'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
+        'dimension14': '@spSummary.contractedOutFlag',
+        'dimension15': '@spSummary.statePensionAge',
+        'dimension16': '@spSummary.copeAmount.week'
+    });
+}
+
 @nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-            pageScripts=Some(pageScripts), articleClasses = Some("mainpage")) {
+            pageScripts=Some(pageScripts), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <div class="grid services">
                <h1 class="heading-large title-spa">@Messages("nisp.main.h1.title")</h1>
@@ -174,20 +189,4 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-           $(document).ready(function(){
-               ga('send', 'pageview', {
-                  'dimension7':  '@spSummary.contextMessage.getOrElse("")',
-                  'dimension8':  '@spSummary.forecastAmount.week.toInt',
-                  @Html(abTest.map (p => s"'dimension9':  '${p.toString}',").getOrElse(""))
-                  'dimension10': '@spSummary.numberOfQualifyingYears',
-                  'dimension11': '@spSummary.numberOfGaps',
-                  'dimension12': '@spSummary.numberOfGapsPayable',
-                  'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
-                  'dimension14': '@spSummary.contractedOutFlag',
-                  'dimension15': '@spSummary.statePensionAge',
-                  'dimension16': '@spSummary.copeAmount.week'
-               });
-           });
-    </script>
 }
