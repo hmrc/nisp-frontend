@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.controllers
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.services.NpsAvailabilityChecker
-import uk.gov.hmrc.nisp.views.html.{guidanceNotes, landing, preVerify}
+import uk.gov.hmrc.nisp.views.html.{landing}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 
@@ -33,10 +33,6 @@ trait LandingController extends FrontendController with Actions with Authenticat
   val npsAvailabilityChecker: NpsAvailabilityChecker
 
   def show: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(landing()))
-
-  def showPreVerify: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(preVerify()).withNewSession)
-
-  def showGuidanceNotes: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(guidanceNotes()))
 
   def showNpsUnavailable: Action[AnyContent] = UnauthorisedAction(implicit request => ServiceUnavailable(uk.gov.hmrc.nisp.views.html.npsUnavailable()))
 }
