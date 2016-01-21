@@ -131,7 +131,7 @@
                 </p>
             </div>
             <div class="content-block">
-                @scenarios.viewScenarioForecast(spSummary.contextMessage, spSummary.lastProcessedDate.localDate.getYear().toString(), spSummary)
+                <p>@Messages("nisp.main.guarantee", spSummary.finalRelevantYear)</p>
 
                 @if(spSummary.numberOfQualifyingYears >= Constants.minimumQualifyingYearsNSP) {
 
