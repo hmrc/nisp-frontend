@@ -49,9 +49,7 @@ nisp.main.year = a year
 nisp.main.equivalent = This is equal to:
 nisp.main.thisAmount = The amount shown is not a guarantee and is based on your National Insurance record up to {0}.
 
-nisp.main.guarantee2016 = Your estimate is based on the current law. The amount shown is not a guarantee and is based on your National Insurance record using the latest complete tax year available, 5 April {0}. This assumes that you''ll continue to add enough years before 5 April 2016, when the pension scheme changes. It does not include any increase due to inflation.
-nisp.main.guaranteeSPA = Your estimate is based on the current law. The amount shown is not a guarantee and is based on your National Insurance record using the latest complete tax year available, 5 April {0}. This assumes that you''ll continue to contribute until you reach State Pension age in {1}. It does not include any increase due to inflation.
-
+nisp.main.guarantee = Your estimate is based on the current law. The amount shown is not a guarantee and is based on your National Insurance record using the latest complete tax year available, 5 April {0}. The forecast assumes National Insurance contributions are added to your record for future years until you cannot increase your State Pension any further. It does not include any increase due to inflation.
 nisp.main.psod = It does not include the pension sharing order you have in effect.
 nisp.main.whenYoullBe = when you''ll be
 nisp.main.after = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
