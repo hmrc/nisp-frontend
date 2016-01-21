@@ -20,8 +20,8 @@
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
 
-@(nino: String, niRecord: NIRecord, niSummary: NISummary, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, niGaps: Boolean = false,
-    form: Form[_])(implicit request: Request[_])
+@(nino: String, niRecord: NIRecord, niSummary: NISummary, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, niGaps: Boolean = false
+    )(implicit request: Request[_])
 
 @sidebar = {
 <div class="sidebar-border" >   
@@ -39,14 +39,7 @@
     <p aria-hidden="true" class="nisummary-number">@niSummary.noOfNonQualifyingYears</p>
 
     <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps")</p>
-
-    <hr class="summary-nirecord-feedback">
-    <h2>@Messages("nisp.nifeedback.comments.feedback.heading")</h2>
-
-    <p class="nisummary-text">@Messages("nisp.nirecord.summary.yourfeedback.description")</p>
-
-    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordFeedbackController.show.url">@Messages("nisp.nirecord.summary.yourfeedback.linktext")</a></p>
-    
+  
 </div>
 }
 
@@ -125,14 +118,5 @@ sidebarLinks = Some(sidebar)) {
 <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
 }
 <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}#how-to-increase-it">@Messages("nisp.back")</a></p>
-
-<div class="sidebar-mobile"> 
-
-    <h2>@Messages("nisp.nifeedback.comments.feedback.heading")</h2>
-    <p class="nisummary-text">@Messages("nisp.nirecord.summary.yourfeedback.description")</p>
-    <p>
-        <a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordFeedbackController.show.url">@Messages("nisp.nirecord.summary.yourfeedback.linktext")</a>
-    </p>
-</div>
 
 }

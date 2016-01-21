@@ -22,7 +22,6 @@ import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
 import uk.gov.hmrc.nisp.events.NIRecordEvent
-import uk.gov.hmrc.nisp.models.forms.NIRecordFeedbackForm
 import uk.gov.hmrc.nisp.models.{NIRecord, NIResponse, NISummary}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
@@ -59,7 +58,7 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))
 
-            Ok(nirecordpage(nino, niRecord, niSummary, user, niGaps, NIRecordFeedbackForm.form))
+            Ok(nirecordpage(nino, niRecord, niSummary, user, niGaps))
           }
         case _ => throw new RuntimeException("NI Response Model is empty")
       }
