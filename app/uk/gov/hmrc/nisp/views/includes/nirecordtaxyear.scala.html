@@ -83,13 +83,12 @@
                         <p>@Html(Messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem().url))</p>
 
                     @if(niRecordTaxYear.payable && niRecordTaxYear.classThreePayableBy.isDefined) {
-                        @niRecordTaxYear.classThreePayableBy.map
-                        { classThreePayableByDate => @niRecordTaxYear.classThreePayableByPenalty.map
-                            { classThreePayableWithPenalty =>
-                                <p class="contributions-header">@Messages("nisp.nirecord.gap.youcanmakeupshortfall")</p>
-                                <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate),Dates.formatDate(classThreePayableByDate.localDate)))</p>
-                                <p>@Html(Messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
-                            }
+                        @niRecordTaxYear.classThreePayableBy.map { classThreePayableByDate =>
+                        @niRecordTaxYear.classThreePayableByPenalty.map { classThreePayableWithPenalty =>
+                            <p class="contributions-header">@Messages("nisp.nirecord.gap.youcanmakeupshortfall")</p>
+                            <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate),Dates.formatDate(classThreePayableByDate.localDate)))</p>
+                            <p>@Html(Messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
+                        }
                         }
                     } else{
                         <p class="panel-indent">@Messages("nisp.nirecord.gap.latepaymentmessage")</p>
