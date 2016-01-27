@@ -352,6 +352,7 @@
         "otherCredits": 0,
         "classThreePayable": 626.6,
         "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableByPenalty": "05\/04\/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -364,6 +365,7 @@
         "otherCredits": 0,
         "classThreePayable": 655.2,
         "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableByPenalty": "05\/04\/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -376,6 +378,7 @@
         "otherCredits": 0,
         "classThreePayable": 689,
         "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableByPenalty": "05\/04\/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -388,6 +391,7 @@
         "otherCredits": 0,
         "classThreePayable": 704.6,
         "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableByPenalty": "05\/04\/2023",
         "payable": true,
         "underInvestigation": false
       }
