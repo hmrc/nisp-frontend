@@ -21,7 +21,7 @@ import uk.gov.hmrc.nisp.utils.Constants
 
 case class NIRecordTaxYear(taxYear: Int, qualifying: Boolean,classOneContributions: BigDecimal,
                            classTwoCredits: Int, classThreeCredits: Int, otherCredits: Int,
-                           classThreePayable: Option[BigDecimal], classThreePayableBy: Option[NpsDate], payable: Boolean, underInvestigation: Boolean) {
+                           classThreePayable: Option[BigDecimal], classThreePayableBy: Option[NpsDate], classThreePayableByPenalty: Option[NpsDate], payable: Boolean, underInvestigation: Boolean) {
   val displayableTaxYear: String = s"$taxYear-${(taxYear + 1).toString.substring(Constants.shortYearStartCharacter,Constants.shortYearEndCharacter)}"
 }
 
