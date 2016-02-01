@@ -234,25 +234,27 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = More on National 
 nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check your State Pension
 nisp.nirecord.voluntarycontributions.heading = Voluntary contributions
 nisp.nirecord.voluntarycontributions.title.message = Before considering paying voluntary contributions you should:
-nisp.nirecord.voluntarycontributions.h2title.1 = 1.  Seek guidance or financial advice
-nisp.nirecord.voluntarycontributions.h2title.1.message = Paying voluntary contributions may not be your best option when planning for your retirement.
-nisp.nirecord.voluntarycontributions.h2title.1.help.title = Where you can get guidance and advice
-nisp.nirecord.voluntarycontributions.h2title.1.help.message = You can seek professional financial advice. For free impartial guidance (not on GOV.UK):
-nisp.nirecord.voluntarycontributions.h2title.1.help.link1 = Pensions Advisory Service (opens in new tab)
-nisp.nirecord.voluntarycontributions.h2title.1.help.link2 = Pension wise (opens in new tab)
-nisp.nirecord.voluntarycontributions.h2title.1.help.link2.message =  - advice on pensions for over 50s
-nisp.nirecord.voluntarycontributions.h2title.1.help.link3 = Citizens Advice (opens in new tab)
-nisp.nirecord.voluntarycontributions.h2title.2 = 2.  Check if you may get extra pension income because you
-nisp.nirecord.voluntarycontributions.h2title.2.linktitle1 = inherit or increase it from a partner
-nisp.nirecord.voluntarycontributions.h2title.2.linktitle1.heading = Your amount may change if you:
-nisp.nirecord.voluntarycontributions.h2title.2.linktitle1.message1 = are widowed, divorced or have dissolved your civil partnership
-nisp.nirecord.voluntarycontributions.h2title.2.linktitle1.message2 = paid married women''s reduced rate contributions
-nisp.nirecord.voluntarycontributions.h2title.2.linktitle2 = lived or worked overseas
-nisp.nirecord.voluntarycontributions.h2title.2.linktitle2.message = You may be entitled to a State Pension from the country you lived or worked in. Contact the pension service of the country you were in to find out if you are eligible.
+
+nisp.nirecord.voluntarycontributions.h2title.1 = 1.  Check if you may get extra pension income because you
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle1 = inherit or increase it from a partner
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.heading = Your amount may change if you:
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message1 = are widowed, divorced or have dissolved your civil partnership
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message2 = paid married women''s reduced rate contributions
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle2 = lived or worked overseas
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message = You may be entitled to a State Pension from the country you lived or worked in. Contact the pension service of the country you were in to find out if you are eligible.
+
+nisp.nirecord.voluntarycontributions.h2title.2 = 2.  Seek guidance or financial advice
+nisp.nirecord.voluntarycontributions.h2title.2.message = Paying voluntary contributions may not be your best option when planning for your retirement.
+nisp.nirecord.voluntarycontributions.h2title.2.help.title = Where you can get guidance and advice
+nisp.nirecord.voluntarycontributions.h2title.2.help.message = You can seek professional financial advice. For free impartial guidance (not on GOV.UK):
+nisp.nirecord.voluntarycontributions.h2title.2.help.link1 = Pensions Advisory Service (opens in new tab)
+nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = Pension wise (opens in new tab)
+nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - advice on pensions for over 50s
+nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = Citizens Advice (opens in new tab)
+
 nisp.nirecord.voluntarycontributions.h2title.3 = 3.  Find out how paying voluntary contributions affects your State Pension
 nisp.nirecord.voluntarycontributions.h2title.3.link1 = Contact the Future Pension Centre (opens in new tab)
 nisp.nirecord.voluntarycontributions.h2title.3.message =  to find out more about how filling gaps can affect your pension.
-
 
 #***************
 # Minimum Qualifying Period
