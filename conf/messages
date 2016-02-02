@@ -28,7 +28,7 @@ nisp.landing.eligibility.heading = You can use this service if you''re
 nisp.landing.eligibility1 = a man born after 5 April 1951
 nisp.landing.eligibility2 = a woman born after 5 April 1953
 nisp.landing.noteligible.heading = If you were born before these dates
-nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pension-centre" rel="external">Pension Service</a> to get a statement of your current pension by post.
+nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pension-centre" rel="external" data-journey-click="checkmystatepension:external:landingfuturepensioncentre">Pension Service</a> to get a statement of your current pension by post.
 
 
 #**************************
@@ -281,8 +281,8 @@ nisp.mqp.gaps.singular=You also have 1 year on your record which does not count 
 nisp.mqp.gaps.plural=You also have {0} years on your record which do not count towards your State Pension because you did not contribute enough National Insurance.
 nisp.mqp.gaps.fill.singular=You can fill this year to get the 10 years you need to get any State Pension.
 nisp.mqp.gaps.fill.plural=You can fill some of these years to get the 10 years you need to get any State Pension.
-nisp.mqp.never.para1 =You may have a private pension. For more details about your private pension you will need to contact your pension provider. Use the free service to<a href="https://www.gov.uk/find-lost-pension"> find pension contact details (opens in new tab)</a>.
-nisp.mqp.never.para2 =You may be eligible for <a href="https://www.gov.uk/pension-credit/overview">Pension Credit (opens in new tab)</a> if your retirement income is low.
+nisp.mqp.never.para1 =You may have a private pension. For more details about your private pension you will need to contact your pension provider. Use the free service to<a href="https://www.gov.uk/find-lost-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:findlostpension"> find pension contact details (opens in new tab)</a>.
+nisp.mqp.never.para2 =You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
 
 #**************************
 #  Cope Page Messages
