@@ -28,7 +28,7 @@ nisp.landing.eligibility.heading = You can use this service if you''re
 nisp.landing.eligibility1 = a man born after 5 April 1951
 nisp.landing.eligibility2 = a woman born after 5 April 1953
 nisp.landing.noteligible.heading = If you were born before these dates
-nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:landingfuturepensioncentre">Pension Service</a> to get a statement of your current pension by post.
+nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pension-centre" rel="external" data-journey-click="checkmystatepension:external:landingfuturepensioncentre">Pension Service</a> to get a statement of your current pension by post.
 
 
 #**************************
