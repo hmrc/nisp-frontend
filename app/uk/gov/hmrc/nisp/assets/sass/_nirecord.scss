@@ -2,77 +2,73 @@
 
 
 .ni-action {
-  width: 40%;
   float: left;
   text-align: right;
+  width: 40%;
 }
 
 .ni-years {
+  float: left;
   width: 20%;
   @media only screen and (max-width: 640px) {
     width: 25%;
   }
-  float: left;
 }
 
 .ni-notfull {
+  float: left;
   width: 40%;
   @media only screen and (max-width: 640px) {
     width: 35%;
   }
-  float: left;
 }
 
 .contributions-wrapper {
-  display: block;
   clear: both;
-  padding: 0px 0px 0px 20%;
-  margin-bottom: 5px;
+  display: block;
   font-size: 16px;
+  margin-bottom: 5px;
+  padding: 0 0 0 20%;
+  
   @media only screen and (max-width: 640px) {
     padding: 0;
   }
-}
-
-
-
-
-.contributions-wrapper .contributions-header {
-  font-weight: 700;
-  color: #6F777B;
-  margin: 25px 0 0 0;
+  
+  .contributions-header {
+    font-weight: 700;
+    color: $secondary-text-colour;
+    margin: 25px 0 0 0;
+   }
 }
 
 .accordion {
-  border-top:none;
-  
-}
-
-
-.accordion dd, .ni-table dd {
-  padding-bottom: 5px;
-}
-
-.accordion dt {
-  border-top:1px solid #bfc1c3;
-}
-
-.accordion dd p {
-  font-size: 16px;
-  margin-top: 5px;
-  @media only screen and (max-width: 640px) {
-    font-size: 14px;
+  border-top: none;
+  dd {
+    padding-bottom: 5px;
+    p {
+      font-size: 16px;
+      margin-top: 5px;
+      @media only screen and (max-width: 640px) {
+        font-size: 14px;
+      }
+      .contributions-header {
+        font-weight: 700;
+        color: $secondary-text-colour;
+        margin: 25px 0 0 0;
+      }
+    }
+  }
+   
+  dt {
+    border-top: 1px solid $border-colour;
   }
 }
 
-.accordion dd p.contributions-header {
-  font-weight: 700;
-  color: #6F777B;
-  margin: 25px 0 0 0;
+
+.ni-table dd {
+  padding-bottom: 5px;
 }
 
- 
-  
 .ni-wrapper {
   display: inline-block;
   clear: both;
@@ -84,19 +80,19 @@
 
 aside {
   padding-top: 30px;
-  width:30%;
+  width: 30%;
+  h2 {
+    padding-top: 15px;
+    font-weight: bold;
+  }
 }
 
-aside h2 {
-  padding-top: 15px;
-  font-weight: bold;
-}
+
 
 .sidebar-border {
-  border-top: 10px solid #005EA5;
+  border-top: 10px solid $govuk-blue;
   @media only screen and (max-width:640px){
-      display:none;
-
+    display: none;
   }
 }
 
@@ -106,7 +102,7 @@ aside h2 {
 }
 
 .full-width {
-  width:100%;
+  width: 100%;
 }
 
 .sidebar-mobile {
@@ -118,7 +114,7 @@ aside h2 {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  @media only screen and (max-width:640px){
+  @media only screen and (max-width: 640px){
 
     position: inherit;
     width: inherit;
@@ -136,7 +132,7 @@ ul.listbullets {
   list-style-type: disc;
   padding-left: 20px;
   li {
-      font-size: 16px;
+    font-size: 16px;
   }
 }
 
@@ -144,7 +140,7 @@ ul.listbullets {
 
 
 .inactive {
-  color: #6F777B;
+  color: $secondary-text-colour;
 }
 
 .backlink {
@@ -169,7 +165,7 @@ ul.listbullets {
 }
 
 .nirecord-taxyear {
-  white-space:nowrap;
+  white-space: nowrap;
 }
 
 
@@ -180,11 +176,11 @@ ul.listbullets {
 
 
 h1.gapsinyourrecord {
-  margin-top:0.5em;
-  margin-bottom:0;
+  margin-top: 0.5em;
+  margin-bottom: 0;
 }
 
 h2.gapsinyourrecord {
-  margin-top:1.87em !important;
-  margin-bottom:0.83em;
+  margin-top: 1.87em !important;
+  margin-bottom: 0.83em;
 }

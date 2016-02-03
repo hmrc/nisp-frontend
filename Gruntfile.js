@@ -21,7 +21,11 @@ module.exports = function(grunt){
       ],
       options: {
         bundleExec: false,
-        reporterOutput: null
+        config: '.scss-lint.yaml',
+        compact:true,
+        colorizeOutput:true,
+        maxBuffer:3000*1024,
+        reporterOutput: 'logs/reports/scss-lint-report.xml'
       }
     },
     // Watches styles and specs for changes
