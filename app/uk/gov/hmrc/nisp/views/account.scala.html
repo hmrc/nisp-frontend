@@ -81,9 +81,9 @@
                         <ul class="list-bullet">
                             <li>@Messages("nisp.cope.why.bullet1")</li>
                             <li>@Messages("nisp.cope.why.bullet2")</li>
-                        </ul>
-                        <p>@Messages("nisp.cope.definition")</p>
+                        </ul>                        
                         <h2 class="heading-medium cope-title">@Messages("nisp.cope.title2")</h2>
+                        <p>@Messages("nisp.cope.definition")</p>
                         <p>@Messages("nisp.cope.workplace")</p>
 
                         <table class="cope-table">
@@ -95,12 +95,12 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td><p>@Messages("nisp.cope.table.estimate.title")</p></td>
-                                <td><p>@NispMoney.pounds(spSummary.copeAmount.week)</p></td>
+                                <td><p>@Messages("nisp.cope.table.pensionforecast")</p></td>
+                                <td><p>@NispMoney.pounds(spSummary.forecastAmount.week)</p></td>                                
                             </tr>
                             <tr>
-                                <td><p>@Messages("nisp.cope.table.pensionforecast")</p></td>
-                                <td><p>@NispMoney.pounds(spSummary.forecastAmount.week)</p></td>
+                                <td><p>@Messages("nisp.cope.table.estimate.title")</p></td>
+                                <td><p>@NispMoney.pounds(spSummary.copeAmount.week)</p></td>                                
                             </tr>
                             <tr>
                                 <td><p>@Messages("nisp.cope.table.copeadded")</p></td>
@@ -109,10 +109,8 @@
                             </tbody>
                         </table>
 
-                        <p>@Messages("nisp.cope.paidby")</p>
-                        <p>
-                            @Html(Messages("nisp.main.cope.linktitle"))
-                        </p>
+                        <p>@Html(Messages("nisp.main.cope.linktitle"))</p>
+
                     </div>
                 </div>
            }

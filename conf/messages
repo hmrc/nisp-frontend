@@ -93,16 +93,16 @@ nisp.main.context.improve.list.payable.plural = You have {0} years on your recor
 nisp.main.context.improve.nogaps = You cannot improve your forecast any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.main.context.improve.nogaps.line2 = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
 
-nisp.main.context.improve.para1.plural = You have {0} years on your National Insurance record which do not count towards your State Pension. You may improve your forecast by filling them.
-nisp.main.context.improve.para1.singular = You have {0} year on your National Insurance record which does not count towards your State Pension. You may improve your forecast by filling it.
+nisp.main.context.improve.para1.plural = You have years on your National Insurance record which do not count towards your State Pension. You may improve your forecast by filling them.
+nisp.main.context.improve.para1.singular = You have a year on your National Insurance record which does not count towards your State Pension. You may improve your forecast by filling it.
 
-nisp.main.context.improve.para1.dorothy.plural = You have {0} years on your National Insurance record which do not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
-nisp.main.context.improve.para1.dorothy.singular = You have {0} year on your National Insurance record which does not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps
+nisp.main.context.improve.para1.dorothy.plural = You have years on your National Insurance record which do not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
+nisp.main.context.improve.para1.dorothy.singular = You have a year on your National Insurance record which does not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
 
 nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
 
-nisp.main.context.improve.para1.priya.plural = You have {0} years on your National Insurance record which do not count towards your State Pension. You cannot improve your forecast by filling them.
-nisp.main.context.improve.para1.priya.singular = You have {0} year on your National Insurance record which does not count towards your State Pension. You cannot improve your forecast by filling it.
+nisp.main.context.improve.para1.priya.plural = You have years on your National Insurance record which do not count towards your State Pension. You cannot improve your forecast by filling them.
+nisp.main.context.improve.para1.priya.singular = You have a year on your National Insurance record which does not count towards your State Pension. You cannot improve your forecast by filling it.
 
 #**************************
 # Exclusion Messages
@@ -294,11 +294,10 @@ nisp.cope.inthepast=In the past you''ve been part of one or more contracted out 
 nisp.cope.why=When you were contracted out:
 nisp.cope.why.bullet1=you and your employers paid lower rate National Insurance contributions; or
 nisp.cope.why.bullet2=some of your National Insurance contributions were paid into your private pension schemes instead
-nisp.cope.definition=Your contracted out workplace or personal pension schemes should include an amount of pension which will in most cases be at least equal to the additional State Pension you would have been paid if you had not been contracted out.  We call this amount your Contracted Out Pension Equivalent.
+nisp.cope.definition=Your workplace or personal pension scheme should include an amount that, in most cases, will be equivalent of the additional State Pension you would have been paid if you had not been contracted out. This is your Contracted Out Pension Equivalent (COPE).
 nisp.cope.title2=Contracted Out Pension Equivalent (COPE)
-nisp.cope.workplace=It will be paid by your workplace or personal pension schemes, in addition to your State Pension.
+nisp.cope.workplace=The COPE estimate is paid as part of your other pension schemes, not by the government. The actual amount paid by your workplace or personal pension scheme will depend on the one you have and on any investment choices.
 nisp.cope.table.estimate.title=Your COPE estimate
 nisp.cope.table.pensionforecast=Your State Pension forecast
 nisp.cope.table.copeadded=COPE added to your State Pension forecast
-nisp.cope.paidby=The COPE amount is paid as part of your other pensions schemes, not by the government.
-nisp.main.cope.linktitle=Find out more about <a href="https://www.gov.uk/contracted-out" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE amount  (opens in new tab)</a>.
+nisp.main.cope.linktitle=Find out more about <a href="https://www.gov.uk/contracted-out" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE estimate (opens in new tab)</a>.
