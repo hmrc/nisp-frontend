@@ -66,7 +66,8 @@ object MetricsService extends MetricsService {
     SPExclusion.ContractedOut -> MetricsRegistry.defaultRegistry.meter("exclusion-contracted-out"),
     SPExclusion.Dead -> MetricsRegistry.defaultRegistry.meter("exclusion-dead"),
     SPExclusion.IOM -> MetricsRegistry.defaultRegistry.meter("exclusion-isle-of-man"),
-    SPExclusion.AmountDissonance -> MetricsRegistry.defaultRegistry.meter("amount-dissonance")
+    SPExclusion.AmountDissonance -> MetricsRegistry.defaultRegistry.meter("amount-dissonance"),
+    SPExclusion.PostStatePensionAge -> MetricsRegistry.defaultRegistry.meter("exclusion-post-spa")
   )
 
   val abTestA = MetricsRegistry.defaultRegistry.meter("abtest-a")
