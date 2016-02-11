@@ -97,7 +97,7 @@ nisp.main.context.improve.para1.plural = You have years on your National Insuran
 nisp.main.context.improve.para1.singular = You have a year on your National Insurance record which does not count towards your State Pension. You may improve your forecast by filling it.
 
 nisp.main.context.improve.para1.dorothy.plural = You have years on your National Insurance record which do not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
-nisp.main.context.improve.para1.dorothy.singular = You have a year on your National Insurance record which does not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps
+nisp.main.context.improve.para1.dorothy.singular = You have a year on your National Insurance record which does not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
 
 nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
 
