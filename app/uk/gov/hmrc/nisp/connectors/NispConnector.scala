@@ -80,6 +80,10 @@ trait NispConnector {
               None
           }
       }
+    } recover {
+      case ex =>
+        MetricsService.keystoreReadFailed.inc()
+        None
     }
   }
 
@@ -101,8 +105,12 @@ trait NispConnector {
 
   private def cacheResult[A](a:A,name: String)(implicit hc: HeaderCarrier, formats: Format[A]): A = {
     val timerContext = MetricsService.keystoreWriteTimer.time()
-    sessionCache.cache[A](name, a).onComplete {
+    val cacheFuture = sessionCache.cache[A](name, a)
+    cacheFuture.onSuccess {
       case _ => timerContext.stop()
+    }
+    cacheFuture.onFailure {
+      case _ => MetricsService.keystoreWriteFailed.inc()
     }
     a
   }
