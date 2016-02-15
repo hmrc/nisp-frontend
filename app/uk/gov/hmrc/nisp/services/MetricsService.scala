@@ -91,6 +91,9 @@ object MetricsService extends MetricsService {
   val keystoreReadTimer = MetricsRegistry.defaultRegistry.timer("keystore-read-timer")
   val keystoreWriteTimer = MetricsRegistry.defaultRegistry.timer("keystore-write-timer")
 
+  val keystoreReadFailed = MetricsRegistry.defaultRegistry.counter("keystore-read-failed-counter")
+  val keystoreWriteFailed = MetricsRegistry.defaultRegistry.counter("keystore-write-failed-counter")
+
   val keystoreHitCounter = MetricsRegistry.defaultRegistry.counter("keystore-hit-counter")
   val keystoreMissCounter = MetricsRegistry.defaultRegistry.counter("keystore-miss-counter")
 
