@@ -17,6 +17,8 @@
  *
  * Messaging
  *
+ * Questionnaire
+ *
  * Chart lines
  *
  */
@@ -213,6 +215,19 @@ h1.title-spa {
 
 article h2.putting-off-header {
   padding-top: 20px;
+}
+
+
+/*------------------------------------*\
+    #Questionnaire
+\*------------------------------------*/
+
+@media (min-width : 641px) {
+
+    .form-field--error {
+        width: inherit;
+    }
+
 }
 
 /*----------------------------------*\
