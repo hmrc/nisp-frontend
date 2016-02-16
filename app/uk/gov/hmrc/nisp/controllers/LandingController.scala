@@ -32,7 +32,7 @@ object LandingController extends LandingController {
 trait LandingController extends FrontendController with Actions with AuthenticationConnectors {
   val npsAvailabilityChecker: NpsAvailabilityChecker
 
-  def show: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(landing()))
+  def show: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(landing()).withNewSession)
 
   def showNpsUnavailable: Action[AnyContent] = UnauthorisedAction(implicit request => ServiceUnavailable(uk.gov.hmrc.nisp.views.html.npsUnavailable()))
 }
