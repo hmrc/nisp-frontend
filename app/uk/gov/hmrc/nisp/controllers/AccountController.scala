@@ -109,13 +109,17 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
     if(isContractedOut && !applicationConfig.excludeCopeTab) Some(ABService.test(nino)) else None
 
   def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>
-    val name = request.session.get(NAME).getOrElse("")
-    val nino = request.session.get(NINO).getOrElse("")
-    val abTest = request.session.get(ABTEST).getOrElse("None")
-    Redirect(routes.QuestionnaireController.show()).withNewSession.withSession(
-      NAME -> name,
-      NINO -> nino,
-      ABTEST -> abTest)
+    if (applicationConfig.showGovUkDonePage) {
+      Redirect(applicationConfig.govUkFinishedPageUrl).withNewSession
+    } else {
+      val name = request.session.get(NAME).getOrElse("")
+      val nino = request.session.get(NINO).getOrElse("")
+      val abTest = request.session.get(ABTEST).getOrElse("None")
+      Redirect(routes.QuestionnaireController.show()).withNewSession.withSession(
+        NAME -> name,
+        NINO -> nino,
+        ABTEST -> abTest)
+    }
   }
 
   def timeout: Action[AnyContent] = UnauthorisedAction { implicit request =>
