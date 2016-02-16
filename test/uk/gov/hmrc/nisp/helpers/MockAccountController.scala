@@ -47,5 +47,7 @@ trait MockAccountController extends AccountController {
     override val analyticsToken: Option[String] = None
     override val betaFeedbackUrl: String = ""
     override val reportAProblemPartialUrl: String = ""
+    override val showGovUkDonePage: Boolean = true
+    override val govUkFinishedPageUrl: String = "govukdone"
   }
 }
