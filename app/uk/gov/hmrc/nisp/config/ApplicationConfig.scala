@@ -31,6 +31,8 @@ trait ApplicationConfig {
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
   val excludeCopeTab: Boolean
+  val showGovUkDonePage: Boolean
+  val govUkFinishedPageUrl: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -52,4 +54,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
   override val excludeCopeTab: Boolean = configuration.getBoolean(s"microservice.services.exclusions.copetab").getOrElse(true)
+  override val showGovUkDonePage: Boolean = configuration.getBoolean("govuk-done-page.enabled").getOrElse(true)
+  override val govUkFinishedPageUrl: String = loadConfig("govuk-done-page.url")
 }

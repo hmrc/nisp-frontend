@@ -26,7 +26,8 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.auth.AuthUrlConfig
-import uk.gov.hmrc.nisp.helpers.{TestAccountBuilder, MockCitizenDetailsService, MockAccountController}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, TestAccountBuilder, MockCitizenDetailsService, MockAccountController}
 import uk.gov.hmrc.nisp.models.SPAmountModel
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.http.SessionKeys
@@ -152,9 +153,50 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
     }
 
     "GET /signout" should {
-      "redirect to the questionnaire page" in {
-        val result = MockAccountController.signOut(fakeRequest)
+      "redirect to the questionnaire page when govuk done page is disabled" in {
+        val controller = new MockAccountController {
+          override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+            override val assetsPrefix: String = ""
+            override val reportAProblemNonJSUrl: String = ""
+            override val ssoUrl: Option[String] = None
+            override val betaFeedbackUnauthenticatedUrl: String = ""
+            override val contactFrontendPartialBaseUrl: String = ""
+            override val govUkFinishedPageUrl: String = "govukdone"
+            override val excludeCopeTab: Boolean = false
+            override val showGovUkDonePage: Boolean = false
+            override val analyticsHost: String = ""
+            override val analyticsToken: Option[String] = None
+            override val betaFeedbackUrl: String = ""
+            override val reportAProblemPartialUrl: String = ""
+          }
+        }
+        val result = controller.signOut(fakeRequest)
         redirectLocation(result).get shouldBe routes.QuestionnaireController.show().url
+      }
+
+      "redirect to the gov.uk done page when govuk done page is enabled" in {
+        val controller = new MockAccountController {
+          override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+            override val assetsPrefix: String = ""
+            override val reportAProblemNonJSUrl: String = ""
+            override val ssoUrl: Option[String] = None
+            override val betaFeedbackUnauthenticatedUrl: String = ""
+            override val contactFrontendPartialBaseUrl: String = ""
+            override val govUkFinishedPageUrl: String = "govukdone"
+            override val excludeCopeTab: Boolean = false
+            override val showGovUkDonePage: Boolean = true
+            override val analyticsHost: String = ""
+            override val analyticsToken: Option[String] = None
+            override val betaFeedbackUrl: String = ""
+            override val reportAProblemPartialUrl: String = ""
+          }
+        }
+        val result = controller.signOut(fakeRequest)
+        redirectLocation(result).get shouldBe "govukdone"
       }
     }
 
