@@ -49,6 +49,7 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
     forecastAmount = SPAmountModel(1,2,3),
     fullNewStatePensionAmount = 151.25,
     contractedOutFlag = false,
+    forecastOnlyFlag = false,
     customerAge = 24,
     copeAmount = SPAmountModel(0,0,0)
   )

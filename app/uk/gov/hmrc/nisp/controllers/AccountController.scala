@@ -55,23 +55,25 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
     nispConnector.connectToGetSPResponse(nino).map{
       case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
         metricsService.mainPage(spSummary.forecastAmount.week, spSummary.statePensionAmount.week, spSummary.contextMessage,
-          spSummary.contractedOutFlag, spSummary.customerAge, getABTest(nino, spSummary.contractedOutFlag))
+          spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, spSummary.customerAge, getABTest(nino, spSummary.contractedOutFlag))
 
         customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
           spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name,
-          spSummary.contractedOutFlag, getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week))
+          spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week))
 
         if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
           val canGetPension = spSummary.numberOfQualifyingYears +
             spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
           val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
           Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing)).withSession(storeUserInfoInSession(user, contractedOut = false))
+        } else if(spSummary.forecastOnlyFlag){
+          Ok(account_forecastonly(nino, spSummary, user)).withSession(storeUserInfoInSession(user, contractedOut = false))
         } else {
           val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
           Ok(account(nino, spSummary, user, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart))
             .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
-
         }
+
       case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) =>
         metricsService.exclusion(spExclusions.spExclusions)
 

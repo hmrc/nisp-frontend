@@ -23,7 +23,7 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 
 object AccountAccessEvent {
   def apply(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal, statePensionForecast: BigDecimal,
-            dateOfBirth: NpsDate, name: Option[String], contractedOutFlag: Boolean = false, abTest: Option[ABTest],
+            dateOfBirth: NpsDate, name: Option[String], contractedOutFlag: Boolean = false, forecastOnlyFlag: Boolean = false, abTest: Option[ABTest],
             copeAmount: BigDecimal)(implicit hc: HeaderCarrier): AccountAccessEvent =
     new AccountAccessEvent(
       nino,
@@ -34,12 +34,13 @@ object AccountAccessEvent {
       dateOfBirth,
       name.getOrElse("N/A"),
       contractedOutFlag,
+      forecastOnlyFlag,
       abTest,
       copeAmount
     )
 }
 class AccountAccessEvent(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal,
-                         statePensionForecast: BigDecimal, dateOfBirth: NpsDate, name: String, contractedOutFlag: Boolean,
+                         statePensionForecast: BigDecimal, dateOfBirth: NpsDate, name: String, contractedOutFlag: Boolean, forecastOnlyFlag: Boolean,
                          abTest: Option[ABTest], copeAmount: BigDecimal)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("AccountPage",
     Map(
@@ -51,6 +52,7 @@ class AccountAccessEvent(nino: String, contextMessage: Option[SPContextMessage],
       "DateOfBirth" -> dateOfBirth.toNpsString,
       "Name" -> name,
       "ContractedOut" -> contractedOutFlag.toString,
+      "ForecastOnly" -> forecastOnlyFlag.toString,
       "ABTest" -> abTest.map(_.toString).getOrElse("None"),
       "COPEAmount" -> copeAmount.toString()
     )

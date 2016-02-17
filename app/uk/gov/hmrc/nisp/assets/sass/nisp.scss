@@ -55,10 +55,6 @@ $background-error-message:rgba(223,48,52,0.05);
   margin-bottom: 0;
 }
 
-.heading-medium {
-  margin-top: 0.5em;
-}
-
 div.panel-indent{
   margin: 30px 15px 45px 0;
 }
@@ -181,6 +177,12 @@ h1.title-spa {
     margin-top: 0; 
   }
 }
+
+.forecastonly-heading {
+    margin-top: 2em !important
+}
+
+
 
 /*------------------------------------*\
     #Exception Errors
