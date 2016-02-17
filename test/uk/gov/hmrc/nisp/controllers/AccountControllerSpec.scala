@@ -74,12 +74,12 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           contentAsString(result) should include ("Your estimate is the most you can get")
       }
 
-      "redirect to the IDA Login" in {
+      "redirect to the Verify Login" in {
         val result = MockAccountController.show().apply(fakeRequest)
         redirectLocation(result).get.equals(AuthUrlConfig.idaSignIn) shouldBe true
       }
 
-      "redirect to the IDA Login, for session ID NOSESSION" in {
+      "redirect to the Verify Login, for session ID NOSESSION" in {
         val result = MockAccountController.show().apply(fakeRequest.withSession(
           SessionKeys.sessionId -> "NOSESSION"
         ))

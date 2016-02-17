@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.nisp.auth.IDAProvider
+import uk.gov.hmrc.nisp.auth.VerifyProvider
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.play.frontend.auth._
@@ -40,7 +40,7 @@ trait AuthorisedForNisp extends Actions {
 
   implicit private def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
 
-  object AuthorisedByIda {
+  object AuthorisedByVerify {
     val authedBy: AuthenticatedBy = AuthorisedFor(NispRegime, VerifyConfidence)
     def async(action: AsyncUserRequest): Action[AnyContent] = {
       if (!npsAvailabilityChecker.isNPSAvailable) {
@@ -81,6 +81,6 @@ trait AuthorisedForNisp extends Actions {
 
   object NispRegime extends TaxRegime {
     override def isAuthorised(accounts: Accounts): Boolean = accounts.paye.isDefined
-    override def authenticationType: AuthenticationProvider = IDAProvider
+    override def authenticationType: AuthenticationProvider = VerifyProvider
   }
 }

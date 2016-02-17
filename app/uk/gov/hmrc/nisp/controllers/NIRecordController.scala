@@ -43,7 +43,7 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
   def showFull: Action[AnyContent] = show(niGaps = false)
   def showGaps: Action[AnyContent] = show(niGaps = true)
 
-  private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByIda.async {
+  private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByVerify.async {
     implicit user => implicit request =>
       val nino = user.nino.getOrElse("")
       nispConnector.connectToGetNIResponse(nino).map {
@@ -64,11 +64,11 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
       }
   }
 
-  def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByIda { implicit user => implicit request =>
+  def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
     Ok(nirecordGapsAndHowToCheckThem(user))
   }
 
-  def showVoluntaryContributions: Action[AnyContent] = AuthorisedByIda { implicit user => implicit request =>
+  def showVoluntaryContributions: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
     Ok(nirecordVoluntaryContributions(user))
   }
 }
