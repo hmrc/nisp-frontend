@@ -46,6 +46,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdContractedOut = "/auth/oid/mockcontractedout"
   val mockUserIdBlank = "/auth/oid/mockblank"
   val mockUserIdMQP = "/auth/oid/mockmqp"
+  val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
 
   lazy val fakeRequest = FakeRequest()
   private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
@@ -66,6 +67,11 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       "return 303 to the account page" in {
         val result = MockAccountController.show().apply(fakeRequest)
         status(result) shouldBe Status.SEE_OTHER
+      }
+
+      "return the account-forecastonly page" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          contentAsString(result) should include ("Your estimate is the most you can get")
       }
 
       "redirect to the IDA Login" in {
@@ -238,9 +244,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
         forecastChart.width shouldBe 30
       }
     }
-
-
-
 
   }
 }

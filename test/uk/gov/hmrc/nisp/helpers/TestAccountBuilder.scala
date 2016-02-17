@@ -31,6 +31,7 @@ object TestAccountBuilder {
   val excludedNino: String = randomNino
   val regularNino: String = randomNino
   val mqpNino: String = randomNino
+  val forecastOnlyNino: String = randomNino
   val contractedOutBTestNino: String = randomNino.replaceAll("[02468]", "1")
   val fullUserNino: String = randomNino
   val blankNino: String = randomNino
@@ -43,6 +44,7 @@ object TestAccountBuilder {
     excludedNino -> "excluded",
     regularNino -> "regular",
     mqpNino -> "mqp",
+    forecastOnlyNino -> "forecastonly",
     contractedOutBTestNino -> "contractedout",
     fullUserNino ->  "fulluser",
     blankNino ->  "blank",
