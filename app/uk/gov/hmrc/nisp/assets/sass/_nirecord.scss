@@ -23,12 +23,12 @@
   width: 35%;
 }
 
-.ni-full{
+.ni-full, .inactive {
   float: right;
   width:75%;
   @media only screen and (max-width: 640px) {
       width: 65%;
-    }
+  }
 }
 
 .contributions-wrapper {
