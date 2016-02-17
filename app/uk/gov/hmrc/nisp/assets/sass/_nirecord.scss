@@ -20,7 +20,15 @@
 
 .ni-notfull {
   float: left;
-  width: 35%;  
+  width: 35%;
+}
+
+.ni-full{
+  float: right;
+  width:75%;
+  @media only screen and (max-width: 640px) {
+      width: 65%;
+    }
 }
 
 .contributions-wrapper {
