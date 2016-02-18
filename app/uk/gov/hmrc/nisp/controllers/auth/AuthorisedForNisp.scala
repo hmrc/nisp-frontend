@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.nisp.auth.VerifyProvider
+import uk.gov.hmrc.nisp.auth.{GovernmentGatewayProvider, VerifyProvider}
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.play.frontend.auth._
