@@ -16,27 +16,25 @@
 
 package uk.gov.hmrc.nisp.auth
 
-import play.api.mvc.Results.Redirect
+import java.net.URLEncoder
+
 import play.api.mvc._
+import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.play.frontend.auth.GovernmentGateway
 import uk.gov.hmrc.nisp.controllers.routes
-import uk.gov.hmrc.play.frontend.auth.Verify
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
 
-object VerifyProvider extends Verify {
-  override def redirectToLogin(implicit request: Request[_]): Future[FailureResult] = {
-    Future.successful(Redirect(login).withSession(
-      SessionKeys.redirect -> ApplicationConfig.postSignInRedirectUrl,
-      SessionKeys.loginOrigin -> "YSP"
-    ))
+object GovernmentGatewayProvider extends GovernmentGateway {
+
+  private lazy val ggSignInUrl = {
+    val encodedUrl = URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")
+    s"${ApplicationConfig.governmentGateway}/gg/sign-in?continue=$encodedUrl&accountType=individual"
   }
 
-  override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] = {
+  override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] =
     Future.successful(Redirect(routes.AccountController.timeout().url))
-  }
 
-  override def login: String = ApplicationConfig.verifySignIn
+  override def login: String = ggSignInUrl
 }

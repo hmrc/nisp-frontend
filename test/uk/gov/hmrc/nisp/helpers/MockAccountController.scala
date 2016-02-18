@@ -49,5 +49,8 @@ trait MockAccountController extends AccountController {
     override val reportAProblemPartialUrl: String = ""
     override val showGovUkDonePage: Boolean = true
     override val govUkFinishedPageUrl: String = "govukdone"
+    override val citizenAuthHost: String = ""
+    override val governmentGateway: String = ""
+    override val postSignInRedirectUrl: String = ""
   }
 }
