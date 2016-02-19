@@ -44,6 +44,7 @@ nisp.main.cope = What affects it
 nisp.main.currentvalue=Current Value
 nisp.main.today = Today, the amount of your State Pension is
 nisp.main.h2.title = Breakdown
+nisp.main.forecastonly.h2.title = Your estimate is the most you can get
 nisp.main.week = a week
 nisp.main.month = a month
 nisp.main.year = a year
@@ -51,6 +52,7 @@ nisp.main.equivalent = This is equal to:
 nisp.main.thisAmount = The amount shown is not a guarantee and is based on your National Insurance record up to {0}.
 
 nisp.main.guarantee = Your estimate is based on the current law. The amount shown is not a guarantee and is based on your National Insurance record using the latest complete tax year available, 5 April {0}. The forecast assumes National Insurance contributions are added to your record for future years until you cannot increase your State Pension any further. It does not include any increase due to inflation.
+nisp.main.guarantee.forecastonly = Your estimate is based on the current law. The amount shown is not a guarantee and is based on your National Insurance record using the latest complete tax year available, 5 April {0}. It does not include any increase due to inflation.
 nisp.main.psod = It does not include the pension sharing order you have in effect.
 nisp.main.whenYoullBe = when you''ll be
 nisp.main.after = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
@@ -100,6 +102,7 @@ nisp.main.context.improve.para1.dorothy.plural = You have years on your National
 nisp.main.context.improve.para1.dorothy.singular = You have a year on your National Insurance record which does not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
 
 nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
+nisp.main.context.forecastonly.para1 = You still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
 
 nisp.main.context.improve.para1.priya.plural = You have years on your National Insurance record which do not count towards your State Pension. You cannot improve your forecast by filling them.
 nisp.main.context.improve.para1.priya.singular = You have a year on your National Insurance record which does not count towards your State Pension. You cannot improve your forecast by filling it.

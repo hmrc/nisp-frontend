@@ -35,6 +35,7 @@ case class SPSummaryModel( nino: String,
                            forecastAmount:SPAmountModel,
                            fullNewStatePensionAmount: BigDecimal,
                            contractedOutFlag: Boolean,
+                           forecastOnlyFlag:Boolean,
                            customerAge: Int,
                            copeAmount: SPAmountModel)
 
