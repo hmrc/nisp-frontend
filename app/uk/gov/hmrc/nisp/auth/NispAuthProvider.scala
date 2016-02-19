@@ -16,14 +16,13 @@
 
 package uk.gov.hmrc.nisp.auth
 
-import play.api.Play.current
-import play.api.Play
-import uk.gov.hmrc.play.config.RunMode
+import play.api.mvc.Request
+import uk.gov.hmrc.play.frontend.auth.{GovernmentGateway, Verify, AnyAuthenticationProvider}
 
-object AuthUrlConfig extends RunMode {
-  val citizenAuthHost: String = Play.current.configuration.getString(s"citizen-auth.host").getOrElse("")
+object NispAuthProvider extends AnyAuthenticationProvider {
+  override def ggwAuthenticationProvider: GovernmentGateway = GovernmentGatewayProvider
 
-  def idaSignIn: String = s"$citizenAuthHost/ida/login"
+  override def verifyAuthenticationProvider: Verify = VerifyProvider
 
-  val postSignInRedirectUrl: Option[String] = Play.configuration.getString(s"login-callback.url")
+  override def login: String = ???
 }

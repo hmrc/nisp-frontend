@@ -25,7 +25,6 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.auth.AuthUrlConfig
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, TestAccountBuilder, MockCitizenDetailsService, MockAccountController}
 import uk.gov.hmrc.nisp.models.SPAmountModel
@@ -74,16 +73,16 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           contentAsString(result) should include ("Your estimate is the most you can get")
       }
 
-      "redirect to the IDA Login" in {
+      "redirect to the Verify Login" in {
         val result = MockAccountController.show().apply(fakeRequest)
-        redirectLocation(result).get.equals(AuthUrlConfig.idaSignIn) shouldBe true
+        redirectLocation(result).get.equals(ApplicationConfig.verifySignIn) shouldBe true
       }
 
-      "redirect to the IDA Login, for session ID NOSESSION" in {
+      "redirect to the Verify Login, for session ID NOSESSION" in {
         val result = MockAccountController.show().apply(fakeRequest.withSession(
           SessionKeys.sessionId -> "NOSESSION"
         ))
-        redirectLocation(result).get.equals(AuthUrlConfig.idaSignIn) shouldBe true
+        redirectLocation(result).get.equals(ApplicationConfig.verifySignIn) shouldBe true
       }
 
       "return 200, create an authenticated session" in {
@@ -176,6 +175,9 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val analyticsToken: Option[String] = None
             override val betaFeedbackUrl: String = ""
             override val reportAProblemPartialUrl: String = ""
+            override val citizenAuthHost: String = ""
+            override val postSignInRedirectUrl: String = ""
+            override val governmentGateway: String = ""
           }
         }
         val result = controller.signOut(fakeRequest)
@@ -199,6 +201,9 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val analyticsToken: Option[String] = None
             override val betaFeedbackUrl: String = ""
             override val reportAProblemPartialUrl: String = ""
+            override val citizenAuthHost: String = ""
+            override val postSignInRedirectUrl: String = ""
+            override val governmentGateway: String = ""
           }
         }
         val result = controller.signOut(fakeRequest)
