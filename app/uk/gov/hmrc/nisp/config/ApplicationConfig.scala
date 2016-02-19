@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nisp.config
 
+import java.net.{URLEncoder, URI}
+
 import play.api.Play._
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -38,6 +40,8 @@ trait ApplicationConfig {
   val postSignInRedirectUrl: String
   val governmentGateway: String
   val verifySignIn = s"$citizenAuthHost/ida/login"
+  val ivService: String
+  val ivUpliftURI: URI = new URI(s"$ivService/mdtp/uplift?origin=NISP&completionURL=${URLEncoder.encode("http://localhost:9234/checkmystatepension/account", "UTF-8")}&failureURL=${URLEncoder.encode("http://xkcd.com", "UTF-8")}&confidenceLevel=200")
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -65,4 +69,5 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host").getOrElse("")
   override lazy val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse(routes.AccountController.show().url)
   override lazy val governmentGateway: String = baseUrl(s"government-gateway")
+  override lazy val ivService: String = baseUrl(s"identity-verification")
 }
