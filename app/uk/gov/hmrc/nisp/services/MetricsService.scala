@@ -24,7 +24,7 @@ import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
 import uk.gov.hmrc.nisp.models.enums.SPExclusion.SPExclusion
 
 trait MetricsService {
-  def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage], contractedOutFlag: Boolean, age: Int, abTest: Option[ABTest])
+  def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage], contractedOutFlag: Boolean, forecastOnlyFlag: Boolean, age: Int, abTest: Option[ABTest])
   def niRecord(gaps: Int, payableGaps: Int, pre75Years: Int, qualifyingYears: Int, yearsUntilSPA: Int)
   def exclusion(exclusions: List[SPExclusion])
 }
@@ -34,6 +34,8 @@ object MetricsService extends MetricsService {
   val niRecordPageMeter = MetricsRegistry.defaultRegistry.meter("ni-record-page")
   val contractedOutMeter = MetricsRegistry.defaultRegistry.meter("contracted-out")
   val notContractedOutMeter = MetricsRegistry.defaultRegistry.meter("not-contracted-out")
+  val forecastOnlyMeter = MetricsRegistry.defaultRegistry.meter("forecast-only")
+  val notForecastOnlyMeter = MetricsRegistry.defaultRegistry.meter("not-forecast-only")
   val ageUpTo30 = MetricsRegistry.defaultRegistry.meter("age-upto-30")
   val age31To45 = MetricsRegistry.defaultRegistry.meter("age-31-to-45")
   val age46To55 = MetricsRegistry.defaultRegistry.meter("age-46-to-55")
@@ -98,12 +100,13 @@ object MetricsService extends MetricsService {
   val keystoreMissCounter = MetricsRegistry.defaultRegistry.counter("keystore-miss-counter")
 
   override def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage],
-                        contractedOutFlag: Boolean, age: Int, abTest: Option[ABTest]): Unit = {
+                        contractedOutFlag: Boolean, forecastOnlyFlag: Boolean, age: Int, abTest: Option[ABTest]): Unit = {
     mainPageMeter.mark()
     forecastAmountMeter.update(forecast.toInt)
     currentAmountMeter.update(current.toInt)
     scenario.foreach(scenarioMeters(_).mark())
     if(contractedOutFlag) contractedOutMeter.mark() else notContractedOutMeter.mark()
+    if(forecastOnlyFlag) forecastOnlyMeter.mark() else notForecastOnlyMeter.mark()
     mapToAgeMeter(age)
     abTest.foreach(mapToABTestMeter)
   }

@@ -3,7 +3,7 @@
     "nino": "<NINO>",
     "lastProcessedDate": "05/04/2014",
     "statePensionAmount": {
-      "week": 46.38,
+      "week": 80.38,
       "month": 201.67,
       "year": 2420.04
     },
@@ -26,7 +26,7 @@
     },
     "fullNewStatePensionAmount": 151.25,
     "contractedOutFlag": true,
-    "forecastOnlyFlag": false,
+    "forecastOnlyFlag": true,
     "customerAge": 61,
     "copeAmount": {
       "week": 50,
