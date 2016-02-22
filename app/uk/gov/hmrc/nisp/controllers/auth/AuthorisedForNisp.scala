@@ -42,8 +42,8 @@ trait AuthorisedForNisp extends Actions {
 
   implicit private def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
 
-  object AuthorisedByVerify {
-    val authedBy: AuthenticatedBy = AuthorisedFor(NispRegime, NispCompositePageVisibilityPredicate)
+  class AuthorisedBy(regime: TaxRegime) {
+    val authedBy: AuthenticatedBy = AuthorisedFor(regime, NispCompositePageVisibilityPredicate)
     def async(action: AsyncUserRequest): Action[AnyContent] = {
       if (!npsAvailabilityChecker.isNPSAvailable) {
         UnauthorisedAction(request => Redirect(routes.LandingController.showNpsUnavailable()))
@@ -59,6 +59,9 @@ trait AuthorisedForNisp extends Actions {
 
     def apply(action: UserRequest): Action[AnyContent] = async(user => request => Future.successful(action(user)(request)))
   }
+
+  object AuthorisedByAny extends AuthorisedBy(NispAnyRegime)
+  object AuthorisedByVerify extends AuthorisedBy(NispVerifyRegime)
 
   def retrieveName(authContext: AuthContext)(implicit request: Request[AnyContent]): Future[Option[String]] = {
     val nino = retrieveNino(authContext.principal)
@@ -81,8 +84,17 @@ trait AuthorisedForNisp extends Actions {
     }
   }
 
-  object NispRegime extends TaxRegime {
+  trait NispRegime extends TaxRegime {
     override def isAuthorised(accounts: Accounts): Boolean = accounts.paye.isDefined
-    override def authenticationType: AuthenticationProvider = GovernmentGatewayProvider
+    override def authenticationType: AuthenticationProvider = new AnyAuthenticationProvider {
+      override def ggwAuthenticationProvider: GovernmentGateway = GovernmentGatewayProvider
+      override def verifyAuthenticationProvider: Verify = VerifyProvider
+      override def login: String = GovernmentGatewayProvider.login
+    }
+  }
+
+  object NispAnyRegime extends NispRegime
+  object NispVerifyRegime extends NispRegime {
+    override def authenticationType: AuthenticationProvider = VerifyProvider
   }
 }

@@ -17,22 +17,30 @@
 package uk.gov.hmrc.nisp.controllers
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.services.NpsAvailabilityChecker
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{landing}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 
-import scala.concurrent.Future
-
 object LandingController extends LandingController {
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
+  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
 }
 
-trait LandingController extends FrontendController with Actions with AuthenticationConnectors {
+trait LandingController extends FrontendController with Actions with AuthenticationConnectors with AuthorisedForNisp {
   val npsAvailabilityChecker: NpsAvailabilityChecker
 
   def show: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(landing()).withNewSession)
 
   def showNpsUnavailable: Action[AnyContent] = UnauthorisedAction(implicit request => ServiceUnavailable(uk.gov.hmrc.nisp.views.html.npsUnavailable()))
+
+  def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
+    Redirect(routes.AccountController.show())
+  }
+
+  def ggSignIn: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
+    Redirect(routes.AccountController.show())
+  }
 }

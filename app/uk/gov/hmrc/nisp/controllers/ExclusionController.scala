@@ -35,7 +35,7 @@ object ExclusionController extends ExclusionController with AuthenticationConnec
 trait ExclusionController extends FrontendController with AuthorisedForNisp {
   val nispConnector: NispConnector
 
-  def show: Action[AnyContent] = AuthorisedByVerify.async { implicit user => implicit request =>
+  def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
     nispConnector.connectToGetSPResponse(nino).map{
       case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) => Ok(excluded(nino, spExclusions, user))
