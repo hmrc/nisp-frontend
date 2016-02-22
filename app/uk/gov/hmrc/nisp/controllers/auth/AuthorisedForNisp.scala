@@ -87,6 +87,7 @@ trait AuthorisedForNisp extends Actions {
   trait NispRegime extends TaxRegime {
     override def isAuthorised(accounts: Accounts): Boolean = accounts.paye.isDefined
     override def authenticationType: AuthenticationProvider = new AnyAuthenticationProvider {
+      override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] = GovernmentGatewayProvider.handleSessionTimeout
       override def ggwAuthenticationProvider: GovernmentGateway = GovernmentGatewayProvider
       override def verifyAuthenticationProvider: Verify = VerifyProvider
       override def login: String = GovernmentGatewayProvider.login
