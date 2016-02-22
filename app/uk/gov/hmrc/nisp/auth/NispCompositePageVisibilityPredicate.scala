@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.nisp.auth
 
-import uk.gov.hmrc.play.frontend.auth.{AnyAuthenticationProvider, GovernmentGateway, Verify}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
+import uk.gov.hmrc.play.frontend.auth.{UpliftingIdentityConfidencePredicate, PageVisibilityPredicate, CompositePageVisibilityPredicate}
 
-object NispAuthProvider extends AnyAuthenticationProvider {
-  override def ggwAuthenticationProvider: GovernmentGateway = GovernmentGatewayProvider
-
-  override def verifyAuthenticationProvider: Verify = VerifyProvider
-
-  override def login: String = ???
+object NispCompositePageVisibilityPredicate extends CompositePageVisibilityPredicate{
+  override def children: Seq[PageVisibilityPredicate] = Seq (
+    new UpliftingIdentityConfidencePredicate(L200, ApplicationConfig.ivUpliftURI),
+    new NispStrongCredentialPredicate(ApplicationConfig.twoFactorURI)
+  )
 }

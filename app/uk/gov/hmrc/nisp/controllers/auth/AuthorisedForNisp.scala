@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.nisp.auth.{GovernmentGatewayProvider, VerifyProvider}
+import uk.gov.hmrc.nisp.auth.{NispCompositePageVisibilityPredicate, GovernmentGatewayProvider, VerifyProvider}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
@@ -43,7 +43,7 @@ trait AuthorisedForNisp extends Actions {
   implicit private def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
 
   object AuthorisedByVerify {
-    val authedBy: AuthenticatedBy = AuthorisedFor(NispRegime, new UpliftingIdentityConfidencePredicate(L200, ApplicationConfig.ivUpliftURI))
+    val authedBy: AuthenticatedBy = AuthorisedFor(NispRegime, NispCompositePageVisibilityPredicate)
     def async(action: AsyncUserRequest): Action[AnyContent] = {
       if (!npsAvailabilityChecker.isNPSAvailable) {
         UnauthorisedAction(request => Redirect(routes.LandingController.showNpsUnavailable()))

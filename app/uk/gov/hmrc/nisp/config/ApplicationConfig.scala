@@ -42,6 +42,7 @@ trait ApplicationConfig {
   val verifySignIn = s"$citizenAuthHost/ida/login"
   val ivService: String
   val ivUpliftURI: URI = new URI(s"$ivService/mdtp/uplift?origin=NISP&completionURL=${URLEncoder.encode("http://localhost:9234/checkmystatepension/account", "UTF-8")}&failureURL=${URLEncoder.encode("http://xkcd.com", "UTF-8")}&confidenceLevel=200")
+  val twoFactorURI: URI = new URI(s"$governmentGateway/coafe/two-step-verification/register/?continue=${URLEncoder.encode("http://localhost:9234/checkmystatepension/account", "UTF-8")}&failure=${URLEncoder.encode("http://xkcd.com", "UTF-8")}")
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -68,6 +69,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host").getOrElse("")
   override lazy val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse(routes.AccountController.show().url)
-  override lazy val governmentGateway: String = baseUrl(s"government-gateway")
-  override lazy val ivService: String = baseUrl(s"identity-verification")
+  override lazy val governmentGateway: String = baseUrl("government-gateway")
+  override lazy val ivService: String = baseUrl("identity-verification")
 }
