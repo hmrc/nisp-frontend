@@ -39,8 +39,4 @@ trait LandingController extends FrontendController with Actions with Authenticat
   def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
     Redirect(routes.AccountController.show())
   }
-
-  def ggSignIn: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
-    Redirect(routes.AccountController.show())
-  }
 }
