@@ -47,7 +47,7 @@ object MockAuthConnector extends AuthConnector {
   )
 
   private def payeAuthority(id: String, nino: String): Option[Authority] =
-    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", Nino(nino)))), None, None,  CredentialStrength.Strong, L500))
+    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", Nino(nino)))), None, None, CredentialStrength.Strong, L500))
 
   override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] =
     Future(payeAuthority(hc.userId.getOrElse(mockUserId).value, usernameToNino(hc.userId.getOrElse(mockUserId))))
