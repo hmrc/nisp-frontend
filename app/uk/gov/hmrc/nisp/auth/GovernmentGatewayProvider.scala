@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.nisp.auth
 
-import java.net.URLEncoder
-
 import play.api.mvc._
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -27,14 +25,8 @@ import uk.gov.hmrc.nisp.controllers.routes
 import scala.concurrent.Future
 
 object GovernmentGatewayProvider extends GovernmentGateway {
-
-  private lazy val ggSignInUrl = {
-    val encodedUrl = URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")
-    s"${ApplicationConfig.governmentGateway}/gg/sign-in?continue=$encodedUrl&accountType=individual"
-  }
-
   override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] =
     Future.successful(Redirect(routes.AccountController.timeout().url))
 
-  override def login: String = ggSignInUrl
+  override def login: String = ApplicationConfig.ggSignInUrl
 }
