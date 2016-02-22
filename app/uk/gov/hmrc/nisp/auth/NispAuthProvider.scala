@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.nisp.auth
 
+import play.api.mvc.Request
 import uk.gov.hmrc.play.frontend.auth.{AnyAuthenticationProvider, GovernmentGateway, Verify}
+
+import scala.concurrent.Future
 
 object NispAuthProvider extends AnyAuthenticationProvider {
   override def ggwAuthenticationProvider: GovernmentGateway = GovernmentGatewayProvider
-
   override def verifyAuthenticationProvider: Verify = VerifyProvider
-
-  override def login: String = ???
+  override def login: String = GovernmentGatewayProvider.login
+  override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] = GovernmentGatewayProvider.handleSessionTimeout
 }
