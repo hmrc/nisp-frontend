@@ -16,13 +16,29 @@
 
 package uk.gov.hmrc.nisp.auth
 
+import java.net.{URLEncoder, URI}
+
+import uk.gov.hmrc.nisp.controllers.routes
+
+import play.api.mvc.Request
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
 import uk.gov.hmrc.play.frontend.auth.{UpliftingIdentityConfidencePredicate, PageVisibilityPredicate, CompositePageVisibilityPredicate}
 
 object NispCompositePageVisibilityPredicate extends CompositePageVisibilityPredicate {
   override def children: Seq[PageVisibilityPredicate] = Seq (
-    new NispStrongCredentialPredicate(ApplicationConfig.twoFactorURI),
-    new UpliftingIdentityConfidencePredicate(L200, ApplicationConfig.ivUpliftURI)
+    new NispStrongCredentialPredicate(twoFactorURI),
+    new UpliftingIdentityConfidencePredicate(L200, ivUpliftURI)
   )
+
+  private val ivUpliftURI: URI =
+    new URI(s"${ApplicationConfig.ivUpliftUrl}?origin=NISP&" +
+      s"completionURL=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
+      s"failureURL=${URLEncoder.encode(ApplicationConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
+      s"&confidenceLevel=200")
+
+  private val twoFactorURI: URI =
+    new URI(s"${ApplicationConfig.twoFactorUrl}?" +
+      s"continue=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
+      s"failure=${URLEncoder.encode(ApplicationConfig.notAuthorisedRedirectUrl, "UTF-8")}")
 }
