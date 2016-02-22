@@ -47,6 +47,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdBlank = "/auth/oid/mockblank"
   val mockUserIdMQP = "/auth/oid/mockmqp"
   val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
+  val mockUserIdWeak =  "/auth/oid/mockweak"
 
   lazy val fakeRequest = FakeRequest()
   private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
@@ -159,6 +160,16 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       "return page with MQP messaging for MQP user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdMQP))
         contentAsString(result) should include ("It may be possible for you to get some State Pension")
+      }
+
+      "redirect to 2FA when authentication is not strong" in {
+        val result = MockAccountController.show()(fakeRequest.withSession(
+          SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+          SessionKeys.userId -> mockUserIdWeak,
+          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+        ))
+        redirectLocation(result) shouldBe Some(ApplicationConfig.twoFactorURI.toString)
       }
     }
 

@@ -16,15 +16,21 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import java.util.UUID
+
 import org.joda.time.LocalDateTime
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.http._
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.MockCitizenDetailsService
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.time.DateTimeUtils._
 
 class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
 
@@ -66,6 +72,23 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
     "return service unavailable page" in {
       val result = LandingController.showNpsUnavailable(fakeRequest)
       contentAsString(result) should include ("The service is unavailable due to maintenance")
+    }
+  }
+
+  "GET /signin/verify" should {
+    "redirect to verify" in {
+      val result = LandingController.verifySignIn(fakeRequest)
+      redirectLocation(result) shouldBe Some(ApplicationConfig.verifySignIn)
+    }
+
+    "redirect to timeout page for last activity -15 minutes" in {
+      val result = LandingController.verifySignIn(fakeRequest.withSession(
+        SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+        SessionKeys.lastRequestTimestamp -> now.minusMinutes(15).getMillis.toString,
+        SessionKeys.userId -> "",
+        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+      ))
+      redirectLocation(result) shouldBe Some("/checkmystatepension/timeout")
     }
   }
 }

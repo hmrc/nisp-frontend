@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.nisp.auth.{NispCompositePageVisibilityPredicate, GovernmentGatewayProvider, VerifyProvider}
+import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredicate, GovernmentGatewayProvider, VerifyProvider}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
@@ -86,12 +86,7 @@ trait AuthorisedForNisp extends Actions {
 
   trait NispRegime extends TaxRegime {
     override def isAuthorised(accounts: Accounts): Boolean = accounts.paye.isDefined
-    override def authenticationType: AuthenticationProvider = new AnyAuthenticationProvider {
-      override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] = GovernmentGatewayProvider.handleSessionTimeout
-      override def ggwAuthenticationProvider: GovernmentGateway = GovernmentGatewayProvider
-      override def verifyAuthenticationProvider: Verify = VerifyProvider
-      override def login: String = GovernmentGatewayProvider.login
-    }
+    override def authenticationType: AuthenticationProvider = NispAuthProvider
   }
 
   object NispAnyRegime extends NispRegime
