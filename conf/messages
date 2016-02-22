@@ -344,3 +344,13 @@ nisp.cope.table.estimate.title=Your COPE estimate
 nisp.cope.table.pensionforecast=Your State Pension forecast
 nisp.cope.table.copeadded=COPE added to your State Pension forecast
 nisp.main.cope.linktitle=Find out more about <a href="https://www.gov.uk/contracted-out" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE estimate (opens in new tab)</a>.
+
+#**************************
+#  Not Authorised IV Messages
+#**************************
+
+nisp.notauthorised.title = We were unable to confirm your identity
+nisp.notauthorised.verify.heading = Using GOV.UK Verify
+nisp.notauthorised.verify.text = You can also <a href="{0}">sign in using GOV.UK Verify</a>. If you haven''t used GOV.UK Verify before, it will take you about 10 minutes to get set up.
+nisp.notauthorised.statement.heading = Other ways to get a statement
+nisp.notauthorised.statement.text = If you cannot use the online service contact the <a href="https://www.gov.uk/future-pension-centre">Future Pension centre</a>.

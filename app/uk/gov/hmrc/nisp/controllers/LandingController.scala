@@ -20,7 +20,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
-import uk.gov.hmrc.nisp.views.html.{landing}
+import uk.gov.hmrc.nisp.views.html.{landing, not_authorised}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 
@@ -39,4 +39,6 @@ trait LandingController extends FrontendController with Actions with Authenticat
   def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
     Redirect(routes.AccountController.show())
   }
+
+  def showNotAuthorised: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(not_authorised()))
 }
