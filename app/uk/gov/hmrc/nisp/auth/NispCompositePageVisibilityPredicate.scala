@@ -20,9 +20,9 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
 import uk.gov.hmrc.play.frontend.auth.{UpliftingIdentityConfidencePredicate, PageVisibilityPredicate, CompositePageVisibilityPredicate}
 
-object NispCompositePageVisibilityPredicate extends CompositePageVisibilityPredicate{
+object NispCompositePageVisibilityPredicate extends CompositePageVisibilityPredicate {
   override def children: Seq[PageVisibilityPredicate] = Seq (
-    new UpliftingIdentityConfidencePredicate(L200, ApplicationConfig.ivUpliftURI),
-    new NispStrongCredentialPredicate(ApplicationConfig.twoFactorURI)
+    new NispStrongCredentialPredicate(ApplicationConfig.twoFactorURI),
+    new UpliftingIdentityConfidencePredicate(L200, ApplicationConfig.ivUpliftURI)
   )
 }
