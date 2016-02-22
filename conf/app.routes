@@ -7,7 +7,6 @@ GET         /                                      uk.gov.hmrc.nisp.controllers.
 GET         /service-unavailable                   uk.gov.hmrc.nisp.controllers.LandingController.showNpsUnavailable
 
 GET         /signin/verify                         uk.gov.hmrc.nisp.controllers.LandingController.verifySignIn
-GET         /signin/gg                             uk.gov.hmrc.nisp.controllers.LandingController.ggSignIn
 
 GET         /account                               uk.gov.hmrc.nisp.controllers.AccountController.show
 GET         /signout                               uk.gov.hmrc.nisp.controllers.AccountController.signOut
