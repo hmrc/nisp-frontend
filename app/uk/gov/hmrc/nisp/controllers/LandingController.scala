@@ -40,5 +40,5 @@ trait LandingController extends FrontendController with Actions with Authenticat
     Redirect(routes.AccountController.show())
   }
 
-  def showNotAuthorised: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(not_authorised()))
+  def showNotAuthorised: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(not_authorised()).withNewSession)
 }

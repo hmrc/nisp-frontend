@@ -34,6 +34,8 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockFullUserId = "/auth/oid/mockfulluser"
   val mockBlankUserId = "/auth/oid/mockblank"
 
+  val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
+
   lazy val fakeRequest = FakeRequest()
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -45,7 +47,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord/gaps (gaps)" should {
     "return redirect for unauthenticated user" in {
       val result = MockNIRecordController.showGaps(fakeRequest)
-      redirectLocation(result) shouldBe Some(ApplicationConfig.ggSignInUrl)
+      redirectLocation(result) shouldBe Some(ggSignInUrl)
     }
 
     "return gaps page for user with gaps" in {
@@ -69,7 +71,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord (full)" should {
     "return redirect for unauthenticated user" in {
       val result = MockNIRecordController.showFull(fakeRequest)
-      redirectLocation(result) shouldBe Some(ApplicationConfig.ggSignInUrl)
+      redirectLocation(result) shouldBe Some(ggSignInUrl)
     }
 
     "return gaps page for user with gaps" in {
@@ -86,7 +88,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord/gapsandhowtocheck" should {
     "return redirect for unauthenticated user" in {
       val result = MockNIRecordController.showGapsAndHowToCheckThem(fakeRequest)
-      redirectLocation(result) shouldBe Some(ApplicationConfig.ggSignInUrl)
+      redirectLocation(result) shouldBe Some(ggSignInUrl)
     }
 
     "return how to check page for authenticated user" in {
@@ -98,7 +100,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord/voluntarycontribs" should {
     "return redirect for unauthenticated user" in {
       val result = MockNIRecordController.showVoluntaryContributions(fakeRequest)
-      redirectLocation(result) shouldBe Some(ApplicationConfig.ggSignInUrl)
+      redirectLocation(result) shouldBe Some(ggSignInUrl)
     }
 
     "return how to check page for authenticated user" in {

@@ -53,5 +53,6 @@ trait MockAccountController extends AccountController {
     override val governmentGateway: String = ""
     override val postSignInRedirectUrl: String = ""
     override val ivService: String = ""
+    override val notAuthorisedRedirectUrl: String = ""
   }
 }
