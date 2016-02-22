@@ -22,7 +22,8 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.http._
-import uk.gov.hmrc.nisp.services.NpsAvailabilityChecker
+import uk.gov.hmrc.nisp.helpers.MockCitizenDetailsService
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
@@ -33,6 +34,7 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
     override val npsAvailabilityChecker: NpsAvailabilityChecker = new NpsAvailabilityChecker {
       override def now: LocalDateTime = testNow
     }
+    override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
   }
 
   "GET /" should {

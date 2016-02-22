@@ -22,6 +22,7 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.helpers.{MockExclusionController, MockAccountController}
+import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
@@ -38,7 +39,8 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = MockExclusionController.show()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-        SessionKeys.userId -> mockUserIdExcluded
+        SessionKeys.userId -> mockUserIdExcluded,
+        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
 
       contentAsString(result).contains("You will have reached State Pension age before the new scheme starts.") shouldBe true
@@ -49,7 +51,8 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = MockExclusionController.show()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-        SessionKeys.userId -> mockUserId
+        SessionKeys.userId -> mockUserId,
+        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
 
       redirectLocation(result) shouldBe Some("/checkmystatepension/account")
