@@ -34,9 +34,5 @@ object VerifyProvider extends Verify {
     ))
   }
 
-  override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] = {
-    Future.successful(Redirect(routes.AccountController.timeout().url))
-  }
-
   override def login: String = ApplicationConfig.verifySignIn
 }

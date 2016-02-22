@@ -80,15 +80,12 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = LandingController.verifySignIn(fakeRequest)
       redirectLocation(result) shouldBe Some(ApplicationConfig.verifySignIn)
     }
+  }
 
-    "redirect to timeout page for last activity -15 minutes" in {
-      val result = LandingController.verifySignIn(fakeRequest.withSession(
-        SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> now.minusMinutes(15).getMillis.toString,
-        SessionKeys.userId -> "",
-        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
-      ))
-      redirectLocation(result) shouldBe Some("/checkmystatepension/timeout")
+  "GET /not-authorised" should {
+    "show not authorised page" in {
+      val result = LandingController.showNotAuthorised(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
     }
   }
 }
