@@ -16,21 +16,16 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.util.UUID
-
 import org.joda.time.LocalDateTime
 import org.scalatestplus.play.OneAppPerSuite
+import play.api.http._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.http._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers.MockCitizenDetailsService
+import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, MockCitizenDetailsService}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.time.DateTimeUtils._
 
 class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
 
@@ -66,6 +61,34 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = LandingController.show(fakeRequest)
       val buttonText = Messages("nisp.continue")
       contentAsString(result) should include (s"$buttonText</a>")
+    }
+
+    "return IVLanding page" in {
+      val result = new LandingController {
+        override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+          override val citizenAuthHost: String = ""
+          override val assetsPrefix: String = ""
+          override val reportAProblemNonJSUrl: String = ""
+          override val ssoUrl: Option[String] = None
+          override val identityVerification: Boolean = true
+          override val betaFeedbackUnauthenticatedUrl: String = ""
+          override val notAuthorisedRedirectUrl: String = ""
+          override val ivService: String = ""
+          override val contactFrontendPartialBaseUrl: String = ""
+          override val govUkFinishedPageUrl: String = ""
+          override val showGovUkDonePage: Boolean = false
+          override val excludeCopeTab: Boolean = true
+          override val analyticsHost: String = ""
+          override val betaFeedbackUrl: String = ""
+          override val analyticsToken: Option[String] = None
+          override val reportAProblemPartialUrl: String = ""
+          override val governmentGateway: String = ""
+          override val postSignInRedirectUrl: String = ""
+        }
+      }.show(fakeRequest)
+      contentAsString(result) should include ("You need to sign in to use this service")
     }
   }
 

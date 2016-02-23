@@ -49,8 +49,8 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
   val mockUserIdWeak =  "/auth/oid/mockweak"
 
-  val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
-  val twoFactorUrl = s"http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Fnot-authorised"
+  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
+  val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Fnot-authorised"
 
   lazy val fakeRequest = FakeRequest()
   private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
@@ -80,15 +80,44 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       }
 
       "redirect to the GG Login" in {
-        val result = MockAccountController.show().apply(fakeRequest)
-        redirectLocation(result).get.equals(ggSignInUrl) shouldBe true
+        val result = MockAccountController.show(fakeRequest)
+        redirectLocation(result) shouldBe Some(ggSignInUrl)
       }
 
-      "redirect to the Verify Login, for session ID NOSESSION" in {
+      "redirect to Verify with IV disabled" in {
+        val controller = new MockAccountController {
+          override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+            override val assetsPrefix: String = ""
+            override val reportAProblemNonJSUrl: String = ""
+            override val ssoUrl: Option[String] = None
+            override val betaFeedbackUnauthenticatedUrl: String = ""
+            override val contactFrontendPartialBaseUrl: String = ""
+            override val govUkFinishedPageUrl: String = "govukdone"
+            override val excludeCopeTab: Boolean = false
+            override val showGovUkDonePage: Boolean = false
+            override val analyticsHost: String = ""
+            override val analyticsToken: Option[String] = None
+            override val betaFeedbackUrl: String = ""
+            override val reportAProblemPartialUrl: String = ""
+            override val citizenAuthHost: String = ""
+            override val postSignInRedirectUrl: String = ""
+            override val governmentGateway: String = ""
+            override val ivService: String = ""
+            override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = false
+          }
+        }
+        val result = controller.show(fakeRequest)
+        redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
+      }
+
+      "redirect to the GG Login, for session ID NOSESSION" in {
         val result = MockAccountController.show().apply(fakeRequest.withSession(
           SessionKeys.sessionId -> "NOSESSION"
         ))
-        redirectLocation(result).get.equals(ggSignInUrl) shouldBe true
+        redirectLocation(result) shouldBe Some(ggSignInUrl)
       }
 
       "return 200, create an authenticated session" in {
