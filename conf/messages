@@ -26,8 +26,8 @@ nisp.continue = Continue
 nisp.landing.title = Check your State Pension
 nisp.landing.intro = Check how much pension you can get based on your National Insurance record.
 nisp.landing.signin.heading = You need to sign in to use this service
-nisp.landing.signin.gg = You can <a href="{0}" data-journey-click="checkmystatepension:landing:ivlink">sign in using the Government Gateway</a>. You may need to answer a few questions – they’ll be based on things HMRC already know about you.
-nisp.landing.signin.verify = You can also <a href="{0}" data-journey-click="checkmystatepension:landing:verifylink">sign in using GOV.UK Verify</a>. If you haven’t used GOV.UK Verify before, it will take you about 10 minutes to get set up.
+nisp.landing.signin.gg = You can <a href="{0}" data-journey-click="checkmystatepension:landing:ivlink">sign in using the Government Gateway</a>. You may need to answer a few questions – they''ll be based on things HMRC already know about you.
+nisp.landing.signin.verify = You can also <a href="{0}" data-journey-click="checkmystatepension:landing:verifylink">sign in using GOV.UK Verify</a>. If you haven''t used GOV.UK Verify before, it will take you about 10 minutes to get set up.
 nisp.landing.sidebar.heading = Elsewhere on GOV.UK
 nisp.landing.sidebar.link1 = <a href="https://www.gov.uk/plan-retirement-income/overview" rel="external" data-journey-click="checkmystatepension:external:landingsidebarlink">Plan your retirement income</a>
 nisp.landing.estimateprovided = This estimate is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
