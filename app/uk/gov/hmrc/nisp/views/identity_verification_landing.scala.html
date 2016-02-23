@@ -1,0 +1,41 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.nisp.controllers.routes
+
+@()(implicit request: Request[_])
+
+@sidebar = {
+<div class="sidebar-border" >
+    <h2 aria-hidden="true">@Messages("nisp.landing.sidebar.heading")</h2>
+    <p>@Html(Messages("nisp.landing.sidebar.link1"))</p>
+</div>
+}
+
+@nispMain(pageTitle = Some(Messages("nisp.landing.title")),h1Classes=Some("welcome-msg"),sidebarLinks = Some(sidebar)) {
+
+<p class="lede">@Messages("nisp.landing.intro")</p>
+<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+
+<h2 class="heading-medium">@Messages("nisp.landing.signin.heading")</h2>
+
+<p>@Html(Messages("nisp.landing.signin.gg",routes.AccountController.show.url))</p>
+<p>@Html(Messages("nisp.landing.signin.verify",routes.LandingController.verifySignIn.url))</p>
+
+<a id="continue" href='@routes.AccountController.show.url' data-journey-click="checkmystatepension:landing:continue" role="button" tabindex="0" class="button">@Messages("nisp.continue")</a>
+
+}

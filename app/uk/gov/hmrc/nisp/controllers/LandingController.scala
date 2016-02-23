@@ -21,7 +21,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
-import uk.gov.hmrc.nisp.views.html.{landing, not_authorised}
+import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing, not_authorised}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 
@@ -34,7 +34,14 @@ object LandingController extends LandingController {
 trait LandingController extends FrontendController with Actions with AuthenticationConnectors with AuthorisedForNisp {
   val npsAvailabilityChecker: NpsAvailabilityChecker
 
-  def show: Action[AnyContent] = UnauthorisedAction(implicit request => Ok(landing()).withNewSession)
+  def show: Action[AnyContent] = UnauthorisedAction(
+    implicit request =>
+      if(applicationConfig.identityVerification) {
+        Ok(identity_verification_landing()).withNewSession
+      } else {
+        Ok(landing()).withNewSession
+      }
+  )
 
   def showNpsUnavailable: Action[AnyContent] = UnauthorisedAction(implicit request => ServiceUnavailable(uk.gov.hmrc.nisp.views.html.npsUnavailable()))
 
