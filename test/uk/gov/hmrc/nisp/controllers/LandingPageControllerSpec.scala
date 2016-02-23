@@ -41,6 +41,7 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
       override def now: LocalDateTime = testNow
     }
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+    override val applicationConfig: ApplicationConfig = ApplicationConfig
   }
 
   "GET /" should {

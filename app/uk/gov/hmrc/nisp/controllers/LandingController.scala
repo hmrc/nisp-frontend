@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
@@ -27,6 +28,7 @@ import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAct
 object LandingController extends LandingController {
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
+  override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
 trait LandingController extends FrontendController with Actions with AuthenticationConnectors with AuthorisedForNisp {

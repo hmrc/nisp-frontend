@@ -36,6 +36,7 @@ trait ApplicationConfig {
   val excludeCopeTab: Boolean
   val showGovUkDonePage: Boolean
   val govUkFinishedPageUrl: String
+  val identityVerification: Boolean
   val citizenAuthHost: String
   val postSignInRedirectUrl: String
   val notAuthorisedRedirectUrl: String
@@ -68,6 +69,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val excludeCopeTab: Boolean = configuration.getBoolean(s"microservice.services.exclusions.copetab").getOrElse(true)
   override val showGovUkDonePage: Boolean = configuration.getBoolean("govuk-done-page.enabled").getOrElse(true)
   override val govUkFinishedPageUrl: String = loadConfig("govuk-done-page.url")
+  override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
 
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host").getOrElse("")
   override lazy val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse("")

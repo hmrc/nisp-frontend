@@ -54,5 +54,6 @@ trait MockAccountController extends AccountController {
     override val postSignInRedirectUrl: String = ""
     override val ivService: String = ""
     override val notAuthorisedRedirectUrl: String = ""
+    override val identityVerification: Boolean = true
   }
 }
