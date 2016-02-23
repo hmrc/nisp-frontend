@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import play.api.Logger
 import play.api.mvc.{AnyContent, Action}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
@@ -30,6 +31,7 @@ object ExclusionController extends ExclusionController with AuthenticationConnec
   override val nispConnector: NispConnector = NispConnector
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
+  override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
 trait ExclusionController extends FrontendController with AuthorisedForNisp {

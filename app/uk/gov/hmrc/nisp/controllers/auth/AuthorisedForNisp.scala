@@ -34,6 +34,7 @@ import scala.concurrent.Future
 trait AuthorisedForNisp extends Actions {
   val citizenDetailsService: CitizenDetailsService
   val npsAvailabilityChecker: NpsAvailabilityChecker
+  val applicationConfig: ApplicationConfig
 
   private type PlayRequest = Request[AnyContent] => Result
   private type UserRequest = NispUser => PlayRequest
@@ -43,7 +44,14 @@ trait AuthorisedForNisp extends Actions {
   implicit private def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
 
   class AuthorisedBy(regime: TaxRegime) {
-    val authedBy: AuthenticatedBy = AuthorisedFor(regime, NispCompositePageVisibilityPredicate)
+    val authedBy: AuthenticatedBy = {
+      if(applicationConfig.identityVerification) {
+        AuthorisedFor(regime, NispCompositePageVisibilityPredicate)
+      } else {
+        AuthorisedFor(NispVerifyRegime, VerifyConfidence)
+      }
+    }
+
     def async(action: AsyncUserRequest): Action[AnyContent] = {
       if (!npsAvailabilityChecker.isNPSAvailable) {
         UnauthorisedAction(request => Redirect(routes.LandingController.showNpsUnavailable()))

@@ -199,6 +199,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val governmentGateway: String = ""
             override val ivService: String = ""
             override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = false
           }
         }
         val result = controller.signOut(fakeRequest)
@@ -227,6 +228,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val governmentGateway: String = ""
             override val ivService: String = ""
             override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = false
           }
         }
         val result = controller.signOut(fakeRequest)

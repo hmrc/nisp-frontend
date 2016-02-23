@@ -43,6 +43,7 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
 
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
+  override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
 trait FeedbackController extends FrontendController with Actions with AuthorisedForNisp {
