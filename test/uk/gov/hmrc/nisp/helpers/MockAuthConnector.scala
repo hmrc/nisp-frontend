@@ -30,9 +30,7 @@ object MockAuthConnector extends AuthConnector {
   override val serviceUrl: String = ""
   override def http: HttpGet = ???
 
-  val mockUserNino = TestAccountBuilder.regularNino
-  val mockUsername = "mockuser"
-  val mockUserId = userID(mockUsername)
+  val mockUserId = userID("mockuser")
 
   def userID(username: String): UserId = UserId(s"/auth/oid/$username")
 
@@ -43,11 +41,15 @@ object MockAuthConnector extends AuthConnector {
     userID("mockblank") -> TestAccountBuilder.blankNino,
     userID("mockcontractedout") -> TestAccountBuilder.contractedOutBTestNino,
     userID("mockmqp") -> TestAccountBuilder.mqpNino,
-    userID("mockforecastonly") -> TestAccountBuilder.forecastOnlyNino
+    userID("mockforecastonly") -> TestAccountBuilder.forecastOnlyNino,
+    userID("mockweak") -> TestAccountBuilder.weakNino
   )
 
   private def payeAuthority(id: String, nino: String): Option[Authority] =
-    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", Nino(nino)))), None, None,  CredentialStrength.Strong, L500))
+    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", Nino(nino)))), None, None, testCredentialStrength(nino), L500))
+
+  private def testCredentialStrength(nino: String): CredentialStrength =
+    if (nino == TestAccountBuilder.weakNino) CredentialStrength.Weak else CredentialStrength.Strong
 
   override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] =
     Future(payeAuthority(hc.userId.getOrElse(mockUserId).value, usernameToNino(hc.userId.getOrElse(mockUserId))))

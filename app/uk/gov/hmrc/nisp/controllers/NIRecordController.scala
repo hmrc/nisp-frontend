@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.Logger
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
@@ -26,7 +26,6 @@ import uk.gov.hmrc.nisp.models.{NIRecord, NIResponse, NISummary}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-
 import scala.concurrent.Future
 
 object NIRecordController extends NIRecordController with AuthenticationConnectors {
@@ -34,6 +33,7 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
   override val metricsService: MetricsService = MetricsService
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
+  override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
 trait NIRecordController extends FrontendController with AuthorisedForNisp {
@@ -43,7 +43,7 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
   def showFull: Action[AnyContent] = show(niGaps = false)
   def showGaps: Action[AnyContent] = show(niGaps = true)
 
-  private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByVerify.async {
+  private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user => implicit request =>
       val nino = user.nino.getOrElse("")
       nispConnector.connectToGetNIResponse(nino).map {
@@ -64,11 +64,11 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
       }
   }
 
-  def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
+  def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
     Ok(nirecordGapsAndHowToCheckThem(user))
   }
 
-  def showVoluntaryContributions: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
+  def showVoluntaryContributions: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
     Ok(nirecordVoluntaryContributions(user))
   }
 }

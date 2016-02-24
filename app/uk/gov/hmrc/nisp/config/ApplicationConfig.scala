@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nisp.config
 
+import java.net.{URLEncoder, URI}
+
 import play.api.Play._
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -34,10 +36,16 @@ trait ApplicationConfig {
   val excludeCopeTab: Boolean
   val showGovUkDonePage: Boolean
   val govUkFinishedPageUrl: String
+  val identityVerification: Boolean
   val citizenAuthHost: String
   val postSignInRedirectUrl: String
+  val notAuthorisedRedirectUrl: String
   val governmentGateway: String
   val verifySignIn = s"$citizenAuthHost/ida/login"
+  val ivService: String
+  val ivUpliftUrl = s"$ivService/mdtp/uplift"
+  val twoFactorUrl = s"$governmentGateway/coafe/two-step-verification/register/"
+  val ggSignInUrl = s"$governmentGateway/gg/sign-in"
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -61,8 +69,11 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val excludeCopeTab: Boolean = configuration.getBoolean(s"microservice.services.exclusions.copetab").getOrElse(true)
   override val showGovUkDonePage: Boolean = configuration.getBoolean("govuk-done-page.enabled").getOrElse(true)
   override val govUkFinishedPageUrl: String = loadConfig("govuk-done-page.url")
+  override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
 
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host").getOrElse("")
-  override lazy val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse(routes.AccountController.show().url)
-  override lazy val governmentGateway: String = baseUrl(s"government-gateway")
+  override lazy val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse("")
+  override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
+  override lazy val governmentGateway: String = baseUrl("government-gateway")
+  override lazy val ivService: String = baseUrl("identity-verification")
 }

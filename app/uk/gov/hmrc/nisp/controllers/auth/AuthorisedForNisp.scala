@@ -18,11 +18,13 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.nisp.auth.{GovernmentGatewayProvider, VerifyProvider}
+import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredicate, GovernmentGatewayProvider, VerifyProvider}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.play.frontend.auth._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.Accounts
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
@@ -32,6 +34,7 @@ import scala.concurrent.Future
 trait AuthorisedForNisp extends Actions {
   val citizenDetailsService: CitizenDetailsService
   val npsAvailabilityChecker: NpsAvailabilityChecker
+  val applicationConfig: ApplicationConfig
 
   private type PlayRequest = Request[AnyContent] => Result
   private type UserRequest = NispUser => PlayRequest
@@ -40,8 +43,15 @@ trait AuthorisedForNisp extends Actions {
 
   implicit private def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
 
-  object AuthorisedByVerify {
-    val authedBy: AuthenticatedBy = AuthorisedFor(NispRegime, VerifyConfidence)
+  class AuthorisedBy(regime: TaxRegime) {
+    val authedBy: AuthenticatedBy = {
+      if(applicationConfig.identityVerification) {
+        AuthorisedFor(regime, NispCompositePageVisibilityPredicate)
+      } else {
+        AuthorisedFor(NispVerifyRegime, VerifyConfidence)
+      }
+    }
+
     def async(action: AsyncUserRequest): Action[AnyContent] = {
       if (!npsAvailabilityChecker.isNPSAvailable) {
         UnauthorisedAction(request => Redirect(routes.LandingController.showNpsUnavailable()))
@@ -57,6 +67,9 @@ trait AuthorisedForNisp extends Actions {
 
     def apply(action: UserRequest): Action[AnyContent] = async(user => request => Future.successful(action(user)(request)))
   }
+
+  object AuthorisedByAny extends AuthorisedBy(NispAnyRegime)
+  object AuthorisedByVerify extends AuthorisedBy(NispVerifyRegime)
 
   def retrieveName(authContext: AuthContext)(implicit request: Request[AnyContent]): Future[Option[String]] = {
     val nino = retrieveNino(authContext.principal)
@@ -79,8 +92,13 @@ trait AuthorisedForNisp extends Actions {
     }
   }
 
-  object NispRegime extends TaxRegime {
+  trait NispRegime extends TaxRegime {
     override def isAuthorised(accounts: Accounts): Boolean = accounts.paye.isDefined
+    override def authenticationType: AuthenticationProvider = NispAuthProvider
+  }
+
+  object NispAnyRegime extends NispRegime
+  object NispVerifyRegime extends NispRegime {
     override def authenticationType: AuthenticationProvider = VerifyProvider
   }
 }

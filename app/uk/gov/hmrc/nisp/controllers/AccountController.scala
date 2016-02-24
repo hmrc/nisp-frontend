@@ -50,7 +50,7 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
 
-  def show: Action[AnyContent] = AuthorisedByVerify.async { implicit user => implicit request =>
+  def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
     nispConnector.connectToGetSPResponse(nino).map{
       case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>

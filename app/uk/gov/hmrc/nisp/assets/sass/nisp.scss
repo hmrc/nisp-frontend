@@ -1,5 +1,4 @@
 
-
 /**
  * CONTENTS
  *
@@ -313,4 +312,13 @@ table.cope-table p{
   @media only screen and (max-width: 647px) {
     font-size: 16px;
   } 
+}
+
+
+/*----------------------------------*\
+    # Not Authorised
+\*----------------------------------*/
+
+h2.not-authorised {
+  margin-top: 1.875em !important;
 }

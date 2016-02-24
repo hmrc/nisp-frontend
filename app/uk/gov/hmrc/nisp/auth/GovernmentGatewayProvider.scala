@@ -27,14 +27,11 @@ import uk.gov.hmrc.nisp.controllers.routes
 import scala.concurrent.Future
 
 object GovernmentGatewayProvider extends GovernmentGateway {
-
-  private lazy val ggSignInUrl = {
-    val encodedUrl = URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")
-    s"${ApplicationConfig.governmentGateway}/gg/sign-in?continue=$encodedUrl&accountType=individual"
-  }
-
   override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] =
     Future.successful(Redirect(routes.AccountController.timeout().url))
 
   override def login: String = ggSignInUrl
+
+  private val ggSignInUrl = s"${ApplicationConfig.ggSignInUrl}?" +
+    s"continue=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}&accountType=individual"
 }

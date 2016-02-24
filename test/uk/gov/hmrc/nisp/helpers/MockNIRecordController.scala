@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.NIRecordController
 import uk.gov.hmrc.nisp.services.{MetricsService, NpsAvailabilityChecker, CitizenDetailsService}
@@ -28,4 +29,25 @@ object MockNIRecordController extends NIRecordController {
   override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
 
   override protected def authConnector: AuthConnector = MockAuthConnector
+
+  override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+    override val assetsPrefix: String = ""
+    override val reportAProblemNonJSUrl: String = ""
+    override val ssoUrl: Option[String] = None
+    override val betaFeedbackUnauthenticatedUrl: String = ""
+    override val contactFrontendPartialBaseUrl: String = ""
+    override val excludeCopeTab: Boolean = false
+    override val analyticsHost: String = ""
+    override val analyticsToken: Option[String] = None
+    override val betaFeedbackUrl: String = ""
+    override val reportAProblemPartialUrl: String = ""
+    override val showGovUkDonePage: Boolean = true
+    override val govUkFinishedPageUrl: String = "govukdone"
+    override val citizenAuthHost: String = ""
+    override val governmentGateway: String = ""
+    override val postSignInRedirectUrl: String = ""
+    override val ivService: String = ""
+    override val notAuthorisedRedirectUrl: String = ""
+    override val identityVerification: Boolean = true
+  }
 }

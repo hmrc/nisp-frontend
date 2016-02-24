@@ -18,11 +18,13 @@ package uk.gov.hmrc.nisp.controllers
 
 import org.joda.time.LocalDateTime
 import org.scalatestplus.play.OneAppPerSuite
+import play.api.http._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.http._
-import uk.gov.hmrc.nisp.services.NpsAvailabilityChecker
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, MockCitizenDetailsService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
@@ -33,6 +35,8 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
     override val npsAvailabilityChecker: NpsAvailabilityChecker = new NpsAvailabilityChecker {
       override def now: LocalDateTime = testNow
     }
+    override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+    override val applicationConfig: ApplicationConfig = ApplicationConfig
   }
 
   "GET /" should {
@@ -58,12 +62,54 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
       val buttonText = Messages("nisp.continue")
       contentAsString(result) should include (s"$buttonText</a>")
     }
+
+    "return IVLanding page" in {
+      val result = new LandingController {
+        override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+          override val citizenAuthHost: String = ""
+          override val assetsPrefix: String = ""
+          override val reportAProblemNonJSUrl: String = ""
+          override val ssoUrl: Option[String] = None
+          override val identityVerification: Boolean = true
+          override val betaFeedbackUnauthenticatedUrl: String = ""
+          override val notAuthorisedRedirectUrl: String = ""
+          override val ivService: String = ""
+          override val contactFrontendPartialBaseUrl: String = ""
+          override val govUkFinishedPageUrl: String = ""
+          override val showGovUkDonePage: Boolean = false
+          override val excludeCopeTab: Boolean = true
+          override val analyticsHost: String = ""
+          override val betaFeedbackUrl: String = ""
+          override val analyticsToken: Option[String] = None
+          override val reportAProblemPartialUrl: String = ""
+          override val governmentGateway: String = ""
+          override val postSignInRedirectUrl: String = ""
+        }
+      }.show(fakeRequest)
+      contentAsString(result) should include ("You need to sign in to use this service")
+    }
   }
 
   "GET /service-unavailable" should {
     "return service unavailable page" in {
       val result = LandingController.showNpsUnavailable(fakeRequest)
       contentAsString(result) should include ("The service is unavailable due to maintenance")
+    }
+  }
+
+  "GET /signin/verify" should {
+    "redirect to verify" in {
+      val result = LandingController.verifySignIn(fakeRequest)
+      redirectLocation(result) shouldBe Some(ApplicationConfig.verifySignIn)
+    }
+  }
+
+  "GET /not-authorised" should {
+    "show not authorised page" in {
+      val result = LandingController.showNotAuthorised(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
     }
   }
 }
