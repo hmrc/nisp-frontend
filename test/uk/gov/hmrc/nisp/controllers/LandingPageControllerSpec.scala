@@ -75,7 +75,6 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
           override val identityVerification: Boolean = true
           override val betaFeedbackUnauthenticatedUrl: String = ""
           override val notAuthorisedRedirectUrl: String = ""
-          override val ivService: String = ""
           override val contactFrontendPartialBaseUrl: String = ""
           override val govUkFinishedPageUrl: String = ""
           override val showGovUkDonePage: Boolean = false
@@ -84,8 +83,10 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
           override val betaFeedbackUrl: String = ""
           override val analyticsToken: Option[String] = None
           override val reportAProblemPartialUrl: String = ""
-          override val governmentGateway: String = ""
           override val postSignInRedirectUrl: String = ""
+          override val ivUpliftUrl: String = "ivuplift"
+          override val ggSignInUrl: String = "ggsignin"
+          override val twoFactorUrl: String = "twofactor"
         }
       }.show(fakeRequest)
       contentAsString(result) should include ("You need to sign in to use this service")

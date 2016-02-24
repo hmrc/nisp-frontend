@@ -50,10 +50,11 @@ trait MockAccountController extends AccountController {
     override val showGovUkDonePage: Boolean = true
     override val govUkFinishedPageUrl: String = "govukdone"
     override val citizenAuthHost: String = ""
-    override val governmentGateway: String = ""
     override val postSignInRedirectUrl: String = ""
-    override val ivService: String = ""
     override val notAuthorisedRedirectUrl: String = ""
     override val identityVerification: Boolean = true
+    override val ivUpliftUrl: String = "ivuplift"
+    override val ggSignInUrl: String = "ggsignin"
+    override val twoFactorUrl: String = "twofactor"
   }
 }

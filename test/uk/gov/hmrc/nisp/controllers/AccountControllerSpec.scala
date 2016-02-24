@@ -103,10 +103,11 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val reportAProblemPartialUrl: String = ""
             override val citizenAuthHost: String = ""
             override val postSignInRedirectUrl: String = ""
-            override val governmentGateway: String = ""
-            override val ivService: String = ""
             override val notAuthorisedRedirectUrl: String = ""
             override val identityVerification: Boolean = false
+            override val ivUpliftUrl: String = "ivuplift"
+            override val ggSignInUrl: String = "ggsignin"
+            override val twoFactorUrl: String = "twofactor"
           }
         }
         val result = controller.show(fakeRequest)
@@ -225,10 +226,11 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val reportAProblemPartialUrl: String = ""
             override val citizenAuthHost: String = ""
             override val postSignInRedirectUrl: String = ""
-            override val governmentGateway: String = ""
-            override val ivService: String = ""
             override val notAuthorisedRedirectUrl: String = ""
             override val identityVerification: Boolean = false
+            override val ivUpliftUrl: String = "ivuplift"
+            override val ggSignInUrl: String = "ggsignin"
+            override val twoFactorUrl: String = "twofactor"
           }
         }
         val result = controller.signOut(fakeRequest)
@@ -254,10 +256,11 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val reportAProblemPartialUrl: String = ""
             override val citizenAuthHost: String = ""
             override val postSignInRedirectUrl: String = ""
-            override val governmentGateway: String = ""
-            override val ivService: String = ""
             override val notAuthorisedRedirectUrl: String = ""
             override val identityVerification: Boolean = false
+            override val ivUpliftUrl: String = "ivuplift"
+            override val ggSignInUrl: String = "ggsignin"
+            override val twoFactorUrl: String = "twofactor"
           }
         }
         val result = controller.signOut(fakeRequest)
