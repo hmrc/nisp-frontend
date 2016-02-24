@@ -39,6 +39,7 @@ object TestAccountBuilder {
   val invalidKeyNino: String = randomNino
   val cachedNino: String = randomNino
   val noNameNino: String = randomNino
+  val weakNino: String = randomNino
 
   val mappedTestAccounts = Map(
     excludedNino -> "excluded",

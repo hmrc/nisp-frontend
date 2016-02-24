@@ -29,6 +29,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, TestAccountBuilder, MockCitizenDetailsService, MockAccountController}
 import uk.gov.hmrc.nisp.models.SPAmountModel
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
@@ -46,12 +47,17 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdBlank = "/auth/oid/mockblank"
   val mockUserIdMQP = "/auth/oid/mockmqp"
   val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
+  val mockUserIdWeak =  "/auth/oid/mockweak"
+
+  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
+  val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Fnot-authorised"
 
   lazy val fakeRequest = FakeRequest()
   private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-    SessionKeys.userId -> userId
+    SessionKeys.userId -> userId,
+    SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
   )
 
   def testAccountController(testNow: LocalDateTime): AccountController = new MockAccountController {
@@ -63,38 +69,68 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
   "Account controller" should {
     "GET /account" should {
-      "return 303 to the account page" in {
+      "return 303 when no session" in {
         val result = MockAccountController.show().apply(fakeRequest)
         status(result) shouldBe Status.SEE_OTHER
       }
 
-      "return the account-forecastonly page" in {
-          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
-          contentAsString(result) should include ("Your estimate is the most you can get")
+      "return the forecast only page for a user with a forecast lower than current amount" in {
+        val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        contentAsString(result) should include ("Your estimate is the most you can get")
       }
 
-      "redirect to the Verify Login" in {
-        val result = MockAccountController.show().apply(fakeRequest)
-        redirectLocation(result).get.equals(ApplicationConfig.verifySignIn) shouldBe true
+      "redirect to the GG Login" in {
+        val result = MockAccountController.show(fakeRequest)
+        redirectLocation(result) shouldBe Some(ggSignInUrl)
       }
 
-      "redirect to the Verify Login, for session ID NOSESSION" in {
+      "redirect to Verify with IV disabled" in {
+        val controller = new MockAccountController {
+          override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+            override val assetsPrefix: String = ""
+            override val reportAProblemNonJSUrl: String = ""
+            override val ssoUrl: Option[String] = None
+            override val betaFeedbackUnauthenticatedUrl: String = ""
+            override val contactFrontendPartialBaseUrl: String = ""
+            override val govUkFinishedPageUrl: String = "govukdone"
+            override val excludeCopeTab: Boolean = false
+            override val showGovUkDonePage: Boolean = false
+            override val analyticsHost: String = ""
+            override val analyticsToken: Option[String] = None
+            override val betaFeedbackUrl: String = ""
+            override val reportAProblemPartialUrl: String = ""
+            override val citizenAuthHost: String = ""
+            override val postSignInRedirectUrl: String = ""
+            override val governmentGateway: String = ""
+            override val ivService: String = ""
+            override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = false
+          }
+        }
+        val result = controller.show(fakeRequest)
+        redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
+      }
+
+      "redirect to the GG Login, for session ID NOSESSION" in {
         val result = MockAccountController.show().apply(fakeRequest.withSession(
           SessionKeys.sessionId -> "NOSESSION"
         ))
-        redirectLocation(result).get.equals(ApplicationConfig.verifySignIn) shouldBe true
+        redirectLocation(result) shouldBe Some(ggSignInUrl)
       }
 
       "return 200, create an authenticated session" in {
         val result = MockAccountController.show()(authenticatedFakeRequest())
-        contentAsString(result).contains("Sign out") shouldBe true
+        contentAsString(result) should include ("Sign out")
       }
 
       "return timeout error for last request -14 minutes, 59 seconds" in {
         val result = MockAccountController.show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.minusMinutes(14).minusSeconds(59).getMillis.toString,
-          SessionKeys.userId -> mockUserId
+          SessionKeys.userId -> mockUserId,
+          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
 
         redirectLocation(result) should not be Some("/checkmystatepension/timeout")
@@ -104,7 +140,8 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
         val result = MockAccountController.show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.minusMinutes(15).getMillis.toString,
-          SessionKeys.userId -> mockUserId
+          SessionKeys.userId -> mockUserId,
+          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
 
         redirectLocation(result) shouldBe Some("/checkmystatepension/timeout")
@@ -114,7 +151,8 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
         val result = MockAccountController.show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> mockUserIdExcluded
+          SessionKeys.userId -> mockUserIdExcluded,
+          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
         redirectLocation(result) shouldBe Some("/checkmystatepension/exclusion")
       }
@@ -155,6 +193,16 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdMQP))
         contentAsString(result) should include ("It may be possible for you to get some State Pension")
       }
+
+      "redirect to 2FA when authentication is not strong" in {
+        val result = MockAccountController.show()(fakeRequest.withSession(
+          SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+          SessionKeys.userId -> mockUserIdWeak,
+          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+        ))
+        redirectLocation(result) shouldBe Some(twoFactorUrl)
+      }
     }
 
     "GET /signout" should {
@@ -178,6 +226,9 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val citizenAuthHost: String = ""
             override val postSignInRedirectUrl: String = ""
             override val governmentGateway: String = ""
+            override val ivService: String = ""
+            override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = false
           }
         }
         val result = controller.signOut(fakeRequest)
@@ -204,6 +255,9 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val citizenAuthHost: String = ""
             override val postSignInRedirectUrl: String = ""
             override val governmentGateway: String = ""
+            override val ivService: String = ""
+            override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = false
           }
         }
         val result = controller.signOut(fakeRequest)

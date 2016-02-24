@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.ExclusionController
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
@@ -27,4 +28,5 @@ object MockExclusionController extends ExclusionController {
 
   override protected def authConnector: AuthConnector = MockAuthConnector
   override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+  override val applicationConfig: ApplicationConfig = ApplicationConfig
 }

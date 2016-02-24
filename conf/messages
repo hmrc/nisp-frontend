@@ -24,6 +24,12 @@ nisp.useagain = To use the service again you''ll need to <a href="{0}">sign in</
 nisp.title = Check your State Pension
 nisp.continue = Continue
 nisp.landing.title = Check your State Pension
+nisp.landing.intro = Check how much pension you can get based on your National Insurance record.
+nisp.landing.signin.heading = You need to sign in to use this service
+nisp.landing.signin.gg = You can <a href="{0}" data-journey-click="checkmystatepension:landing:ivlink">sign in using the Government Gateway</a>. You may need to answer a few questions – they''ll be based on things HMRC already know about you.
+nisp.landing.signin.verify = You can also <a href="{0}" data-journey-click="checkmystatepension:landing:verifylink">sign in using GOV.UK Verify</a>. If you haven''t used GOV.UK Verify before, it will take you about 10 minutes to get set up.
+nisp.landing.sidebar.heading = Elsewhere on GOV.UK
+nisp.landing.sidebar.link1 = <a href="https://www.gov.uk/plan-retirement-income/overview" rel="external" data-journey-click="checkmystatepension:external:landingsidebarlink">Plan your retirement income</a>
 nisp.landing.estimateprovided = This estimate is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
 nisp.landing.eligibility.heading = You can use this service if you''re
 nisp.landing.eligibility1 = a man born after 5 April 1951
@@ -344,3 +350,13 @@ nisp.cope.table.estimate.title=Your COPE estimate
 nisp.cope.table.pensionforecast=Your State Pension forecast
 nisp.cope.table.copeadded=COPE added to your State Pension forecast
 nisp.main.cope.linktitle=Find out more about <a href="https://www.gov.uk/contracted-out" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE estimate (opens in new tab)</a>.
+
+#**************************
+#  Not Authorised IV Messages
+#**************************
+
+nisp.notauthorised.title = We were unable to confirm your identity
+nisp.notauthorised.verify.heading = Using GOV.UK Verify
+nisp.notauthorised.verify.text = You can also <a href="{0}">sign in using GOV.UK Verify</a>. If you haven''t used GOV.UK Verify before, it will take you about 10 minutes to get set up.
+nisp.notauthorised.statement.heading = Other ways to get a statement
+nisp.notauthorised.statement.text = If you cannot use the online service contact the <a href="https://www.gov.uk/future-pension-centre">Future Pension centre</a>.

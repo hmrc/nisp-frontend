@@ -51,6 +51,7 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
 
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+    override val applicationConfig: ApplicationConfig = ApplicationConfig
   }
 
   "GET /feedback" should {

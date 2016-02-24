@@ -22,7 +22,9 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.MockNIRecordController
+import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
@@ -32,17 +34,20 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockFullUserId = "/auth/oid/mockfulluser"
   val mockBlankUserId = "/auth/oid/mockblank"
 
+  val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
+
   lazy val fakeRequest = FakeRequest()
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-    SessionKeys.userId -> userId
+    SessionKeys.userId -> userId,
+    SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
   )
 
   "GET /account/nirecord/gaps (gaps)" should {
     "return redirect for unauthenticated user" in {
       val result = MockNIRecordController.showGaps(fakeRequest)
-      redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
+      redirectLocation(result) shouldBe Some(ggSignInUrl)
     }
 
     "return gaps page for user with gaps" in {
@@ -66,7 +71,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord (full)" should {
     "return redirect for unauthenticated user" in {
       val result = MockNIRecordController.showFull(fakeRequest)
-      redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
+      redirectLocation(result) shouldBe Some(ggSignInUrl)
     }
 
     "return gaps page for user with gaps" in {
@@ -83,7 +88,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord/gapsandhowtocheck" should {
     "return redirect for unauthenticated user" in {
       val result = MockNIRecordController.showGapsAndHowToCheckThem(fakeRequest)
-      redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
+      redirectLocation(result) shouldBe Some(ggSignInUrl)
     }
 
     "return how to check page for authenticated user" in {
@@ -95,7 +100,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord/voluntarycontribs" should {
     "return redirect for unauthenticated user" in {
       val result = MockNIRecordController.showVoluntaryContributions(fakeRequest)
-      redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
+      redirectLocation(result) shouldBe Some(ggSignInUrl)
     }
 
     "return how to check page for authenticated user" in {
