@@ -40,12 +40,10 @@ trait ApplicationConfig {
   val citizenAuthHost: String
   val postSignInRedirectUrl: String
   val notAuthorisedRedirectUrl: String
-  val governmentGateway: String
   val verifySignIn = s"$citizenAuthHost/ida/login"
-  val ivService: String
-  val ivUpliftUrl = s"$ivService/mdtp/uplift"
-  val twoFactorUrl = s"$governmentGateway/coafe/two-step-verification/register/"
-  val ggSignInUrl = s"$governmentGateway/gg/sign-in"
+  val ivUpliftUrl: String
+  val twoFactorUrl: String
+  val ggSignInUrl: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -74,6 +72,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host").getOrElse("")
   override lazy val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse("")
   override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
-  override lazy val governmentGateway: String = baseUrl("government-gateway")
-  override lazy val ivService: String = baseUrl("identity-verification")
+  override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
+  override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
+  override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
 }
