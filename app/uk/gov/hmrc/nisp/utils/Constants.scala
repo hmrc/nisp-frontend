@@ -43,4 +43,6 @@ object Constants {
 
   val shortYearStartCharacter = 2
   val shortYearEndCharacter = 4
+  val verify = "verify"
+  val iv = "iv"
 }
