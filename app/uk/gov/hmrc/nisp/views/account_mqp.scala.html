@@ -20,9 +20,26 @@
 @import uk.gov.hmrc.nisp.models.SPSummaryModel
 @import uk.gov.hmrc.nisp.controllers.routes
 
-@(nino: String, spSummary: SPSummaryModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, canGetPension: Boolean, numberOfYearsMissing: Int)(implicit request: Request[_])
+@(nino: String, spSummary: SPSummaryModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, canGetPension: Boolean, numberOfYearsMissing: Int, authenticationProvider: String)(implicit request: Request[_])
 
-@nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title")) {
+@analyticsAdditionalJs = {
+    ga('set', {
+        'dimension7':  '@spSummary.contextMessage.getOrElse("")',
+        'dimension8':  '@spSummary.forecastAmount.week.toInt',
+        'dimension10': '@spSummary.numberOfQualifyingYears',
+        'dimension11': '@spSummary.numberOfGaps',
+        'dimension12': '@spSummary.numberOfGapsPayable',
+        'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
+        'dimension14': '@spSummary.contractedOutFlag',
+        'dimension15': '@spSummary.statePensionAge',
+        'dimension16': '@spSummary.copeAmount.week',
+        'dimension21': '@spSummary.forecastOnlyFlag',
+        'dimension22': '@authenticationProvider',
+        'metric5': 1
+    });
+}
+
+@nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 
 <div class="grid services">

@@ -29,6 +29,7 @@ import uk.gov.hmrc.nisp.services.{CitizenDetailsService, ABService, MetricsServi
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 
 import scala.concurrent.Future
@@ -52,6 +53,7 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
 
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
+    val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
     nispConnector.connectToGetSPResponse(nino).map{
       case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
         metricsService.mainPage(spSummary.forecastAmount.week, spSummary.statePensionAmount.week, spSummary.contextMessage,
@@ -59,18 +61,18 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
 
         customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
           spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name,
-          spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week))
+          spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week,authenticationProvider ))
 
         if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
           val canGetPension = spSummary.numberOfQualifyingYears +
             spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
           val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-          Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing)).withSession(storeUserInfoInSession(user, contractedOut = false))
+          Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
         } else if(spSummary.forecastOnlyFlag){
-          Ok(account_forecastonly(nino, spSummary, user)).withSession(storeUserInfoInSession(user, contractedOut = false))
+          Ok(account_forecastonly(nino, spSummary, user, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
         } else {
           val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
-          Ok(account(nino, spSummary, user, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart))
+          Ok(account(nino, spSummary, user, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider))
             .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
         }
 
@@ -126,5 +128,9 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
 
   def timeout: Action[AnyContent] = UnauthorisedAction { implicit request =>
     Ok(sessionTimeout())
+  }
+
+  private def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = {
+    if(confidenceLevel.level == 500) Constants.verify else Constants.iv
   }
 }

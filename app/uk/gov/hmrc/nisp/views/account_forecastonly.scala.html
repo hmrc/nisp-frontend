@@ -22,20 +22,22 @@
 
 
 
-@(nino: String, spSummary: SPSummaryModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser)(implicit request: Request[_])
+@(nino: String, spSummary: SPSummaryModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, authenticationProvider: String)(implicit request: Request[_])
 
 @analyticsAdditionalJs = {
     ga('set', {
-                'dimension7':  '@spSummary.contextMessage.getOrElse("")',
-                'dimension8':  '@spSummary.forecastAmount.week.toInt',
-                'dimension10': '@spSummary.numberOfQualifyingYears',
-                'dimension11': '@spSummary.numberOfGaps',
-                'dimension12': '@spSummary.numberOfGapsPayable',
-                'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
-                'dimension14': '@spSummary.contractedOutFlag',
-                'dimension15': '@spSummary.statePensionAge',
-                'dimension16': '@spSummary.copeAmount.week',
-                'dimension21': '@spSummary.forecastOnlyFlag'
+        'dimension7':  '@spSummary.contextMessage.getOrElse("")',
+        'dimension8':  '@spSummary.forecastAmount.week.toInt',
+        'dimension10': '@spSummary.numberOfQualifyingYears',
+        'dimension11': '@spSummary.numberOfGaps',
+        'dimension12': '@spSummary.numberOfGapsPayable',
+        'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
+        'dimension14': '@spSummary.contractedOutFlag',
+        'dimension15': '@spSummary.statePensionAge',
+        'dimension16': '@spSummary.copeAmount.week',
+        'dimension21': '@spSummary.forecastOnlyFlag',
+        'dimension22': '@authenticationProvider',
+        'metric5': 1
     });
 }
 
