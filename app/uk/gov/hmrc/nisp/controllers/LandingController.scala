@@ -16,23 +16,31 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Result, Action, AnyContent}
+import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import uk.gov.hmrc.nisp.models.enums.IdentityVerificationResult
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
-import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing, not_authorised}
+import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
+import uk.gov.hmrc.nisp.views.html.iv.failurepages.{not_authorised, technical_issue, locked_out, timeout}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
+
+import scala.concurrent.Future
 
 object LandingController extends LandingController {
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val applicationConfig: ApplicationConfig = ApplicationConfig
+  override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
 }
 
 trait LandingController extends FrontendController with Actions with AuthenticationConnectors with AuthorisedForNisp {
   val npsAvailabilityChecker: NpsAvailabilityChecker
+  val identityVerificationConnector: IdentityVerificationConnector
 
   def show: Action[AnyContent] = UnauthorisedAction(
     implicit request =>
@@ -49,8 +57,24 @@ trait LandingController extends FrontendController with Actions with Authenticat
     Redirect(routes.AccountController.show())
   }
 
-  def showNotAuthorised(journeyId: Option[String]) : Action[AnyContent] = UnauthorisedAction {
-    implicit request =>
-        Ok(not_authorised()).withNewSession
+  def showNotAuthorised(journeyId: Option[String]) : Action[AnyContent] = UnauthorisedAction.async {implicit request =>
+    val result = journeyId map { id =>
+      val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
+      identityVerificationResult map {
+        case IdentityVerificationResult.FailedMatching => not_authorised()
+        case IdentityVerificationResult.InsufficientEvidence => not_authorised()
+        case IdentityVerificationResult.TechnicalIssue => technical_issue()
+        case IdentityVerificationResult.LockedOut => locked_out()
+        case IdentityVerificationResult.Timeout => timeout()
+        case IdentityVerificationResult.Incomplete => not_authorised()
+        case IdentityVerificationResult.PreconditionFailed => not_authorised()
+        case IdentityVerificationResult.UserAborted => not_authorised()
+        case _ => not_authorised()
+      }
+    } getOrElse Future.successful(not_authorised())
+
+    result.map {
+      Ok(_).withNewSession
+    }
   }
 }
