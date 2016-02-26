@@ -361,7 +361,7 @@ nisp.iv.failure.otherways.heading = Other ways to get a statement
 nisp.iv.failure.otherways.text = If you cannot use the online service contact the <a href="https://www.gov.uk/future-pension-centre" rel="external">Future Pension centre</a>.
 
 nisp.iv.failure.general.title = We were unable to confirm your identity
-nisp.iv.failure.general.text = If you can''t confirm your identity and you have a query you can <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/online-services-helpdesk" rel="external">contact HMRC to get help</a>.
+nisp.iv.failure.general.text = If you cannot confirm your identity and you have a query you can <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/online-services-helpdesk" rel="external">contact HMRC to get help</a>.
 
 nisp.iv.failure.technical.title = There''s a technical problem
 nisp.iv.failure.technical.message = This online service is experiencing technical difficulties.
@@ -373,6 +373,6 @@ nisp.iv.failure.lockedout.intro = You have reached the maximum number of attempt
 nisp.iv.failure.lockedout.tryagain = You can try again in 7 days.
 
 nisp.iv.failure.timeout.title = Your session has ended due to inactivity
-nisp.iv.failure.timeout.message = Your session has ended because you haven''t done anything for 15 minutes.
+nisp.iv.failure.timeout.message = Your session has ended because you have not done anything for 15 minutes.
 nisp.iv.failure.timeout.data = We''ve deleted all the details you''ve entered to protect your data.
 nisp.iv.failure.timeout.button = Start again
