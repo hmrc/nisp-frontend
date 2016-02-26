@@ -109,7 +109,7 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /not-authorised" should {
     "show not authorised page" in {
-      val result = LandingController.showNotAuthorised(fakeRequest)
+      val result = LandingController.showNotAuthorised(None)(fakeRequest)
       contentAsString(result) should include ("We were unable to confirm your identity")
     }
   }

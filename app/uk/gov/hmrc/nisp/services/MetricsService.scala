@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.services
 
-import com.codahale.metrics.Meter
+import com.codahale.metrics.{Timer, Counter, Meter}
 import com.kenshoo.play.metrics.MetricsRegistry
 import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
 import uk.gov.hmrc.nisp.models.enums.{APIType, ABTest, SPExclusion, SPContextMessage}
@@ -98,6 +98,9 @@ object MetricsService extends MetricsService {
 
   val keystoreHitCounter = MetricsRegistry.defaultRegistry.counter("keystore-hit-counter")
   val keystoreMissCounter = MetricsRegistry.defaultRegistry.counter("keystore-miss-counter")
+
+  val identityVerificationTimer = MetricsRegistry.defaultRegistry.timer("identity-verification-timer")
+  val identityVerificationFailedCounter = MetricsRegistry.defaultRegistry.counter("identity-verification-failed-counter")
 
   override def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage],
                         contractedOutFlag: Boolean, forecastOnlyFlag: Boolean, age: Int, abTest: Option[ABTest]): Unit = {
