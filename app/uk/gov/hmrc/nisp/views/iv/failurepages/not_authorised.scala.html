@@ -14,17 +14,18 @@
 * limitations under the License.
 *@
 
+@import uk.gov.hmrc.nisp.views.html.nispMain
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.controllers.routes
 
 @()(implicit request: Request[_])
 
-@nispMain(pageTitle = Some(Messages("nisp.notauthorised.title")),h1Classes=Some("welcome-msg")) {
+@nispMain(pageTitle = None, h1Classes=Some("welcome-msg"), articleClasses = Some("mainpage")) {
 
-<h2 class="heading-medium not-authorised">@Messages("nisp.notauthorised.verify.heading")</h2>
-<p>@Html(Messages("nisp.notauthorised.verify.text", routes.LandingController.verifySignIn.url))</p>
+<h1 class="heading-xlarge">@Messages("nisp.iv.failure.general.title")</h1>
+<p>@Html(Messages("nisp.iv.failure.general.text"))</p>
 
-<h2 class="heading-medium not-authorised">@Messages("nisp.notauthorised.statement.heading")</h2>
-<p>@Html(Messages("nisp.notauthorised.statement.text"))</p>
+<h2 class="heading-medium">@Messages("nisp.iv.failure.otherways.heading")</h2>
+<p>@Html(Messages("nisp.iv.failure.otherways.text"))</p>
 
 }

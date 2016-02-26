@@ -23,7 +23,8 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, MockCitizenDetailsService}
+import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
+import uk.gov.hmrc.nisp.helpers.{MockIdentityVerificationConnector, MockNpsAvailabilityChecker, MockCitizenDetailsService}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -37,6 +38,7 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
     }
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override val applicationConfig: ApplicationConfig = ApplicationConfig
+    override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
   }
 
   "GET /" should {
@@ -88,6 +90,7 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
           override val ggSignInUrl: String = "ggsignin"
           override val twoFactorUrl: String = "twofactor"
         }
+        override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
       }.show(fakeRequest)
       contentAsString(result) should include ("You need to sign in to use this service")
     }
@@ -109,7 +112,7 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /not-authorised" should {
     "show not authorised page" in {
-      val result = LandingController.showNotAuthorised(fakeRequest)
+      val result = LandingController.showNotAuthorised(None)(fakeRequest)
       contentAsString(result) should include ("We were unable to confirm your identity")
     }
   }
