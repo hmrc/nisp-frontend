@@ -19,15 +19,36 @@ package uk.gov.hmrc.nisp.helpers
 import org.mockito.Mockito._
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
+import play.api.http.Status
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.nisp.models.enums.IdentityVerificationResult
-import uk.gov.hmrc.play.http.HttpGet
+import uk.gov.hmrc.play.http.{HttpResponse, HttpGet}
 
 import scala.concurrent.Future
 import scala.io.Source
 
 object MockIdentityVerificationHttp extends MockitoSugar {
   val mockHttp = mock[HttpGet]
-  val journeyIdSuccess = "success-journey-id"
-  val fileContents = Source.fromFile("test/resources/identity-verification/success.json").mkString
-  when(mockHttp.GET[MockIdentityVerificationConnector.IdentityVerificationResponse.type](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(MockIdentityVerificationConnector.IdentityVerificationResponse(IdentityVerificationResult.Success)))
+
+  val possibleJournies = Map (
+    "success-journey-id" -> "test/resources/identity-verification/success.json",
+    "incomplete-journey-id" -> "test/resources/identity-verification/incomplete.json",
+    "failed-matching-journey-id" -> "test/resources/identity-verification/failed-matching.json",
+    "insufficient-evidence-journey-id" -> "test/resources/identity-verification/insufficient-evidence.json",
+    "locked-out-journey-id" -> "test/resources/identity-verification/locked-out.json",
+    "user-aborted-journey-id" -> "test/resources/identity-verification/user-aborted.json",
+    "timeout-journey-id" -> "test/resources/identity-verification/timeout.json",
+    "technical-issue-journey-id" -> "test/resources/identity-verification/technical-issue.json",
+    "precondition-failed-journey-id" -> "test/resources/identity-verification/precondition-failed.json",
+    "invalid-journey-id" -> "test/resources/identity-verification/invalid-result.json",
+    "invalid-fields-journey-id" -> "test/resources/identity-verification/invalid-fields.json"
+  )
+
+  def mockJourneyId(journeyId: String): Unit = {
+    val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
+    when(mockHttp.GET[HttpResponse](Matchers.contains(journeyId))(Matchers.any(), Matchers.any())).
+      thenReturn(Future.successful(HttpResponse(Status.OK, responseJson = Some(Json.parse(fileContents)))))
+  }
+
+  possibleJournies.keys.foreach(mockJourneyId)
 }

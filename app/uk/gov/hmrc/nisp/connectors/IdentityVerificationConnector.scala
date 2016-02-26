@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import play.api.libs.json.Json
+import play.api.data.validation.ValidationError
+import play.api.libs.json.{JsPath, Json}
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
 import uk.gov.hmrc.nisp.models.enums.IdentityVerificationResult.IdentityVerificationResult
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.{HttpGet, HeaderCarrier}
+import uk.gov.hmrc.play.http.{HttpResponse, HttpGet, HeaderCarrier}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
@@ -42,9 +43,12 @@ trait IdentityVerificationConnector {
 
   def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResult] = {
     val context = MetricsService.identityVerificationTimer.time()
-    val ivFuture = http.GET[IdentityVerificationResponse](url(journeyId)).map {
+    val ivFuture = http.GET[HttpResponse](url(journeyId)).flatMap { httpResponse =>
       context.stop()
-      _.result
+      httpResponse.json.validate[IdentityVerificationResponse].fold(
+        errs => Future.failed(new JsonValidationException(s"Unable to deserialise: ${formatJsonErrors(errs)}")),
+        valid => Future.successful(valid.result)
+      )
     }
 
     ivFuture onFailure {
@@ -54,4 +58,10 @@ trait IdentityVerificationConnector {
 
     ivFuture
   }
+
+  private def formatJsonErrors(errors: Seq[(JsPath, Seq[ValidationError])]): String = {
+    errors.map(p => p._1 + " - " + p._2.map(_.message).mkString(",")).mkString(" | ")
+  }
+
+  private[connectors] class JsonValidationException(message: String) extends Exception(message)
 }
