@@ -24,7 +24,8 @@ import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
 import uk.gov.hmrc.nisp.models.enums.SPExclusion.SPExclusion
 
 trait MetricsService {
-  def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage], contractedOutFlag: Boolean, forecastOnlyFlag: Boolean, age: Int, abTest: Option[ABTest])
+  def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage], contractedOutFlag: Boolean, forecastOnlyFlag: Boolean, 
+    age: Int, abTest: Option[ABTest])
   def niRecord(gaps: Int, payableGaps: Int, pre75Years: Int, qualifyingYears: Int, yearsUntilSPA: Int)
   def exclusion(exclusions: List[SPExclusion])
 }
