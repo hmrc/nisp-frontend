@@ -44,14 +44,6 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     when(mockHttp.POST[JsValue, HttpResponse](Matchers.endsWith(s"citizen-details/$nino/designatory-details/summary"), Matchers.any(),
       Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(response)
 
-  def responseFromSource(filename: String): HttpResponse = {
-    val fileContents = Source.fromFile(filename).mkString
-    if (fileContents.isEmpty)
-      HttpResponse(Status.OK, responseString = Some(fileContents))
-    else
-      HttpResponse(Status.OK, Some(Json.parse(fileContents)))
-  }
-
   private def setupCitizenDetailsMocking(nino: String) =
     createMockedURL(nino, TestAccountBuilder.jsonResponse(nino, "citizen-details"))
 
