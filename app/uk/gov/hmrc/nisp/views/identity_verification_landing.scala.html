@@ -19,23 +19,36 @@
 
 @()(implicit request: Request[_])
 
-@sidebar = {
-<div class="sidebar-border" >
-    <h2 aria-hidden="true">@Messages("nisp.landing.sidebar.heading")</h2>
-    <p>@Html(Messages("nisp.landing.sidebar.link1"))</p>
+
+@nispMain(articleEnabled=false) {
+<div class="grid-wrapper">
+    <div class="grid-2-3">
+        <h1 class="heading-xlarge">@Messages("nisp.landing.title")</h1>
+        <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+    </div>
 </div>
-}
 
-@nispMain(pageTitle = Some(Messages("nisp.landing.title")),h1Classes=Some("welcome-msg"),sidebarLinks = Some(sidebar)) {
+<div class="grid-wrapper sign-in-grid">
+    <h2 class="heading-medium">@Messages("nisp.landing.signin.heading")</h2>
 
-<p class="lede">@Messages("nisp.landing.intro")</p>
-<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+    <div class="grid grid-1-2 left">
+        <div class="inner-block">
+            <p>@Html(Messages("nisp.landing.signin.gg"))</p>
+            <a id="continue" href='@routes.AccountController.show.url' data-journey-click="checkmystatepension:landing:ivcontinue" role="button" tabindex="0" class="button">@Messages("nisp.continue")</a>
+        </div>
+    </div>
 
-<h2 class="heading-medium">@Messages("nisp.landing.signin.heading")</h2>
-
-<p>@Html(Messages("nisp.landing.signin.gg",routes.AccountController.show.url))</p>
-<p>@Html(Messages("nisp.landing.signin.verify",routes.LandingController.verifySignIn.url))</p>
-
-<a id="continue" href='@routes.AccountController.show.url' data-journey-click="checkmystatepension:landing:ivcontinue" role="button" tabindex="0" class="button">@Messages("nisp.continue")</a>
+    <div class="grid grid-1-2">
+        <div class="inner-block">
+            <p>@Html(Messages("nisp.landing.signin.verify",routes.LandingController.verifySignIn.url))</p>
+            <div class="verify-block">
+                <img src='@controllers.routes.Assets.at("img/verify-logo-inline.png")' class="verify-logo" alt="@Messages("nisp.gov-uk-verify")" />
+                <strong>@Messages("nisp.gov-uk")</strong>
+                <br/>
+                @Messages("nisp.verify")
+            </div>
+        </div>
+    </div>
+</div>
 
 }

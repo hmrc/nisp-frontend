@@ -32,7 +32,8 @@
     showBetaBanner: Boolean = true,
     pageScripts: Option[Html] = None,
     articleClasses: Option[String] = None,
-    analyticsAdditionalJs: Option[Html] = None)(mainContent: Html)(implicit request : Request[_])
+    analyticsAdditionalJs: Option[Html] = None,
+    articleEnabled: Boolean = true)(mainContent: Html)(implicit request : Request[_])
 
 
 @linkElement = {
@@ -91,7 +92,11 @@
 }
 
 @article = {
-    @layouts.article(mainContent, false, articleClasses)
+    @if(articleEnabled) {
+        @layouts.article(mainContent, false, articleClasses)
+    } else {
+        @mainContent
+    }
 }
 
 @mainContentHeader = {
