@@ -92,7 +92,7 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
         }
         override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
       }.show(fakeRequest)
-      contentAsString(result) should include ("You need to sign in to use this service")
+      contentAsString(result) should include ("You need to confirm your identity")
     }
   }
 
