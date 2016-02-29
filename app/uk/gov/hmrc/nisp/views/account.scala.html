@@ -78,14 +78,14 @@
             @if(test == B && spSummary.contractedOutFlag) {
                 <div class="tab-panel" id="cope" role="tabpanel">
                     <div class="content-block">
-                        <h2 class="heading-medium cope-title">@Messages("nisp.cope.title1")</h2>
+                        <h2 class="heading-medium">@Messages("nisp.cope.title1")</h2>
                         <p>@Messages("nisp.cope.inthepast")</p>
                         <p>@Messages("nisp.cope.why")</p>
                         <ul class="list-bullet">
                             <li>@Messages("nisp.cope.why.bullet1")</li>
                             <li>@Messages("nisp.cope.why.bullet2")</li>
                         </ul>                        
-                        <h2 class="heading-medium cope-title">@Messages("nisp.cope.title2")</h2>
+                        <h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
                         <p>@Messages("nisp.cope.definition")</p>
                         <p>@Messages("nisp.cope.workplace")</p>
 
@@ -137,7 +137,7 @@
                 @if(spSummary.numberOfQualifyingYears >= Constants.minimumQualifyingYearsNSP) {
 
                     @if(spSummary.hasPsod) {<p>@Messages("nisp.main.psod")</p>}
-                    <h2 class="heading-medium" style="margin-top: 2em !important">@Messages("nisp.main.h2.title")</h2>
+                    <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
 
                     <div class="chart-block">
                         <span class="graph-title">@Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())</span>
@@ -183,7 +183,7 @@
                 </div>
 
                 <div>
-                    <h2 class="heading-medium putting-off-header">2. @Messages("nisp.main.puttingOff")</h2>
+                    <h2 class="heading-medium">2. @Messages("nisp.main.puttingOff")</h2>
                     <p>@Messages("nisp.main.puttingOff.line1", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
                     <p><a href="https://www.gov.uk/deferring-state-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:deferstatepension">@Messages("nisp.main.puttingOff.linkTitle")</a></p>
 
