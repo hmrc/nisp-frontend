@@ -147,17 +147,14 @@ table.amounts {
 
 .improve-forecast {
   margin-bottom: 0.5em;
-  margin-top: 1em;
   overflow: hidden;
 }
 
 .tab-panel {
-  padding: 1em 0px 0px;
   border-top: 1px solid #BFC1C3;
   clear: both;
   width: auto;
   @media only screen and (max-width: 640px) {
     border-top:0;
-    padding: 0 0;
   }
 }
