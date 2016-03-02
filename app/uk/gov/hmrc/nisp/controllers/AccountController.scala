@@ -59,15 +59,16 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
         metricsService.mainPage(spSummary.forecastAmount.week, spSummary.statePensionAmount.week, spSummary.contextMessage,
           spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, spSummary.customerAge, getABTest(nino, spSummary.contractedOutFlag))
 
-        customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
-          spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name,
-          spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week,authenticationProvider ))
+        customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage, spSummary.statePensionAge.date, spSummary.statePensionAmount.week,
+          spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecastOnlyFlag,
+          getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week,authenticationProvider))
 
         if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
           val canGetPension = spSummary.numberOfQualifyingYears +
             spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
           val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-          Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
+          Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing, authenticationProvider)).
+            withSession(storeUserInfoInSession(user, contractedOut = false))
         } else if(spSummary.forecastOnlyFlag){
           Ok(account_forecastonly(nino, spSummary, user, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
         } else {
