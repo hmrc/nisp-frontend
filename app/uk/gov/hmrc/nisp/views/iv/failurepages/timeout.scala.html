@@ -20,7 +20,11 @@
 
 @()(implicit request: Request[_])
 
-@nispMain(h1Classes=Some("welcome-msg"), articleClasses = Some("mainpage")) {
+@analyticsAdditionalJs = {
+    ga('send', 'pageview', '/checkmystatepension/unauthorised-timeout');
+}
+
+@nispMain(h1Classes=Some("welcome-msg"), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <h1 class="heading-xlarge">@Messages("nisp.iv.failure.timeout.title")</h1>
 
