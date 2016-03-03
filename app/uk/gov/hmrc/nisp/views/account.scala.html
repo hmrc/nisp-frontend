@@ -20,16 +20,17 @@
 @import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
 @import uk.gov.hmrc.nisp.services.ABService
 @import uk.gov.hmrc.nisp.models.enums.ABTest._
+@import uk.gov.hmrc.play.frontend.auth.AuthContext
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 
 @(
     nino: String,
     spSummary: SPSummaryModel,
-    user: uk.gov.hmrc.nisp.controllers.auth.NispUser,
     abTest: Option[ABTest],
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
     authenticationProvider: String
-)(implicit request: Request[_])
+)(implicit request: Request[_], authContext: Option[AuthContext] = None, user: NispUser)
 
 @pageScripts = {
 <script src="@routes.Assets.at("javascript/account.js")" type="text/javascript"></script>
@@ -52,138 +53,142 @@
     });
 }
 
-@nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-            pageScripts=Some(pageScripts), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@defining(Some(user)) { implicit userOption =>
+    @nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
+                pageScripts=Some(pageScripts), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-    <div class="grid services">
-               <h1 class="heading-large title-spa">@Messages("nisp.main.h1.title")</h1>
-        <div class="tablist">
-            <ul class="tab-nav" role="tablist">
-                <li>
-                    <a href="#forecast-sp-value" role="tab" id="tab-forecast-sp-value">@Messages("nisp.main.forecast")</a>
-                </li>
-                @for(test <- abTest) {
-                    @if(test == B && spSummary.contractedOutFlag) {
-                        <li>
-                            <a href="#cope" role="tab" id="tab-cope">@Messages("nisp.main.cope")</a>
-                        </li>
+    @{ print(authContext.isDefined+"--------------------") }
+
+        <div class="grid services">
+                   <h1 class="heading-large title-spa">@Messages("nisp.main.h1.title")</h1>
+            <div class="tablist">
+                <ul class="tab-nav" role="tablist">
+                    <li>
+                        <a href="#forecast-sp-value" role="tab" id="tab-forecast-sp-value">@Messages("nisp.main.forecast")</a>
+                    </li>
+                    @for(test <- abTest) {
+                        @if(test == B && spSummary.contractedOutFlag) {
+                            <li>
+                                <a href="#cope" role="tab" id="tab-cope">@Messages("nisp.main.cope")</a>
+                            </li>
+                        }
                     }
-                }
-                <li>
-                    <a href="#how-to-increase-it" role="tab" id="tab-how-to-increase-it">@Messages("nisp.main.howtoincreaseit")</a>
-                </li>
-            </ul>
-        </div>
-        @for(test <- abTest) {
-            @if(test == B && spSummary.contractedOutFlag) {
-                <div class="tab-panel" id="cope" role="tabpanel">
-                    <div class="content-block">
-                        <h2 class="heading-medium">@Messages("nisp.cope.title1")</h2>
-                        <p>@Messages("nisp.cope.inthepast")</p>
-                        <p>@Messages("nisp.cope.why")</p>
-                        <ul class="list-bullet">
-                            <li>@Messages("nisp.cope.why.bullet1")</li>
-                            <li>@Messages("nisp.cope.why.bullet2")</li>
-                        </ul>                        
-                        <h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
-                        <p>@Messages("nisp.cope.definition")</p>
-                        <p>@Messages("nisp.cope.workplace")</p>
+                    <li>
+                        <a href="#how-to-increase-it" role="tab" id="tab-how-to-increase-it">@Messages("nisp.main.howtoincreaseit")</a>
+                    </li>
+                </ul>
+            </div>
+            @for(test <- abTest) {
+                @if(test == B && spSummary.contractedOutFlag) {
+                    <div class="tab-panel" id="cope" role="tabpanel">
+                        <div class="content-block">
+                            <h2 class="heading-medium">@Messages("nisp.cope.title1")</h2>
+                            <p>@Messages("nisp.cope.inthepast")</p>
+                            <p>@Messages("nisp.cope.why")</p>
+                            <ul class="list-bullet">
+                                <li>@Messages("nisp.cope.why.bullet1")</li>
+                                <li>@Messages("nisp.cope.why.bullet2")</li>
+                            </ul>
+                            <h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
+                            <p>@Messages("nisp.cope.definition")</p>
+                            <p>@Messages("nisp.cope.workplace")</p>
 
-                        <table class="cope-table">
-                            <thead>
+                            <table class="cope-table">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th><p>@Messages("nisp.main.chart.week")</p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                 <tr>
-                                    <th>&nbsp;</th>
-                                    <th><p>@Messages("nisp.main.chart.week")</p></th>
+                                    <td><p>@Messages("nisp.cope.table.pensionforecast")</p></td>
+                                    <td><p>@NispMoney.pounds(spSummary.forecastAmount.week)</p></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><p>@Messages("nisp.cope.table.pensionforecast")</p></td>
-                                <td><p>@NispMoney.pounds(spSummary.forecastAmount.week)</p></td>                                
-                            </tr>
-                            <tr>
-                                <td><p>@Messages("nisp.cope.table.estimate.title")</p></td>
-                                <td><p>@NispMoney.pounds(spSummary.copeAmount.week)</p></td>                                
-                            </tr>
-                            <tr>
-                                <td><p>@Messages("nisp.cope.table.copeadded")</p></td>
-                                <td><p>@NispMoney.pounds(spSummary.copeAmount.week+spSummary.forecastAmount.week)</p></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                <tr>
+                                    <td><p>@Messages("nisp.cope.table.estimate.title")</p></td>
+                                    <td><p>@NispMoney.pounds(spSummary.copeAmount.week)</p></td>
+                                </tr>
+                                <tr>
+                                    <td><p>@Messages("nisp.cope.table.copeadded")</p></td>
+                                    <td><p>@NispMoney.pounds(spSummary.copeAmount.week+spSummary.forecastAmount.week)</p></td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                        <p>@Html(Messages("nisp.main.cope.linktitle"))</p>
+                            <p>@Html(Messages("nisp.main.cope.linktitle"))</p>
 
+                        </div>
                     </div>
+               }
+            }
+            <div class="tab-panel" id="forecast-sp-value" role="tabpanel">
+                <div class="highlighted-event">
+                    <p id="amount-intro">@Messages("nisp.main.basedOn")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate) </span>@Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.title.estimate.is")</p>
+                    <p>
+                        <em id="amount-value">@NispMoney.pounds(spSummary.forecastAmount.week) @Messages("nisp.main.week")</em>
+                        @if(spSummary.numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP) {
+                            <p id="amount-sub">
+                                @NispMoney.pounds(spSummary.forecastAmount.month) @Messages("nisp.main.month"),
+                                @NispMoney.pounds(spSummary.forecastAmount.year) @Messages("nisp.main.year")
+                            </p>
+                        }
+                    </p>
                 </div>
-           }
-        }
-        <div class="tab-panel" id="forecast-sp-value" role="tabpanel">
-            <div class="highlighted-event">
-                <p id="amount-intro">@Messages("nisp.main.basedOn")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate) </span>@Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.title.estimate.is")</p>
-                <p>
-                    <em id="amount-value">@NispMoney.pounds(spSummary.forecastAmount.week) @Messages("nisp.main.week")</em>
-                    @if(spSummary.numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP) {
-                        <p id="amount-sub">
-                            @NispMoney.pounds(spSummary.forecastAmount.month) @Messages("nisp.main.month"),
-                            @NispMoney.pounds(spSummary.forecastAmount.year) @Messages("nisp.main.year")
-                        </p>
-                    }
-                </p>
-            </div>
-            <div class="content-block">
-                <p>@Messages("nisp.main.guarantee", spSummary.lastProcessedDate.localDate.getYear().toString())</p>
+                <div class="content-block">
+                    <p>@Messages("nisp.main.guarantee", spSummary.lastProcessedDate.localDate.getYear().toString())</p>
 
-                @if(spSummary.numberOfQualifyingYears >= Constants.minimumQualifyingYearsNSP) {
+                    @if(spSummary.numberOfQualifyingYears >= Constants.minimumQualifyingYearsNSP) {
 
-                    @if(spSummary.hasPsod) {<p>@Messages("nisp.main.psod")</p>}
-                    <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
+                        @if(spSummary.hasPsod) {<p>@Messages("nisp.main.psod")</p>}
+                        <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
 
-                    <div class="chart-block">
-                        <span class="graph-title">@Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())</span>
-                        <ul class="graph">
-                            <li>
-                                 <span class="amount" style="width:@currentChart.width%">
-                                     <span>
-                                        @NispMoney.pounds(currentChart.amountModel.week) @Messages("nisp.main.chart.week")
-                                     </span>
-                                </span>
-                            </li>
-                        </ul>
-                        <span class="footnote">@Messages("nisp.main.chart.whichis") @NispMoney.pounds(currentChart.amountModel.month) @Messages("nisp.main.chart.month"), @NispMoney.pounds(currentChart.amountModel.year) @Messages("nisp.main.chart.year")</span>
-                    </div>
-
-                    <div class="chart-block">
-                        <span class="graph-title">@Messages("nisp.main.chart.spa.title")</span>
-                        <ul class="graph">
-                            <li>
-                                <span class="amount" style="width:@forecastChart.width%">
-                                    <span>
-                                        @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.chart.week")
+                        <div class="chart-block">
+                            <span class="graph-title">@Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())</span>
+                            <ul class="graph">
+                                <li>
+                                     <span class="amount" style="width:@currentChart.width%">
+                                         <span>
+                                            @NispMoney.pounds(currentChart.amountModel.week) @Messages("nisp.main.chart.week")
+                                         </span>
                                     </span>
-                                </span>
-                            </li>
-                        </ul>
-                        <p class="footnote">@Messages("nisp.main.chart.whichis") @NispMoney.pounds(forecastChart.amountModel.month) @Messages("nisp.main.chart.month"), @NispMoney.pounds(forecastChart.amountModel.year) @Messages("nisp.main.chart.year")</p>
-                    </div>
-                } else {
-                    <p>@Messages("nisp.mqp.youneedatleast", Time.years(spSummary.numberOfQualifyingYears))</p>
-                    <p>@Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
-                    <div class="panel-indent">
-                        <p>@Html(Messages("nisp.mqp.overseas"))</p>
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="tab-panel" id="how-to-increase-it" role="tabpanel">
-            <div class="content-block">
-                @scenarios.viewScenario(spSummary.contextMessage, spSummary.finalRelevantYear, spSummary.numberOfGaps,spSummary)
-                <p>@Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+                                </li>
+                            </ul>
+                            <span class="footnote">@Messages("nisp.main.chart.whichis") @NispMoney.pounds(currentChart.amountModel.month) @Messages("nisp.main.chart.month"), @NispMoney.pounds(currentChart.amountModel.year) @Messages("nisp.main.chart.year")</span>
+                        </div>
 
-                <h2 class="heading-medium">2. @Messages("nisp.main.puttingOff")</h2>
-                <p>@Messages("nisp.main.puttingOff.line1", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
-                <p><a href="https://www.gov.uk/deferring-state-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:deferstatepension">@Messages("nisp.main.puttingOff.linkTitle")</a></p>
+                        <div class="chart-block">
+                            <span class="graph-title">@Messages("nisp.main.chart.spa.title")</span>
+                            <ul class="graph">
+                                <li>
+                                    <span class="amount" style="width:@forecastChart.width%">
+                                        <span>
+                                            @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.chart.week")
+                                        </span>
+                                    </span>
+                                </li>
+                            </ul>
+                            <p class="footnote">@Messages("nisp.main.chart.whichis") @NispMoney.pounds(forecastChart.amountModel.month) @Messages("nisp.main.chart.month"), @NispMoney.pounds(forecastChart.amountModel.year) @Messages("nisp.main.chart.year")</p>
+                        </div>
+                    } else {
+                        <p>@Messages("nisp.mqp.youneedatleast", Time.years(spSummary.numberOfQualifyingYears))</p>
+                        <p>@Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+                        <div class="panel-indent">
+                            <p>@Html(Messages("nisp.mqp.overseas"))</p>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="tab-panel" id="how-to-increase-it" role="tabpanel">
+                <div class="content-block">
+                    @scenarios.viewScenario(spSummary.contextMessage, spSummary.finalRelevantYear, spSummary.numberOfGaps,spSummary)
+                    <p>@Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+
+                    <h2 class="heading-medium">2. @Messages("nisp.main.puttingOff")</h2>
+                    <p>@Messages("nisp.main.puttingOff.line1", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+                    <p><a href="https://www.gov.uk/deferring-state-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:deferstatepension">@Messages("nisp.main.puttingOff.linkTitle")</a></p>
+                </div>
             </div>
         </div>
-    </div>
+    }
 }

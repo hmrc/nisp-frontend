@@ -59,6 +59,7 @@ trait AuthorisedForNisp extends Actions {
         authedBy.async {
           authContext: AuthContext => implicit request =>
             retrieveName(authContext) flatMap { name =>
+              authContext.principal.name.toSet(Some(name))
               action(NispUser(authContext, name))(request)
             }
         }
