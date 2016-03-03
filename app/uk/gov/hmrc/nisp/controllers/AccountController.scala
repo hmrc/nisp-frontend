@@ -52,6 +52,7 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
   val applicationConfig: ApplicationConfig
 
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+    implicit val authContext = Some(user.authContext)
     val nino = user.nino.getOrElse("")
     val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
     nispConnector.connectToGetSPResponse(nino).map{
@@ -72,7 +73,7 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
           Ok(account_forecastonly(nino, spSummary, user, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
         } else {
           val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
-          Ok(account(nino, spSummary, user, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider))
+          Ok(account(nino, spSummary, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider))
             .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
         }
 

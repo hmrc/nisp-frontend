@@ -19,9 +19,12 @@ package uk.gov.hmrc.nisp.config
 import java.net.{URLEncoder, URI}
 
 import play.api.Play._
+import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.nisp.utils.Constants
+import play.api.mvc.Request
+import uk.gov.hmrc.play.frontend.auth.AuthContext
 
 trait ApplicationConfig {
   val assetsPrefix: String
@@ -44,6 +47,10 @@ trait ApplicationConfig {
   val ivUpliftUrl: String
   val twoFactorUrl: String
   val ggSignInUrl: String
+  val breadcrumbServiceUrl: String
+  val perTaxFrontEndUrl: String
+  val initialBreadCrumbList: List[(String, String)]
+  val mainContentHeaderPartialUrl: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -75,4 +82,40 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
   override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
+  override lazy val breadcrumbServiceUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
+
+  override lazy val perTaxFrontEndUrl: String  = configuration.getString(s"pertax-frontend.url").getOrElse("")
+  lazy val pertaxServiceUrl = s"$perTaxFrontEndUrl/"
+  val initialBreadCrumbList = List(("label.account_home", pertaxServiceUrl))
+
+  lazy val mainContentHeaderPartialUrl = s"$breadcrumbServiceUrl/integration/main-content-header"
+
+  private[config] def buildBreadCrumb(request: Request[_]): List[(String, String)] = {
+    val links = Map(
+      "account" -> (("label.pension-forecast", routes.AccountController.show().url)),
+      "nirecord" -> (("label.national-insurance", routes.NIRecordController.showGaps().url))
+    )
+    try {
+      val items = request.path.split("/").filter(!_.isEmpty).map(links.get).toList
+      initialBreadCrumbList ::: items.flatten
+    } catch {
+      case e: NoSuchElementException => Nil
+    }
+  }
+
+  def generateHeaderUrl() (implicit request:Request[_], user: NispUser): String = {
+    val userName = if(Some(user.name).isDefined) {
+      user.name.get
+    } else {
+      "TestUser"
+    }
+    print("-------------" + user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse(""))
+     val x = buildBreadCrumb(request).map(listItem => s"item_text=${listItem._1}&item_url=${listItem._2}").mkString("&")
+    println("************" + x)
+
+    mainContentHeaderPartialUrl + "?name=" + s"$userName" +"&" +
+      user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
+      buildBreadCrumb(request).map(listItem => s"item_text=${listItem._1}&item_url=${listItem._2}").mkString("&") +
+      "&showBetaBanner=true&deskProToken='NISP'"
+  }
 }

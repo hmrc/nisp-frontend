@@ -19,6 +19,8 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.config._
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+@import uk.gov.hmrc.play.frontend.auth.AuthContext
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 
 @(title: String,
     sidebarLinks: Option[Html] = None,
@@ -33,15 +35,15 @@
     pageScripts: Option[Html] = None,
     articleClasses: Option[String] = None,
     analyticsAdditionalJs: Option[Html] = None,
-    articleEnabled: Boolean = true)(mainContent: Html)(implicit request : Request[_])
+    articleEnabled: Boolean = true)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None)
 
 
 @linkElement = {
-    <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/nisp.css")'/>   
+    <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/nisp.css")'/>
     <script src='@controllers.routes.Assets.at("jquery.js")'></script>
 }
 
-@links = { 
+@links = {
   <li><a href="@Constants.logoutUrl" role="button">Sign out</a></li>
 }
 
@@ -103,6 +105,10 @@
    
    @if( contentHeader.isDefined ) {
         @layouts.main_content_header(contentHeader.getOrElse(Html("")))
+    }
+
+    @if(user.isDefined) {
+        @uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever.getPartialContent(ApplicationConfig.generateHeaderUrl()(request, user.get))
     }
 }
 
