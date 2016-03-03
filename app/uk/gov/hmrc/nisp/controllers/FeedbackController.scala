@@ -23,18 +23,21 @@ import play.api.http.{Status => HttpStatus}
 import play.api.mvc.{Action, AnyContent, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{NispHeaderCarrierForPartialsConverter, WSHttp}
+import uk.gov.hmrc.nisp.config.wiring.{NispCachedStaticHtmlPartialRetriever, NispHeaderCarrierForPartialsConverter, WSHttp}
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import uk.gov.hmrc.nisp.controllers.connectors.{CustomAuditConnector, AuthenticationConnectors}
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, _}
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 import scala.concurrent.Future
 
 object FeedbackController extends FeedbackController with AuthenticationConnectors {
+  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = NispCachedStaticHtmlPartialRetriever
+
   override val httpPost = WSHttp
   override val contactFrontendPartialBaseUrl = ApplicationConfig.contactFrontendPartialBaseUrl
   override val contactFormServiceIdentifier = ApplicationConfig.contactFormServiceIdentifier
@@ -47,6 +50,8 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
 }
 
 trait FeedbackController extends FrontendController with Actions with AuthorisedForNisp {
+  implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever
+
   def httpPost: HttpPost
   def contactFrontendPartialBaseUrl: String
   def contactFormServiceIdentifier: String
@@ -79,7 +84,7 @@ trait FeedbackController extends FrontendController with Actions with Authorised
           resp =>
             resp.status match {
             case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))
-            case HttpStatus.BAD_REQUEST => BadRequest(uk.gov.hmrc.nisp.views.html.feedback(feedbackFormPartialUrl, Some(Html(resp.body)))(request))
+            case HttpStatus.BAD_REQUEST => BadRequest(uk.gov.hmrc.nisp.views.html.feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
             case status => Logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
           }
         }

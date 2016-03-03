@@ -20,24 +20,28 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.helpers.MockAccountController
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
+import uk.gov.hmrc.nisp.helpers.{MockCustomAuditConnector, MockAccountController}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequest = FakeRequest("GET", "/")
 
+  val testQuestionnaireController: QuestionnaireController = new QuestionnaireController {
+    override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+  }
+
   "GET /questionnaire" should {
     "return questionnaire page" in {
-      val result = QuestionnaireController.show(fakeRequest)
+      val result = testQuestionnaireController.show(fakeRequest)
       contentAsString(result).contains("signed out of your account") shouldBe true
       contentAsString(result).contains("Give us feedback to help us improve this service.") shouldBe true
     }
   }
 
   "POST /questionnaire" should {
-
     "return thank you page for submitted form" in {
-      val result = QuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
         ("easytouse", "2"),
         ("useitbyyourself", "2"),
         ("likelytouse", "2"),
@@ -55,12 +59,12 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /finished" should {
     "return 200" in {
-      val result = QuestionnaireController.showFinished(fakeRequest)
+      val result = testQuestionnaireController.showFinished(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
     "return HTML" in {
-      val result = QuestionnaireController.showFinished(fakeRequest)
+      val result = testQuestionnaireController.showFinished(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
