@@ -40,8 +40,6 @@ object NispConnector extends NispConnector with ServicesConfig {
   override def sessionCache: SessionCache = NispSessionCache
 }
 
-
-
 trait NispConnector {
 
   def http: HttpGet
@@ -72,7 +70,6 @@ trait NispConnector {
           MetricsService.keystoreMissCounter.inc()
           connectToMicroservice[A](url, api) map {
             case Success(data) =>
-              MetricsService.successCounters(api).inc()
               Some(cacheResult(data, api.toString))
             case Failure(ex) =>
               MetricsService.failedCounters(api).inc()
@@ -98,7 +95,6 @@ trait NispConnector {
     } recover {
       // http-verbs throws java exceptions, convert to Try
       case ex =>
-        timerContext.stop()
         Failure(ex)
     }
   }
