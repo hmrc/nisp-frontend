@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.connectors
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
 import uk.gov.hmrc.nisp.models.citizen.{CitizenDetailsResponse, CitizenDetailsRequest}
+import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
@@ -38,8 +39,19 @@ trait CitizenDetailsConnector {
 
   def connectToGetPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
     val jsonRequest = Json.toJson(CitizenDetailsRequest(Set(nino)))
-    http.POST[JsValue, HttpResponse](url(nino), jsonRequest).map {
+
+    val context = MetricsService.citizenDetailsTimer.time()
+
+    val result = http.POST[JsValue, HttpResponse](url(nino), jsonRequest).map {
+      context.stop()
       _.json.as[CitizenDetailsResponse]
     }
+
+    result onFailure {
+      case e: Exception =>
+        MetricsService.citizenDetailsFailedCounter.inc()
+    }
+
+    result
   }
 }
