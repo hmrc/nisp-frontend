@@ -34,11 +34,13 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
+  override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
 }
 
 trait NIRecordController extends FrontendController with AuthorisedForNisp {
   val nispConnector: NispConnector
   val metricsService: MetricsService
+  val customAuditConnector: CustomAuditConnector
 
   def showFull: Action[AnyContent] = show(niGaps = false)
   def showGaps: Action[AnyContent] = show(niGaps = true)
@@ -54,7 +56,7 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
             metricsService.niRecord(niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.noOfQualifyingYears, niSummary.yearsToContributeUntilPensionAge)
 
-            CustomAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
+            customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))
 

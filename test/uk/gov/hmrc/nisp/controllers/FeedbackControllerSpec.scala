@@ -25,12 +25,13 @@ import play.api.mvc.{AnyContent, Request, Cookie}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, MockCitizenDetailsService}
+import uk.gov.hmrc.nisp.controllers.connectors.{CustomAuditConnector, AuthenticationConnectors}
+import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, MockCustomAuditConnector, MockNpsAvailabilityChecker, MockCitizenDetailsService}
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.http.{HttpResponse, HttpPost}
 import uk.gov.hmrc.play.http.ws.WSHttp
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -41,6 +42,8 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
   val mockHttp = mock[WSHttp]
 
   val testFeedbackController = new FeedbackController with AuthenticationConnectors {
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+
     override def httpPost: HttpPost = mockHttp
     override def contactFrontendPartialBaseUrl: String = ApplicationConfig.contactFrontendPartialBaseUrl
     override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
