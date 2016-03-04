@@ -40,7 +40,7 @@ trait ExclusionController extends FrontendController with AuthorisedForNisp {
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
     nispConnector.connectToGetSPResponse(nino).map{
-      case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) => Ok(excluded(nino, spExclusions, user))
+      case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) => Ok(excluded(nino, spExclusions))
       case _ =>
         Logger.warn("User accessed /exclusion as non-excluded user")
         Redirect(routes.AccountController.show())

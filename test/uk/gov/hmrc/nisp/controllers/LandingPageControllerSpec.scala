@@ -89,6 +89,10 @@ class LandingPageControllerSpec extends UnitSpec with OneAppPerSuite {
           override val ivUpliftUrl: String = "ivuplift"
           override val ggSignInUrl: String = "ggsignin"
           override val twoFactorUrl: String = "twofactor"
+          override val breadcrumbServiceUrl: String = ""
+          override val mainContentHeaderPartialUrl: String = ""
+          override val initialBreadCrumbList: List[(String, String)] = Nil
+          override val perTaxFrontEndUrl: String = ""
         }
         override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
       }.show(fakeRequest)

@@ -68,9 +68,9 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
           val canGetPension = spSummary.numberOfQualifyingYears +
             spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
           val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-          Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
+          Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
         } else if(spSummary.forecastOnlyFlag){
-          Ok(account_forecastonly(nino, spSummary, user, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
+          Ok(account_forecastonly(nino, spSummary, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
         } else {
           val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
           Ok(account(nino, spSummary, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider))
