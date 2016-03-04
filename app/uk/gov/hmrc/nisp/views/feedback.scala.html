@@ -14,10 +14,10 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
+@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], formPartialRetriever: FormPartialRetriever)
 
 @nispMain(showBetaBanner = false) {
-    @formBody.getOrElse(cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl))
+    @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
 }
