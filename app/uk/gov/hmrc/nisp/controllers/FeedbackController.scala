@@ -23,7 +23,7 @@ import play.api.http.{Status => HttpStatus}
 import play.api.mvc.{Action, AnyContent, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{NispCachedStaticHtmlPartialRetriever, NispHeaderCarrierForPartialsConverter, WSHttp}
+import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, NispCachedStaticHtmlPartialRetriever, NispHeaderCarrierForPartialsConverter, WSHttp}
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.{CustomAuditConnector, AuthenticationConnectors}
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
@@ -31,12 +31,13 @@ import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, _}
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.play.partials.{FormPartialRetriever, CachedStaticHtmlPartialRetriever}
 
 import scala.concurrent.Future
 
 object FeedbackController extends FeedbackController with AuthenticationConnectors {
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = NispCachedStaticHtmlPartialRetriever
+  override implicit val formPartialRetriever: FormPartialRetriever = NispFormPartialRetriever
 
   override val httpPost = WSHttp
   override val contactFrontendPartialBaseUrl = ApplicationConfig.contactFrontendPartialBaseUrl
@@ -51,6 +52,7 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
 
 trait FeedbackController extends FrontendController with Actions with AuthorisedForNisp {
   implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever
 
   def httpPost: HttpPost
   def contactFrontendPartialBaseUrl: String
