@@ -97,7 +97,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
       "account" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.pension"), "UTF-8"), routes.AccountController.show().url)),
       "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGaps().url)),
       "voluntarycontribs" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showVoluntaryContributions().url)),
-      "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url))
+      "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url)),
+      "exclusion" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.account"), "UTF-8"), pertaxServiceUrl))
     )
     try {
       val items = request.path.split("/").filter(!_.isEmpty).map(links.get).toList

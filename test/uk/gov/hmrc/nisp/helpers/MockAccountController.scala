@@ -56,5 +56,9 @@ trait MockAccountController extends AccountController {
     override val ivUpliftUrl: String = "ivuplift"
     override val ggSignInUrl: String = "ggsignin"
     override val twoFactorUrl: String = "twofactor"
+    override val breadcrumbServiceUrl: String = ""
+    override val mainContentHeaderPartialUrl: String = ""
+    override val initialBreadCrumbList: List[(String, String)] = Nil
+    override val perTaxFrontEndUrl: String = ""
   }
 }

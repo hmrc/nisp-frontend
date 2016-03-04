@@ -19,10 +19,10 @@
 @import uk.gov.hmrc.nisp.models.SPSummaryModel
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 
 
-
-@(nino: String, spSummary: SPSummaryModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, authenticationProvider: String)(implicit request: Request[_])
+@(nino: String, spSummary: SPSummaryModel, authenticationProvider: String)(implicit request: Request[_], user: NispUser)
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -41,6 +41,7 @@
     });
 }
 
+@defining(Some(user)) { implicit userOption =>
 @nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <div class="grid services">
@@ -65,4 +66,5 @@
     <p>@Messages("nisp.main.context.forecastonly.para1", spSummary.forecastAmount.week, Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
     <a href='@routes.NIRecordController.showGaps.url' role="button" class="button">@Messages("nisp.main.showyourrecord")</a>
 </div>
+}
 }

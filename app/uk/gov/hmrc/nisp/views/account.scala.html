@@ -57,8 +57,6 @@
     @nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
                 pageScripts=Some(pageScripts), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-    @{ print(authContext.isDefined+"--------------------") }
-
         <div class="grid services">
                    <h1 class="heading-large title-spa">@Messages("nisp.main.h1.title")</h1>
             <div class="tablist">
