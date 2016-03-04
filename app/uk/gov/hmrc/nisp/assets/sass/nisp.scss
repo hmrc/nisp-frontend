@@ -54,6 +54,32 @@ h2.heading-medium {
 }
 
 /*------------------------------------*\
+    #HEADER - Global Breadcrumb
+\*------------------------------------*/
+
+#global-breadcrumb {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+#global-breadcrumb ol {
+  padding: .75em 0 .55em;
+}
+
+#global-breadcrumb ol li a:focus {
+  outline: 3px solid #ffbf47;
+}
+
+#global-breadcrumb ol li a {
+  font-size: 19px;
+}
+
+#global-breadcrumb ol li a:link, #global-breadcrumb ol li a:visited {
+  color: $link-colour;
+}
+
+
+/*------------------------------------*\
     #Landing Page
 \*------------------------------------*/
 

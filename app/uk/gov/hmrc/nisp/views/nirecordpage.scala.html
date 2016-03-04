@@ -19,9 +19,9 @@
 @import uk.gov.hmrc.nisp.models.NIRecord
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
-
-@(nino: String, niRecord: NIRecord, niSummary: NISummary, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, niGaps: Boolean = false
-    )(implicit request: Request[_])
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false
+    )(implicit request: Request[_], user: NispUser)
 
 @sidebar = {
 <div class="sidebar-border" >   
@@ -47,13 +47,11 @@
 <script src="@routes.Assets.at("javascript/nirecord.js")" type="text/javascript"></script>
 }
 
-@nispMain(  pageTitle=None, browserTitle = Messages("nisp.nirecord.title"),
-serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true,
-h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
-sidebarLinks = Some(sidebar)) {
-
-
-<p><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}#how-to-increase-it">@Messages("nisp.back")</a></p>
+@defining(Some(user)) { implicit userOption =>
+    @nispMain(  pageTitle=None, browserTitle = Messages("nisp.nirecord.title"),
+    serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true,
+    h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
+    sidebarLinks = Some(sidebar)) {
 
 
 <h1 class="heading-large nirecord-heading">@Messages("nisp.nirecord.heading")</h1>
@@ -119,4 +117,5 @@ sidebarLinks = Some(sidebar)) {
 }
 <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}#how-to-increase-it">@Messages("nisp.back")</a></p>
 
+}
 }
