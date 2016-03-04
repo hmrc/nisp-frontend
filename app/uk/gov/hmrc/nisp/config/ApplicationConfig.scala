@@ -19,12 +19,12 @@ package uk.gov.hmrc.nisp.config
 import java.net.{URLEncoder, URI}
 
 import play.api.Play._
+import play.api.i18n.Messages
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.nisp.utils.Constants
 import play.api.mvc.Request
-import uk.gov.hmrc.play.frontend.auth.AuthContext
 
 trait ApplicationConfig {
   val assetsPrefix: String
@@ -86,14 +86,18 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val perTaxFrontEndUrl: String  = configuration.getString(s"pertax-frontend.url").getOrElse("")
   lazy val pertaxServiceUrl = s"$perTaxFrontEndUrl/"
-  val initialBreadCrumbList = List(("label.account_home", pertaxServiceUrl))
+  val initialBreadCrumbList = List(
+                        (URLEncoder.encode(Messages("nisp.breadcrumb.account"),"UTF-8"), pertaxServiceUrl)
+                        )
 
   lazy val mainContentHeaderPartialUrl = s"$breadcrumbServiceUrl/integration/main-content-header"
 
   private[config] def buildBreadCrumb(request: Request[_]): List[(String, String)] = {
     val links = Map(
-      "account" -> (("label.pension-forecast", routes.AccountController.show().url)),
-      "nirecord" -> (("label.national-insurance", routes.NIRecordController.showGaps().url))
+      "account" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.pension"), "UTF-8"), routes.AccountController.show().url)),
+      "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGaps().url)),
+      "voluntarycontribs" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showVoluntaryContributions().url)),
+      "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url))
     )
     try {
       val items = request.path.split("/").filter(!_.isEmpty).map(links.get).toList
@@ -107,15 +111,12 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
     val userName = if(Some(user.name).isDefined) {
       user.name.get
     } else {
-      "TestUser"
+      "UserNotFound"
     }
-    print("-------------" + user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse(""))
-     val x = buildBreadCrumb(request).map(listItem => s"item_text=${listItem._1}&item_url=${listItem._2}").mkString("&")
-    println("************" + x)
 
-    mainContentHeaderPartialUrl + "?name=" + s"$userName" +"&" +
+    mainContentHeaderPartialUrl + "?name=" + s"${URLEncoder.encode(userName,"UTF-8")}" +"&" +
       user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
       buildBreadCrumb(request).map(listItem => s"item_text=${listItem._1}&item_url=${listItem._2}").mkString("&") +
-      "&showBetaBanner=true&deskProToken='NISP'"
+      "&showBetaBanner=false&deskProToken='NISP'"
   }
 }

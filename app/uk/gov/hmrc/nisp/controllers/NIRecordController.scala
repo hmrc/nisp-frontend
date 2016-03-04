@@ -58,17 +58,17 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))
 
-            Ok(nirecordpage(nino, niRecord, niSummary, user, niGaps))
+            Ok(nirecordpage(nino, niRecord, niSummary, niGaps))
           }
         case _ => throw new RuntimeException("NI Response Model is empty")
       }
   }
 
   def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
-    Ok(nirecordGapsAndHowToCheckThem(user))
+    Ok(nirecordGapsAndHowToCheckThem())
   }
 
   def showVoluntaryContributions: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
-    Ok(nirecordVoluntaryContributions(user))
+    Ok(nirecordVoluntaryContributions())
   }
 }

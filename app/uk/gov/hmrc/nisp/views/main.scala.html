@@ -102,13 +102,13 @@
 }
 
 @mainContentHeader = {
-   
-   @if( contentHeader.isDefined ) {
-        @layouts.main_content_header(contentHeader.getOrElse(Html("")))
-    }
 
     @if(user.isDefined) {
         @uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever.getPartialContent(ApplicationConfig.generateHeaderUrl()(request, user.get))
+    } else {
+        @if( contentHeader.isDefined ) {
+            @layouts.main_content_header(contentHeader.getOrElse(Html("")))
+        }
     }
 }
 
