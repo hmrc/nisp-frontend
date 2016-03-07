@@ -60,6 +60,7 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
       override val reportAProblemPartialUrl: String = ""
       override val postSignInRedirectUrl: String = ""
       override val ivUpliftUrl: String = ""
+      override val contactFormServiceIdentifier: String = ""
     }
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
 
@@ -111,7 +112,7 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /signin/verify" should {
     "redirect to verify" in {
       val result = testLandingController().verifySignIn(fakeRequest)
-      redirectLocation(result) shouldBe Some(ApplicationConfig.verifySignIn)
+      redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
     }
 
     "redirect to account page when signed in" in {

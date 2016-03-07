@@ -30,6 +30,7 @@ trait ApplicationConfig {
   val analyticsToken: Option[String]
   val analyticsHost: String
   val ssoUrl: Option[String]
+  val contactFormServiceIdentifier: String
   val contactFrontendPartialBaseUrl: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
@@ -52,8 +53,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
 
-  val contactFormServiceIdentifier = "NISP"
-
   override lazy val assetsPrefix: String = loadConfig(s"assets.url") + loadConfig(s"assets.version")
   override lazy val betaFeedbackUrl = s"${Constants.baseUrl}/feedback"
   override lazy val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
@@ -61,6 +60,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val analyticsHost: String = configuration.getString(s"google-analytics.host").getOrElse("auto")
   override lazy val ssoUrl: Option[String] = configuration.getString(s"portal.ssoUrl")
 
+  override val contactFormServiceIdentifier = "NISP"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"

@@ -40,8 +40,6 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
   override implicit val formPartialRetriever: FormPartialRetriever = NispFormPartialRetriever
 
   override val httpPost = WSHttp
-  override val contactFrontendPartialBaseUrl = ApplicationConfig.contactFrontendPartialBaseUrl
-  override val contactFormServiceIdentifier = ApplicationConfig.contactFormServiceIdentifier
   override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
   override def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
 
@@ -55,19 +53,17 @@ trait FeedbackController extends FrontendController with Actions with Authorised
   implicit val formPartialRetriever: FormPartialRetriever
 
   def httpPost: HttpPost
-  def contactFrontendPartialBaseUrl: String
-  def contactFormServiceIdentifier: String
   def contactFormReferer(implicit request: Request[AnyContent]): String
   def localSubmitUrl(implicit request: Request[AnyContent]): String
 
   private val TICKET_ID = "ticketId"
   private def feedbackFormPartialUrl(implicit request: Request[AnyContent]) =
-    s"$contactFrontendPartialBaseUrl/contact/beta-feedback/form/?submitUrl=${urlEncode(localSubmitUrl)}" +
-      s"&service=${urlEncode(contactFormServiceIdentifier)}&referer=${urlEncode(contactFormReferer)}"
+    s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/beta-feedback/form/?submitUrl=${urlEncode(localSubmitUrl)}" +
+      s"&service=${urlEncode(applicationConfig.contactFormServiceIdentifier)}&referer=${urlEncode(contactFormReferer)}"
   private def feedbackHmrcSubmitPartialUrl(implicit request: Request[AnyContent]) =
-    s"$contactFrontendPartialBaseUrl/contact/beta-feedback/form?resubmitUrl=${urlEncode(localSubmitUrl)}"
+    s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/beta-feedback/form?resubmitUrl=${urlEncode(localSubmitUrl)}"
   private def feedbackThankYouPartialUrl(ticketId: String)(implicit request: Request[AnyContent]) =
-    s"$contactFrontendPartialBaseUrl/contact/beta-feedback/form/confirmation?ticketId=${urlEncode(ticketId)}"
+    s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/beta-feedback/form/confirmation?ticketId=${urlEncode(ticketId)}"
 
   def show: Action[AnyContent] = UnauthorisedAction {
     implicit request =>
