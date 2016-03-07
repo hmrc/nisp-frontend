@@ -70,7 +70,7 @@ trait LandingController extends FrontendController with Actions with AuthorisedF
         case IdentityVerificationResult.PreconditionFailed => not_authorised()
         case IdentityVerificationResult.UserAborted => not_authorised()
       }
-    } getOrElse Future.successful(not_authorised())
+    } getOrElse Future.successful(not_authorised(showFirstParagraph = false)) // 2FA returns no journeyId
 
     result.map {
       Ok(_).withNewSession
