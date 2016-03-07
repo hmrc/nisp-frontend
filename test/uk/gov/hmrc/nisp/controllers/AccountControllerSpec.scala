@@ -108,6 +108,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val ivUpliftUrl: String = "ivuplift"
             override val ggSignInUrl: String = "ggsignin"
             override val twoFactorUrl: String = "twofactor"
+            override val contactFormServiceIdentifier: String = ""
           }
         }
         val result = controller.show(fakeRequest)
@@ -231,6 +232,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val ivUpliftUrl: String = "ivuplift"
             override val ggSignInUrl: String = "ggsignin"
             override val twoFactorUrl: String = "twofactor"
+            override val contactFormServiceIdentifier: String = ""
           }
         }
         val result = controller.signOut(fakeRequest)
@@ -261,6 +263,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val ivUpliftUrl: String = "ivuplift"
             override val ggSignInUrl: String = "ggsignin"
             override val twoFactorUrl: String = "twofactor"
+            override val contactFormServiceIdentifier: String = ""
           }
         }
         val result = controller.signOut(fakeRequest)
