@@ -169,5 +169,11 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = testLandingController().showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
       contentAsString(result) should include ("Your session has ended because you have not done anything for 15 minutes.")
     }
+
+    "show 2FA failure page when no journey ID specified" in {
+      val result = testLandingController().showNotAuthorised(None)(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
+      contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
+    }
   }
 }

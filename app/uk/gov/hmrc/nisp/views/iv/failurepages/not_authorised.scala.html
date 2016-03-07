@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.controllers.routes
 
-@()(implicit request: Request[_])
+@(showFirstParagraph: Boolean = true)(implicit request: Request[_])
 
 @analyticsAdditionalJs = {
     ga('send', 'pageview', '/checkmystatepension/unauthorised-confirm-identity');
@@ -27,7 +27,10 @@
 @nispMain(pageTitle = None, h1Classes=Some("welcome-msg"), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <h1 class="heading-xlarge">@Messages("nisp.iv.failure.general.title")</h1>
-<p>@Html(Messages("nisp.iv.failure.general.text"))</p>
+
+@if(showFirstParagraph) {
+    <p>@Html(Messages("nisp.iv.failure.general.text"))</p>
+}
 
 <h2 class="heading-medium">@Messages("nisp.iv.failure.otherways.heading")</h2>
 <p>@Html(Messages("nisp.iv.failure.otherways.text"))</p>
