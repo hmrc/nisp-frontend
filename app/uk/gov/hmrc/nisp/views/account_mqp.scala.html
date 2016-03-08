@@ -41,7 +41,7 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-@nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <div class="grid services">
     <h1 class="heading-large title-spa">@Messages("nisp.main.description.mqp")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>, @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h1>
