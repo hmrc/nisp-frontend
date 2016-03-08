@@ -26,7 +26,6 @@
     sidebarLinks: Option[Html] = None,
     sidebarClasses: Option[String] = None,
     userLoggedIn: Boolean = false,
-    serviceInfoContent: Option[Html] = None,
     contentHeader: Option[Html] = None,
     gaCalls: Option[(String,String) => Html] = None,
     applicationConfig: ApplicationConfig = ApplicationConfig,
@@ -79,7 +78,7 @@
 }
 
 @serviceInfoHtml = {
-    @serviceInfo(betaBanner, false,  None)
+    @serviceInfo(betaBanner, false)
 }
 
 @getHelpForm = {

@@ -54,7 +54,7 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
+    @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
                 pageScripts=Some(pageScripts), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
         <div class="grid services">
