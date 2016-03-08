@@ -28,11 +28,11 @@ import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAct
 import scala.concurrent.Future
 
 object QuestionnaireController extends QuestionnaireController {
-  override def customAuditConnector: CustomAuditConnector = CustomAuditConnector
+  override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
 }
 
 trait QuestionnaireController extends FrontendController with Actions with AuthenticationConnectors {
-  def customAuditConnector: CustomAuditConnector
+  val customAuditConnector: CustomAuditConnector
 
   def show: Action[AnyContent] = UnauthorisedAction.async {
     implicit request =>

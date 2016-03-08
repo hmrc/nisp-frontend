@@ -67,16 +67,19 @@
 }
 
 @betaBanner = {
-    @if(showBetaBanner) {
-        @layouts.betaBanner(userLoggedIn,
-            applicationConfig.betaFeedbackUrl,
-            applicationConfig.betaFeedbackUnauthenticatedUrl,
-            true)
+    @if(user.isDefined) {
+        @uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever.getPartialContent(ApplicationConfig.generateHeaderUrl()(request, user.get))
+    } else {
+        @if(showBetaBanner) {
+            @layouts.betaBanner(userLoggedIn,
+                applicationConfig.betaFeedbackUrl,
+                applicationConfig.betaFeedbackUnauthenticatedUrl,true)
+        }
     }
 }
 
 @serviceInfoHtml = {
-    @serviceInfo(betaBanner, false,  serviceInfoContent)
+    @serviceInfo(betaBanner, false,  None)
 }
 
 @getHelpForm = {
@@ -102,13 +105,8 @@
 }
 
 @mainContentHeader = {
-
-    @if(user.isDefined) {
-        @uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever.getPartialContent(ApplicationConfig.generateHeaderUrl()(request, user.get))
-    } else {
-        @if( contentHeader.isDefined ) {
-            @layouts.main_content_header(contentHeader.getOrElse(Html("")))
-        }
+    @if( contentHeader.isDefined ) {
+        @layouts.main_content_header(contentHeader.getOrElse(Html("")))
     }
 }
 

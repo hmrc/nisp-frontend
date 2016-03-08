@@ -24,7 +24,7 @@ import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
 import uk.gov.hmrc.nisp.models.enums.SPExclusion.SPExclusion
 
 trait MetricsService {
-  def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage], contractedOutFlag: Boolean, forecastOnlyFlag: Boolean, 
+  def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage], contractedOutFlag: Boolean, forecastOnlyFlag: Boolean,
     age: Int, abTest: Option[ABTest])
   def niRecord(gaps: Int, payableGaps: Int, pre75Years: Int, qualifyingYears: Int, yearsUntilSPA: Int)
   def exclusion(exclusions: List[SPExclusion])
@@ -81,11 +81,6 @@ object MetricsService extends MetricsService {
     APIType.NI -> MetricsRegistry.defaultRegistry.timer("ni-response-timer")
   )
 
-  val successCounters = Map(
-    APIType.SP -> MetricsRegistry.defaultRegistry.counter("sp-success-counter"),
-    APIType.NI -> MetricsRegistry.defaultRegistry.counter("ni-success-counter")
-  )
-
   val failedCounters = Map(
     APIType.SP -> MetricsRegistry.defaultRegistry.counter("sp-failed-counter"),
     APIType.NI -> MetricsRegistry.defaultRegistry.counter("ni-failed-counter")
@@ -102,6 +97,9 @@ object MetricsService extends MetricsService {
 
   val identityVerificationTimer = MetricsRegistry.defaultRegistry.timer("identity-verification-timer")
   val identityVerificationFailedCounter = MetricsRegistry.defaultRegistry.counter("identity-verification-failed-counter")
+
+  val citizenDetailsTimer = MetricsRegistry.defaultRegistry.timer("citizen-details-timer")
+  val citizenDetailsFailedCounter = MetricsRegistry.defaultRegistry.counter("citizen-details-failed-counter")
 
   override def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage],
                         contractedOutFlag: Boolean, forecastOnlyFlag: Boolean, age: Int, abTest: Option[ABTest]): Unit = {

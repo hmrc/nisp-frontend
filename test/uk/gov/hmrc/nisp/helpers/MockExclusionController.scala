@@ -28,5 +28,30 @@ object MockExclusionController extends ExclusionController {
 
   override protected def authConnector: AuthConnector = MockAuthConnector
   override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
+  override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+    override val ggSignInUrl: String = ""
+    override val citizenAuthHost: String = ""
+    override val twoFactorUrl: String = ""
+    override val assetsPrefix: String = ""
+    override val reportAProblemNonJSUrl: String = ""
+    override val ssoUrl: Option[String] = None
+    override val identityVerification: Boolean = true
+    override val betaFeedbackUnauthenticatedUrl: String = ""
+    override val notAuthorisedRedirectUrl: String = ""
+    override val contactFrontendPartialBaseUrl: String = ""
+    override val govUkFinishedPageUrl: String = ""
+    override val showGovUkDonePage: Boolean = true
+    override val excludeCopeTab: Boolean = true
+    override val analyticsHost: String = ""
+    override val betaFeedbackUrl: String = ""
+    override val analyticsToken: Option[String] = None
+    override val reportAProblemPartialUrl: String = ""
+    override val contactFormServiceIdentifier: String = ""
+    override val postSignInRedirectUrl: String = ""
+    override val ivUpliftUrl: String = ""
+    override val breadcrumbServiceUrl: String = ""
+    override val mainContentHeaderPartialUrl: String = ""
+    override val initialBreadCrumbList: List[(String, String)] = Nil
+    override val perTaxFrontEndUrl: String = ""
+  }
 }

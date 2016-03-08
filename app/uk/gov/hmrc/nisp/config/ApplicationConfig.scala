@@ -16,15 +16,14 @@
 
 package uk.gov.hmrc.nisp.config
 
-import java.net.{URLEncoder, URI}
-
+import java.net.URLEncoder
 import play.api.Play._
 import play.api.i18n.Messages
+import play.api.mvc.Request
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.nisp.controllers.routes
-import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.nisp.utils.Constants
-import play.api.mvc.Request
+import uk.gov.hmrc.play.config.ServicesConfig
 
 trait ApplicationConfig {
   val assetsPrefix: String
@@ -33,6 +32,7 @@ trait ApplicationConfig {
   val analyticsToken: Option[String]
   val analyticsHost: String
   val ssoUrl: Option[String]
+  val contactFormServiceIdentifier: String
   val contactFrontendPartialBaseUrl: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
@@ -59,8 +59,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
 
-  val contactFormServiceIdentifier = "NISP"
-
   override lazy val assetsPrefix: String = loadConfig(s"assets.url") + loadConfig(s"assets.version")
   override lazy val betaFeedbackUrl = s"${Constants.baseUrl}/feedback"
   override lazy val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
@@ -68,6 +66,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val analyticsHost: String = configuration.getString(s"google-analytics.host").getOrElse("auto")
   override lazy val ssoUrl: Option[String] = configuration.getString(s"portal.ssoUrl")
 
+  override val contactFormServiceIdentifier = "NISP"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
@@ -86,10 +85,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val perTaxFrontEndUrl: String  = configuration.getString(s"pertax-frontend.url").getOrElse("")
   lazy val pertaxServiceUrl = s"$perTaxFrontEndUrl/"
-  val initialBreadCrumbList = List(
-                        (URLEncoder.encode(Messages("nisp.breadcrumb.account"),"UTF-8"), pertaxServiceUrl)
-                        )
-
+  val initialBreadCrumbList = List((URLEncoder.encode(Messages("nisp.breadcrumb.account"),"UTF-8"), pertaxServiceUrl))
   lazy val mainContentHeaderPartialUrl = s"$breadcrumbServiceUrl/integration/main-content-header"
 
   private[config] def buildBreadCrumb(request: Request[_]): List[(String, String)] = {
@@ -118,6 +114,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
     mainContentHeaderPartialUrl + "?name=" + s"${URLEncoder.encode(userName,"UTF-8")}" +"&" +
       user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
       buildBreadCrumb(request).map(listItem => s"item_text=${listItem._1}&item_url=${listItem._2}").mkString("&") +
-      "&showBetaBanner=false&deskProToken='NISP'"
+      "&showBetaBanner=true&deskProToken='NISP'"
   }
 }
