@@ -25,12 +25,13 @@ import play.api.mvc.{AnyContent, Request, Cookie}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, MockCitizenDetailsService}
+import uk.gov.hmrc.nisp.controllers.connectors.{CustomAuditConnector, AuthenticationConnectors}
+import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.http.{HttpResponse, HttpPost}
 import uk.gov.hmrc.play.http.ws.WSHttp
+import uk.gov.hmrc.play.partials.{FormPartialRetriever, CachedStaticHtmlPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -41,17 +42,42 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
   val mockHttp = mock[WSHttp]
 
   val testFeedbackController = new FeedbackController with AuthenticationConnectors {
-    override def httpPost: HttpPost = mockHttp
-    override def contactFrontendPartialBaseUrl: String = ApplicationConfig.contactFrontendPartialBaseUrl
-    override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+    override implicit val formPartialRetriever: FormPartialRetriever = MockFormPartialRetriever
 
-    override def contactFormServiceIdentifier: String = "NISP"
+    override def httpPost: HttpPost = mockHttp
+    override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
 
     override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
 
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
-    override val applicationConfig: ApplicationConfig = ApplicationConfig
+    override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+      override val ggSignInUrl: String = ""
+      override val citizenAuthHost: String = ""
+      override val twoFactorUrl: String = ""
+      override val assetsPrefix: String = ""
+      override val reportAProblemNonJSUrl: String = ""
+      override val ssoUrl: Option[String] = None
+      override val identityVerification: Boolean = false
+      override val betaFeedbackUnauthenticatedUrl: String = ""
+      override val notAuthorisedRedirectUrl: String = ""
+      override val contactFrontendPartialBaseUrl: String = ""
+      override val govUkFinishedPageUrl: String = ""
+      override val showGovUkDonePage: Boolean = false
+      override val excludeCopeTab: Boolean = false
+      override val analyticsHost: String = ""
+      override val betaFeedbackUrl: String = ""
+      override val analyticsToken: Option[String] = None
+      override val reportAProblemPartialUrl: String = ""
+      override val contactFormServiceIdentifier: String = "NISP"
+      override val postSignInRedirectUrl: String = ""
+      override val ivUpliftUrl: String = ""
+      override val breadcrumbServiceUrl: String = ""
+      override val mainContentHeaderPartialUrl: String = ""
+      override val initialBreadCrumbList: List[(String, String)] = Nil
+      override val perTaxFrontEndUrl: String = ""
+    }
   }
 
   "GET /feedback" should {

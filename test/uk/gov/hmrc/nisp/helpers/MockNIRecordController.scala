@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.NIRecordController
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.services.{MetricsService, NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
@@ -27,6 +28,7 @@ object MockNIRecordController extends NIRecordController {
   override val metricsService: MetricsService = MockMetricsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
   override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+  override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
 
   override protected def authConnector: AuthConnector = MockAuthConnector
 
@@ -54,5 +56,6 @@ object MockNIRecordController extends NIRecordController {
     override val mainContentHeaderPartialUrl: String = ""
     override val initialBreadCrumbList: List[(String, String)] = Nil
     override val perTaxFrontEndUrl: String = ""
+    override val contactFormServiceIdentifier: String = ""
   }
 }

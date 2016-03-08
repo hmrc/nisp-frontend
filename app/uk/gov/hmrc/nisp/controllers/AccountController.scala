@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Request, Session}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
@@ -31,8 +30,6 @@ import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
-
-import scala.concurrent.Future
 
 object AccountController extends AccountController with AuthenticationConnectors {
   override val nispConnector: NispConnector = NispConnector
@@ -60,9 +57,9 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
         metricsService.mainPage(spSummary.forecastAmount.week, spSummary.statePensionAmount.week, spSummary.contextMessage,
           spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, spSummary.customerAge, getABTest(nino, spSummary.contractedOutFlag))
 
-        customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
-          spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name,
-          spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week,authenticationProvider ))
+        customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage, spSummary.statePensionAge.date, spSummary.statePensionAmount.week,
+          spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecastOnlyFlag,
+          getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week,authenticationProvider))
 
         if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
           val canGetPension = spSummary.numberOfQualifyingYears +

@@ -21,7 +21,7 @@ import java.util.UUID
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.helpers.{MockExclusionController, MockAccountController}
+import uk.gov.hmrc.nisp.helpers.MockExclusionController
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
@@ -42,9 +42,9 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.userId -> mockUserIdExcluded,
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
-
-      contentAsString(result).contains("You will have reached State Pension age before the new scheme starts.") shouldBe true
-      contentAsString(result).contains("Tom ExclusionMultilple") shouldBe true
+      print(contentAsString(result))
+      contentAsString(result).contains("You are unable to use this service") shouldBe true
+      contentAsString(result).contains("You will have reached State Pension age before the new scheme starts") shouldBe true
     }
 
     "return redirect to account page for non-excluded user" in {

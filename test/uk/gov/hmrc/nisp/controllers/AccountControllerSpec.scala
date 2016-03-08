@@ -112,6 +112,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val mainContentHeaderPartialUrl: String = ""
             override val initialBreadCrumbList: List[(String, String)] = Nil
             override val perTaxFrontEndUrl: String = ""
+            override val contactFormServiceIdentifier: String = ""
           }
         }
         val result = controller.show(fakeRequest)
@@ -239,6 +240,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val mainContentHeaderPartialUrl: String = ""
             override val initialBreadCrumbList: List[(String, String)] = Nil
             override val perTaxFrontEndUrl: String = ""
+            override val contactFormServiceIdentifier: String = ""
           }
         }
         val result = controller.signOut(fakeRequest)
@@ -273,6 +275,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val mainContentHeaderPartialUrl: String = ""
             override val initialBreadCrumbList: List[(String, String)] = Nil
             override val perTaxFrontEndUrl: String = ""
+            override val contactFormServiceIdentifier: String = ""
           }
         }
         val result = controller.signOut(fakeRequest)

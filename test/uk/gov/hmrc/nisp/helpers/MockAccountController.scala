@@ -60,5 +60,6 @@ trait MockAccountController extends AccountController {
     override val mainContentHeaderPartialUrl: String = ""
     override val initialBreadCrumbList: List[(String, String)] = Nil
     override val perTaxFrontEndUrl: String = ""
+    override val contactFormServiceIdentifier: String = ""
   }
 }
