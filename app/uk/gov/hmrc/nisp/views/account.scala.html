@@ -20,7 +20,6 @@
 @import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
 @import uk.gov.hmrc.nisp.services.ABService
 @import uk.gov.hmrc.nisp.models.enums.ABTest._
-@import uk.gov.hmrc.play.frontend.auth.AuthContext
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 
 @(
@@ -30,7 +29,7 @@
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
     authenticationProvider: String
-)(implicit request: Request[_], authContext: Option[AuthContext] = None, user: NispUser)
+)(implicit request: Request[_], user: NispUser)
 
 @pageScripts = {
 <script src="@routes.Assets.at("javascript/account.js")" type="text/javascript"></script>

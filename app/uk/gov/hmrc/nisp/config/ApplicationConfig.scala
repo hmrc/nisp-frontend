@@ -102,13 +102,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   }
 
   def generateHeaderUrl() (implicit request:Request[_], user: NispUser): String = {
-    val userName = if(Some(user.name).isDefined) {
-      user.name.get
-    } else {
-      "UserNotFound"
-    }
-
-    mainContentHeaderPartialUrl + "?name=" + s"${URLEncoder.encode(userName,"UTF-8")}" +"&" +
+    mainContentHeaderPartialUrl + "?name=" + s"${URLEncoder.encode(user.name.getOrElse(""),"UTF-8")}" +"&" +
       user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
       buildBreadCrumb(request).map(listItem => s"item_text=${listItem._1}&item_url=${listItem._2}").mkString("&") +
       "&showBetaBanner=true&deskProToken='NISP'"
