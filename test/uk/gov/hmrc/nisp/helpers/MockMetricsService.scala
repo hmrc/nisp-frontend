@@ -22,8 +22,5 @@ import uk.gov.hmrc.nisp.models.enums.SPExclusion.SPExclusion
 import uk.gov.hmrc.nisp.services.MetricsService
 
 object MockMetricsService extends MetricsService {
-  override def mainPage(forecast: BigDecimal, current: BigDecimal, scenario: Option[SPContextMessage],
-                        contractedOutFlag: Boolean, forecastOnlyFlag: Boolean, age: Int, abTest: Option[ABTest]): Unit = ()
-  override def niRecord(gaps: Int, payableGaps: Int, pre75Years: Int, qualifyingYears: Int, yearsUntilSPA: Int): Unit = ()
-  override def exclusion(exclusions: List[SPExclusion]): Unit = ()
+  override def abTest(abTest: Option[ABTest]): Unit = ()
 }
