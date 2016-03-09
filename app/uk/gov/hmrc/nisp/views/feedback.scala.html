@@ -18,6 +18,6 @@
 
 @(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], formPartialRetriever: FormPartialRetriever)
 
-@nispMain(showBetaBanner = false) {
+@nispMain() {
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
 }
