@@ -30,7 +30,6 @@
     gaCalls: Option[(String,String) => Html] = None,
     applicationConfig: ApplicationConfig = ApplicationConfig,
     showTitleHeaderNav: Boolean = true,
-    showBetaBanner: Boolean = true,
     pageScripts: Option[Html] = None,
     articleClasses: Option[String] = None,
     analyticsAdditionalJs: Option[Html] = None,
@@ -69,16 +68,18 @@
     @if(user.isDefined) {
         @uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever.getPartialContent(ApplicationConfig.generateHeaderUrl()(request, user.get))
     } else {
-        @if(showBetaBanner) {
-            @layouts.betaBanner(userLoggedIn,
-                applicationConfig.betaFeedbackUrl,
-                applicationConfig.betaFeedbackUnauthenticatedUrl,true)
-        }
+      @layouts.betaBanner(userLoggedIn,
+        applicationConfig.betaFeedbackUrl,
+        applicationConfig.betaFeedbackUnauthenticatedUrl,true)
     }
 }
 
 @serviceInfoHtml = {
-    @serviceInfo(betaBanner, false)
+   @if(!user.isDefined) {  
+      @serviceInfo(betaBanner, false)
+   } else {
+      @betaBanner
+   }
 }
 
 @getHelpForm = {
