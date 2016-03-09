@@ -49,7 +49,7 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
   val applicationConfig: ApplicationConfig
 
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    implicit val authContext = Some(user.authContext)
+
     val nino = user.nino.getOrElse("")
     val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
     nispConnector.connectToGetSPResponse(nino).map{

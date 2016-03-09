@@ -60,7 +60,6 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
       override val reportAProblemPartialUrl: String = ""
       override val postSignInRedirectUrl: String = ""
       override val ivUpliftUrl: String = ""
-      override val breadcrumbServiceUrl: String = ""
       override val mainContentHeaderPartialUrl: String = ""
       override val initialBreadCrumbList: List[(String, String)] = Nil
       override val perTaxFrontEndUrl: String = ""
