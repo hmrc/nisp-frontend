@@ -57,8 +57,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "url-builder" % "1.0.0",
     "com.kenshoo" %% "metrics-play" % "2.3.0_0.1.8",
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
-    "uk.gov.hmrc" %% "domain" % "3.2.0",
-    "uk.gov.hmrc" %% "play-breadcrumb" % "1.0.0"
+    "uk.gov.hmrc" %% "domain" % "3.2.0"
   )
 
   trait TestDependencies {

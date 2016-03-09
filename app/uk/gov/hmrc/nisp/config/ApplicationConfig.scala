@@ -47,7 +47,6 @@ trait ApplicationConfig {
   val ivUpliftUrl: String
   val twoFactorUrl: String
   val ggSignInUrl: String
-  val breadcrumbServiceUrl: String
   val perTaxFrontEndUrl: String
   val initialBreadCrumbList: List[(String, String)]
   val mainContentHeaderPartialUrl: String
@@ -81,12 +80,10 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
   override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
-  override lazy val breadcrumbServiceUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
 
-  override lazy val perTaxFrontEndUrl: String  = configuration.getString(s"pertax-frontend.url").getOrElse("")
-  lazy val pertaxServiceUrl = s"$perTaxFrontEndUrl/"
-  val initialBreadCrumbList = List((URLEncoder.encode(Messages("nisp.breadcrumb.account"),"UTF-8"), pertaxServiceUrl))
-  lazy val mainContentHeaderPartialUrl = s"$breadcrumbServiceUrl/integration/main-content-header"
+  override lazy val perTaxFrontEndUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
+  val initialBreadCrumbList = List((URLEncoder.encode(Messages("nisp.breadcrumb.account"),"UTF-8"), perTaxFrontEndUrl))
+  lazy val mainContentHeaderPartialUrl = s"$perTaxFrontEndUrl/integration/main-content-header"
 
   private[config] def buildBreadCrumb(request: Request[_]): List[(String, String)] = {
     val links = Map(
@@ -94,7 +91,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
       "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGaps().url)),
       "voluntarycontribs" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showVoluntaryContributions().url)),
       "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url)),
-      "exclusion" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.account"), "UTF-8"), pertaxServiceUrl))
+      "exclusion" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.account"), "UTF-8"), perTaxFrontEndUrl))
     )
     try {
       val items = request.path.split("/").filter(!_.isEmpty).map(links.get).toList
