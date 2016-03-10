@@ -17,8 +17,10 @@
 @import uk.gov.hmrc.nisp.models.enums.SPExclusion
 @import uk.gov.hmrc.nisp.models.SPExclusionsModel
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String,spExclusions: SPExclusionsModel)(implicit request: Request[_], user: NispUser)
+@(nino: String,spExclusions: SPExclusionsModel)(implicit request: Request[_], user: NispUser,
+  partialRetriever: CachedStaticHtmlPartialRetriever)
 
 
 @analyticsAdditionalJs = {

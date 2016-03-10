@@ -17,8 +17,9 @@
 @import uk.gov.hmrc.nisp.views.html.nispMain
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@()(implicit request: Request[_])
+@()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('send', 'pageview', '/checkmystatepension/unauthorised-locked-out');

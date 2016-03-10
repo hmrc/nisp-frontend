@@ -16,8 +16,9 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@()(implicit request: Request[_])
+@()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @nispMain(browserTitle = Messages("nisp.timeout.title"), showTitleHeaderNav = false, pageTitle = Some(Messages("nisp.timeout.heading"))) {
     <p>@Messages("nisp.timeout.body")</p>

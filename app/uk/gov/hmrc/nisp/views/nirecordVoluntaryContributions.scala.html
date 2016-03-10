@@ -16,8 +16,9 @@
 
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@()(implicit request: Request[_], user: NispUser)
+@()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
 @nispMain(pageTitle=None, browserTitle = Messages("nisp.nirecord.voluntarycontributions.title"),

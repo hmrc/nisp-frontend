@@ -31,14 +31,14 @@ import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAct
 
 import scala.concurrent.Future
 
-object LandingController extends LandingController with AuthenticationConnectors {
+object LandingController extends LandingController with AuthenticationConnectors with PartialRetriever {
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
 }
 
-trait LandingController extends FrontendController with Actions with AuthorisedForNisp {
+trait LandingController extends NispFrontendController with Actions with AuthorisedForNisp {
   val npsAvailabilityChecker: NpsAvailabilityChecker
   val identityVerificationConnector: IdentityVerificationConnector
 

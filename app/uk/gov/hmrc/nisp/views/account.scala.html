@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nisp.services.ABService
 @import uk.gov.hmrc.nisp.models.enums.ABTest._
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 @(
     nino: String,
@@ -29,7 +30,7 @@
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
     authenticationProvider: String
-)(implicit request: Request[_], user: NispUser)
+)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @pageScripts = {
 <script src="@routes.Assets.at("javascript/account.js")" type="text/javascript"></script>

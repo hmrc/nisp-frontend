@@ -20,8 +20,9 @@
 @import uk.gov.hmrc.nisp.models.SPSummaryModel
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, spSummary: SPSummaryModel, canGetPension: Boolean, numberOfYearsMissing: Int, authenticationProvider: String)(implicit request: Request[_], user: NispUser)
+@(nino: String, spSummary: SPSummaryModel, canGetPension: Boolean, numberOfYearsMissing: Int, authenticationProvider: String)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
