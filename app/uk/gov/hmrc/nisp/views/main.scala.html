@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
 @import uk.gov.hmrc.play.frontend.auth.AuthContext
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.nisp.utils.Breadcrumb
 
 @(title: String,
     sidebarLinks: Option[Html] = None,
@@ -64,22 +65,16 @@
 @actingAttorneyBanner = {
 }
 
-@betaBanner = {
-    @if(user.isDefined) {
-        @partialRetriever.getPartialContent(ApplicationConfig.generateHeaderUrl()(request, user.get))
-    } else {
-      @layouts.betaBanner(userLoggedIn,
-        applicationConfig.betaFeedbackUrl,
-        applicationConfig.betaFeedbackUnauthenticatedUrl,true)
-    }
-}
-
 @serviceInfoHtml = {
-   @if(!user.isDefined) {  
-      @serviceInfo(betaBanner, false)
-   } else {
-      @betaBanner
-   }
+    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl()(request, user)))
+    .getOrElse(
+        layouts.serviceInfo(
+            layouts.betaBanner(userLoggedIn, applicationConfig.betaFeedbackUrl,
+                applicationConfig.betaFeedbackUnauthenticatedUrl, true),
+            false,
+            None
+        )
+    )}
 }
 
 @getHelpForm = {
