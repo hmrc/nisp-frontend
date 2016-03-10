@@ -75,7 +75,7 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
       override val ivUpliftUrl: String = ""
       override val mainContentHeaderPartialUrl: String = ""
       override val initialBreadCrumbList: List[(String, String)] = Nil
-      override val perTaxFrontEndUrl: String = ""
+      override val pertaxFrontendUrl: String = ""
     }
   }
 

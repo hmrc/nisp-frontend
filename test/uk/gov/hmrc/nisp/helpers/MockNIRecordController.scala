@@ -54,7 +54,7 @@ object MockNIRecordController extends NIRecordController {
     override val twoFactorUrl: String = "twofactor"
     override val mainContentHeaderPartialUrl: String = ""
     override val initialBreadCrumbList: List[(String, String)] = Nil
-    override val perTaxFrontEndUrl: String = ""
+    override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
   }
 }
