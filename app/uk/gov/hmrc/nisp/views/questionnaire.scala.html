@@ -14,9 +14,10 @@
 * limitations under the License.
 *@
 
-@(form: Form[_])(implicit request: Request[_])
-
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+
+@(form: Form[_])(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @nispMain(browserTitle = Messages("nisp.questionnaire.title"), pageTitle = Some(Messages("nisp.questionnaire.header")), sidebarLinks = Some(includes.questionnaireSidebar())) {
     <p>@Html(Messages("nisp.useagain", uk.gov.hmrc.nisp.controllers.routes.LandingController.show.url))</p>

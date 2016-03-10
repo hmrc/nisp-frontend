@@ -35,8 +35,8 @@ import uk.gov.hmrc.play.partials.{FormPartialRetriever, CachedStaticHtmlPartialR
 
 import scala.concurrent.Future
 
-object FeedbackController extends FeedbackController with AuthenticationConnectors {
-  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = NispCachedStaticHtmlPartialRetriever
+object FeedbackController extends FeedbackController with AuthenticationConnectors with PartialRetriever {
+
   override implicit val formPartialRetriever: FormPartialRetriever = NispFormPartialRetriever
 
   override val httpPost = WSHttp
@@ -48,8 +48,7 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
   override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
-trait FeedbackController extends FrontendController with Actions with AuthorisedForNisp {
-  implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever
+trait FeedbackController extends NispFrontendController with Actions with AuthorisedForNisp {
   implicit val formPartialRetriever: FormPartialRetriever
 
   def httpPost: HttpPost

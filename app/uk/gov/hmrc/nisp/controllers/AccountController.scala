@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import play.api.mvc.{Action, AnyContent, Request, Session}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.{AuthorisedForNisp, NispUser}
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
@@ -29,9 +30,10 @@ import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
-import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
+import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-object AccountController extends AccountController with AuthenticationConnectors {
+object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
   override val metricsService: MetricsService = MetricsService
 
@@ -39,11 +41,13 @@ object AccountController extends AccountController with AuthenticationConnectors
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
+  override val partialRetriever: CachedStaticHtmlPartialRetriever = NispCachedStaticHtmlPartialRetriever
 }
 
-trait AccountController extends FrontendController with AuthorisedForNisp {
+trait AccountController extends NispFrontendController with AuthorisedForNisp {
   def nispConnector: NispConnector
   def metricsService: MetricsService
+  implicit val partialRetriever: CachedStaticHtmlPartialRetriever
 
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig

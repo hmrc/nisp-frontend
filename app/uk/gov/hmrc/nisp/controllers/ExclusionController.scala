@@ -27,14 +27,14 @@ import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.nisp.views.html.excluded
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
-object ExclusionController extends ExclusionController with AuthenticationConnectors {
+object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
-trait ExclusionController extends FrontendController with AuthorisedForNisp {
+trait ExclusionController extends NispFrontendController with AuthorisedForNisp {
   val nispConnector: NispConnector
 
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>

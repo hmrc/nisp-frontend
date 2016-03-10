@@ -20,8 +20,10 @@
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
-@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false
-    )(implicit request: Request[_], user: NispUser)
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+
+@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false)(implicit request: Request[_],
+  user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >   

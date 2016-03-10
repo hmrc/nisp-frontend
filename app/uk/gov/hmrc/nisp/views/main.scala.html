@@ -33,7 +33,7 @@
     pageScripts: Option[Html] = None,
     articleClasses: Option[String] = None,
     analyticsAdditionalJs: Option[Html] = None,
-    articleEnabled: Boolean = true)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None)
+    articleEnabled: Boolean = true)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 
 @linkElement = {
@@ -66,7 +66,7 @@
 
 @betaBanner = {
     @if(user.isDefined) {
-        @uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever.getPartialContent(ApplicationConfig.generateHeaderUrl()(request, user.get))
+        @partialRetriever.getPartialContent(ApplicationConfig.generateHeaderUrl()(request, user.get))
     } else {
       @layouts.betaBanner(userLoggedIn,
         applicationConfig.betaFeedbackUrl,

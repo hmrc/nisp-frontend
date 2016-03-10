@@ -29,7 +29,7 @@
     contentHeaderExtra: Option[Html] = None,
     articleClasses: Option[String] = None,
     analyticsAdditionalJs: Option[Html] = None,
-    articleEnabled: Boolean = true)(mainContent: Html)(implicit request:Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None)
+    articleEnabled: Boolean = true)(mainContent: Html)(implicit request:Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 @contentHeader = {
     @loginDetailsHeader

@@ -28,7 +28,7 @@ import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVolun
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
 
-object NIRecordController extends NIRecordController with AuthenticationConnectors {
+object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
   override val metricsService: MetricsService = MetricsService
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
@@ -37,7 +37,7 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
   override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
 }
 
-trait NIRecordController extends FrontendController with AuthorisedForNisp {
+trait NIRecordController extends NispFrontendController with AuthorisedForNisp {
   val nispConnector: NispConnector
   val metricsService: MetricsService
   val customAuditConnector: CustomAuditConnector
