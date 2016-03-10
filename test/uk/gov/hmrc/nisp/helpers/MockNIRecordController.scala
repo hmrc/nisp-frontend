@@ -53,8 +53,6 @@ object MockNIRecordController extends NIRecordController {
     override val ivUpliftUrl: String = "ivuplift"
     override val ggSignInUrl: String = "ggsignin"
     override val twoFactorUrl: String = "twofactor"
-    override val mainContentHeaderPartialUrl: String = ""
-    override val initialBreadCrumbList: List[(String, String)] = Nil
     override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
   }

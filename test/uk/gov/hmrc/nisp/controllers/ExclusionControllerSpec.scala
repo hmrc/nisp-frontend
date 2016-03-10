@@ -43,7 +43,6 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
       contentAsString(result).contains("You are unable to use this service") shouldBe true
-      contentAsString(result).contains("You will have reached State Pension age before the new scheme starts") shouldBe true
     }
 
     "return redirect to account page for non-excluded user" in {

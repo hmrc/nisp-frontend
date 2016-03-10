@@ -48,8 +48,6 @@ trait ApplicationConfig {
   val twoFactorUrl: String
   val ggSignInUrl: String
   val pertaxFrontendUrl: String
-  val initialBreadCrumbList: List[(String, String)]
-  val mainContentHeaderPartialUrl: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -82,29 +80,4 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
 
   override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
-  val initialBreadCrumbList = List((URLEncoder.encode(Messages("nisp.breadcrumb.account"),"UTF-8"), pertaxFrontendUrl))
-  lazy val mainContentHeaderPartialUrl = s"$pertaxFrontendUrl/integration/main-content-header"
-
-  private[config] def buildBreadCrumb(request: Request[_]): List[(String, String)] = {
-    val links = Map(
-      "account" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.pension"), "UTF-8"), routes.AccountController.show().url)),
-      "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGaps().url)),
-      "voluntarycontribs" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showVoluntaryContributions().url)),
-      "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url)),
-      "exclusion" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.account"), "UTF-8"), pertaxFrontendUrl))
-    )
-    try {
-      val items = request.path.split("/").filter(!_.isEmpty).map(links.get).toList
-      initialBreadCrumbList ::: items.flatten
-    } catch {
-      case e: NoSuchElementException => Nil
-    }
-  }
-
-  def generateHeaderUrl() (implicit request:Request[_], user: NispUser): String = {
-    mainContentHeaderPartialUrl + "?name=" + s"${URLEncoder.encode(user.name.getOrElse(""),"UTF-8")}" +"&" +
-      user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
-      buildBreadCrumb(request).map(listItem => s"item_text=${listItem._1}&item_url=${listItem._2}").mkString("&") +
-      "&showBetaBanner=true&deskProToken='NISP'"
-  }
 }

@@ -53,7 +53,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-json-logger" % "2.1.1",
     "uk.gov.hmrc" %% "play-health" % "1.1.0",
     "uk.gov.hmrc" %% "govuk-template" % "4.0.0",
-    "uk.gov.hmrc" %% "play-ui" % "4.4.0",
+    "uk.gov.hmrc" %% "play-ui" % "4.10.0",
     "uk.gov.hmrc" %% "url-builder" % "1.0.0",
     "com.kenshoo" %% "metrics-play" % "2.3.0_0.1.8",
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,

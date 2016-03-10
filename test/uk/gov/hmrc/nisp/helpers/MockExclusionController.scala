@@ -50,8 +50,6 @@ object MockExclusionController extends ExclusionController {
     override val contactFormServiceIdentifier: String = ""
     override val postSignInRedirectUrl: String = ""
     override val ivUpliftUrl: String = ""
-    override val mainContentHeaderPartialUrl: String = ""
-    override val initialBreadCrumbList: List[(String, String)] = Nil
     override val pertaxFrontendUrl: String = ""
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
