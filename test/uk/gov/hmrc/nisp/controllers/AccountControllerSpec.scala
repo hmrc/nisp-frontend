@@ -26,11 +26,13 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers.{MockNpsAvailabilityChecker, TestAccountBuilder, MockCitizenDetailsService, MockAccountController}
+import uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.SPAmountModel
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
 
@@ -65,6 +67,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       override def now: LocalDateTime = testNow
     }
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   }
 
   "Account controller" should {
@@ -113,6 +116,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
           }
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
         val result = controller.show(fakeRequest)
         redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
@@ -240,6 +244,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
           }
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
         val result = controller.signOut(fakeRequest)
         redirectLocation(result).get shouldBe routes.QuestionnaireController.show().url
@@ -274,6 +279,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
           }
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
         val result = controller.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "govukdone"

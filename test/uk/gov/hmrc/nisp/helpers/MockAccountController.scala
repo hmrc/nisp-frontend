@@ -22,10 +22,12 @@ import uk.gov.hmrc.nisp.controllers.AccountController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.services.{MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 object MockAccountController extends MockAccountController {
   override val npsAvailabilityChecker = MockNpsAvailabilityChecker
   override val citizenDetailsService = MockCitizenDetailsService
+  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 }
 
 trait MockAccountController extends AccountController {

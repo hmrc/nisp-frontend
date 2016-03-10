@@ -21,6 +21,7 @@ import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.ExclusionController
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 object MockExclusionController extends ExclusionController {
   override val nispConnector: NispConnector = MockNispConnector
@@ -53,4 +54,5 @@ object MockExclusionController extends ExclusionController {
     override val initialBreadCrumbList: List[(String, String)] = Nil
     override val pertaxFrontendUrl: String = ""
   }
+  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 }
