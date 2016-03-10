@@ -41,13 +41,11 @@ object AccountController extends AccountController with AuthenticationConnectors
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
-  override val partialRetriever: CachedStaticHtmlPartialRetriever = NispCachedStaticHtmlPartialRetriever
 }
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp {
   def nispConnector: NispConnector
   def metricsService: MetricsService
-  implicit val partialRetriever: CachedStaticHtmlPartialRetriever
 
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
