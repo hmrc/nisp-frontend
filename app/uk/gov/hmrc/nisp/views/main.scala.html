@@ -31,6 +31,7 @@
     gaCalls: Option[(String,String) => Html] = None,
     applicationConfig: ApplicationConfig = ApplicationConfig,
     showTitleHeaderNav: Boolean = true,
+    showBetaBanner: Boolean = true,
     pageScripts: Option[Html] = None,
     articleClasses: Option[String] = None,
     analyticsAdditionalJs: Option[Html] = None,
@@ -65,16 +66,13 @@
 @actingAttorneyBanner = {
 }
 
+@betaBanner = {@if(showBetaBanner) {@layouts.betaBanner(userLoggedIn, applicationConfig.betaFeedbackUrl,applicationConfig.betaFeedbackUnauthenticatedUrl, true)}}
+
 @serviceInfoHtml = {
     @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl()(request, user)))
-    .getOrElse(
-        layouts.serviceInfo(
-            layouts.betaBanner(userLoggedIn, applicationConfig.betaFeedbackUrl,
-                applicationConfig.betaFeedbackUnauthenticatedUrl, true),
-            false,
-            None
+        .getOrElse(serviceInfo(betaBanner, false, None)
         )
-    )}
+    }
 }
 
 @getHelpForm = {
