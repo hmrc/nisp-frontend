@@ -25,8 +25,8 @@ import uk.gov.hmrc.nisp.events.NIRecordEvent
 import uk.gov.hmrc.nisp.models.{NIRecord, NIResponse, NISummary}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import scala.concurrent.Future
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
+
 
 object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
