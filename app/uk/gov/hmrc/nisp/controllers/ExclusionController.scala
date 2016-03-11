@@ -25,7 +25,7 @@ import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.models.{SPExclusionsModel, SPResponseModel}
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
 import uk.gov.hmrc.nisp.views.html.excluded
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector

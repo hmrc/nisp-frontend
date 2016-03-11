@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers
+package uk.gov.hmrc.nisp.controllers.partial
 
 import uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
