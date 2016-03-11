@@ -53,7 +53,7 @@ trait NispConnector {
 
   def connectToGetNIResponse(nino: String)(implicit hc: HeaderCarrier): Future[NIResponse] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/nirecord"
-    retrieveFromCache[NIResponse](APIType.NI, urlToRead) map (_.getOrElse(NIResponse(None, None)))
+    retrieveFromCache[NIResponse](APIType.NI, urlToRead) map (_.getOrElse(NIResponse(None, None, None)))
   }
 
   private def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[Option[A]] = {

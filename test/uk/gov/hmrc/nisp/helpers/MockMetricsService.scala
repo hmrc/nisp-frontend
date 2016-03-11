@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.helpers
 
 import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
 import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
-import uk.gov.hmrc.nisp.models.enums.SPExclusion.SPExclusion
+import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 import uk.gov.hmrc.nisp.services.MetricsService
 
 object MockMetricsService extends MetricsService {
