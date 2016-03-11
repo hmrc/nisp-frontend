@@ -19,9 +19,9 @@ package uk.gov.hmrc.nisp.services
 import com.codahale.metrics.{Timer, Counter, Meter}
 import com.kenshoo.play.metrics.MetricsRegistry
 import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
-import uk.gov.hmrc.nisp.models.enums.{APIType, ABTest, SPExclusion, SPContextMessage}
+import uk.gov.hmrc.nisp.models.enums.{APIType, ABTest, Exclusion, SPContextMessage}
 import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
-import uk.gov.hmrc.nisp.models.enums.SPExclusion.SPExclusion
+import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 
 trait MetricsService {
   def abTest(abTest: Option[ABTest])

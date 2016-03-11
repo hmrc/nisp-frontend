@@ -66,15 +66,17 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
         case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
           metricsService.abTest(getABTest(nino, spSummary.contractedOutFlag))
 
-          customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage, spSummary.statePensionAge.date, spSummary.statePensionAmount.week,
-            spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecastOnlyFlag,
+          customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
+            spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecastAmount.week,
+            spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecastOnlyFlag,
             getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week, authenticationProvider))
 
           if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
             val canGetPension = spSummary.numberOfQualifyingYears +
               spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-            Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
+            Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax))
+              .withSession(storeUserInfoInSession(user, contractedOut = false))
           } else if (spSummary.forecastOnlyFlag) {
             Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
           } else {
@@ -83,11 +85,11 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }
 
-        case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) =>
+        case SPResponseModel(_, Some(spExclusions: ExclusionsModel)) =>
           customAuditConnector.sendEvent(AccountExclusionEvent(
             nino,
             user.name,
-            spExclusions.spExclusions
+            spExclusions.exclusions
           ))
           Redirect(routes.ExclusionController.show()).withSession(storeUserInfoInSession(user, contractedOut = false))
         case _ => throw new RuntimeException("SP Response Model is empty")

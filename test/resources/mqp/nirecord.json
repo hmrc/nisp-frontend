@@ -318,7 +318,8 @@
     "unavailableYear": 2014,
     "numberOfPayableGaps": 7,
     "numberOfNonPayableGaps": 19,
-    "canImproveWithGaps": true
+    "canImproveWithGaps": true,
+    "isAbroad": false
   }
 }
 

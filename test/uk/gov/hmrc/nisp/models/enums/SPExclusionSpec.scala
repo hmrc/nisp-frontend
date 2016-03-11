@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.models.enums
 
-import SPExclusion.SPExclusion
+import Exclusion.Exclusion
 import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -28,11 +28,11 @@ class SPExclusionSpec extends UnitSpec {
   "SP Exclusion" when {
     "serialised into JSON" should {
       "output Abroad when Abroad is formatted" in {
-        Json.toJson(SPExclusion.Abroad) shouldBe JsString("Abroad")
+        Json.toJson(Exclusion.Abroad) shouldBe JsString("Abroad")
       }
 
       "parse Abroad when Abroad is read" in {
-        Json.fromJson[SPExclusion](JsString("Abroad")).get shouldBe SPExclusion.Abroad
+        Json.fromJson[Exclusion](JsString("Abroad")).get shouldBe Exclusion.Abroad
       }
     }
   }
