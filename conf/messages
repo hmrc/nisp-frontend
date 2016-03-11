@@ -132,8 +132,7 @@ nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200
 nisp.excluded.isleOfMan.line1 = The Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms from 6 April 2016. 
 nisp.excluded.isleOfMan.line2 = For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
 
-nisp.excluded.mwrre.line1 = The digital service is currently unable to calculate your State Pension forecast as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
-nisp.excluded.mwrre.line2 = To get a married women''s reduced rate elective pension statement, you will need to <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a>.
+nisp.excluded.mwrre = The digital service is currently unable to calculate your State Pension forecast as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
 
 nisp.excluded.overseas = The digital service is currently unable to calculate your UK State Pension forecast as you''ve lived or worked abroad.
 
