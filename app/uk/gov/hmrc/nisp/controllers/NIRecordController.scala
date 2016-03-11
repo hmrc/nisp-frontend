@@ -53,9 +53,6 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
           if (niGaps && niSummary.noOfNonQualifyingYears < 1) {
             Redirect(routes.NIRecordController.showFull())
           } else {
-            metricsService.niRecord(niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
-              niSummary.noOfQualifyingYears, niSummary.yearsToContributeUntilPensionAge)
-
             customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))

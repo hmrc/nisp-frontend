@@ -56,8 +56,7 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
     val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
     nispConnector.connectToGetSPResponse(nino).map{
       case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
-        metricsService.mainPage(spSummary.forecastAmount.week, spSummary.statePensionAmount.week, spSummary.contextMessage,
-          spSummary.contractedOutFlag, spSummary.forecastOnlyFlag, spSummary.customerAge, getABTest(nino, spSummary.contractedOutFlag))
+        metricsService.abTest(getABTest(nino, spSummary.contractedOutFlag))
 
         customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage, spSummary.statePensionAge.date, spSummary.statePensionAmount.week,
           spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecastOnlyFlag,
@@ -78,8 +77,6 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
         }
 
       case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) =>
-        metricsService.exclusion(spExclusions.spExclusions)
-
         customAuditConnector.sendEvent(AccountExclusionEvent(
           nino,
           user.name,
