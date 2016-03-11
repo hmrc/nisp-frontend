@@ -130,8 +130,4 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
   def timeout: Action[AnyContent] = UnauthorisedAction { implicit request =>
     Ok(sessionTimeout())
   }
-
-  private def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = {
-    if(confidenceLevel.level == 500) Constants.verify else Constants.iv
-  }
 }

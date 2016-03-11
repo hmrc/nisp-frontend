@@ -60,7 +60,7 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))
 
-            Ok(nirecordpage(nino, niRecord, niSummary, user, niGaps))
+            Ok(nirecordpage(nino, niRecord, niSummary, user, niGaps, getAuthenticationProvider(user.authContext.user.confidenceLevel)))
           }
         case _ => throw new RuntimeException("NI Response Model is empty")
       }

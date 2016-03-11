@@ -22,8 +22,9 @@ import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredi
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.auth._
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.Accounts
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.{ConfidenceLevel, Accounts}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -100,5 +101,9 @@ trait AuthorisedForNisp extends Actions {
   object NispAnyRegime extends NispRegime
   object NispVerifyRegime extends NispRegime {
     override def authenticationType: AuthenticationProvider = VerifyProvider
+  }
+
+  def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = {
+    if(confidenceLevel.level == 500) Constants.verify else Constants.iv
   }
 }

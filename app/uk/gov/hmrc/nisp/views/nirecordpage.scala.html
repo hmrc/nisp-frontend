@@ -20,8 +20,9 @@
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
 
-@(nino: String, niRecord: NIRecord, niSummary: NISummary, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, niGaps: Boolean = false
+@(nino: String, niRecord: NIRecord, niSummary: NISummary, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, niGaps: Boolean = false, authenticationProvider: String
     )(implicit request: Request[_])
+
 
 @sidebar = {
 <div class="sidebar-border" >   
@@ -47,10 +48,20 @@
 <script src="@routes.Assets.at("javascript/nirecord.js")" type="text/javascript"></script>
 }
 
+@analyticsAdditionalJs = {
+    ga('set', {
+        'dimension10': '@niSummary.noOfQualifyingYears',
+        'dimension12': '@niSummary.numberOfPayableGaps',
+        'dimension13': '@niSummary.yearsToContributeUntilPensionAge',
+        'dimension22': '@authenticationProvider',
+        'metric5': 1
+    });
+}
+
 @nispMain(  pageTitle=None, browserTitle = Messages("nisp.nirecord.title"),
 serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true,
 h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
-sidebarLinks = Some(sidebar)) {
+sidebarLinks = Some(sidebar), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 
 <p><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}#how-to-increase-it">@Messages("nisp.back")</a></p>
