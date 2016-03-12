@@ -71,7 +71,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp {
           Ok(account_forecastonly(nino, spSummary, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
         } else {
           val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
-          Ok(account(nino, spSummary, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider))
+          Ok(account(nino, spSummary, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider,isPertaxUrl))
             .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
         }
 
@@ -132,4 +132,9 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp {
   private def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = {
     if(confidenceLevel.level == 500) Constants.verify else Constants.iv
   }
+
+  def isPertaxUrl(implicit request: Request[AnyContent]): Boolean = {
+    request.headers.get(REFERER).getOrElse("").contains("personal-tax")
+  }
+
 }
