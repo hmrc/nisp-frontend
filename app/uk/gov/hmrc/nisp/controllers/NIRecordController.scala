@@ -63,14 +63,11 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
           if (niGaps && niSummary.noOfNonQualifyingYears < 1) {
             Redirect(routes.NIRecordController.showFull())
           } else {
-            metricsService.niRecord(niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
-              niSummary.noOfQualifyingYears, niSummary.yearsToContributeUntilPensionAge)
-
             customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))
 
-            Ok(nirecordpage(nino, niRecord, niSummary, niGaps))
+            Ok(nirecordpage(nino, niRecord, niSummary, niGaps, getAuthenticationProvider(user.authContext.user.confidenceLevel)))
           }
         case _ => throw new RuntimeException("NI Response Model is empty")
       }
