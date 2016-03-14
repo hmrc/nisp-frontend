@@ -24,9 +24,8 @@
 
 
 
-@(nino: String, spSummary: SPSummaryModel, authenticationProvider: String,isPertaxUrl:Boolean
-)(implicit request: Request[_], user: NispUser,
-  partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, spSummary: SPSummaryModel, authenticationProvider: String, isPertaxUrl:Boolean
+)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {

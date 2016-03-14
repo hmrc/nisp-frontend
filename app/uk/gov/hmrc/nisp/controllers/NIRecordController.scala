@@ -30,6 +30,8 @@ import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvai
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 
+import scala.concurrent.Future
+
 
 object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
@@ -48,27 +50,29 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
 
   def showFull: Action[AnyContent] = show(niGaps = false)
   def showGaps: Action[AnyContent] = show(niGaps = true)
+  def pta: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
+    setFromPertax
+    Redirect(routes.NIRecordController.showGaps())
+  }
 
   private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user => implicit request =>
-      isFromPertax.flatMap { isPertax => // Must be called incase they go to Account
-        val nino = user.nino.getOrElse("")
-        nispConnector.connectToGetNIResponse(nino).map {
-          case NIResponse(Some(niRecord: NIRecord), Some(niSummary: NISummary)) =>
-            if (niGaps && niSummary.noOfNonQualifyingYears < 1) {
-              Redirect(routes.NIRecordController.showFull())
-            } else {
-              metricsService.niRecord(niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
-                niSummary.noOfQualifyingYears, niSummary.yearsToContributeUntilPensionAge)
+      val nino = user.nino.getOrElse("")
+      nispConnector.connectToGetNIResponse(nino).map {
+        case NIResponse(Some(niRecord: NIRecord), Some(niSummary: NISummary)) =>
+          if (niGaps && niSummary.noOfNonQualifyingYears < 1) {
+            Redirect(routes.NIRecordController.showFull())
+          } else {
+            metricsService.niRecord(niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
+              niSummary.noOfQualifyingYears, niSummary.yearsToContributeUntilPensionAge)
 
-              customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
-                niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
-                niSummary.spaYear))
+            customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
+              niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
+              niSummary.spaYear))
 
-              Ok(nirecordpage(nino, niRecord, niSummary, niGaps))
-            }
-          case _ => throw new RuntimeException("NI Response Model is empty")
-        }
+            Ok(nirecordpage(nino, niRecord, niSummary, niGaps))
+          }
+        case _ => throw new RuntimeException("NI Response Model is empty")
       }
   }
 

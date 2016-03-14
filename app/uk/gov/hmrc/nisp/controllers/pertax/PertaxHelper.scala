@@ -30,30 +30,31 @@ trait PertaxHelper {
 
   val sessionCache: SessionCache
 
-  def isFromPertax(implicit request: Request[AnyContent], hc: HeaderCarrier): Future[Boolean] = {
+  def setFromPertax(implicit hc: HeaderCarrier): Unit = {
+    val timerContext = MetricsService.keystoreWriteTimer.time()
+    val cacheFuture = sessionCache.cache(PERTAX, true)
+    cacheFuture.onSuccess {
+      case _ => timerContext.stop()
+    }
+    cacheFuture.onFailure {
+      case _ => MetricsService.keystoreWriteFailed.inc()
+    }
+  }
+
+  def isFromPertax(implicit hc: HeaderCarrier): Future[Boolean] = {
     val keystoreTimerContext = MetricsService.keystoreReadTimer.time()
     sessionCache.fetchAndGetEntry[Boolean](PERTAX).map { keystoreResult =>
       keystoreTimerContext.stop()
       keystoreResult match  {
         case Some(isPertax) => MetricsService.keystoreHitCounter.inc(); isPertax
-        case None =>  {
+        case None =>
           MetricsService.keystoreMissCounter.inc()
-          val isPertax = request.headers.get(REFERER).getOrElse("").contains("personal-account")
-          val timerContext = MetricsService.keystoreWriteTimer.time()
-          val cacheFuture = sessionCache.cache(PERTAX, isPertax)
-          cacheFuture.onSuccess {
-            case _ => timerContext.stop()
-          }
-          cacheFuture.onFailure {
-            case _ => MetricsService.keystoreWriteFailed.inc()
-          }
-          isPertax
-        }
+          false
       }
     } recover {
       case ex =>
         MetricsService.keystoreReadFailed.inc()
-        request.headers.get(REFERER).getOrElse("").contains("personal-account")
+        false
     }
   }
 }

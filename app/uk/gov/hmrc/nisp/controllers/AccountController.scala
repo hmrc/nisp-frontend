@@ -75,7 +75,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
             val canGetPension = spSummary.numberOfQualifyingYears +
               spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-            Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
+            Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
           } else if (spSummary.forecastOnlyFlag) {
             Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
           } else {
@@ -96,6 +96,11 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
     }
+  }
+
+  def pta(): Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
+    setFromPertax
+    Redirect(routes.AccountController.show())
   }
 
   def calculateChartWidths(currentAmountModel: SPAmountModel, forecastAmountModel: SPAmountModel): (SPChartModel, SPChartModel) = {
