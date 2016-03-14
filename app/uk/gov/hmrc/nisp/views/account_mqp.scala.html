@@ -22,7 +22,8 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, spSummary: SPSummaryModel, canGetPension: Boolean, numberOfYearsMissing: Int, authenticationProvider: String)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, spSummary: SPSummaryModel, canGetPension: Boolean, numberOfYearsMissing: Int, authenticationProvider: String,isPertaxUrl:Boolean
+)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -110,6 +111,7 @@
     }
 
     <a href='@routes.NIRecordController.showGaps.url' role="button" class="button">@Messages("nisp.main.showyourrecord")</a>
+    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.main.caveat")</div>}
 </div>
 }
 }
