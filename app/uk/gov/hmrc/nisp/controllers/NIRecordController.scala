@@ -17,33 +17,43 @@
 package uk.gov.hmrc.nisp.controllers
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.NIRecordEvent
 import uk.gov.hmrc.nisp.models.{NIRecord, NIResponse, NISummary}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
+
 import scala.concurrent.Future
 
-object NIRecordController extends NIRecordController with AuthenticationConnectors {
+
+object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
   override val metricsService: MetricsService = MetricsService
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
+  override val sessionCache: SessionCache = NispSessionCache
 }
 
-trait NIRecordController extends FrontendController with AuthorisedForNisp {
+trait NIRecordController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   val nispConnector: NispConnector
   val metricsService: MetricsService
   val customAuditConnector: CustomAuditConnector
 
   def showFull: Action[AnyContent] = show(niGaps = false)
   def showGaps: Action[AnyContent] = show(niGaps = true)
+  def pta: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
+    setFromPertax
+    Redirect(routes.NIRecordController.showGaps())
+  }
 
   private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user => implicit request =>
@@ -57,17 +67,17 @@ trait NIRecordController extends FrontendController with AuthorisedForNisp {
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))
 
-            Ok(nirecordpage(nino, niRecord, niSummary, user, niGaps, getAuthenticationProvider(user.authContext.user.confidenceLevel)))
+            Ok(nirecordpage(nino, niRecord, niSummary, niGaps, getAuthenticationProvider(user.authContext.user.confidenceLevel)))
           }
         case _ => throw new RuntimeException("NI Response Model is empty")
       }
   }
 
   def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
-    Ok(nirecordGapsAndHowToCheckThem(user))
+    Ok(nirecordGapsAndHowToCheckThem())
   }
 
   def showVoluntaryContributions: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
-    Ok(nirecordVoluntaryContributions(user))
+    Ok(nirecordVoluntaryContributions())
   }
 }

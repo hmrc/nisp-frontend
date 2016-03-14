@@ -15,17 +15,16 @@
 *@
 
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(user: uk.gov.hmrc.nisp.controllers.auth.NispUser)(implicit request: Request[_])
+@()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
+@defining(Some(user)) { implicit userOption =>
 @nispMain(pageTitle=None, browserTitle = Messages("nisp.nirecord.voluntarycontributions.title"),
-serviceInfoContent=Some(includes.loginInfo(user)),
 userLoggedIn = true,
 h1Classes=Some("account-heading"),
 sidebarLinks = None) {
-
-<div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a>
-</div>
 
 <h1 class="heading-large">@Messages("nisp.nirecord.voluntarycontributions.heading")</h1>
 <p class="lede">@Messages("nisp.nirecord.voluntarycontributions.title.message")</p>
@@ -74,4 +73,5 @@ sidebarLinks = None) {
 <div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a>
 </div>
 
+}
 }

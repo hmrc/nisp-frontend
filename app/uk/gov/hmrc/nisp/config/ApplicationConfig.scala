@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.nisp.config
 
-import java.net.{URLEncoder, URI}
-
+import java.net.URLEncoder
 import play.api.Play._
+import play.api.i18n.Messages
+import play.api.mvc.Request
+import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.nisp.controllers.routes
-import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.play.config.ServicesConfig
 
 trait ApplicationConfig {
   val assetsPrefix: String
@@ -45,6 +47,7 @@ trait ApplicationConfig {
   val ivUpliftUrl: String
   val twoFactorUrl: String
   val ggSignInUrl: String
+  val pertaxFrontendUrl: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -75,4 +78,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
   override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
+
+  override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
 }

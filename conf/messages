@@ -20,6 +20,11 @@ nisp.verify = verify
 nisp.iv = iv
 nisp.gov-uk = GOV.UK
 nisp.gov-uk-verify = GOV.UK Verify
+nisp.breadcrumb.account = Account home
+nisp.breadcrumb.pension = State Pension
+nisp.breadcrumb.nirecord = NI record
+nisp.breadcrumb.nirecord.voluntaryContrib = Voluntary contributions
+nisp.breadcrumb.nirecord.gapsandhowtocheck = Gaps in your record and how to check them
 
 #**************************
 #  Landing Page Messages

@@ -16,8 +16,11 @@
 
 @import uk.gov.hmrc.nisp.models.enums.SPExclusion
 @import uk.gov.hmrc.nisp.models.SPExclusionsModel
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String,spExclusions: SPExclusionsModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser)(implicit request: Request[_])
+@(nino: String,spExclusions: SPExclusionsModel)(implicit request: Request[_], user: NispUser,
+  partialRetriever: CachedStaticHtmlPartialRetriever)
 
 
 @analyticsAdditionalJs = {
@@ -26,8 +29,8 @@
     });
 }
 
-@nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), serviceInfoContent=Some(includes.loginInfo(user)),
-            userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@defining(Some(user)) { implicit userOption =>
+@nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 
     @if(spExclusions.spExclusions.contains(SPExclusion.Abroad)) {
@@ -51,4 +54,5 @@
     @if(spExclusions.spExclusions.contains(SPExclusion.PostStatePensionAge)) {
         @exclusions.postStatePensionAge()
     }
+}
 }

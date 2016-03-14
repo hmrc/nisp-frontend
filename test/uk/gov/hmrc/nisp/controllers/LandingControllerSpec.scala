@@ -25,11 +25,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
-import uk.gov.hmrc.nisp.helpers.{MockAuthConnector, MockCitizenDetailsService, MockIdentityVerificationConnector, MockNpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
 
@@ -60,11 +61,14 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
       override val reportAProblemPartialUrl: String = ""
       override val postSignInRedirectUrl: String = ""
       override val ivUpliftUrl: String = ""
+      override val pertaxFrontendUrl: String = ""
       override val contactFormServiceIdentifier: String = ""
     }
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
 
     override protected def authConnector: AuthConnector = MockAuthConnector
+
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   }
 
   "GET /" should {

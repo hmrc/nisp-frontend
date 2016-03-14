@@ -17,26 +17,17 @@
 package uk.gov.hmrc.nisp.helpers
 
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispConnector
-import uk.gov.hmrc.nisp.controllers.ExclusionController
-import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.nisp.utils.Breadcrumb
 
-object MockExclusionController extends ExclusionController {
-  override val nispConnector: NispConnector = MockNispConnector
-  override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-
-  override protected def authConnector: AuthConnector = MockAuthConnector
-  override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
-  override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+object MockBreadcrumb extends Breadcrumb {
+  override lazy val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val ggSignInUrl: String = ""
     override val citizenAuthHost: String = ""
     override val twoFactorUrl: String = ""
     override val assetsPrefix: String = ""
     override val reportAProblemNonJSUrl: String = ""
     override val ssoUrl: Option[String] = None
-    override val identityVerification: Boolean = true
+    override val identityVerification: Boolean = false
     override val betaFeedbackUnauthenticatedUrl: String = ""
     override val notAuthorisedRedirectUrl: String = ""
     override val contactFrontendPartialBaseUrl: String = ""
@@ -47,10 +38,9 @@ object MockExclusionController extends ExclusionController {
     override val betaFeedbackUrl: String = ""
     override val analyticsToken: Option[String] = None
     override val reportAProblemPartialUrl: String = ""
-    override val contactFormServiceIdentifier: String = ""
     override val postSignInRedirectUrl: String = ""
     override val ivUpliftUrl: String = ""
-    override val pertaxFrontendUrl: String = ""
+    override val pertaxFrontendUrl: String = "http://localhost:9232/account"
+    override val contactFormServiceIdentifier: String = ""
   }
-  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 }

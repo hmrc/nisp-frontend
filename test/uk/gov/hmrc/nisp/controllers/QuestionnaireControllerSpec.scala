@@ -20,8 +20,10 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.helpers.{MockCustomAuditConnector, MockAccountController}
+import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, MockCustomAuditConnector, MockAccountController}
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 
 class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
@@ -29,6 +31,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
 
   val testQuestionnaireController: QuestionnaireController = new QuestionnaireController {
     override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   }
 
   "GET /questionnaire" should {

@@ -19,8 +19,12 @@
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.SPSummaryModel
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, spSummary: SPSummaryModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, canGetPension: Boolean, numberOfYearsMissing: Int, authenticationProvider: String)(implicit request: Request[_])
+@(nino: String, spSummary: SPSummaryModel, canGetPension: Boolean, numberOfYearsMissing: Int,
+  authenticationProvider: String, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser,
+  partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -39,8 +43,8 @@
     });
 }
 
-@nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-
+@defining(Some(user)) { implicit userOption =>
+@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <div class="grid services">
     <h1 class="heading-large title-spa">@Messages("nisp.main.description.mqp")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>, @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h1>
@@ -108,5 +112,7 @@
     }
 
     <a href='@routes.NIRecordController.showGaps.url' role="button" class="button">@Messages("nisp.main.showyourrecord")</a>
+    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 </div>
+}
 }
