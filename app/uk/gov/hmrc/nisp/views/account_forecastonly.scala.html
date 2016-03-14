@@ -68,7 +68,7 @@
     <h2 class="heading-medium">@Messages("nisp.main.forecastonly.h2.title")</h2>
     <p>@Messages("nisp.main.context.forecastonly.para1", spSummary.forecastAmount.week, Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
     <a href='@routes.NIRecordController.showGaps.url' role="button" class="button">@Messages("nisp.main.showyourrecord")</a>
-    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.main.caveat")</div>}
+    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 </div>
 }
 }
