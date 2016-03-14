@@ -18,11 +18,12 @@ package uk.gov.hmrc.nisp.utils
 
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.test.FakeRequest
-import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{PayeAccount, Accounts, ConfidenceLevel, CredentialStrength}
-import uk.gov.hmrc.play.frontend.auth.{Principal, LoggedInUser, AuthContext}
+import uk.gov.hmrc.nisp.helpers.MockBreadcrumb
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength}
+import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 import uk.gov.hmrc.play.test.UnitSpec
+
 
 class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequestSP = FakeRequest("GET", "/account")
@@ -69,32 +70,5 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
       MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser) should not include "Voluntary+contributions"
       MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser) should include ("Gaps+in+your+record")
     }
-  }
-}
-
-
-object MockBreadcrumb extends Breadcrumb {
-  override lazy val applicationConfig: ApplicationConfig = new ApplicationConfig {
-    override val ggSignInUrl: String = ""
-    override val citizenAuthHost: String = ""
-    override val twoFactorUrl: String = ""
-    override val assetsPrefix: String = ""
-    override val reportAProblemNonJSUrl: String = ""
-    override val ssoUrl: Option[String] = None
-    override val identityVerification: Boolean = false
-    override val betaFeedbackUnauthenticatedUrl: String = ""
-    override val notAuthorisedRedirectUrl: String = ""
-    override val contactFrontendPartialBaseUrl: String = ""
-    override val govUkFinishedPageUrl: String = ""
-    override val showGovUkDonePage: Boolean = true
-    override val excludeCopeTab: Boolean = true
-    override val analyticsHost: String = ""
-    override val betaFeedbackUrl: String = ""
-    override val analyticsToken: Option[String] = None
-    override val reportAProblemPartialUrl: String = ""
-    override val postSignInRedirectUrl: String = ""
-    override val ivUpliftUrl: String = ""
-    override val pertaxFrontendUrl: String = "http://localhost:9232/account"
-    override val contactFormServiceIdentifier: String = ""
   }
 }
