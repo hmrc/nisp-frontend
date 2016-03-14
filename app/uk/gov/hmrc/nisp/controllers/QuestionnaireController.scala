@@ -18,20 +18,21 @@ package uk.gov.hmrc.nisp.controllers
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.events.QuestionnaireEvent
 import uk.gov.hmrc.nisp.models.forms.QuestionnaireForm
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html.{finalPage, questionnaire}
 import uk.gov.hmrc.play.frontend.auth.Actions
-import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
+import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
 import scala.concurrent.Future
 
-object QuestionnaireController extends QuestionnaireController {
+object QuestionnaireController extends QuestionnaireController with PartialRetriever {
   override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
 }
 
-trait QuestionnaireController extends FrontendController with Actions with AuthenticationConnectors {
+trait QuestionnaireController extends NispFrontendController with Actions with AuthenticationConnectors {
   val customAuditConnector: CustomAuditConnector
 
   def show: Action[AnyContent] = UnauthorisedAction.async {

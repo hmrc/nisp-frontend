@@ -14,11 +14,13 @@
 * limitations under the License.
 *@
 
+@import uk.gov.hmrc.play.frontend.auth.AuthContext
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+
 @(browserTitle: String = Messages("nisp.title"),
     loginDetailsHeader: Option[Html] = None,
     pageTitle: Option[String] = None,
     userLoggedIn : Boolean = false,
-    serviceInfoContent : Option[Html] = None,
     sidebarLinks: Option[Html] = None,
     sidebarClasses: Option[String] = None,
     h1Classes:Option[String]=None,
@@ -28,7 +30,7 @@
     contentHeaderExtra: Option[Html] = None,
     articleClasses: Option[String] = None,
     analyticsAdditionalJs: Option[Html] = None,
-    articleEnabled: Boolean = true)(mainContent: Html)(implicit request:Request[_])
+    articleEnabled: Boolean = true)(mainContent: Html)(implicit request:Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 @contentHeader = {
     @loginDetailsHeader
@@ -41,7 +43,6 @@
     sidebarClasses = sidebarClasses,
     contentHeader = Some(contentHeader),
     userLoggedIn = userLoggedIn,
-    serviceInfoContent = serviceInfoContent,
     showTitleHeaderNav = showTitleHeaderNav,
     showBetaBanner = showBetaBanner,
     pageScripts = pageScripts,

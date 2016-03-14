@@ -19,10 +19,13 @@
 @import uk.gov.hmrc.nisp.models.SPSummaryModel
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 
 
-@(nino: String, spSummary: SPSummaryModel, user: uk.gov.hmrc.nisp.controllers.auth.NispUser, authenticationProvider: String)(implicit request: Request[_])
+@(nino: String, spSummary: SPSummaryModel, authenticationProvider: String, isPertaxUrl:Boolean
+)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -41,7 +44,8 @@
     });
 }
 
-@nispMain(serviceInfoContent=Some(includes.loginInfo(user)), userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@defining(Some(user)) { implicit userOption =>
+@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <div class="grid services">
     <h1 class="heading-large title-spa">@Messages("nisp.main.h1.title")</h1>
@@ -64,5 +68,7 @@
     <h2 class="heading-medium">@Messages("nisp.main.forecastonly.h2.title")</h2>
     <p>@Messages("nisp.main.context.forecastonly.para1", spSummary.forecastAmount.week, Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
     <a href='@routes.NIRecordController.showGaps.url' role="button" class="button">@Messages("nisp.main.showyourrecord")</a>
+    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 </div>
+}
 }

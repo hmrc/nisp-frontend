@@ -15,16 +15,16 @@
 *@
 
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(user: uk.gov.hmrc.nisp.controllers.auth.NispUser)(implicit request: Request[_])
+@()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
+@defining(Some(user)) { implicit userOption =>
 @nispMain(pageTitle=None, browserTitle = Messages("nisp.nirecord.gapsinyourrecord.title"),
-serviceInfoContent=Some(includes.loginInfo(user)),
 userLoggedIn = true,
 h1Classes=Some("account-heading"),
 sidebarLinks = None) {
-
-<div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a></div>
 
 <h1 class="heading-large">@Messages("nisp.nirecord.gapsinyourrecord.heading")</h1>
 
@@ -61,4 +61,5 @@ sidebarLinks = None) {
 <p>@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc")</p>
 <p><a href="https://www.gov.uk/national-insurance-credits/eligibility" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancecredits">@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")</a></p>
 <div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a></div>
+}
 }

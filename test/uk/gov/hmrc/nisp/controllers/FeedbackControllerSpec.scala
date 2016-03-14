@@ -73,6 +73,7 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
       override val contactFormServiceIdentifier: String = "NISP"
       override val postSignInRedirectUrl: String = ""
       override val ivUpliftUrl: String = ""
+      override val pertaxFrontendUrl: String = ""
     }
   }
 

@@ -11,9 +11,14 @@
   position: relative;
   z-index: 5;
   border-bottom: none; 
+  overflow: visible;
   @media only screen and (max-width: 640px) {
     float:none;
   }
+}
+
+.tabs-nav::before {
+  border-bottom:0;
 }
 
 .tabs-nav li {

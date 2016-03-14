@@ -16,22 +16,26 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.AccountController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.services.{MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 object MockAccountController extends MockAccountController {
   override val npsAvailabilityChecker = MockNpsAvailabilityChecker
   override val citizenDetailsService = MockCitizenDetailsService
+  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 }
 
 trait MockAccountController extends AccountController {
   override protected implicit def authConnector: AuthConnector = MockAuthConnector
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val npsAvailabilityChecker: NpsAvailabilityChecker
+  override val sessionCache: SessionCache = MockSessionCache
 
   override def metricsService: MetricsService = MockMetricsService
 
@@ -56,6 +60,7 @@ trait MockAccountController extends AccountController {
     override val ivUpliftUrl: String = "ivuplift"
     override val ggSignInUrl: String = "ggsignin"
     override val twoFactorUrl: String = "twofactor"
+    override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
   }
 }

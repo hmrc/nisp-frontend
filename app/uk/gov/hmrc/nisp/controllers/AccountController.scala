@@ -16,12 +16,16 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.Logger
+import play.api.libs.json.Format
 import play.api.mvc.{Action, AnyContent, Request, Session}
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.{AuthorisedForNisp, NispUser}
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
@@ -30,13 +34,16 @@ import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
-import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
+import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
-object AccountController extends AccountController with AuthenticationConnectors {
+object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
   override val metricsService: MetricsService = MetricsService
+  override val sessionCache: SessionCache = NispSessionCache
 
   override val customAuditConnector = CustomAuditConnector
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
@@ -44,7 +51,7 @@ object AccountController extends AccountController with AuthenticationConnectors
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
 }
 
-trait AccountController extends FrontendController with AuthorisedForNisp {
+trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   def nispConnector: NispConnector
   def metricsService: MetricsService
 
@@ -52,39 +59,45 @@ trait AccountController extends FrontendController with AuthorisedForNisp {
   val applicationConfig: ApplicationConfig
 
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    val nino = user.nino.getOrElse("")
-    val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
-    nispConnector.connectToGetSPResponse(nino).map{
-      case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
-        metricsService.abTest(getABTest(nino, spSummary.contractedOutFlag))
+    isFromPertax.flatMap { isPertax =>
+      val nino = user.nino.getOrElse("")
+      val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
+      nispConnector.connectToGetSPResponse(nino).map {
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
+          metricsService.abTest(getABTest(nino, spSummary.contractedOutFlag))
 
-        customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage, spSummary.statePensionAge.date, spSummary.statePensionAmount.week,
-          spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecastOnlyFlag,
-          getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week,authenticationProvider))
+          customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage, spSummary.statePensionAge.date, spSummary.statePensionAmount.week,
+            spSummary.forecastAmount.week, spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecastOnlyFlag,
+            getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week, authenticationProvider))
 
-        if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
-          val canGetPension = spSummary.numberOfQualifyingYears +
-            spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
-          val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-          Ok(account_mqp(nino, spSummary, user, canGetPension, yearsMissing, authenticationProvider)).
-            withSession(storeUserInfoInSession(user, contractedOut = false))
-        } else if(spSummary.forecastOnlyFlag){
-          Ok(account_forecastonly(nino, spSummary, user, authenticationProvider)).withSession(storeUserInfoInSession(user, contractedOut = false))
-        } else {
-          val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
-          Ok(account(nino, spSummary, user, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider))
-            .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
-        }
+          if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
+            val canGetPension = spSummary.numberOfQualifyingYears +
+              spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
+            val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
+            Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
+          } else if (spSummary.forecastOnlyFlag) {
+            Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
+          } else {
+            val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
+            Ok(account(nino, spSummary, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider, isPertax))
+              .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+          }
 
-      case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) =>
-        customAuditConnector.sendEvent(AccountExclusionEvent(
-          nino,
-          user.name,
-          spExclusions.spExclusions
-        ))
-        Redirect(routes.ExclusionController.show()).withSession(storeUserInfoInSession(user, contractedOut = false))
-      case _ => throw new RuntimeException("SP Response Model is empty")
+        case SPResponseModel(_, Some(spExclusions: SPExclusionsModel)) =>
+          customAuditConnector.sendEvent(AccountExclusionEvent(
+            nino,
+            user.name,
+            spExclusions.spExclusions
+          ))
+          Redirect(routes.ExclusionController.show()).withSession(storeUserInfoInSession(user, contractedOut = false))
+        case _ => throw new RuntimeException("SP Response Model is empty")
+      }
     }
+  }
+
+  def pta(): Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
+    setFromPertax
+    Redirect(routes.AccountController.show())
   }
 
   def calculateChartWidths(currentAmountModel: SPAmountModel, forecastAmountModel: SPAmountModel): (SPChartModel, SPChartModel) = {

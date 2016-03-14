@@ -15,8 +15,10 @@
 *@
 
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], formPartialRetriever: FormPartialRetriever)
+@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], formPartialRetriever: FormPartialRetriever,
+  partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @nispMain(showBetaBanner = false) {
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
