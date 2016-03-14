@@ -22,7 +22,8 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false)(implicit request: Request[_],
+
+@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, authenticationProvider: String)(implicit request: Request[_],
   user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
@@ -49,11 +50,21 @@
 <script src="@routes.Assets.at("javascript/nirecord.js")" type="text/javascript"></script>
 }
 
+
+@analyticsAdditionalJs = {
+    ga('set', {
+        'dimension10': '@niSummary.noOfQualifyingYears',
+        'dimension12': '@niSummary.numberOfPayableGaps',
+        'dimension13': '@niSummary.yearsToContributeUntilPensionAge',
+        'dimension22': '@authenticationProvider',
+        'metric5': 1
+    });
+}
+
 @defining(Some(user)) { implicit userOption =>
     @nispMain(  pageTitle=None, browserTitle = Messages("nisp.nirecord.title"), userLoggedIn = true,
     h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
-    sidebarLinks = Some(sidebar)) {
-
+    sidebarLinks = Some(sidebar), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <h1 class="heading-large nirecord-heading">@Messages("nisp.nirecord.heading")</h1>
 
