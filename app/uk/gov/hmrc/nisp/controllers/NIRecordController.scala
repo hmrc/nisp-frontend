@@ -17,10 +17,13 @@
 package uk.gov.hmrc.nisp.controllers
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.NIRecordEvent
 import uk.gov.hmrc.nisp.models.{NIRecord, NIResponse, NISummary}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
@@ -35,9 +38,10 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
+  override val sessionCache: SessionCache = NispSessionCache
 }
 
-trait NIRecordController extends NispFrontendController with AuthorisedForNisp {
+trait NIRecordController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   val nispConnector: NispConnector
   val metricsService: MetricsService
   val customAuditConnector: CustomAuditConnector
@@ -47,22 +51,24 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp {
 
   private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user => implicit request =>
-      val nino = user.nino.getOrElse("")
-      nispConnector.connectToGetNIResponse(nino).map {
-        case NIResponse(Some(niRecord: NIRecord), Some(niSummary: NISummary)) =>
-          if (niGaps && niSummary.noOfNonQualifyingYears < 1) {
-            Redirect(routes.NIRecordController.showFull())
-          } else {
-            metricsService.niRecord(niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
-              niSummary.noOfQualifyingYears, niSummary.yearsToContributeUntilPensionAge)
+      isFromPertax.flatMap { isPertax => // Must be called incase they go to Account
+        val nino = user.nino.getOrElse("")
+        nispConnector.connectToGetNIResponse(nino).map {
+          case NIResponse(Some(niRecord: NIRecord), Some(niSummary: NISummary)) =>
+            if (niGaps && niSummary.noOfNonQualifyingYears < 1) {
+              Redirect(routes.NIRecordController.showFull())
+            } else {
+              metricsService.niRecord(niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
+                niSummary.noOfQualifyingYears, niSummary.yearsToContributeUntilPensionAge)
 
-            customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
-              niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
-              niSummary.spaYear))
+              customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
+                niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
+                niSummary.spaYear))
 
-            Ok(nirecordpage(nino, niRecord, niSummary, niGaps))
-          }
-        case _ => throw new RuntimeException("NI Response Model is empty")
+              Ok(nirecordpage(nino, niRecord, niSummary, niGaps))
+            }
+          case _ => throw new RuntimeException("NI Response Model is empty")
+        }
       }
   }
 

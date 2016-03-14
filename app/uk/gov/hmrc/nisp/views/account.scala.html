@@ -29,7 +29,8 @@
     abTest: Option[ABTest],
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
-    authenticationProvider: String
+    authenticationProvider: String,
+    isPertaxUrl:Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @pageScripts = {
@@ -185,6 +186,8 @@
                     <h2 class="heading-medium">2. @Messages("nisp.main.puttingOff")</h2>
                     <p>@Messages("nisp.main.puttingOff.line1", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
                     <p><a href="https://www.gov.uk/deferring-state-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:deferstatepension">@Messages("nisp.main.puttingOff.linkTitle")</a></p>
+                   @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.main.caveat")</div>}
+
                 </div>
             </div>
         </div>
