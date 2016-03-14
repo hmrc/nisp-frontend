@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.AccountController
@@ -34,6 +35,7 @@ trait MockAccountController extends AccountController {
   override protected implicit def authConnector: AuthConnector = MockAuthConnector
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val npsAvailabilityChecker: NpsAvailabilityChecker
+  override val sessionCache: SessionCache = MockSessionCache
 
   override def metricsService: MetricsService = MockMetricsService
 
