@@ -168,7 +168,8 @@
     "spaYear": 2021,
     "earningsIncludedUpTo": "05\/04\/2014",
     "unavailableYear": 2015,
-    "pre75QualifyingYears": 1
+    "pre75QualifyingYears": 1,
+    "isAbroad": false
   }
 }
 

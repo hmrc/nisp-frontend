@@ -1,1 +1,1 @@
-{"spExclusions":{"spExclusions":["ContractedOut","CustomerTooOld"]}}
+{"spExclusions":{"exclusions":["ContractedOut","CustomerTooOld"]}}
