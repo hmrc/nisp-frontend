@@ -31,25 +31,25 @@
 @defining(Some(user)) { implicit userOption =>
     @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
         @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
-            @exclusions.overseas()
+            @exclusions.sp.overseas()
         }
         @if(spExclusions.exclusions.contains(Exclusion.MWRRE)) {
-            @exclusions.mwrre()
+            @exclusions.sp.mwrre()
         }
         @if(spExclusions.exclusions.contains(Exclusion.CustomerTooOld)) {
-            @exclusions.spaBefore5April2016()
+            @exclusions.sp.spaBefore5April2016()
         }
         @if(spExclusions.exclusions.contains(Exclusion.Dead)) {
             @exclusions.dead()
         }
         @if(spExclusions.exclusions.contains(Exclusion.IOM)) {
-            @exclusions.isleOfMan()
+            @exclusions.sp.isleOfMan()
         }
         @if(spExclusions.exclusions.contains(Exclusion.AmountDissonance)) {
-            @exclusions.amountDissonance()
+            @exclusions.sp.amountDissonance()
         }
         @if(spExclusions.exclusions.contains(Exclusion.PostStatePensionAge)) {
-            @exclusions.postStatePensionAge()
+            @exclusions.sp.postStatePensionAge()
         }
     }
 }
