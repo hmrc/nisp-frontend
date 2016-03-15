@@ -59,7 +59,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
     implicit user => implicit request =>
       val nino = user.nino.getOrElse("")
       nispConnector.connectToGetNIResponse(nino).map {
-        case NIResponse(Some(niRecord: NIRecord), Some(niSummary: NISummary)) =>
+        case NIResponse(Some(niRecord: NIRecord), Some(niSummary: NISummary), None) =>
           if (niGaps && niSummary.noOfNonQualifyingYears < 1) {
             Redirect(routes.NIRecordController.showFull())
           } else {
