@@ -31,13 +31,13 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
 @defining(Some(user)) { implicit userOption =>
     @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
         @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
-            @exclusions.mwrre()
+            @exclusions.ni.mwrre()
         }
         @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
             @exclusions.dead()
         }
         @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
-            @exclusions.isleOfMan()
+            @exclusions.ni.isleOfMan()
         }
     }
 }
