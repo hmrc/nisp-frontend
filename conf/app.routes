@@ -14,7 +14,8 @@ GET         /account/pta                           uk.gov.hmrc.nisp.controllers.
 GET         /signout                               uk.gov.hmrc.nisp.controllers.AccountController.signOut
 GET         /timeout                               uk.gov.hmrc.nisp.controllers.AccountController.timeout
 
-GET         /exclusion                             uk.gov.hmrc.nisp.controllers.ExclusionController.show
+GET         /exclusion                             uk.gov.hmrc.nisp.controllers.ExclusionController.showSP
+GET         /exclusion/nirecord                    uk.gov.hmrc.nisp.controllers.ExclusionController.showNI
 
 GET         /account/nirecord                      uk.gov.hmrc.nisp.controllers.NIRecordController.showFull
 GET         /account/nirecord/pta                  uk.gov.hmrc.nisp.controllers.NIRecordController.pta
