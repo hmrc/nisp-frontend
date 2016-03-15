@@ -36,7 +36,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /exclusion" should {
     "return exclusion page for excluded user" in {
-      val result = MockExclusionController.show()(fakeRequest.withSession(
+      val result = MockExclusionController.showSP()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
         SessionKeys.userId -> mockUserIdExcluded,
@@ -46,7 +46,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
     }
 
     "return redirect to account page for non-excluded user" in {
-      val result = MockExclusionController.show()(fakeRequest.withSession(
+      val result = MockExclusionController.showSP()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
         SessionKeys.userId -> mockUserId,

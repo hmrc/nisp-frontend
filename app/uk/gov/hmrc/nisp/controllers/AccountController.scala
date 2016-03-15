@@ -91,7 +91,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
             user.name,
             spExclusions.exclusions
           ))
-          Redirect(routes.ExclusionController.show()).withSession(storeUserInfoInSession(user, contractedOut = false))
+          Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
     }
