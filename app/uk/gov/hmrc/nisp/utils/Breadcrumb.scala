@@ -40,7 +40,9 @@ trait Breadcrumb {
       "account" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.pension"), "UTF-8"), routes.AccountController.show().url)),
       "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGaps().url)),
       "voluntarycontribs" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.voluntaryContrib"), "UTF-8"), routes.NIRecordController.showVoluntaryContributions().url)),
-      "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.gapsandhowtocheck"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url))
+      "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.gapsandhowtocheck"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url)),
+      "exclusionsp" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.excluded"), "UTF-8"), routes.ExclusionController.showSP().url)),
+      "exclusionni" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.excluded"), "UTF-8"), routes.ExclusionController.showNI().url))
     )
 
     val items: List[Option[(String, String)]] = request.path.split("/").filter(!_.isEmpty).map(links.get).toList
