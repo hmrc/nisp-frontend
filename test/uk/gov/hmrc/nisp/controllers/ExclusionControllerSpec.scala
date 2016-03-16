@@ -36,7 +36,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /exclusion" should {
     "return exclusion page for excluded user" in {
-      val result = MockExclusionController.show()(fakeRequest.withSession(
+      val result = MockExclusionController.showSP()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
         SessionKeys.userId -> mockUserIdExcluded,
@@ -46,7 +46,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
     }
 
     "return redirect to account page for non-excluded user" in {
-      val result = MockExclusionController.show()(fakeRequest.withSession(
+      val result = MockExclusionController.showSP()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
         SessionKeys.userId -> mockUserId,
@@ -54,6 +54,29 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
       ))
 
       redirectLocation(result) shouldBe Some("/checkmystatepension/account")
+    }
+  }
+
+  "GET /exclusion/nirecord" should {
+    "return exclusion page for excluded user" in {
+      val result = MockExclusionController.showNI()(fakeRequest.withSession(
+        SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+        SessionKeys.userId -> mockUserIdExcluded,
+        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+      ))
+      contentAsString(result).contains("You are unable to use this service") shouldBe true
+    }
+
+    "return redirect to account page for non-excluded user" in {
+      val result = MockExclusionController.showNI()(fakeRequest.withSession(
+        SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+        SessionKeys.userId -> mockUserId,
+        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+      ))
+
+      redirectLocation(result) shouldBe Some("/checkmystatepension/account/nirecord/gaps")
     }
   }
 }
