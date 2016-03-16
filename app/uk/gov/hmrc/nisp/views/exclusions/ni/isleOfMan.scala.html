@@ -15,17 +15,19 @@
 *@
 
 @import play.api.i18n.Messages
+@import uk.gov.hmrc.nisp.views.html.exclusions.viewExclusions
 
 @()
 
-@********************************************@
-@*                                          *@
-@* Exclusion template for amount dissonance *@
-@*                                          *@
-@*                                          *@
-@********************************************@
+@****************************@
+@*                          *@
+@*  State Pension Exclusion *@
+@*  template for            *@
+@*  living in Isle Of Man   *@
+@*                          *@
+@****************************@
 
 @viewExclusions() {
-    <p> @Html(Messages("nisp.excluded.amountdissonance")) </p>
-    <p> @Html(Messages("nisp.excluded.contactFuturePensionCentre")) </p>
+    <p> @Html(Messages("nisp.excluded.isleOfMan.ni")) </p>
+    <p> @Html(Messages("nisp.excluded.contactNationalInsuranceHelpline")) </p>
 }

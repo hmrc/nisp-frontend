@@ -22,9 +22,9 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.models.{ExclusionsModel, SPResponseModel}
+import uk.gov.hmrc.nisp.models.{NIResponse, ExclusionsModel, SPResponseModel}
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
-import uk.gov.hmrc.nisp.views.html.excluded
+import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
@@ -37,13 +37,23 @@ object ExclusionController extends ExclusionController with AuthenticationConnec
 trait ExclusionController extends NispFrontendController with AuthorisedForNisp {
   val nispConnector: NispConnector
 
-  def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+  def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
-    nispConnector.connectToGetSPResponse(nino).map{
-      case SPResponseModel(_, Some(spExclusions: ExclusionsModel)) => Ok(excluded(nino, spExclusions))
+    nispConnector.connectToGetSPResponse(nino).map {
+      case SPResponseModel(_, Some(spExclusions: ExclusionsModel)) => Ok(excluded_sp(nino, spExclusions))
       case _ =>
         Logger.warn("User accessed /exclusion as non-excluded user")
         Redirect(routes.AccountController.show())
+    }
+  }
+
+  def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+    val nino = user.nino.getOrElse("")
+    nispConnector.connectToGetNIResponse(nino).map {
+      case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) => Ok(excluded_ni(nino, niExclusions))
+      case _ =>
+        Logger.warn("User accessed /exclusion/nirecord as non-excluded user")
+        Redirect(routes.NIRecordController.showGaps())
     }
   }
 }

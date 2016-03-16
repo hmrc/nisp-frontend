@@ -24,8 +24,8 @@ import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.events.NIRecordEvent
-import uk.gov.hmrc.nisp.models.{NIRecord, NIResponse, NISummary}
+import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
+import uk.gov.hmrc.nisp.models.{ExclusionsModel, NIRecord, NIResponse, NISummary}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
@@ -69,6 +69,13 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
 
             Ok(nirecordpage(nino, niRecord, niSummary, niGaps, getAuthenticationProvider(user.authContext.user.confidenceLevel)))
           }
+        case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
+          customAuditConnector.sendEvent(AccountExclusionEvent(
+            nino,
+            user.name,
+            niExclusions.exclusions
+          ))
+          Redirect(routes.ExclusionController.showNI())
         case _ => throw new RuntimeException("NI Response Model is empty")
       }
   }

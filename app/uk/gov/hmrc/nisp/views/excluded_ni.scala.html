@@ -19,37 +19,25 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, spExclusions: ExclusionsModel)(implicit request: Request[_], user: NispUser,
-  partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, niExclusions: ExclusionsModel)(implicit request: Request[_], user: NispUser,
+partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension20': '@spExclusions.exclusions.map(_.toString).mkString(" ") '
+        'dimension20': '@niExclusions.exclusions.map(_.toString).mkString(" ") '
     });
 }
 
 @defining(Some(user)) { implicit userOption =>
     @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-        @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
-            @exclusions.overseas()
+        @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
+            @exclusions.ni.mwrre()
         }
-        @if(spExclusions.exclusions.contains(Exclusion.MWRRE)) {
-            @exclusions.mwrre()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.CustomerTooOld)) {
-            @exclusions.spaBefore5April2016()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.Dead)) {
+        @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
             @exclusions.dead()
         }
-        @if(spExclusions.exclusions.contains(Exclusion.IOM)) {
-            @exclusions.isleOfMan()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.AmountDissonance)) {
-            @exclusions.amountDissonance()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.PostStatePensionAge)) {
-            @exclusions.postStatePensionAge()
+        @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
+            @exclusions.ni.isleOfMan()
         }
     }
 }

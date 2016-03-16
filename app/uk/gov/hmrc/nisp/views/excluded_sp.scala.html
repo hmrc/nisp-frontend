@@ -1,0 +1,55 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.models.enums.Exclusion
+@import uk.gov.hmrc.nisp.models.ExclusionsModel
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+
+@(nino: String, spExclusions: ExclusionsModel)(implicit request: Request[_], user: NispUser,
+  partialRetriever: CachedStaticHtmlPartialRetriever)
+
+@analyticsAdditionalJs = {
+    ga('set', {
+        'dimension20': '@spExclusions.exclusions.map(_.toString).mkString(" ") '
+    });
+}
+
+@defining(Some(user)) { implicit userOption =>
+    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+        @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
+            @exclusions.sp.overseas()
+        }
+        @if(spExclusions.exclusions.contains(Exclusion.MWRRE)) {
+            @exclusions.sp.mwrre()
+        }
+        @if(spExclusions.exclusions.contains(Exclusion.CustomerTooOld)) {
+            @exclusions.sp.spaBefore5April2016()
+        }
+        @if(spExclusions.exclusions.contains(Exclusion.Dead)) {
+            @exclusions.dead()
+        }
+        @if(spExclusions.exclusions.contains(Exclusion.IOM)) {
+            @exclusions.sp.isleOfMan()
+        }
+        @if(spExclusions.exclusions.contains(Exclusion.AmountDissonance)) {
+            @exclusions.sp.amountDissonance()
+        }
+        @if(spExclusions.exclusions.contains(Exclusion.PostStatePensionAge)) {
+            @exclusions.sp.postStatePensionAge()
+        }
+    }
+}
