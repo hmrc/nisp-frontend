@@ -48,6 +48,7 @@ trait ApplicationConfig {
   val twoFactorUrl: String
   val ggSignInUrl: String
   val pertaxFrontendUrl: String
+  val breadcrumbPartialUrl: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -79,5 +80,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
   override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
 
+  private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
+  override lazy val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"
 }

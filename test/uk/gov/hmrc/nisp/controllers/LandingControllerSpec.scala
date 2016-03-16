@@ -63,6 +63,7 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
       override val ivUpliftUrl: String = ""
       override val pertaxFrontendUrl: String = ""
       override val contactFormServiceIdentifier: String = ""
+      override val breadcrumbPartialUrl: String = ""
     }
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
 
