@@ -33,7 +33,7 @@ trait Breadcrumb {
   val applicationConfig: ApplicationConfig
 
   val initialBreadCrumbList = List((URLEncoder.encode(Messages("nisp.breadcrumb.account"),"UTF-8"), applicationConfig.pertaxFrontendUrl))
-  lazy val mainContentHeaderPartialUrl = s"${applicationConfig.pertaxFrontendUrl}/integration/main-content-header"
+  lazy val mainContentHeaderPartialUrl = applicationConfig.breadcrumbPartialUrl
 
   private def buildBreadCrumb(request: Request[_]): List[(String, String)] = {
     val links = Map(
