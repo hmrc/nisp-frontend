@@ -161,7 +161,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           SessionKeys.userId -> mockUserIdExcluded,
           SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
-        redirectLocation(result) shouldBe Some("/checkmystatepension/exclusionsp")
+        redirectLocation(result) shouldBe Some("/checkmystatepension/exclusion")
       }
 
       "return 200, account page (1.59.59am)" in {

@@ -41,7 +41,7 @@ trait Breadcrumb {
       "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGaps().url)),
       "voluntarycontribs" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.voluntaryContrib"), "UTF-8"), routes.NIRecordController.showVoluntaryContributions().url)),
       "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.gapsandhowtocheck"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url)),
-      "exclusionsp" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.excluded"), "UTF-8"), routes.ExclusionController.showSP().url)),
+      "exclusion" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.excluded"), "UTF-8"), routes.ExclusionController.showSP().url)),
       "exclusionni" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.excluded"), "UTF-8"), routes.ExclusionController.showNI().url))
     )
 
