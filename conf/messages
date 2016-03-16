@@ -25,6 +25,7 @@ nisp.breadcrumb.pension = State Pension
 nisp.breadcrumb.nirecord = NI record
 nisp.breadcrumb.nirecord.voluntaryContrib = Voluntary contributions
 nisp.breadcrumb.nirecord.gapsandhowtocheck = Gaps in your record and how to check them
+nisp.breadcrumb.excluded = Excluded
 
 #**************************
 #  Landing Page Messages

@@ -22,7 +22,6 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.MockNIRecordController
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.http.SessionKeys
@@ -33,6 +32,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserId = "/auth/oid/mockuser"
   val mockFullUserId = "/auth/oid/mockfulluser"
   val mockBlankUserId = "/auth/oid/mockblank"
+  val mockUserIdExcluded = "/auth/oid/mockexcluded"
 
   val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
 
@@ -66,6 +66,16 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
+
+    "redirect to exclusion for excluded user" in {
+      val result =  MockNIRecordController.showGaps(fakeRequest.withSession(
+        SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+        SessionKeys.userId -> mockUserIdExcluded,
+        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+      ))
+      redirectLocation(result) shouldBe Some("/checkmystatepension/exclusionni")
+    }
   }
 
   "GET /account/nirecord (full)" should {
@@ -82,6 +92,16 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     "return full page for user without gaps" in {
       val result = MockNIRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) should include ("All years.")
+    }
+
+    "redirect to exclusion for excluded user" in {
+      val result =  MockNIRecordController.showFull(fakeRequest.withSession(
+        SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+        SessionKeys.userId -> mockUserIdExcluded,
+        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+      ))
+      redirectLocation(result) shouldBe Some("/checkmystatepension/exclusionni")
     }
   }
 
