@@ -62,5 +62,6 @@ trait MockAccountController extends AccountController {
     override val twoFactorUrl: String = "twofactor"
     override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
+    override val breadcrumbPartialUrl: String = ""
   }
 }
