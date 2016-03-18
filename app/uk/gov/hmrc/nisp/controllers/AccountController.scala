@@ -106,8 +106,8 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
     // scalastyle:off magic.number
     if (forecastAmountModel.week > currentAmountModel.week) {
       val currentPercentage = (currentAmountModel.week/forecastAmountModel.week * 100).toInt     
-      val currentChart = if (currentPercentage<25) {
-         SPChartModel(25, currentAmountModel) 
+      val currentChart = if (currentPercentage<29) {
+         SPChartModel(29, currentAmountModel) 
       } else  { 
         SPChartModel(currentPercentage, currentAmountModel)
       } 
