@@ -96,21 +96,21 @@
                                 <thead>
                                     <tr>
                                         <th>&nbsp;</th>
-                                        <th><p>@Messages("nisp.main.chart.week")</p></th>
+                                        <th class="cope-table-number">@Messages("nisp.main.chart.week")</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><p>@Messages("nisp.cope.table.pensionforecast")</p></td>
-                                    <td><p>@NispMoney.pounds(spSummary.forecastAmount.week)</p></td>
+                                    <td>@Messages("nisp.cope.table.pensionforecast")</td>
+                                    <td class="cope-table-number">@NispMoney.pounds(spSummary.forecastAmount.week)</td>
                                 </tr>
                                 <tr>
-                                    <td><p>@Messages("nisp.cope.table.estimate.title")</p></td>
-                                    <td><p>@NispMoney.pounds(spSummary.copeAmount.week)</p></td>
+                                    <td>@Messages("nisp.cope.table.estimate.title")</td>
+                                    <td class="cope-table-number">@NispMoney.pounds(spSummary.copeAmount.week)</td>
                                 </tr>
                                 <tr>
-                                    <td><p>@Messages("nisp.cope.table.copeadded")</p></td>
-                                    <td><p>@NispMoney.pounds(spSummary.copeAmount.week+spSummary.forecastAmount.week)</p></td>
+                                    <td>@Messages("nisp.cope.table.copeadded")</td>
+                                    <td class="cope-table-number">@NispMoney.pounds(spSummary.copeAmount.week+spSummary.forecastAmount.week)</td>
                                 </tr>
                                 </tbody>
                             </table>

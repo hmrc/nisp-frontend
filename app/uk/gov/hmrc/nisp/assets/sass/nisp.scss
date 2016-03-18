@@ -70,17 +70,18 @@ h2.heading-medium {
   outline: 3px solid #ffbf47;
 }
 
-#global-breadcrumb ol li a {
-  font-size: 19px;
-}
-
-#global-breadcrumb ol li a:link, #global-breadcrumb ol li a:visited {
-  color: $link-colour;
-}
-
 .service-info-p {
   color: $grey-1;
   font-size: 16px;
+  font-family: nta,Arial,sans-serif;
+  font-weight: 300;
+  line-height: 1.25;
+  text-transform: none;
+  margin-bottom: 5px;
+}
+
+.service-info {
+  padding-bottom: 5px;
 }
 
 .logo {
@@ -145,8 +146,8 @@ div.panel-indent{
     #User Account Details + NINO
 \*------------------------------------*/
 
-
 .service-info {
+  border-bottom: 1px solid $grey-3;
   .service-info__help {
     margin-top: 5px;
     @media only screen and (max-width: 800px) {
@@ -240,7 +241,8 @@ h1.title-spa {
   padding-bottom: 10px;
   background-repeat: no-repeat;
   color: $text-colour;
-  font-weight: 600; 
+  font-weight: 600;
+  margin-top: 30px;
   @media only screen and (max-width: 640px) {
     margin-top: 0; 
   }
@@ -357,9 +359,21 @@ h1.title-spa {
   padding-bottom: 0px;
 }
 
-table.cope-table p{   
+table.cope-table td {
   font-size: 19px;
   @media only screen and (max-width: 647px) {
     font-size: 16px;
   } 
 }
+
+table.cope-table th {
+  font-size: 19px;
+  @media only screen and (max-width: 647px) {
+    font-size: 16px;
+  }
+}
+
+table.cope-table .cope-table-number {
+  text-align: right;
+}
+
