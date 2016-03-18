@@ -333,10 +333,11 @@ h1.title-sp {
       line-height: 1.6em;
       color: $page-colour;
       text-align: right;
-      font-size: 25px;
+      font-size: 1.3em;
       font-weight: 800;
       @media only screen and (max-width: 640px) {
-        font-size: 20px;
+        font-size: 0.8em;
+        line-height: 2em;
       }
       & > * {
         padding-right: 10px;
