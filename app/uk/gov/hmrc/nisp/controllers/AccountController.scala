@@ -105,7 +105,8 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def calculateChartWidths(currentAmountModel: SPAmountModel, forecastAmountModel: SPAmountModel): (SPChartModel, SPChartModel) = {
     // scalastyle:off magic.number
     if (forecastAmountModel.week > currentAmountModel.week) {
-      val currentChart = SPChartModel((currentAmountModel.week/forecastAmountModel.week * 100).toInt, currentAmountModel)
+      val currentPercentage = (currentAmountModel.week/forecastAmountModel.week * 100).toInt     
+      val currentChart = SPChartModel(currentPercentage.max(31), currentAmountModel)
       val forecastChart = SPChartModel(100, forecastAmountModel)
       (currentChart, forecastChart)
     } else {
