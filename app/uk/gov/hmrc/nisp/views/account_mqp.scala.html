@@ -47,7 +47,7 @@
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <div class="grid services">
-    <h1 class="heading-large title-spa">@Messages("nisp.main.description.mqp")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>, @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h1>
+    <h1 class="heading-large title-sp">@Messages("nisp.main.description.mqp")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>, @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h1>
     <div class="panel-indent mqp">
         <p><strong>
            @if(spSummary.numberOfQualifyingYears == 1) {
