@@ -46,4 +46,5 @@ object Constants {
   val shortYearEndCharacter = 4
   val verify = "verify"
   val iv = "iv"
+  val chartWidthMinimum = 31
 }
