@@ -52,6 +52,7 @@ nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pensio
 #**************************
 nisp.main.title=Summary: Check your State Pension
 nisp.main.h1.title= Your State Pension
+nisp.main.h1.subtitle= Summary
 nisp.main.title.estimate.is= your estimate is
 nisp.main.forecast = Forecast
 nisp.main.howtoincreaseit = How to increase it
@@ -73,7 +74,7 @@ nisp.main.whenYoullBe = when you''ll be
 nisp.main.after = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
 
 nisp.main.reach = You''ll reach State Pension age when you are
-nisp.main.basedOn = The earliest you can get your State Pension is
+nisp.main.basedOn = You can get your State Pension on
 
 nisp.main.puttingOff = Put off claiming
 nisp.main.puttingOff.line1 = After State Pension age, {0}, you do not pay National Insurance. You can put off claiming your State Pension and this may mean you get extra State Pension when you do want to claim it.
