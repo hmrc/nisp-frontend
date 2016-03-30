@@ -29,6 +29,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
+import uk.gov.hmrc.nisp.models.enums.Scenario
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, ABService, MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
@@ -36,6 +37,7 @@ import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.play.http.HeaderCarrier
+
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -67,9 +69,8 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
           metricsService.abTest(getABTest(nino, spSummary.contractedOutFlag))
 
           customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
-            spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecastAmount.week,
-            spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecastOnlyFlag,
-            getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week, authenticationProvider))
+            spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecast.forecastAmount.week,
+            spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario, getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week, authenticationProvider))
 
           if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
             val canGetPension = spSummary.numberOfQualifyingYears +
@@ -77,10 +78,10 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
             Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax))
               .withSession(storeUserInfoInSession(user, contractedOut = false))
-          } else if (spSummary.forecastOnlyFlag) {
+          } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
             Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
           } else {
-            val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecastAmount)
+            val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecast.forecastAmount)
             Ok(account(nino, spSummary, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider, isPertax))
               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }

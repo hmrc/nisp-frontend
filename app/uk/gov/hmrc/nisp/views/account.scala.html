@@ -22,6 +22,8 @@
 @import uk.gov.hmrc.nisp.models.enums.ABTest._
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.models.enums.Scenario
+@import uk.gov.hmrc.nisp.controllers.routes
 
 @(
     nino: String,
@@ -33,14 +35,11 @@
     isPertaxUrl:Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@pageScripts = {
-<script src="@routes.Assets.at("javascript/account.js")" type="text/javascript"></script>
-}
 
 @analyticsAdditionalJs = {
     ga('set', {
         'dimension7':  '@spSummary.contextMessage.getOrElse("")',
-        'dimension8':  '@spSummary.forecastAmount.week.toInt',
+        'dimension8':  '@spSummary.forecast.forecastAmount.week.toInt',
         @Html(abTest.map (p => s"'dimension9':  '${p.toString}',").getOrElse(""))
         'dimension10': '@spSummary.numberOfQualifyingYears',
         'dimension11': '@spSummary.numberOfGaps',
@@ -56,20 +55,72 @@
 
 @defining(Some(user)) { implicit userOption =>
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-                pageScripts=Some(pageScripts), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+              articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 <h2 class="heading-large">@Messages("nisp.main.h1.title")</h2>
 <h3 class="heading-medium subtitle">@Messages("nisp.main.h1.subtitle")</h3>
+<h2>Scenario is @spSummary.forecast.scenario </h2>
 
 <div class="highlighted-event">
       <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.title.estimate.is")</p>
-      <p> <em>@NispMoney.pounds(spSummary.forecastAmount.week) @Messages("nisp.main.week")</em></p>         
-      <p> @NispMoney.pounds(spSummary.forecastAmount.month) @Messages("nisp.main.month"),
-          @NispMoney.pounds(spSummary.forecastAmount.year) @Messages("nisp.main.year")
+      <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
+      <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
+          @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
      </p>
 </div>
 
-        <h1>Here go caveats</h1>
-        <h1>Here go charts</h1>
-        <h1>Here go personal max messaging</h1>      
+@if(spSummary.forecast.scenario.equals(Scenario.Reached)) {
+<p>Your estimate</p>
+<ul class="list-bullet">
+    <li>is not a guarantee and is based on the current law</li>
+    <li>is based on your latest National Insurance record (@spSummary.lastProcessedDate.localDate.toString())</li>
+    <li>does not include any increase due to inflation</li>
+</ul>
+
+}
+
+@if(spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax)) {
+
+    <p>Your estimate</p>
+    <ul class="list-bullet">
+        <li>is not a guarantee and is based on the current law</li>
+        <li>does not include any increase due to inflation</li>
+    </ul>
+
+
+    <h3 class="heading-medium">Breakdown</h3>
+    <div class="chart-block">
+        <span>@Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())</span>
+        <ul class="graph">
+            <li>
+             <span class="amount" style="width:@currentChart.width%">
+                 <span>
+                    @NispMoney.pounds(currentChart.amountModel.week) @Messages("nisp.main.chart.week")
+                 </span>
+            </span>
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="chart-block">
+        <span>@Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())</span>
+        <ul class="graph">
+            <li>
+                <span class="amount" style="width:@forecastChart.width%">
+                    <span>
+                        @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.chart.week")
+                    </span>
+                </span>
+            </li>
+        </ul>
+</div>
+
+<h3 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) is the most you can get</h3>
+<p>When you reach State Pension age in @{(spSummary.finalRelevantYear+1).toString()}, you no longer have to pay National Insurance Contributions.</p>
+
+<a href='@routes.NIRecordController.showGaps.url' role="button">View your National Insurance record</a>
+}
+
+
     }
 }

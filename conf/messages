@@ -91,8 +91,8 @@ nisp.main.yearly = Yearly
 
 nisp.main.showyourrecord = View your National Insurance record
 
-nisp.main.chart.lastprocessed.title=Amount based on your latest National Insurance record (5 April {0})
-nisp.main.chart.spa.title=Amount you may get to if you continue to contribute
+nisp.main.chart.lastprocessed.title=Estimate based on your National Insurance record up to 5 April {0}
+nisp.main.chart.spa.title=Estimate if you continue to contribute until {0}
 
 nisp.main.chart.whichis=which is
 nisp.main.chart.week=a week
