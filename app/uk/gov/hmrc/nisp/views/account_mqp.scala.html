@@ -47,21 +47,22 @@
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <div class="grid services">
-    <h1 class="heading-large title-sp">@Messages("nisp.main.description.mqp")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>, @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h1>
+    <h2 class="heading-large">@Messages("nisp.main.h1.title")</h2>
+    <h3 class="heading-medium">@Messages("nisp.main.description.mqp") @Dates.formatDate(spSummary.statePensionAge.date.localDate), @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h3>
     <div class="panel-indent mqp">
-        <p><strong>
+        <p>
            @if(spSummary.numberOfQualifyingYears == 1) {
                @Messages("nisp.mqp.youcurrentlyhave.singular", spSummary.numberOfQualifyingYears, spSummary.lastProcessedDate.localDate.getYear().toString())
            } else {
                @Messages("nisp.mqp.youcurrentlyhave.plural", spSummary.numberOfQualifyingYears, spSummary.lastProcessedDate.localDate.getYear().toString())
            }
-        </strong></p>
+        </p>
     </div>
 
     @if(canGetPension) {
-        <h2 class="heading-medium">@Messages("nisp.mqp.possible")</h2>
+        <h3 class="heading-medium">@Messages("nisp.mqp.possible")</h3>
     } else {
-        <h2 class="heading-medium">@Messages("nisp.mqp.notpossible")</h2>
+        <h3 class="heading-medium">@Messages("nisp.mqp.notpossible")</h3>
     }
 
     <p>
@@ -111,7 +112,7 @@
     </p>
     }
 
-    <a href='@routes.NIRecordController.showGaps.url' role="button" class="button">@Messages("nisp.main.showyourrecord")</a>
+    <a href='@routes.NIRecordController.showGaps.url' role="button">View your National Insurance record</a>.
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 </div>
 }
