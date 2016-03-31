@@ -58,62 +58,32 @@
            }
         </p>
     </div>
-
     @if(canGetPension) {
-        <h3 class="heading-medium">@Messages("nisp.mqp.possible")</h3>
-    } else {
-        <h3 class="heading-medium">@Messages("nisp.mqp.notpossible")</h3>
-    }
+    <h3 class="heading-medium">@Messages("nisp.mqp.possible")</h3>
+        <p>  @Messages("nisp.mqp.youneedtoadd",
+            Time.years(numberOfYearsMissing),
+            Time.years(spSummary.yearsToContributeUntilPensionAge),
+            Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
 
-    <p>
-        @Messages("nisp.mqp.youneedtoadd",
-                  Time.years(numberOfYearsMissing),
-                  Time.years(spSummary.yearsToContributeUntilPensionAge),
-                  Dates.formatDate(spSummary.statePensionAge.date.localDate))
-
-        @if(canGetPension == false) {
-            @Messages("nisp.mqp.afterthis")
-        }
-    </p>
-
-    @if(spSummary.numberOfGaps > 0) {
-        <p>
-            @if(spSummary.numberOfGaps == 1) {
-                @Messages("nisp.mqp.gaps.singular")
-                @if(canGetPension) {
-                    @Messages("nisp.mqp.gaps.fill.singular")
-                }
-            } else {
-                @Messages("nisp.mqp.gaps.plural", spSummary.numberOfGaps)
-                @if(canGetPension) {
-                    @Messages("nisp.mqp.gaps.fill.plural")
+            @if(spSummary.numberOfGaps > 0) {
+                @if(spSummary.numberOfGaps == 1) {
+                    <p>@Messages("nisp.mqp.gaps.singular")</p>
+                } else {
+                    <p>@Messages("nisp.mqp.gaps.fill.plural", spSummary.numberOfGaps)</p>
                 }
             }
 
-        </p>
+        <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
+
+
+    } else {
+
     }
 
-    @if(canGetPension) {
-        <p>
-            @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate))
-        </p>
+    <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.showyourrecord")</a>.
+
     }
-
-    <div class="panel-indent mqp">
-        @Html(Messages("nisp.mqp.overseas"))
-    </div>
-
-    @if(!canGetPension) {
-    <p>
-        @Html(Messages("nisp.mqp.never.para1"))
-    </p>
-    <p>
-        @Html(Messages("nisp.mqp.never.para2"))
-    </p>
-    }
-
-    <a href='@routes.NIRecordController.showGaps.url' role="button">View your National Insurance record</a>.
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 </div>
-}
+
 }

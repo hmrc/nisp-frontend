@@ -56,6 +56,7 @@
 @defining(Some(user)) { implicit userOption =>
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
               articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
 <h2 class="heading-large">@Messages("nisp.main.h1.title")</h2>
 <h3 class="heading-medium subtitle">@Messages("nisp.main.h1.subtitle")</h3>
 <h2>Scenario is @spSummary.forecast.scenario </h2>
@@ -69,14 +70,18 @@
 </div>
 
 @if(spSummary.forecast.scenario.equals(Scenario.Reached)) {
-<p>Your estimate</p>
-<ul class="list-bullet">
-    <li>is not a guarantee and is based on the current law</li>
-    <li>is based on your latest National Insurance record (@spSummary.lastProcessedDate.localDate.toString())</li>
-    <li>does not include any increase due to inflation</li>
-</ul>
+    <p>Your estimate</p>
+    <ul class="list-bullet">
+        <li>is not a guarantee and is based on the current law</li>
+        <li>is based on your latest National Insurance record (@spSummary.lastProcessedDate.localDate.toString())</li>
+        <li>does not include any increase due to inflation</li>
+    </ul>
+    <h3 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) is the most you can get</h3>
+    <p>You cannot improve your estimate any more.</p>
+    <p>You'll still need to pay National Insurance contributions until @(spSummary.finalRelevantYear+1) as they fund other state benefits and the NHS.</p>
 
 }
+
 
 @if(spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax)) {
 
@@ -113,14 +118,14 @@
                 </span>
             </li>
         </ul>
-</div>
+    </div>
 
-<h3 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) is the most you can get</h3>
-<p>When you reach State Pension age in @{(spSummary.finalRelevantYear+1).toString()}, you no longer have to pay National Insurance Contributions.</p>
+    <h3 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) is the most you can get</h3>
+    <p>When you reach State Pension age in @{(spSummary.finalRelevantYear+1).toString()}, you no longer have to pay National Insurance Contributions.</p>
 
-<a href='@routes.NIRecordController.showGaps.url' role="button">View your National Insurance record</a>
 }
 
+    <a href='@routes.NIRecordController.showGaps.url' role="button">View your National Insurance record</a>.
 
     }
 }
