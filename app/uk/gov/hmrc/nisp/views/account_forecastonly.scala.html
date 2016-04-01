@@ -47,28 +47,26 @@
 @defining(Some(user)) { implicit userOption =>
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-<div class="grid services">
-    <h1 class="heading-large title-sp">@Messages("nisp.main.h1.title")</h1>
+    <h1 class="heading-large">@Messages("nisp.main.h1.title")</h1>
+    <h2 class="heading-medium subtitle">@Messages("nisp.main.h1.subtitle")</h2>
+    <h3>Scenario is @spSummary.forecast.scenario </h3>
+
     <div class="highlighted-event">
-        <p id="amount-intro">@Messages("nisp.main.basedOn")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate)
-             </span>@Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.title.estimate.is")
-        </p>
-        <p>
-            <em id="amount-value">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em>
-            <p id="amount-sub">
-                 @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
-                 @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
-            </p>
+        <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.title.estimate.is")</p>
+        <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
+        <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
+            @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
         </p>
     </div>
-    <div class="content-block">
-        <p>@Messages("nisp.main.guarantee.forecastonly", spSummary.lastProcessedDate.localDate.getYear().toString())</p>
-         @if(spSummary.hasPsod) {<p>@Messages("nisp.main.psod")</p>}
-    </div>
-    <h2 class="heading-medium">@Messages("nisp.main.forecastonly.h2.title")</h2>
-    <p>@Messages("nisp.main.context.forecastonly.para1", spSummary.forecast.forecastAmount.week, Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
-    <a href='@routes.NIRecordController.showGaps.url' role="button" class="button">@Messages("nisp.main.showyourrecord")</a>
-    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
-</div>
+    <p>Your estimate</p>
+    <ul class="list-bullet">
+        <li>is not a guarantee and is based on the current law</li>
+        <li>is based on your latest National Insurance record  (@Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
+        <li>does not include any increase due to inflation</li>
+    </ul>
+    <h4 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) is the most you can get</h4>
+    <p>You cannot improve your estimate any more.</p>
+    <p>You'll still need to pay National Insurance contributions until @(spSummary.finalRelevantYear+1) as they fund other state benefits and the NHS.</p>
+    <a href='@routes.NIRecordController.showGaps.url' role="button">View your National Insurance record</a>.
 }
 }
