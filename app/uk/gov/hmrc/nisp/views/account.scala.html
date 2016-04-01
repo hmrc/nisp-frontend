@@ -57,7 +57,7 @@
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
               articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-<h2 class="heading-large">@Messages("nisp.main.h1.title")</h2>
+<h1 class="heading-large">@Messages("nisp.main.h1.title")</h1>
 <h3 class="heading-medium subtitle">@Messages("nisp.main.h1.subtitle")</h3>
 <h2>Scenario is @spSummary.forecast.scenario </h2>
 
@@ -73,7 +73,7 @@
     <p>Your estimate</p>
     <ul class="list-bullet">
         <li>is not a guarantee and is based on the current law</li>
-        <li>is based on your latest National Insurance record (@spSummary.lastProcessedDate.localDate.toString())</li>
+        <li>is based on your latest National Insurance record (@Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
         <li>does not include any increase due to inflation</li>
     </ul>
     <h3 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) is the most you can get</h3>
