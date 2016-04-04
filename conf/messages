@@ -76,8 +76,8 @@ nisp.main.after = When you reach State Pension age, {0}, you no longer have to p
 nisp.main.reach = You''ll reach State Pension age when you are
 nisp.main.basedOn = You can get your State Pension on
 
-nisp.main.puttingOff = Put off claiming
-nisp.main.puttingOff.line1 = After State Pension age, {0}, you do not pay National Insurance. You can put off claiming your State Pension and this may mean you get extra State Pension when you do want to claim it.
+nisp.main.puttingOff = Putting off claiming
+nisp.main.puttingOff.line1 = When you are {0}, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.
 nisp.main.puttingOff.linkTitle = More on putting off claiming (opens in new tab)
 
 nisp.main.context.default = If you continue to make National Insurance contributions, your State Pension may increase before you retire.
@@ -111,17 +111,11 @@ nisp.main.context.improve.list.payable.plural = You have {0} years on your recor
 nisp.main.context.improve.nogaps = You cannot improve your forecast any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.main.context.improve.nogaps.line2 = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
 
-nisp.main.context.improve.para1.plural = You have years on your National Insurance record which do not count towards your State Pension. You may improve your forecast by filling them.
-nisp.main.context.improve.para1.singular = You have a year on your National Insurance record which does not count towards your State Pension. You may improve your forecast by filling it.
-
-nisp.main.context.improve.para1.dorothy.plural = You have years on your National Insurance record which do not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
-nisp.main.context.improve.para1.dorothy.singular = You have a year on your National Insurance record which does not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
+nisp.main.context.improve.para1.plural = You have years on your record where you did not contribute enough National Insurance and you can make up the shortfall.This will make these years count towards your pension and may improve your forecast.
+nisp.main.context.improve.para1.singular = You have a year on your record where you did not contribute enough National Insurance and you can make up the shortfall.This will make these years count towards your pension and may improve your forecast.
 
 nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.main.context.forecastonly.para1 = You still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
-
-nisp.main.context.improve.para1.priya.plural = You have years on your National Insurance record which do not count towards your State Pension. You cannot improve your forecast by filling them.
-nisp.main.context.improve.para1.priya.singular = You have a year on your National Insurance record which does not count towards your State Pension. You cannot improve your forecast by filling it.
 
 #**************************
 # Exclusion Messages
