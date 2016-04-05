@@ -52,7 +52,6 @@ nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pensio
 #**************************
 nisp.main.title=Summary: Check your State Pension
 nisp.main.h1.title= Your State Pension
-nisp.main.h1.subtitle= Summary
 nisp.main.estimate = Your estimate
 nisp.main.forecast = Forecast
 nisp.main.howtoincreaseit = How to increase it
@@ -73,7 +72,7 @@ nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = It does not include the pension sharing order you have in effect.
 nisp.main.whenYoullBe = when you''ll be
-nisp.main.after = When you reach State Pension age in {0}, you no longer have to pay National Insurance contributions.
+nisp.main.after = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
 
 nisp.main.reach = You''ll reach State Pension age when you are
 nisp.main.basedOn = You can get your State Pension on
@@ -345,6 +344,9 @@ nisp.mqp.gaps.fill.plural=You can fill some of these years to get the 10 years y
 nisp.mqp.never.para1 =You may have a private pension. For more details about your private pension you will need to contact your pension provider. Use the free service to<a href="https://www.gov.uk/find-lost-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:findlostpension"> find pension contact details (opens in new tab)</a>.
 nisp.mqp.never.para2 =You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
 nisp.mqp.years.dontcount = You also have {0} years on your record which doesn''t count towards your pension because you didn''t contribute enough National Insurance.
+nisp.mqp.cannotImprove = You cannot improve your estimate any further, unless you choose to put off claiming. You''ll still need to pay contributions as these fund other state benefits and the NHS.
+nisp.mqp.youCurrentlyHave = You currently have {0} years on your record and you need at least {1} years to get any State Pension.
+nisp.mqp.howManyToContribute = assumes that you''ll contribute another {0} years
 
 #**************************
 #  Cope Page Messages
