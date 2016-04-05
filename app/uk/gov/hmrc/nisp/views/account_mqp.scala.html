@@ -46,10 +46,9 @@
 @defining(Some(user)) { implicit userOption =>
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-<div class="grid services">
     <h2 class="heading-large">@Messages("nisp.main.h1.title")</h2>
     <h3 class="heading-medium">@Messages("nisp.main.description.mqp") @Dates.formatDate(spSummary.statePensionAge.date.localDate), @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h3>
-    <div class="panel-indent mqp">
+    <div class="panel-indent">
         <p>
            @if(spSummary.numberOfQualifyingYears == 1) {
                @Messages("nisp.mqp.youcurrentlyhave.singular", spSummary.numberOfQualifyingYears, spSummary.lastProcessedDate.localDate.getYear().toString())
@@ -58,46 +57,41 @@
            }
         </p>
     </div>
-    @if(canGetPension) {revising messages
-    <h3 class="heading-medium">@Messages("nisp.mqp.possible")</h3>
+    @if(canGetPension) {
+        <h3 class="heading-medium">@Messages("nisp.mqp.possible")</h3>
         <p>  @Messages("nisp.mqp.youneedtoadd",
             Time.years(numberOfYearsMissing),
             Time.years(spSummary.yearsToContributeUntilPensionAge),
-            Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
-
-            @if(spSummary.numberOfGaps > 0) {
-                @if(spSummary.numberOfGaps == 1) {
-                    <p>@Messages("nisp.mqp.gaps.singular")</p>
-                } else {
-                    <p>@Messages("nisp.mqp.gaps.fill.plural", spSummary.numberOfGaps)</p>
-                }
-            }
-
+            Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>       
+        @if(spSummary.numberOfGapsPayable>=10) {
+            <p>@Messages("nisp.mqp.years.dontcount",spSummary.numberOfGapsPayable)</p>
+        }
         <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
-
+        <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.showyourrecord")</a>.
+        <div class="panel-indent">
+            <p>@Html(Messages("nisp.mqp.overseas"))</p>
+        </div>
 
     } else {
 
-    }
-
-    <h3 class="heading-medium">@Messages("nisp.mqp.notpossible")</h3>
-    <p>  @Messages("nisp.mqp.youneedtoadd",
-        Time.years(numberOfYearsMissing),
-        Time.years(spSummary.yearsToContributeUntilPensionAge),
-        Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
-    @if(spSummary.numberOfGapsPayable > 0) {
-        <p>@Messages("nisp.mqp.years.dontcount", spSummary.numberOfGapsPayable)</p>
-    }
-    <h3 class="heading-medium">What you can do next</h3>
-    <p>@Html(Messages("nisp.mqp.overseas"))</p>
-    <p>@Html(Messages("nisp.mqp.never.para1"))</p>
-    <p>@Html(Messages("nisp.mqp.never.para2"))</p>
+        <h3 class="heading-medium">@Messages("nisp.mqp.notpossible")</h3>
+        <p>  @Messages("nisp.mqp.youneedtoadd",
+            Time.years(numberOfYearsMissing),
+            Time.years(spSummary.yearsToContributeUntilPensionAge),
+            Dates.formatDate(spSummary.statePensionAge.date.localDate)) @Messages("nisp.mqp.afterthis") </p>
+        @if(spSummary.numberOfGapsPayable > 0) {
+            <p>@Messages("nisp.mqp.years.dontcount", spSummary.numberOfGapsPayable).</p>
+        }
+        <h3 class="heading-medium">What you can do next</h3>
+        <p>@Html(Messages("nisp.mqp.overseas"))</p>
+        <p>@Html(Messages("nisp.mqp.never.para1"))</p>
+        <p>@Html(Messages("nisp.mqp.never.para2"))</p>
 
 
-    <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.showyourrecord")</a>.
+        <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.showyourrecord")</a>.
 
     }
+}
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
-</div>
 
 }

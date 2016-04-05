@@ -59,16 +59,15 @@
               articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <h1 class="heading-large">@Messages("nisp.main.h1.title")</h1>
-<h2 class="heading-medium">Scenario is : @spSummary.forecast.scenario</h2>
-<div class="highlighted-event">
+
+@if(spSummary.forecast.scenario.equals(Scenario.Reached)) {
+    <div class="highlighted-event">
       <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
       <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
       <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
           @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
      </p>
 </div>
-
-@if(spSummary.forecast.scenario.equals(Scenario.Reached)) {
     <p>@Messages("nisp.main.estimate")</p>
     <ul class="list-bullet">
         <li>@Messages("nisp.main.notAGuarantee")</li>
@@ -84,6 +83,13 @@
 
 
 @if(spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax)) {
+    <div class="highlighted-event">
+        <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
+        <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
+        <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
+              @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
+        </p>
+    </div>
     @if(spSummary.numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP) {
         <p>@Messages("nisp.main.estimate")</p>
         <ul class="list-bullet">
@@ -127,7 +133,12 @@
             @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
                 <span>@Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())</span>
             } else  {
-                <span>@Messages("nisp.main.chart.estimateIfYouContinue", spSummary.forecast.yearsLeftToWork, (spSummary.finalRelevantYear+1).toString())</span>
+                @if(spSummary.forecast.yearsLeftToWork==1) {
+                    <span>@Messages("nisp.main.chart.estimateIfYouContinue.single", spSummary.forecast.yearsLeftToWork, (spSummary.finalRelevantYear+1).toString())</span>
+                } else {
+                    <span>@Messages("nisp.main.chart.estimateIfYouContinue.plural", spSummary.forecast.yearsLeftToWork, (spSummary.finalRelevantYear+1).toString())</span>
+                }
+
             }
             <ul class="graph">
                 <li>
@@ -142,7 +153,7 @@
 
         <h3 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h3>
         @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
-            <p>@Messages("nisp.main.after", (spSummary.finalRelevantYear+1).toString())***</p>
+            <p>@Messages("nisp.main.after", (spSummary.finalRelevantYear+1).toString())</p>
         } else  {
             <p>@Messages("nisp.main.context.continueWorkingMax.stillNeedToPay", (spSummary.finalRelevantYear+1).toString()) </p>
         }
@@ -153,6 +164,13 @@
 }
 
 @if(spSummary.forecast.scenario.equals(Scenario.ContinueWorkingNonMax)) {
+    <div class="highlighted-event">
+        <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
+        <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
+        <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
+            @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
+        </p>
+    </div>
     @if(spSummary.numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP) {
         <p>@Messages("nisp.main.estimate")</p>
         <ul class="list-bullet">
@@ -173,44 +191,66 @@
 }
 
 @if(spSummary.forecast.scenario.equals(Scenario.FillGaps)) {
-    <p>@Messages("nisp.main.estimate")</p>
-    <ul class="list-bullet">
-        <li>@Messages("nisp.main.notAGuarantee")</li>
-        <li>@Messages("nisp.main.inflation")</li>
-    </ul>
-    <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
-    <div class="chart-block">
-        <span>@Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())</span>
-        <ul class="graph">
-            <li>
-                 <span class="amount" style="width:@currentChart.width%">
-                     <span>
-                        @NispMoney.pounds(currentChart.amountModel.week) @Messages("nisp.main.chart.week")
-                     </span>
-                </span>
-            </li>
+    @if(spSummary.numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP) {
+        <h2 class="heading-medium">@Messages("nisp.mqp.reachStatePensionAge",Dates.formatDate(spSummary.statePensionAge.date.localDate),spSummary.statePensionAge.age)</h2>
+        <div class="panel-indent">
+            @Messages("nisp.mqp.youcurrentlyhave.plural",spSummary.numberOfQualifyingYears,spSummary.lastProcessedDate.localDate.getYear().toString())
+        </div>
+        <h2>@Messages("nisp.mqp.possible")</h2>
+        <p>@Messages("nisp.mqp.youneedtoadd",(Constants.minimumQualifyingYearsNSP-spSummary.numberOfQualifyingYears), spSummary.yearsToContributeUntilPensionAge, Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+        <p>@Messages("nisp.mqp.years.dontcount",spSummary.numberOfGapsPayable)</p>
+        <p>@Messages("nisp.mqp.afterspa",Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+        <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>.
+        <div class="panel-indent">
+            <p>@Html(Messages("nisp.mqp.overseas"))</p>
+        </div>
+    } else {
+            <div class="highlighted-event">
+                <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
+                <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
+                <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
+                    @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
+                </p>
+            </div>
+        <p>@Messages("nisp.main.estimate")</p>
+        <ul class="list-bullet">
+            <li>@Messages("nisp.main.notAGuarantee")</li>
+            <li>@Messages("nisp.main.inflation")</li>
         </ul>
-    </div>
-
-    <div class="chart-block">
-        <span>@Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())</span>
-        <ul class="graph">
-            <li>
-                <span class="amount" style="width:@forecastChart.width%">
-                    <span>
-                        @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.chart.week")
+        <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
+        <div class="chart-block">
+            <span>@Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())</span>
+            <ul class="graph">
+                <li>
+                     <span class="amount" style="width:@currentChart.width%">
+                         <span>
+                            @NispMoney.pounds(currentChart.amountModel.week) @Messages("nisp.main.chart.week")
+                         </span>
                     </span>
-                </span>
-            </li>
-        </ul>
-    </div>
-    <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
-    <h3>@Messages("nisp.main.context.fillGaps")</h3>
-    <p>@Messages("nisp.main.context.improve.para1.plural")</p>
-    <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
-    <h3>@Messages("nisp.main.puttingOff")</h3>
-    <p>@Messages("nisp.main.puttingOff.line1", spSummary.statePensionAge.age)</p>
-    <a href="https://www.gov.uk/deferring-state-pension" target="_blank" rel="external">@Messages("nisp.main.puttingOff.linkTitle")</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="chart-block">
+            <span>@Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())</span>
+            <ul class="graph">
+                <li>
+                    <span class="amount" style="width:@forecastChart.width%">
+                        <span>
+                            @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.chart.week")
+                        </span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
+        <h3>@Messages("nisp.main.context.fillGaps")</h3>
+        <p>@Messages("nisp.main.context.improve.para1.plural")</p>
+        <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
+        <h3>@Messages("nisp.main.puttingOff")</h3>
+        <p>@Messages("nisp.main.puttingOff.line1", spSummary.statePensionAge.age)</p>
+        <a href="https://www.gov.uk/deferring-state-pension" target="_blank" rel="external">@Messages("nisp.main.puttingOff.linkTitle")</a>
+    }    
 }
 
 
