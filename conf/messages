@@ -52,7 +52,7 @@ nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pensio
 #**************************
 nisp.main.title=Summary: Check your State Pension
 nisp.main.h1.title= Your State Pension
-nisp.main.estimate = Your estimate is
+nisp.main.estimate = Your estimate
 nisp.main.forecast = Forecast
 nisp.main.howtoincreaseit = How to increase it
 nisp.main.cope = What affects it
