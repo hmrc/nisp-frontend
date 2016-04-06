@@ -57,13 +57,14 @@
            }
         </p>
     </div>
+
     @if(canGetPension) {
         <h3 class="heading-medium">@Messages("nisp.mqp.possible")</h3>
         <p>  @Messages("nisp.mqp.youneedtoadd",
             Time.years(numberOfYearsMissing),
             Time.years(spSummary.yearsToContributeUntilPensionAge),
             Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>       
-        @if(spSummary.numberOfGapsPayable>=10) {
+        @if(spSummary.numberOfQualifyingYears + spSummary.numberOfGapsPayable>=Constants.minimumQualifyingYearsNSP) {
             <p>@Messages("nisp.mqp.years.dontcount",spSummary.numberOfGapsPayable)</p>
         }
         <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
