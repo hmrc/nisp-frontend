@@ -52,7 +52,7 @@ nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pensio
 #**************************
 nisp.main.title=Summary: Check your State Pension
 nisp.main.h1.title= Your State Pension
-nisp.main.estimate = Your estimate
+nisp.main.estimate = Your estimate is
 nisp.main.forecast = Forecast
 nisp.main.howtoincreaseit = How to increase it
 nisp.main.cope = What affects it
@@ -337,7 +337,7 @@ nisp.mqp.youcurrentlyhave.singular=You currently have {0} year on your National 
 nisp.mqp.youcurrentlyhave.plural=You currently have {0} years on your National Insurance record, using the latest complete tax year available, up to 5 April {1}. You need at least 10 years to get any State Pension.
 nisp.mqp.possible=It may be possible for you to get some State Pension
 nisp.mqp.notpossible=It''s not possible for you to get any State Pension based on your National Insurance record
-nisp.mqp.youneedtoadd=You need to add {0} years to your record and you have {1} years left to contribute before you reach State Pension age on {2}. 
+nisp.mqp.youneedtoadd=You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on {2}. 
 nisp.mqp.afterthis=After this you no longer pay National Insurance contributions.
 nisp.mqp.afterspa=After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.gaps.fill.singular=You can fill this year to get the 10 years you need to get any State Pension.

@@ -48,10 +48,9 @@
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <h1 class="heading-large">@Messages("nisp.main.h1.title")</h1>
-    <h3>Scenario is @spSummary.forecast.scenario </h3>
 
     <div class="highlighted-event">
-        <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.title.estimate.is")</p>
+        <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase()</p>
         <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
         <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
             @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
