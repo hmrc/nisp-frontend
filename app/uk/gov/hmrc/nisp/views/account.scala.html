@@ -95,7 +95,7 @@
             <ul class="list-bullet">
                 <li>@Messages("nisp.main.notAGuarantee")</li>
                 <li>@Messages("nisp.main.isBased",Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
-                <li>@Messages("nisp.mqp.howManyToContribute",spSummary.yearsToContributeUntilPensionAge)</li>
+                <li>@Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.yearsToContributeUntilPensionAge))</li>
                 <li>@Messages("nisp.main.inflation")</li>
             </ul>  
             <p> @Messages("nisp.mqp.youCurrentlyHave", spSummary.numberOfQualifyingYears,Constants.minimumQualifyingYearsNSP)</p> 
@@ -176,10 +176,10 @@
             <ul class="list-bullet">
                 <li>@Messages("nisp.main.notAGuarantee")</li>
                 <li>@Messages("nisp.main.isBased",Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
-                <li>@Messages("nisp.mqp.howManyToContribute",spSummary.yearsToContributeUntilPensionAge)</li>
+                <li>@Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.yearsToContributeUntilPensionAge))</li>
                 <li>@Messages("nisp.main.inflation")</li>
             </ul>  
-            <p> @Messages("nisp.mqp.youCurrentlyHave", spSummary.numberOfQualifyingYears,Constants.minimumQualifyingYearsNSP)</p> 
+            <p> @Messages("nisp.mqp.youCurrentlyHave", Time.years(spSummary.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p> 
             <div class="panel-indent">
                 <p>@Html(Messages("nisp.mqp.overseas"))</p>
             </div>
@@ -239,11 +239,11 @@
         @if(spSummary.numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP) {
             <h2 class="heading-medium">@Messages("nisp.mqp.reachStatePensionAge",Dates.formatDate(spSummary.statePensionAge.date.localDate),spSummary.statePensionAge.age)</h2>
             <div class="panel-indent">
-                @Messages("nisp.mqp.youcurrentlyhave.plural",spSummary.numberOfQualifyingYears,spSummary.lastProcessedDate.localDate.getYear().toString())
+                @Messages("nisp.mqp.youcurrentlyhaveUsing",Time.years(spSummary.numberOfQualifyingYears),spSummary.lastProcessedDate.localDate.getYear().toString())
             </div>
             <h2>@Messages("nisp.mqp.possible")</h2>
-            <p>@Messages("nisp.mqp.youneedtoadd",(Constants.minimumQualifyingYearsNSP-spSummary.numberOfQualifyingYears), spSummary.yearsToContributeUntilPensionAge, Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
-            <p>@Messages("nisp.mqp.years.dontcount",spSummary.numberOfGapsPayable)</p>
+            <p>@Messages("nisp.mqp.youneedtoadd",(Time.years(Constants.minimumQualifyingYearsNSP-spSummary.numberOfQualifyingYears)), Time.years(spSummary.yearsToContributeUntilPensionAge), Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+            <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
             <p>@Messages("nisp.mqp.afterspa",Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
             <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
             <div class="panel-indent">
