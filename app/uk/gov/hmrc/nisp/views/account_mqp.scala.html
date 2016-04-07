@@ -49,13 +49,7 @@
     <h2 class="heading-large">@Messages("nisp.main.h1.title")</h2>
     <h3 class="heading-medium">@Messages("nisp.main.description.mqp") @Dates.formatDate(spSummary.statePensionAge.date.localDate), @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h3>
     <div class="panel-indent">
-        <p>
-           @if(spSummary.numberOfQualifyingYears == 1) {
-               @Messages("nisp.mqp.youcurrentlyhave.singular", spSummary.numberOfQualifyingYears, spSummary.lastProcessedDate.localDate.getYear().toString())
-           } else {
-               @Messages("nisp.mqp.youcurrentlyhave.plural", spSummary.numberOfQualifyingYears, spSummary.lastProcessedDate.localDate.getYear().toString())
-           }
-        </p>
+        <p> @Messages("nisp.mqp.youcurrentlyhaveUsing", Time.years(spSummary.numberOfQualifyingYears), spSummary.lastProcessedDate.localDate.getYear().toString())</p>
     </div>
 
     @if(canGetPension) {
@@ -65,7 +59,7 @@
             Time.years(spSummary.yearsToContributeUntilPensionAge),
             Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>       
         @if(spSummary.numberOfQualifyingYears + spSummary.numberOfGapsPayable>=Constants.minimumQualifyingYearsNSP) {
-            <p>@Messages("nisp.mqp.years.dontcount",spSummary.numberOfGapsPayable)</p>
+            <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
         }
         <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
         <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.showyourrecord")</a>
@@ -81,7 +75,7 @@
             Time.years(spSummary.yearsToContributeUntilPensionAge),
             Dates.formatDate(spSummary.statePensionAge.date.localDate)) @Messages("nisp.mqp.afterthis") </p>
         @if(spSummary.numberOfGapsPayable > 0) {
-            <p>@Messages("nisp.mqp.years.dontcount", spSummary.numberOfGapsPayable).</p>
+            <p>@Messages("nisp.mqp.years.dontcount", Time.years(spSummary.numberOfGapsPayable)).</p>
         }
         <h3 class="heading-medium">What you can do next</h3>
         <p>@Html(Messages("nisp.mqp.overseas"))</p>
