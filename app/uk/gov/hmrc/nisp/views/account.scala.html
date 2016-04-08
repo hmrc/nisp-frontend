@@ -60,6 +60,8 @@
 
     <h1 class="heading-large">@Messages("nisp.main.h1.title")</h1>
 
+@spSummary.forecast.scenario
+
     @if(spSummary.forecast.scenario.equals(Scenario.Reached)) {
         <div class="highlighted-event">
           <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
@@ -232,6 +234,12 @@
             <h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
             <p>@Messages("nisp.main.after", (spSummary.finalRelevantYear+1).toString())</p>
             <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
+
+            @for(test <- abTest) {
+                @if(test == B && spSummary.contractedOutFlag) {
+                    <h3 class="heading-medium">@Messages("nisp.cope.title1")</h3>
+                }
+            }
         }
     }
 

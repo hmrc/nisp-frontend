@@ -353,7 +353,8 @@ nisp.mqp.reachStatePensionAge = You''ll reach State Pension age on {0} when you'
 #  Cope Page Messages
 #**************************
 
-nisp.cope.title1=You were contracted out
+nisp.cope.title1=Contracted out pensions and National Insurance
+nisp.cope.likeMostPeople=Like most people, you were contracted out during your working life. In addition to the {0}, you will get an amount from your workplace or personal pension provider.
 nisp.cope.inthepast=In the past you''ve been part of one or more contracted out pension schemes, such as workplace or personal pension schemes.
 nisp.cope.why=When you were contracted out:
 nisp.cope.why.bullet1=you and your employers paid lower rate National Insurance contributions; or
