@@ -81,10 +81,6 @@ h2.heading-medium {
   margin-bottom: 5px;
 }
 
-.service-info {
-  padding-bottom: 5px;
-}
-
 .logo {
     display: none;
 }
@@ -143,23 +139,7 @@ div.panel-indent{
   }
 }
 
-/*------------------------------------*\
-    #User Account Details + NINO
-\*------------------------------------*/
 
-.service-info {  
-  .service-info__help {
-    margin-top: 5px;
-    @media only screen and (max-width: 800px) {
-      font-size: 16px;
-    }
-  }
-}
-
-
-h3.subtitle {
-  margin: 10px 0 -10px 0;
-}
 /*------------------------------------*\
     #Amount Box
 \*------------------------------------*/
