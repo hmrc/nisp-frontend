@@ -26,6 +26,7 @@ nisp.breadcrumb.nirecord = NI record
 nisp.breadcrumb.nirecord.voluntaryContrib = Voluntary contributions
 nisp.breadcrumb.nirecord.gapsandhowtocheck = Gaps in your record and how to check them
 nisp.breadcrumb.excluded = Excluded
+nisp.breadcrumb.cope = Cope Page
 
 #**************************
 #  Landing Page Messages
@@ -355,14 +356,16 @@ nisp.mqp.reachStatePensionAge = You''ll reach State Pension age on {0} when you'
 
 nisp.cope.title1=Contracted out pensions and National Insurance
 nisp.cope.likeMostPeople=Like most people, you were contracted out during your working life. In addition to the {0}, you will get an amount from your workplace or personal pension provider.
+nisp.cope.moreAbout=More about <a href="{0}">contracting out and National Insurance</a>.
+nisp.cope.youWereContractedOut=You were contracted out
 nisp.cope.inthepast=In the past you''ve been part of one or more contracted out pension schemes, such as workplace or personal pension schemes.
 nisp.cope.why=When you were contracted out:
 nisp.cope.why.bullet1=you and your employers paid lower rate National Insurance contributions; or
 nisp.cope.why.bullet2=some of your National Insurance contributions were paid into your private pension schemes instead
-nisp.cope.definition=Your contracted out workplace or personal pension scheme(s) should include an amount of pension which will, in most cases, be the equivalent of the additional State Pension you would have been paid if you had not been contracted out. We call this amount your Contracted Out Pension Equivalent (COPE). Your COPE estimate is shown below.
+nisp.cope.definition=Your workplace or personal pension scheme should include an amount of pension which will, in most cases, be equal to the additional State Pension you would have been paid. We call this amount your Contracted Out Pension Equivalent (COPE). Your COPE estimate is shown below.
 
 nisp.cope.title2=Contracted Out Pension Equivalent (COPE)
-nisp.cope.workplace=The COPE amount is paid as part of your other pension scheme(s), not by the government. The total amount of pension paid by your workplace or personal pension scheme will depend on the scheme and on any investment choices you may make.
+nisp.cope.workplace=The COPE amount is paid as part of your other pension schemes, not by the government. The total amount of pension paid by your workplace or personal pension scheme will depend on the scheme and on any investment choices.
 nisp.cope.table.estimate.title=Your COPE estimate
 nisp.cope.table.pensionforecast=Your State Pension forecast
 nisp.cope.table.copeadded=COPE added to your State Pension forecast

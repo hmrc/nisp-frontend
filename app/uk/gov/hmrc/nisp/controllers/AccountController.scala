@@ -60,6 +60,18 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
 
+  def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+    isFromPertax.flatMap { isPertax =>
+      val nino = user.nino.getOrElse("")
+      val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
+      nispConnector.connectToGetSPResponse(nino).map {
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
+          Ok(account_cope(nino, spSummary.forecast.forecastAmount.week, spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week+spSummary.copeAmount.week, authenticationProvider, isPertax))
+        case _ => throw new RuntimeException("SP Response Model is empty")
+      }
+    }
+  }
+
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
