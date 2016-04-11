@@ -69,18 +69,8 @@
           <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
               @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
          </p>
-    </div>
-        <p>@Messages("nisp.main.estimate")</p>
-        <ul class="list-bullet">
-            <li>@Messages("nisp.main.notAGuarantee")</li>
-            <li>@Messages("nisp.main.isBased",Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
-            <li>@Messages("nisp.main.inflation")</li>
-        </ul>
-        <h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
-        <p>@Messages("nisp.main.cantImprove")</p>
-        <p>@Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString())</p>
-        <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
-
+        </div>
+        @includes.reached(spSummary)
     }
 
 
