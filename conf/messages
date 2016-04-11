@@ -73,7 +73,7 @@ nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = It does not include the pension sharing order you have in effect.
 nisp.main.whenYoullBe = when you''ll be
-nisp.main.after = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
+nisp.main.after = When you reach State Pension age in {0}, you no longer have to pay National Insurance contributions.
 
 nisp.main.reach = You''ll reach State Pension age when you are
 nisp.main.basedOn = You can get your State Pension on
