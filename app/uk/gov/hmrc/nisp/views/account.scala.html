@@ -100,7 +100,7 @@
                 <li>@Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.yearsToContributeUntilPensionAge))</li>
                 <li>@Messages("nisp.main.inflation")</li>
             </ul>  
-            <p> @Messages("nisp.mqp.youCurrentlyHave", spSummary.numberOfQualifyingYears,Constants.minimumQualifyingYearsNSP)</p> 
+            <p> @Messages("nisp.mqp.youCurrentlyHave", Time.years(spSummary.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
             <div class="panel-indent">
                 <p>@Html(Messages("nisp.mqp.overseas"))</p>
             </div>
@@ -260,22 +260,11 @@
                         @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
                     </p>
                 </div>
-            <p>@Messages("nisp.main.estimate")</p>
-            <ul class="list-bullet">
-                <li>@Messages("nisp.main.notAGuarantee")</li>
-                <li>@Messages("nisp.main.inflation")</li>
-            </ul>
-            <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
+
 
             @includes.fillGaps(spSummary, currentChart, forecastChart)
 
-            <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
-            <h3>@Messages("nisp.main.context.fillGaps")</h3>
-            <p>@Messages("nisp.main.context.improve.para1.plural")</p>
-            <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
-            <h3>@Messages("nisp.main.puttingOff")</h3>
-            <p>@Messages("nisp.main.puttingOff.line1", spSummary.statePensionAge.age)</p>
-            <a href="https://www.gov.uk/deferring-state-pension" target="_blank" rel="external">@Messages("nisp.main.puttingOff.linkTitle")</a>
+
         }    
     }
 
