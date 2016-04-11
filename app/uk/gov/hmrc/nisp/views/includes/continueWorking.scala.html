@@ -40,6 +40,7 @@
     } else {
         @chart(Messages("nisp.main.chart.estimateIfYouContinue.plural", spSummary.yearsToContributeUntilPensionAge, (spSummary.finalRelevantYear+1).toString()), forecastChart.width, Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
     }
+}
 
 <h3 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h3>
 @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
@@ -49,4 +50,3 @@
 }
 
     <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
-}

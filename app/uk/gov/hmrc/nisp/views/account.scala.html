@@ -100,7 +100,7 @@
             <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
         } else {
 
-            @includes.continueWorkingMax(spSummary, currentChart, forecastChart)
+            @includes.continueWorking(spSummary, currentChart, forecastChart)
         }
     }
 
@@ -129,51 +129,7 @@
             <p>@Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
             <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
         } else {
-            <p>@Messages("nisp.main.estimate")</p>
-            <ul class="list-bullet">
-                <li>@Messages("nisp.main.notAGuarantee")</li>                
-                <li>@Messages("nisp.main.inflation")</li>
-            </ul>
-             <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
-            <div class="chart-block">
-                <span>@Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())</span>
-                <ul class="graph">
-                    <li>
-                     <span class="amount" style="width:@currentChart.width%">
-                         <span>
-                            @NispMoney.pounds(currentChart.amountModel.week) @Messages("nisp.main.chart.week")
-                         </span>
-                    </span>
-                    </li>
-                </ul>
-
-            </div>
-
-            <div class="chart-block">
-                @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
-                    <span>@Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())</span>
-                } else  {
-                    @if(spSummary.forecast.yearsLeftToWork==1) {
-                        <span>@Messages("nisp.main.chart.estimateIfYouContinue.single", spSummary.forecast.yearsLeftToWork, (spSummary.finalRelevantYear+1).toString())</span>
-                    } else {
-                        <span>@Messages("nisp.main.chart.estimateIfYouContinue.plural", spSummary.forecast.yearsLeftToWork, (spSummary.finalRelevantYear+1).toString())</span>
-                    }
-
-                }
-                <ul class="graph">
-                    <li>
-                        <span class="amount" style="width:@forecastChart.width%">
-                            <span>
-                                @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.chart.week")
-                            </span>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-            <h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
-            <p>@Messages("nisp.main.after", (spSummary.finalRelevantYear+1).toString())</p>
-            <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
-
+            @includes.continueWorking(spSummary, currentChart, forecastChart)
         }
     }
 
