@@ -64,9 +64,13 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
       val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
+      val abTest2: Option[ABTest] = getABTest(user.nino.getOrElse(""), true)
+
       nispConnector.connectToGetSPResponse(nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
-          Ok(account_cope(nino, spSummary.forecast.forecastAmount.week, spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week+spSummary.copeAmount.week, authenticationProvider, isPertax))
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None) => abTest2.contains('B') && spSummary.contractedOutFlag match {
+          case true => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week, spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, authenticationProvider, isPertax))
+          case false => throw new RuntimeException("User trying access COPE page using link")
+        }
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
     }
@@ -118,7 +122,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def calculateChartWidths(currentAmountModel: SPAmountModel, forecastAmountModel: SPAmountModel): (SPChartModel, SPChartModel) = {
     // scalastyle:off magic.number
     if (forecastAmountModel.week > currentAmountModel.week) {
-      val currentPercentage = (currentAmountModel.week/forecastAmountModel.week * 100).toInt     
+      val currentPercentage = (currentAmountModel.week/forecastAmountModel.week * 100).toInt
       val currentChart = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), currentAmountModel)
       val forecastChart = SPChartModel(100, forecastAmountModel)
       (currentChart, forecastChart)
