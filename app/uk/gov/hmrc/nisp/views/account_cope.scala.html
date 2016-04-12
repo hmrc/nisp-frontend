@@ -1,0 +1,70 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.play.views.formatting.Dates
+@import uk.gov.hmrc.nisp.models.SPSummaryModel
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+
+
+@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, authenticationProvider: String,
+    isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+
+@defining(Some(user)) { implicit userOption =>
+@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title")) {
+
+    <h2 class="heading-large">@Messages("nisp.cope.youWereContractedOut")</h2>
+    <p>@Messages("nisp.cope.inthepast")</p>
+    <p>@Messages("nisp.cope.why")</p>
+    <ul class="list-bullet">
+        <li>@Messages("nisp.cope.why.bullet1")</li>
+        <li>@Messages("nisp.cope.why.bullet2")</li>
+    </ul>
+    <h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
+    <p>@Messages("nisp.cope.definition")</p>
+    <p>@Messages("nisp.cope.workplace")</p>
+
+    <table class="cope-table">
+        <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th class="cope-table-number">@Messages("nisp.main.chart.week")</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>@Messages("nisp.cope.table.pensionforecast")</td>
+            <td class="cope-table-number">@NispMoney.pounds(forecastAmount)</td>
+        </tr>
+        <tr>
+            <td>@Messages("nisp.cope.table.estimate.title")</td>
+            <td class="cope-table-number">@NispMoney.pounds(copeEstimate)</td>
+        </tr>
+        <tr>
+            <td>@Messages("nisp.cope.table.copeadded")</td>
+            <td class="cope-table-number">@NispMoney.pounds(totalPension)</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>@Html(Messages("nisp.main.cope.linktitle"))</p>
+
+    <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
+}
+}
