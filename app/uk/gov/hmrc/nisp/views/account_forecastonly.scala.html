@@ -29,7 +29,7 @@
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension7':  '@spSummary.contextMessage.getOrElse("")',
+        'dimension7':  '@spSummary.forecast.scenario',
         'dimension8':  '@spSummary.forecast.forecastAmount.week.toInt',
         'dimension10': '@spSummary.numberOfQualifyingYears',
         'dimension11': '@spSummary.numberOfGaps',
@@ -38,7 +38,6 @@
         'dimension14': '@spSummary.contractedOutFlag',
         'dimension15': '@spSummary.statePensionAge',
         'dimension16': '@spSummary.copeAmount.week',
-        'dimension21': '@spSummary.forecast.scenario',
         'dimension22': '@authenticationProvider',
         'metric5': 1
     });
