@@ -60,7 +60,6 @@
 
     <h1 class="heading-large">@Messages("nisp.main.h1.title")</h1>
 
-@spSummary.forecast.scenario
 
     @if(spSummary.forecast.scenario.equals(Scenario.Reached)) {
         <div class="highlighted-event">
@@ -170,6 +169,6 @@
             <p>@Html(Messages("nisp.cope.moreAbout",routes.AccountController.showCope.url))</p>
         }
     }
-
+<h3>>>>>@spSummary.forecast.scenario<<<</h3>
   }
 }
