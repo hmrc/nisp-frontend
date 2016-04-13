@@ -4,22 +4,19 @@
  *
  * General section
  *
- * Landing Page
+ * Breadcrumb
  *
- * User Account Details + NINO
+ * Landing Page
  *
  * Amount Box
  *
- * Final Done Page
- *
  * Exception Errors
- *
- * Messaging
  *
  * Questionnaire
  *
  * Chart lines
  *
+ * Cope table
  */
 
  
@@ -28,8 +25,6 @@ $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.pn
 @import 'colours';
 
 @import 'nirecord';
-
-@import 'tabs';
 
 $light-bg-chart-bar:#C1DFE4;
 $background-error-message:rgba(223,48,52,0.05);
@@ -296,18 +291,9 @@ h1.title-sp {
 }
   
 /*----------------------------------*\
-    # Minimum Qualifying Period
+    # Cope Table
 \*----------------------------------*/
 
-.panel-indent.mqp {
-  margin-top: 30px;
-  margin-bottom: 45px;
-}
-  
-.summary{
-  margin-bottom: 0px;
-  padding-bottom: 0px;
-}
 
 table.cope-table td {
   font-size: 19px;
