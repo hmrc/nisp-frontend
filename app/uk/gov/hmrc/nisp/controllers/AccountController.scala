@@ -29,7 +29,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
-import uk.gov.hmrc.nisp.models.enums.Scenario
+import uk.gov.hmrc.nisp.models.enums.{ABTest, Scenario}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, ABService, MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
@@ -64,12 +64,11 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
       val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
-      val abTest2: Option[ABTest] = getABTest(user.nino.getOrElse(""), true)
 
       nispConnector.connectToGetSPResponse(nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None) => abTest2.contains('B') && spSummary.contractedOutFlag match {
-          case true => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week, spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, authenticationProvider, isPertax))
-          case false => throw new RuntimeException("User trying access COPE page using link")
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None) => getABTest(nino, spSummary.contractedOutFlag) match {
+          case Some(ABTest.B) => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week, spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, authenticationProvider, isPertax))
+          case _ => Redirect(routes.AccountController.show())
         }
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
