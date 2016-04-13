@@ -24,7 +24,7 @@ import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.models.{NIResponse, ExclusionsModel, SPResponseModel}
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
-import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp}
+import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp_old}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
@@ -40,7 +40,9 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
     nispConnector.connectToGetSPResponse(nino).map {
-      case SPResponseModel(_, Some(spExclusions: ExclusionsModel)) => Ok(excluded_sp(nino, spExclusions))
+      case SPResponseModel(_, Some(spExclusions: ExclusionsModel), niExclusionOption) => {
+        Ok(excluded_sp_old(nino, spExclusions))
+      }
       case _ =>
         Logger.warn("User accessed /exclusion as non-excluded user")
         Redirect(routes.AccountController.show())
