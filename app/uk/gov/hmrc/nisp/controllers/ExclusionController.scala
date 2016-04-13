@@ -17,15 +17,16 @@
 package uk.gov.hmrc.nisp.controllers
 
 import play.api.Logger
-import play.api.mvc.{AnyContent, Action}
+import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.models.{NIResponse, ExclusionsModel, SPResponseModel}
-import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
-import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp_old}
+import uk.gov.hmrc.nisp.models.{ExclusionsModel, NIResponse, SPResponseModel, SPSummaryModel}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp, excluded_sp_old}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
+import uk.gov.hmrc.nisp.models.enums.Exclusion
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
@@ -40,8 +41,12 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
     nispConnector.connectToGetSPResponse(nino).map {
-      case SPResponseModel(_, Some(spExclusions: ExclusionsModel), niExclusionOption) => {
-        Ok(excluded_sp_old(nino, spExclusions))
+      case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) => {
+        if (spExclusions.exclusions.contains(Exclusion.AmountDissonance)) {
+          Ok(excluded_sp(spExclusions.exclusions, spSummary.statePensionAge.date, spSummary.statePensionAge.age, niExclusionOption.fold(true)(_.exclusions.isEmpty)))
+        } else {
+          Ok(excluded_sp_old(nino, spExclusions))
+        }
       }
       case _ =>
         Logger.warn("User accessed /exclusion as non-excluded user")

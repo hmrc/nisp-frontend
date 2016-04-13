@@ -1,0 +1,57 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.models.NpsDate
+@import uk.gov.hmrc.nisp.models.enums.Exclusion._
+@import uk.gov.hmrc.play.views.formatting.Dates
+
+@(
+spExclusions: List[Exclusion],
+statePensionAgeDate: NpsDate,
+statePensionAge: Int,
+canSeeNIRecord: Boolean
+)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+
+@analyticsAdditionalJs = {
+    ga('set', {
+        'dimension20': '@spExclusions.map(_.toString).mkString(" ") ',
+        'dimension15': '@statePensionAge'
+    });
+}
+
+
+@defining(Some(user)) { implicit userOption =>
+    @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
+                articleClasses = Some("mainpage"), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+        @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
+            <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAgeDate.localDate), statePensionAge) </h2>
+        } else {
+            <h2 class="heading-medium"> @Messages("nisp.excluded.willReach", Dates.formatDate(statePensionAgeDate.localDate), statePensionAge) </h2>
+        }
+        <div class="panel-indent">
+            @if(spExclusions.contains(AmountDissonance)) {
+                @exclusions.sp.amountDissonance()
+            }
+        </div>
+        @if(canSeeNIRecord) {
+            <p> @Messages("nisp.excluded.niRecordIntro") </p>
+            <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
+        }
+    }
+}
