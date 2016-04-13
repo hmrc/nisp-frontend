@@ -149,6 +149,9 @@ nisp.excluded.spa = You are now able to <a href="https://www.gov.uk/claim-state-
 nisp.excluded.spa.defer = You can <a href="https://www.gov.uk/deferring-state-pension" rel="external" data-journey-click="checkmystatepension:external:deferstatepension" target="_blank">put off claiming your State Pension (opens in new tab)</a> and this may mean you get extra State Pension when you do want to claim it.
 nisp.excluded.spa.nirecord = You can <a href="https://www.gov.uk/check-national-insurance-record" rel="external" data-journey-click="checkmystatepension:external:checkyournationalinsurancerecord" target="_blank">check your National Insurance record (opens in new tab)</a>.
 nisp.excluded.spaBefore5April2016 = You will have reached State Pension age before the new scheme starts. You must refer to the <a href="https://www.gov.uk/state-pension/overview" rel="external" data-journey-click="checkmystatepension:external:statepensionoverview" target="_blank">information about the old scheme (opens in new tab)</a>.
+nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
+nisp.excluded.haveReached = You reached State Pension age on {0} when you were {1}
+nisp.excluded.willReach = You''ll reach State Pension age on {0} when you''ll be {1}
 
 #**************************
 #  NPS Unavailable Page Messages

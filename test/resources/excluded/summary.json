@@ -1,1 +1,39 @@
-{"spExclusions":{"exclusions":["ContractedOut","CustomerTooOld"]}}
+{
+  "spSummary": {
+    "nino": "<NINO>",
+    "lastProcessedDate": "05/04/2014",
+    "statePensionAmount": {
+      "week": 46.38,
+      "month": 201.67,
+      "year": 2420.04
+    },
+    "statePensionAge": {
+      "age": 67,
+      "date": "18/07/2021"
+    },
+    "contextMessage": "ScenarioEight",
+    "finalRelevantYear": 2020,
+    "numberOfQualifyingYears": 12,
+    "numberOfGaps": 24,
+    "numberOfGapsPayable": 8,
+    "yearsToContributeUntilPensionAge": 7,
+    "hasPsod": false,
+    "dateOfBirth": "18/05/1954",
+    "forecastAmount": {
+      "week": 76.76,
+      "month": 333.77,
+      "year": 4005.23
+    },
+    "fullNewStatePensionAmount": 151.25,
+    "contractedOutFlag": true,
+    "forecastOnlyFlag": false,
+    "customerAge": 61,
+    "copeAmount": {
+      "week": 50,
+      "month": 217.41,
+      "year": 2608.93
+    }
+  },
+  "spExclusions":{"exclusions":["ContractedOut","CustomerTooOld"]},
+  "niExclusions":{"exclusions":[]}
+}
