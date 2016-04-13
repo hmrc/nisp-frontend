@@ -27,9 +27,8 @@
     isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
-@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title")) {
+@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),pageTitle=Some(Messages("nisp.cope.youWereContractedOut"))) {
 
-    <h2 class="heading-large">@Messages("nisp.cope.youWereContractedOut")</h2>
     <p>@Messages("nisp.cope.inthepast")</p>
     <p>@Messages("nisp.cope.why")</p>
     <ul class="list-bullet">

@@ -39,6 +39,7 @@
 
 @analyticsAdditionalJs = {
     ga('set', {
+        'dimension7':  '@spSummary.forecast.scenario',
         'dimension8':  '@spSummary.forecast.forecastAmount.week.toInt',
         @Html(abTest.map (p => s"'dimension9':  '${p.toString}',").getOrElse(""))
         'dimension10': '@spSummary.numberOfQualifyingYears',
@@ -55,9 +56,7 @@
 
 @defining(Some(user)) { implicit userOption =>
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-              articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-
-    <h1 class="heading-large">@Messages("nisp.main.h1.title")</h1>
+              articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
     @if(spSummary.numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP)  {
         @spSummary.forecast.scenario match {

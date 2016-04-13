@@ -44,9 +44,7 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-
-    <h1 class="heading-large">@Messages("nisp.main.h1.title")</h1>
+@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
     <div class="highlighted-event">
         <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase()</p>
@@ -61,7 +59,7 @@
         <li>is based on your latest National Insurance record  (@Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
         <li>does not include any increase due to inflation</li>
     </ul>
-    <h4 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) is the most you can get</h4>
+    <h2 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) is the most you can get</h2>
     <p>You cannot improve your estimate any more.</p>
     <p>You'll still need to pay National Insurance contributions until @(spSummary.finalRelevantYear+1) as they fund other state benefits and the NHS.</p>
     <a href='@routes.NIRecordController.showGaps.url' role="button">View your National Insurance record</a>.
