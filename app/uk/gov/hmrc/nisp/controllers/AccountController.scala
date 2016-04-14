@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.libs.json.Format
 import play.api.mvc.{Action, AnyContent, Request, Session}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -30,17 +29,11 @@ import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
 import uk.gov.hmrc.nisp.models.enums.{ABTest, Scenario}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, ABService, MetricsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.services.{ABService, CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import uk.gov.hmrc.play.http.HeaderCarrier
-
-
-import scala.concurrent.Future
-import scala.concurrent.duration._
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
@@ -66,9 +59,12 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
 
       nispConnector.connectToGetSPResponse(nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None) => getABTest(nino, spSummary.contractedOutFlag) match {
-          case Some(ABTest.B) => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week, spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, authenticationProvider, isPertax))
-          case _ => Redirect(routes.AccountController.show())
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None) => getABTest(nino, spSummary.contractedOutFlag)
+          match {
+            case Some(ABTest.B) => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+                    spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week,
+                    authenticationProvider, isPertax))
+            case _ => Redirect(routes.AccountController.show())
         }
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
@@ -85,7 +81,8 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
           customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
             spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecast.forecastAmount.week,
-            spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario, getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week, authenticationProvider))
+            spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario,
+            getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week, authenticationProvider))
 
           if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
             val canGetPension = spSummary.numberOfQualifyingYears +

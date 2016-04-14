@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.models
 import uk.gov.hmrc.nisp.models.enums.SPContextMessage
 import SPContextMessage.SPContextMessage
 import play.api.libs.json.Json
+import uk.gov.hmrc.nisp.utils.Constants
 
 case class SPSummaryModel( nino: String,
                            lastProcessedDate: NpsDate,
@@ -36,7 +37,9 @@ case class SPSummaryModel( nino: String,
                            fullNewStatePensionAmount: BigDecimal,
                            contractedOutFlag: Boolean,
                            customerAge: Int,
-                           copeAmount: SPAmountModel)
+                           copeAmount: SPAmountModel) {
+  val isMQP = numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP
+}
 
 object SPSummaryModel {
   implicit val formats = Json.format[SPSummaryModel]
