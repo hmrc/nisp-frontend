@@ -42,6 +42,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.userId -> mockUserIdExcluded,
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
+      redirectLocation(result) shouldBe None
       contentAsString(result).contains("You are unable to use this service") shouldBe true
     }
 
