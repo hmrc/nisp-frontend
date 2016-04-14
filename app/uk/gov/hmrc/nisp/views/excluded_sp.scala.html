@@ -14,42 +14,44 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.nisp.models.enums.Exclusion
-@import uk.gov.hmrc.nisp.models.ExclusionsModel
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.models.NpsDate
+@import uk.gov.hmrc.nisp.models.enums.Exclusion._
+@import uk.gov.hmrc.play.views.formatting.Dates
 
-@(nino: String, spExclusions: ExclusionsModel)(implicit request: Request[_], user: NispUser,
-  partialRetriever: CachedStaticHtmlPartialRetriever)
+@(
+spExclusions: List[Exclusion],
+statePensionAgeDate: NpsDate,
+statePensionAge: Int,
+canSeeNIRecord: Boolean
+)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension20': '@spExclusions.exclusions.map(_.toString).mkString(" ") '
+        'dimension20': '@spExclusions.map(_.toString).mkString(" ") ',
+        'dimension15': '@statePensionAge'
     });
 }
 
+
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), h1Classes = Some("title-sp"), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-        @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
-            @exclusions.sp.overseas()
+    @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
+                articleClasses = Some("mainpage"), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+        @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
+            <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAgeDate.localDate), statePensionAge) </h2>
+        } else {
+            <h2 class="heading-medium"> @Messages("nisp.excluded.willReach", Dates.formatDate(statePensionAgeDate.localDate), statePensionAge) </h2>
         }
-        @if(spExclusions.exclusions.contains(Exclusion.MWRRE)) {
-            @exclusions.sp.mwrre()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.CustomerTooOld)) {
-            @exclusions.sp.spaBefore5April2016()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.Dead)) {
-            @exclusions.dead()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.IOM)) {
-            @exclusions.sp.isleOfMan()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.AmountDissonance)) {
-            @exclusions.sp.amountDissonance()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.PostStatePensionAge)) {
-            @exclusions.sp.postStatePensionAge()
+        <div class="panel-indent">
+            @if(spExclusions.contains(AmountDissonance)) {
+                @exclusions.sp.amountDissonance()
+            }
+        </div>
+        @if(canSeeNIRecord) {
+            <p> @Messages("nisp.excluded.niRecordIntro") </p>
+            <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
         }
     }
 }

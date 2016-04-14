@@ -63,7 +63,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       val nino = user.nino.getOrElse("")
       val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
       nispConnector.connectToGetSPResponse(nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None) =>
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
           metricsService.abTest(getABTest(nino, spSummary.contractedOutFlag))
 
           customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
@@ -85,7 +85,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }
 
-        case SPResponseModel(_, Some(spExclusions: ExclusionsModel)) =>
+        case SPResponseModel(_, Some(spExclusions: ExclusionsModel), _) =>
           customAuditConnector.sendEvent(AccountExclusionEvent(
             nino,
             user.name,
