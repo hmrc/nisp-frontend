@@ -26,6 +26,7 @@ object Scenario extends Enumeration {
     val ContinueWorkingNonMax = Value
     val FillGaps = Value
     val ForecastOnly = Value
+    val CantGetPension = Value
 
     implicit val formats = new Format[Scenario] {
         def reads(json: JsValue): JsResult[Scenario] = JsSuccess(Scenario.withName(json.as[String]) )
