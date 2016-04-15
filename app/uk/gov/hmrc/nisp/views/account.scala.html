@@ -95,7 +95,7 @@
             }
         }
 
-    }else {
+    } else {
 
         @if(spSummary.forecast.scenario.equals(Scenario.Reached)) {
             @includes.reached(spSummary)
@@ -124,7 +124,7 @@
         }
 
         @for(test <- abTest) {
-            @if(test == B && spSummary.contractedOutFlag) {
+            @if(test == B) {
                 <h3 class="heading-medium">@Messages("nisp.cope.title1")</h3>
                 <p>@Html(Messages("nisp.cope.likeMostPeople", NispMoney.pounds(spSummary.forecast.forecastAmount.week)))</p>
                 <p>@Html(Messages("nisp.cope.moreAbout",routes.AccountController.showCope.url))</p>
