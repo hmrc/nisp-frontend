@@ -55,10 +55,10 @@
         <p>  @Messages("nisp.mqp.youneedtoadd",
             Time.years(numberOfYearsMissing),
             Time.years(spSummary.yearsToContributeUntilPensionAge),
-            Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>       
-        @if(spSummary.numberOfQualifyingYears + spSummary.numberOfGapsPayable>=Constants.minimumQualifyingYearsNSP) {
-            <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
-        }
+            Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
+
+        <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
+
         <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
         <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.showyourrecord")</a>
         <div class="panel-indent">
