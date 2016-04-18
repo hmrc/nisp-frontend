@@ -35,6 +35,7 @@
     <ul class="list-bullet">
         <li>@Messages("nisp.main.notAGuarantee")</li>
         <li>@Messages("nisp.main.inflation")</li>
+        @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
     </ul>
     <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
         @chart(Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString()),

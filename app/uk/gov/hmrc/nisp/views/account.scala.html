@@ -77,6 +77,7 @@
             <li>@Messages("nisp.main.isBased",Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
             <li>@Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.yearsToContributeUntilPensionAge))</li>
             <li>@Messages("nisp.main.inflation")</li>
+            @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
         </ul>
         <p> @Messages("nisp.mqp.youCurrentlyHave", Time.years(spSummary.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
         <div class="panel-indent">
@@ -109,6 +110,7 @@
             <ul class="list-bullet">
                 <li>@Messages("nisp.main.notAGuarantee")</li>
                 <li>@Messages("nisp.main.inflation")</li>
+                @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
             </ul>
             <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
 

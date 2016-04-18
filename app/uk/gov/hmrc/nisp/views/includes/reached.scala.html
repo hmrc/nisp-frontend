@@ -26,6 +26,7 @@
     <li>@Messages("nisp.main.notAGuarantee")</li>
     <li>@Messages("nisp.main.isBased",Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
     <li>@Messages("nisp.main.inflation")</li>
+    @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
 </ul>
 <h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
 <p>@Messages("nisp.main.cantImprove")</p>
