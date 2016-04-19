@@ -72,7 +72,7 @@ nisp.main.notAGuarantee = is not a guarantee and is based on the current law
 nisp.main.isBased = is based on your latest National Insurance record ({0})
 nisp.main.inflation = does not include any increase due to inflation
 
-nisp.main.psod = It does not include the pension sharing order you have in effect.
+nisp.main.psod = does not include the pension sharing order you have in effect
 nisp.main.whenYoullBe = when you''ll be
 nisp.main.after = When you reach State Pension age in {0}, you no longer have to pay National Insurance contributions.
 nisp.main.continueWorking.whenYouReachSPA = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
