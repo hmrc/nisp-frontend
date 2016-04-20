@@ -58,6 +58,14 @@
 @defining(Some(user)) { implicit userOption =>
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
               articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
+
+
+    @if(!spSummary.isMQP &&
+        (spSummary.forecast.scenario.equals(Scenario.FillGaps) ||
+         spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax) ||
+         spSummary.forecast.scenario.equals(Scenario.ContinueWorkingNonMax))) {
+        <h2 class="heading-medium">@Messages("nisp.main.summary")</h2>
+    }
     <div class="highlighted-event">
         <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate)
             @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase()
@@ -116,7 +124,7 @@
                 <li>@Messages("nisp.main.inflation")</li>
                 @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
             </ul>
-            <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
+            <h2 class="heading-medium heading-space">@Messages("nisp.main.breakdown")</h2>
 
             @includes.chart(Messages("nisp.main.chart.lastprocessed.title",
                             spSummary.lastProcessedDate.localDate.getYear().toString()), currentChart.width,

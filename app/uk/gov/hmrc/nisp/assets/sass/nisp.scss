@@ -42,7 +42,13 @@ $background-error-message:rgba(223,48,52,0.05);
 }
 
 h2.heading-medium {
-    margin-top: 1.875em !important;
+  @media only screen and (max-width: 640px) {
+    font-size: 18px;
+  }
+}
+
+.heading-space {
+  margin-top: 1.875em !important;
 }
 
 .grid-wrapper {
@@ -141,7 +147,7 @@ div.panel-indent{
 
 .highlighted-event {
   padding:1.75em 0.75em 1.25em 0.75em;
-  margin: 2em 0 1em;
+  margin: 1.5em 0 1em;
 
   @media only screen and (max-width: 640px) {
     padding: 0.5em 0.75em 0.25em 0.75em;
