@@ -47,7 +47,13 @@
 
     <h2 class="heading-medium">@Messages("nisp.main.description.mqp") @Dates.formatDate(spSummary.statePensionAge.date.localDate), @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h2>
     <div class="panel-indent">
-        <p> @Messages("nisp.mqp.youcurrentlyhaveUsing", Time.years(spSummary.numberOfQualifyingYears), spSummary.lastProcessedDate.localDate.getYear().toString())</p>
+        <p> 
+            @if(spSummary.numberOfQualifyingYears > 0) {
+                @Messages("nisp.mqp.youCurrentlyHaveUsing", Time.years(spSummary.numberOfQualifyingYears), spSummary.lastProcessedDate.localDate.getYear().toString())    
+            } else {
+                @Messages("nisp.mqp.youCurrentlyHaveUsingZero", spSummary.lastProcessedDate.localDate.getYear().toString())
+            }
+        </p>
     </div>
 
     @if(canGetPension) {

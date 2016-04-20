@@ -79,7 +79,11 @@
             <li>@Messages("nisp.main.inflation")</li>
             @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
         </ul>
-        <p> @Messages("nisp.mqp.youCurrentlyHave", Time.years(spSummary.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
+        @if(spSummary.numberOfQualifyingYears > 0) {
+            <p>@Messages("nisp.mqp.youCurrentlyHave", Time.years(spSummary.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
+        } else {
+            <p>@Messages("nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP)
+        }
         <div class="panel-indent">
             <p>@Html(Messages("nisp.mqp.overseas"))</p>
         </div>
@@ -127,7 +131,7 @@
         @for(test <- abTest) {
             @if(test == B) {
                 <h3 class="heading-medium">@Messages("nisp.cope.title1")</h3>
-                <p>@Html(Messages("nisp.cope.likeMostPeople", NispMoney.pounds(spSummary.forecast.forecastAmount.week)))</p>
+                <p>@Html(Messages("nisp.cope.likeMostPeople"))</p>
                 <p>@Html(Messages("nisp.cope.moreAbout",routes.AccountController.showCope.url))</p>
             }
         }
