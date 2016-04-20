@@ -45,7 +45,7 @@
 @defining(Some(user)) { implicit userOption =>
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
-    <h2 class="heading-medium">@Messages("nisp.main.description.mqp") @Dates.formatDate(spSummary.statePensionAge.date.localDate), @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h2>
+    <h2 class="heading-medium">@Messages("nisp.main.description.mqp") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h2>
     <div class="panel-indent">
         <p> @Messages("nisp.mqp.youcurrentlyhaveUsing", Time.years(spSummary.numberOfQualifyingYears), spSummary.lastProcessedDate.localDate.getYear().toString())</p>
     </div>
