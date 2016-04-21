@@ -22,6 +22,10 @@
 @import uk.gov.hmrc.nisp.models.enums.ABTest._
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.models.enums.Scenario
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.utils.Constants
+
 
 @(
     nino: String,
@@ -33,14 +37,11 @@
     isPertaxUrl:Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@pageScripts = {
-<script src="@routes.Assets.at("javascript/account.js")" type="text/javascript"></script>
-}
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension7':  '@spSummary.contextMessage.getOrElse("")',
-        'dimension8':  '@spSummary.forecastAmount.week.toInt',
+        'dimension7':  '@spSummary.forecast.scenario',
+        'dimension8':  '@spSummary.forecast.forecastAmount.week.toInt',
         @Html(abTest.map (p => s"'dimension9':  '${p.toString}',").getOrElse(""))
         'dimension10': '@spSummary.numberOfQualifyingYears',
         'dimension11': '@spSummary.numberOfGaps',
@@ -56,140 +57,92 @@
 
 @defining(Some(user)) { implicit userOption =>
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-                pageScripts=Some(pageScripts), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+              articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
-        <div class="grid services">
-                   <h1 class="heading-large title-sp">@Messages("nisp.main.h1.title")</h1>
-            <div class="tablist">
-                <ul class="tab-nav" role="tablist">
-                    <li>
-                        <a href="#forecast-sp-value" role="tab" id="tab-forecast-sp-value">@Messages("nisp.main.forecast")</a>
-                    </li>
-                    @for(test <- abTest) {
-                        @if(test == B && spSummary.contractedOutFlag) {
-                            <li>
-                                <a href="#cope" role="tab" id="tab-cope">@Messages("nisp.main.cope")</a>
-                            </li>
-                        }
-                    }
-                    <li>
-                        <a href="#how-to-increase-it" role="tab" id="tab-how-to-increase-it">@Messages("nisp.main.howtoincreaseit")</a>
-                    </li>
-                </ul>
-            </div>
-            @for(test <- abTest) {
-                @if(test == B && spSummary.contractedOutFlag) {
-                    <div class="tab-panel" id="cope" role="tabpanel">
-                        <div class="content-block">
-                            <h2 class="heading-medium">@Messages("nisp.cope.title1")</h2>
-                            <p>@Messages("nisp.cope.inthepast")</p>
-                            <p>@Messages("nisp.cope.why")</p>
-                            <ul class="list-bullet">
-                                <li>@Messages("nisp.cope.why.bullet1")</li>
-                                <li>@Messages("nisp.cope.why.bullet2")</li>
-                            </ul>
-                            <h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
-                            <p>@Messages("nisp.cope.definition")</p>
-                            <p>@Messages("nisp.cope.workplace")</p>
 
-                            <table class="cope-table">
-                                <thead>
-                                    <tr>
-                                        <th>&nbsp;</th>
-                                        <th class="cope-table-number">@Messages("nisp.main.chart.week")</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>@Messages("nisp.cope.table.pensionforecast")</td>
-                                    <td class="cope-table-number">@NispMoney.pounds(spSummary.forecastAmount.week)</td>
-                                </tr>
-                                <tr>
-                                    <td>@Messages("nisp.cope.table.estimate.title")</td>
-                                    <td class="cope-table-number">@NispMoney.pounds(spSummary.copeAmount.week)</td>
-                                </tr>
-                                <tr>
-                                    <td>@Messages("nisp.cope.table.copeadded")</td>
-                                    <td class="cope-table-number">@NispMoney.pounds(spSummary.copeAmount.week+spSummary.forecastAmount.week)</td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                            <p>@Html(Messages("nisp.main.cope.linktitle"))</p>
-
-                        </div>
-                    </div>
-               }
-            }
-            <div class="tab-panel" id="forecast-sp-value" role="tabpanel">
-                <div class="highlighted-event">
-                    <p id="amount-intro">@Messages("nisp.main.basedOn")<span style="white-space:nowrap"> @Dates.formatDate(spSummary.statePensionAge.date.localDate) </span>@Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.title.estimate.is")</p>
-                    <p>
-                        <em id="amount-value">@NispMoney.pounds(spSummary.forecastAmount.week) @Messages("nisp.main.week")</em>
-                        @if(spSummary.numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP) {
-                            <p id="amount-sub">
-                                @NispMoney.pounds(spSummary.forecastAmount.month) @Messages("nisp.main.month"),
-                                @NispMoney.pounds(spSummary.forecastAmount.year) @Messages("nisp.main.year")
-                            </p>
-                        }
-                    </p>
-                </div>
-                <div class="content-block">
-                    <p>@Messages("nisp.main.guarantee", spSummary.lastProcessedDate.localDate.getYear().toString())</p>
-
-                    @if(spSummary.numberOfQualifyingYears >= Constants.minimumQualifyingYearsNSP) {
-
-                        @if(spSummary.hasPsod) {<p>@Messages("nisp.main.psod")</p>}
-                        <h2 class="heading-medium">@Messages("nisp.main.h2.title")</h2>
-
-                        <div class="chart-block">
-                            <span class="graph-title">@Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())</span>
-                            <ul class="graph">
-                                <li>
-                                     <span class="amount" style="width:@currentChart.width%">
-                                         <span>
-                                            @NispMoney.pounds(currentChart.amountModel.week) @Messages("nisp.main.chart.week")
-                                         </span>
-                                    </span>
-                                </li>
-                            </ul>
-                            <span class="footnote">@Messages("nisp.main.chart.whichis") @NispMoney.pounds(currentChart.amountModel.month) @Messages("nisp.main.chart.month"), @NispMoney.pounds(currentChart.amountModel.year) @Messages("nisp.main.chart.year")</span>
-                        </div>
-
-                        <div class="chart-block">
-                            <span class="graph-title">@Messages("nisp.main.chart.spa.title")</span>
-                            <ul class="graph">
-                                <li>
-                                    <span class="amount" style="width:@forecastChart.width%">
-                                        <span>
-                                            @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.chart.week")
-                                        </span>
-                                    </span>
-                                </li>
-                            </ul>
-                            <p class="footnote">@Messages("nisp.main.chart.whichis") @NispMoney.pounds(forecastChart.amountModel.month) @Messages("nisp.main.chart.month"), @NispMoney.pounds(forecastChart.amountModel.year) @Messages("nisp.main.chart.year")</p>
-                        </div>
-                    } else {
-                        <p>@Messages("nisp.mqp.youneedatleast", Time.years(spSummary.numberOfQualifyingYears))</p>
-                        <p>@Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
-                        <div class="panel-indent">
-                            <p>@Html(Messages("nisp.mqp.overseas"))</p>
-                        </div>
-                    }
-                </div>
-            </div>
-            <div class="tab-panel" id="how-to-increase-it" role="tabpanel">
-                <div class="content-block">
-                    @scenarios.viewScenario(spSummary.contextMessage, spSummary.finalRelevantYear, spSummary.numberOfGaps,spSummary)
-                    <p>@Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
-
-                    <h2 class="heading-medium">2. @Messages("nisp.main.puttingOff")</h2>
-                    <p>@Messages("nisp.main.puttingOff.line1", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
-                    <p><a href="https://www.gov.uk/deferring-state-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:deferstatepension">@Messages("nisp.main.puttingOff.linkTitle")</a></p>
-                   @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
-
-                </div>
-            </div>
-        </div>
+    @if(!spSummary.isMQP &&
+        (spSummary.forecast.scenario.equals(Scenario.FillGaps) ||
+         spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax) ||
+         spSummary.forecast.scenario.equals(Scenario.ContinueWorkingNonMax))) {
+        <h2 class="heading-medium summary">@Messages("nisp.main.summary")</h2>
     }
+    <div class="highlighted-event">
+        <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate)
+            @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase()
+            @Messages("nisp.is")
+        </p>
+        <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
+        <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
+            @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
+        </p>
+    </div>
+
+    @if(spSummary.isMQP)  {
+
+        <p>@Messages("nisp.main.estimate")</p>
+        <ul class="list-bullet">
+            <li>@Messages("nisp.main.notAGuarantee")</li>
+            <li>@Messages("nisp.main.isBased",Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
+            <li>@Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.yearsToContributeUntilPensionAge))</li>
+            <li>@Messages("nisp.main.inflation")</li>
+            @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
+        </ul>
+        @if(spSummary.numberOfQualifyingYears > 0) {
+            <p>@Messages("nisp.mqp.youCurrentlyHave", Time.years(spSummary.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
+        } else {
+            <p>@Messages("nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP)
+        }
+        <div class="panel-indent">
+            <p>@Html(Messages("nisp.mqp.overseas"))</p>
+        </div>
+
+        @spSummary.forecast.scenario match {
+
+            case Scenario.ContinueWorkingMax | Scenario.ContinueWorkingNonMax  => {
+                @includes.continueWorking(spSummary, currentChart, forecastChart)
+            }
+
+            case Scenario.FillGaps => {
+                @includes.fillGaps(spSummary, currentChart, forecastChart)
+            }
+        }
+
+    } else {
+
+        @if(spSummary.forecast.scenario.equals(Scenario.Reached)) {
+            @includes.reached(spSummary)
+        }
+
+        @if(spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax) || spSummary.forecast.scenario.equals(Scenario.ContinueWorkingNonMax)) {
+            @includes.continueWorking(spSummary, currentChart, forecastChart)
+        }
+
+        @if(spSummary.forecast.scenario.equals(Scenario.FillGaps)) {
+            <p>@Messages("nisp.main.estimate")</p>
+            <ul class="list-bullet">
+                <li>@Messages("nisp.main.notAGuarantee")</li>
+                <li>@Messages("nisp.main.inflation")</li>
+                @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
+            </ul>
+            <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
+
+            @includes.chart(Messages("nisp.main.chart.lastprocessed.title",
+                            spSummary.lastProcessedDate.localDate.getYear().toString()), currentChart.width,
+                            Html(s"${NispMoney.pounds(currentChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+
+            @includes.chart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()),
+                            forecastChart.width, Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+
+            @includes.fillGaps(spSummary, currentChart, forecastChart)
+        }
+
+        @for(test <- abTest) {
+            @if(test == B) {
+                <h3 class="heading-medium">@Messages("nisp.cope.title1")</h3>
+                <p>@Html(Messages("nisp.cope.likeMostPeople"))</p>
+                <p>@Html(Messages("nisp.cope.moreAbout",routes.AccountController.showCope.url))</p>
+            }
+        }
+     }
+  }
 }
