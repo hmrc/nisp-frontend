@@ -59,7 +59,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
 
       nispConnector.connectToGetSPResponse(nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None) => getABTest(nino, spSummary.contractedOutFlag)
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) => getABTest(nino, spSummary.contractedOutFlag)
           match {
             case Some(ABTest.B) => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
                     spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week,
