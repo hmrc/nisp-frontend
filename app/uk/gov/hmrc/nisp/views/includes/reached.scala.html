@@ -1,0 +1,37 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
+@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
+@import uk.gov.hmrc.play.views.formatting.Dates
+@import uk.gov.hmrc.nisp.controllers.routes
+
+@(spSummary: SPSummaryModel)
+
+<p>@Messages("nisp.main.estimate")</p>
+<ul class="list-bullet">
+    <li>@Messages("nisp.main.notAGuarantee")</li>
+    <li>@Messages("nisp.main.isBased",Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
+    <li>@Messages("nisp.main.inflation")</li>
+    @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
+</ul>
+<h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
+<p>@Messages("nisp.main.cantImprove")</p>
+<p>@Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString())</p>
+<a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
+
+
+

@@ -79,7 +79,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
       "return the forecast only page for a user with a forecast lower than current amount" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
-        contentAsString(result) should include ("Your estimate is the most you can get")
+        contentAsString(result) should include ("is the most you can get")
       }
 
       "redirect to the GG Login" in {
@@ -191,12 +191,19 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           status(result) shouldBe Status.INTERNAL_SERVER_ERROR
         }
       }
-
-      "return page with COPE tab for contracted out (B) user" in {
+      "return content about COPE for contracted out (B) user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdContractedOut))
-        contentAsString(result) should include ("You were contracted out")
+        contentAsString(result) should include ("Contracted out pensions and National Insurance")
       }
 
+      "return COPE page for contracted out (B) user" in {
+        val result = MockAccountController.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
+        contentAsString(result) should include ("You were contracted out ")
+      }
+      "redirect to account page for non contracted out user" in {
+        val result = MockAccountController.showCope()(authenticatedFakeRequest(mockUserIdMQP))
+        redirectLocation(result) shouldBe Some("/checkmystatepension/account")
+      }
       "return page with MQP messaging for MQP user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdMQP))
         contentAsString(result) should include ("It may be possible for you to get some State Pension")
