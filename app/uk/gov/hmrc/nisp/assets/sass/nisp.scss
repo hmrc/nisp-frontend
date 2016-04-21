@@ -42,13 +42,14 @@ $background-error-message:rgba(223,48,52,0.05);
 }
 
 h2.heading-medium {
+  margin-top: 1.875em !important;
   @media only screen and (max-width: 640px) {
     font-size: 18px;
   }
 }
 
-.heading-space {
-  margin-top: 1.875em !important;
+h2.summary {
+  margin-top: 1em !important;
 }
 
 .grid-wrapper {

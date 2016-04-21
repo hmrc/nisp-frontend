@@ -37,7 +37,7 @@
         <li>@Messages("nisp.main.inflation")</li>
         @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
     </ul>
-    <h2 class="heading-medium heading-space">@Messages("nisp.main.breakdown")</h2>
+    <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
         @chart(Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString()),
                 currentChart.width, Html(s"${NispMoney.pounds(currentChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
 
@@ -62,7 +62,7 @@
             }
         }
 
-    <h2 class="heading-medium heading-space"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h2>
+    <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h2>
     @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
         <p>@Messages("nisp.main.after", (spSummary.finalRelevantYear+1).toString())</p>
     } else  {

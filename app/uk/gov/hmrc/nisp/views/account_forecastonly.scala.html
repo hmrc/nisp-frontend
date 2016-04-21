@@ -46,7 +46,6 @@
 @defining(Some(user)) { implicit userOption =>
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
-    <h2>@Messages("nisp.main.summary")</h2>
     <div class="highlighted-event">
         <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
         <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
