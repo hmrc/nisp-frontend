@@ -143,6 +143,8 @@
                 <p>@Html(Messages("nisp.cope.moreAbout",routes.AccountController.showCope.url))</p>
             }
         }
+
+        @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
      }
   }
 }
