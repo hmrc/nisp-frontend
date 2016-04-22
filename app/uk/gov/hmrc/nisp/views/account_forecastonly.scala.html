@@ -64,5 +64,7 @@
     <p>You cannot improve your estimate any more.</p>
     <p>You'll still need to pay National Insurance contributions until @(spSummary.finalRelevantYear+1) as they fund other state benefits and the NHS.</p>
     <a href='@routes.NIRecordController.showGaps.url' role="button">View your National Insurance record</a>.
+
+    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 }
 }
