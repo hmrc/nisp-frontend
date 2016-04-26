@@ -58,10 +58,18 @@
 
     @if(canGetPension) {
         <h2 class="heading-medium">@Messages("nisp.mqp.possible")</h2>
-        <p>  @Messages("nisp.mqp.youneedtoadd",
-            Time.years(numberOfYearsMissing),
-            Time.years(spSummary.yearsToContributeUntilPensionAge),
-            Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
+        <p>
+            @if(spSummary.yearsToContributeUntilPensionAge > 0) {
+                @Messages("nisp.mqp.youNeedToAdd",
+                Time.years(numberOfYearsMissing),
+                Time.years(spSummary.yearsToContributeUntilPensionAge),
+                Dates.formatDate(spSummary.statePensionAge.date.localDate))
+            } else { 
+                @Messages("nisp.mqp.youNeedToAddZeroLeft",
+                Time.years(numberOfYearsMissing),
+                Dates.formatDate(spSummary.statePensionAge.date.localDate))
+            }
+        </p>
 
         <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
 
