@@ -22,7 +22,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.models.{ExclusionsModel, NIResponse, SPResponseModel, SPSummaryModel}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp, excluded_sp_old}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
@@ -43,9 +43,9 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
     nispConnector.connectToGetSPResponse(nino).map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) => {
         if (spExclusions.exclusions.contains(Exclusion.AmountDissonance)) {
-          Ok(excluded_sp(spExclusions.exclusions, spSummary.statePensionAge.date, spSummary.statePensionAge.age, niExclusionOption.fold(true)(_.exclusions.isEmpty)))
+          Ok(excluded_sp(spExclusions.exclusions, spSummary.statePensionAge, niExclusionOption.fold(true)(_.exclusions.isEmpty)))
         } else {
-          Ok(excluded_sp_old(nino, spExclusions))
+          Ok(excluded_sp_old(nino, spExclusions, spSummary.statePensionAge))
         }
       }
       case _ =>

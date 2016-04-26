@@ -11,6 +11,7 @@ GET         /not-authorised                        uk.gov.hmrc.nisp.controllers.
 
 GET         /account                               uk.gov.hmrc.nisp.controllers.AccountController.show
 GET         /account/pta                           uk.gov.hmrc.nisp.controllers.AccountController.pta
+GET         /account/cope                          uk.gov.hmrc.nisp.controllers.AccountController.showCope
 GET         /signout                               uk.gov.hmrc.nisp.controllers.AccountController.signOut
 GET         /timeout                               uk.gov.hmrc.nisp.controllers.AccountController.timeout
 
