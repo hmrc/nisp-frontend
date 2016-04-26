@@ -46,7 +46,7 @@ private object AppDependencies {
   private val httpCachingClientVersion = "5.3.0"
 
   val compile = Seq(
-    "uk.gov.hmrc" %% "frontend-bootstrap" % "5.1.1",
+    "uk.gov.hmrc" %% "frontend-bootstrap" % "6.4.0",
     "uk.gov.hmrc" %% "play-partials" % "4.2.0",
     "uk.gov.hmrc" %% "play-authorised-frontend" % "4.5.0",
     "uk.gov.hmrc" %% "play-config" % "2.0.1",
@@ -57,7 +57,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "url-builder" % "1.0.0",
     "com.kenshoo" %% "metrics-play" % "2.3.0_0.1.8",
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
-    "uk.gov.hmrc" %% "domain" % "3.2.0"
+    "uk.gov.hmrc" %% "domain" % "3.2.0",
+    "uk.gov.hmrc" %% "secure" % "7.0.0"
   )
 
   trait TestDependencies {
