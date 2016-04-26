@@ -22,6 +22,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.nisp.helpers.{TestAccountBuilder, MockNispConnector}
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.enums.Scenario
 import uk.gov.hmrc.play.http.{HeaderCarrier, UserId}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -46,13 +47,13 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
     yearsToContributeUntilPensionAge = 30,
     hasPsod = false,
     dateOfBirth = NpsDate(1991,3,31),
-    forecastAmount = SPAmountModel(1,2,3),
+    SPForecastModel(SPAmountModel(155.55,622.35,76022.24), 4, SPAmountModel(155.55,622.35,76022.24), Scenario.Reached),
     fullNewStatePensionAmount = 151.25,
     contractedOutFlag = false,
-    forecastOnlyFlag = false,
     customerAge = 24,
     copeAmount = SPAmountModel(0,0,0)
   )
+
 
   def niResponse:NIResponse = NIResponse(Some(NIRecord(List(
     NIRecordTaxYear(1976,true,0,0,0,52,None,None,None,false, false), NIRecordTaxYear(1977,true,0,0,0,52,None,None,None,false, false), NIRecordTaxYear(1978,true,325,0,0,0,None,None,None,false, false),

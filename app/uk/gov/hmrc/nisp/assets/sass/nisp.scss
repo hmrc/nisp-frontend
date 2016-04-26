@@ -4,22 +4,19 @@
  *
  * General section
  *
- * Landing Page
+ * Breadcrumb
  *
- * User Account Details + NINO
+ * Landing Page
  *
  * Amount Box
  *
- * Final Done Page
- *
  * Exception Errors
- *
- * Messaging
  *
  * Questionnaire
  *
  * Chart lines
  *
+ * Cope table
  */
 
  
@@ -29,10 +26,9 @@ $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.pn
 
 @import 'nirecord';
 
-@import 'tabs';
-
 $light-bg-chart-bar:#C1DFE4;
 $background-error-message:rgba(223,48,52,0.05);
+
 
 
 /*------------------------------------*\
@@ -46,12 +42,26 @@ $background-error-message:rgba(223,48,52,0.05);
 }
 
 h2.heading-medium {
-    margin-top: 1.875em !important;
+  margin-top: 1.875em !important;
+  @media only screen and (max-width: 640px) {
+    font-size: 18px;
+  }
+}
+
+h2.summary {
+  margin-top: 1em !important;
 }
 
 .grid-wrapper {
     margin: 0;
 }
+
+
+.top-title-heading {
+  margin-bottom: 0;
+  margin-top: 0.5em;
+}
+
 
 /*------------------------------------*\
     #HEADER - Global Breadcrumb
@@ -143,34 +153,13 @@ div.panel-indent{
     #Amount Box
 \*------------------------------------*/
 
-.mainpage {
-  width: 66.6667%;
-
-  @media only screen and (max-width: 780px) {
-    width: 100%;
-  }
-}
-
 .highlighted-event {
-  padding: 1.75em 0.75em 1em;
-  margin: 1em 0 1em;
+  padding:1.75em 0.75em 1.25em 0.75em;
+  margin: 1.5em 0 1em;
 
   @media only screen and (max-width: 640px) {
     padding: 0.5em 0.75em 0.25em 0.75em;
     margin: 0 -15px;
-   }
-
-  #amount-intro {
-    color: $page-colour;            
-    font-weight: 800;
-    line-height: 1.25;
-    margin: 0;
-    padding: 0;
-    font-size: 24px;
-    @media only screen and (max-width: 640px) {
-      font-size: 20px;
-      line-height: 1.2;
-    }
    }
     
   p {        
@@ -201,19 +190,6 @@ div.panel-indent{
       }        
     }
  } 
- 
-  #amount-perweek {      
-    display: block;
-    font-family: "nta",Arial,sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    text-transform: none;          
-    padding-bottom: 6px;
-    font-weight: 800;   
-    @media only screen and (max-width: 640px) {
-      padding-bottom: 0px;
-    }
-  }  
 }
 
 h1.title-sp {
@@ -277,6 +253,7 @@ h1.title-sp {
 .chart-block {
   clear: both;
   margin-top: 25px;
+  margin-bottom: 80px;
   span.graph-title {
     font-weight: 800;
     font-size: 19px;
@@ -328,18 +305,9 @@ h1.title-sp {
 }
   
 /*----------------------------------*\
-    # Minimum Qualifying Period
+    # Cope Table
 \*----------------------------------*/
 
-.panel-indent.mqp {
-  margin-top: 30px;
-  margin-bottom: 45px;
-}
-  
-.summary{
-  margin-bottom: 0px;
-  padding-bottom: 0px;
-}
 
 table.cope-table td {
   font-size: 19px;
