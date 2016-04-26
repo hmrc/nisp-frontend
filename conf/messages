@@ -26,6 +26,7 @@ nisp.breadcrumb.nirecord = NI record
 nisp.breadcrumb.nirecord.voluntaryContrib = Voluntary contributions
 nisp.breadcrumb.nirecord.gapsandhowtocheck = Gaps in your record and how to check them
 nisp.breadcrumb.excluded = Excluded
+nisp.breadcrumb.cope = Cope Page
 
 #**************************
 #  Landing Page Messages
@@ -51,32 +52,36 @@ nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pensio
 #  Main Page Messages
 #**************************
 nisp.main.title=Summary: Check your State Pension
+nisp.main.summary= Summary
 nisp.main.h1.title= Your State Pension
-nisp.main.title.estimate.is= your estimate is
+nisp.main.estimate = Your estimate
 nisp.main.forecast = Forecast
 nisp.main.howtoincreaseit = How to increase it
 nisp.main.cope = What affects it
 nisp.main.currentvalue=Current Value
 nisp.main.today = Today, the amount of your State Pension is
-nisp.main.h2.title = Breakdown
+nisp.main.breakdown = Breakdown
 nisp.main.forecastonly.h2.title = Your estimate is the most you can get
+nisp.main.mostYouCanGet = is the most you can get
+nisp.main.cantImprove = You cannot improve your estimate any more.
 nisp.main.week = a week
 nisp.main.month = a month
 nisp.main.year = a year
 nisp.main.equivalent = This is equal to:
-nisp.main.thisAmount = The amount shown is not a guarantee and is based on your National Insurance record up to {0}.
+nisp.main.notAGuarantee = is not a guarantee and is based on the current law
+nisp.main.isBased = is based on your latest National Insurance record ({0})
+nisp.main.inflation = does not include any increase due to inflation
 
-nisp.main.guarantee = Your estimate is based on the current law. The amount shown is not a guarantee and is based on your National Insurance record using the latest complete tax year available, 5 April {0}. The forecast assumes National Insurance contributions are added to your record for future years until you cannot increase your State Pension any further. It does not include any increase due to inflation.
-nisp.main.guarantee.forecastonly = Your estimate is based on the current law. The amount shown is not a guarantee and is based on your National Insurance record using the latest complete tax year available, 5 April {0}. It does not include any increase due to inflation.
-nisp.main.psod = It does not include the pension sharing order you have in effect.
+nisp.main.psod = does not include the pension sharing order you have in effect
 nisp.main.whenYoullBe = when you''ll be
-nisp.main.after = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
+nisp.main.after = When you reach State Pension age in {0}, you no longer have to pay National Insurance contributions.
+nisp.main.continueWorking.whenYouReachSPA = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
 
 nisp.main.reach = You''ll reach State Pension age when you are
-nisp.main.basedOn = The earliest you can get your State Pension is
+nisp.main.basedOn = You can get your State Pension on
 
-nisp.main.puttingOff = Put off claiming
-nisp.main.puttingOff.line1 = After State Pension age, {0}, you do not pay National Insurance. You can put off claiming your State Pension and this may mean you get extra State Pension when you do want to claim it.
+nisp.main.puttingOff = Putting off claiming
+nisp.main.puttingOff.line1 = When you are {0}, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.
 nisp.main.puttingOff.linkTitle = More on putting off claiming (opens in new tab)
 
 nisp.main.context.default = If you continue to make National Insurance contributions, your State Pension may increase before you retire.
@@ -90,13 +95,15 @@ nisp.main.yearly = Yearly
 
 nisp.main.showyourrecord = View your National Insurance record
 
-nisp.main.chart.lastprocessed.title=Amount based on your latest National Insurance record (5 April {0})
-nisp.main.chart.spa.title=Amount you may get to if you continue to contribute
+nisp.main.chart.lastprocessed.title=Estimate based on your National Insurance record up to 5 April {0}
+nisp.main.chart.spa.title=Estimate if you continue to contribute until {0}
 
 nisp.main.chart.whichis=which is
 nisp.main.chart.week=a week
 nisp.main.chart.month=a month
 nisp.main.chart.year=a year
+nisp.main.chart.estimateIfYouContinue.single = Estimate if you continue to contribute another year before {1}
+nisp.main.chart.estimateIfYouContinue.plural = Estimate if you continue to contribute another {0} years before {1}
 
 #**************************
 # Scenario Messages
@@ -107,20 +114,20 @@ nisp.main.context.improve.heading = How to improve your State Pension
 nisp.main.context.improve.list.payable.singular = You have {0} year on your record that does not count towards your pension.
 nisp.main.context.improve.list.payable.plural = You have {0} years on your record that do not count towards your pension.
 
-nisp.main.context.improve.nogaps = You cannot improve your forecast any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
-nisp.main.context.improve.nogaps.line2 = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
+nisp.main.context.improve.nogaps = When you reach State Pension age in {0}, you no longer have to pay National Insurance contributions.
 
-nisp.main.context.improve.para1.plural = You have years on your National Insurance record which do not count towards your State Pension. You may improve your forecast by filling them.
-nisp.main.context.improve.para1.singular = You have a year on your National Insurance record which does not count towards your State Pension. You may improve your forecast by filling it.
-
-nisp.main.context.improve.para1.dorothy.plural = You have years on your National Insurance record which do not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
-nisp.main.context.improve.para1.dorothy.singular = You have a year on your National Insurance record which does not count towards your State Pension. If you do not add enough years before 5 April 2016 you may improve your forecast by filling gaps.
+nisp.main.context.improve.para1.plural = You have years on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
+nisp.main.context.improve.para1.singular = You have a year on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
 
 nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.main.context.forecastonly.para1 = You still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
+nisp.main.context.reachMax.needToPay = You''ll still need to pay National Insurance contributions until {0} as they fund other state benefits and the NHS.
+nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach the most you can get, you still need to pay National Insurance until {0} as it funds other state benefits and the NHS.
+nisp.main.context.fillGaps.improve.title = You can improve your estimate
+nisp.main.context.fillGaps = Fill gaps in your National Insurance record
+nisp.main.context.fillGaps.viewGaps = View gaps in your record
 
-nisp.main.context.improve.para1.priya.plural = You have years on your National Insurance record which do not count towards your State Pension. You cannot improve your forecast by filling them.
-nisp.main.context.improve.para1.priya.singular = You have a year on your National Insurance record which does not count towards your State Pension. You cannot improve your forecast by filling it.
+
 
 #**************************
 # Exclusion Messages
@@ -328,36 +335,43 @@ nisp.nirecord.voluntarycontributions.h2title.3.message =  to find out more about
 # Minimum Qualifying Period
 #***************
 
-nisp.main.description.mqp=You will reach State Pension age on
+nisp.main.description.mqp=You''ll reach State Pension age on
 nisp.mqp.youneedatleast = You have {0} on your record and you need at least 10 years to get any State Pension.
 nisp.mqp.overseas=If you have lived or worked overseas, you may be able to use your time abroad to make your years in the UK qualify for the purposes of getting any State Pension. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>
-nisp.mqp.youcurrentlyhave.singular=You have {0} year on your National Insurance record, using the latest complete tax year available, up to 5 April {1}. You need at least 10 years to get any State Pension.
-nisp.mqp.youcurrentlyhave.plural=You have {0} years on your National Insurance record, using the latest complete tax year available, up to 5 April {1}. You need at least 10 years to get any State Pension.
+nisp.mqp.youCurrentlyHaveUsing = You currently have {0} on your National Insurance record, using the latest complete tax year available, up to 5 April {1}. You need at least 10 years to get any State Pension.
+nisp.mqp.youCurrentlyHaveUsingZero = You do not have any years on your National Insurance record, using the latest complete tax year available, up to 5 April {0}. You need at least 10 years to get any State Pension.
 nisp.mqp.possible=It may be possible for you to get some State Pension
 nisp.mqp.notpossible=It''s not possible for you to get any State Pension based on your National Insurance record
-nisp.mqp.youneedtoadd=You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on {2}.
+nisp.mqp.youneedtoadd=You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on {2}. 
 nisp.mqp.afterthis=After this you no longer pay National Insurance contributions.
 nisp.mqp.afterspa=After State Pension age, {0} you no longer pay National Insurance contributions.
-nisp.mqp.gaps.singular=You also have 1 year on your record which does not count towards your State Pension because you did not contribute enough National Insurance.
-nisp.mqp.gaps.plural=You also have {0} years on your record which do not count towards your State Pension because you did not contribute enough National Insurance.
 nisp.mqp.gaps.fill.singular=You can fill this year to get the 10 years you need to get any State Pension.
 nisp.mqp.gaps.fill.plural=You can fill some of these years to get the 10 years you need to get any State Pension.
 nisp.mqp.never.para1 =You may have a private pension. For more details about your private pension you will need to contact your pension provider. Use the free service to<a href="https://www.gov.uk/find-lost-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:findlostpension"> find pension contact details (opens in new tab)</a>.
 nisp.mqp.never.para2 =You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
+nisp.mqp.years.dontcount = You also have {0} on your record which do not count towards your pension because you did not contribute enough National Insurance. You can fill some of these years to get the 10 years you need to get any State Pension.
+nisp.mqp.cannotImprove = You cannot improve your estimate any further, unless you choose to put off claiming. You''ll still need to pay contributions as these fund other state benefits and the NHS.
+nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
+nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
+nisp.mqp.howManyToContribute = assumes that you''ll contribute another {0}
+nisp.mqp.reachStatePensionAge = You''ll reach State Pension age on {0} when you''ll be {1}
 
 #**************************
 #  Cope Page Messages
 #**************************
 
-nisp.cope.title1=You were contracted out
+nisp.cope.title1=Contracted out pensions and National Insurance
+nisp.cope.likeMostPeople=Like most people, you were contracted out during your working life. In addition to your State Pension, you will get an amount from your workplace or personal pension provider.
+nisp.cope.moreAbout=More about <a href="{0}">contracting out and National Insurance</a>.
+nisp.cope.youWereContractedOut=You were contracted out
 nisp.cope.inthepast=In the past you''ve been part of one or more contracted out pension schemes, such as workplace or personal pension schemes.
 nisp.cope.why=When you were contracted out:
 nisp.cope.why.bullet1=you and your employers paid lower rate National Insurance contributions; or
 nisp.cope.why.bullet2=some of your National Insurance contributions were paid into your private pension schemes instead
-nisp.cope.definition=Your contracted out workplace or personal pension scheme(s) should include an amount of pension which will, in most cases, be the equivalent of the additional State Pension you would have been paid if you had not been contracted out. We call this amount your Contracted Out Pension Equivalent (COPE). Your COPE estimate is shown below.
+nisp.cope.definition=Your workplace or personal pension scheme should include an amount of pension which will, in most cases, be equal to the additional State Pension you would have been paid. We call this amount your Contracted Out Pension Equivalent (COPE). Your COPE estimate is shown below.
 
 nisp.cope.title2=Contracted Out Pension Equivalent (COPE)
-nisp.cope.workplace=The COPE amount is paid as part of your other pension scheme(s), not by the government. The total amount of pension paid by your workplace or personal pension scheme will depend on the scheme and on any investment choices you may make.
+nisp.cope.workplace=The COPE amount is paid as part of your other pension schemes, not by the government. The total amount of pension paid by your workplace or personal pension scheme will depend on the scheme and on any investment choices.
 nisp.cope.table.estimate.title=Your COPE estimate
 nisp.cope.table.pensionforecast=Your State Pension forecast
 nisp.cope.table.copeadded=COPE added to your State Pension forecast

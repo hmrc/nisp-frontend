@@ -1,0 +1,73 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
+@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
+@import uk.gov.hmrc.play.views.formatting.Dates
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.nisp.models.enums.Scenario
+
+@(spSummary: SPSummaryModel, currentChart: SPChartModel, forecastChart: SPChartModel)
+
+@if(spSummary.isMQP)  {
+
+    <h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
+    <p>@Messages("nisp.mqp.cannotImprove")</p>
+    <p>@Messages("nisp.main.continueWorking.whenYouReachSPA", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+
+} else {
+
+    <p>@Messages("nisp.main.estimate")</p>
+    <ul class="list-bullet">
+        <li>@Messages("nisp.main.notAGuarantee")</li>
+        <li>@Messages("nisp.main.inflation")</li>
+        @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
+    </ul>
+    <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
+        @chart(Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString()),
+                currentChart.width, Html(s"${NispMoney.pounds(currentChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+
+        @spSummary.forecast.scenario match  {
+
+            case Scenario.ContinueWorkingMax => {
+
+                @if(spSummary.forecast.yearsLeftToWork==1) {
+                    @chart(Messages("nisp.main.chart.estimateIfYouContinue.single",1,
+                        (spSummary.finalRelevantYear+1).toString()), forecastChart.width,
+                        Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                } else {
+                    @chart(Messages("nisp.main.chart.estimateIfYouContinue.plural", spSummary.yearsToContributeUntilPensionAge,
+                        (spSummary.finalRelevantYear+1).toString()), forecastChart.width,
+                        Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                }
+            }
+
+            case Scenario.ContinueWorkingNonMax  => {
+                    @chart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()), forecastChart.width,
+                        Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+            }
+        }
+
+    <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h2>
+    @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
+        <p>@Messages("nisp.main.after", (spSummary.finalRelevantYear+1).toString())</p>
+    } else  {
+        <p>@Messages("nisp.main.context.continueWorkingMax.stillNeedToPay", (spSummary.finalRelevantYear+1).toString()) </p>
+    }
+}
+
+<a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
