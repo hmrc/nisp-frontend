@@ -342,7 +342,8 @@ nisp.mqp.youCurrentlyHaveUsing = You currently have {0} on your National Insuran
 nisp.mqp.youCurrentlyHaveUsingZero = You do not have any years on your National Insurance record, using the latest complete tax year available, up to 5 April {0}. You need at least 10 years to get any State Pension.
 nisp.mqp.possible=It may be possible for you to get some State Pension
 nisp.mqp.notpossible=It''s not possible for you to get any State Pension based on your National Insurance record
-nisp.mqp.youneedtoadd=You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on {2}. 
+nisp.mqp.youNeedToAdd=You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on {2}.
+nisp.mqp.youNeedToAddZeroLeft = You need to add {0} to your record and you do not have any left to contribute before you reach State Pension age on {1}.
 nisp.mqp.afterthis=After this you no longer pay National Insurance contributions.
 nisp.mqp.afterspa=After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.gaps.fill.singular=You can fill this year to get the 10 years you need to get any State Pension.
@@ -360,9 +361,9 @@ nisp.mqp.reachStatePensionAge = You''ll reach State Pension age on {0} when you'
 #  Cope Page Messages
 #**************************
 
-nisp.cope.title1=Contracted out pensions and National Insurance
-nisp.cope.likeMostPeople=Like most people, you were contracted out during your working life. In addition to your State Pension, you will get an amount from your workplace or personal pension provider.
-nisp.cope.moreAbout=More about <a href="{0}">contracting out and National Insurance</a>.
+nisp.cope.title1 = How contracting out affects your pension income
+nisp.cope.likeMostPeople = Like most people, you were contracted out of part of the State Pension.
+nisp.cope.moreAbout = More about <a href="{0}">how contracting out has affected your pension income</a>.
 nisp.cope.youWereContractedOut=You were contracted out
 nisp.cope.inthepast=In the past you''ve been part of one or more contracted out pension schemes, such as workplace or personal pension schemes.
 nisp.cope.why=When you were contracted out:

@@ -193,7 +193,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       }
       "return content about COPE for contracted out (B) user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdContractedOut))
-        contentAsString(result) should include ("Contracted out pensions and National Insurance")
+        contentAsString(result) should include ("How contracting out affects your pension income")
       }
 
       "return COPE page for contracted out (B) user" in {
