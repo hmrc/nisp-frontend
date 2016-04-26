@@ -135,7 +135,7 @@ nisp.main.context.fillGaps.viewGaps = View gaps in your record
 
 nisp.excluded.title = You are unable to use this service
 
-nisp.excluded.amountdissonance = Sorry, you''re one of the few people who cannot get a State Pension forecast. We''re trying to fix this.
+nisp.excluded.amountdissonance = Sorry, your National Insurance record is a bit complicated, so we cannot give you a forecast. We''re working on fixing this.
 
 nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a> to get a paper statement of how much you''ve earned so far.
 
