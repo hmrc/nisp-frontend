@@ -17,14 +17,13 @@
 package uk.gov.hmrc.nisp.events
 
 import uk.gov.hmrc.nisp.models.NpsDate
-import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
 import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
 import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 object AccountAccessEvent {
   def apply(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal, statePensionForecast: BigDecimal,
-            dateOfBirth: NpsDate, name: Option[String], contractedOutFlag: Boolean = false, forecastScenario: Scenario, abTest: Option[ABTest],
+            dateOfBirth: NpsDate, name: Option[String], contractedOutFlag: Boolean = false, forecastScenario: Scenario,
             copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier): AccountAccessEvent =
     new AccountAccessEvent(
       nino,
@@ -36,14 +35,13 @@ object AccountAccessEvent {
       name.getOrElse("N/A"),
       contractedOutFlag,
       forecastScenario,
-      abTest,
       copeAmount,
       authenticationProvider
     )
 }
 class AccountAccessEvent(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal,
                          statePensionForecast: BigDecimal, dateOfBirth: NpsDate, name: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
-                         abTest: Option[ABTest], copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier)
+                         copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("AccountPage",
     Map(
       "nino" -> nino,
@@ -55,7 +53,6 @@ class AccountAccessEvent(nino: String, contextMessage: Option[SPContextMessage],
       "Name" -> name,
       "ContractedOut" -> contractedOutFlag.toString,
       "ForecastScenario" -> forecastScenario.toString,
-      "ABTest" -> abTest.map(_.toString).getOrElse("None"),
       "COPEAmount" -> copeAmount.toString(),
       "AuthenticationProvider" -> authenticationProvider
     )

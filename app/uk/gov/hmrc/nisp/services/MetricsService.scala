@@ -16,20 +16,10 @@
 
 package uk.gov.hmrc.nisp.services
 
-import com.codahale.metrics.{Timer, Counter, Meter}
 import com.kenshoo.play.metrics.MetricsRegistry
-import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
-import uk.gov.hmrc.nisp.models.enums.{APIType, ABTest, Exclusion, SPContextMessage}
-import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
-import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
+import uk.gov.hmrc.nisp.models.enums.APIType
 
-trait MetricsService {
-  def abTest(abTest: Option[ABTest])
-}
-
-object MetricsService extends MetricsService {
-  val abTestA = MetricsRegistry.defaultRegistry.meter("abtest-a")
-  val abTestB = MetricsRegistry.defaultRegistry.meter("abtest-b")
+object MetricsService {
 
   val timers = Map(
     APIType.SP -> MetricsRegistry.defaultRegistry.timer("sp-response-timer"),
@@ -56,10 +46,4 @@ object MetricsService extends MetricsService {
   val citizenDetailsTimer = MetricsRegistry.defaultRegistry.timer("citizen-details-timer")
   val citizenDetailsFailedCounter = MetricsRegistry.defaultRegistry.counter("citizen-details-failed-counter")
 
-  override def abTest(abTest: Option[ABTest]): Unit = {
-    abTest foreach {
-      case ABTest.A => abTestA.mark()
-      case ABTest.B => abTestB.mark()
-    }
-  }
 }

@@ -98,7 +98,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val betaFeedbackUnauthenticatedUrl: String = ""
             override val contactFrontendPartialBaseUrl: String = ""
             override val govUkFinishedPageUrl: String = "govukdone"
-            override val excludeCopeTab: Boolean = false
             override val showGovUkDonePage: Boolean = false
             override val analyticsHost: String = ""
             override val analyticsToken: Option[String] = None
@@ -232,7 +231,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val betaFeedbackUnauthenticatedUrl: String = ""
             override val contactFrontendPartialBaseUrl: String = ""
             override val govUkFinishedPageUrl: String = "govukdone"
-            override val excludeCopeTab: Boolean = false
             override val showGovUkDonePage: Boolean = false
             override val analyticsHost: String = ""
             override val analyticsToken: Option[String] = None
@@ -266,7 +264,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val betaFeedbackUnauthenticatedUrl: String = ""
             override val contactFrontendPartialBaseUrl: String = ""
             override val govUkFinishedPageUrl: String = "govukdone"
-            override val excludeCopeTab: Boolean = false
             override val showGovUkDonePage: Boolean = true
             override val analyticsHost: String = ""
             override val analyticsToken: Option[String] = None

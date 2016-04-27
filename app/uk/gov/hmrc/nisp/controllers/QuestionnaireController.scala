@@ -56,7 +56,7 @@ trait QuestionnaireController extends NispFrontendController with Actions with A
             value.nextSteps,
             request.session.get(NAME).getOrElse(""),
             request.session.get(NINO).getOrElse(""),
-            request.session.get(ABTEST).getOrElse("")
+            request.session.get(CONTRACTEDOUT).getOrElse("")
           ))
           Future.successful(Redirect(routes.QuestionnaireController.showFinished()))
         }

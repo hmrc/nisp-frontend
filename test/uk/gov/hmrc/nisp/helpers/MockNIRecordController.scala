@@ -27,7 +27,6 @@ import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 object MockNIRecordController extends NIRecordController {
   override val nispConnector: NispConnector = MockNispConnector
-  override val metricsService: MetricsService = MockMetricsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
   override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
@@ -41,7 +40,6 @@ object MockNIRecordController extends NIRecordController {
     override val ssoUrl: Option[String] = None
     override val betaFeedbackUnauthenticatedUrl: String = ""
     override val contactFrontendPartialBaseUrl: String = ""
-    override val excludeCopeTab: Boolean = false
     override val analyticsHost: String = ""
     override val analyticsToken: Option[String] = None
     override val betaFeedbackUrl: String = ""

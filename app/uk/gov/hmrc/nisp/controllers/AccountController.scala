@@ -27,9 +27,8 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.ABTest.ABTest
-import uk.gov.hmrc.nisp.models.enums.{ABTest, Scenario}
-import uk.gov.hmrc.nisp.services.{ABService, CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.models.enums.Scenario
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
@@ -37,7 +36,6 @@ import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
-  override val metricsService: MetricsService = MetricsService
   override val sessionCache: SessionCache = NispSessionCache
 
   override val customAuditConnector = CustomAuditConnector
@@ -48,7 +46,6 @@ object AccountController extends AccountController with AuthenticationConnectors
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   def nispConnector: NispConnector
-  def metricsService: MetricsService
 
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
@@ -59,13 +56,14 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
 
       nispConnector.connectToGetSPResponse(nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) => getABTest(nino, spSummary.contractedOutFlag)
-          match {
-            case Some(ABTest.B) => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-                    spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week,
-                    authenticationProvider, isPertax))
-            case _ => Redirect(routes.AccountController.show())
-        }
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
+          if(spSummary.contractedOutFlag) {
+            Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week,
+              authenticationProvider, isPertax))
+          } else {
+            Redirect(routes.AccountController.show())
+          }
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
     }
@@ -77,24 +75,23 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
       nispConnector.connectToGetSPResponse(nino).map {
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
-          metricsService.abTest(getABTest(nino, spSummary.contractedOutFlag))
 
           customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
             spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecast.forecastAmount.week,
             spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario,
-            getABTest(nino, spSummary.contractedOutFlag), spSummary.copeAmount.week, authenticationProvider))
+            spSummary.copeAmount.week, authenticationProvider))
 
           if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
             val canGetPension = spSummary.numberOfQualifyingYears +
               spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
             Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax))
-              .withSession(storeUserInfoInSession(user, contractedOut = false))
+              .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
-            Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
+            Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else {
             val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecast.forecastAmount)
-            Ok(account(nino, spSummary, getABTest(nino, spSummary.contractedOutFlag), currentChart, forecastChart, authenticationProvider, isPertax))
+            Ok(account(nino, spSummary, currentChart, forecastChart, authenticationProvider, isPertax))
               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }
 
@@ -129,15 +126,11 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
     }
   }
   private def storeUserInfoInSession(user: NispUser, contractedOut: Boolean)(implicit request: Request[AnyContent]): Session = {
-    val abTest: Option[ABTest] = getABTest(user.nino.getOrElse(""), contractedOut)
     request.session +
       (NAME -> user.name.getOrElse("N/A")) +
       (NINO -> user.nino.getOrElse("")) +
-      (ABTEST -> abTest.map(_.toString).getOrElse("None"))
+      (CONTRACTEDOUT -> contractedOut.toString)
   }
-
-  private def getABTest(nino: String, isContractedOut: Boolean): Option[ABTest] =
-    if(isContractedOut && !applicationConfig.excludeCopeTab) Some(ABService.test(nino)) else None
 
   def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>
     if (applicationConfig.showGovUkDonePage) {
@@ -145,11 +138,12 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
     } else {
       val name = request.session.get(NAME).getOrElse("")
       val nino = request.session.get(NINO).getOrElse("")
-      val abTest = request.session.get(ABTEST).getOrElse("None")
+      val contractedOut = request.session.get(CONTRACTEDOUT).getOrElse("")
+
       Redirect(routes.QuestionnaireController.show()).withNewSession.withSession(
         NAME -> name,
         NINO -> nino,
-        ABTEST -> abTest)
+        CONTRACTEDOUT -> contractedOut)
     }
   }
 
