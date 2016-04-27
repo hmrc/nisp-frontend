@@ -272,6 +272,7 @@ nisp.nirecord.summary.gaps = years when you did not contribute enough
 nisp.nirecord.summary.yearsremaining = years to contribute before {0}
 nisp.nirecord.pre75Years = Up to 1975
 nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to 5 April 1975
+nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to 5 April 1975
 
 #**************************
 # Gaps In Your Record Page
