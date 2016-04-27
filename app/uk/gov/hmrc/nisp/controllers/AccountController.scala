@@ -27,8 +27,8 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.{ABTest, Scenario}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.models.enums.Scenario
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
@@ -36,7 +36,6 @@ import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
-  override val metricsService: MetricsService = MetricsService
   override val sessionCache: SessionCache = NispSessionCache
 
   override val customAuditConnector = CustomAuditConnector
@@ -47,7 +46,6 @@ object AccountController extends AccountController with AuthenticationConnectors
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   def nispConnector: NispConnector
-  def metricsService: MetricsService
 
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
@@ -58,13 +56,14 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
 
       nispConnector.connectToGetSPResponse(nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) => spSummary.contractedOutFlag
-          match {
-            case true => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-                    spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week,
-                    authenticationProvider, isPertax))
-            case _ => Redirect(routes.AccountController.show())
-        }
+        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
+          if(spSummary.contractedOutFlag) {
+            Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week,
+              authenticationProvider, isPertax))
+          } else {
+            Redirect(routes.AccountController.show())
+          }
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
     }
@@ -87,9 +86,9 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
               spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
             Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax))
-              .withSession(storeUserInfoInSession(user, contractedOut = false))
+              .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
-            Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, contractedOut = false))
+            Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else {
             val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecast.forecastAmount)
             Ok(account(nino, spSummary, currentChart, forecastChart, authenticationProvider, isPertax))

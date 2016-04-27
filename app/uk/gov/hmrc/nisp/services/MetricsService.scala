@@ -19,9 +19,7 @@ package uk.gov.hmrc.nisp.services
 import com.kenshoo.play.metrics.MetricsRegistry
 import uk.gov.hmrc.nisp.models.enums.APIType
 
-trait MetricsService {}
-
-object MetricsService extends MetricsService {
+object MetricsService {
 
   val timers = Map(
     APIType.SP -> MetricsRegistry.defaultRegistry.timer("sp-response-timer"),

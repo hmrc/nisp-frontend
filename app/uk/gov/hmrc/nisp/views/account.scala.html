@@ -135,9 +135,7 @@
      }
 
     @if(spSummary.contractedOutFlag) {
-        <h3 class="heading-medium">@Messages("nisp.cope.title1")</h3>
-        <p>@Html(Messages("nisp.cope.likeMostPeople"))</p>
-        <p>@Html(Messages("nisp.cope.moreAbout",routes.AccountController.showCope.url))</p>
+        @includes.contractedOut
     }
 
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}

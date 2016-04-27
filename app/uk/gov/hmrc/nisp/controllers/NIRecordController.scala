@@ -23,19 +23,16 @@ import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models.{ExclusionsModel, NIRecord, NIResponse, NISummary}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
-
-import scala.concurrent.Future
 
 
 object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
-  override val metricsService: MetricsService = MetricsService
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
@@ -45,7 +42,6 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
 
 trait NIRecordController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   val nispConnector: NispConnector
-  val metricsService: MetricsService
   val customAuditConnector: CustomAuditConnector
 
   def showFull: Action[AnyContent] = show(niGaps = false)
