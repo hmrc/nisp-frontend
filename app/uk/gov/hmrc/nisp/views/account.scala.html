@@ -18,8 +18,6 @@
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
-@import uk.gov.hmrc.nisp.services.ABService
-@import uk.gov.hmrc.nisp.models.enums.ABTest._
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.models.enums.Scenario
@@ -30,7 +28,6 @@
 @(
     nino: String,
     spSummary: SPSummaryModel,
-    abTest: Option[ABTest],
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
     authenticationProvider: String,
@@ -42,7 +39,6 @@
     ga('set', {
         'dimension7':  '@spSummary.forecast.scenario',
         'dimension8':  '@spSummary.forecast.forecastAmount.week.toInt',
-        @Html(abTest.map (p => s"'dimension9':  '${p.toString}',").getOrElse(""))
         'dimension10': '@spSummary.numberOfQualifyingYears',
         'dimension11': '@spSummary.numberOfGaps',
         'dimension12': '@spSummary.numberOfGapsPayable',
@@ -136,15 +132,11 @@
             @includes.fillGaps(spSummary, currentChart, forecastChart)
         }
 
-        @for(test <- abTest) {
-            @if(test == B) {
-                <h3 class="heading-medium">@Messages("nisp.cope.title1")</h3>
-                <p>@Html(Messages("nisp.cope.likeMostPeople"))</p>
-                <p>@Html(Messages("nisp.cope.moreAbout",routes.AccountController.showCope.url))</p>
-            }
-        }
-
      }
+
+    @if(spSummary.contractedOutFlag) {
+        @includes.contractedOut()
+    }
 
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 

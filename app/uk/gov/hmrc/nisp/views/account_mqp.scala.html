@@ -110,6 +110,10 @@
 
     }
 
+    @if(spSummary.contractedOutFlag) {
+        @includes.contractedOut()
+    }
+
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
   }
 }

@@ -37,8 +37,6 @@ trait MockAccountController extends AccountController {
   override val npsAvailabilityChecker: NpsAvailabilityChecker
   override val sessionCache: SessionCache = MockSessionCache
 
-  override def metricsService: MetricsService = MockMetricsService
-
   override def nispConnector: NispConnector = MockNispConnector
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = ""
@@ -46,7 +44,6 @@ trait MockAccountController extends AccountController {
     override val ssoUrl: Option[String] = None
     override val betaFeedbackUnauthenticatedUrl: String = ""
     override val contactFrontendPartialBaseUrl: String = ""
-    override val excludeCopeTab: Boolean = false
     override val analyticsHost: String = ""
     override val analyticsToken: Option[String] = None
     override val betaFeedbackUrl: String = ""

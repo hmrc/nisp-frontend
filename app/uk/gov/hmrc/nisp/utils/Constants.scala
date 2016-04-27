@@ -37,7 +37,7 @@ object Constants {
 
   val NAME = "customerName"
   val NINO = "customerNino"
-  val ABTEST = "customerABTest"
+  val CONTRACTEDOUT = "contractedOutFlag"
   val PERTAX = "customerPERTAX"
 
   val ninoWithoutSuffixLength: Int = 8

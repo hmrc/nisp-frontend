@@ -33,7 +33,6 @@ object MockBreadcrumb extends Breadcrumb {
     override val contactFrontendPartialBaseUrl: String = ""
     override val govUkFinishedPageUrl: String = ""
     override val showGovUkDonePage: Boolean = true
-    override val excludeCopeTab: Boolean = true
     override val analyticsHost: String = ""
     override val betaFeedbackUrl: String = ""
     override val analyticsToken: Option[String] = None

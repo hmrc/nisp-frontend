@@ -65,7 +65,6 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
       override val contactFrontendPartialBaseUrl: String = ""
       override val govUkFinishedPageUrl: String = ""
       override val showGovUkDonePage: Boolean = false
-      override val excludeCopeTab: Boolean = false
       override val analyticsHost: String = ""
       override val betaFeedbackUrl: String = ""
       override val analyticsToken: Option[String] = None
