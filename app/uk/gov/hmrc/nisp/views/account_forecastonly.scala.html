@@ -22,8 +22,6 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-
-
 @(nino: String, spSummary: SPSummaryModel, authenticationProvider: String, isPertaxUrl:Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
@@ -47,23 +45,22 @@
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
     <div class="highlighted-event">
-        <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
-        <p> <em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
-        <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
-            @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")
-        </p>
+        <p>@Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
+        <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
+        <p>@NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
+        @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")</p>
     </div>
-    <p>Your estimate</p>
+    <p>@Messages("nisp.main.estimate")</p>
     <ul class="list-bullet">
-        <li>is not a guarantee and is based on the current law</li>
-        <li>is based on your latest National Insurance record  (@Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
-        <li>does not include any increase due to inflation</li>
+        <li>@Messages("nisp.main.notAGuarantee")</li>
+        <li>@Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
+        <li>@Messages("nisp.main.inflation")</li>
         @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
     </ul>
-    <h2 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) is the most you can get</h2>
-    <p>You cannot improve your estimate any more.</p>
-    <p>You'll still need to pay National Insurance contributions until @(spSummary.finalRelevantYear+1) as they fund other state benefits and the NHS.</p>
-    <a href='@routes.NIRecordController.showGaps.url'>View your National Insurance record</a>.
+    <h2 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h2>
+    <p>@Messages("nisp.main.cantImprove")</p>
+    <p>@Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString())</p>
+    <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
 
     @if(spSummary.contractedOutFlag) {
         @includes.contractedOut()
