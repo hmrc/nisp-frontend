@@ -41,9 +41,9 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
     @if(!recordEnded) {
         <p aria-hidden="true" class="nisummary-number">@niSummary.yearsToContributeUntilPensionAge</p>
         @if(niSummary.yearsToContributeUntilPensionAge != 1) {
-            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining", niSummary.spaYear.toString)</p>
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining", (niSummary.finalRelevantYear+1).toString)</p>
         } else {
-            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining.single", niSummary.spaYear.toString)</p>
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining.single", (niSummary.finalRelevantYear+1).toString)</p>
         }
     }
 
@@ -94,9 +94,9 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 
         @if(!recordEnded) {
             <li>@niSummary.yearsToContributeUntilPensionAge @if(niSummary.yearsToContributeUntilPensionAge != 1) {
-                    @Messages("nisp.nirecord.summary.yearsRemaining", niSummary.spaYear.toString)
+                    @Messages("nisp.nirecord.summary.yearsRemaining", (niSummary.finalRelevantYear+1).toString)
                 } else {
-                    @Messages("nisp.nirecord.summary.yearsRemaining.single", niSummary.spaYear.toString)
+                    @Messages("nisp.nirecord.summary.yearsRemaining.single", (niSummary.finalRelevantYear+1).toString)
                 }
             </li>
         }

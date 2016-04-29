@@ -272,7 +272,8 @@
     "numberOfNonPayableGaps": 16,
     "canImproveWithGaps": true,
     "isAbroad": false,
-    "recordEnd": null
+    "recordEnd": null,
+    "finalRelevantYear": 2020
   }
 }
 
