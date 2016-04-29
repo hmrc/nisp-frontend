@@ -22,28 +22,38 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-
 @(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, tableStart: Int, recordEnded: Boolean,
 authenticationProvider: String)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
-<div class="sidebar-border" >   
+<div class="sidebar-border" >
 
     <h2 aria-hidden="true">@Messages("nisp.nirecord.summary.yourrecord")</h2>
 
     <p aria-hidden="true" class="nisummary-number">@niSummary.noOfQualifyingYears</p>
 
-    <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullcontributions")</p>
+    @if(niSummary.noOfQualifyingYears != 1) {
+        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullContributions")</p> 
+    } else {
+        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullContributions.single")</p>
+    }
 
     @if(!recordEnded) {
         <p aria-hidden="true" class="nisummary-number">@niSummary.yearsToContributeUntilPensionAge</p>
-
-        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsremaining", niSummary.spaYear.toString)</p>
+        @if(niSummary.yearsToContributeUntilPensionAge != 1) {
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining", niSummary.spaYear.toString)</p>
+        } else {
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining.single", niSummary.spaYear.toString)</p>
+        }
     }
 
     <p aria-hidden="true" class="nisummary-number">@niSummary.noOfNonQualifyingYears</p>
 
-    <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps")</p>
+    @if(niSummary.noOfNonQualifyingYears != 1) {
+        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps")</p> 
+    } else {
+        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps.single")</p>
+    }
   
 </div>
 }
@@ -51,7 +61,6 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 @pageScripts = {
 <script src="@routes.Assets.at("javascript/nirecord.js")" type="text/javascript"></script>
 }
-
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -68,7 +77,6 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
     h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
     sidebarLinks = Some(sidebar), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-
 <h1 class="heading-large top-title-heading">@Messages(if(niSummary.isAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")</h1>
 
 <div class="sidebar-mobile">
@@ -76,13 +84,30 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
     <h2>@Messages("nisp.nirecord.summary.yourrecord.mobile")</h2>
     <p>You have:</p>
     <ul class="list-bullet">
-        <li>@niSummary.noOfQualifyingYears @Messages("nisp.nirecord.summary.fullcontributions")</li>
+        <li>@niSummary.noOfQualifyingYears 
+            @if(niSummary.noOfQualifyingYears != 1) {
+            @Messages("nisp.nirecord.summary.fullContributions")
+        } else {
+            @Messages("nisp.nirecord.summary.fullContributions.single")
+        }
+        </li>
+
         @if(!recordEnded) {
-            <li>
-                @niSummary.yearsToContributeUntilPensionAge @Messages("nisp.nirecord.summary.yearsremaining",niSummary.spaYear.toString)
+            <li>@niSummary.yearsToContributeUntilPensionAge @if(niSummary.yearsToContributeUntilPensionAge != 1) {
+                    @Messages("nisp.nirecord.summary.yearsRemaining", niSummary.spaYear.toString)
+                } else {
+                    @Messages("nisp.nirecord.summary.yearsRemaining.single", niSummary.spaYear.toString)
+                }
             </li>
         }
-        <li>@niSummary.noOfNonQualifyingYears @Messages("nisp.nirecord.summary.gaps")</li>
+
+        <li>@niSummary.noOfNonQualifyingYears 
+            @if(niSummary.noOfNonQualifyingYears != 1) {
+            @Messages("nisp.nirecord.summary.gaps")
+        } else {
+            @Messages("nisp.nirecord.summary.gaps.single")
+        }
+        </li>
     </ul>
 </div>
 
