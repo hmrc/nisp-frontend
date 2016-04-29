@@ -255,7 +255,8 @@
     "numberOfPayableGaps": 0,
     "numberOfNonPayableGaps": 0,
     "canImproveWithGaps": true,
-    "isAbroad": false
+    "isAbroad": false,
+    "recordEnd": null
   }
 }
 

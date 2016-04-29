@@ -47,6 +47,10 @@ canSeeNIRecord: Boolean
         <div class="panel-indent">
             @if(spExclusions.contains(AmountDissonance)) {
                 @exclusions.sp.amountDissonance()
+            } else {
+                @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
+                    @exclusions.sp.postStatePensionAge()
+                }
             }
         </div>
         @if(canSeeNIRecord) {

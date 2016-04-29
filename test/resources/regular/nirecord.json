@@ -405,7 +405,8 @@
     "numberOfPayableGaps": 4,
     "numberOfNonPayableGaps": 6,
     "canImproveWithGaps": false,
-    "isAbroad": false
+    "isAbroad": false,
+    "recordEnd": null
   }
 }
 

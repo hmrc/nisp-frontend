@@ -22,8 +22,8 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, authenticationProvider: String)(implicit request: Request[_],
-  user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, tableStart: Int, recordEnded: Boolean,
+authenticationProvider: String)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >
@@ -38,12 +38,13 @@
         <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullContributions.single")</p>
     }
 
-    <p aria-hidden="true" class="nisummary-number">@niSummary.yearsToContributeUntilPensionAge</p>
-
-    @if(niSummary.yearsToContributeUntilPensionAge != 1) {
-        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining", niSummary.spaYear.toString)</p> 
-    } else {
-        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining.single", niSummary.spaYear.toString)</p>
+    @if(!recordEnded) {
+        <p aria-hidden="true" class="nisummary-number">@niSummary.yearsToContributeUntilPensionAge</p>
+        @if(niSummary.yearsToContributeUntilPensionAge != 1) {
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining", niSummary.spaYear.toString)</p>
+        } else {
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining.single", niSummary.spaYear.toString)</p>
+        }
     }
 
     <p aria-hidden="true" class="nisummary-number">@niSummary.noOfNonQualifyingYears</p>
@@ -83,7 +84,6 @@
     <h2>@Messages("nisp.nirecord.summary.yourrecord.mobile")</h2>
     <p>You have:</p>
     <ul class="list-bullet">
-
         <li>@niSummary.noOfQualifyingYears 
             @if(niSummary.noOfQualifyingYears != 1) {
             @Messages("nisp.nirecord.summary.fullContributions")
@@ -92,13 +92,14 @@
         }
         </li>
 
-        <li>@niSummary.yearsToContributeUntilPensionAge 
-            @if(niSummary.yearsToContributeUntilPensionAge != 1) {
-            @Messages("nisp.nirecord.summary.yearsRemaining", niSummary.spaYear.toString)
-        } else {
-            @Messages("nisp.nirecord.summary.yearsRemaining.single", niSummary.spaYear.toString)
+        @if(!recordEnded) {
+            <li>@niSummary.yearsToContributeUntilPensionAge @if(niSummary.yearsToContributeUntilPensionAge != 1) {
+                    @Messages("nisp.nirecord.summary.yearsRemaining", niSummary.spaYear.toString)
+                } else {
+                    @Messages("nisp.nirecord.summary.yearsRemaining.single", niSummary.spaYear.toString)
+                }
+            </li>
         }
-        </li>
 
         <li>@niSummary.noOfNonQualifyingYears 
             @if(niSummary.noOfNonQualifyingYears != 1) {
@@ -107,7 +108,6 @@
             @Messages("nisp.nirecord.summary.gaps.single")
         }
         </li>
-
     </ul>
 </div>
 
@@ -132,12 +132,13 @@
         @if(niRecord.taxYears.isEmpty) {
             <dt>
                 <div class="ni-wrapper">
-                    <div class="ni-years"> @{(niSummary.earningsIncludedUpTo.taxYear + 1)}-@{(niSummary.earningsIncludedUpTo.taxYear + 2).toString.substring(2,4)}</div>
+                    <div class="ni-years"> @{(tableStart)}-@{(tableStart + 1).toString.substring(2,4)}</div>
                     <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
                 </div>
             </dt>
         } else {
-            @for(taxYear <- niSummary.earningsIncludedUpTo.taxYear + 1 to niRecord.taxYears.map(p => p.taxYear).min by -1) {
+
+            @for(taxYear <- tableStart to niRecord.taxYears.map(p => p.taxYear).min by -1) {
               @niRecord.taxYears.find(p => p.taxYear == taxYear).map(includes.nirecordtaxyear(_)).getOrElse {
                 <dt>
                     <div class="ni-wrapper">
