@@ -289,6 +289,7 @@ nisp.nirecord.gapsinyourrecord.line1 = in paid employment and had low earnings
 nisp.nirecord.gapsinyourrecord.line2 = unemployed and not claiming benefit
 nisp.nirecord.gapsinyourrecord.line3 = self-employed but did not pay contributions because of small profits
 nisp.nirecord.gapsinyourrecord.line4 = living abroad
+nisp.nirecord.gapsinyourrecord.line5 = living or working in the Isle of Man
 nisp.nirecord.gap.viewdetails = View <span class="visuallyhidden">{0} </span>details
 nisp.nirecord.gapsinyourrecord.howtocheckrecord= How to check your record
 nisp.nirecord.gapsinyourrecord.paidemployment.title = Paid employment
@@ -322,6 +323,9 @@ nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message1 = are widowed
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message2 = paid married women''s reduced rate contributions
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2 = lived or worked overseas
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message = You may be entitled to a State Pension from the country you lived or worked in. Contact the pension service of the country you were in to find out if you are eligible.
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle3 = lived or worked in the Isle of Man
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme, 
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message2 = visit GOV.IM – Retirement Pension (opens in new window)
 
 nisp.nirecord.voluntarycontributions.h2title.2 = 2.  Seek guidance or financial advice
 nisp.nirecord.voluntarycontributions.h2title.2.message = Paying voluntary contributions may not be your best option when planning for your retirement.
