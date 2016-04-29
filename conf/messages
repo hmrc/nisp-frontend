@@ -135,9 +135,10 @@ nisp.main.context.fillGaps.viewGaps = View gaps in your record
 
 nisp.excluded.title = You are unable to use this service
 
-nisp.excluded.amountdissonance = The digital service is currently unable to calculate your State Pension forecast. We are looking into this matter.
+nisp.excluded.amountdissonance = Sorry, you''re one of the few people who cannot get a State Pension forecast. We''re trying to fix this.
 
-nisp.excluded.contactFuturePensionCentre = To get a statement of how much pension you''ve earned so far, <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a>.
+nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a> to get a paper statement of how much you''ve earned so far.
+
 nisp.excluded.contactFuturePensionCentre.IOM = You should contact <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">Future Pension Centre (opens in new tab)</a> to get information about your State Pension.
 nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
 
