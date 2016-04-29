@@ -23,8 +23,8 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 
-@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, authenticationProvider: String)(implicit request: Request[_],
-  user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, tableStart: Int, recordEnded: Boolean,
+authenticationProvider: String)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >   
@@ -35,9 +35,11 @@
 
     <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullcontributions")</p>
 
-    <p aria-hidden="true" class="nisummary-number">@niSummary.yearsToContributeUntilPensionAge</p>
+    @if(!recordEnded) {
+        <p aria-hidden="true" class="nisummary-number">@niSummary.yearsToContributeUntilPensionAge</p>
 
-    <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsremaining", niSummary.spaYear.toString)</p>
+        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsremaining", niSummary.spaYear.toString)</p>
+    }
 
     <p aria-hidden="true" class="nisummary-number">@niSummary.noOfNonQualifyingYears</p>
 
@@ -75,9 +77,11 @@
     <p>You have:</p>
     <ul class="list-bullet">
         <li>@niSummary.noOfQualifyingYears @Messages("nisp.nirecord.summary.fullcontributions")</li>
-        <li>
-            @niSummary.yearsToContributeUntilPensionAge @Messages("nisp.nirecord.summary.yearsremaining",niSummary.spaYear.toString)
-        </li>
+        @if(!recordEnded) {
+            <li>
+                @niSummary.yearsToContributeUntilPensionAge @Messages("nisp.nirecord.summary.yearsremaining",niSummary.spaYear.toString)
+            </li>
+        }
         <li>@niSummary.noOfNonQualifyingYears @Messages("nisp.nirecord.summary.gaps")</li>
     </ul>
 </div>
@@ -103,12 +107,13 @@
         @if(niRecord.taxYears.isEmpty) {
             <dt>
                 <div class="ni-wrapper">
-                    <div class="ni-years"> @{(niSummary.earningsIncludedUpTo.taxYear + 1)}-@{(niSummary.earningsIncludedUpTo.taxYear + 2).toString.substring(2,4)}</div>
+                    <div class="ni-years"> @{(tableStart)}-@{(tableStart + 1).toString.substring(2,4)}</div>
                     <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
                 </div>
             </dt>
         } else {
-            @for(taxYear <- niSummary.earningsIncludedUpTo.taxYear + 1 to niRecord.taxYears.map(p => p.taxYear).min by -1) {
+
+            @for(taxYear <- tableStart to niRecord.taxYears.map(p => p.taxYear).min by -1) {
               @niRecord.taxYears.find(p => p.taxYear == taxYear).map(includes.nirecordtaxyear(_)).getOrElse {
                 <dt>
                     <div class="ni-wrapper">

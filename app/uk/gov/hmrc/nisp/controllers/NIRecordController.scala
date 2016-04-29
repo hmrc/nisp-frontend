@@ -63,7 +63,9 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))
 
-            Ok(nirecordpage(nino, niRecord, niSummary, niGaps, getAuthenticationProvider(user.authContext.user.confidenceLevel)))
+              val tableStart = niSummary.recordEnd.getOrElse(niSummary.earningsIncludedUpTo.taxYear + 1)
+
+            Ok(nirecordpage(nino, niRecord, niSummary, niGaps, tableStart, niSummary.recordEnd.isDefined, getAuthenticationProvider(user.authContext.user.confidenceLevel)))
           }
         case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
           customAuditConnector.sendEvent(AccountExclusionEvent(
