@@ -30,7 +30,7 @@
 </ul>
 <h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
 <p>@Messages("nisp.main.cantImprove")</p>
-<p>@Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString())</p>
+<p>@Messages("nisp.main.context.reachMax.needToPay", (spSummary.statePensionAge.date.localDate.getYear).toString())</p>
 <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
 
 

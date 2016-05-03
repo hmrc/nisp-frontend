@@ -18,10 +18,20 @@ package uk.gov.hmrc.nisp.models
 
 import play.api.libs.json.Json
 
-case class NISummary(noOfQualifyingYears: Int, noOfNonQualifyingYears: Int, yearsToContributeUntilPensionAge: Int,
-                     spaYear: Int, earningsIncludedUpTo: NpsDate, unavailableYear: Int,
-                     pre75QualifyingYears: Option[Int], numberOfPayableGaps: Int, numberOfNonPayableGaps: Int,
-                     canImproveWithGaps: Boolean, isAbroad: Boolean, recordEnd: Option[Int])
+case class NISummary(noOfQualifyingYears: Int,
+                     noOfNonQualifyingYears: Int,
+                     yearsToContributeUntilPensionAge: Int,
+                     spaYear: Int,
+                     earningsIncludedUpTo: NpsDate,
+                     unavailableYear: Int,
+                     pre75QualifyingYears : Option[Int],
+                     numberOfPayableGaps: Int,
+                     numberOfNonPayableGaps: Int,
+                     canImproveWithGaps: Boolean,
+                     isAbroad: Boolean,
+                     recordEnd: Option[Int],
+                     finalRelevantYear: Int)
+
 
 object NISummary {
   implicit val formats = Json.format[NISummary]
