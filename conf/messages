@@ -96,14 +96,14 @@ nisp.main.yearly = Yearly
 nisp.main.showyourrecord = View your National Insurance record
 
 nisp.main.chart.lastprocessed.title=Estimate based on your National Insurance record up to 5 April {0}
-nisp.main.chart.spa.title=Estimate if you continue to contribute until {0}
+nisp.main.chart.spa.title = Estimate if you continue to contribute until {0}
 
-nisp.main.chart.whichis=which is
-nisp.main.chart.week=a week
-nisp.main.chart.month=a month
-nisp.main.chart.year=a year
-nisp.main.chart.estimateIfYouContinue.single = Estimate if you continue to contribute another year before {1}
-nisp.main.chart.estimateIfYouContinue.plural = Estimate if you continue to contribute another {0} years before {1}
+nisp.main.chart.whichis = which is
+nisp.main.chart.week = a week
+nisp.main.chart.month = a month
+nisp.main.chart.year = a year
+nisp.main.chart.estimateIfYouContinue.single = Estimate if you contribute another year before {1}
+nisp.main.chart.estimateIfYouContinue.plural = Estimate if you contribute another {0} years before {1}
 
 #**************************
 # Scenario Messages
