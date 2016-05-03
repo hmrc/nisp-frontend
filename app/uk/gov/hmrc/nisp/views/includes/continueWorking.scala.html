@@ -64,9 +64,9 @@
 
     <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h2>
     @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
-        <p>@Messages("nisp.main.after", (spSummary.finalRelevantYear+1).toString())</p>
+        <p>@Messages("nisp.main.after", (spSummary.statePensionAge.date.localDate.getYear).toString())</p>
     } else  {
-        <p>@Messages("nisp.main.context.continueWorkingMax.stillNeedToPay", (spSummary.finalRelevantYear+1).toString()) </p>
+        <p>@Html(Messages("nisp.main.context.continueWorkingMax.stillNeedToPay", NispMoney.pounds(forecastChart.amountModel.week),(spSummary.statePensionAge.date.localDate.getYear).toString())) </p>
     }
 }
 
