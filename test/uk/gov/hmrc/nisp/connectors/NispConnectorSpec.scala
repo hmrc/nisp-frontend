@@ -47,7 +47,7 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
     yearsToContributeUntilPensionAge = 30,
     hasPsod = false,
     dateOfBirth = NpsDate(1991,3,31),
-    SPForecastModel(SPAmountModel(155.55,622.35,76022.24), 4, SPAmountModel(155.55,622.35,76022.24), Scenario.Reached),
+    SPForecastModel(SPAmountModel(155.55,622.35,76022.24), 4, SPAmountModel(155.55,622.35,76022.24), Scenario.Reached, false),
     fullNewStatePensionAmount = 151.25,
     contractedOutFlag = false,
     customerAge = 24,
