@@ -31,7 +31,8 @@
         "month": 622.35,
         "year": 76022.24
         },
-      "scenario": "Reached"
+      "scenario": "Reached",
+      "oldRulesCustomer": false
     },
     "fullNewStatePensionAmount": 151.25,
     "contractedOutFlag": false,

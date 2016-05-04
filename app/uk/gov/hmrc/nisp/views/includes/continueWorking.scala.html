@@ -45,14 +45,20 @@
 
             case Scenario.ContinueWorkingMax => {
 
-                @if(spSummary.forecast.yearsLeftToWork==1) {
-                    @chart(Messages("nisp.main.chart.estimateIfYouContinue.single",1,
-                        (spSummary.finalRelevantYear+1).toString()), forecastChart.width,
-                        Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                @if(spSummary.forecast.oldRulesCustomer) {
+                    @chart(Messages("nisp.main.chart.estimateIfYouContinue2016",
+                    (spSummary.finalRelevantYear+1).toString()), forecastChart.width,
+                    Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
                 } else {
-                    @chart(Messages("nisp.main.chart.estimateIfYouContinue.plural", spSummary.forecast.yearsLeftToWork,
-                        (spSummary.finalRelevantYear+1).toString()), forecastChart.width,
-                        Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                    @if(spSummary.forecast.yearsLeftToWork==1) {
+                        @chart(Messages("nisp.main.chart.estimateIfYouContinue.single",1,
+                            (spSummary.finalRelevantYear+1).toString()), forecastChart.width,
+                            Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                    } else {
+                        @chart(Messages("nisp.main.chart.estimateIfYouContinue.plural", spSummary.forecast.yearsLeftToWork,
+                            (spSummary.finalRelevantYear+1).toString()), forecastChart.width,
+                            Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                    }
                 }
             }
 

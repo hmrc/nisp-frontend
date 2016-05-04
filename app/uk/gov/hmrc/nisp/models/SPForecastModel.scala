@@ -22,7 +22,8 @@ import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 case class SPForecastModel(forecastAmount: SPAmountModel,
                            yearsLeftToWork: Int,
                            personalMaximum: SPAmountModel,
-                           scenario: Scenario)
+                           scenario: Scenario,
+                           oldRulesCustomer: Boolean)
 
 object SPForecastModel {
   implicit val formats = Json.format[SPForecastModel]
