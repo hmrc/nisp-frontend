@@ -18,20 +18,16 @@ package uk.gov.hmrc.nisp.events
 
 import uk.gov.hmrc.play.http.HeaderCarrier
 
-class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int], likelyToSeek : Option[Int],
-                         recommend : Option[Int], satisfied: Option[Int], takePart: Option[Int], nextSteps: Option[String], name: String,
-                         nino: String, contractedOut: String)(implicit hc: HeaderCarrier)
+class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int], satisfied: Option[Int],
+                         improve: Option[String], name: String, nino: String, contractedOut: String)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("Questionnaire",
     Map(
-      "version" -> 3.toString,
+      "version" -> 4.toString,
       "easytouse" -> easyToUse.map(_.toString).getOrElse("N/A"),
       "useitbyyourself" -> useItByYourself.map(_.toString).getOrElse("N/A"),
       "likelytouse" -> likelyToUse.map(_.toString).getOrElse("N/A"),
-      "likelytoseek"-> likelyToSeek.map(_.toString).getOrElse("N/A"),
-      "recommend" -> recommend.map(_.toString).getOrElse("N/A"),
       "satisfied"-> satisfied.map(_.toString).getOrElse("N/A"),
-      "takepart" -> takePart.map(_.toString).getOrElse("N/A"),
-      "nextsteps" -> nextSteps.map(_.toString).getOrElse("N/A"),
+      "improve" -> improve.map(_.toString).getOrElse("N/A"),
       "Name" -> name,
       "nino" -> nino,
       "contractedout" -> contractedOut

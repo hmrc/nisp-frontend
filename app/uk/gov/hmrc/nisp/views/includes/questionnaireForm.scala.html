@@ -66,7 +66,8 @@
             ("0", Messages("nisp.questionnaire.satisfied.0")),
             ("1", Messages("nisp.questionnaire.satisfied.1")),
             ("2", Messages("nisp.questionnaire.satisfied.2")),
-            ("3", Messages("nisp.questionnaire.satisfied.3"))
+            ("3", Messages("nisp.questionnaire.satisfied.3")),
+            ("4", Messages("nisp.questionnaire.satisfied.4"))
         ),
         '_legend -> Messages("nisp.questionnaire.satisfied.question"),
         '_legendClass -> "heading-small",
@@ -75,8 +76,8 @@
     )
 
 
-    @helpers.textArea(form("nextsteps"),
-        '_label -> Messages("nisp.questionnaire.nextsteps.question"),
+    @helpers.textArea(form("improve"),
+        '_label -> Messages("nisp.questionnaire.improve.question"),
         '_labelClass -> "heading-small",
         '_help -> Messages("nisp.textentry.warning"),
         '_inputClass -> "full-width")

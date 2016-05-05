@@ -19,8 +19,8 @@ package uk.gov.hmrc.nisp.models.forms
 import play.api.data.Form
 import play.api.data.Forms._
 
-case class QuestionnaireForm(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int], likelyToSeek : Option[Int],
-                             recommend : Option[Int], satisfied: Option[Int], takePart: Option[Int], nextSteps: Option[String])
+case class QuestionnaireForm(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int],
+                             satisfied: Option[Int], improve: Option[String])
 
 object QuestionnaireForm {
   val form = Form[QuestionnaireForm](
@@ -29,11 +29,8 @@ object QuestionnaireForm {
       "easytouse" -> optional(number(0, 3)),
       "useitbyyourself" -> optional(number(0, 2)),
       "likelytouse" -> optional(number(0, 3)),
-      "likelytoseek" -> optional(number(0, 3)),
-      "recommend" -> optional(number(0, 1)),
       "satisfied" -> optional(number(0, 3)),
-      "takepart" -> optional(number(0, 1)),
-      "nextsteps" -> optional(text(maxLength = 1200))
+      "improve" -> optional(text(maxLength = 1200))
     )(QuestionnaireForm.apply)(QuestionnaireForm.unapply)
   )
 }
