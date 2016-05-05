@@ -29,7 +29,7 @@ object QuestionnaireForm {
       "easytouse" -> optional(number(0, 3)),
       "useitbyyourself" -> optional(number(0, 2)),
       "likelytouse" -> optional(number(0, 3)),
-      "satisfied" -> optional(number(0, 3)),
+      "satisfied" -> optional(number(0, 4)),
       "improve" -> optional(text(maxLength = 1200))
     )(QuestionnaireForm.apply)(QuestionnaireForm.unapply)
   )

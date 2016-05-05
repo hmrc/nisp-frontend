@@ -189,7 +189,7 @@ nisp.questionnaire.useitbyyourself.0 = Use it by yourself
 nisp.questionnaire.useitbyyourself.1 = Use it with someone
 nisp.questionnaire.useitbyyourself.2 = Have someone use it for you
 
-nisp.questionnaire.likelytouse.question = How likely would you be to use this service next time?
+nisp.questionnaire.likelytouse.question = How likely would you be to use this service again?
 nisp.questionnaire.likely.0 = Very likely
 nisp.questionnaire.likely.1 = Likely
 nisp.questionnaire.likely.2 = Unlikely
