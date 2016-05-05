@@ -23,17 +23,6 @@
     <input type="hidden" name="referer" id="referer" value="@form.data.get("referer")">
 
     @helpers.inputRadioGroup(
-        form("takepart"), Seq(
-            ("0", Messages("nisp.yes")),
-            ("1", Messages("nisp.no"))
-            ),
-            '_legend -> Messages("nisp.questionnaire.takepart.question"),
-            '_legendClass -> "heading-small",
-            '_labelAfter -> true,
-            '_labelClass -> "block-label"
-    )
-
-    @helpers.inputRadioGroup(
         form("easytouse"), Seq(
             ("0", Messages("nisp.questionnaire.easytouse.0")),
             ("1", Messages("nisp.questionnaire.easytouse.1")),
@@ -80,31 +69,6 @@
             ("3", Messages("nisp.questionnaire.satisfied.3"))
         ),
         '_legend -> Messages("nisp.questionnaire.satisfied.question"),
-        '_legendClass -> "heading-small",
-        '_labelAfter -> true,
-        '_labelClass -> "block-label"
-    )
-
-
-    @helpers.inputRadioGroup(
-        form("likelytoseek"), Seq(
-            ("0", Messages("nisp.questionnaire.likely.0")),
-            ("1", Messages("nisp.questionnaire.likely.1")),
-            ("2", Messages("nisp.questionnaire.likely.2")),
-            ("3", Messages("nisp.questionnaire.likely.3"))
-        ),
-        '_legend -> Messages("nisp.questionnaire.likelytoseek.question"),
-        '_legendClass -> "heading-small",
-        '_labelAfter -> true,
-        '_labelClass -> "block-label"
-    )
-
-    @helpers.inputRadioGroup(
-        form("recommend"), Seq(
-            ("0", Messages("nisp.yes")),
-            ("1", Messages("nisp.no"))
-        ),
-        '_legend -> Messages("nisp.questionnaire.recommend.question"),
         '_legendClass -> "heading-small",
         '_labelAfter -> true,
         '_labelClass -> "block-label"
