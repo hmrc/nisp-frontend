@@ -48,7 +48,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
   def showGaps: Action[AnyContent] = show(niGaps = true)
   def pta: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
     setFromPertax
-    Redirect(routes.NIRecordController.showGaps())
+    Redirect(routes.NIRecordController.showFull())
   }
 
   private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByAny.async {
