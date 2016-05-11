@@ -296,33 +296,40 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
     }
 
     "calculate chart widths" should {
-      def calculateCharts(currentAmount: BigDecimal, forecastAmount: BigDecimal) =
-        MockAccountController.calculateChartWidths(SPAmountModel(currentAmount, 0, 0), SPAmountModel(forecastAmount, 0, 0))
+      def calculateCharts(currentAmount: BigDecimal, forecastAmount: BigDecimal, personalMax: BigDecimal) =
+        MockAccountController.calculateChartWidths(SPAmountModel(currentAmount, 0, 0), SPAmountModel(forecastAmount, 0, 0), SPAmountModel(personalMax, 0, 0))
 
       "current chart is 100 when current amount is higher" in {
-        val (currentChart, forecastChart) = calculateCharts(70, 30)
+        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 30, 0)
         currentChart.width shouldBe 100
       }
 
       "forecast chart is 100 when forecast amount is higher" in {
-        val (currentChart, forecastChart) = calculateCharts(70, 80)
+        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 80, 80)
         forecastChart.width shouldBe 100
+        personalMaxChart.width shouldBe 100
       }
 
       "current chart and forecast chart are 100 when amounts are equal" in {
-        val (currentChart, forecastChart) = calculateCharts(70, 70)
+        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 70, 70)
         currentChart.width shouldBe 100
         forecastChart.width shouldBe 100
+        personalMaxChart.width shouldBe 100
       }
 
       "current chart is 66 when current amount is 2 and forecast is 3" in {
-        val (currentChart, forecastChart) = calculateCharts(2, 3)
-        currentChart.width shouldBe 66
+        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(2, 3, 4)
+        currentChart.width shouldBe 50
+        forecastChart.width shouldBe 75
+        personalMaxChart.width shouldBe 100
       }
 
       "forecast chart is 30 when forecast amount is 4 and current is 13" in {
-        val (currentChart, forecastChart) = calculateCharts(13, 4)
-        forecastChart.width shouldBe 30
+        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(13, 4, 20)
+        forecastChart.width shouldBe 31
+        currentChart.width shouldBe 65
+        personalMaxChart.width shouldBe 100
+
       }
     }
 

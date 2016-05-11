@@ -30,6 +30,7 @@
     spSummary: SPSummaryModel,
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
+    personalMaximumChart: SPChartModel,
     authenticationProvider: String,
     isPertaxUrl:Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
@@ -99,7 +100,7 @@
             }
 
             case Scenario.FillGaps => {
-                @includes.fillGaps(spSummary, currentChart, forecastChart)
+                @includes.fillGapsMQP(spSummary, currentChart, forecastChart)
             }
         }
 
@@ -122,14 +123,13 @@
             </ul>
             <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
 
-            @includes.chart(Messages("nisp.main.chart.lastprocessed.title",
-                            spSummary.lastProcessedDate.localDate.getYear().toString()), currentChart.width,
-                            Html(s"${NispMoney.pounds(currentChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+            @includes.spChart(Messages("nisp.main.chart.lastprocessed.title",
+                            spSummary.lastProcessedDate.localDate.getYear().toString()), currentChart)
 
-            @includes.chart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()),
-                            forecastChart.width, Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+            @includes.spChart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()),
+                            forecastChart)
 
-            @includes.fillGaps(spSummary, currentChart, forecastChart)
+            @includes.fillGaps(spSummary, personalMaximumChart)
         }
 
      }
