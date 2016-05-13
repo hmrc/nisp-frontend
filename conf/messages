@@ -127,6 +127,7 @@ nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach {0}, you st
 nisp.main.context.fillGaps.improve.title = You can improve your estimate
 nisp.main.context.fillGaps = Fill gaps in your National Insurance record
 nisp.main.context.fillGaps.viewGaps = View gaps in your record
+nisp.main.context.fillGaps.viewGapsAndCost = Gaps in your record and the cost of filling them
 
 nisp.main.context.fillgaps.para1.plural = You have gaps in your National Insurance record for years where you did not contribute enough.
 nisp.main.context.fillgaps.para1.singular = You have 1 gap in your National Insurance record where you did not contribute enough. You only need to fill this gap to get the most you can.
