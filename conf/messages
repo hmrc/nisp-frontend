@@ -128,8 +128,9 @@ nisp.excluded.overseas.line2 = If you''ve only worked or lived abroad, you must 
 nisp.excluded.overseas.line3 = Austria, Belgium, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Gibraltar, Greece, Hungary, Iceland, Ireland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Netherlands, Norway, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden or Switzerland.
 nisp.excluded.overseas.line4 = <a href="https://www.gov.uk/state-pension-if-you-retire-abroad/how-to-claim" rel="external" target="_blank" data-journey-click="checkmystatepension:external:howtoclaimabroad">Contact the IPC (opens in new tab)</a> if you''ve worked or lived in a country not listed above.
 
-nisp.excluded.spa = You are now able to <a href="https://www.gov.uk/claim-state-pension-online" rel="external" data-journey-click="checkmystatepension:external:claimstatepension">claim your State Pension.</a>
+nisp.excluded.spa = You are now able to <a href="https://www.gov.uk/claim-state-pension-online" rel="external" data-journey-click="checkmystatepension:external:claimstatepension">claim your State Pension</a>.
 nisp.excluded.spa.defer = You can <a href="https://www.gov.uk/deferring-state-pension" rel="external" data-journey-click="checkmystatepension:external:deferstatepension">put off claiming your State Pension</a> and this may mean you get extra State Pension when you do want to claim it.
+nisp.excluded.spa.nirecord = You can <a href="https://www.gov.uk/check-national-insurance-record" rel="external" data-journey-click="checkmystatepension:external:checkyournationalinsurancerecord">check your National Insurance record</a>.
 nisp.excluded.spaBefore5April2016 = You will have reached State Pension age before the new scheme starts. You must refer to the <a href="https://www.gov.uk/state-pension/overview" rel="external" data-journey-click="checkmystatepension:external:statepensionoverview" target="_blank">information about the old scheme (opens in new tab)</a>.
 
 #**************************
