@@ -50,6 +50,8 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdMQP = "/auth/oid/mockmqp"
   val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
   val mockUserIdWeak =  "/auth/oid/mockweak"
+  val mockUserIdAbroad = "/auth/oid/mockabroad"
+  val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
 
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Fnot-authorised"
@@ -79,7 +81,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
       "return the forecast only page for a user with a forecast lower than current amount" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
-        contentAsString(result) should include ("is the most you can get")
+        contentAsString(result) should not include ("£80.38")
       }
 
       "redirect to the GG Login" in {
@@ -199,6 +201,24 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
         val result = MockAccountController.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
         contentAsString(result) should include ("You were contracted out ")
       }
+
+      "return abroad message for abroad user" in {
+        val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdAbroad))
+        contentAsString(result) should include ("As you are living or working overseas")
+      }
+
+      "return abroad message for forecast only user" in {
+        val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        contentAsString(result) should include ("As you are living or working overseas")
+        contentAsString(result) should not include ("£80.38")
+      }
+
+      "return abroad message for an mqp user instead of standard mqp overseas message" in {
+        val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
+        contentAsString(result) should include ("As you are living or working overseas")
+        contentAsString(result) should not include ("If you have lived or worked overseas")
+      }
+
       "redirect to account page for non contracted out user" in {
         val result = MockAccountController.showCope()(authenticatedFakeRequest(mockUserIdMQP))
         redirectLocation(result) shouldBe Some("/checkmystatepension/account")

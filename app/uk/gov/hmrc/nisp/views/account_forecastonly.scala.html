@@ -62,6 +62,10 @@
     <p>@Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString())</p>
     <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
 
+    @if(spSummary.isAbroad) {
+        @includes.abroad()
+    }
+
     @if(spSummary.contractedOutFlag) {
         @includes.contractedOut()
     }

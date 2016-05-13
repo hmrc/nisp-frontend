@@ -43,6 +43,7 @@
       "week": 0,
       "month": 0,
       "year": 0
-    }
+    },
+    "isAbroad": false
   }
 }

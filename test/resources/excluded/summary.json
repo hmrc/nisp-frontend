@@ -42,7 +42,8 @@
       "week": 50,
       "month": 217.41,
       "year": 2608.93
-    }
+    },
+    "isAbroad": false
   },
   "spExclusions":{"exclusions":["ContractedOut","CustomerTooOld"]},
   "niExclusions":{"exclusions":[]}

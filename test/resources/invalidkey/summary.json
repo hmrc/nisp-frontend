@@ -23,6 +23,7 @@
       "month": 2,
       "year": 3
     },
-    "fullNewStatePensionAmount": 151.25
+    "fullNewStatePensionAmount": 151.25,
+    "isAbroad": false
   }
 }

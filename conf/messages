@@ -106,6 +106,8 @@ nisp.main.chart.estimateIfYouContinue.single = Estimate if you contribute anothe
 nisp.main.chart.estimateIfYouContinue.plural = Estimate if you contribute another {0} years before {1}
 nisp.main.chart.estimateIfYouContinue2016 = Estimate if you contribute enough in year up to 5 April 2016
 
+nisp.main.overseas = As you are living or working overseas, you may be entitled to a State Pension from the country you are living or working in. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>
+
 #**************************
 # Scenario Messages
 #**************************
