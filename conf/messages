@@ -136,7 +136,7 @@ nisp.main.context.fillgaps.bullet2.onlyone = you only need to fill this gap to g
 nisp.main.context.fillgaps.bullet2.singular = you only need to fill 1 gap to get the most you can
 nisp.main.context.fillgaps.bullet2.plural = you only need to fill {0} gaps to get the most you can
 nisp.main.context.fillgaps.chart.onlyone = The most you can get by filling this gap in your record is
-nisp.main.context.fillgaps.chart.singular = The most you can get by filling 1 gap in your record is
+nisp.main.context.fillgaps.chart.singular = The most you can get by filling any gap in your record is
 nisp.main.context.fillgaps.chart.plural = The most you can get by filling any {0} gaps in your record is
 
 
