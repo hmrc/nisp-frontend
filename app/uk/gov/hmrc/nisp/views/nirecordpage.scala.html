@@ -170,7 +170,7 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 @if(niGaps) {
 <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
 }
-<p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}#how-to-increase-it">@Messages("nisp.back")</a></p>
+<p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
 
 }
 }
