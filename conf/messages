@@ -143,7 +143,6 @@ nisp.excluded.amountdissonance = Sorry, your National Insurance record is a bit 
 
 nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a> to get a paper statement of how much you''ve earned so far.
 
-nisp.excluded.contactFuturePensionCentre.IOM = You should contact <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">Future Pension Centre (opens in new tab)</a> to get information about your State Pension.
 nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
 
 nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
