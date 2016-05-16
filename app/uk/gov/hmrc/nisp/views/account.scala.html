@@ -126,8 +126,11 @@
             @includes.spChart(Messages("nisp.main.chart.lastprocessed.title",
                             spSummary.lastProcessedDate.localDate.getYear().toString()), currentChart)
 
-            @includes.spChart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()),
-                            forecastChart)
+            @if(spSummary.forecast.oldRulesCustomer) {
+                @includes.spChart(Messages("nisp.main.chart.estimateIfYouContinue2016"), forecastChart)
+            } else {
+                @includes.spChart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()), forecastChart)
+            }
 
             @includes.fillGaps(spSummary, personalMaximumChart)
         }
