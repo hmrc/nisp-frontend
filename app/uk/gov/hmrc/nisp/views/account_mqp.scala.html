@@ -74,7 +74,7 @@
         <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
 
         <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
-        <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.showyourrecord")</a>
+        <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
         <div class="panel-indent">
             <p>@Html(Messages("nisp.mqp.overseas"))</p>
         </div>
