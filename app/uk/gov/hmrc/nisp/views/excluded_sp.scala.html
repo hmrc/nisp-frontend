@@ -60,18 +60,17 @@ canSeeNIRecord: Boolean
             }
         </div>
         @if(canSeeNIRecord) {
-
             @if(spExclusions.contains(Abroad)) {
 
                 <p> @Messages("nisp.excluded.niRecordIntroUK") </p>
-                <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecordUK")</a>
+                <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecordUK")</a>
 
             } else {
 
                 <p> @Messages("nisp.excluded.niRecordIntro") </p>
-                <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.showyourrecord")</a>
+                <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
 
             }
-        } 
+        }
     }
 }
