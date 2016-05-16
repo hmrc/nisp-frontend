@@ -40,6 +40,8 @@ object TestAccountBuilder {
   val cachedNino: String = randomNino
   val noNameNino: String = randomNino
   val weakNino: String = randomNino
+  val abroadNino: String = randomNino
+  val mqpAbroadNino: String = randomNino
 
   val mappedTestAccounts = Map(
     excludedNino -> "excluded",
@@ -50,7 +52,9 @@ object TestAccountBuilder {
     fullUserNino ->  "fulluser",
     blankNino ->  "blank",
     invalidKeyNino -> "invalidkey",
-    noNameNino -> "noname"
+    noNameNino -> "noname",
+    abroadNino -> "abroad",
+    mqpAbroadNino -> "mqp_abroad"
   )
 
   def jsonResponse(nino: String, api: String): HttpResponse = {
