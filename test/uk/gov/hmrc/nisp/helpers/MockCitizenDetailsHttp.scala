@@ -37,7 +37,9 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.mqpNino,
     TestAccountBuilder.forecastOnlyNino,
-    TestAccountBuilder.noNameNino
+    TestAccountBuilder.noNameNino,
+    TestAccountBuilder.abroadNino,
+    TestAccountBuilder.mqpAbroadNino
   )
 
   def createMockedURL(nino: String, response: Future[HttpResponse]): Unit =

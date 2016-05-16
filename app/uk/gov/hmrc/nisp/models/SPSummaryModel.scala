@@ -37,7 +37,8 @@ case class SPSummaryModel( nino: String,
                            fullNewStatePensionAmount: BigDecimal,
                            contractedOutFlag: Boolean,
                            customerAge: Int,
-                           copeAmount: SPAmountModel) {
+                           copeAmount: SPAmountModel,
+                           isAbroad: Boolean) {
   val isMQP = numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP
 }
 
