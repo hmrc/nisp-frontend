@@ -88,9 +88,12 @@
         } else {
             <p>@Messages("nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP)
         }
-        <div class="panel-indent">
-            <p>@Html(Messages("nisp.mqp.overseas"))</p>
-        </div>
+
+        @if(!spSummary.isAbroad) {
+            <div class="panel-indent">
+                <p>@Html(Messages("nisp.mqp.overseas"))</p>
+            </div>
+        }
 
         @spSummary.forecast.scenario match {
 
@@ -133,6 +136,10 @@
         }
 
      }
+
+    @if(spSummary.isAbroad) {
+        @includes.abroad()
+    }
 
     @if(spSummary.contractedOutFlag) {
         @includes.contractedOut()

@@ -76,7 +76,13 @@
         <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
         <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
         <div class="panel-indent">
-            <p>@Html(Messages("nisp.mqp.overseas"))</p>
+            <p>
+                @if(spSummary.isAbroad) {
+                    @Html(Messages("nisp.main.overseas"))
+                } else {
+                    @Html(Messages("nisp.mqp.overseas"))
+                }
+            </p>
         </div>
 
     } else {
@@ -101,7 +107,14 @@
             <p>@Messages("nisp.mqp.years.dontcount", Time.years(spSummary.numberOfGapsPayable)).</p>
         }
         <h2 class="heading-medium">What you can do next</h2>
-        <p>@Html(Messages("nisp.mqp.overseas"))</p>
+        <p>
+            @if(spSummary.isAbroad) {
+                @Html(Messages("nisp.main.overseas"))
+            } else {
+                @Html(Messages("nisp.mqp.overseas"))
+            }
+        </p>
+
         <p>@Html(Messages("nisp.mqp.never.para1"))</p>
         <p>@Html(Messages("nisp.mqp.never.para2"))</p>
 

@@ -45,17 +45,32 @@ canSeeNIRecord: Boolean
             <h2 class="heading-medium"> @Messages("nisp.excluded.willReach", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age) </h2>
         }
         <div class="panel-indent">
-            @if(spExclusions.contains(AmountDissonance)) {
-                @exclusions.sp.amountDissonance()
-            } else {
-                @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
+            @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
                     @exclusions.sp.postStatePensionAge()
-                }
+            } else { 
+
+                @if(spExclusions.contains(AmountDissonance)) {
+                    @exclusions.sp.amountDissonance()
+                } else {
+
+                    @if(spExclusions.contains(Abroad)) {
+                        @exclusions.sp.overseas()
+                    }
+                }   
             }
         </div>
         @if(canSeeNIRecord) {
-            <p> @Messages("nisp.excluded.niRecordIntro") </p>
-            <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+            @if(spExclusions.contains(Abroad)) {
+
+                <p> @Messages("nisp.excluded.niRecordIntroUK") </p>
+                <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecordUK")</a>
+
+            } else {
+
+                <p> @Messages("nisp.excluded.niRecordIntro") </p>
+                <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+
+            }
         }
     }
 }
