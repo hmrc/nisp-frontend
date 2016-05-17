@@ -22,6 +22,7 @@ import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 case class SPForecastModel(forecastAmount: SPAmountModel,
                            yearsLeftToWork: Int,
                            personalMaximum: SPAmountModel,
+                           minGapsToFillToReachMaximum: Int,
                            scenario: Scenario,
                            oldRulesCustomer: Boolean)
 
