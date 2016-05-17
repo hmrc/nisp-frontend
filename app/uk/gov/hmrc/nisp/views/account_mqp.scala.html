@@ -106,7 +106,7 @@
         @if(spSummary.numberOfGapsPayable > 0) {
             <p>@Messages("nisp.mqp.years.dontcount", Time.years(spSummary.numberOfGapsPayable)).</p>
         }
-        <h2 class="heading-medium">What you can do next</h2>
+        <h2 class="heading-medium">@Messages("nisp.mqp.doNext")</h2>
         <p>
             @if(spSummary.isAbroad) {
                 @Html(Messages("nisp.main.overseas"))

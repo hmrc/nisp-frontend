@@ -364,6 +364,7 @@ nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
 nisp.mqp.howManyToContribute = assumes that you''ll contribute another {0}
 nisp.mqp.reachStatePensionAge = You''ll reach State Pension age on {0} when you''ll be {1}
+nisp.mqp.doNext = What you can do next
 
 #**************************
 #  Cope Page Messages
