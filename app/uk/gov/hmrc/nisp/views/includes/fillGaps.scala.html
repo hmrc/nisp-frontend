@@ -20,12 +20,26 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.utils.Constants
 
-@(spSummary: SPSummaryModel, currentChart: SPChartModel, forecastChart: SPChartModel)
+@(spSummary: SPSummaryModel, personalMaximumChart: SPChartModel)
 
     <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
-    <h3>@Messages("nisp.main.context.fillGaps")</h3>
-    <p>@Messages("nisp.main.context.improve.para1.plural")</p>
-    <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGaps")</a>
-    <h3>@Messages("nisp.main.puttingOff")</h3>
-    <p>@Messages("nisp.main.puttingOff.line1", spSummary.statePensionAge.age)</p>
-    <a href="https://www.gov.uk/deferring-state-pension" target="_blank" rel="external">@Messages("nisp.main.puttingOff.linkTitle")</a>
+    @if(spSummary.numberOfGaps == 1) {
+        <p>@Messages("nisp.main.context.fillgaps.para1.singular")</p>
+        @spChart(Messages("nisp.main.context.fillgaps.chart.onlyone"), personalMaximumChart)
+    } else {
+        <p>@Messages("nisp.main.context.fillgaps.para1.plural")</p>
+        <ul class="list-bullet">
+            <li>@Messages("nisp.main.context.fillgaps.bullet1")</li>
+
+            @if(spSummary.forecast.minGapsToFillToReachMaximum == 1) {
+                    <li>@Messages("nisp.main.context.fillgaps.bullet2.singular")</li>
+                </ul>
+                @spChart(Messages("nisp.main.context.fillgaps.chart.singular"), personalMaximumChart)
+            } else {
+                    <li>@Messages("nisp.main.context.fillgaps.bullet2.plural", spSummary.forecast.minGapsToFillToReachMaximum)</li>
+                </ul>
+                @spChart(Messages("nisp.main.context.fillgaps.chart.plural", spSummary.forecast.minGapsToFillToReachMaximum), personalMaximumChart)
+            }
+    }
+
+    <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGapsAndCost")</a>

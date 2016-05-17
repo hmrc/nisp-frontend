@@ -88,8 +88,13 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
           } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
             Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else {
-            val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecast.forecastAmount)
-            Ok(account(nino, spSummary, currentChart, forecastChart, authenticationProvider, isPertax))
+            val (currentChart, forecastChart, personalMaximumChart) =
+              calculateChartWidths(
+                spSummary.statePensionAmount,
+                spSummary.forecast.forecastAmount,
+                spSummary.forecast.personalMaximum
+              )
+            Ok(account(nino, spSummary, currentChart, forecastChart, personalMaximumChart, authenticationProvider, isPertax))
               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }
 
@@ -109,20 +114,28 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
     setFromPertax
     Redirect(routes.AccountController.show())
   }
-
-  def calculateChartWidths(currentAmountModel: SPAmountModel, forecastAmountModel: SPAmountModel): (SPChartModel, SPChartModel) = {
+  
+  def calculateChartWidths(current: SPAmountModel, forecast: SPAmountModel, personalMaximum: SPAmountModel): (SPChartModel, SPChartModel, SPChartModel) = {
     // scalastyle:off magic.number
-    if (forecastAmountModel.week > currentAmountModel.week) {
-      val currentPercentage = (currentAmountModel.week/forecastAmountModel.week * 100).toInt
-      val currentChart = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), currentAmountModel)
-      val forecastChart = SPChartModel(100, forecastAmountModel)
-      (currentChart, forecastChart)
+    if (personalMaximum.week > forecast.week) {
+      val currentChart = SPChartModel((current.week/personalMaximum.week * 100).toInt.max(Constants.chartWidthMinimum), current)
+      val forecastChart = SPChartModel((forecast.week/personalMaximum.week * 100).toInt.max(Constants.chartWidthMinimum), forecast)
+      val personalMaxChart = SPChartModel(100, personalMaximum)
+      (currentChart, forecastChart, personalMaxChart)
     } else {
-      val currentChart = SPChartModel(100, currentAmountModel)
-      val forecastChart = SPChartModel((forecastAmountModel.week/currentAmountModel.week * 100).toInt, forecastAmountModel)
-      (currentChart, forecastChart)
+      if (forecast.week > current.week) {
+        val currentPercentage = (current.week / forecast.week * 100).toInt
+        val currentChart = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), current)
+        val forecastChart = SPChartModel(100, forecast)
+        (currentChart, forecastChart, forecastChart)
+      } else {
+        val currentChart = SPChartModel(100, current)
+        val forecastChart = SPChartModel((forecast.week / current.week * 100).toInt, forecast)
+        (currentChart, forecastChart, forecastChart)
+      }
     }
   }
+
   private def storeUserInfoInSession(user: NispUser, contractedOut: Boolean)(implicit request: Request[AnyContent]): Session = {
     request.session +
       (NAME -> user.name.getOrElse("N/A")) +
