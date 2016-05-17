@@ -147,7 +147,7 @@ nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National 
 
 nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
 
-nisp.excluded.isleOfMan.sp.line1 = The Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms from 6 April 2016.
+nisp.excluded.isleOfMan.sp.line1 = We''re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.
 nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
 nisp.excluded.isleOfMan.ni = The digital service is currently unable to show your National Insurance record as you have contributions from the Isle of Man.
 
