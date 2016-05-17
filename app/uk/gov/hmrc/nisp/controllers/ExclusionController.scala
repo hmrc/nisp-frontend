@@ -44,6 +44,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
         if (spExclusions.exclusions.contains(Exclusion.AmountDissonance) ||
             spExclusions.exclusions.contains(Exclusion.PostStatePensionAge) ||
+            spExclusions.exclusions.contains(Exclusion.Abroad) ||
             spExclusions.exclusions.contains(Exclusion.CustomerTooOld)) {
           Ok(excluded_sp(
             spExclusions.exclusions,

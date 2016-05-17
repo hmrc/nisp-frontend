@@ -38,7 +38,7 @@ trait Breadcrumb {
   private def buildBreadCrumb(request: Request[_]): List[(String, String)] = {
     val links = Map(
       "account" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.pension"), "UTF-8"), routes.AccountController.show().url)),
-      "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showGaps().url)),
+      "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showFull().url)),
       "voluntarycontribs" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.voluntaryContrib"), "UTF-8"), routes.NIRecordController.showVoluntaryContributions().url)),
       "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.gapsandhowtocheck"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url)),
       "exclusion" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.excluded"), "UTF-8"), routes.ExclusionController.showSP().url)),
