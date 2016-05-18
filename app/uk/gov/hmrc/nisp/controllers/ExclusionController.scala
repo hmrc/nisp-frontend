@@ -45,7 +45,8 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
         if (spExclusions.exclusions.contains(Exclusion.AmountDissonance) ||
             spExclusions.exclusions.contains(Exclusion.PostStatePensionAge) ||
             spExclusions.exclusions.contains(Exclusion.Abroad) ||
-            spExclusions.exclusions.contains(Exclusion.CustomerTooOld)) {
+            spExclusions.exclusions.contains(Exclusion.CustomerTooOld) ||
+            spExclusions.exclusions.contains(Exclusion.IOM)) {
           Ok(excluded_sp(
             spExclusions.exclusions,
             spSummary.statePensionAge,
