@@ -22,7 +22,6 @@ import play.api.libs.json.{Format, JsPath}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.wiring.{NispSessionCache, WSHttp}
 import uk.gov.hmrc.nisp.models.enums.APIType
-import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.enums.APIType.APIType
 import uk.gov.hmrc.nisp.models.{NIResponse, SPResponseModel}
 import uk.gov.hmrc.nisp.services.MetricsService
