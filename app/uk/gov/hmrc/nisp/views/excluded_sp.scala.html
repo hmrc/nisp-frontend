@@ -55,8 +55,12 @@ canSeeNIRecord: Boolean
                     @if(spExclusions.contains(IOM)) {
                         @exclusions.sp.isleOfMan()
                     } else {
-                        @if(spExclusions.contains(Abroad)) {
-                            @exclusions.sp.overseas()
+                        @if(spExclusions.contains(MWRRE)) {
+                            @exclusions.sp.mwrre()
+                        } else {
+                            @if(spExclusions.contains(Abroad)) {
+                                @exclusions.sp.overseas()
+                            }
                         }
                     }                   
                 }
