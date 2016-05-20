@@ -62,6 +62,11 @@ h2.summary {
   margin-top: 0.5em;
 }
 
+.mainpage {
+  @media only screen and (min-width: 640px) {
+    width: 66.666%;
+  }
+}
 
 /*------------------------------------*\
     #HEADER - Global Breadcrumb
