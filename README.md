@@ -18,7 +18,7 @@ This service provides the following useful information to the customer:
 Requirements
 ------------
 
-This service is written in [Scala](http://www.scala-lang.org/) and [Play](http://playframework.com/), so needs at least a [JRE] to run.
+This service is written in [Scala](http://www.scala-lang.org/) and [Play](http://playframework.com/), and needs at least a [JRE] version 8 to run.
 
 
 Authentication
