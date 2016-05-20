@@ -18,11 +18,14 @@
 @import uk.gov.hmrc.nisp.views.formatting.Time
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.SPSummaryModel
+@import uk.gov.hmrc.nisp.models.enums.MQPScenario._
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import play.api.Logger
+@import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, spSummary: SPSummaryModel, canGetPension: Boolean, numberOfYearsMissing: Int,
+@(nino: String, spSummary: SPSummaryModel, mqp: Option[MQPScenario], numberOfYearsMissing: Int,
   authenticationProvider: String, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser,
   partialRetriever: CachedStaticHtmlPartialRetriever)
 
@@ -56,26 +59,59 @@
         </p>
     </div>
 
-    @if(canGetPension) {
-        <h2 class="heading-medium">@Messages("nisp.mqp.possible")</h2>
-        <p>
-            @if(spSummary.yearsToContributeUntilPensionAge > 0) {
-                @Messages("nisp.mqp.youNeedToAdd",
-                Time.years(numberOfYearsMissing),
-                Time.years(spSummary.yearsToContributeUntilPensionAge),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate))
-            } else { 
-                @Messages("nisp.mqp.youNeedToAddZeroLeft",
-                Time.years(numberOfYearsMissing),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate))
+    @spSummary.mqp match {
+        case Some(CanGetWithGaps) => {
+            <h2 class="heading-medium">@Messages("nisp.mqp.possible")</h2>
+            <p>
+                @if(spSummary.yearsToContributeUntilPensionAge > 0) {
+                    @Messages("nisp.mqp.youNeedToAdd",
+                    Time.years(numberOfYearsMissing),
+                    Time.years(spSummary.yearsToContributeUntilPensionAge),
+                    Dates.formatDate(spSummary.statePensionAge.date.localDate))
+                } else {
+                    @Messages("nisp.mqp.youNeedToAddZeroLeft",
+                    Time.years(numberOfYearsMissing),
+                    Dates.formatDate(spSummary.statePensionAge.date.localDate))
+                }
+            </p>
+
+            <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
+
+            <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
+            <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
+            <div class="panel-indent">
+                <p>
+                    @if(spSummary.isAbroad) {
+                        @Html(Messages("nisp.main.overseas"))
+                    } else {
+                        @Html(Messages("nisp.mqp.overseas"))
+                    }
+                </p>
+            </div>
+        }
+
+        case Some(CantGet) => {
+
+            <h2 class="heading-medium">@Messages("nisp.mqp.notpossible")</h2>
+            <p>
+                @if(spSummary.yearsToContributeUntilPensionAge > 0) {
+                    @Messages("nisp.mqp.youNeedToAdd",
+                    Time.years(numberOfYearsMissing),
+                    Time.years(spSummary.yearsToContributeUntilPensionAge),
+                    Dates.formatDate(spSummary.statePensionAge.date.localDate))
+                } else {
+                    @Messages("nisp.mqp.youNeedToAddZeroLeft",
+                    Time.years(numberOfYearsMissing),
+                    Dates.formatDate(spSummary.statePensionAge.date.localDate))
+                }
+
+                @Messages("nisp.mqp.afterthis")
+            </p>
+
+            @if(spSummary.numberOfGapsPayable > 0) {
+                <p>@Messages("nisp.mqp.years.dontcount", Time.years(spSummary.numberOfGapsPayable)).</p>
             }
-        </p>
-
-        <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
-
-        <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
-        <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
-        <div class="panel-indent">
+            <h2 class="heading-medium">What you can do next</h2>
             <p>
                 @if(spSummary.isAbroad) {
                     @Html(Messages("nisp.main.overseas"))
@@ -83,45 +119,16 @@
                     @Html(Messages("nisp.mqp.overseas"))
                 }
             </p>
-        </div>
 
-    } else {
+            <p>@Html(Messages("nisp.mqp.never.para1"))</p>
+            <p>@Html(Messages("nisp.mqp.never.para2"))</p>
 
-        <h2 class="heading-medium">@Messages("nisp.mqp.notpossible")</h2>
-        <p>
-            @if(spSummary.yearsToContributeUntilPensionAge > 0) {
-                @Messages("nisp.mqp.youNeedToAdd",
-                Time.years(numberOfYearsMissing),
-                Time.years(spSummary.yearsToContributeUntilPensionAge),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate)) 
-            } else { 
-                @Messages("nisp.mqp.youNeedToAddZeroLeft",
-                Time.years(numberOfYearsMissing),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate))
-            } 
-
-            @Messages("nisp.mqp.afterthis") 
-        </p>
-        
-        @if(spSummary.numberOfGapsPayable > 0) {
-            <p>@Messages("nisp.mqp.years.dontcount", Time.years(spSummary.numberOfGapsPayable)).</p>
+            <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
         }
 
-        <h2 class="heading-medium">@Messages("nisp.mqp.doNext")</h2>
-        <p>
-            @if(spSummary.isAbroad) {
-                @Html(Messages("nisp.main.overseas"))
-            } else {
-                @Html(Messages("nisp.mqp.overseas"))
-            }
-        </p>
-
-        <p>@Html(Messages("nisp.mqp.never.para1"))</p>
-        <p>@Html(Messages("nisp.mqp.never.para2"))</p>
-
-
-        <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
-
+        case _ => {
+            @Logger.error(s"Unexpected error MQPScenario - ${spSummary.mqp}")
+        }
     }
 
     @if(spSummary.contractedOutFlag) {
