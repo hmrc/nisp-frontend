@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.Scenario
+import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
@@ -81,11 +81,9 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
             spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario,
             spSummary.copeAmount.week, authenticationProvider))
 
-          if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
-            val canGetPension = spSummary.numberOfQualifyingYears +
-              spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
+          if (spSummary.mqp.fold(false) (_ != MQPScenario.ContinueWorking)) {
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-            Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax))
+            Ok(account_mqp(nino, spSummary, spSummary.mqp, yearsMissing, authenticationProvider, isPertax))
               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
             Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))

@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nisp.models
 
+import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
 import uk.gov.hmrc.nisp.models.enums.SPContextMessage
 import SPContextMessage.SPContextMessage
 import play.api.libs.json.Json
-import uk.gov.hmrc.nisp.utils.Constants
 
 case class SPSummaryModel( nino: String,
                            lastProcessedDate: NpsDate,
@@ -38,8 +38,9 @@ case class SPSummaryModel( nino: String,
                            contractedOutFlag: Boolean,
                            customerAge: Int,
                            copeAmount: SPAmountModel,
+                           mqp: Option[MQPScenario],
                            isAbroad: Boolean) {
-  val isMQP = numberOfQualifyingYears < Constants.minimumQualifyingYearsNSP
+  val isMQP = mqp.isDefined
 }
 
 object SPSummaryModel {

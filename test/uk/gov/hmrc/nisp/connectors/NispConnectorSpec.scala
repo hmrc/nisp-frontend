@@ -52,6 +52,7 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
     contractedOutFlag = false,
     customerAge = 24,
     copeAmount = SPAmountModel(0,0,0),
+    mqp = None,
     isAbroad = false
   )
 
