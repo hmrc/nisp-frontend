@@ -58,9 +58,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       nispConnector.connectToGetSPResponse(nino).map {
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
           if(spSummary.contractedOutFlag) {
-            Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week,
-              authenticationProvider, isPertax))
+            Ok(account_cope(nino, spSummary.copeAmount.week, authenticationProvider, isPertax))
           } else {
             Redirect(routes.AccountController.show())
           }
