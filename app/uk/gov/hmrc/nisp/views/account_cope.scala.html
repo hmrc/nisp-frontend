@@ -29,7 +29,7 @@
 @defining(Some(user)) { implicit userOption =>
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),pageTitle=Some(Messages("nisp.cope.youWereContractedOut"))) {
 
-    <p>@Messages("nisp.cope.inthepast")</p>
+    <p>@Html(Messages("nisp.cope.inThePast"))</p>
     <p>@Messages("nisp.cope.why")</p>
     <ul class="list-bullet">
         <li>@Messages("nisp.cope.why.bullet1")</li>

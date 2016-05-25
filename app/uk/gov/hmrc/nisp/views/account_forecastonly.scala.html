@@ -45,7 +45,7 @@
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
     <div class="highlighted-event">
-        <p>@Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
+        <p>@Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
         <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
         <p>@NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
         @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")</p>
@@ -59,7 +59,7 @@
     </ul>
     <h2 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h2>
     <p>@Messages("nisp.main.cantImprove")</p>
-    <p>@Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString())</p>
+    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString()))</p>
     <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
 
     @if(spSummary.isAbroad) {
