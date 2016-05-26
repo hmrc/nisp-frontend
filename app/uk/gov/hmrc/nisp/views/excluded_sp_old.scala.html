@@ -21,13 +21,16 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import exclusions.viewExclusions
 
-@(nino: String, spExclusions: ExclusionsModel, statePensionAge: SPAgeModel)(implicit request: Request[_], user: NispUser,
+@(nino: String, spExclusions: ExclusionsModel, statePensionAge: SPAgeModel, authProviderGA: Option[String],
+        confidenceLevel: String)(implicit request: Request[_], user: NispUser,
   partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
         'dimension20': '@spExclusions.exclusions.map(_.toString).mkString(" ") ',
-        'dimension15': '@statePensionAge'
+        'dimension15': '@statePensionAge',
+        'dimension38': '@authProviderGA',
+        'dimension39': '@confidenceLevel',
     });
 }
 
