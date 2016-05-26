@@ -102,7 +102,7 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return non-IV landing page when switched off" in {
       val result = testLandingController(identityVerificationEnabled = false).show(fakeRequest)
-      contentAsString(result) should include ("You can use this service if you&#x27;re")
+      contentAsString(result) should include ("You can use this service if you&rsquo;re")
     }
   }
 
