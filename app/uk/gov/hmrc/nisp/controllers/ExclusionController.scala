@@ -27,6 +27,7 @@ import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp, excluded_sp_old}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.play.http.SessionKeys
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
@@ -40,16 +41,21 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
+    val confidenceLevel = user.authContext.user.confidenceLevel
+    val authProviderGA = request.session.get(SessionKeys.authProvider)
+
     nispConnector.connectToGetSPResponse(nino).map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
         if (!spExclusions.exclusions.contains(Exclusion.Dead)) {
           Ok(excluded_sp(
             spExclusions.exclusions,
             spSummary.statePensionAge,
-            niExclusionOption.fold(true)(_.exclusions.isEmpty)
+            niExclusionOption.fold(true)(_.exclusions.isEmpty),
+            authProviderGA,
+            confidenceLevel.toString
           ))
         } else {
-          Ok(excluded_sp_old(nino, spExclusions, spSummary.statePensionAge))
+          Ok(excluded_sp_old(nino, spExclusions, spSummary.statePensionAge, authProviderGA, confidenceLevel.toString))
         }
       case _ =>
         Logger.warn("User accessed /exclusion as non-excluded user")
