@@ -1,0 +1,849 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 111673344 bytes for committing reserved memory.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (os_linux.cpp:2627), pid=11611, tid=140156536911616
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_60-b27) (build 1.8.0_60-b27)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.60-b23 mixed mode linux-amd64 compressed oops)
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f78d007e800):  VMThread [stack: 0x00007f78bc887000,0x00007f78bc988000] [id=11620]
+
+Stack: [0x00007f78bc887000,0x00007f78bc988000],  sp=0x00007f78bc985f60,  free space=1019k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0xab97ea]  VMError::report_and_die()+0x2ba
+V  [libjvm.so+0x4f9dab]  report_vm_out_of_memory(char const*, int, unsigned long, VMErrorType, char const*)+0x8b
+V  [libjvm.so+0x91a7c3]  os::Linux::commit_memory_impl(char*, unsigned long, bool)+0x103
+V  [libjvm.so+0x91ad19]  os::pd_commit_memory(char*, unsigned long, unsigned long, bool)+0x29
+V  [libjvm.so+0x91502a]  os::commit_memory(char*, unsigned long, unsigned long, bool)+0x2a
+V  [libjvm.so+0x9886d3]  PSVirtualSpace::expand_by(unsigned long)+0x53
+V  [libjvm.so+0x989ad8]  PSYoungGen::resize_generation(unsigned long, unsigned long)+0xf8
+V  [libjvm.so+0x988c32]  PSYoungGen::resize(unsigned long, unsigned long)+0x22
+V  [libjvm.so+0x985f0b]  PSScavenge::invoke_no_policy()+0xf3b
+V  [libjvm.so+0x986691]  PSScavenge::invoke()+0x41
+V  [libjvm.so+0x93e430]  ParallelScavengeHeap::failed_mem_allocate(unsigned long)+0x70
+V  [libjvm.so+0xabb207]  VM_ParallelGCFailedAllocation::doit()+0x97
+V  [libjvm.so+0xac2c35]  VM_Operation::evaluate()+0x55
+V  [libjvm.so+0xac100a]  VMThread::evaluate_operation(VM_Operation*)+0xba
+V  [libjvm.so+0xac138e]  VMThread::loop()+0x1ce
+V  [libjvm.so+0xac1800]  VMThread::run()+0x70
+V  [libjvm.so+0x91cb88]  java_start(Thread*)+0x108
+
+VM_Operation (0x00007f78b6de3d50): ParallelGCFailedAllocation, mode: safepoint, requested by thread 0x00007f78d0a02800
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007f787c9b0000 JavaThread "metrics-graphite-reporter-thread-1" daemon [_thread_blocked, id=11646, stack(0x00007f78b415c000,0x00007f78b425d000)]
+  0x00007f787c9aa800 JavaThread "metrics-graphite-reporter-thread-1" daemon [_thread_blocked, id=11645, stack(0x00007f78b425d000,0x00007f78b435e000)]
+  0x00007f785802d800 JavaThread "play-akka.actor.default-dispatcher-9" [_thread_blocked, id=11643, stack(0x00007f78b455e000,0x00007f78b465f000)]
+  0x00007f785c001000 JavaThread "play-akka.actor.default-dispatcher-8" [_thread_blocked, id=11642, stack(0x00007f78b465f000,0x00007f78b4760000)]
+  0x00007f786004a800 JavaThread "play-akka.actor.default-dispatcher-7" [_thread_blocked, id=11641, stack(0x00007f78b4760000,0x00007f78b4861000)]
+  0x00007f7864076000 JavaThread "ForkJoinPool-2-worker-5" daemon [_thread_blocked, id=11640, stack(0x00007f78b4861000,0x00007f78b4962000)]
+  0x00007f785802c800 JavaThread "play-akka.actor.default-dispatcher-6" [_thread_blocked, id=11639, stack(0x00007f78b4962000,0x00007f78b4a63000)]
+  0x00007f786c01d000 JavaThread "play-akka.actor.default-dispatcher-5" [_thread_blocked, id=11638, stack(0x00007f78b4c63000,0x00007f78b4d64000)]
+  0x00007f787c96a800 JavaThread "ForkJoinPool-2-worker-7" daemon [_thread_blocked, id=11637, stack(0x00007f78b4f64000,0x00007f78b5065000)]
+  0x00007f787c93e000 JavaThread "play-akka.actor.default-dispatcher-4" [_thread_blocked, id=11636, stack(0x00007f78b5065000,0x00007f78b5166000)]
+  0x00007f787c93b800 JavaThread "play-akka.actor.default-dispatcher-3" [_thread_blocked, id=11635, stack(0x00007f78b5166000,0x00007f78b5267000)]
+  0x00007f787c925800 JavaThread "play-akka.actor.default-dispatcher-2" [_thread_blocked, id=11634, stack(0x00007f78b5661000,0x00007f78b5762000)]
+  0x00007f787c767000 JavaThread "play-scheduler-1" [_thread_blocked, id=11633, stack(0x00007f78b5467000,0x00007f78b5568000)]
+  0x00007f787c40a800 JavaThread "metrics-graphite-reporter-thread-1" daemon [_thread_blocked, id=11632, stack(0x00007f78b5fd9000,0x00007f78b60da000)]
+  0x00007f78d0a02800 JavaThread "pool-1-thread-1" [_thread_blocked, id=11631, stack(0x00007f78b6ce6000,0x00007f78b6de7000)]
+  0x00007f78d097b800 JavaThread "ScalaTest-dispatcher" [_thread_blocked, id=11630, stack(0x00007f78b6fe7000,0x00007f78b70e8000)]
+  0x00007f78d00d1800 JavaThread "Service Thread" daemon [_thread_blocked, id=11627, stack(0x00007f78bc180000,0x00007f78bc281000)]
+  0x00007f78d00c4800 JavaThread "C1 CompilerThread2" daemon [_thread_blocked, id=11626, stack(0x00007f78bc281000,0x00007f78bc382000)]
+  0x00007f78d00c2800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=11625, stack(0x00007f78bc382000,0x00007f78bc483000)]
+  0x00007f78d00bf800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=11624, stack(0x00007f78bc483000,0x00007f78bc584000)]
+  0x00007f78d00be000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=11623, stack(0x00007f78bc584000,0x00007f78bc685000)]
+  0x00007f78d0086000 JavaThread "Finalizer" daemon [_thread_blocked, id=11622, stack(0x00007f78bc685000,0x00007f78bc786000)]
+  0x00007f78d0083800 JavaThread "Reference Handler" daemon [_thread_blocked, id=11621, stack(0x00007f78bc786000,0x00007f78bc887000)]
+  0x00007f78d0011000 JavaThread "main" [_thread_blocked, id=11612, stack(0x00007f78d9339000,0x00007f78d943a000)]
+
+Other Threads:
+=>0x00007f78d007e800 VMThread [stack: 0x00007f78bc887000,0x00007f78bc988000] [id=11620]
+  0x00007f78d00d4800 WatcherThread [stack: 0x00007f78bc07f000,0x00007f78bc180000] [id=11628]
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007f78d000d430] Threads_lock - owner thread: 0x00007f78d007e800
+[0x00007f78d000d930] Heap_lock - owner thread: 0x00007f78d0a02800
+
+Heap:
+ PSYoungGen      total 551424K, used 832K [0x00000000d6600000, 0x00000000f8b00000, 0x0000000100000000)
+  eden space 540672K, 0% used [0x00000000d6600000,0x00000000d6600000,0x00000000f7600000)
+  from space 10752K, 7% used [0x00000000f7600000,0x00000000f76d0388,0x00000000f8080000)
+  to   space 2048K, 0% used [0x00000000f8900000,0x00000000f8900000,0x00000000f8b00000)
+ ParOldGen       total 86016K, used 17992K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 20% used [0x0000000083200000,0x0000000084392240,0x0000000088600000)
+ Metaspace       used 37001K, capacity 37276K, committed 37632K, reserved 1081344K
+  class space    used 5162K, capacity 5258K, committed 5376K, reserved 1048576K
+
+Card table byte_map: [0x00007f78d5d15000,0x00007f78d60fd000] byte_map_base: 0x00007f78d58fc000
+
+Marking Bits: (ParMarkBitMap*) 0x00007f78d880bde0
+ Begin Bits: [0x00007f78bd190000, 0x00007f78bf0c8000)
+ End Bits:   [0x00007f78bf0c8000, 0x00007f78c1000000)
+
+Polling page: 0x00007f78d9453000
+
+CodeCache: size=245760Kb used=9185Kb max_used=9203Kb free=236574Kb
+ bounds [0x00007f78c1000000, 0x00007f78c1910000, 0x00007f78d0000000]
+ total_blobs=3700 nmethods=3211 adapters=403
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 13.695 Thread 0x00007f78d00bf800 nmethod 3574 0x00007f78c1882d10 code [0x00007f78c1882e60, 0x00007f78c1882ed8]
+Event: 13.696 Thread 0x00007f78d00bf800 3580       4       ch.qos.logback.core.joran.spi.ElementPath::get (12 bytes)
+Event: 13.698 Thread 0x00007f78d00bf800 nmethod 3580 0x00007f78c18f93d0 code [0x00007f78c18f9520, 0x00007f78c18f9638]
+Event: 13.698 Thread 0x00007f78d00bf800 3579  s    4       java.util.Stack::peek (25 bytes)
+Event: 13.699 Thread 0x00007f78d00bf800 nmethod 3579 0x00007f78c18f7910 code [0x00007f78c18f7a60, 0x00007f78c18f7d18]
+Event: 13.703 Thread 0x00007f78d00c2800 nmethod 3566 0x00007f78c1906650 code [0x00007f78c1906a80, 0x00007f78c1909028]
+Event: 13.744 Thread 0x00007f78d00c4800 3587       1       java.util.concurrent.ConcurrentHashMap$MapEntry::getValue (5 bytes)
+Event: 13.745 Thread 0x00007f78d00c4800 nmethod 3587 0x00007f78c18f7650 code [0x00007f78c18f77a0, 0x00007f78c18f78b0]
+Event: 13.745 Thread 0x00007f78d00c4800 3588       3       java.util.concurrent.ConcurrentHashMap$EntryIterator::next (5 bytes)
+Event: 13.745 Thread 0x00007f78d00c4800 nmethod 3588 0x00007f78c18f7250 code [0x00007f78c18f73c0, 0x00007f78c18f75c8]
+
+GC Heap History (10 events):
+Event: 7.906 GC heap after
+Heap after GC invocations=16 (full 2):
+ PSYoungGen      total 333824K, used 0K [0x00000000d6600000, 0x00000000ebc80000, 0x0000000100000000)
+  eden space 325120K, 0% used [0x00000000d6600000,0x00000000d6600000,0x00000000ea380000)
+  from space 8704K, 0% used [0x00000000eaf80000,0x00000000eaf80000,0x00000000eb800000)
+  to   space 12288K, 0% used [0x00000000ea380000,0x00000000ea380000,0x00000000eaf80000)
+ ParOldGen       total 86016K, used 16979K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 19% used [0x0000000083200000,0x0000000084294eb0,0x0000000088600000)
+ Metaspace       used 34870K, capacity 35098K, committed 35416K, reserved 1079296K
+  class space    used 4951K, capacity 5055K, committed 5120K, reserved 1048576K
+}
+Event: 9.606 GC heap before
+{Heap before GC invocations=17 (full 2):
+ PSYoungGen      total 333824K, used 325120K [0x00000000d6600000, 0x00000000ebc80000, 0x0000000100000000)
+  eden space 325120K, 100% used [0x00000000d6600000,0x00000000ea380000,0x00000000ea380000)
+  from space 8704K, 0% used [0x00000000eaf80000,0x00000000eaf80000,0x00000000eb800000)
+  to   space 12288K, 0% used [0x00000000ea380000,0x00000000ea380000,0x00000000eaf80000)
+ ParOldGen       total 86016K, used 16979K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 19% used [0x0000000083200000,0x0000000084294eb0,0x0000000088600000)
+ Metaspace       used 35951K, capacity 36248K, committed 36736K, reserved 1081344K
+  class space    used 5052K, capacity 5156K, committed 5248K, reserved 1048576K
+Event: 9.609 GC heap after
+Heap after GC invocations=17 (full 2):
+ PSYoungGen      total 337408K, used 736K [0x00000000d6600000, 0x00000000f3600000, 0x0000000100000000)
+  eden space 325120K, 0% used [0x00000000d6600000,0x00000000d6600000,0x00000000ea380000)
+  from space 12288K, 5% used [0x00000000ea380000,0x00000000ea438388,0x00000000eaf80000)
+  to   space 11776K, 0% used [0x00000000f2a80000,0x00000000f2a80000,0x00000000f3600000)
+ ParOldGen       total 86016K, used 16987K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 19% used [0x0000000083200000,0x0000000084296eb0,0x0000000088600000)
+ Metaspace       used 35951K, capacity 36248K, committed 36736K, reserved 1081344K
+  class space    used 5052K, capacity 5156K, committed 5248K, reserved 1048576K
+}
+Event: 9.730 GC heap before
+{Heap before GC invocations=18 (full 2):
+ PSYoungGen      total 337408K, used 325856K [0x00000000d6600000, 0x00000000f3600000, 0x0000000100000000)
+  eden space 325120K, 100% used [0x00000000d6600000,0x00000000ea380000,0x00000000ea380000)
+  from space 12288K, 5% used [0x00000000ea380000,0x00000000ea438388,0x00000000eaf80000)
+  to   space 11776K, 0% used [0x00000000f2a80000,0x00000000f2a80000,0x00000000f3600000)
+ ParOldGen       total 86016K, used 16987K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 19% used [0x0000000083200000,0x0000000084296eb0,0x0000000088600000)
+ Metaspace       used 35951K, capacity 36248K, committed 36736K, reserved 1081344K
+  class space    used 5052K, capacity 5156K, committed 5248K, reserved 1048576K
+Event: 9.733 GC heap after
+Heap after GC invocations=18 (full 2):
+ PSYoungGen      total 454144K, used 96K [0x00000000d6600000, 0x00000000f3100000, 0x0000000100000000)
+  eden space 447488K, 0% used [0x00000000d6600000,0x00000000d6600000,0x00000000f1b00000)
+  from space 6656K, 1% used [0x00000000f2a80000,0x00000000f2a98000,0x00000000f3100000)
+  to   space 11264K, 0% used [0x00000000f1b00000,0x00000000f1b00000,0x00000000f2600000)
+ ParOldGen       total 86016K, used 17471K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 20% used [0x0000000083200000,0x000000008430fe88,0x0000000088600000)
+ Metaspace       used 35951K, capacity 36248K, committed 36736K, reserved 1081344K
+  class space    used 5052K, capacity 5156K, committed 5248K, reserved 1048576K
+}
+Event: 10.279 GC heap before
+{Heap before GC invocations=19 (full 2):
+ PSYoungGen      total 454144K, used 447584K [0x00000000d6600000, 0x00000000f3100000, 0x0000000100000000)
+  eden space 447488K, 100% used [0x00000000d6600000,0x00000000f1b00000,0x00000000f1b00000)
+  from space 6656K, 1% used [0x00000000f2a80000,0x00000000f2a98000,0x00000000f3100000)
+  to   space 11264K, 0% used [0x00000000f1b00000,0x00000000f1b00000,0x00000000f2600000)
+ ParOldGen       total 86016K, used 17471K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 20% used [0x0000000083200000,0x000000008430fe88,0x0000000088600000)
+ Metaspace       used 36132K, capacity 36406K, committed 36736K, reserved 1081344K
+  class space    used 5075K, capacity 5161K, committed 5248K, reserved 1048576K
+Event: 10.281 GC heap after
+Heap after GC invocations=19 (full 2):
+ PSYoungGen      total 458752K, used 512K [0x00000000d6600000, 0x00000000f9400000, 0x0000000100000000)
+  eden space 447488K, 0% used [0x00000000d6600000,0x00000000d6600000,0x00000000f1b00000)
+  from space 11264K, 4% used [0x00000000f1b00000,0x00000000f1b80388,0x00000000f2600000)
+  to   space 11264K, 0% used [0x00000000f8900000,0x00000000f8900000,0x00000000f9400000)
+ ParOldGen       total 86016K, used 17511K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 20% used [0x0000000083200000,0x0000000084319e88,0x0000000088600000)
+ Metaspace       used 36132K, capacity 36406K, committed 36736K, reserved 1081344K
+  class space    used 5075K, capacity 5161K, committed 5248K, reserved 1048576K
+}
+Event: 10.402 GC heap before
+{Heap before GC invocations=20 (full 2):
+ PSYoungGen      total 458752K, used 448000K [0x00000000d6600000, 0x00000000f9400000, 0x0000000100000000)
+  eden space 447488K, 100% used [0x00000000d6600000,0x00000000f1b00000,0x00000000f1b00000)
+  from space 11264K, 4% used [0x00000000f1b00000,0x00000000f1b80388,0x00000000f2600000)
+  to   space 11264K, 0% used [0x00000000f8900000,0x00000000f8900000,0x00000000f9400000)
+ ParOldGen       total 86016K, used 17511K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 20% used [0x0000000083200000,0x0000000084319e88,0x0000000088600000)
+ Metaspace       used 36132K, capacity 36406K, committed 36736K, reserved 1081344K
+  class space    used 5075K, capacity 5161K, committed 5248K, reserved 1048576K
+Event: 10.441 GC heap after
+Heap after GC invocations=20 (full 2):
+ PSYoungGen      total 542720K, used 96K [0x00000000d6600000, 0x00000000f8b00000, 0x0000000100000000)
+  eden space 540672K, 0% used [0x00000000d6600000,0x00000000d6600000,0x00000000f7600000)
+  from space 2048K, 4% used [0x00000000f8900000,0x00000000f8918000,0x00000000f8b00000)
+  to   space 10752K, 0% used [0x00000000f7600000,0x00000000f7600000,0x00000000f8080000)
+ ParOldGen       total 86016K, used 17928K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 20% used [0x0000000083200000,0x0000000084382240,0x0000000088600000)
+ Metaspace       used 36132K, capacity 36406K, committed 36736K, reserved 1081344K
+  class space    used 5075K, capacity 5161K, committed 5248K, reserved 1048576K
+}
+Event: 13.804 GC heap before
+{Heap before GC invocations=21 (full 2):
+ PSYoungGen      total 542720K, used 540768K [0x00000000d6600000, 0x00000000f8b00000, 0x0000000100000000)
+  eden space 540672K, 100% used [0x00000000d6600000,0x00000000f7600000,0x00000000f7600000)
+  from space 2048K, 4% used [0x00000000f8900000,0x00000000f8918000,0x00000000f8b00000)
+  to   space 10752K, 0% used [0x00000000f7600000,0x00000000f7600000,0x00000000f8080000)
+ ParOldGen       total 86016K, used 17928K [0x0000000083200000, 0x0000000088600000, 0x00000000d6600000)
+  object space 86016K, 20% used [0x0000000083200000,0x0000000084382240,0x0000000088600000)
+ Metaspace       used 37001K, capacity 37276K, committed 37632K, reserved 1081344K
+  class space    used 5162K, capacity 5258K, committed 5376K, reserved 1048576K
+
+Deoptimization events (10 events):
+Event: 8.897 Thread 0x00007f78d0a02800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f78c14533d4 method=java.lang.ThreadLocal$ThreadLocalMap.getEntry(Ljava/lang/ThreadLocal;)Ljava/lang/ThreadLocal$ThreadLocalMap$Entry; @ 29
+Event: 9.810 Thread 0x00007f78d0a02800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007f78c1296c04 method=scala.collection.TraversableOnce$class.nonEmpty(Lscala/collection/TraversableOnce;)Z @ 1
+Event: 9.810 Thread 0x00007f78d0a02800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007f78c1296c04 method=scala.collection.TraversableOnce$class.nonEmpty(Lscala/collection/TraversableOnce;)Z @ 1
+Event: 10.166 Thread 0x00007f78d0a02800 Uncommon trap: reason=speculate_class_check action=maybe_recompile pc=0x00007f78c169c704 method=scala.collection.TraversableOnce$class.nonEmpty(Lscala/collection/TraversableOnce;)Z @ 1
+Event: 11.642 Thread 0x00007f785802c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f78c173417c method=scala.concurrent.forkjoin.ForkJoinPool.scan(Lscala/concurrent/forkjoin/ForkJoinPool$WorkQueue;)Lscala/concurrent/forkjoin/ForkJoinTask; @ 427
+Event: 13.114 Thread 0x00007f785802c800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f78c1712c04 method=play.twirl.api.BaseScalaTemplate._display_(Ljava/lang/Object;Lscala/reflect/Manifest;)Lplay/twirl/api/Appendable; @ 185
+Event: 13.145 Thread 0x00007f785802c800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007f78c1704fb0 method=play.twirl.api.Html.buildString(Lscala/collection/mutable/StringBuilder;)V @ 4
+Event: 13.155 Thread 0x00007f787c93e000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f78c1712c04 method=play.twirl.api.BaseScalaTemplate._display_(Ljava/lang/Object;Lscala/reflect/Manifest;)Lplay/twirl/api/Appendable; @ 185
+Event: 13.156 Thread 0x00007f787c93e000 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007f78c1704fb0 method=play.twirl.api.Html.buildString(Lscala/collection/mutable/StringBuilder;)V @ 4
+Event: 13.367 Thread 0x00007f785802d800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f78c113a60c method=sun.nio.cs.UTF_8$Encoder.encode([CII[B)I @ 33
+
+Internal exceptions (10 events):
+Event: 4.327 Thread 0x00007f78d097b800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d6a61ed8) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 4.333 Thread 0x00007f78d097b800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d6a797f0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 5.423 Thread 0x00007f78d097b800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d6a9f520) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 5.506 Thread 0x00007f78d097b800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d9af0910) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 8.613 Thread 0x00007f78d097b800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d777df48) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 8.817 Thread 0x00007f78d097b800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d77b3760) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 8.817 Thread 0x00007f78d0a02800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d6dbdaa0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 8.820 Thread 0x00007f78d0a02800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d6dc6bf0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 8.827 Thread 0x00007f78d0a02800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d6dcfa70) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+Event: 8.828 Thread 0x00007f78d0a02800 Exception <a 'java/lang/NoSuchMethodError': <clinit>> (0x00000000d6dd7440) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u60/4407/hotspot/src/share/vm/prims/jni.cpp, line 1591]
+
+Events (10 events):
+Event: 13.571 loading class groovy/lang/Binding
+Event: 13.571 loading class groovy/lang/Binding done
+Event: 13.739 loading class java/util/concurrent/ConcurrentHashMap$EntryIterator
+Event: 13.741 loading class java/util/concurrent/ConcurrentHashMap$EntryIterator done
+Event: 13.741 loading class java/util/concurrent/ConcurrentHashMap$MapEntry
+Event: 13.742 loading class java/util/concurrent/ConcurrentHashMap$MapEntry done
+Event: 13.742 loading class java/util/Collections$UnmodifiableSortedMap
+Event: 13.743 loading class java/util/Collections$UnmodifiableSortedMap done
+Event: 13.788 loading class java/net/ConnectException
+Event: 13.800 Executing VM operation: ParallelGCFailedAllocation
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:01 290872                             /usr/lib/jvm/java-8-oracle/jre/bin/java
+00600000-00601000 rw-p 00000000 08:01 290872                             /usr/lib/jvm/java-8-oracle/jre/bin/java
+01b8a000-01bab000 rw-p 00000000 00:00 0                                  [heap]
+83200000-88600000 rw-p 00000000 00:00 0 
+88600000-d6600000 ---p 00000000 00:00 0 
+d6600000-f8b00000 rw-p 00000000 00:00 0 
+ff580000-100000000 ---p 00000000 00:00 0 
+100000000-100540000 rw-p 00000000 00:00 0 
+100540000-140000000 ---p 00000000 00:00 0 
+7f7840000000-7f7840021000 rw-p 00000000 00:00 0 
+7f7840021000-7f7844000000 ---p 00000000 00:00 0 
+7f7844000000-7f7844021000 rw-p 00000000 00:00 0 
+7f7844021000-7f7848000000 ---p 00000000 00:00 0 
+7f7848000000-7f7848021000 rw-p 00000000 00:00 0 
+7f7848021000-7f784c000000 ---p 00000000 00:00 0 
+7f784c000000-7f784c021000 rw-p 00000000 00:00 0 
+7f784c021000-7f7850000000 ---p 00000000 00:00 0 
+7f7850000000-7f7850021000 rw-p 00000000 00:00 0 
+7f7850021000-7f7854000000 ---p 00000000 00:00 0 
+7f7854000000-7f7854021000 rw-p 00000000 00:00 0 
+7f7854021000-7f7858000000 ---p 00000000 00:00 0 
+7f7858000000-7f7858036000 rw-p 00000000 00:00 0 
+7f7858036000-7f785c000000 ---p 00000000 00:00 0 
+7f785c000000-7f785c021000 rw-p 00000000 00:00 0 
+7f785c021000-7f7860000000 ---p 00000000 00:00 0 
+7f7860000000-7f7860056000 rw-p 00000000 00:00 0 
+7f7860056000-7f7864000000 ---p 00000000 00:00 0 
+7f7864000000-7f7864078000 rw-p 00000000 00:00 0 
+7f7864078000-7f7868000000 ---p 00000000 00:00 0 
+7f7868000000-7f786818c000 rw-p 00000000 00:00 0 
+7f786818c000-7f786c000000 ---p 00000000 00:00 0 
+7f786c000000-7f786c027000 rw-p 00000000 00:00 0 
+7f786c027000-7f7870000000 ---p 00000000 00:00 0 
+7f7870000000-7f7870021000 rw-p 00000000 00:00 0 
+7f7870021000-7f7874000000 ---p 00000000 00:00 0 
+7f7874000000-7f787428c000 rw-p 00000000 00:00 0 
+7f787428c000-7f7878000000 ---p 00000000 00:00 0 
+7f7878000000-7f7878040000 rw-p 00000000 00:00 0 
+7f7878040000-7f787c000000 ---p 00000000 00:00 0 
+7f787c000000-7f787c9d4000 rw-p 00000000 00:00 0 
+7f787c9d4000-7f7880000000 ---p 00000000 00:00 0 
+7f7880000000-7f7880021000 rw-p 00000000 00:00 0 
+7f7880021000-7f7884000000 ---p 00000000 00:00 0 
+7f7884000000-7f7884021000 rw-p 00000000 00:00 0 
+7f7884021000-7f7888000000 ---p 00000000 00:00 0 
+7f7888000000-7f7889311000 rw-p 00000000 00:00 0 
+7f7889311000-7f788c000000 ---p 00000000 00:00 0 
+7f788c000000-7f788c436000 rw-p 00000000 00:00 0 
+7f788c436000-7f7890000000 ---p 00000000 00:00 0 
+7f7890000000-7f7890021000 rw-p 00000000 00:00 0 
+7f7890021000-7f7894000000 ---p 00000000 00:00 0 
+7f7894000000-7f7895c1f000 rw-p 00000000 00:00 0 
+7f7895c1f000-7f7898000000 ---p 00000000 00:00 0 
+7f7898000000-7f7898021000 rw-p 00000000 00:00 0 
+7f7898021000-7f789c000000 ---p 00000000 00:00 0 
+7f789c000000-7f789c021000 rw-p 00000000 00:00 0 
+7f789c021000-7f78a0000000 ---p 00000000 00:00 0 
+7f78a0000000-7f78a0021000 rw-p 00000000 00:00 0 
+7f78a0021000-7f78a4000000 ---p 00000000 00:00 0 
+7f78a4000000-7f78a428b000 rw-p 00000000 00:00 0 
+7f78a428b000-7f78a8000000 ---p 00000000 00:00 0 
+7f78a8000000-7f78a8021000 rw-p 00000000 00:00 0 
+7f78a8021000-7f78ac000000 ---p 00000000 00:00 0 
+7f78b0000000-7f78b0021000 rw-p 00000000 00:00 0 
+7f78b0021000-7f78b4000000 ---p 00000000 00:00 0 
+7f78b415c000-7f78b415f000 ---p 00000000 00:00 0 
+7f78b415f000-7f78b425d000 rw-p 00000000 00:00 0                          [stack:11646]
+7f78b425d000-7f78b4260000 ---p 00000000 00:00 0 
+7f78b4260000-7f78b44de000 rw-p 00000000 00:00 0                          [stack:11645]
+7f78b44de000-7f78b455e000 ---p 00000000 00:00 0 
+7f78b455e000-7f78b4561000 ---p 00000000 00:00 0 
+7f78b4561000-7f78b465f000 rw-p 00000000 00:00 0                          [stack:11643]
+7f78b465f000-7f78b4662000 ---p 00000000 00:00 0 
+7f78b4662000-7f78b4760000 rw-p 00000000 00:00 0                          [stack:11642]
+7f78b4760000-7f78b4763000 ---p 00000000 00:00 0 
+7f78b4763000-7f78b4861000 rw-p 00000000 00:00 0                          [stack:11641]
+7f78b4861000-7f78b4864000 ---p 00000000 00:00 0 
+7f78b4864000-7f78b4962000 rw-p 00000000 00:00 0                          [stack:11640]
+7f78b4962000-7f78b4965000 ---p 00000000 00:00 0 
+7f78b4965000-7f78b4c63000 rw-p 00000000 00:00 0                          [stack:11639]
+7f78b4c63000-7f78b4c66000 ---p 00000000 00:00 0 
+7f78b4c66000-7f78b4f64000 rw-p 00000000 00:00 0                          [stack:11638]
+7f78b4f64000-7f78b4f67000 ---p 00000000 00:00 0 
+7f78b4f67000-7f78b5065000 rw-p 00000000 00:00 0                          [stack:11637]
+7f78b5065000-7f78b5068000 ---p 00000000 00:00 0 
+7f78b5068000-7f78b5166000 rw-p 00000000 00:00 0                          [stack:11636]
+7f78b5166000-7f78b5169000 ---p 00000000 00:00 0 
+7f78b5169000-7f78b5467000 rw-p 00000000 00:00 0                          [stack:11635]
+7f78b5467000-7f78b546a000 ---p 00000000 00:00 0 
+7f78b546a000-7f78b5568000 rw-p 00000000 00:00 0                          [stack:11633]
+7f78b5661000-7f78b5664000 ---p 00000000 00:00 0 
+7f78b5664000-7f78b5962000 rw-p 00000000 00:00 0                          [stack:11634]
+7f78b5962000-7f78b5b62000 rw-p 00000000 00:00 0 
+7f78b5b62000-7f78b5b78000 r-xp 00000000 08:01 921870                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f78b5b78000-7f78b5d77000 ---p 00016000 08:01 921870                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f78b5d77000-7f78b5d78000 rw-p 00015000 08:01 921870                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f78b5d87000-7f78b5d88000 rw-p 00000000 00:00 0 
+7f78b5d88000-7f78b5d8e000 r--s 0003f000 08:01 163199                     /usr/lib/jvm/java-8-oracle/jre/lib/ext/sunjce_provider.jar
+7f78b5d8e000-7f78b5dc0000 r-xp 00000000 08:01 290815                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libsunec.so
+7f78b5dc0000-7f78b5fbf000 ---p 00032000 08:01 290815                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libsunec.so
+7f78b5fbf000-7f78b5fc5000 rw-p 00031000 08:01 290815                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libsunec.so
+7f78b5fc5000-7f78b5fd5000 rw-p 00000000 00:00 0 
+7f78b5fd5000-7f78b5fd6000 r--s 00009000 08:01 163195                     /usr/lib/jvm/java-8-oracle/jre/lib/ext/sunec.jar
+7f78b5fd6000-7f78b5fd9000 r--s 0001a000 08:01 163261                     /usr/lib/jvm/java-8-oracle/jre/lib/jce.jar
+7f78b5fd9000-7f78b5fdc000 ---p 00000000 00:00 0 
+7f78b5fdc000-7f78b62da000 rw-p 00000000 00:00 0                          [stack:11632]
+7f78b62da000-7f78b62e2000 r-xp 00000000 08:01 290840                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libmanagement.so
+7f78b62e2000-7f78b64e2000 ---p 00008000 08:01 290840                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libmanagement.so
+7f78b64e2000-7f78b64e3000 rw-p 00008000 08:01 290840                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libmanagement.so
+7f78b64e3000-7f78b66e3000 rw-p 00000000 00:00 0 
+7f78b66e3000-7f78b68e3000 rw-p 00000000 00:00 0 
+7f78b68e3000-7f78b6ae3000 rw-p 00000000 00:00 0 
+7f78b6ae3000-7f78b6ae4000 r--p 00000000 08:01 1446030                    /usr/share/locale-langpack/en_GB/LC_MESSAGES/libc.mo
+7f78b6ae4000-7f78b6ae6000 r--s 00002000 08:01 1329970                    /home/dimitri/.sbt/boot/scala-2.10.4/org.scala-sbt/sbt/0.13.8/test-interface-1.0.jar
+7f78b6ae6000-7f78b6ce6000 rw-p 00000000 00:00 0 
+7f78b6ce6000-7f78b6ce9000 ---p 00000000 00:00 0 
+7f78b6ce9000-7f78b6fe7000 rw-p 00000000 00:00 0                          [stack:11631]
+7f78b6fe7000-7f78b6fea000 ---p 00000000 00:00 0 
+7f78b6fea000-7f78b70e8000 rw-p 00000000 00:00 0                          [stack:11630]
+7f78b70e8000-7f78b70ec000 r--s 00095000 08:01 163220                     /usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar
+7f78b70ec000-7f78b711d000 rw-p 00000000 00:00 0 
+7f78b711d000-7f78b7133000 r-xp 00000000 08:01 290843                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f78b7133000-7f78b7333000 ---p 00016000 08:01 290843                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f78b7333000-7f78b7334000 rw-p 00016000 08:01 290843                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f78b7334000-7f78b7335000 r--s 00005000 08:01 1329955                    /home/dimitri/.sbt/boot/scala-2.10.4/org.scala-sbt/sbt/0.13.8/test-agent-0.13.8.jar
+7f78b7335000-7f78b733a000 r--s 00039000 08:11 815235                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scoverage/scalac-scoverage-plugin_2.11/scalac-scoverage-plugin_2.11-1.1.1.jar
+7f78b733a000-7f78b733b000 r--s 00001000 08:11 815252                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scoverage/scalac-scoverage-runtime_2.11/scalac-scoverage-runtime_2.11-1.1.1.jar
+7f78b733b000-7f78b733f000 r--s 0002b000 08:11 1452305                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scalatestplus/play_2.11/play_2.11-1.2.0.jar
+7f78b733f000-7f78b735d000 r--s 00110000 08:11 945415                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.mockito/mockito-all/mockito-all-1.10.19.jar
+7f78b735d000-7f78b7363000 r--s 00043000 08:11 3161013                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.jsoup/jsoup/jsoup-1.7.3.jar
+7f78b7363000-7f78b7364000 r--s 0000a000 08:11 674046                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.ow2.asm/asm-util/asm-util-5.0.3.jar
+7f78b7364000-7f78b7365000 r--s 00004000 08:11 1061887                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.ow2.asm/asm-analysis/asm-analysis-5.0.3.jar
+7f78b7365000-7f78b7367000 r--s 00006000 08:11 1061904                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.ow2.asm/asm-tree/asm-tree-5.0.3.jar
+7f78b7367000-7f78b7368000 r--s 0000c000 08:11 537788                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.ow2.asm/asm/asm-5.0.3.jar
+7f78b7368000-7f78b736d000 r--s 00029000 08:11 1194800                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.parboiled/parboiled-core/parboiled-core-1.1.7.jar
+7f78b736d000-7f78b736f000 r--s 00010000 08:11 1194786                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.parboiled/parboiled-java/parboiled-java-1.1.7.jar
+7f78b736f000-7f78b7371000 r--s 00010000 08:11 537787                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.pegdown/pegdown/pegdown-1.5.0.jar
+7f78b7371000-7f78b7375000 r--s 00024000 08:11 1194768                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play-test_2.11/play-test_2.11-2.3.9.jar
+7f78b7375000-7f78b737f000 r--s 00095000 08:11 945429                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.scala-lang.modules/scala-xml_2.11/scala-xml_2.11-1.0.2.jar
+7f78b737f000-7f78b73cb000 r--s 003e5000 08:11 945438                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scala-lang/scala-reflect/scala-reflect-2.11.2.jar
+7f78b73cb000-7f78b7431000 r--s 00675000 08:11 945409                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.scalatest/scalatest_2.11/scalatest_2.11-2.2.4.jar
+7f78b7431000-7f78b7434000 r--s 00016000 08:11 537769                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/hmrctest_2.11/hmrctest_2.11-1.4.0.jar
+7f78b7434000-7f78b7436000 r--s 00006000 08:11 1061882                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.easytesting/fest-util/fest-util-1.1.6.jar
+7f78b7436000-7f78b7439000 r--s 00011000 08:11 1061902                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.easytesting/fest-assert/fest-assert-1.4.jar
+7f78b7439000-7f78b743e000 r--s 0001d000 08:11 815237                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-support/selenium-support-2.39.0.jar
+7f78b743e000-7f78b7443000 r--s 00024000 08:11 1452340                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.webbitserver/webbit/webbit-0.4.14.jar
+7f78b7443000-7f78b7445000 r--s 00043000 08:11 1452317                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-safari-driver/selenium-safari-driver-2.39.0.jar
+7f78b7445000-7f78b7447000 r--s 00002000 08:11 1452309                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-iphone-driver/selenium-iphone-driver-2.39.0.jar
+7f78b7447000-7f78b7448000 r--s 00002000 08:11 537767                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-ie-driver/selenium-ie-driver-2.39.0.jar
+7f78b7448000-7f78b744a000 r--s 00261000 08:11 1452322                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-firefox-driver/selenium-firefox-driver-2.39.0.jar
+7f78b744a000-7f78b744c000 r--s 00016000 08:11 815247                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.eclipse.jetty/jetty-http/jetty-http-8.1.12.v20130726.jar
+7f78b744c000-7f78b744f000 r--s 00017000 08:11 815249                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.eclipse.jetty/jetty-io/jetty-io-8.1.12.v20130726.jar
+7f78b744f000-7f78b7454000 r--s 00042000 08:11 3160989                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.eclipse.jetty/jetty-util/jetty-util-8.1.12.v20130726.jar
+7f78b7454000-7f78b7457000 r--s 0001c000 08:11 815219                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.eclipse.jetty/jetty-websocket/jetty-websocket-8.1.12.v20130726.jar
+7f78b7457000-7f78b7458000 r--s 00003000 08:11 1061892                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.w3c.css/sac/sac-1.3.jar
+7f78b7458000-7f78b745c000 r--s 00053000 08:11 1452365                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/net.sourceforge.cssparser/cssparser/cssparser-0.9.11.jar
+7f78b745c000-7f78b745f000 r--s 0001c000 08:11 1452389                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/net.sourceforge.nekohtml/nekohtml/nekohtml-1.9.19.jar
+7f78b745f000-7f78b746d000 r--s 000ef000 08:11 1061885                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/net.sourceforge.htmlunit/htmlunit-core-js/htmlunit-core-js-2.13.jar
+7f78b746d000-7f78b746f000 r--s 00008000 08:11 3029707                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.apache.httpcomponents/httpmime/httpmime-4.3.1.jar
+7f78b746f000-7f78b747d000 r--s 0007f000 08:11 945426                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/commons-collections/commons-collections/commons-collections-3.2.1.jar
+7f78b747d000-7f78b7480000 r--s 00041000 08:11 1452337                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/xalan/serializer/serializer-2.7.1.jar
+7f78b7480000-7f78b74a5000 r--s 002e3000 08:11 1061879                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/xalan/xalan/xalan-2.7.1.jar
+7f78b74a5000-7f78b74bc000 r--s 00124000 08:11 1452324                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/net.sourceforge.htmlunit/htmlunit/htmlunit-2.13.jar
+7f78b74bc000-7f78b74be000 r--s 0000d000 08:11 537760                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-htmlunit-driver/selenium-htmlunit-driver-2.39.0.jar
+7f78b74be000-7f78b74bf000 r--s 00002000 08:11 1452307                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-chrome-driver/selenium-chrome-driver-2.39.0.jar
+7f78b74bf000-7f78b74ca000 r--s 000d5000 08:11 1452295                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/net.java.dev.jna/platform/platform-3.4.0.jar
+7f78b74ca000-7f78b74ce000 r--s 000f3000 08:11 1452355                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/net.java.dev.jna/jna/jna-3.4.0.jar
+7f78b74ce000-7f78b74d0000 r--s 0000b000 08:11 3161038                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.apache.commons/commons-exec/commons-exec-1.1.jar
+7f78b74d0000-7f78b74d2000 r--s 0000e000 08:11 3161039                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/commons-logging/commons-logging/commons-logging-1.1.3.jar
+7f78b74d2000-7f78b74d8000 r--s 0003f000 08:11 3029712                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.apache.httpcomponents/httpcore/httpcore-4.3.jar
+7f78b74d8000-7f78b74e3000 r--s 00084000 08:11 3029717                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.apache.httpcomponents/httpclient/httpclient-4.3.1.jar
+7f78b74e3000-7f78b74e9000 r--s 0001e000 08:11 1452383                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-api/selenium-api-2.39.0.jar
+7f78b74e9000-7f78b74eb000 r--s 00008000 08:11 1452386                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.json/json/json-20080701.jar
+7f78b74eb000-7f78b74f2000 r--s 00049000 08:11 1452350                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/cglib/cglib-nodep/cglib-nodep-2.1_3.jar
+7f78b74f2000-7f78b74f8000 r--s 00037000 08:11 1452292                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-remote-driver/selenium-remote-driver-2.39.0.jar
+7f78b74f8000-7f78b74fb000 r--s 00049000 08:11 1452290                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-android-driver/selenium-android-driver-2.39.0.jar
+7f78b74fb000-7f78b7501000 r--s 00059000 08:11 1452332                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-java/selenium-java-2.39.0.jar
+7f78b7501000-7f78b7504000 r--s 00012000 08:11 1194795                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.fluentlenium/fluentlenium-core/fluentlenium-core-0.9.2.jar
+7f78b7504000-7f78b7506000 r--s 00002000 08:11 1194791                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.fluentlenium/fluentlenium-festassert/fluentlenium-festassert-0.9.2.jar
+7f78b7506000-7f78b7509000 r--s 00006000 08:11 815225                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.google.code.findbugs/jsr305/jsr305-2.0.3.jar
+7f78b7509000-7f78b750b000 r--s 00002000 08:11 1452368                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scala-sbt/test-interface/test-interface-1.0.jar
+7f78b750b000-7f78b750c000 r--s 00006000 08:11 1452315                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.novocode/junit-interface/junit-interface-0.11-RC1.jar
+7f78b750c000-7f78b7510000 r--s 00018000 08:11 1323840                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.specs2/classycle/classycle-1.4.3.jar
+7f78b7510000-7f78b7531000 rw-p 00000000 00:00 0 
+7f78b7531000-7f78b7621000 r--s 00c16000 08:11 674053                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scala-lang/scala-compiler/scala-compiler-2.11.0.jar
+7f78b7621000-7f78b7623000 r--s 0000f000 08:11 1194788                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.specs2/specs2-analysis_2.11/specs2-analysis_2.11-2.3.12.jar
+7f78b7623000-7f78b762f000 r--s 00075000 08:11 945423                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.specs2/specs2-matcher-extra_2.11/specs2-matcher-extra_2.11-2.3.12.jar
+7f78b762f000-7f78b7631000 r--s 00005000 08:11 815217                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.objenesis/objenesis/objenesis-1.0.jar
+7f78b7631000-7f78b7650000 r--s 00150000 08:11 945441                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.mockito/mockito-core/mockito-core-1.9.5.jar
+7f78b7650000-7f78b7655000 r--s 00033000 08:11 1194797                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.specs2/specs2-mock_2.11/specs2-mock_2.11-2.3.12.jar
+7f78b7655000-7f78b7658000 r--s 0002b000 08:11 1061894                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.specs2/specs2-junit_2.11/specs2-junit_2.11-2.3.12.jar
+7f78b7658000-7f78b7663000 r--s 0005c000 08:11 674048                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.scalaz/scalaz-effect_2.11/scalaz-effect_2.11-7.0.6.jar
+7f78b7663000-7f78b766b000 r--s 00044000 08:11 674045                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.scalaz/scalaz-concurrent_2.11/scalaz-concurrent_2.11-7.0.6.jar
+7f78b766b000-7f78b7722000 r--s 007d5000 08:11 674007                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.scalaz/scalaz-core_2.11/scalaz-core_2.11-7.0.6.jar
+7f78b7722000-7f78b7741000 r--s 0014d000 08:11 1323836                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.specs2/specs2-common_2.11/specs2-common_2.11-2.3.12.jar
+7f78b7741000-7f78b777c000 r--s 00223000 08:11 1323842                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.specs2/specs2-matcher_2.11/specs2-matcher_2.11-2.3.12.jar
+7f78b777c000-7f78b77a6000 r--s 001d1000 08:11 945412                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.specs2/specs2-core_2.11/specs2-core_2.11-2.3.12.jar
+7f78b77a6000-7f78b77a8000 r--s 00009000 08:11 3161022                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.hamcrest/hamcrest-core/hamcrest-core-1.3.jar
+7f78b77a8000-7f78b77ae000 r--s 00036000 08:11 1194759                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/junit/junit/junit-4.11.jar
+7f78b77ae000-7f78b77b0000 r--s 00002000 08:11 1452381                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/json-encryption_2.11/json-encryption_2.11-2.0.0.jar
+7f78b77b0000-7f78b77b3000 r--s 0000d000 08:11 1452375                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/http-caching-client_2.11/http-caching-client_2.11-5.3.0.jar
+7f78b77b3000-7f78b77b5000 r--s 00009000 08:11 1452302                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/url-builder_2.11/url-builder_2.11-1.0.0.jar
+7f78b77b5000-7f78b77bc000 r--s 00064000 08:11 3161041                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.apache.commons/commons-lang3/commons-lang3-3.4.jar
+7f78b77bc000-7f78b77be000 r--s 0000d000 08:11 674027                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/twirl-api_2.11/twirl-api_2.11-1.1.1.jar
+7f78b77be000-7f78b77c9000 r--s 00067000 08:11 1452345                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-ui_2.11/play-ui_2.11-4.10.0.jar
+7f78b77c9000-7f78b77cc000 r--s 000c2000 08:11 537765                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/govuk-template_2.11/govuk-template_2.11-4.0.0.jar
+7f78b77cc000-7f78b77ce000 r--s 0000c000 08:11 1061899                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-health_2.11/play-health_2.11-1.1.0.jar
+7f78b77ce000-7f78b77d2000 r--s 0002a000 08:11 1452335                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/commons-io/commons-io/commons-io-2.4.jar
+7f78b77d2000-7f78b77d3000 r--s 00003000 08:11 815243                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-json-logger_2.11/play-json-logger_2.11-2.1.1.jar
+7f78b77d3000-7f78b77d7000 r--s 00018000 08:11 1194762                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/net.ceedubs/ficus_2.11/ficus_2.11-1.1.1.jar
+7f78b77d7000-7f78b77d9000 r--s 0000a000 08:11 1452330                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-config_2.11/play-config_2.11-2.0.1.jar
+7f78b77d9000-7f78b77dc000 r--s 00022000 08:11 815241                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/domain_2.11/domain_2.11-3.2.0.jar
+7f78b77dc000-7f78b77e5000 r--s 0005f000 08:11 537771                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-authorised-frontend_2.11/play-authorised-frontend_2.11-4.5.0.jar
+7f78b77e5000-7f78b77eb000 r--s 00033000 08:11 1452362                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/filters-helpers_2.11/filters-helpers_2.11-2.3.10.jar
+7f78b77eb000-7f78b77ed000 r--s 0000c000 08:11 1452297                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-partials_2.11/play-partials_2.11-4.2.0.jar
+7f78b77ed000-7f78b77f7000 r--s 0005f000 08:11 674013                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/ch.qos.logback/logback-core/logback-core-1.1.2.jar
+7f78b77f7000-7f78b77fd000 r--s 0003d000 08:11 674055                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/ch.qos.logback/logback-classic/logback-classic-1.1.2.jar
+7f78b77fd000-7f78b77ff000 r--s 00000000 08:11 537786                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-logback/metrics-logback-3.1.0.jar
+7f78b77ff000-7f78b7801000 r--s 00007000 08:11 537779                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-jvm/metrics-jvm-3.1.0.jar
+7f78b7801000-7f78b7805000 r--s 00034000 08:11 1194766                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/com.fasterxml.jackson.core/jackson-core/jackson-core-2.4.2.jar
+7f78b7805000-7f78b7808000 r--s 00007000 08:11 3161035                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/com.fasterxml.jackson.core/jackson-annotations/jackson-annotations-2.4.0.jar
+7f78b7808000-7f78b7819000 r--s 000f6000 08:11 674015                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/com.fasterxml.jackson.core/jackson-databind/jackson-databind-2.4.2.jar
+7f78b7819000-7f78b781a000 r--s 00003000 08:11 537790                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-json/metrics-json-3.1.0.jar
+7f78b781a000-7f78b781c000 r--s 00006000 08:11 1061876                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.slf4j/slf4j-api/slf4j-api-1.7.7.jar
+7f78b781c000-7f78b7820000 r--s 00018000 08:11 3161019                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-core/metrics-core-3.1.0.jar
+7f78b7820000-7f78b7822000 r--s 00007000 08:11 945403                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.kenshoo/metrics-play_2.11/metrics-play_2.11-2.3.0_0.1.8.jar
+7f78b7822000-7f78b7825000 r--s 00012000 08:11 537784                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/com.codahale.metrics/metrics-core/metrics-core-3.0.2.jar
+7f78b7825000-7f78b7826000 r--s 00002000 08:11 537774                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/com.codahale.metrics/metrics-graphite/metrics-graphite-3.0.2.jar
+7f78b7826000-7f78b7828000 r--s 0000a000 08:11 815229                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/http-exceptions_2.11/http-exceptions_2.11-1.0.0.jar
+7f78b7828000-7f78b7838000 r--s 00088000 08:11 674050                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/joda-time/joda-time/joda-time-2.8.2.jar
+7f78b7838000-7f78b783d000 r--s 0002d000 08:11 1452353                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.github.nscala-time/nscala-time_2.11/nscala-time_2.11-2.2.0.jar
+7f78b783d000-7f78b783f000 r--s 00008000 08:11 3029698                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/time_2.11/time_2.11-2.0.0.jar
+7f78b783f000-7f78b7846000 r--s 00039000 08:11 1323834                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/http-verbs_2.11/http-verbs_2.11-3.3.0.jar
+7f78b7846000-7f78b7849000 r--s 00009000 08:11 3029701                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/oauth.signpost/signpost-core/signpost-core-1.2.1.2.jar
+7f78b7849000-7f78b7853000 r--s 00079000 08:11 1452343                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.ning/async-http-client/async-http-client-1.8.15.jar
+7f78b7853000-7f78b787e000 r--s 001f5000 08:11 1452300                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/com.google.guava/guava/guava-16.0.1.jar
+7f78b787e000-7f78b788a000 r--s 00087000 08:11 1194764                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play-ws_2.11/play-ws_2.11-2.3.10.jar
+7f78b788a000-7f78b7890000 r--s 0003d000 08:11 1061889                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-auditing_2.11/play-auditing_2.11-1.5.1.jar
+7f78b7890000-7f78b78b8000 r--s 001a3000 08:11 815222                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.bouncycastle/bcprov-jdk16/bcprov-jdk16-1.46.jar
+7f78b78b8000-7f78b78d1000 r--s 0012c000 08:11 945406                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/io.netty/netty/netty-3.9.8.Final.jar
+7f78b78d1000-7f78b791e000 r--s 0034d000 08:11 674019                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play_2.11/play_2.11-2.3.9.jar
+7f78b791e000-7f78b8000000 r--p 00000000 08:01 1054741                    /usr/lib/locale/locale-archive
+7f78b8000000-7f78b8021000 rw-p 00000000 00:00 0 
+7f78b8021000-7f78bc000000 ---p 00000000 00:00 0 
+7f78bc000000-7f78bc001000 r--s 00004000 08:11 537782                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-graphite_2.11/play-graphite_2.11-2.0.0.jar
+7f78bc001000-7f78bc002000 r--s 00001000 08:11 3029710                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/oauth.signpost/signpost-commonshttp4/signpost-commonshttp4-1.2.1.2.jar
+7f78bc002000-7f78bc005000 r--s 00018000 08:11 1452347                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/play-filters_2.11/play-filters_2.11-4.6.0.jar
+7f78bc005000-7f78bc007000 r--s 00006000 08:11 1452360                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/secure_2.11/secure_2.11-7.0.0.jar
+7f78bc007000-7f78bc00a000 r--s 00017000 08:11 945421                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/crypto_2.11/crypto_2.11-3.0.0.jar
+7f78bc00a000-7f78bc015000 r--s 0008f000 08:11 815250                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play-json_2.11/play-json_2.11-2.3.9.jar
+7f78bc015000-7f78bc027000 r--s 000a1000 08:11 3161036                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play-iteratees_2.11/play-iteratees_2.11-2.3.9.jar
+7f78bc027000-7f78bc07f000 r--s 00523000 08:11 945439                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scala-lang/scala-library/scala-library-2.11.7.jar
+7f78bc07f000-7f78bc080000 ---p 00000000 00:00 0 
+7f78bc080000-7f78bc180000 rw-p 00000000 00:00 0                          [stack:11628]
+7f78bc180000-7f78bc183000 ---p 00000000 00:00 0 
+7f78bc183000-7f78bc281000 rw-p 00000000 00:00 0                          [stack:11627]
+7f78bc281000-7f78bc284000 ---p 00000000 00:00 0 
+7f78bc284000-7f78bc382000 rw-p 00000000 00:00 0                          [stack:11626]
+7f78bc382000-7f78bc385000 ---p 00000000 00:00 0 
+7f78bc385000-7f78bc483000 rw-p 00000000 00:00 0                          [stack:11625]
+7f78bc483000-7f78bc486000 ---p 00000000 00:00 0 
+7f78bc486000-7f78bc584000 rw-p 00000000 00:00 0                          [stack:11624]
+7f78bc584000-7f78bc587000 ---p 00000000 00:00 0 
+7f78bc587000-7f78bc685000 rw-p 00000000 00:00 0                          [stack:11623]
+7f78bc685000-7f78bc688000 ---p 00000000 00:00 0 
+7f78bc688000-7f78bc786000 rw-p 00000000 00:00 0                          [stack:11622]
+7f78bc786000-7f78bc789000 ---p 00000000 00:00 0 
+7f78bc789000-7f78bc887000 rw-p 00000000 00:00 0                          [stack:11621]
+7f78bc887000-7f78bc888000 ---p 00000000 00:00 0 
+7f78bc888000-7f78c1000000 rw-p 00000000 00:00 0                          [stack:11620]
+7f78c1000000-7f78c1910000 rwxp 00000000 00:00 0 
+7f78c1910000-7f78d0000000 ---p 00000000 00:00 0 
+7f78d0000000-7f78d0a5c000 rw-p 00000000 00:00 0 
+7f78d0a5c000-7f78d4000000 ---p 00000000 00:00 0 
+7f78d4000000-7f78d4001000 r--s 00001000 08:11 1452328                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play-datacommons_2.11/play-datacommons_2.11-2.3.9.jar
+7f78d4001000-7f78d400a000 r--s 00053000 08:11 3161040                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play-functional_2.11/play-functional_2.11-2.3.9.jar
+7f78d400a000-7f78d400c000 r--s 00000000 08:11 1194801                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play-exceptions/play-exceptions-2.3.9.jar
+7f78d400c000-7f78d400f000 r--s 00013000 08:11 1452373                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/frontend-bootstrap_2.11/frontend-bootstrap_2.11-6.4.0.jar
+7f78d400f000-7f78d4018000 r--s 0002d000 08:11 1452320                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/xml-apis/xml-apis/xml-apis-1.4.01.jar
+7f78d4018000-7f78d4031000 r--s 00135000 08:11 1452371                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/xerces/xercesImpl/xercesImpl-2.11.0.jar
+7f78d4031000-7f78d4038000 r--s 0003a000 08:11 1452358                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/commons-codec/commons-codec/commons-codec-1.9.jar
+7f78d4038000-7f78d405d000 r--s 00242000 08:11 1323830                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.akka/akka-actor_2.11/akka-actor_2.11-2.3.4.jar
+7f78d405d000-7f78d4068000 r--s 0005c000 08:11 945434                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.scala-lang.modules/scala-parser-combinators_2.11/scala-parser-combinators_2.11-1.0.1.jar
+7f78d4068000-7f78d4842000 rw-p 00000000 00:00 0 
+7f78d4842000-7f78d4a1a000 r--s 03d17000 08:01 163388                     /usr/lib/jvm/java-8-oracle/jre/lib/rt.jar
+7f78d4a1a000-7f78d5677000 rw-p 00000000 00:00 0 
+7f78d5677000-7f78d5678000 ---p 00000000 00:00 0 
+7f78d5678000-7f78d5778000 rw-p 00000000 00:00 0                          [stack:11619]
+7f78d5778000-7f78d5779000 ---p 00000000 00:00 0 
+7f78d5779000-7f78d5879000 rw-p 00000000 00:00 0                          [stack:11618]
+7f78d5879000-7f78d587a000 ---p 00000000 00:00 0 
+7f78d587a000-7f78d597a000 rw-p 00000000 00:00 0                          [stack:11617]
+7f78d597a000-7f78d597b000 ---p 00000000 00:00 0 
+7f78d597b000-7f78d5aa5000 rw-p 00000000 00:00 0                          [stack:11614]
+7f78d5aa5000-7f78d5d15000 ---p 00000000 00:00 0 
+7f78d5d15000-7f78d5d3f000 rw-p 00000000 00:00 0 
+7f78d5d3f000-7f78d5faf000 ---p 00000000 00:00 0 
+7f78d5faf000-7f78d60c2000 rw-p 00000000 00:00 0 
+7f78d60c2000-7f78d60fc000 ---p 00000000 00:00 0 
+7f78d60fc000-7f78d6122000 rw-p 00000000 00:00 0 
+7f78d6122000-7f78d64bd000 ---p 00000000 00:00 0 
+7f78d64bd000-7f78d64d7000 r-xp 00000000 08:01 290827                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f78d64d7000-7f78d66d7000 ---p 0001a000 08:01 290827                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f78d66d7000-7f78d66d8000 rw-p 0001a000 08:01 290827                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f78d66d8000-7f78d66e3000 r-xp 00000000 08:01 931313                     /lib/x86_64-linux-gnu/libnss_files-2.19.so
+7f78d66e3000-7f78d68e2000 ---p 0000b000 08:01 931313                     /lib/x86_64-linux-gnu/libnss_files-2.19.so
+7f78d68e2000-7f78d68e3000 r--p 0000a000 08:01 931313                     /lib/x86_64-linux-gnu/libnss_files-2.19.so
+7f78d68e3000-7f78d68e4000 rw-p 0000b000 08:01 931313                     /lib/x86_64-linux-gnu/libnss_files-2.19.so
+7f78d68e4000-7f78d68ef000 r-xp 00000000 08:01 931333                     /lib/x86_64-linux-gnu/libnss_nis-2.19.so
+7f78d68ef000-7f78d6aee000 ---p 0000b000 08:01 931333                     /lib/x86_64-linux-gnu/libnss_nis-2.19.so
+7f78d6aee000-7f78d6aef000 r--p 0000a000 08:01 931333                     /lib/x86_64-linux-gnu/libnss_nis-2.19.so
+7f78d6aef000-7f78d6af0000 rw-p 0000b000 08:01 931333                     /lib/x86_64-linux-gnu/libnss_nis-2.19.so
+7f78d6af0000-7f78d6b07000 r-xp 00000000 08:01 931322                     /lib/x86_64-linux-gnu/libnsl-2.19.so
+7f78d6b07000-7f78d6d06000 ---p 00017000 08:01 931322                     /lib/x86_64-linux-gnu/libnsl-2.19.so
+7f78d6d06000-7f78d6d07000 r--p 00016000 08:01 931322                     /lib/x86_64-linux-gnu/libnsl-2.19.so
+7f78d6d07000-7f78d6d08000 rw-p 00017000 08:01 931322                     /lib/x86_64-linux-gnu/libnsl-2.19.so
+7f78d6d08000-7f78d6d0a000 rw-p 00000000 00:00 0 
+7f78d6d0a000-7f78d6d13000 r-xp 00000000 08:01 931321                     /lib/x86_64-linux-gnu/libnss_compat-2.19.so
+7f78d6d13000-7f78d6f12000 ---p 00009000 08:01 931321                     /lib/x86_64-linux-gnu/libnss_compat-2.19.so
+7f78d6f12000-7f78d6f13000 r--p 00008000 08:01 931321                     /lib/x86_64-linux-gnu/libnss_compat-2.19.so
+7f78d6f13000-7f78d6f14000 rw-p 00009000 08:01 931321                     /lib/x86_64-linux-gnu/libnss_compat-2.19.so
+7f78d6f14000-7f78d6f3e000 r-xp 00000000 08:01 290816                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f78d6f3e000-7f78d713e000 ---p 0002a000 08:01 290816                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f78d713e000-7f78d7140000 rw-p 0002a000 08:01 290816                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f78d7140000-7f78d714d000 r-xp 00000000 08:01 290810                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f78d714d000-7f78d734d000 ---p 0000d000 08:01 290810                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f78d734d000-7f78d734f000 rw-p 0000d000 08:01 290810                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f78d734f000-7f78d7356000 r-xp 00000000 08:01 931330                     /lib/x86_64-linux-gnu/librt-2.19.so
+7f78d7356000-7f78d7555000 ---p 00007000 08:01 931330                     /lib/x86_64-linux-gnu/librt-2.19.so
+7f78d7555000-7f78d7556000 r--p 00006000 08:01 931330                     /lib/x86_64-linux-gnu/librt-2.19.so
+7f78d7556000-7f78d7557000 rw-p 00007000 08:01 931330                     /lib/x86_64-linux-gnu/librt-2.19.so
+7f78d7557000-7f78d765c000 r-xp 00000000 08:01 931312                     /lib/x86_64-linux-gnu/libm-2.19.so
+7f78d765c000-7f78d785b000 ---p 00105000 08:01 931312                     /lib/x86_64-linux-gnu/libm-2.19.so
+7f78d785b000-7f78d785c000 r--p 00104000 08:01 931312                     /lib/x86_64-linux-gnu/libm-2.19.so
+7f78d785c000-7f78d785d000 rw-p 00105000 08:01 931312                     /lib/x86_64-linux-gnu/libm-2.19.so
+7f78d785d000-7f78d851b000 r-xp 00000000 08:01 290793                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f78d851b000-7f78d871a000 ---p 00cbe000 08:01 290793                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f78d871a000-7f78d87f2000 rw-p 00cbd000 08:01 290793                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f78d87f2000-7f78d8837000 rw-p 00000000 00:00 0 
+7f78d8837000-7f78d89f2000 r-xp 00000000 08:01 931327                     /lib/x86_64-linux-gnu/libc-2.19.so
+7f78d89f2000-7f78d8bf1000 ---p 001bb000 08:01 931327                     /lib/x86_64-linux-gnu/libc-2.19.so
+7f78d8bf1000-7f78d8bf5000 r--p 001ba000 08:01 931327                     /lib/x86_64-linux-gnu/libc-2.19.so
+7f78d8bf5000-7f78d8bf7000 rw-p 001be000 08:01 931327                     /lib/x86_64-linux-gnu/libc-2.19.so
+7f78d8bf7000-7f78d8bfc000 rw-p 00000000 00:00 0 
+7f78d8bfc000-7f78d8bff000 r-xp 00000000 08:01 931316                     /lib/x86_64-linux-gnu/libdl-2.19.so
+7f78d8bff000-7f78d8dfe000 ---p 00003000 08:01 931316                     /lib/x86_64-linux-gnu/libdl-2.19.so
+7f78d8dfe000-7f78d8dff000 r--p 00002000 08:01 931316                     /lib/x86_64-linux-gnu/libdl-2.19.so
+7f78d8dff000-7f78d8e00000 rw-p 00003000 08:01 931316                     /lib/x86_64-linux-gnu/libdl-2.19.so
+7f78d8e00000-7f78d8e15000 r-xp 00000000 08:01 290820                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f78d8e15000-7f78d9015000 ---p 00015000 08:01 290820                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f78d9015000-7f78d9016000 rw-p 00015000 08:01 290820                     /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f78d9016000-7f78d902f000 r-xp 00000000 08:01 931328                     /lib/x86_64-linux-gnu/libpthread-2.19.so
+7f78d902f000-7f78d922e000 ---p 00019000 08:01 931328                     /lib/x86_64-linux-gnu/libpthread-2.19.so
+7f78d922e000-7f78d922f000 r--p 00018000 08:01 931328                     /lib/x86_64-linux-gnu/libpthread-2.19.so
+7f78d922f000-7f78d9230000 rw-p 00019000 08:01 931328                     /lib/x86_64-linux-gnu/libpthread-2.19.so
+7f78d9230000-7f78d9234000 rw-p 00000000 00:00 0 
+7f78d9234000-7f78d9257000 r-xp 00000000 08:01 931324                     /lib/x86_64-linux-gnu/ld-2.19.so
+7f78d9257000-7f78d9258000 r--s 00002000 08:11 3029704                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/build-link/build-link-2.3.9.jar
+7f78d9258000-7f78d9259000 r--s 00003000 08:11 1061897                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/javax.transaction/jta/jta-1.1.jar
+7f78d9259000-7f78d925a000 r--s 00003000 08:11 815232                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.akka/akka-slf4j_2.11/akka-slf4j_2.11-2.3.4.jar
+7f78d925a000-7f78d925c000 r--s 00003000 08:11 1323838                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.slf4j/jcl-over-slf4j/jcl-over-slf4j-1.7.6.jar
+7f78d925c000-7f78d9260000 r--s 00015000 08:11 1452378                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.joda/joda-convert/joda-convert-1.6.jar
+7f78d9260000-7f78d9264000 r--s 00032000 08:11 674025                     /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/com.typesafe/config/config-1.2.1.jar
+7f78d9264000-7f78d926d000 r--s 00091000 08:11 1323828                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scala-stm/scala-stm_2.11/scala-stm_2.11-0.7.jar
+7f78d926d000-7f78d9339000 rw-p 00000000 00:00 0 
+7f78d9339000-7f78d933c000 ---p 00000000 00:00 0 
+7f78d933c000-7f78d943e000 rw-p 00000000 00:00 0                          [stack:11612]
+7f78d943e000-7f78d943f000 r--s 00001000 08:11 1452326                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.slf4j/jul-to-slf4j/jul-to-slf4j-1.7.6.jar
+7f78d943f000-7f78d9440000 r--s 00001000 08:11 1452312                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.netty/netty-http-pipelining/netty-http-pipelining-1.1.2.jar
+7f78d9440000-7f78d944a000 r--s 000a5000 08:11 1061873                    /Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.javassist/javassist/javassist-3.18.2-GA.jar
+7f78d944a000-7f78d9452000 rw-s 00000000 08:01 1966486                    /tmp/hsperfdata_dimitri/11611
+7f78d9452000-7f78d9453000 rw-p 00000000 00:00 0 
+7f78d9453000-7f78d9454000 ---p 00000000 00:00 0 
+7f78d9454000-7f78d9456000 rw-p 00000000 00:00 0 
+7f78d9456000-7f78d9457000 r--p 00022000 08:01 931324                     /lib/x86_64-linux-gnu/ld-2.19.so
+7f78d9457000-7f78d9458000 rw-p 00023000 08:01 931324                     /lib/x86_64-linux-gnu/ld-2.19.so
+7f78d9458000-7f78d9459000 rw-p 00000000 00:00 0 
+7fffef99b000-7fffef9c0000 rw-p 00000000 00:00 0                          [stack]
+7fffef9f2000-7fffef9f4000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+java_command: sbt.ForkMain 42632
+java_class_path (initial): /Extra_Disk/hmrc/nisp-frontend/target/scala-2.11/test-classes:/Extra_Disk/hmrc/nisp-frontend/target/scala-2.11/classes:/Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.javassist/javassist/javassist-3.18.2-GA.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scala-stm/scala-stm_2.11/scala-stm_2.11-0.7.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/com.typesafe/config/config-1.2.1.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.joda/joda-convert/joda-convert-1.6.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/bundles/org.scala-lang.modules/scala-parser-combinators_2.11/scala-parser-combinators_2.11-1.0.1.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.netty/netty-http-pipelining/netty-http-pipelining-1.1.2.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.slf4j/jul-to-slf4j/jul-to-slf4j-1.7.6.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.slf4j/jcl-over-slf4j/jcl-over-slf4j-1.7.6.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.akka/akka-actor_2.11/akka-actor_2.11-2.3.4.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.akka/akka-slf4j_2.11/akka-slf4j_2.11-2.3.4.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/commons-codec/commons-codec/commons-codec-1.9.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/xerces/xercesImpl/xercesImpl-2.11.0.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/xml-apis/xml-apis/xml-apis-1.4.01.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/javax.transaction/jta/jta-1.1.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/uk.gov.hmrc/frontend-bootstrap_2.11/frontend-bootstrap_2.11-6.4.0.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/org.scala-lang/scala-library/scala-library-2.11.7.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/play_2.11/play_2.11-2.3.9.jar:/Extra_Disk/hmrc/nisp-frontend/lib_managed/jars/com.typesafe.play/build-link/build-link-2.3.9.jar:/Extra_Disk/hmrc/nisp-frontend/li
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/usr/lib/jvm/java-8-oracle
+PATH=/home/dimitri/Downloads/idea-IC-141.1532.4/bin:/usr/local/heroku/bin:/home/dimitri/bin:/home/dimitri/.npm-global/bin:/home/dimitri/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xaba070], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xaba070], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x917630], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0x917630], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0x917630], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x917630], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0x918c60], sa_mask[0]=00100000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x91a060], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0x91a060], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0x91a060], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x91a060], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=14.04
+DISTRIB_CODENAME=trusty
+DISTRIB_DESCRIPTION="Ubuntu 14.04.2 LTS"
+
+uname:Linux 3.13.0-48-generic #80-Ubuntu SMP Thu Mar 12 11:16:15 UTC 2015 x86_64
+libc:glibc 2.19 NPTL 2.19 
+rlimit: STACK 8192k, CORE 0k, NPROC 63712, NOFILE 4096, AS infinity
+load average:3.59 2.14 1.60
+
+/proc/meminfo:
+MemTotal:        8176772 kB
+MemFree:          172216 kB
+Buffers:             772 kB
+Cached:            51812 kB
+SwapCached:            0 kB
+Active:          7770348 kB
+Inactive:          36968 kB
+Active(anon):    7756188 kB
+Inactive(anon):     6656 kB
+Active(file):      14160 kB
+Inactive(file):    30312 kB
+Unevictable:         120 kB
+Mlocked:             120 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:              1428 kB
+Writeback:             0 kB
+AnonPages:       7755476 kB
+Mapped:            27300 kB
+Shmem:              7488 kB
+Slab:              70088 kB
+SReclaimable:      34540 kB
+SUnreclaim:        35548 kB
+KernelStack:       10888 kB
+PageTables:        51564 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     4088384 kB
+Committed_AS:   12852816 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:       80456 kB
+VmallocChunk:   34359652856 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:   3969024 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       59328 kB
+DirectMap2M:     8329216 kB
+
+
+CPU:total 4 (4 cores per cpu, 1 threads per core) family 6 model 60 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, tsc
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i7-4800MQ CPU @ 2.70GHz
+stepping	: 3
+microcode	: 0x19
+cpu MHz		: 2693.804
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 5
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl pni ssse3 lahf_lm
+bogomips	: 5387.60
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i7-4800MQ CPU @ 2.70GHz
+stepping	: 3
+microcode	: 0x19
+cpu MHz		: 2693.804
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 4
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 5
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl pni ssse3 lahf_lm
+bogomips	: 5387.60
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i7-4800MQ CPU @ 2.70GHz
+stepping	: 3
+microcode	: 0x19
+cpu MHz		: 2693.804
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 2
+cpu cores	: 4
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 5
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl pni ssse3 lahf_lm
+bogomips	: 5387.60
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i7-4800MQ CPU @ 2.70GHz
+stepping	: 3
+microcode	: 0x19
+cpu MHz		: 2693.804
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 3
+cpu cores	: 4
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 5
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl pni ssse3 lahf_lm
+bogomips	: 5387.60
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 8176772k(172216k free), swap 0k(0k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.60-b23) for linux-amd64 JRE (1.8.0_60-b27), built on Aug  4 2015 12:19:40 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Thu May 26 11:38:39 2016
+elapsed time: 17 seconds (0d 0h 0m 17s)
+
