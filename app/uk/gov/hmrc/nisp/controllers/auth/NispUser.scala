@@ -17,9 +17,12 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import org.joda.time.DateTime
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 
-case class NispUser(authContext: AuthContext, name: Option[String]) {
+case class NispUser(authContext: AuthContext, name: Option[String], authProvider: String) {
   def nino: Option[String] = authContext.principal.accounts.paye.map(_.nino.nino)
   def previouslyLoggedInAt: Option[DateTime] = authContext.user.previouslyLoggedInAt
+  val authProviderOld = if(authContext.user.confidenceLevel.level == 500) Constants.verify else Constants.iv
+  val confidenceLevel = authContext.user.confidenceLevel
 }
