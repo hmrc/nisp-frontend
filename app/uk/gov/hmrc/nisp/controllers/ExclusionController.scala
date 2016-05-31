@@ -41,8 +41,6 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
-    val confidenceLevel = user.authContext.user.confidenceLevel
-    val authProviderGA = request.session.get(SessionKeys.authProvider)
 
     nispConnector.connectToGetSPResponse(nino).map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
@@ -50,12 +48,10 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
           Ok(excluded_sp(
             spExclusions.exclusions,
             spSummary.statePensionAge,
-            niExclusionOption.fold(true)(_.exclusions.isEmpty),
-            authProviderGA,
-            confidenceLevel.toString
+            niExclusionOption.fold(true)(_.exclusions.isEmpty)
           ))
         } else {
-          Ok(excluded_sp_old(nino, spExclusions, spSummary.statePensionAge, authProviderGA, confidenceLevel.toString))
+          Ok(excluded_sp_old(nino, spExclusions, spSummary.statePensionAge))
         }
       case _ =>
         Logger.warn("User accessed /exclusion as non-excluded user")
