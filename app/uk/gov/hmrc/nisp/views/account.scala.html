@@ -64,8 +64,8 @@
         <h2 class="heading-medium summary">@Messages("nisp.main.summary")</h2>
     }
     <div class="highlighted-event">
-        <p> @Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate)
-            @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase()
+        <p>@Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate)
+            @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase()
             @Messages("nisp.is")
         </p>
         <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
@@ -80,7 +80,7 @@
         <ul class="list-bullet">
             <li>@Messages("nisp.main.notAGuarantee")</li>
             <li>@Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
-            <li>@Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.forecast.yearsLeftToWork))</li>
+            <li>@Html(Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.forecast.yearsLeftToWork)))</li>
             <li>@Messages("nisp.main.inflation")</li>
             @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
         </ul>
