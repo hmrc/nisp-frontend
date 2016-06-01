@@ -372,7 +372,7 @@ nisp.mqp.years.dontcount = You also have {0} on your record which do not count t
 nisp.mqp.cannotImprove = You cannot improve your estimate any further, unless you choose to put off claiming. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
-nisp.mqp.howManyToContribute = assumes that you''ll contribute another {0}
+nisp.mqp.howManyToContribute = assumes that you&rsquo;ll contribute another {0}
 nisp.mqp.reachStatePensionAge = You&rsquo;ll reach State Pension age on {0} when you&rsquo;ll be {1}
 nisp.mqp.doNext = What you can do next
 
