@@ -12,7 +12,7 @@ $(document).ready(function(){
   			eventAction: 'click',
   			eventLabel: "'"+$path+"'",
 				hitCallback: function() {
-      			//	window.location.href = $href;
+      			window.location.href = $href;
 				}
 		});		
 		 	
