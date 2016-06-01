@@ -22,14 +22,12 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-
-@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, authenticationProvider: String,
-    isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, copeEstimate: BigDecimal, authenticationProvider: String, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),pageTitle=Some(Messages("nisp.cope.youWereContractedOut"))) {
 
-    <p>@Messages("nisp.cope.inthepast")</p>
+    <p>@Messages("nisp.cope.inThePast")</p>
     <p>@Messages("nisp.cope.why")</p>
     <ul class="list-bullet">
         <li>@Messages("nisp.cope.why.bullet1")</li>
@@ -38,32 +36,8 @@
     <h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
     <p>@Messages("nisp.cope.definition")</p>
     <p>@Messages("nisp.cope.workplace")</p>
-
-    <table class="cope-table">
-        <thead>
-        <tr>
-            <th>&nbsp;</th>
-            <th class="cope-table-number">@Messages("nisp.main.chart.week")</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>@Messages("nisp.cope.table.pensionforecast")</td>
-            <td class="cope-table-number">@NispMoney.pounds(forecastAmount)</td>
-        </tr>
-        <tr>
-            <td>@Messages("nisp.cope.table.estimate.title")</td>
-            <td class="cope-table-number">@NispMoney.pounds(copeEstimate)</td>
-        </tr>
-        <tr>
-            <td>@Messages("nisp.cope.table.copeadded")</td>
-            <td class="cope-table-number">@NispMoney.pounds(totalPension)</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <p>@Html(Messages("nisp.main.cope.linktitle"))</p>
-
+    <p>@Messages("nisp.cope.table.estimate.title") <span class="heading-small">@NispMoney.pounds(copeEstimate) @Messages("nisp.main.chart.week")</span>.</p>
+    <p>@Html(Messages("nisp.main.cope.linkTitle"))</p>
     <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
 }
 }
