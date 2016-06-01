@@ -23,6 +23,10 @@
 
 @(nino: String, spExclusions: ExclusionsModel, statePensionAge: SPAgeModel)(implicit request: Request[_], user: NispUser,
   partialRetriever: CachedStaticHtmlPartialRetriever)
+  
+@pageScripts = {
+  <script src='@controllers.routes.Assets.at("javascript/app.js")' type="text/javascript"></script>
+}
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -32,7 +36,7 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), h1Classes = Some("title-sp"), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), h1Classes = Some("title-sp"), pageScripts=Some(pageScripts), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
         @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
             @viewExclusions(){@exclusions.sp.overseas()}
         }
