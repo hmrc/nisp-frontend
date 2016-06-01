@@ -20,9 +20,16 @@
 
 @()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
+@pageScripts = {
+  <script src='@controllers.routes.Assets.at("javascript/app.js")' type="text/javascript"></script>
+}
+
+
+
 @defining(Some(user)) { implicit userOption =>
 @nispMain(pageTitle=None, browserTitle = Messages("nisp.nirecord.gapsinyourrecord.title"),
 userLoggedIn = true,
+pageScripts = Some(pageScripts),
 h1Classes=Some("account-heading"),
 sidebarLinks = None) {
 

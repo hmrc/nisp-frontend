@@ -59,7 +59,8 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 }
 
 @pageScripts = {
-<script src="@routes.Assets.at("javascript/nirecord.js")" type="text/javascript"></script>
+  <script src='@controllers.routes.Assets.at("javascript/app.js")' type="text/javascript"></script>
+  <script src="@routes.Assets.at("javascript/nirecord.js")" type="text/javascript"></script>
 }
 
 @analyticsAdditionalJs = {
