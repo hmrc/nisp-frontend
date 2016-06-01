@@ -42,7 +42,7 @@
         <dd id="tax-year-@niRecordTaxYear.taxYear">
             @if(niRecordTaxYear.underInvestigation) {
             <div class="contributions-wrapper">
-                <p>@Messages("nisp.nirecord.gap.underinvestigation")</p>
+                <p>@Html(Messages("nisp.nirecord.gap.underInvestigation"))</p>
             </div>
             } else {
                 <div class="contributions-wrapper">
@@ -92,10 +92,9 @@
                                 <p>@Html(Messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
                         }
                     } else {
-                        <p class="panel-indent">@Messages("nisp.nirecord.gap.latepaymentmessage")</p>
+                        <p class="panel-indent">@Html(Messages("nisp.nirecord.gap.latePaymentMessage"))</p>
                     }
                 </div>
             }
         </dd>
     }
-
