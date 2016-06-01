@@ -20,7 +20,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 
 case class QuestionnaireForm(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int],
-                             satisfied: Option[Int], improve: Option[String])
+                             satisfied: Option[Int], followUpCall: Option[Int], improve: Option[String])
 
 object QuestionnaireForm {
   val form = Form[QuestionnaireForm](
@@ -30,6 +30,7 @@ object QuestionnaireForm {
       "useitbyyourself" -> optional(number(0, 2)),
       "likelytouse" -> optional(number(0, 3)),
       "satisfied" -> optional(number(0, 4)),
+      "followupcall" -> optional(number(0,2)),
       "improve" -> optional(text(maxLength = 1200))
     )(QuestionnaireForm.apply)(QuestionnaireForm.unapply)
   )
