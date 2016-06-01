@@ -47,12 +47,15 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
         }
     }
 
-    <p aria-hidden="true" class="nisummary-number">@niSummary.noOfNonQualifyingYears</p>
 
-    @if(niSummary.noOfNonQualifyingYears != 1) {
-        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps")</p> 
-    } else {
-        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps.single")</p>
+    @if(niSummary.noOfNonQualifyingYears > 0) {
+        <p aria-hidden="true" class="nisummary-number">@niSummary.noOfNonQualifyingYears</p>
+
+        @if(niSummary.noOfNonQualifyingYears != 1) {
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps")</p>
+        } else {
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps.single")</p>
+        }
     }
   
 </div>
@@ -101,13 +104,15 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
             </li>
         }
 
-        <li>@niSummary.noOfNonQualifyingYears 
+        @if(niSummary.noOfNonQualifyingYears > 0) {
+            <li>@niSummary.noOfNonQualifyingYears
             @if(niSummary.noOfNonQualifyingYears != 1) {
-            @Messages("nisp.nirecord.summary.gaps")
-        } else {
-            @Messages("nisp.nirecord.summary.gaps.single")
+                @Messages("nisp.nirecord.summary.gaps")
+            } else {
+                @Messages("nisp.nirecord.summary.gaps.single")
+            }
+            </li>
         }
-        </li>
     </ul>
 </div>
 
