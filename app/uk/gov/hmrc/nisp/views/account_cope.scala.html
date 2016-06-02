@@ -26,12 +26,9 @@
 @(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, authenticationProvider: String,
     isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@pageScripts = {
-  <script src='@controllers.routes.Assets.at("javascript/app.js")' type="text/javascript"></script>
-}
-
 @defining(Some(user)) { implicit userOption =>
-@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), pageScripts=Some(pageScripts), pageTitle=Some(Messages("nisp.cope.youWereContractedOut"))) {
+@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), 
+  pageTitle=Some(Messages("nisp.cope.youWereContractedOut"))) {
 
     <p>@Messages("nisp.cope.inthepast")</p>
     <p>@Messages("nisp.cope.why")</p>
