@@ -130,6 +130,14 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 <dl class="accordion">
 
     @if(niGaps) {
+        @if(!niRecord.taxYears.exists(_.taxYear == tableStart)) {
+            <dt>
+                <div class="ni-wrapper">
+                    <div class="ni-years"> @{(tableStart)}-@{(tableStart + 1).toString.substring(2,4)}</div>
+                    <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
+                </div>
+            </dt>
+        }
         @for(niRecordTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
             @includes.nirecordtaxyear(niRecordTaxYear)
         }
