@@ -25,7 +25,8 @@
 @(nino: String, copeEstimate: BigDecimal, authenticationProvider: String, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
-@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),pageTitle=Some(Messages("nisp.cope.youWereContractedOut"))) {
+@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), 
+  pageTitle=Some(Messages("nisp.cope.youWereContractedOut"))) {
 
     <p>@Html(Messages("nisp.cope.inThePast"))</p>
 
