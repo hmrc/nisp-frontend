@@ -38,7 +38,8 @@ canSeeNIRecord: Boolean
 
 @defining(Some(user)) { implicit userOption =>
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-                articleClasses = Some("mainpage"), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+                articleClasses = Some("mainpage"), pageTitle = Some(Messages("nisp.main.h1.title")), 
+                analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
         @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
             <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age) </h2>
         } else {

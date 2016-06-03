@@ -22,7 +22,6 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.utils.Constants
 
 
 @(
@@ -34,7 +33,6 @@
     authenticationProvider: String,
     isPertaxUrl:Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
-
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -54,7 +52,8 @@
 
 @defining(Some(user)) { implicit userOption =>
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-              articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
+        articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs), 
+        pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
 
     @if(!spSummary.isMQP &&
