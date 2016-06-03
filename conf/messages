@@ -214,6 +214,12 @@ nisp.questionnaire.satisfied.2 = Neither satisfied or dissatisfied
 nisp.questionnaire.satisfied.3 = Dissatisfied
 nisp.questionnaire.satisfied.4 = Very dissatisfied
 
+nisp.questionnaire.followupcall.question = After using this service, do you need to contact HM Revenue and Customs (HMRC)?
+nisp.questionnaire.followupcall.0 = Yes
+nisp.questionnaire.followupcall.1 = No
+nisp.questionnaire.followupcall.2 = Not sure
+
+
 nisp.questionnaire.improve.question = How could we improve the service?
 
 #*******************
