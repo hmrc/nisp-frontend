@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.frontend.auth._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{ConfidenceLevel, Accounts}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
@@ -60,7 +60,7 @@ trait AuthorisedForNisp extends Actions {
         authedBy.async {
           authContext: AuthContext => implicit request =>
             retrieveName(authContext) flatMap { name =>
-              action(NispUser(authContext, name))(request)
+              action(NispUser(authContext, name, request.session.get(SessionKeys.authProvider).getOrElse("")))(request)
             }
         }
       }
