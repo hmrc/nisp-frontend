@@ -22,7 +22,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, copeEstimate: BigDecimal, authenticationProvider: String, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), 

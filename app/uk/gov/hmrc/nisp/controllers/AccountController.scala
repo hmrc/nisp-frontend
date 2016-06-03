@@ -53,12 +53,12 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
-      val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
 
       nispConnector.connectToGetSPResponse(nino).map {
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
           if(spSummary.contractedOutFlag) {
-            Ok(account_cope(nino, spSummary.copeAmount.week, authenticationProvider, isPertax))
+            Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax))
           } else {
             Redirect(routes.AccountController.show())
           }
@@ -70,21 +70,21 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
-      val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
+
       nispConnector.connectToGetSPResponse(nino).map {
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
 
           customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
             spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecast.forecastAmount.week,
             spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario,
-            spSummary.copeAmount.week, authenticationProvider))
+            spSummary.copeAmount.week, user.authProviderOld))
 
           if (spSummary.mqp.fold(false) (_ != MQPScenario.ContinueWorking)) {
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-            Ok(account_mqp(nino, spSummary, spSummary.mqp, yearsMissing, authenticationProvider, isPertax))
-              .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+            Ok(account_mqp(nino, spSummary, spSummary.mqp, yearsMissing, isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
-            Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+            Ok(account_forecastonly(nino, spSummary, isPertax)).withSession(storeUserInfoInSession(user,
+               spSummary.contractedOutFlag))
           } else {
             val (currentChart, forecastChart, personalMaximumChart) =
               calculateChartWidths(
@@ -92,8 +92,8 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                 spSummary.forecast.forecastAmount,
                 spSummary.forecast.personalMaximum
               )
-            Ok(account(nino, spSummary, currentChart, forecastChart, personalMaximumChart, authenticationProvider, isPertax))
-              .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+            Ok(account(nino, spSummary, currentChart, forecastChart, personalMaximumChart, isPertax))
+               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }
 
         case SPResponseModel(_, Some(spExclusions: ExclusionsModel), _) =>

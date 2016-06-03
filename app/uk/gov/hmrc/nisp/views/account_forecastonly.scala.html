@@ -22,10 +22,9 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, spSummary: SPSummaryModel, authenticationProvider: String, isPertaxUrl:Boolean
-)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, spSummary: SPSummaryModel, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@analyticsAdditionalJs = {
+@analyticsAdditionalJs(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever) = {
     ga('set', {
         'dimension7':  '@spSummary.forecast.scenario',
         'dimension8':  '@spSummary.forecast.forecastAmount.week.toInt',
@@ -36,7 +35,9 @@
         'dimension14': '@spSummary.contractedOutFlag',
         'dimension15': '@spSummary.statePensionAge',
         'dimension16': '@spSummary.copeAmount.week',
-        'dimension22': '@authenticationProvider',
+        'dimension22': '@user.authProviderOld',
+        'dimension38': '@user.authProvider',
+        'dimension39': '@user.confidenceLevel',
         'metric5': 1
     });
 }

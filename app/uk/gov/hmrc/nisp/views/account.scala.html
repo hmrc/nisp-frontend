@@ -30,7 +30,6 @@
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
     personalMaximumChart: SPChartModel,
-    authenticationProvider: String,
     isPertaxUrl:Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
@@ -45,7 +44,9 @@
         'dimension14': '@spSummary.contractedOutFlag',
         'dimension15': '@spSummary.statePensionAge',
         'dimension16': '@spSummary.copeAmount.week',
-        'dimension22': '@authenticationProvider',
+        'dimension22': '@user.authProviderOld',
+        'dimension38': '@user.authProvider',
+        'dimension39': '@user.confidenceLevel',
         'metric5': 1
     });
 }
