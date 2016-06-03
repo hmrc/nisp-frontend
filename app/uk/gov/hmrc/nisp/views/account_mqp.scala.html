@@ -49,7 +49,7 @@
 @defining(Some(user)) { implicit userOption =>
 @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
-    <h2 class="heading-medium">@Messages("nisp.main.description.mqp") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h2>
+    <h2 class="heading-medium">@Html(Messages("nisp.main.description.mqp")) @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age</h2>
     <div class="panel-indent">
         <p> 
             @if(spSummary.numberOfQualifyingYears > 0) {
@@ -93,7 +93,7 @@
 
         case Some(CantGet) => {
 
-            <h2 class="heading-medium">@Messages("nisp.mqp.notpossible")</h2>
+            <h2 class="heading-medium">@Html(Messages("nisp.mqp.notpossible"))</h2>
             <p>
                 @if(spSummary.yearsToContributeUntilPensionAge > 0) {
                     @Messages("nisp.mqp.youNeedToAdd",
