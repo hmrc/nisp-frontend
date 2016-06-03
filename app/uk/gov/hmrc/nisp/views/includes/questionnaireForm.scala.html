@@ -75,6 +75,19 @@
         '_labelClass -> "block-label"
     )
 
+    @helpers.inputRadioGroup(
+        form("followupcall"), Seq(
+            ("0", Messages("nisp.questionnaire.followupcall.0")),
+            ("1", Messages("nisp.questionnaire.followupcall.1")),
+            ("2", Messages("nisp.questionnaire.followupcall.2"))
+        ),
+        '_legend -> Messages("nisp.questionnaire.followupcall.question"),
+        '_legendClass -> "heading-small",
+        '_labelAfter -> true,
+        '_labelClass -> "block-label"
+    )
+
+
 
     @helpers.textArea(form("improve"),
         '_label -> Messages("nisp.questionnaire.improve.question"),
