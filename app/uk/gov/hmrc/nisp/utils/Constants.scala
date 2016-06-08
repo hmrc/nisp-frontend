@@ -47,4 +47,5 @@ object Constants {
   val verify = "verify"
   val iv = "iv"
   val chartWidthMinimum = 31
+  val deferralCutOffAge = 53
 }
