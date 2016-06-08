@@ -20,7 +20,7 @@
 
 @()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@nispMain(browserTitle = Messages("nisp.timeout.title"), showTitleHeaderNav = false, pageTitle = Some(Messages("nisp.timeout.heading"))) {
+@main(browserTitle = Some(Messages("nisp.timeout.title")), showTitleHeaderNav = false, pageTitle = Some(Messages("nisp.timeout.heading"))) {
     <p>@Messages("nisp.timeout.body")</p>
     <p>@Html(Messages("nisp.useagain", uk.gov.hmrc.nisp.controllers.routes.LandingController.show.url))</p>
 }
