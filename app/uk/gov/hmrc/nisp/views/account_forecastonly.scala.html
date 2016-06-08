@@ -43,7 +43,7 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), 
+@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
   analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
 
     <div class="highlighted-event">

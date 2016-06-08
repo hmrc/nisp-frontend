@@ -20,7 +20,7 @@
 
 @()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@nispMain(pageTitle = Some(Messages("nisp.landing.title")),h1Classes=Some("welcome-msg")) {
+@main(pageTitle = Some(Messages("nisp.landing.title")), h1Classes=Some("welcome-msg")) {
 <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
 
 

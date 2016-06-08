@@ -23,7 +23,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.nisp.utils.Breadcrumb
 
-@(title: String,
+@(browserTitle: Option[String] = None,
     sidebarLinks: Option[Html] = None,
     sidebarClasses: Option[String] = None,
     userLoggedIn: Boolean = false,
@@ -35,7 +35,11 @@
     pageScripts: Option[Html] = None,
     articleClasses: Option[String] = None,
     analyticsAdditionalJs: Option[Html] = None,
-    articleEnabled: Boolean = true)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
+    articleEnabled: Boolean = true,
+    loginDetailsHeader: Option[Html] = None,
+    pageTitle: Option[String] = None,
+    h1Classes:Option[String]=None,
+    contentHeaderExtra: Option[Html] = None)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 
 @linkElement = {
@@ -96,10 +100,13 @@
     }
 }
 
+@contentHeader = {
+    @loginDetailsHeader
+    @contentHeaderExtra
+}
+
 @mainContentHeader = {
-    @if( contentHeader.isDefined ) {
-        @layouts.main_content_header(contentHeader.getOrElse(Html("")))
-    }
+        @layouts.main_content_header(contentHeader)
 }
 
 @content = {
@@ -130,4 +137,6 @@
     @pageScripts
 }
 
-@govuk_template(Some(title), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uk.gov.hmrc.play.views.html.layouts.footer_links()), true)(content)
+
+@govuk_template(browserTitle, None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uk.gov.hmrc.play.views.html.layouts.footer_links()), true)(content)
+

@@ -21,7 +21,7 @@
 @()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
-@nispMain(pageTitle=None, browserTitle = Messages("nisp.nirecord.gapsinyourrecord.title"),
+@main(pageTitle=None, browserTitle = Some(Messages("nisp.nirecord.gapsinyourrecord.title")),
   userLoggedIn = true,
   h1Classes=Some("account-heading"),
   sidebarLinks = None) {

@@ -39,7 +39,7 @@ canSeeNIRecord: Boolean
 
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
+    @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
                 articleClasses = Some("mainpage"), pageTitle = Some(Messages("nisp.main.h1.title")), 
                 analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
         @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
