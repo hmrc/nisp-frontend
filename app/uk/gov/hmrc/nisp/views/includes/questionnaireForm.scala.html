@@ -88,7 +88,6 @@
     )
 
 
-
     @helpers.textArea(form("improve"),
         '_label -> Messages("nisp.questionnaire.improve.question"),
         '_labelClass -> "heading-small",
@@ -96,5 +95,28 @@
         '_inputClass -> "full-width")
     <p class="font-xsmall">@Messages("nisp.textentry.charlimit")</p>
 
-    <input class="button" type="submit" value="@Messages("nisp.submit")" />
+
+    @helpers.inputRadioGroup(
+        form("research"), Seq(
+            ("0", Messages("nisp.questionnaire.research.0")),
+            ("1", Messages("nisp.questionnaire.research.1"))
+        ),
+        '_legend -> Messages("nisp.questionnaire.research.question"),
+        '_legendClass -> "heading-small research",
+        '_labelAfter -> true,
+        '_labelClass -> "block-label"
+    )
+
+    <fieldset>
+    @helpers.input(
+        form("email"),
+        '_label -> "Please leave your email address so we can contact you",
+        '_inputClass -> "block-label",
+        '_labelClass -> "heading-small email",
+        '_maxlength -> 255
+    )
+    </fieldset>
+    <div class="heading-small">
+        <input class="button" type="submit" value="@Messages("nisp.submit")" />
+    </div>
 }
