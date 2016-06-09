@@ -93,9 +93,10 @@
 }
 
 @article = {
-@if(pageTitle.isDefined) {
-    <h1 class="heading-large top-title-heading"> @pageTitle </h1>
-}
+
+    @if(pageTitle.isDefined) {
+        <h1 class="heading-large top-title-heading"> @pageTitle </h1>
+    }
     @if(articleEnabled) {
         @layouts.article(mainContent, false, articleClasses)
     } else {
