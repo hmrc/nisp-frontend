@@ -93,6 +93,9 @@
 }
 
 @article = {
+@if(pageTitle.isDefined) {
+    <h1 class="heading-large top-title-heading"> @pageTitle </h1>
+}
     @if(articleEnabled) {
         @layouts.article(mainContent, false, articleClasses)
     } else {
@@ -136,7 +139,6 @@
     <script src='@controllers.routes.Assets.at("javascript/app.js")' type="text/javascript"></script>
     @pageScripts
 }
-
 
 @govuk_template(browserTitle, None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uk.gov.hmrc.play.views.html.layouts.footer_links()), true)(content)
 
