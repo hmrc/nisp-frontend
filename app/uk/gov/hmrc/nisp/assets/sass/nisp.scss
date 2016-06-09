@@ -17,6 +17,8 @@
  * Chart lines
  *
  * Cope table
+ *
+ * Survey form styling
  */
 
  
@@ -332,3 +334,11 @@ table.cope-table .cope-table-number {
   text-align: right;
 }
 
+/*------------------------------------*\
+    #Survey form styling
+\*------------------------------------*/
+
+fieldset, label.heading-small {
+  margin-top: 2em;
+
+}
