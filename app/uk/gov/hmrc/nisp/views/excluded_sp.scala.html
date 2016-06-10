@@ -37,11 +37,13 @@ canSeeNIRecord: Boolean
     });
 }
 
+@pageTitle = { @Messages("nisp.main.h1.title") }
 
 @defining(Some(user)) { implicit userOption =>
     @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
-                articleClasses = Some("mainpage"), pageTitle = Some(Messages("nisp.main.h1.title")), 
-                analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+                articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+                
+        <h1 class="heading-large top-title-heading"> @pageTitle </h1>
         @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
             <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age) </h2>
         } else {
