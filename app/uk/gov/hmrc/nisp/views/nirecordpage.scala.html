@@ -76,7 +76,7 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @main(pageTitle=None, browserTitle = Some(Messages("nisp.nirecord.title")), userLoggedIn = true,
+    @main(browserTitle = Some(Messages("nisp.nirecord.title")), userLoggedIn = true,
     h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
     sidebarLinks = Some(sidebar), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 

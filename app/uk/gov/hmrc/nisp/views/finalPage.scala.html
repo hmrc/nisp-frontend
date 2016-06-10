@@ -20,7 +20,7 @@
 
 @()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@main(browserTitle = Some(Messages("nisp.finishpage.title")), pageTitle = None, sidebarLinks = Some(includes.questionnaireSidebar())) {
+@main(browserTitle = Some(Messages("nisp.finishpage.title")), sidebarLinks = Some(includes.questionnaireSidebar())) {
 <h1 class="heading-large">@Messages("nisp.thankyou.title")</h1>
 
 <p>@Html(Messages("nisp.thankyou.received"))</p>

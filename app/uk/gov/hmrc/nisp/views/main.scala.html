@@ -37,7 +37,6 @@
     analyticsAdditionalJs: Option[Html] = None,
     articleEnabled: Boolean = true,
     loginDetailsHeader: Option[Html] = None,
-    pageTitle: Option[String] = None,
     h1Classes:Option[String]=None,
     contentHeaderExtra: Option[Html] = None)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
@@ -94,9 +93,6 @@
 
 @article = {
 
-    @if(pageTitle.isDefined) {
-        <h1 class="heading-large top-title-heading"> @pageTitle </h1>
-    }
     @if(articleEnabled) {
         @layouts.article(mainContent, false, articleClasses)
     } else {
