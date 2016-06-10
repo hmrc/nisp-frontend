@@ -29,8 +29,8 @@ class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], l
       "satisfied"-> satisfied.map(_.toString).getOrElse("N/A"),
       "followupcall" -> followUpCall.map(_.toString).getOrElse("N/A"),
       "improve" -> improve.map(_.toString).getOrElse("N/A"),
-      "research" -> improve.map(_.toString).getOrElse("N/A"),
-      "email" -> improve.map(_.toString).getOrElse("N/A"),
+      "research" -> research.map(_.toString).getOrElse("N/A"),
+      "email" -> email.map(_.toString).getOrElse("N/A"),
       "Name" -> name,
       "nino" -> nino,
       "contractedout" -> contractedOut
