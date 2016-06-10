@@ -19,9 +19,11 @@ $(document).ready(function(){
 	});
 
 	if($("input[name='research']").length) {
-		var $inputResearch = $("input[name='research']");	
-		$inputResearch.change(function() {		
-			if($(this).val() === '0') 
+		var $inputResearch = $("input[name='research']");
+		if($(".form-field--error").length)
+			$(".email").css("display","inline-block")
+		$inputResearch.change(function() {
+			if($(this).val() === '0')
 					$(".email").css("display","inline-block")
 			else
 					$(".email").css('display','none')

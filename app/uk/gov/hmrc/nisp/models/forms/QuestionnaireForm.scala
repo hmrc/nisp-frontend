@@ -34,7 +34,7 @@ object QuestionnaireForm {
       "followupcall" -> optional(number(0,2)),
       "improve" -> optional(text(maxLength = 1200)),
       "research" -> optional(number(0,1)),
-      "email" -> optional(text(maxLength = 255))
+      "email" -> optional(email)
     )(QuestionnaireForm.apply)(QuestionnaireForm.unapply)
   )
 }
