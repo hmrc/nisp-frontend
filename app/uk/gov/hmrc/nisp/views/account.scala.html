@@ -148,7 +148,7 @@
         @includes.contractedOut()
     }
 
-    @if(spSummary.statePensionAge.age > Constants.deferralCutOffAge) {
+    @if(spSummary.customerAge > Constants.deferralCutOffAge) {
         @includes.deferral(spSummary.statePensionAge.age)
     }
 
