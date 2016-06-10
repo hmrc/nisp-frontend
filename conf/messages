@@ -103,8 +103,8 @@ nisp.main.chart.whichis = which is
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
 nisp.main.chart.year = a year
-nisp.main.chart.estimateIfYouContinue.single = Estimate if you contribute another year before {1}
-nisp.main.chart.estimateIfYouContinue.plural = Estimate if you contribute another {0} years before {1}
+nisp.main.chart.estimateIfYouContinue.single = Estimate if you contribute another year before April {1}
+nisp.main.chart.estimateIfYouContinue.plural = Estimate if you contribute another {0} years before April {1}
 nisp.main.chart.estimateIfYouContinue2016 = Estimate if you contribute enough in year up to 5 April 2016
 
 nisp.main.overseas = As you are living or working overseas, you may be entitled to a State Pension from the country you are living or working in. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>
@@ -150,9 +150,10 @@ nisp.excluded.title = You are unable to use this service
 
 nisp.excluded.amountdissonance = Sorry, your National Insurance record is a bit complicated, so we cannot give you a forecast. We&rsquo;re working on fixing this.
 
-nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a> to get a paper statement of how much you&rsquo;ve earned so far.
+nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a> to get a paper statement of how much State Pension you&rsquo;ve earned so far.
 
 nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
+nisp.excluded.contactNationalInsuranceHelplineIom = To get a copy of your UK National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
 
 nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
 

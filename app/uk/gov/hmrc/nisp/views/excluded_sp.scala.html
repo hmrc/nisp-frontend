@@ -86,7 +86,15 @@ canSeeNIRecord: Boolean
 
             }
         } else {
-            <p> @Html(Messages("nisp.excluded.contactNationalInsuranceHelpline")) </p>
+            @if(spExclusions.contains(IOM)) {
+            
+                <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelplineIom"))</p> 
+            
+            } else {        
+            
+                <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelpline"))</p>
+
+            }
         }
     }
 }
