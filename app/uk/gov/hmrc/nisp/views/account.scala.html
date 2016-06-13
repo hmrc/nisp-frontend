@@ -148,6 +148,10 @@
         @includes.contractedOut()
     }
 
+    @if(spSummary.customerAge > Constants.deferralCutOffAge) {
+        @includes.deferral(spSummary.statePensionAge.age)
+    }
+
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 
   }

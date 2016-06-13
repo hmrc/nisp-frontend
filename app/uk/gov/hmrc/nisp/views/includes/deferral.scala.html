@@ -14,14 +14,9 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
-@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.utils.Constants
+@(statePensionAge: Int)
 
-@(spSummary: SPSummaryModel, currentChart: SPChartModel, forecastChart: SPChartModel)
-
-    <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
-    <p>@Messages("nisp.main.context.improve.para1.plural")</p>
-    <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGaps")</a>
+<h2 class="heading-medium">@Messages("nisp.main.puttingOff")</h2>
+<p>@Messages("nisp.main.puttingOff.line1", statePensionAge)</p>
+<a href="https://www.gov.uk/deferring-state-pension" target="_blank" rel="external">@Messages("nisp.main.puttingOff.linkTitle")</a>
