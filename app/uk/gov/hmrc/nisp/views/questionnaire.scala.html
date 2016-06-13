@@ -19,10 +19,9 @@
 
 @(form: Form[_])(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@pageTitle = { @Messages("nisp.questionnaire.header") }
 
-@main(browserTitle = Some(Messages("nisp.questionnaire.title")), sidebarLinks = Some(includes.questionnaireSidebar())) {
-    <h1 class="heading-large top-title-heading"> @pageTitle </h1>
+@main(browserTitle = Some(Messages("nisp.questionnaire.title")), sidebarLinks = Some(includes.questionnaireSidebar()),
+        pageTitle = Some(Messages("nisp.questionnaire.header"))) {
     <p>@Html(Messages("nisp.useagain", uk.gov.hmrc.nisp.controllers.routes.LandingController.show.url))</p>
     <p>@Html(Messages("nisp.questionnaire.please"))</p>
 

@@ -51,15 +51,12 @@
     });
 }
 
-@pageTitle = { @Messages("nisp.main.h1.title") }
-
 @defining(Some(user)) { implicit userOption =>
     @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
-        articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+        articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs),
+        pageTitle=Some(Messages("nisp.main.h1.title"))) {
         
-        <h1 class="heading-large top-title-heading"> @pageTitle </h1>
-    
-    
+
     @if(!spSummary.isMQP &&
         (spSummary.forecast.scenario.equals(Scenario.FillGaps) ||
          spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax) ||

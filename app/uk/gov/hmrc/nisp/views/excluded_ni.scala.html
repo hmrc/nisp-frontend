@@ -28,13 +28,9 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
     });
 }
 
-@pageTitle = { @Messages("nisp.excluded.title") }
-
 @defining(Some(user)) { implicit userOption =>
     @main(browserTitle=Some(Messages("nisp.main.title")), h1Classes = Some("title-sp"), userLoggedIn = true, 
-    analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-        
-        <h1 class="heading-large top-title-heading"> @pageTitle </h1>
+    analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle = Some(Messages("nisp.excluded.title"))) {
         
         @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
             @exclusions.ni.mwrre()
