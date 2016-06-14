@@ -346,4 +346,9 @@ fieldset, label.heading-small {
 .email {
 
   display: none;
+  padding-left: 0.78em;  
+}
+
+input[name="email"] {
+  width: 75%;
 }
