@@ -77,8 +77,7 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 
 @defining(Some(user)) { implicit userOption =>
     @main(browserTitle = Some(Messages("nisp.nirecord.title")), userLoggedIn = true,
-    h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
-    sidebarLinks = Some(sidebar), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+    pageScripts=Some(pageScripts), sidebarLinks = Some(sidebar), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <h1 class="heading-large top-title-heading">@Messages(if(niSummary.isAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")</h1>
 
