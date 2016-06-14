@@ -20,13 +20,18 @@ $(document).ready(function(){
 
 	if($("input[name='research']").length) {
 		var $inputResearch = $("input[name='research']");
+		var $email = $("input[name='email']");
 		if($(".form-field--error").length)
 			$(".email").css("display","inline-block")
 		$inputResearch.change(function() {
-			if($(this).val() === '0')
-					$(".email").css("display","inline-block")
-			else
+			if($(this).val() === '0') 
+					$(".email").css("display","inline-block");
+			else {					
 					$(".email").css('display','none')
+					if($email.val().length) {
+						$email.val('');
+					}
+			}
 		});
 	}
 });
