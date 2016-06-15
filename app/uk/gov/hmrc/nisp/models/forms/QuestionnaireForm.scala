@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.models.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
+import uk.gov.voa.play.form.ConditionalMappings._
 
 case class QuestionnaireForm(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int],
                              satisfied: Option[Int], followUpCall: Option[Int], improve: Option[String],
@@ -34,7 +35,7 @@ object QuestionnaireForm {
       "followupcall" -> optional(number(0,2)),
       "improve" -> optional(text(maxLength = 1200)),
       "research" -> optional(number(0,1)),
-      "email" -> optional(email)
+      "email" -> mandatoryIfEqual("research", "0", email)
     )(QuestionnaireForm.apply)(QuestionnaireForm.unapply)
   )
 }
