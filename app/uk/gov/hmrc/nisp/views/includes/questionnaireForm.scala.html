@@ -91,13 +91,14 @@
         '_labelClass -> "block-label"
     )
 
-
+    <fieldset>
     @helpers.textArea(form("improve"),
         '_label -> Messages("nisp.questionnaire.improve.question"),
         '_labelClass -> "heading-small",
         '_help -> Messages("nisp.textentry.warning"),
         '_inputClass -> "full-width")
-    <p class="font-xsmall">@Messages("nisp.textentry.charlimit")</p>
+    <p class="font-xsmall">@Messages("nisp.textentry.charlimit")</p>      
+    </fieldset>
 
 
     @helpers.inputRadioGroup(
