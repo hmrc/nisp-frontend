@@ -22,10 +22,8 @@
 
 @helpers.form(postRoute) {
 
+    @helpers.errorSummary("Error summary", form)
 
-    @form.errors.map( error =>
-
-        error.message)
 
     <input type="hidden" name="referer" id="referer" value="@form.data.get("referer")">
 
