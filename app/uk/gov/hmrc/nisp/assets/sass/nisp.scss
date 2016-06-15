@@ -352,3 +352,11 @@ fieldset, label.heading-small {
 input[name="email"] {
   width: 75%;
 }
+
+.form-field--error {
+  border-left: 5px solid $red;
+}
+
+.form-field--error .form-control {
+  border: 5px solid $red;
+}
