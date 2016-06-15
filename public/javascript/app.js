@@ -31,6 +31,7 @@ $(document).ready(function(){
 					$(".email").css('display','none');
 					if($errorNotification.length) {
 						$errorNotification.remove();
+						$(".error-summary").remove(); 
 						$("label").removeClass("form-field--error");
 					}
 
