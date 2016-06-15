@@ -35,7 +35,7 @@ $(document).ready(function(){
 					}
 
 					if($email.val().length) {
-						$email.val('');
+          	$email.val('');
 					}
 			}
 		});
