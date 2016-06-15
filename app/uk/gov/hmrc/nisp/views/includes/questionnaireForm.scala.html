@@ -24,7 +24,6 @@
 
     @helpers.errorSummary("Error summary", form)
 
-
     <input type="hidden" name="referer" id="referer" value="@form.data.get("referer")">
 
     @helpers.inputRadioGroup(
@@ -114,7 +113,7 @@
 
     @helpers.input(
         form("email"),
-        '_label -> "Please leave your email address so we can contact you",
+        '_label -> Messages("nisp.questionnaire.email"),
         '_inputClass -> "block-label form-control",
         '_labelClass -> "heading-small email panel-indent",
         '_maxlength -> 255)
