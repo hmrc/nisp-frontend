@@ -19,7 +19,6 @@
 @import uk.gov.hmrc.play.views.html.helpers
 
 
-
 @helpers.form(postRoute) {
 
     @helpers.errorSummary("Error summary", form)
@@ -112,7 +111,7 @@
         '_labelClass -> "block-label",
         '_groupClass -> "inline")
 
-    @helpers.input(
+    @input(
         form("email"),
         '_label -> Messages("nisp.questionnaire.email"),
         '_inputClass -> "block-label form-control",
