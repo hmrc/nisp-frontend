@@ -103,21 +103,9 @@ h2.summary {
     #Landing Page
 \*------------------------------------*/
 
-
-.heading-large.landingpagetitle {
-  margin-bottom: 0;
-}
-
 div.panel-indent{
   margin: 30px 15px 45px 0;
 }
-
-#content .welcome-msg {
-  font-size: 48px;
-  margin-top: 30px;
-  margin-bottom: 60px;
-}
-
 #content #continue {
   margin: 0 15px 15px 0;
 }
@@ -197,21 +185,6 @@ div.panel-indent{
  } 
 }
 
-h1.title-sp {
-  line-height: 1.09375;
-  text-transform: none;    
-  padding-bottom: 10px;
-  background-repeat: no-repeat;
-  color: $text-colour;
-  font-weight: 600;
-  margin-top: 30px;
-  @media only screen and (max-width: 640px) {
-    margin-top: 0; 
-  }
-}
-
-
-
 /*------------------------------------*\
     #Exception Errors
 \*------------------------------------*/
@@ -248,7 +221,6 @@ h1.title-sp {
     .form-field--error {
         width: inherit;
     }
-
 }
 
 /*----------------------------------*\
