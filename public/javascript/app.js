@@ -21,6 +21,7 @@ $(document).ready(function(){
 	if($("input[name='research']").length) {
 		var $inputResearch = $("input[name='research']");
 		var $email = $("input[name='email']");
+		$(".email").css("display","none")
 		var $errorNotification = $(".error-notification");
 		if($(".form-field--error").length)
 			$(".email").css("display","inline-block")
