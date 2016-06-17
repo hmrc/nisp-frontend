@@ -30,7 +30,7 @@ class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], l
       "followupcall" -> followUpCall.map(_.toString).getOrElse("N/A"),
       "improve" -> improve.map(_.toString).getOrElse("N/A"),
       "research" -> research.map(_.toString).getOrElse("N/A"),
-      "email" -> email.map(_.toString).getOrElse("N/A"),
+      "email" -> research.flatMap(res => if(res == 0) email else None).map(_.toString).getOrElse("N/A"),
       "Name" -> name,
       "nino" -> nino,
       "contractedout" -> contractedOut
