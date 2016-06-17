@@ -17,6 +17,8 @@
  * Chart lines
  *
  * Cope table
+ *
+ * Survey form styling
  */
 
  
@@ -332,3 +334,27 @@ table.cope-table .cope-table-number {
   text-align: right;
 }
 
+/*------------------------------------*\
+    #Survey form styling
+\*------------------------------------*/
+
+fieldset {
+  margin-top: 2em;
+
+}
+
+.email {
+  padding-left: 0.78em;  
+}
+
+input[name="email"] {
+  width: 75%;
+}
+
+.form-field--error {
+  border-left: 5px solid $red;
+}
+
+.form-field--error .form-control {
+  border: 5px solid $red;
+}

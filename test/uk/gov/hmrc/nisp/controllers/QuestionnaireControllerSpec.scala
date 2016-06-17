@@ -52,11 +52,39 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("recommend", "1"),
         ("satisfied", "2"),
         ("takepart", "1"),
+        ("research", "0"),
+        ("email", "testuser@gmail.com"),
         ("nextsteps", "nextsteps1"),
         ("name", "test"),
         ("nino", "AY112233A")
       ))
       redirectLocation(result) shouldBe Some("/checkmystatepension/finished")
+    }
+
+    "return an error page for selecting 'yes' to research but not specifying email address" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("easytouse", "2"),
+        ("useitbyyourself", "2"),
+        ("likelytouse", "2"),
+        ("research", "0"),
+        ("email", ""),
+        ("name", "test"),
+        ("nino", "AY112233A")
+      ))
+      contentAsString(result).contains("Error summary")
+    }
+    
+     "return an error page for selecting 'yes' to research and specifying wrong email format address" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("easytouse", "2"),
+        ("useitbyyourself", "2"),
+        ("likelytouse", "2"),
+        ("research", "0"),
+        ("email", "testuser@"),
+        ("name", "test"),
+        ("nino", "AY112233A")
+      ))
+      contentAsString(result).contains("Error summary")
     }
   }
 

@@ -17,5 +17,29 @@ $(document).ready(function(){
 		});		
 		 	
 	});
-	
+
+	if($("input[name='research']").length) {
+		var $inputResearch = $("input[name='research']");
+		var $email = $("input[name='email']");
+		$(".email").css("display","none")
+		var $errorNotification = $(".error-notification");
+		if($(".form-field--error").length)
+			$(".email").css("display","inline-block")
+		$inputResearch.change(function() {
+			if($(this).val() === '0') 
+					$(".email").css("display","inline-block");
+			else {					
+					$(".email").css('display','none');
+					if($errorNotification.length) {
+						$errorNotification.remove();
+						$(".error-summary").remove(); 
+						$("label").removeClass("form-field--error");
+					}
+
+					if($email.val().length) {
+          	$email.val('');
+					}
+			}
+		});
+	}
 });
