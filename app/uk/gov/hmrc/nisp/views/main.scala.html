@@ -37,9 +37,7 @@
     analyticsAdditionalJs: Option[Html] = None,
     articleEnabled: Boolean = true,
     loginDetailsHeader: Option[Html] = None,
-    h1Classes:Option[String]=None,
-    contentHeaderExtra: Option[Html] = None,
-    pageTitle: Option[String] = None)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
+    contentHeaderExtra: Option[Html] = None)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 @linkElement = {
     <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/nisp.css")'/>
@@ -50,9 +48,6 @@
 }
 
 @contentWithTitle =  {
-    @if(pageTitle.isDefined) {
-        <h1 class="heading-large top-title-heading"> @pageTitle </h1>
-    }
     @mainContent
 }
 
