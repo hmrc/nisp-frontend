@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.nisp.utils.Breadcrumb
 
 @(browserTitle: Option[String] = None,
+    pageTitle: Option[String] = None,
     sidebarLinks: Option[Html] = None,
     sidebarClasses: Option[String] = None,
     userLoggedIn: Boolean = false,
@@ -48,6 +49,10 @@
 }
 
 @contentWithTitle =  {
+
+    @pageTitle.map { title =>
+        <h1 class="heading-large top-title-heading"> @title </h1>
+    }
     @mainContent
 }
 

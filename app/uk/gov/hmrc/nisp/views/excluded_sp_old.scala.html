@@ -33,13 +33,9 @@
     });
 }
 
-@pageTitle = { @Messages("nisp.excluded.title") }
-
 @defining(Some(user)) { implicit userOption =>
     @main(browserTitle=Some(Messages("nisp.main.title")), userLoggedIn = true,
-        analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-        
-        <h1 class="heading-large top-title-heading"> @pageTitle </h1>
+        pageTitle = Some(Messages("nisp.excluded.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
         @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
             @viewExclusions(){@exclusions.sp.overseas()}

@@ -20,10 +20,8 @@
 
 @()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@pageTitle = { @Messages("nisp.landing.title") }
+@main(pageTitle = Some(Messages("nisp.landing.title"))) {
 
-@main() {
-  <h1 class="heading-large top-title-heading"> @pageTitle </h1>
   <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
   
   

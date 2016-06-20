@@ -45,13 +45,11 @@
         'metric5': 1
     });
 }
-@pageTitle = { @Messages("nisp.main.h1.title") }
 
 @defining(Some(user)) { implicit userOption =>
-@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
+@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
   analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-    <h1 class="heading-large top-title-heading"> @pageTitle </h1>
     <h2 class="heading-medium">@Html(Messages("nisp.main.description.mqp")) @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age</h2>
     <div class="panel-indent">
         <p> 
