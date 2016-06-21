@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.nisp.views.html.nispMain
+@import uk.gov.hmrc.nisp.views.html.main
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
@@ -25,7 +25,7 @@
     ga('send', 'pageview', '/checkmystatepension/unauthorised-technical-issue');
 }
 
-@nispMain(h1Classes=Some("welcome-msg"), articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@main(articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <h1 class="heading-xlarge">@Html(Messages("nisp.iv.failure.technical.title"))</h1>
 

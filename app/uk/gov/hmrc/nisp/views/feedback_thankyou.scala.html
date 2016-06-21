@@ -18,7 +18,7 @@
 
 @(partialUrl: String, redirectUrl: String)(implicit request: Request[_], cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
 
-@nispMain(showBetaBanner = false) {
+@main(showBetaBanner = false) {
     @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
     <a id="Start" href='@redirectUrl' role="button" tabindex="0" data-journey-click="checkmystatepension:feedback:return" class="button">@Messages("nisp.goback")</a>
 }
