@@ -29,10 +29,12 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), 
+    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.nirecord.heading")), 
       h1Classes = Some("title-sp"), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+       
+        <div class="panel-indent">
         @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
-            @exclusions.ni.mwrre()
+             @exclusions.ni.mwrre()
         }
         @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
             @exclusions.dead()
@@ -40,5 +42,6 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
         @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
             @exclusions.ni.isleOfMan()
         }
+        </div>
     }
 }
