@@ -76,11 +76,10 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(  pageTitle=None, browserTitle = Messages("nisp.nirecord.title"), userLoggedIn = true,
-    h1Classes=Some("account-heading"), pageScripts=Some(pageScripts),
-    sidebarLinks = Some(sidebar), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-
-<h1 class="heading-large top-title-heading">@Messages(if(niSummary.isAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")</h1>
+    @main(browserTitle = Some(Messages("nisp.nirecord.title")), userLoggedIn = true,
+        pageScripts=Some(pageScripts), sidebarLinks = Some(sidebar),
+        pageTitle = Some(Messages(if(niSummary.isAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
+        analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <div class="sidebar-mobile">
       

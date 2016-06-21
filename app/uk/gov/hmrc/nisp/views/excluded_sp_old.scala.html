@@ -34,8 +34,9 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), 
-      h1Classes = Some("title-sp"), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+    @main(browserTitle=Some(Messages("nisp.main.title")), userLoggedIn = true,
+        pageTitle = Some(Messages("nisp.excluded.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
         @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
             @viewExclusions(){@exclusions.sp.overseas()}
         }

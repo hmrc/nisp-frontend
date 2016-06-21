@@ -20,20 +20,21 @@
 
 @()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@nispMain(pageTitle = Some(Messages("nisp.landing.title")),h1Classes=Some("welcome-msg")) {
-<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+@main(pageTitle = Some(Messages("nisp.landing.title"))) {
 
-
-<p class="heading-medium">@Html(Messages("nisp.landing.eligibility.heading"))</p>
-
-<ul class="list-bullet">
-    <li>@Messages("nisp.landing.eligibility1")</li>
-    <li>@Messages("nisp.landing.eligibility2")</li>
-</ul>
-
-<a id="continue" href='@routes.AccountController.show.url' data-journey-click="checkmystatepension:landing:continue" role="button" tabindex="0" class="button">@Messages("nisp.continue")</a>
-
-<h2 class="heading-medium">@Messages("nisp.landing.noteligible.heading")</h2>
-<p>@Html(Messages("nisp.landing.noteligible"))</p>
+  <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+  
+  
+  <p class="heading-medium">@Html(Messages("nisp.landing.eligibility.heading"))</p>
+  
+  <ul class="list-bullet">
+      <li>@Messages("nisp.landing.eligibility1")</li>
+      <li>@Messages("nisp.landing.eligibility2")</li>
+  </ul>
+  
+  <a id="continue" href='@routes.AccountController.show.url' data-journey-click="checkmystatepension:landing:continue" role="button" tabindex="0" class="button">@Messages("nisp.continue")</a>
+  
+  <h2 class="heading-medium">@Messages("nisp.landing.noteligible.heading")</h2>
+  <p>@Html(Messages("nisp.landing.noteligible"))</p>
 
 }
