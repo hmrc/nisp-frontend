@@ -22,11 +22,8 @@
 @(niRecordTaxYear: NIRecordTaxYear)
 
 
-    @if(niRecordTaxYear.qualifying){
+
         <dt class="expandable" aria-expanded="false" aria-controls="tax-year-@niRecordTaxYear.taxYear">
-    }else{
-        <dt class="expandable" aria-expanded="false" aria-controls="tax-year-@niRecordTaxYear.taxYear">
-    }
         <div class="ni-wrapper">
             <div class="ni-years"> @niRecordTaxYear.displayableTaxYear</div>
             @if(niRecordTaxYear.qualifying){
