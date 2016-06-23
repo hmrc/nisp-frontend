@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
 @main(browserTitle = Some(Messages("nisp.tandcs.title")),
