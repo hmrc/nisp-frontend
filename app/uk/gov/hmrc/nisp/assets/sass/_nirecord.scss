@@ -18,12 +18,12 @@
   }
 }
 
-.ni-notfull {
+.ni-notfull, .ni-full {
   float: left;
   width: 35%;
 }
 
-.ni-full, .inactive {
+.inactive {
   float: right;
   width:75%;
   @media only screen and (max-width: 640px) {
