@@ -437,8 +437,7 @@ nisp.iv.failure.timeout.button = Start again
 nisp.tandcs.title = Terms and Conditions
 nisp.tandcs.heading = Before using Check my State Pension, please read this page carefully
 
-nisp.tandcs.use = If you want to use &lsquo;Check my State Pension&rsquo; you have to agree to our terms and conditions. 
-We can update our terms and conditions at any time. You should check this page regularly, so that you are aware of any changes.
+nisp.tandcs.use = If you want to use &lsquo;Check my State Pension&rsquo; you have to agree to our terms and conditions. We can update our terms and conditions at any time. You should check this page regularly, so that you are aware of any changes.
 nisp.tandcs.information = The information given is based on details from your account at the time you use the service and, while we will make every effort to keep this service up to date, we do not guarantee that it will be or that it is error and omission free.
 nisp.tandcs.service = The service is free to use. We cannot guarantee that it will always be available, and we may stop or change it at any time. 
 nisp.tandcs.rely = You should not rely on this information, as it does not amount to advice. You must get professional advice when planning for your retirement.
