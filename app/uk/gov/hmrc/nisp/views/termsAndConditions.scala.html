@@ -19,9 +19,7 @@
 
 @()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@defining(Some(user)) { implicit userOption =>
 @main(browserTitle = Some(Messages("nisp.tandcs.title")),
-userLoggedIn = true,
 sidebarLinks = None) {
 
 <h1 class="heading-large top-title-heading">@Messages("nisp.tandcs.heading")</h1>
