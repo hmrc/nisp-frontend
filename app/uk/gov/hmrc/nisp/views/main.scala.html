@@ -23,7 +23,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.nisp.utils.Breadcrumb
 
-@(browserTitle: Option[String] = None,
+@(browserTitle: Option[String] = Some(Messages("nisp.title")),
     pageTitle: Option[String] = None,
     sidebarLinks: Option[Html] = None,
     sidebarClasses: Option[String] = None,
