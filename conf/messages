@@ -129,6 +129,7 @@ nisp.main.context.reachMax.needToPay = You&rsquo;ll still need to pay National I
 nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach {0}, you still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
 nisp.main.context.fillGaps.improve.title = You can improve your estimate
 nisp.main.context.fillGaps.viewGaps = View gaps in your record
+
 nisp.main.context.fillGaps.viewGapsAndCost = Gaps in your record and the cost of filling them
 
 nisp.main.context.fillgaps.para1.plural = You have gaps in your National Insurance record for years where you did not contribute enough.
@@ -360,32 +361,33 @@ nisp.nirecord.voluntarycontributions.h2title.3 = 3.  Find out how paying volunta
 nisp.nirecord.voluntarycontributions.h2title.3.link1 = Contact the Future Pension Centre (opens in new tab)
 nisp.nirecord.voluntarycontributions.h2title.3.message =  to find out more about how filling gaps can affect your pension.
 
-#***************
+#***************************
 # Minimum Qualifying Period
-#***************
+#***************************
 
 nisp.main.description.mqp = You&rsquo;ll reach State Pension age on
-nisp.mqp.youneedatleast = You have {0} on your record and you need at least 10 years to get any State Pension.
-nisp.mqp.overseas = If you have lived or worked overseas, you may be able to use your time abroad to make your years in the UK qualify for the purposes of getting any State Pension. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>
-nisp.mqp.youCurrentlyHaveUsing = You currently have {0} on your National Insurance record, using the latest complete tax year available, up to 5 April {1}. You need at least 10 years to get any State Pension.
-nisp.mqp.youCurrentlyHaveUsingZero = You do not have any years on your National Insurance record, using the latest complete tax year available, up to 5 April {0}. You need at least 10 years to get any State Pension.
-nisp.mqp.possible = It may be possible for you to get some State Pension
-nisp.mqp.notpossible = It&rsquo;s not possible for you to get any State Pension based on your National Insurance record
-nisp.mqp.youNeedToAdd = You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on {2}.
-nisp.mqp.youNeedToAddZeroLeft = You need to add {0} to your record and you do not have any left to contribute before you reach State Pension age on {1}.
-nisp.mqp.afterthis = After this you no longer pay National Insurance contributions.
-nisp.mqp.afterspa = After State Pension age, {0} you no longer pay National Insurance contributions.
-nisp.mqp.gaps.fill.singular = You can fill this year to get the 10 years you need to get any State Pension.
-nisp.mqp.gaps.fill.plural = You can fill some of these years to get the 10 years you need to get any State Pension.
-nisp.mqp.never.para1 = You may have a private pension. For more details about your private pension you will need to contact your pension provider. Use the free service to <a href="https://www.gov.uk/find-lost-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:findlostpension">find pension contact details (opens in new tab)</a>.
-nisp.mqp.never.para2 = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
-nisp.mqp.years.dontcount = You also have {0} on your record which do not count towards your pension because you did not contribute enough National Insurance. You can fill some of these years to get the 10 years you need to get any State Pension.
-nisp.mqp.cannotImprove = You cannot improve your estimate any further, unless you choose to put off claiming. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS.
+nisp.mqp.notPossible = By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.
+nisp.mqp.possible = By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.
+nisp.mqp.doNext = What you can do next
+nisp.mqp.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">If you have lived or worked overseas (opens in new tab)</a>, you may be able to use your time abroad to make your years in the UK qualify for the purposes of getting any State Pension.
+
+nisp.mqp.years.dontCount.single = You also have a year on your record which does not count towards your pension because you did not contribute enough National Insurance.
+nisp.mqp.years.dontCount.plural = You also have {0} on your record which do not count towards your pension because you did not contribute enough National Insurance.
+nisp.mqp.years.dontCount.zero = You do not any years on your record that do not count towards your pension.
+
+
+nisp.mqp.filling.never = Filling these are not enough to get any State Pension.
+nisp.mqp.filling.may = Filling some of these years may get you some State Pension.
+nisp.mqp.afterSpa = After State Pension age, {0} you no longer pay National Insurance contributions.
+nisp.mqp.whatEsle = What else you can do
+nisp.mqp.privatePension = You may have a private pension. Use the free service to <a href="https://www.gov.uk/find-lost-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:findlostpension">find pension contact details (opens in new tab)</a>.
+nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
+nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
+
+nisp.mqp.cannotImprove = You cannot improve your estimate any further, unless you choose to put off claiming. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS
+nisp.mqp.howManyToContribute = assumes that you&rsquo;ll contribute another {0}
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
-nisp.mqp.howManyToContribute = assumes that you&rsquo;ll contribute another {0}
-nisp.mqp.reachStatePensionAge = You&rsquo;ll reach State Pension age on {0} when you&rsquo;ll be {1}
-nisp.mqp.doNext = What you can do next
 
 #**************************
 #  Cope Page Messages
