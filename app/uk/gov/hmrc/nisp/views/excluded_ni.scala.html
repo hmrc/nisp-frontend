@@ -32,7 +32,10 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
     @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.nirecord.heading")), 
       h1Classes = Some("title-sp"), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
        
-        <div class="panel-indent">
+        @if(niExclusions.exclusions.contains(Exclusion.MWRRE) || niExclusions.exclusions.contains(Exclusion.IOM)) {
+            <div class="panel-indent">
+        }
+
         @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
              @exclusions.ni.mwrre()
         }
@@ -42,6 +45,9 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
         @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
             @exclusions.ni.isleOfMan()
         }
-        </div>
+        @if(niExclusions.exclusions.contains(Exclusion.MWRRE) || niExclusions.exclusions.contains(Exclusion.IOM)) {
+            </div>
+        }
+        
     }
 }
