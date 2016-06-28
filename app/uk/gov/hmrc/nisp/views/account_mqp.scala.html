@@ -76,27 +76,15 @@
 
     <p>
         @if(spSummary.numberOfGapsPayable > 1) {
-
             @Messages("nisp.mqp.years.dontCount.plural", Time.years(spSummary.numberOfGapsPayable))
         } else {
-
-            @if(spSummary.numberOfGapsPayable < 1) {
-
-            @Messages("nisp.mqp.years.dontCount.zero")
-
-        } else {
-
-            @Messages("nisp.mqp.years.dontCount.single")
-
-    }
-
+                @if(spSummary.numberOfGapsPayable < 1) {
+                @Messages("nisp.mqp.years.dontCount.zero")
+            } else {
+                @Messages("nisp.mqp.years.dontCount.single")
+            }
         }
-
-
     </p>
-
-
-
 
     <p>@spSummary.mqp match {
             case Some(CanGetWithGaps) => {
@@ -107,15 +95,7 @@
             }
         }
     </p>    
-    <p>@spSummary.mqp match {
-            case Some(CanGetWithGaps) => {
-                @Messages("nisp.mqp.possible")
-            }
-            case Some(CantGet) => {
-                @Html(Messages("nisp.mqp.notPossible"))
-            }
-        }
-    </p>
+   
     <p>@Messages("nisp.mqp.afterSpa", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
 
     <!-- WHAT ELSE YOU CAN DO -->
