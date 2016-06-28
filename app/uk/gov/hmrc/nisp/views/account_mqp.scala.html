@@ -50,7 +50,7 @@
 @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
   analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-    <div class="panel-indent panel-border-wide style1">
+    <div class="panel-indent panel-border-wide mqp-indent">
         <p>@Html(Messages("nisp.main.description.mqp")) @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age</p>
 
         @spSummary.mqp match {
