@@ -91,7 +91,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return full page for user without gaps" in {
       val result = MockNIRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
-      contentAsString(result) should include ("All years.")
+      contentAsString(result) should include ("You do not have any gaps in your record.")
     }
 
     "redirect to exclusion for excluded user" in {
