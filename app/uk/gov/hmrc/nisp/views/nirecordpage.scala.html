@@ -115,13 +115,14 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
     </ul>
 </div>
 
-@if(!niGaps && (niSummary.numberOfPayableGaps + niSummary.numberOfNonPayableGaps > 0)){
-    <p class="lede">@Messages("nisp.nirecord.yournirecordallyears")</p>
+@if(!niGaps){
+    @if(niSummary.numberOfPayableGaps + niSummary.numberOfNonPayableGaps > 0){
+        <p class="lede">@Messages("nisp.nirecord.yournirecordallyears")</p>
+    } else {
+        <p class="lede">@Messages("nisp.nirecord.youdonothaveanygaps")</p>
+    }
 }
 
-@if(niSummary.numberOfPayableGaps + niSummary.numberOfNonPayableGaps == 0) {
-    <p class="lede">@Messages("nisp.nirecord.youdonothaveanygaps")</p>
-}
 @if(niSummary.noOfNonQualifyingYears > 0 && !niGaps){
     <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niSummary.noOfNonQualifyingYears)</a></p>
 }
