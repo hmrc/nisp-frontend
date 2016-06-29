@@ -29,25 +29,21 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.nirecord.heading")), 
-      h1Classes = Some("title-sp"), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+    @main(browserTitle=Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.nirecord.heading")),
+      userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
        
         @if(niExclusions.exclusions.contains(Exclusion.MWRRE) || niExclusions.exclusions.contains(Exclusion.IOM)) {
             <div class="panel-indent">
-        }
-
-        @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
-             @exclusions.ni.mwrre()
-        }
-        @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
-            @exclusions.dead()
-        }
-        @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
-            @exclusions.ni.isleOfMan()
-        }
-        @if(niExclusions.exclusions.contains(Exclusion.MWRRE) || niExclusions.exclusions.contains(Exclusion.IOM)) {
+                @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
+                @exclusions.ni.mwrre()
+                }
+                @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
+                @exclusions.ni.isleOfMan()
+                }
             </div>
         }
-        
+        @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
+        @exclusions.dead()
+        }
     }
 }

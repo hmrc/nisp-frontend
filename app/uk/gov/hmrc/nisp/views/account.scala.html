@@ -53,11 +53,9 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-        articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs), 
-        pageTitle=Some(Messages("nisp.main.h1.title"))) {
-
-
+    @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
+        articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+    
     @if(!spSummary.isMQP &&
         (spSummary.forecast.scenario.equals(Scenario.FillGaps) ||
          spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax) ||

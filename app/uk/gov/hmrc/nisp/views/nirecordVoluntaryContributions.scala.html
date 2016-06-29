@@ -21,9 +21,8 @@
 @()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
-@nispMain(pageTitle=None, browserTitle = Messages("nisp.nirecord.voluntarycontributions.title"),
+@main(browserTitle = Some(Messages("nisp.nirecord.voluntarycontributions.title")),
 userLoggedIn = true,
-h1Classes=Some("account-heading"),
 sidebarLinks = None) {
 
 <h1 class="heading-large top-title-heading">@Messages("nisp.nirecord.voluntarycontributions.heading")</h1>
@@ -69,7 +68,7 @@ sidebarLinks = None) {
     <div class="panel-indent">
         <p>@Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
         <ul class="list-bullet">
-            <li><a href="http://www.pensionsadvisoryservice.org.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensionadvisory">@Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a></li>
+            <li><a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a></li>
             <li><a href="https://www.pensionwise.gov.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">@Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2")</a>&nbsp;@Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")</li>
             <li><a href="https://www.citizensadvice.org.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a></li>
         </ul>

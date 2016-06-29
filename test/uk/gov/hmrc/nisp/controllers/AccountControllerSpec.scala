@@ -199,7 +199,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
       "return COPE page for contracted out (B) user" in {
         val result = MockAccountController.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
-        contentAsString(result) should include ("You were contracted out ")
+        contentAsString(result) should include ("You were contracted out")
       }
 
       "return abroad message for abroad user" in {
