@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /checkmystatepension       app.Routes
+->         /check-your-state-pension  app.Routes
 GET        /yourstatepension          uk.gov.hmrc.nisp.controllers.redirect.RedirectController.redirectToHome(path="")
 GET        /yourstatepension/*path    uk.gov.hmrc.nisp.controllers.redirect.RedirectController.redirectToHome(path)
 ->         /template                  template.Routes
