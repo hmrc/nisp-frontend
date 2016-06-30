@@ -248,7 +248,8 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 #***************
 
 nisp.nirecord.title = Your National Insurance record: Check your State Pension
-nisp.nirecord.heading = You are unable to use this service
+nisp.nirecord.heading = Your National Insurance record
+nisp.nirecord.heading.dead = You are unable to use this service
 nisp.nirecord.heading.uk = Your UK National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.
 nisp.nirecord.yournirecordallyears = All years.

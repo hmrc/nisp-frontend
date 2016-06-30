@@ -28,22 +28,44 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
     });
 }
 
+
+
 @defining(Some(user)) { implicit userOption =>
-    @main(browserTitle=Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.nirecord.heading")),
-      userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-       
-        @if(niExclusions.exclusions.contains(Exclusion.MWRRE) || niExclusions.exclusions.contains(Exclusion.IOM)) {
-            <div class="panel-indent">
-                @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
-                @exclusions.ni.mwrre()
-                }
-                @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
-                @exclusions.ni.isleOfMan()
-                }
-            </div>
+    @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
+        @main(browserTitle=Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.nirecord.heading.dead")),
+          userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
+            @if(niExclusions.exclusions.contains(Exclusion.MWRRE) || niExclusions.exclusions.contains(Exclusion.IOM)) {
+                <div class="panel-indent">
+                    @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
+                    @exclusions.ni.mwrre()
+                    }
+                    @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
+                    @exclusions.ni.isleOfMan()
+                    }
+                </div>
+            }
+            @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
+            @exclusions.dead()
+            }
         }
-        @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
-        @exclusions.dead()
+    }else{
+        @main(browserTitle=Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.nirecord.heading")),
+            userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
+            @if(niExclusions.exclusions.contains(Exclusion.MWRRE) || niExclusions.exclusions.contains(Exclusion.IOM)) {
+                <div class="panel-indent">
+                    @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
+                    @exclusions.ni.mwrre()
+                    }
+                    @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
+                    @exclusions.ni.isleOfMan()
+                    }
+                </div>
+                }
+                @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
+                @exclusions.dead()
+            }
         }
     }
 }
