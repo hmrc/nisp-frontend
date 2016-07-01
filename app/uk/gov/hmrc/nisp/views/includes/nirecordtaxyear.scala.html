@@ -28,20 +28,18 @@
         <div class="ni-years"> @niRecordTaxYear.displayableTaxYear</div>
         @if(niRecordTaxYear.qualifying){
             <div class="ni-full">@Messages("nisp.nirecord.fullyear")</div>
-            <div class="ni-action"><a href="#">@Html(Messages("nisp.nirecord.gap.viewdetails", niRecordTaxYear.displayableTaxYear))</a></div>
         } else {
-            <div class="ni-notfull">@Messages("nisp.nirecord.gap")</div>
-            <div class="ni-action"><a href="#">@Html(Messages("nisp.nirecord.gap.viewdetails", niRecordTaxYear.displayableTaxYear))</a></div>
+            <div class="ni-notfull">@Messages("nisp.nirecord.gap")</div>            
         }
+        <div class="ni-action"><a href="#">@Html(Messages("nisp.nirecord.gap.viewdetails", niRecordTaxYear.displayableTaxYear))</a></div>
     </div>
 </dt>
 <dd id="tax-year-@niRecordTaxYear.taxYear">
+     <div class="contributions-wrapper">
     @if(niRecordTaxYear.underInvestigation) {
-    <div class="contributions-wrapper">
         <p>@Html(Messages("nisp.nirecord.gap.underInvestigation"))</p>
-    </div>
-    } else {
-        <div class="contributions-wrapper">
+        </div>
+    } else {       
             @if(niRecordTaxYear.classOneContributions > 0 || niRecordTaxYear.otherCredits > 0 || niRecordTaxYear.classThreeCredits > 0 || niRecordTaxYear.classTwoCredits > 0){
                 <p class="contributions-header">@Messages("nisp.nirecord.yourcontributionfrom")</p>
             }
