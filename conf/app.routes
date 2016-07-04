@@ -32,3 +32,4 @@ GET         /feedback                              uk.gov.hmrc.nisp.controllers.
 POST        /feedback                              uk.gov.hmrc.nisp.controllers.FeedbackController.submit
 GET         /feedback/thankyou                     uk.gov.hmrc.nisp.controllers.FeedbackController.showThankYou
 
+GET         /terms-and-conditions                  uk.gov.hmrc.nisp.controllers.TermsConditionsController.show
