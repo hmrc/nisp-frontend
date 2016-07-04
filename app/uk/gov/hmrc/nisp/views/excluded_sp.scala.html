@@ -94,5 +94,11 @@ canSeeNIRecord: Boolean
 
             }
         }
+
+        @if(spExclusions.contains(MWRRE)) {
+                <br>
+                <h2>@Html(Messages("nisp.excluded.helpUs.title"))</h2>
+                <p>@Html(Messages("nisp.excluded.helpUs.text"))</p>
+        }
     }
 }

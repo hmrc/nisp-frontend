@@ -173,6 +173,9 @@ nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contri
 nisp.excluded.haveReached = You reached State Pension age on {0} when you were {1}
 nisp.excluded.willReach = You&rsquo;ll reach State Pension age on {0} when you&rsquo;ll be {1}
 
+nisp.excluded.helpUs.title = Help us improve this service
+nisp.excluded.helpUs.text = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
+
 #**************************
 #  NPS Unavailable Page Messages
 #**************************
