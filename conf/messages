@@ -162,6 +162,9 @@ nisp.excluded.isleOfMan.ni = We&rsquo;re unable to show your National Insurance 
 
 nisp.excluded.mwrre.sp = We&rsquo;re unable to calculate your State Pension forecast as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
 nisp.excluded.mwrre.ni = We&rsquo;re currently unable to show your National Insurance Record as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
+nisp.excluded.mwrre.improve = Help us improve this service
+nisp.excluded.mwrre.futureResearch = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
+nisp.excluded.mwrre.signOut = Sign out and leave feedback
 
 nisp.excluded.overseas = We&rsquo;re unable to calculate your UK State Pension forecast as you&rsquo;ve lived or worked abroad.
 
