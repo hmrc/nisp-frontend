@@ -98,7 +98,7 @@ canSeeNIRecord: Boolean
         @if(spExclusions.contains(MWRRE)) {
             <h2 class="heading-medium">@Messages("nisp.excluded.mwrre.improve")</h2>
             <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
-            <a href="#">@Messages("nisp.excluded.mwrre.signOut")</a>
+            <a href="@routes.AccountController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>
         }
     }
 }
