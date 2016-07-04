@@ -74,7 +74,7 @@ canSeeNIRecord: Boolean
         @if(canSeeNIRecord) {
             @if(spExclusions.contains(Abroad)) {
 
-                <p> @Messages("nisp.excluded.niRecordIntroUK") </p>
+                <p>@Messages("nisp.excluded.niRecordIntroUK")</p>
                 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecordUK")</a>
 
             } else {
@@ -93,6 +93,12 @@ canSeeNIRecord: Boolean
                 <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelpline"))</p>
 
             }
+        }
+
+        @if(spExclusions.contains(MWRRE)) {
+            <h2 class="heading-medium">@Messages("nisp.excluded.mwrre.improve")</h2>
+            <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
+            <a href="#">@Messages("nisp.excluded.mwrre.signOut")</a>
         }
     }
 }
