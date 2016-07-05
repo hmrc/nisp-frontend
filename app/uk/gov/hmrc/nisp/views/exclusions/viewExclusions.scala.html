@@ -17,16 +17,15 @@
 @()(exclusionTemplate: Html)
 @import play.api.i18n.Messages
 
-
 @****************************@
 @*                          *@
 @*  Generic exclusion       *@
 @*  template                *@
+@*                          *@
 @****************************@
 
 <div class="errorMessage">
-    <img class="icon-x" src='@controllers.routes.Assets.at("img/icon-close-40.png")' alt="">
-    <div class="errorMessageContent">
-        @exclusionTemplate
-    </div>
+	<div class="errorMessageContent">
+		@exclusionTemplate
+	</div>
 </div>
