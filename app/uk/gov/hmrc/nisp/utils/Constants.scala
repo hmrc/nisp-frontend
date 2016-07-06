@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.utils
 
 object Constants {
   // scalastyle:off magic.number
-  val baseUrl = "/checkmystatepension"
+  val baseUrl = "/check-your-state-pension"
 
   val loginUrl = s"$baseUrl/account"
 
