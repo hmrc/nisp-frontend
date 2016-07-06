@@ -162,6 +162,9 @@ nisp.excluded.isleOfMan.ni = We&rsquo;re unable to show your National Insurance 
 
 nisp.excluded.mwrre.sp = We&rsquo;re unable to calculate your State Pension forecast as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
 nisp.excluded.mwrre.ni = We&rsquo;re currently unable to show your National Insurance Record as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
+nisp.excluded.mwrre.improve = Help us improve this service
+nisp.excluded.mwrre.futureResearch = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
+nisp.excluded.mwrre.signOut = Sign out and leave feedback
 
 nisp.excluded.overseas = We&rsquo;re unable to calculate your UK State Pension forecast as you&rsquo;ve lived or worked abroad.
 
@@ -172,6 +175,9 @@ nisp.excluded.niRecordIntro = See a record of the National Insurance contributio
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
 nisp.excluded.haveReached = You reached State Pension age on {0} when you were {1}
 nisp.excluded.willReach = You&rsquo;ll reach State Pension age on {0} when you&rsquo;ll be {1}
+
+nisp.excluded.helpUs.title = Help us improve this service
+nisp.excluded.helpUs.text = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
 
 #**************************
 #  NPS Unavailable Page Messages
@@ -249,6 +255,7 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 
 nisp.nirecord.title = Your National Insurance record: Check your State Pension
 nisp.nirecord.heading = Your National Insurance record
+nisp.nirecord.heading.dead = You are unable to use this service
 nisp.nirecord.heading.uk = Your UK National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.
 nisp.nirecord.yournirecordallyears = All years.
@@ -429,3 +436,23 @@ nisp.iv.failure.timeout.title = Your session has ended due to inactivity
 nisp.iv.failure.timeout.message = Your session has ended because you have not done anything for 15 minutes.
 nisp.iv.failure.timeout.data = We&rsquo;ve deleted all the details you&rsquo;ve entered to protect your data.
 nisp.iv.failure.timeout.button = Start again
+
+#**********************
+# Terms and Conditions
+#**********************
+
+nisp.tandcs.title = Terms and conditions
+nisp.tandcs.heading = Before using Check my State Pension, please read this page carefully
+
+nisp.tandcs.use = If you want to use &lsquo;Check my State Pension&rsquo; you have to agree to our terms and conditions. We can update our terms and conditions at any time. You should check this page regularly, so that you are aware of any changes.
+nisp.tandcs.information = The information given is based on details from your account at the time you use the service and, while we will make every effort to keep this service up to date, we do not guarantee that it will be or that it is error and omission free.
+nisp.tandcs.service = The service is free to use. We cannot guarantee that it will always be available, and we may stop or change it at any time. 
+nisp.tandcs.rely = You should not rely on this information, as it does not amount to advice. You must get professional advice when planning for your retirement.
+nisp.tandcs.responsibility = It&rsquo;s up to you to make sure that you have everything needed to access our service. It&rsquo;s also your responsibility if anyone uses your internet connection to access our service, that they read our terms and conditions, and agree to them.
+nisp.tandcs.licence = The service is published under the Open Government Licence, and you can reproduce our information as long as you obey the licence. Our material is subject to Crown copyright protection, unless we say otherwise.
+nisp.tandcs.crownCopyright = More information on Crown copyright
+nisp.tandcs.liability = We are not liable for any loss or damage incurred from using the service, from being unable to use the service or reliance on anything displayed on the site.
+nisp.tandcs.links = You can only link to our homepage (you must own the website), as long as it&rsquo;s fair, legal, does not damage our reputation or take advantage of it. When creating the link, it must not suggest there&rsquo;s any form of association, approval or endorsement unless we have already agreed that. You must not frame our site on yours. We can withdraw linking permission at any time and without notice. 
+nisp.tandcs.law = The terms and conditions are governed by English law. Any dispute is subject to the exclusive jurisdiction of the courts in England and Wales.
+nisp.tandcs.operated = The service is operated by the Department for Work and Pensions (DWP) and our main offices are at Caxton House, Tothill Street, London, SW1H 9NA.
+nisp.tandcs.thanks = Thank you for visiting the site.

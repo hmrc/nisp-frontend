@@ -6,7 +6,7 @@ Frontend of the National Insurance and new State Pension application
 This service provides the frontend endpoint for the [National Insurance and State Pensions project](https://github.com/hmrc/nisp).
 
 Summary
------------
+----------
 
 This service provides the following useful information to the customer:
 
