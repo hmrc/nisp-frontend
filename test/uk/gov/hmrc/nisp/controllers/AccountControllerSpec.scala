@@ -53,8 +53,8 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdAbroad = "/auth/oid/mockabroad"
   val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
 
-  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
-  val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Fnot-authorised"
+  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&accountType=individual"
+  val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
   lazy val fakeRequest = FakeRequest()
   private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
@@ -153,7 +153,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
 
-        redirectLocation(result) shouldBe Some("/checkmystatepension/timeout")
+        redirectLocation(result) shouldBe Some("/check-your-state-pension/timeout")
       }
 
       "return 200, with exclusion message for excluded user" in {
@@ -163,7 +163,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           SessionKeys.userId -> mockUserIdExcluded,
           SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
-        redirectLocation(result) shouldBe Some("/checkmystatepension/exclusion")
+        redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
       "return 200, account page (1.59.59am)" in {
@@ -173,12 +173,12 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
       "return redirect, unavailability page for NPS down (2am)" in {
         val result = testAccountController(new LocalDateTime(2015,6,29,2,0,0)).show()(authenticatedFakeRequest())
-        redirectLocation(result) shouldBe Some("/checkmystatepension/service-unavailable")
+        redirectLocation(result) shouldBe Some("/check-your-state-pension/service-unavailable")
       }
 
       "return redirect, unavailability page for NPS down (4.59.59am)" in {
         val result = testAccountController(new LocalDateTime(2015,6,29,4,59,59)).show()(authenticatedFakeRequest())
-        redirectLocation(result) shouldBe Some("/checkmystatepension/service-unavailable")
+        redirectLocation(result) shouldBe Some("/check-your-state-pension/service-unavailable")
       }
 
       "return 200, account page (5am)" in {
@@ -221,7 +221,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
       "redirect to account page for non contracted out user" in {
         val result = MockAccountController.showCope()(authenticatedFakeRequest(mockUserIdMQP))
-        redirectLocation(result) shouldBe Some("/checkmystatepension/account")
+        redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
       }
       "return page with MQP messaging for MQP user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdMQP))

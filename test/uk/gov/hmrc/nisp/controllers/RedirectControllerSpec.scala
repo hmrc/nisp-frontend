@@ -25,44 +25,44 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class RedirectControllerSpec extends UnitSpec with OneAppPerSuite with WithFakeApplication {
 
-  "GET /yourstatepension" should {
-    "redirect to /checkmystatepension" in {
-      val request = FakeRequest("GET", "/yourstatepension")
+  "GET /checkmystatepension" should {
+    "redirect to /check-your-state-pension" in {
+      val request = FakeRequest("GET", "/checkmystatepension")
       val result = Helpers.route(request).get.map { result => result }
-      redirectLocation(result) shouldBe Some("/checkmystatepension")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension")
     }
   }
 
-  "GET /yourstatepension + query string" should {
-    "redirect to /checkmystatepension + query string" in {
-      val request = FakeRequest("GET", "/yourstatepension?p=123&q=456")
+  "GET /checkmystatepension + query string" should {
+    "redirect to /check-your-state-pension + query string" in {
+      val request = FakeRequest("GET", "/checkmystatepension?p=123&q=456")
       val result = Helpers.route(request).get.map { result => result }
-      redirectLocation(result) shouldBe Some("/checkmystatepension?p=123&q=456")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension?p=123&q=456")
     }
   }
 
 
-  "GET /yourstatepension/account" should {
-    "redirect to /checkmystatepension/account" in {
-      val request = FakeRequest("GET", "/yourstatepension/account")
+  "GET /checkmystatepension/account" should {
+    "redirect to /check-your-state-pension/account" in {
+      val request = FakeRequest("GET", "/checkmystatepension/account")
       val result = Helpers.route(request).get.map { result => result }
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 
-  "GET /yourstatepension/account + query string" should {
-    "redirect to /checkmystatepension/account" in {
-      val request = FakeRequest("GET", "/yourstatepension/account?p=123&q=456")
+  "GET /checkmystatepension/account + query string" should {
+    "redirect to /check-your-state-pension/account" in {
+      val request = FakeRequest("GET", "/checkmystatepension/account?p=123&q=456")
       val result = Helpers.route(request).get.map { result => result }
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account?p=123&q=456")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account?p=123&q=456")
     }
   }
 
-  "GET /yourstatepension//account" should {
-    "redirect to /checkmystatepension/account" in {
-      val request = FakeRequest("GET", "/yourstatepension//account")
+  "GET /checkmystatepension//account" should {
+    "redirect to /check-your-state-pension/account" in {
+      val request = FakeRequest("GET", "/checkmystatepension//account")
       val result = Helpers.route(request).get.map { result => result }
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 
