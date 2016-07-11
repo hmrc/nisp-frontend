@@ -125,7 +125,7 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
         SessionKeys.userId -> "/auth/oid/mockuser"
       ))
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 

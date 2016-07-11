@@ -54,7 +54,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
 
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 
@@ -77,7 +77,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
 
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account/nirecord/gaps")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
     }
   }
 }
