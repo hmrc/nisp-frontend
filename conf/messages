@@ -377,7 +377,8 @@ nisp.mqp.years.dontCount.zero = You do not have any years on your record that do
 
 
 nisp.mqp.filling.never = Filling these are not enough to get any State Pension.
-nisp.mqp.filling.may = Filling some of these years may get you some State Pension.
+nisp.mqp.filling.may.single = Filling one year may get you some State Pension.
+nisp.mqp.filling.may.plural = Filling some of these years may get you some State Pension.
 nisp.mqp.afterSpa = After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.whatEsle = What else you can do
 nisp.mqp.privatePension = You may have a private pension. Use the free service to <a href="https://www.gov.uk/find-lost-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:findlostpension">find pension contact details (opens in new tab)</a>.
