@@ -373,7 +373,7 @@ nisp.mqp.overseas = <a rel="external" target="_blank" data-journey-click="checkm
 
 nisp.mqp.years.dontCount.single = You also have a year on your record which does not count towards your pension because you did not contribute enough National Insurance.
 nisp.mqp.years.dontCount.plural = You also have {0} on your record which do not count towards your pension because you did not contribute enough National Insurance.
-nisp.mqp.years.dontCount.zero = You do not any years on your record that do not count towards your pension.
+nisp.mqp.years.dontCount.zero = You do not have any years on your record that do not count towards your pension.
 
 
 nisp.mqp.filling.never = Filling these are not enough to get any State Pension.
