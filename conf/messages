@@ -172,7 +172,7 @@ nisp.excluded.spaBefore5April2016 = You will have reached State Pension age befo
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
 nisp.excluded.haveReached = You reached State Pension age on {0} when you were {1}
-nisp.excluded.willReach = You&rsquo;ll reach State Pension age on {0} when you&rsquo;ll be {1}
+nisp.excluded.willReach = You&rsquo;ll reach State Pension age on {0} when you&rsquo;ll be {1}.
 
 #**************************
 #  NPS Unavailable Page Messages
