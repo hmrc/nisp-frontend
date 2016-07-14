@@ -19,7 +19,10 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.NpsDate
-@(niRecordTaxYear: NIRecordTaxYear)
+@import java.time._
+@import java.util.Date._
+
+@(niRecordTaxYear: NIRecordTaxYear, timePoint: LocalDate = LocalDate.now())
 
 
     @if(niRecordTaxYear.qualifying){
@@ -83,10 +86,16 @@
                     <p>@Html(Messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem().url))</p>
 
                     @if(niRecordTaxYear.payable && niRecordTaxYear.classThreePayableBy.isDefined) {
+                         @{timePoint; }
+
+
+
                         @for(
                             classThreePayableByDate <- niRecordTaxYear.classThreePayableBy;
                             classThreePayableWithPenalty <- niRecordTaxYear.classThreePayableByPenalty
                         ){
+                               
+                       
                                 <p class="contributions-header">@Messages("nisp.nirecord.gap.youcanmakeupshortfall")</p>
                                 <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate),Dates.formatDate(classThreePayableByDate.localDate)))</p>
                                 <p>@Html(Messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
