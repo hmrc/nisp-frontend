@@ -58,7 +58,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("name", "test"),
         ("nino", "AY112233A")
       ))
-      redirectLocation(result) shouldBe Some("/checkmystatepension/finished")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/finished")
     }
 
     "return an error page for selecting 'yes' to research but not specifying email address" in {
