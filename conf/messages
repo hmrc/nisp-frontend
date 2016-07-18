@@ -393,7 +393,7 @@ nisp.mqp.privatePension = You may have a private pension. Use the free service t
 nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
 nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
 
-nisp.mqp.cannotImprove = You cannot improve your estimate any further, unless you choose to put off claiming. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS
+nisp.mqp.cannotImprove = You cannot improve your estimate any further, unless you choose to put off claiming. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.mqp.howManyToContribute = assumes that you&rsquo;ll contribute another {0}
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
