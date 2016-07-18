@@ -122,5 +122,7 @@
     <p>@Html(Messages("nisp.mqp.privatePension"))</p>
     <p>@Html(Messages("nisp.mqp.pensionCredit"))</p>
     <p>@Html(Messages("nisp.mqp.moneyAdvice"))</p>
+
+    @if(isPertaxUrl) {<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
 }
 }
