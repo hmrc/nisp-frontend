@@ -18,7 +18,6 @@
  *
  * Cope table
  */
-
  
 $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.png';
 
@@ -29,16 +28,12 @@ $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.pn
 $light-bg-chart-bar:#C1DFE4;
 $background-error-message:rgba(223,48,52,0.05);
 
-
-
 /*------------------------------------*\
     #General Section
 \*------------------------------------*/
 
 .report-error {
-
   float: none;
-  
 }
 
 h2.heading-medium {
@@ -56,12 +51,10 @@ h2.summary {
     margin: 0;
 }
 
-
 .top-title-heading {
   margin-bottom: 0;
   margin-top: 0.5em;
 }
-
 
 /*------------------------------------*\
     #HEADER - Global Breadcrumb
@@ -97,7 +90,6 @@ h2.summary {
 /*------------------------------------*\
     #Landing Page
 \*------------------------------------*/
-
 
 .heading-large.landingpagetitle {
   margin-bottom: 0;
@@ -147,7 +139,6 @@ div.panel-indent{
     border: 0;
   }
 }
-
 
 /*------------------------------------*\
     #Amount Box
@@ -205,13 +196,9 @@ h1.title-sp {
   }
 }
 
-
-
 /*------------------------------------*\
     #Exception Errors
 \*------------------------------------*/
-
-
 
 .errorMessage {
   background-color: $background-error-message;
@@ -232,7 +219,6 @@ h1.title-sp {
   margin-left: 65px;
 }
 
-
 /*------------------------------------*\
     #Questionnaire
 \*------------------------------------*/
@@ -242,13 +228,11 @@ h1.title-sp {
     .form-field--error {
         width: inherit;
     }
-
 }
 
 /*----------------------------------*\
     # Chart lines
 \*----------------------------------*/
-
 
 .chart-block {
   clear: both;
@@ -308,7 +292,6 @@ h1.title-sp {
     # Cope Table
 \*----------------------------------*/
 
-
 table.cope-table td {
   font-size: 19px;
   @media only screen and (max-width: 647px) {
@@ -326,4 +309,3 @@ table.cope-table th {
 table.cope-table .cope-table-number {
   text-align: right;
 }
-
