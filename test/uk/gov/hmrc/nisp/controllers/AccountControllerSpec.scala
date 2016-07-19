@@ -224,7 +224,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       }
       "return page with MQP messaging for MQP user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdMQP))
-        contentAsString(result) should include ("It may be possible for you to get some State Pension")
+        contentAsString(result) should include ("10 years needed on your National Insurance record to get any State Pension")
       }
 
       "redirect to 2FA when authentication is not strong" in {
