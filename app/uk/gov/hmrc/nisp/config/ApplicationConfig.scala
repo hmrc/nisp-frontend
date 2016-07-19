@@ -48,6 +48,7 @@ trait ApplicationConfig {
   val ggSignInUrl: String
   val pertaxFrontendUrl: String
   val breadcrumbPartialUrl: String
+  val showGovUkFullYearPage: Boolean
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -81,4 +82,5 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
   override lazy val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"
+  override val showGovUkFullYearPage: Boolean = configuration.getBoolean("govuk-full-year-page.enabled").getOrElse(true)
 }

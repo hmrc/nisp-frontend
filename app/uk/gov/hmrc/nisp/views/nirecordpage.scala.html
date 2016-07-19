@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, tableStart: Int, recordEnded: Boolean,
 authenticationProvider: String)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
