@@ -78,7 +78,7 @@
         <p>@Messages("nisp.main.estimate")</p>
         <ul class="list-bullet">
             <li>@Messages("nisp.main.notAGuarantee")</li>
-            <li>@Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
+            <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate)))</li>
             <li>@Html(Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.forecast.yearsLeftToWork)))</li>
             <li>@Messages("nisp.main.inflation")</li>
             @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}

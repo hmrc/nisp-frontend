@@ -69,7 +69,7 @@ nisp.main.month = a month
 nisp.main.year = a year
 nisp.main.equivalent = This is equal to:
 nisp.main.notAGuarantee = is not a guarantee and is based on the current law
-nisp.main.isBased = is based on your latest National Insurance record ({0})
+nisp.main.isBased = is based on your latest National Insurance record <span class="nowrap">({0})</span>
 nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = does not include the pension sharing order you have in effect
@@ -155,7 +155,7 @@ nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="htt
 nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
 nisp.excluded.contactNationalInsuranceHelplineIom = To get a copy of your UK National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
 
-nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
+nisp.excluded.dead = Please contact HMRC National Insurance helpline on <span class="nowrap">0300 200 3500.</span>
 
 nisp.excluded.isleOfMan.sp.line1 = We&rsquo;re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.
 nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
@@ -179,6 +179,7 @@ nisp.excluded.willReach = You&rsquo;ll reach State Pension age on {0} when you&r
 
 nisp.excluded.helpUs.title = Help us improve this service
 nisp.excluded.helpUs.text = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
+
 
 #**************************
 #  NPS Unavailable Page Messages
@@ -302,8 +303,8 @@ nisp.nirecord.summary.gaps.single = year when you did not contribute enough
 nisp.nirecord.summary.yearsRemaining = years to contribute before April {0}
 nisp.nirecord.summary.yearsRemaining.single = year to contribute before April {0}
 nisp.nirecord.pre75Years = Up to 1975
-nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to 5 April 1975
-nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to 5 April 1975
+nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
+nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
 
 #**************************
 # Gaps In Your Record Page

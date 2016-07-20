@@ -20,7 +20,6 @@
  *
  * Survey form styling
  */
-
  
 $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.png';
 
@@ -31,16 +30,12 @@ $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.pn
 $light-bg-chart-bar:#C1DFE4;
 $background-error-message:rgba(223,48,52,0.05);
 
-
-
 /*------------------------------------*\
     #General Section
 \*------------------------------------*/
 
 .report-error {
-
   float: none;
-  
 }
 
 h2.heading-medium {
@@ -58,7 +53,6 @@ h2.summary {
     margin: 0;
 }
 
-
 .top-title-heading {
   margin-bottom: 0;
   margin-top: 0.5em;
@@ -69,7 +63,6 @@ h2.summary {
     width: 66.666%;
   }
 }
-
 
 /*------------------------------------*\
     #HEADER - Global Breadcrumb
@@ -106,9 +99,14 @@ h2.summary {
     #Landing Page
 \*------------------------------------*/
 
+.heading-large.landingpagetitle {
+  margin-bottom: 0;
+}
+
 div.panel-indent{
   margin: 30px 15px 45px 0;
 }
+
 #content #continue {
   margin: 0 15px 15px 0;
 }
@@ -143,7 +141,6 @@ div.panel-indent{
     border: 0;
   }
 }
-
 
 /*------------------------------------*\
     #Amount Box
@@ -188,11 +185,22 @@ div.panel-indent{
  } 
 }
 
+h1.title-sp {
+  line-height: 1.09375;
+  text-transform: none;    
+  padding-bottom: 10px;
+  background-repeat: no-repeat;
+  color: $text-colour;
+  font-weight: 600;
+  margin-top: 30px;
+  @media only screen and (max-width: 640px) {
+    margin-top: 0; 
+  }
+}
+
 /*------------------------------------*\
     #Exception Errors
 \*------------------------------------*/
-
-
 
 .errorMessage {
   background-color: $background-error-message;
@@ -214,13 +222,11 @@ div.panel-indent{
   margin-left: 65px;
 }
 
-
 /*------------------------------------*\
     #Questionnaire
 \*------------------------------------*/
 
 @media (min-width : 641px) {
-
     .form-field--error {
         width: inherit;
     }
@@ -229,7 +235,6 @@ div.panel-indent{
 /*----------------------------------*\
     # Chart lines
 \*----------------------------------*/
-
 
 .chart-block {
   clear: both;
@@ -289,7 +294,6 @@ div.panel-indent{
     # Cope Table
 \*----------------------------------*/
 
-
 table.cope-table td {
   font-size: 19px;
   @media only screen and (max-width: 647px) {
@@ -314,7 +318,6 @@ table.cope-table .cope-table-number {
 
 fieldset {
   margin-top: 2em;
-
 }
 
 .email {
