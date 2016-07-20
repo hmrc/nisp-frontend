@@ -49,9 +49,9 @@
     <div class="panel-indent">
         <p> 
             @if(spSummary.numberOfQualifyingYears > 0) {
-                @Messages("nisp.mqp.youCurrentlyHaveUsing", Time.years(spSummary.numberOfQualifyingYears), spSummary.lastProcessedDate.localDate.getYear().toString())    
+                @Html(Messages("nisp.mqp.youCurrentlyHaveUsing", Time.years(spSummary.numberOfQualifyingYears), spSummary.lastProcessedDate.localDate.getYear().toString()))
             } else {
-                @Messages("nisp.mqp.youCurrentlyHaveUsingZero", spSummary.lastProcessedDate.localDate.getYear().toString())
+                @Html(Messages("nisp.mqp.youCurrentlyHaveUsingZero", spSummary.lastProcessedDate.localDate.getYear().toString()))
             }
         </p>
     </div>

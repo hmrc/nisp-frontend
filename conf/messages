@@ -125,8 +125,8 @@ nisp.main.context.improve.para1.singular = You have a year on your record where 
 
 nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You''ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.main.context.forecastonly.para1 = You still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
-nisp.main.context.reachMax.needToPay = You''ll still need to pay National Insurance contributions until {0} as they fund other state benefits and the NHS.
-nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach {0}, you still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
+nisp.main.context.reachMax.needToPay = You''ll still need to pay National Insurance contributions until <span class="nowrap">{0}</span> as they fund other state benefits and the NHS.
+nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach {0}, you still need to pay National Insurance until <span class="nowrap">{1}</span> as it funds other state benefits and the NHS.
 nisp.main.context.fillGaps.improve.title = You can improve your estimate
 nisp.main.context.fillGaps = Fill gaps in your National Insurance record
 nisp.main.context.fillGaps.viewGaps = View gaps in your record
@@ -146,7 +146,7 @@ nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="htt
 nisp.excluded.contactFuturePensionCentre.IOM = You should contact <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">Future Pension Centre (opens in new tab)</a> to get information about your State Pension.
 nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
 
-nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
+nisp.excluded.dead = Please contact HMRC National Insurance helpline on <span class="nowrap">0300 200 3500.</span>
 
 nisp.excluded.isleOfMan.sp.line1 = The Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms from 6 April 2016.
 nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
@@ -162,8 +162,8 @@ nisp.excluded.spa.nirecord = You can <a href="https://www.gov.uk/check-national-
 nisp.excluded.spaBefore5April2016 = You will have reached State Pension age before the new scheme starts. You must refer to the <a href="https://www.gov.uk/state-pension/overview" rel="external" data-journey-click="checkmystatepension:external:statepensionoverview" target="_blank">information about the old scheme (opens in new tab)</a>.
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
-nisp.excluded.haveReached = You reached State Pension age on {0} when you were {1}
-nisp.excluded.willReach = You''ll reach State Pension age on {0} when you''ll be {1}
+nisp.excluded.haveReached = You reached State Pension age on <span class="nowrap">{0}</span> when you were {1}
+nisp.excluded.willReach = You''ll reach State Pension age on <span class="nowrap">{0}</span> when you''ll be {1}
 
 #**************************
 #  NPS Unavailable Page Messages
@@ -348,8 +348,8 @@ nisp.nirecord.voluntarycontributions.h2title.3.message =  to find out more about
 nisp.main.description.mqp=You''ll reach State Pension age on
 nisp.mqp.youneedatleast = You have {0} on your record and you need at least 10 years to get any State Pension.
 nisp.mqp.overseas=If you have lived or worked overseas, you may be able to use your time abroad to make your years in the UK qualify for the purposes of getting any State Pension. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>
-nisp.mqp.youCurrentlyHaveUsing = You currently have {0} on your National Insurance record, using the latest complete tax year available, up to 5 April {1}. You need at least 10 years to get any State Pension.
-nisp.mqp.youCurrentlyHaveUsingZero = You do not have any years on your National Insurance record, using the latest complete tax year available, up to 5 April {0}. You need at least 10 years to get any State Pension.
+nisp.mqp.youCurrentlyHaveUsing = You currently have {0} on your National Insurance record, using the latest complete tax year available, up to <span class="nowrap">5 April {1}.</span> You need at least 10 years to get any State Pension.
+nisp.mqp.youCurrentlyHaveUsingZero = You do not have any years on your National Insurance record, using the latest complete tax year available, up to <span class="nowrap">5 April {0}.</span> You need at least 10 years to get any State Pension.
 nisp.mqp.possible=It may be possible for you to get some State Pension
 nisp.mqp.notpossible=It''s not possible for you to get any State Pension based on your National Insurance record
 nisp.mqp.youNeedToAdd=You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on <span class="nowrap">{2}.</span>

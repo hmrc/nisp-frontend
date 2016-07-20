@@ -40,9 +40,9 @@ canSeeNIRecord: Boolean
     @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
                 articleClasses = Some("mainpage"), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
         @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
-            <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age) </h2>
+            <h2 class="heading-medium"> @Html(Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age)) </h2>
         } else {
-            <h2 class="heading-medium"> @Messages("nisp.excluded.willReach", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age) </h2>
+            <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age)) </h2>
         }
         <div class="panel-indent">
             @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {

@@ -59,7 +59,7 @@
     </ul>
     <h2 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h2>
     <p>@Messages("nisp.main.cantImprove")</p>
-    <p>@Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString())</p>
+    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString()))</p>
     <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
 
     @if(spSummary.isAbroad) {
