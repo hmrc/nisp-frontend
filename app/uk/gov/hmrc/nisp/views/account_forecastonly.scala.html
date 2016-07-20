@@ -22,10 +22,9 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, spSummary: SPSummaryModel, authenticationProvider: String, isPertaxUrl:Boolean
-)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, spSummary: SPSummaryModel, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@analyticsAdditionalJs = {
+@analyticsAdditionalJs(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever) = {
     ga('set', {
         'dimension7':  '@spSummary.forecast.scenario',
         'dimension8':  '@spSummary.forecast.forecastAmount.week.toInt',
@@ -34,15 +33,19 @@
         'dimension12': '@spSummary.numberOfGapsPayable',
         'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
         'dimension14': '@spSummary.contractedOutFlag',
-        'dimension15': '@spSummary.statePensionAge',
+        'dimension15': '@spSummary.statePensionAge.age',
         'dimension16': '@spSummary.copeAmount.week',
-        'dimension22': '@authenticationProvider',
+        'dimension22': '@user.authProviderOld',
+        'dimension38': '@user.authProvider',
+        'dimension39': '@user.confidenceLevel',
         'metric5': 1
     });
 }
 
+@pageTitle = { @Messages("nisp.main.h1.title") }
+
 @defining(Some(user)) { implicit userOption =>
-@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
+@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <div class="highlighted-event">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span> @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
@@ -70,6 +73,11 @@
         @includes.contractedOut()
     }
 
+    @if(spSummary.customerAge > Constants.deferralCutOffAge) {
+        @includes.deferral(spSummary.statePensionAge.age)
+    }
+
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
-}
+
+  }
 }

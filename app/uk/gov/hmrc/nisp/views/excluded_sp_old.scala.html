@@ -27,12 +27,16 @@
 @analyticsAdditionalJs = {
     ga('set', {
         'dimension20': '@spExclusions.exclusions.map(_.toString).mkString(" ") ',
-        'dimension15': '@statePensionAge'
+        'dimension15': '@statePensionAge.age',
+        'dimension38': '@user.authProvider',
+        'dimension39': '@user.confidenceLevel'
     });
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(browserTitle=Messages("nisp.main.title"), pageTitle = Some(Messages("nisp.excluded.title")), h1Classes = Some("title-sp"), userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+    @main(browserTitle=Some(Messages("nisp.main.title")), userLoggedIn = true,
+        pageTitle = Some(Messages("nisp.excluded.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
         @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
             @viewExclusions(){@exclusions.sp.overseas()}
         }

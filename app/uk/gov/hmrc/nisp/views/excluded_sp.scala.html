@@ -31,14 +31,17 @@ canSeeNIRecord: Boolean
 @analyticsAdditionalJs = {
     ga('set', {
         'dimension20': '@spExclusions.map(_.toString).mkString(" ") ',
-        'dimension15': '@statePensionAge'
+        'dimension15': '@statePensionAge.age',
+        'dimension38': '@user.authProvider',
+        'dimension39': '@user.confidenceLevel'
     });
 }
 
-
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-                articleClasses = Some("mainpage"), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+    @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
+                pageTitle = Some(Messages("nisp.main.h1.title")), articleClasses = Some("mainpage"),
+                analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
         @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
             <h2 class="heading-medium"> @Html(Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age)) </h2>
         } else {
@@ -52,17 +55,26 @@ canSeeNIRecord: Boolean
                 @if(spExclusions.contains(AmountDissonance)) {
                     @exclusions.sp.amountDissonance()
                 } else {
+                    @if(spExclusions.contains(IOM)) {
+                        @exclusions.sp.isleOfMan()
+                    } else {
+                        @if(spExclusions.contains(MWRRE)) {
+                            @exclusions.sp.mwrre()
+                        } else {
+                            @if(spExclusions.contains(Abroad)) {
+                                @exclusions.sp.overseas()
+                            }
+                        }
+                    }                   
+                }
 
-                    @if(spExclusions.contains(Abroad)) {
-                        @exclusions.sp.overseas()
-                    }
-                }   
+                <p> @Html(Messages("nisp.excluded.contactFuturePensionCentre")) </p>
             }
         </div>
         @if(canSeeNIRecord) {
             @if(spExclusions.contains(Abroad)) {
 
-                <p> @Messages("nisp.excluded.niRecordIntroUK") </p>
+                <p>@Messages("nisp.excluded.niRecordIntroUK")</p>
                 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecordUK")</a>
 
             } else {
@@ -71,6 +83,22 @@ canSeeNIRecord: Boolean
                 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
 
             }
+        } else {
+            @if(spExclusions.contains(IOM)) {
+            
+                <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelplineIom"))</p> 
+            
+            } else {        
+            
+                <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelpline"))</p>
+
+            }
+        }
+
+        @if(spExclusions.contains(MWRRE)) {
+            <h2 class="heading-medium">@Messages("nisp.excluded.mwrre.improve")</h2>
+            <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
+            <a href="@routes.AccountController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>
         }
     }
 }

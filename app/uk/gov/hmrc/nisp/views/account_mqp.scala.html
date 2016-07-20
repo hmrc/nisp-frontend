@@ -18,13 +18,15 @@
 @import uk.gov.hmrc.nisp.views.formatting.Time
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.SPSummaryModel
+@import uk.gov.hmrc.nisp.models.enums.MQPScenario._
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import play.api.Logger
+@import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, spSummary: SPSummaryModel, canGetPension: Boolean, numberOfYearsMissing: Int,
-  authenticationProvider: String, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser,
-  partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, spSummary: SPSummaryModel, mqp: Option[MQPScenario], numberOfYearsMissing: Int,
+  isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -35,99 +37,92 @@
         'dimension12': '@spSummary.numberOfGapsPayable',
         'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
         'dimension14': '@spSummary.contractedOutFlag',
-        'dimension15': '@spSummary.statePensionAge',
+        'dimension15': '@spSummary.statePensionAge.age',
         'dimension16': '@spSummary.copeAmount.week',
-        'dimension22': '@authenticationProvider',
+        'dimension22': '@user.authProviderOld',
+        'dimension38': '@user.authProvider',
+        'dimension39': '@user.confidenceLevel',
         'metric5': 1
     });
 }
 
 @defining(Some(user)) { implicit userOption =>
-@nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
+@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
+  analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-    <h2 class="heading-medium">@Messages("nisp.main.description.mqp") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age</h2>
-    <div class="panel-indent">
-        <p> 
-            @if(spSummary.numberOfQualifyingYears > 0) {
-                @Html(Messages("nisp.mqp.youCurrentlyHaveUsing", Time.years(spSummary.numberOfQualifyingYears), spSummary.lastProcessedDate.localDate.getYear().toString()))
-            } else {
-                @Html(Messages("nisp.mqp.youCurrentlyHaveUsingZero", spSummary.lastProcessedDate.localDate.getYear().toString()))
+    <div class="panel-indent panel-border-wide panel-indent--info">
+        <p>@Html(Messages("nisp.main.description.mqp")) @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age.</p>
+
+        @spSummary.mqp match {
+            case Some(CanGetWithGaps) => {
+                <p>@Messages("nisp.mqp.possible")</p>
             }
-        </p>
+            case Some(CantGet) => {
+                <p>@Html(Messages("nisp.mqp.notPossible"))</p>
+            }
+        }
     </div>
 
-    @if(canGetPension) {
-        <h2 class="heading-medium">@Messages("nisp.mqp.possible")</h2>
-        <p>
-            @if(spSummary.yearsToContributeUntilPensionAge > 0) {
-                @Html(Messages("nisp.mqp.youNeedToAdd",
-                Time.years(numberOfYearsMissing),
-                Time.years(spSummary.yearsToContributeUntilPensionAge),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate)))
-            } else { 
-                @Html(Messages("nisp.mqp.youNeedToAddZeroLeft",
-                Time.years(numberOfYearsMissing),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate)))
+    <!-- WHAT YOU CAN DO NEXT -->
+
+    <h2 class="heading-medium">@Messages("nisp.mqp.doNext")</h2>
+    <p>
+        @if(spSummary.isAbroad) {
+            @Html(Messages("nisp.main.overseas"))
+            } else {
+            @Html(Messages("nisp.mqp.overseas"))
             }
-        </p>
+    </p>
 
-        <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
-
-        <p> @Html(Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate))) </p>
-        <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
-        <div class="panel-indent">
-            <p>
-                @if(spSummary.isAbroad) {
-                    @Html(Messages("nisp.main.overseas"))
-                } else {
-                    @Html(Messages("nisp.mqp.overseas"))
-                }
-            </p>
-        </div>
-
-    } else {
-
-        <h2 class="heading-medium">@Messages("nisp.mqp.notpossible")</h2>
-        <p>
-            @if(spSummary.yearsToContributeUntilPensionAge > 0) {
-                @Messages("nisp.mqp.youNeedToAdd",
-                Time.years(numberOfYearsMissing),
-                Time.years(spSummary.yearsToContributeUntilPensionAge),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate)) 
-            } else { 
-                @Messages("nisp.mqp.youNeedToAddZeroLeft",
-                Time.years(numberOfYearsMissing),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate))
-            } 
-
-            @Messages("nisp.mqp.afterthis") 
-        </p>
+    <p>
+        @if(spSummary.numberOfGapsPayable > 1) {
+            @Messages("nisp.mqp.years.dontCount.plural", Time.years(spSummary.numberOfGapsPayable))
+        } else {
+                @if(spSummary.numberOfGapsPayable < 1) {
+                @Messages("nisp.mqp.years.dontCount.zero")
+            } else {
+                @Messages("nisp.mqp.years.dontCount.single")
+            }
+        }
         
-        @if(spSummary.numberOfGapsPayable > 0) {
-            <p>@Messages("nisp.mqp.years.dontcount", Time.years(spSummary.numberOfGapsPayable)).</p>
+        @if(spSummary.numberOfGapsPayable > 0) { 
+            @spSummary.mqp match {
+                case Some(CanGetWithGaps) => {
+                    @if(spSummary.numberOfGapsPayable > 1 ) {
+                        @Messages("nisp.mqp.filling.may.plural") } else {
+                        @Messages("nisp.mqp.filling.may.single")
+                    }
+                }
+                case Some(CantGet) => {
+                    @if(spSummary.numberOfGapsPayable > 1 ) {
+                        @Messages("nisp.mqp.filling.never.plural") } else {
+                        @Messages("nisp.mqp.filling.never.single") 
+                    }
+                }
+            }
         }
 
-        <h2 class="heading-medium">@Messages("nisp.mqp.doNext")</h2>
-        <p>
-            @if(spSummary.isAbroad) {
-                @Html(Messages("nisp.main.overseas"))
-            } else {
-                @Html(Messages("nisp.mqp.overseas"))
+    </p>
+
+    <p>@spSummary.mqp match {
+            case Some(CanGetWithGaps) => {
+            <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGapsAndCost")</a>
             }
-        </p>
+            case Some(CantGet) => {
+            <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+            }
+        }
+    </p>    
+   
+    <p>@Messages("nisp.mqp.afterSpa", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
 
-        <p>@Html(Messages("nisp.mqp.never.para1"))</p>
-        <p>@Html(Messages("nisp.mqp.never.para2"))</p>
+    <!-- WHAT ELSE YOU CAN DO -->
 
+    <h2 class="heading-medium">@Messages("nisp.mqp.whatEsle")</h2>
+    <p>@Html(Messages("nisp.mqp.privatePension"))</p>
+    <p>@Html(Messages("nisp.mqp.pensionCredit"))</p>
+    <p>@Html(Messages("nisp.mqp.moneyAdvice"))</p>
 
-        <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
-
-    }
-
-    @if(spSummary.contractedOutFlag) {
-        @includes.contractedOut()
-    }
-
-    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
-  }
+    @if(isPertaxUrl) {<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
+}
 }

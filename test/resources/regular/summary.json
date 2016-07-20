@@ -33,6 +33,7 @@
         "month": 622.35,
         "year": 76022.24
       },
+      "minGapsToFillToReachMaximum": 0,
       "scenario": "Reached",
       "oldRulesCustomer": false
     },
@@ -44,6 +45,7 @@
       "month": 0,
       "year": 0
     },
+    "mqp": null,
     "isAbroad": false
   }
 }

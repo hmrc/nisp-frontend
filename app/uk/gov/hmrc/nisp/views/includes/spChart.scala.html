@@ -14,16 +14,10 @@
 * limitations under the License.
 *@
 
-@import play.api.i18n.Messages
+@import uk.gov.hmrc.nisp.models.SPChartModel
+@import uk.gov.hmrc.nisp.views.formatting.NispMoney
 
-@()
+@(chartTitle: String, spChartModel: SPChartModel)
 
-@********************************************@
-@*                                          *@
-@* State Pension Exclusion template for     *@
-@* post State Pension age                   *@
-@*                                          *@
-@*                                          *@
-@********************************************@
-
-<p> @Html(Messages("nisp.excluded.spa")) </p>
+@chart(chartTitle, spChartModel.width,
+Html(s"${NispMoney.pounds(spChartModel.amountModel.week)} ${Messages("nisp.main.chart.week")}"))

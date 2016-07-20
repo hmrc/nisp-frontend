@@ -17,6 +17,8 @@
  * Chart lines
  *
  * Cope table
+ *
+ * Survey form styling
  */
  
 $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.png';
@@ -54,6 +56,12 @@ h2.summary {
 .top-title-heading {
   margin-bottom: 0;
   margin-top: 0.5em;
+}
+
+.mainpage {
+  @media only screen and (min-width: 640px) {
+    width: 66.666%;
+  }
 }
 
 /*------------------------------------*\
@@ -97,12 +105,6 @@ h2.summary {
 
 div.panel-indent{
   margin: 30px 15px 45px 0;
-}
-
-#content .welcome-msg {
-  font-size: 48px;
-  margin-top: 30px;
-  margin-bottom: 60px;
 }
 
 #content #continue {
@@ -204,6 +206,7 @@ h1.title-sp {
   background-color: $background-error-message;
   border-left: 5px solid $mellow-red;
   margin-bottom: 30px;
+  margin-top: 30px;
 }
 
 .icon-x {
@@ -224,7 +227,6 @@ h1.title-sp {
 \*------------------------------------*/
 
 @media (min-width : 641px) {
-
     .form-field--error {
         width: inherit;
     }
@@ -308,4 +310,28 @@ table.cope-table th {
 
 table.cope-table .cope-table-number {
   text-align: right;
+}
+
+/*------------------------------------*\
+    #Survey form styling
+\*------------------------------------*/
+
+fieldset {
+  margin-top: 2em;
+}
+
+.email {
+  padding-left: 0.78em;  
+}
+
+input[name="email"] {
+  width: 75%;
+}
+
+.form-field--error {
+  border-left: 5px solid $red;
+}
+
+.form-field--error .form-control {
+  border: 5px solid $red;
 }

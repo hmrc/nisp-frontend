@@ -18,9 +18,11 @@ package uk.gov.hmrc.nisp.models.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
+import uk.gov.voa.play.form.ConditionalMappings._
 
 case class QuestionnaireForm(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int],
-                             satisfied: Option[Int], improve: Option[String])
+                             satisfied: Option[Int], followUpCall: Option[Int], improve: Option[String],
+                             research: Option[Int], email: Option[String])
 
 object QuestionnaireForm {
   val form = Form[QuestionnaireForm](
@@ -30,7 +32,10 @@ object QuestionnaireForm {
       "useitbyyourself" -> optional(number(0, 2)),
       "likelytouse" -> optional(number(0, 3)),
       "satisfied" -> optional(number(0, 4)),
-      "improve" -> optional(text(maxLength = 1200))
+      "followupcall" -> optional(number(0,2)),
+      "improve" -> optional(text(maxLength = 1200)),
+      "research" -> optional(number(0,1)),
+      "email" -> mandatoryIfEqual("research", "0", email)
     )(QuestionnaireForm.apply)(QuestionnaireForm.unapply)
   )
 }

@@ -22,7 +22,6 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.utils.Constants
 
 
 @(
@@ -30,10 +29,9 @@
     spSummary: SPSummaryModel,
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
-    authenticationProvider: String,
+    personalMaximumChart: SPChartModel,
     isPertaxUrl:Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
-
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -44,18 +42,20 @@
         'dimension12': '@spSummary.numberOfGapsPayable',
         'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
         'dimension14': '@spSummary.contractedOutFlag',
-        'dimension15': '@spSummary.statePensionAge',
+        'dimension15': '@spSummary.statePensionAge.age',
         'dimension16': '@spSummary.copeAmount.week',
-        'dimension22': '@authenticationProvider',
+        'dimension22': '@user.authProviderOld',
+        'dimension38': '@user.authProvider',
+        'dimension39': '@user.confidenceLevel',
+        'dimension40': '@spSummary.customerAge',
         'metric5': 1
     });
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @nispMain(userLoggedIn = true, browserTitle = Messages("nisp.main.title"),
-              articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs), pageTitle=Some(Messages("nisp.main.h1.title"))) {
-
-
+    @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
+        articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+    
     @if(!spSummary.isMQP &&
         (spSummary.forecast.scenario.equals(Scenario.FillGaps) ||
          spSummary.forecast.scenario.equals(Scenario.ContinueWorkingMax) ||
@@ -63,8 +63,8 @@
         <h2 class="heading-medium summary">@Messages("nisp.main.summary")</h2>
     }
     <div class="highlighted-event">
-        <p> @Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>
-            @Messages("nisp.main.whenYoullBe") @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase()
+        <p>@Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate)
+            @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase()
             @Messages("nisp.is")
         </p>
         <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
@@ -79,7 +79,7 @@
         <ul class="list-bullet">
             <li>@Messages("nisp.main.notAGuarantee")</li>
             <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate)))</li>
-            <li>@Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.forecast.yearsLeftToWork))</li>
+            <li>@Html(Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.forecast.yearsLeftToWork)))</li>
             <li>@Messages("nisp.main.inflation")</li>
             @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
         </ul>
@@ -102,7 +102,7 @@
             }
 
             case Scenario.FillGaps => {
-                @includes.fillGaps(spSummary, currentChart, forecastChart)
+                @includes.fillGapsMQP(spSummary, currentChart, forecastChart)
             }
         }
 
@@ -125,14 +125,16 @@
             </ul>
             <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
 
-            @includes.chart(Messages("nisp.main.chart.lastprocessed.title",
-                            spSummary.lastProcessedDate.localDate.getYear().toString()), currentChart.width,
-                            Html(s"${NispMoney.pounds(currentChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+            @includes.spChart(Messages("nisp.main.chart.lastprocessed.title",
+                            spSummary.lastProcessedDate.localDate.getYear().toString()), currentChart)
 
-            @includes.chart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()),
-                            forecastChart.width, Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+            @if(spSummary.forecast.oldRulesCustomer) {
+                @includes.spChart(Messages("nisp.main.chart.estimateIfYouContinue2016"), forecastChart)
+            } else {
+                @includes.spChart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()), forecastChart)
+            }
 
-            @includes.fillGaps(spSummary, currentChart, forecastChart)
+            @includes.fillGaps(spSummary, personalMaximumChart)
         }
 
      }
@@ -143,6 +145,10 @@
 
     @if(spSummary.contractedOutFlag) {
         @includes.contractedOut()
+    }
+
+    @if(spSummary.customerAge > Constants.deferralCutOffAge) {
+        @includes.deferral(spSummary.statePensionAge.age)
     }
 
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}

@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.auth
+package uk.gov.hmrc.nisp.models.enums
 
-import org.joda.time.DateTime
-import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.play.frontend.auth.AuthContext
+import play.api.libs.json._
 
-case class NispUser(authContext: AuthContext, name: Option[String], authProvider: String) {
-  def nino: Option[String] = authContext.principal.accounts.paye.map(_.nino.nino)
-  def previouslyLoggedInAt: Option[DateTime] = authContext.user.previouslyLoggedInAt
-  val authProviderOld = if(authContext.user.confidenceLevel.level == 500) Constants.verify else Constants.iv
-  val confidenceLevel = authContext.user.confidenceLevel
+object MQPScenario extends Enumeration {
+  type MQPScenario = Value
+
+  val ContinueWorking = Value
+  val CantGet = Value
+  val CanGetWithGaps = Value
+
+  implicit val formats = new Format[MQPScenario] {
+    def reads(json: JsValue): JsResult[MQPScenario] = JsSuccess(MQPScenario.withName(json.as[String]) )
+    def writes(MQPScenario: MQPScenario): JsValue = JsString(MQPScenario.toString)
+  }
 }

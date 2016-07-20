@@ -14,14 +14,14 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
+@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
+@import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.utils.Constants
 
-@()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
+@(spSummary: SPSummaryModel, currentChart: SPChartModel, forecastChart: SPChartModel)
 
-@main(browserTitle = Some(Messages("nisp.timeout.title")), pageTitle = Some(Messages("nisp.timeout.heading")),
-          showTitleHeaderNav = false) {
-    <p>@Messages("nisp.timeout.body")</p>
-    <p>@Html(Messages("nisp.useagain", uk.gov.hmrc.nisp.controllers.routes.LandingController.show.url))</p>
-}
+    <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
+    <p>@Messages("nisp.main.context.improve.para1.plural")</p>
+    <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGaps")</a>

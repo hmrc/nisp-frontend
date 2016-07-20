@@ -27,6 +27,7 @@ import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp, excluded_sp_old}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.play.http.SessionKeys
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
@@ -40,12 +41,10 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
+
     nispConnector.connectToGetSPResponse(nino).map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
-        if (spExclusions.exclusions.contains(Exclusion.AmountDissonance) ||
-            spExclusions.exclusions.contains(Exclusion.PostStatePensionAge) ||
-            spExclusions.exclusions.contains(Exclusion.Abroad) ||
-            spExclusions.exclusions.contains(Exclusion.CustomerTooOld)) {
+        if (!spExclusions.exclusions.contains(Exclusion.Dead)) {
           Ok(excluded_sp(
             spExclusions.exclusions,
             spSummary.statePensionAge,
@@ -62,8 +61,8 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
 
   def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
-    nispConnector.connectToGetNIResponse(nino).map {
-      case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) => Ok(excluded_ni(nino, niExclusions))
+     nispConnector.connectToGetNIResponse(nino).map {
+        case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) => Ok(excluded_ni(nino, niExclusions))        
       case _ =>
         Logger.warn("User accessed /exclusion/nirecord as non-excluded user")
         Redirect(routes.NIRecordController.showGaps())

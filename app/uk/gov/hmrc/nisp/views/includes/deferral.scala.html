@@ -14,16 +14,9 @@
 * limitations under the License.
 *@
 
-@import play.api.i18n.Messages
+@import uk.gov.hmrc.nisp.controllers.routes
+@(statePensionAge: Int)
 
-@()
-
-@********************************************@
-@*                                          *@
-@* State Pension Exclusion template for     *@
-@* post State Pension age                   *@
-@*                                          *@
-@*                                          *@
-@********************************************@
-
-<p> @Html(Messages("nisp.excluded.spa")) </p>
+<h2 class="heading-medium">@Messages("nisp.main.puttingOff")</h2>
+<p>@Messages("nisp.main.puttingOff.line1", statePensionAge)</p>
+<a href="https://www.gov.uk/deferring-state-pension" target="_blank" rel="external">@Messages("nisp.main.puttingOff.linkTitle")</a>

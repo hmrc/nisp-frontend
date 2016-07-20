@@ -20,9 +20,9 @@
 
 @()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
-@nispMain(browserTitle = Messages("nisp.finishpage.title"), pageTitle = None, sidebarLinks = Some(includes.questionnaireSidebar())) {
+@main(browserTitle = Some(Messages("nisp.finishpage.title")), sidebarLinks = Some(includes.questionnaireSidebar())) {
 <h1 class="heading-large">@Messages("nisp.thankyou.title")</h1>
 
-<p>@Messages("nisp.thankyou.received")</p>
+<p>@Html(Messages("nisp.thankyou.received"))</p>
 <p>@Html(Messages("nisp.useagain", uk.gov.hmrc.nisp.controllers.routes.LandingController.show.url))</p>
 }

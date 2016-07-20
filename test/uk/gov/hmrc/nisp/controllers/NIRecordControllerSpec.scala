@@ -34,7 +34,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockBlankUserId = "/auth/oid/mockblank"
   val mockUserIdExcluded = "/auth/oid/mockexcluded"
 
-  val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheckmystatepension%2Faccount&accountType=individual"
+  val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&accountType=individual"
 
   lazy val fakeRequest = FakeRequest()
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
@@ -57,7 +57,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return full page for user without gaps" in {
       val result = MockNIRecordController.showGaps(authenticatedFakeRequest(mockFullUserId))
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account/nirecord")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord")
     }
 
     "return error page for blank response NINO" in {
@@ -74,7 +74,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.userId -> mockUserIdExcluded,
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
-      redirectLocation(result) shouldBe Some("/checkmystatepension/exclusionni")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
   }
 
@@ -101,7 +101,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.userId -> mockUserIdExcluded,
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
-      redirectLocation(result) shouldBe Some("/checkmystatepension/exclusionni")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
   }
 

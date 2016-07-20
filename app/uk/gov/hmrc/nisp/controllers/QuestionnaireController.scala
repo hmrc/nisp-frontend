@@ -50,7 +50,10 @@ trait QuestionnaireController extends NispFrontendController with Actions with A
             value.useItByYourself,
             value.likelyToUse,
             value.satisfied,
+            value.followUpCall,
             value.improve,
+            value.research,
+            value.email,
             request.session.get(NAME).getOrElse(""),
             request.session.get(NINO).getOrElse(""),
             request.session.get(CONTRACTEDOUT).getOrElse("")

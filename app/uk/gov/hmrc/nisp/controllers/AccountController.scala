@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.Scenario
+import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
@@ -53,14 +53,12 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
-      val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
 
       nispConnector.connectToGetSPResponse(nino).map {
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
           if(spSummary.contractedOutFlag) {
             Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week,
-              authenticationProvider, isPertax))
+              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax))
           } else {
             Redirect(routes.AccountController.show())
           }
@@ -72,27 +70,30 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
-      val authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel)
+
       nispConnector.connectToGetSPResponse(nino).map {
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
 
           customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
             spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecast.forecastAmount.week,
             spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario,
-            spSummary.copeAmount.week, authenticationProvider))
+            spSummary.copeAmount.week, user.authProviderOld))
 
-          if (spSummary.numberOfQualifyingYears + spSummary.yearsToContributeUntilPensionAge < Constants.minimumQualifyingYearsNSP) {
-            val canGetPension = spSummary.numberOfQualifyingYears +
-              spSummary.yearsToContributeUntilPensionAge + spSummary.numberOfGapsPayable >= Constants.minimumQualifyingYearsNSP
+          if (spSummary.mqp.fold(false) (_ != MQPScenario.ContinueWorking)) {
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-            Ok(account_mqp(nino, spSummary, canGetPension, yearsMissing, authenticationProvider, isPertax))
-              .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+            Ok(account_mqp(nino, spSummary, spSummary.mqp, yearsMissing, isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
-            Ok(account_forecastonly(nino, spSummary, authenticationProvider,isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+            Ok(account_forecastonly(nino, spSummary, isPertax)).withSession(storeUserInfoInSession(user,
+               spSummary.contractedOutFlag))
           } else {
-            val (currentChart, forecastChart) = calculateChartWidths(spSummary.statePensionAmount, spSummary.forecast.forecastAmount)
-            Ok(account(nino, spSummary, currentChart, forecastChart, authenticationProvider, isPertax))
-              .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+            val (currentChart, forecastChart, personalMaximumChart) =
+              calculateChartWidths(
+                spSummary.statePensionAmount,
+                spSummary.forecast.forecastAmount,
+                spSummary.forecast.personalMaximum
+              )
+            Ok(account(nino, spSummary, currentChart, forecastChart, personalMaximumChart, isPertax))
+               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }
 
         case SPResponseModel(_, Some(spExclusions: ExclusionsModel), _) =>
@@ -111,20 +112,28 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
     setFromPertax
     Redirect(routes.AccountController.show())
   }
-
-  def calculateChartWidths(currentAmountModel: SPAmountModel, forecastAmountModel: SPAmountModel): (SPChartModel, SPChartModel) = {
+  
+  def calculateChartWidths(current: SPAmountModel, forecast: SPAmountModel, personalMaximum: SPAmountModel): (SPChartModel, SPChartModel, SPChartModel) = {
     // scalastyle:off magic.number
-    if (forecastAmountModel.week > currentAmountModel.week) {
-      val currentPercentage = (currentAmountModel.week/forecastAmountModel.week * 100).toInt
-      val currentChart = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), currentAmountModel)
-      val forecastChart = SPChartModel(100, forecastAmountModel)
-      (currentChart, forecastChart)
+    if (personalMaximum.week > forecast.week) {
+      val currentChart = SPChartModel((current.week/personalMaximum.week * 100).toInt.max(Constants.chartWidthMinimum), current)
+      val forecastChart = SPChartModel((forecast.week/personalMaximum.week * 100).toInt.max(Constants.chartWidthMinimum), forecast)
+      val personalMaxChart = SPChartModel(100, personalMaximum)
+      (currentChart, forecastChart, personalMaxChart)
     } else {
-      val currentChart = SPChartModel(100, currentAmountModel)
-      val forecastChart = SPChartModel((forecastAmountModel.week/currentAmountModel.week * 100).toInt, forecastAmountModel)
-      (currentChart, forecastChart)
+      if (forecast.week > current.week) {
+        val currentPercentage = (current.week / forecast.week * 100).toInt
+        val currentChart = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), current)
+        val forecastChart = SPChartModel(100, forecast)
+        (currentChart, forecastChart, forecastChart)
+      } else {
+        val currentChart = SPChartModel(100, current)
+        val forecastChart = SPChartModel((forecast.week / current.week * 100).toInt, forecast)
+        (currentChart, forecastChart, forecastChart)
+      }
     }
   }
+
   private def storeUserInfoInSession(user: NispUser, contractedOut: Boolean)(implicit request: Request[AnyContent]): Session = {
     request.session +
       (NAME -> user.name.getOrElse("N/A")) +

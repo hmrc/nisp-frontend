@@ -18,7 +18,10 @@
 
 @import uk.gov.hmrc.play.views.html.helpers
 
+
 @helpers.form(postRoute) {
+
+    @helpers.errorSummary("Error summary", form)
 
     <input type="hidden" name="referer" id="referer" value="@form.data.get("referer")">
 
@@ -75,13 +78,47 @@
         '_labelClass -> "block-label"
     )
 
+    @helpers.inputRadioGroup(
+        form("followupcall"), Seq(
+            ("0", Messages("nisp.questionnaire.followupcall.0")),
+            ("1", Messages("nisp.questionnaire.followupcall.1")),
+            ("2", Messages("nisp.questionnaire.followupcall.2"))
+        ),
+        '_legend -> Messages("nisp.questionnaire.followupcall.question"),
+        '_legendClass -> "heading-small",
+        '_labelAfter -> true,
+        '_labelClass -> "block-label"
+    )
 
+    <fieldset>
     @helpers.textArea(form("improve"),
         '_label -> Messages("nisp.questionnaire.improve.question"),
         '_labelClass -> "heading-small",
         '_help -> Messages("nisp.textentry.warning"),
         '_inputClass -> "full-width")
-    <p class="font-xsmall">@Messages("nisp.textentry.charlimit")</p>
+    <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>      
+    </fieldset>
 
-    <input class="button" type="submit" value="@Messages("nisp.submit")" />
+
+    @helpers.inputRadioGroup(
+        form("research"), Seq(
+            ("0", Messages("nisp.questionnaire.research.0")),
+            ("1", Messages("nisp.questionnaire.research.1"))
+        ),
+        '_legend -> Messages("nisp.questionnaire.research.question"),
+        '_legendClass -> "heading-small research",
+        '_labelAfter -> true,
+        '_labelClass -> "block-label",
+        '_groupClass -> "inline")
+
+    @input(
+        form("email"),
+        '_label -> Messages("nisp.questionnaire.email"),
+        '_inputClass -> "block-label form-control",
+        '_labelClass -> "heading-small email panel-indent",
+        '_maxlength -> 255)
+    
+    <div class="heading-small">
+        <input class="button" type="submit" value="@Messages("nisp.submit")" />
+    </div>
 }
