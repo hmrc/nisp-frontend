@@ -69,7 +69,7 @@ nisp.main.month = a month
 nisp.main.year = a year
 nisp.main.equivalent = This is equal to:
 nisp.main.notAGuarantee = is not a guarantee and is based on the current law
-nisp.main.isBased = is based on your latest National Insurance record ({0})
+nisp.main.isBased = is based on your latest National Insurance record <span class="nowrap">({0})</span>
 nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = does not include the pension sharing order you have in effect
@@ -275,8 +275,8 @@ nisp.nirecord.summary.gaps.single = year when you did not contribute enough
 nisp.nirecord.summary.yearsRemaining = years to contribute before {0}
 nisp.nirecord.summary.yearsRemaining.single = year to contribute before {0}
 nisp.nirecord.pre75Years = Up to 1975
-nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to 5 April 1975
-nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to 5 April 1975
+nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
+nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
 
 #**************************
 # Gaps In Your Record Page
@@ -352,10 +352,10 @@ nisp.mqp.youCurrentlyHaveUsing = You currently have {0} on your National Insuran
 nisp.mqp.youCurrentlyHaveUsingZero = You do not have any years on your National Insurance record, using the latest complete tax year available, up to 5 April {0}. You need at least 10 years to get any State Pension.
 nisp.mqp.possible=It may be possible for you to get some State Pension
 nisp.mqp.notpossible=It''s not possible for you to get any State Pension based on your National Insurance record
-nisp.mqp.youNeedToAdd=You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on {2}.
-nisp.mqp.youNeedToAddZeroLeft = You need to add {0} to your record and you do not have any left to contribute before you reach State Pension age on {1}.
+nisp.mqp.youNeedToAdd=You need to add {0} to your record and you have {1} left to contribute before you reach State Pension age on <span class="nowrap">{2}.</span>
+nisp.mqp.youNeedToAddZeroLeft = You need to add {0} to your record and you do not have any left to contribute before you reach State Pension age on <span class="nowrap">{1}.</span>
 nisp.mqp.afterthis=After this you no longer pay National Insurance contributions.
-nisp.mqp.afterspa=After State Pension age, {0} you no longer pay National Insurance contributions.
+nisp.mqp.afterspa=After State Pension age, <span class="nowrap">{0}</span> you no longer pay National Insurance contributions.
 nisp.mqp.gaps.fill.singular=You can fill this year to get the 10 years you need to get any State Pension.
 nisp.mqp.gaps.fill.plural=You can fill some of these years to get the 10 years you need to get any State Pension.
 nisp.mqp.never.para1 =You may have a private pension. For more details about your private pension you will need to contact your pension provider. Use the free service to<a href="https://www.gov.uk/find-lost-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:findlostpension"> find pension contact details (opens in new tab)</a>.
@@ -365,7 +365,7 @@ nisp.mqp.cannotImprove = You cannot improve your estimate any further, unless yo
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
 nisp.mqp.howManyToContribute = assumes that you''ll contribute another {0}
-nisp.mqp.reachStatePensionAge = You''ll reach State Pension age on {0} when you''ll be {1}
+nisp.mqp.reachStatePensionAge = You''ll reach State Pension age on <span class="nowrap">{0}</span> when you''ll be {1}
 nisp.mqp.doNext = What you can do next
 
 #**************************

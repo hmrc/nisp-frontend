@@ -60,20 +60,20 @@
         <h2 class="heading-medium">@Messages("nisp.mqp.possible")</h2>
         <p>
             @if(spSummary.yearsToContributeUntilPensionAge > 0) {
-                @Messages("nisp.mqp.youNeedToAdd",
+                @Html(Messages("nisp.mqp.youNeedToAdd",
                 Time.years(numberOfYearsMissing),
                 Time.years(spSummary.yearsToContributeUntilPensionAge),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate))
+                Dates.formatDate(spSummary.statePensionAge.date.localDate)))
             } else { 
-                @Messages("nisp.mqp.youNeedToAddZeroLeft",
+                @Html(Messages("nisp.mqp.youNeedToAddZeroLeft",
                 Time.years(numberOfYearsMissing),
-                Dates.formatDate(spSummary.statePensionAge.date.localDate))
+                Dates.formatDate(spSummary.statePensionAge.date.localDate)))
             }
         </p>
 
         <p>@Messages("nisp.mqp.years.dontcount",Time.years(spSummary.numberOfGapsPayable))</p>
 
-        <p> @Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate)) </p>
+        <p> @Html(Messages("nisp.mqp.afterspa", Dates.formatDate(spSummary.statePensionAge.date.localDate))) </p>
         <a href='@routes.NIRecordController.showGaps.url' role="button">@Messages("nisp.main.context.fillGaps.viewGaps")</a>
         <div class="panel-indent">
             <p>
