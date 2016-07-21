@@ -48,7 +48,7 @@
 @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <div class="highlighted-event">
-        <p>@Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, @Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</p>
+        <p>@Messages("nisp.main.basedOn") <span class"nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, <span class="nowrap">@Messages("nisp.main.estimate").toLowerCase() @Messages("nisp.is")</span></p>
         <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
         <p>@NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
         @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")</p>
@@ -56,7 +56,7 @@
     <p>@Messages("nisp.main.estimate")</p>
     <ul class="list-bullet">
         <li>@Messages("nisp.main.notAGuarantee")</li>
-        <li>@Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
+        <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate)))</li>
         <li>@Messages("nisp.main.inflation")</li>
         @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
     </ul>
