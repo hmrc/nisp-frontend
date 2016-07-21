@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.nisp.models.SPChartModel
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 
-@(chartTitle: String, spChartModel: SPChartModel)
+@(chartTitle: Html, spChartModel: SPChartModel)
 
 @chart(chartTitle, spChartModel.width,
 Html(s"${NispMoney.pounds(spChartModel.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
