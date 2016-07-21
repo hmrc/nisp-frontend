@@ -54,7 +54,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
 
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 
@@ -66,7 +66,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.userId -> mockUserIdExcluded,
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
-      contentAsString(result).contains("You are unable to use this service") shouldBe true
+      contentAsString(result).contains("Your National Insurance record") shouldBe true
     }
 
     "return redirect to account page for non-excluded user" in {
@@ -77,7 +77,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
       ))
 
-      redirectLocation(result) shouldBe Some("/checkmystatepension/account/nirecord/gaps")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
     }
   }
 }

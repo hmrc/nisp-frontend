@@ -15,7 +15,6 @@
 *@
 
 @import play.api.i18n.Messages
-@import uk.gov.hmrc.nisp.views.html.exclusions.viewExclusions
 
 @()
 
@@ -26,7 +25,5 @@
 @*                                              *@
 @************************************************@
 
-@viewExclusions() {
     <p> @Html(Messages("nisp.excluded.mwrre.ni")) </p>
     <p> @Html(Messages("nisp.excluded.contactNationalInsuranceHelpline")) </p>
-}

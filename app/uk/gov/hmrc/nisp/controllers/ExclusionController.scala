@@ -61,8 +61,8 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
 
   def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
-    nispConnector.connectToGetNIResponse(nino).map {
-      case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) => Ok(excluded_ni(nino, niExclusions))
+     nispConnector.connectToGetNIResponse(nino).map {
+        case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) => Ok(excluded_ni(nino, niExclusions))        
       case _ =>
         Logger.warn("User accessed /exclusion/nirecord as non-excluded user")
         Redirect(routes.NIRecordController.showGaps())
