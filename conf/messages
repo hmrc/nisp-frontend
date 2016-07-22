@@ -460,3 +460,11 @@ nisp.tandcs.links = You can only link to our homepage (you must own the website)
 nisp.tandcs.law = The terms and conditions are governed by English law. Any dispute is subject to the exclusive jurisdiction of the courts in England and Wales.
 nisp.tandcs.operated = The service is operated by the Department for Work and Pensions (DWP) and our main offices are at Caxton House, Tothill Street, London, SW1H 9NA.
 nisp.tandcs.thanks = Thank you for visiting the site.
+
+#***********************
+# Error Messages
+#***********************
+
+nisp.validation.summary.heading = Error summary
+nisp.validation.summary.feedback = Your feedback is too long
+

@@ -17,11 +17,11 @@
 @(form: Form[_], postRoute: play.api.mvc.Call)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html.helpers
-
+@import uk.gov.hmrc.nisp.views.html.includes
 
 @helpers.form(postRoute) {
 
-    @helpers.errorSummary("Error summary", form)
+    @includes.helpers.error_overview(form)
 
     <input type="hidden" name="referer" id="referer" value="@form.data.get("referer")">
 
@@ -91,12 +91,19 @@
     )
 
     <fieldset>
-    @helpers.textArea(form("improve"),
+        <label for="improve" class="  heading-small  ">
+            @Messages("nisp.questionnaire.improve.question")
+        <div data-char-counter>
+            <textarea class="full-width" name="improve" id="improve" maxLength="1200" data-char-field></textarea>
+        </div>
+        <small>@Messages("nisp.textentry.warning")</small>
+        </label>
+    @*helpers.textArea(form("improve"),
         '_label -> Messages("nisp.questionnaire.improve.question"),
         '_labelClass -> "heading-small",
         '_help -> Messages("nisp.textentry.warning"),
-        '_inputClass -> "full-width")
-    <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>      
+        '_inputClass -> "full-width")*@
+    <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>
     </fieldset>
 
 
