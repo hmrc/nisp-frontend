@@ -70,6 +70,7 @@ h2.summary {
   }
 }
 
+
 /*------------------------------------*\
     #HEADER - Global Breadcrumb
 \*------------------------------------*/
@@ -223,6 +224,10 @@ div.panel-indent{
     .form-field--error {
         width: inherit;
     }
+}
+
+textarea {
+  height: 13em;
 }
 
 /*----------------------------------*\
