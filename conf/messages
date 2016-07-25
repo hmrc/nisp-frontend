@@ -122,25 +122,24 @@ nisp.main.context.improve.nogaps = When you reach State Pension age in {0}, you 
 
 nisp.main.context.improve.para1.plural = You have years on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
 nisp.main.context.improve.para1.singular = You have a year on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
-
 nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.main.context.forecastonly.para1 = You still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
+
 nisp.main.context.reachMax.needToPay = You&rsquo;ll still need to pay National Insurance contributions until {0} as they fund other state benefits and the NHS.
 nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach {0}, you still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
+
 nisp.main.context.fillGaps.improve.title = You can improve your forecast
 nisp.main.context.fillGaps.viewGaps = View gaps in your record
-
 nisp.main.context.fillGaps.viewGapsAndCost = Gaps in your record and the cost of filling them
-
-nisp.main.context.fillgaps.para1.plural = You have gaps in your National Insurance record for years where you did not contribute enough.
-nisp.main.context.fillgaps.para1.singular = You have 1 gap in your National Insurance record where you did not contribute enough. You only need to fill this gap to get the most you can.
-nisp.main.context.fillgaps.bullet1 = filling any gap can increase your forecast
-nisp.main.context.fillgaps.bullet2.onlyone = you only need to fill this gap to get the most you can
-nisp.main.context.fillgaps.bullet2.singular = you only need to fill 1 gap to get the most you can
-nisp.main.context.fillgaps.bullet2.plural = you only need to fill {0} gaps to get the most you can
-nisp.main.context.fillgaps.chart.onlyone = The most you can get by filling this gap in your record is
-nisp.main.context.fillgaps.chart.singular = The most you can get by filling any gap in your record is
-nisp.main.context.fillgaps.chart.plural = The most you can get by filling any {0} gaps in your record is
+nisp.main.context.fillgaps.para1.plural = You have years on your National Insurance record where you did not contribute enough.
+nisp.main.context.fillgaps.para1.singular = You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.
+nisp.main.context.fillgaps.bullet1 = filling years can increase your estimate
+nisp.main.context.fillgaps.bullet2.onlyone = you only need to fill this year to get the most you can
+nisp.main.context.fillgaps.bullet2.singular = you only need to fill 1 year to get the most you can
+nisp.main.context.fillgaps.bullet2.plural = you only need to fill {0} years to get the most you can
+nisp.main.context.fillgaps.chart.onlyone = The most you can get by filling this year in your record is
+nisp.main.context.fillgaps.chart.singular = The most you can get by filling any year in your record is
+nisp.main.context.fillgaps.chart.plural = The most you can get by filling any {0} years in your record is
 
 #**************************
 # Exclusion Messages
