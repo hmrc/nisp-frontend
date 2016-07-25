@@ -91,19 +91,14 @@
     )
 
     <fieldset>
-        <label for="improve" class="  heading-small  ">
+        <label for="improve" class="heading-small">
             @Messages("nisp.questionnaire.improve.question")
         <div data-char-counter>
-            <textarea class="full-width" name="improve" id="improve" maxLength="1200" data-char-field></textarea>
+            <textarea class="full-width" name="improve" id="improve" maxLength="1200" data-char-field>@form.data.get("improve")</textarea>
         </div>
         <small>@Messages("nisp.textentry.warning")</small>
         </label>
-    @*helpers.textArea(form("improve"),
-        '_label -> Messages("nisp.questionnaire.improve.question"),
-        '_labelClass -> "heading-small",
-        '_help -> Messages("nisp.textentry.warning"),
-        '_inputClass -> "full-width")*@
-    <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>
+        <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>
     </fieldset>
 
 

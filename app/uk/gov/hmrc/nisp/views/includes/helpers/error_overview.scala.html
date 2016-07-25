@@ -2,7 +2,7 @@
 
 @if(form.hasErrors) {
         <div id="error-summary-display" class="flash error-summary error-summary--show " role="group" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 id="error-summary-heading" class="h3-heading">@Messages("nisp.validation.summary.feedback")</h2>
+            <h2 id="error-summary-heading" class="h3-heading">@Messages("nisp.validation.summary.heading")</h2>
             <ul class="js-error-summary-messages">
                 @form.errors.map { error =>
                 <li role="tooltip">
