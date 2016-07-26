@@ -25,7 +25,7 @@
     <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
     @if(spSummary.numberOfGaps == 1) {
         <p>@Messages("nisp.main.context.fillgaps.para1.singular")</p>
-        @spChart(Messages("nisp.main.context.fillgaps.chart.onlyone"), personalMaximumChart)
+        @spChart(Html(Messages("nisp.main.context.fillgaps.chart.onlyone")), personalMaximumChart)
     } else {
         <p>@Messages("nisp.main.context.fillgaps.para1.plural")</p>
         <ul class="list-bullet">
@@ -34,11 +34,11 @@
             @if(spSummary.forecast.minGapsToFillToReachMaximum == 1) {
                     <li>@Messages("nisp.main.context.fillgaps.bullet2.singular")</li>
                 </ul>
-                @spChart(Messages("nisp.main.context.fillgaps.chart.singular"), personalMaximumChart)
+                @spChart(Html(Messages("nisp.main.context.fillgaps.chart.singular")), personalMaximumChart)
             } else {
                     <li>@Messages("nisp.main.context.fillgaps.bullet2.plural", spSummary.forecast.minGapsToFillToReachMaximum)</li>
                 </ul>
-                @spChart(Messages("nisp.main.context.fillgaps.chart.plural", spSummary.forecast.minGapsToFillToReachMaximum), personalMaximumChart)
+                @spChart(Html(Messages("nisp.main.context.fillgaps.chart.plural", spSummary.forecast.minGapsToFillToReachMaximum)), personalMaximumChart)
             }
     }
 

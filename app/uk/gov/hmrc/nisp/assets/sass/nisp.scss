@@ -20,7 +20,6 @@
  *
  * Survey form styling
  */
-
  
 $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.png';
 
@@ -31,16 +30,12 @@ $help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.pn
 $light-bg-chart-bar:#C1DFE4;
 $background-error-message:rgba(223,48,52,0.05);
 
-
-
 /*------------------------------------*\
     #General Section
 \*------------------------------------*/
 
 .report-error {
-
   float: none;
-  
 }
 
 h2.heading-medium {
@@ -58,7 +53,6 @@ h2.summary {
     margin: 0;
 }
 
-
 .top-title-heading {
   margin-bottom: 0;
   margin-top: 0.5em;
@@ -70,6 +64,9 @@ h2.summary {
   }
 }
 
+.nowrap {
+  white-space:nowrap; 
+} 
 
 /*------------------------------------*\
     #HEADER - Global Breadcrumb
@@ -109,6 +106,7 @@ h2.summary {
 div.panel-indent{
   margin: 30px 15px 45px 0;
 }
+
 #content #continue {
   margin: 0 15px 15px 0;
 }
@@ -143,7 +141,6 @@ div.panel-indent{
     border: 0;
   }
 }
-
 
 /*------------------------------------*\
     #Amount Box
@@ -192,8 +189,6 @@ div.panel-indent{
     #Exception Errors
 \*------------------------------------*/
 
-
-
 .errorMessage {
   background-color: $background-error-message;
   border-left: 5px solid $mellow-red;
@@ -214,7 +209,6 @@ div.panel-indent{
   margin-left: 65px;
 }
 
-
 /*------------------------------------*\
     #Questionnaire
 \*------------------------------------*/
@@ -233,7 +227,6 @@ textarea {
 /*----------------------------------*\
     # Chart lines
 \*----------------------------------*/
-
 
 .chart-block {
   clear: both;
@@ -293,7 +286,6 @@ textarea {
     # Cope Table
 \*----------------------------------*/
 
-
 table.cope-table td {
   font-size: 19px;
   @media only screen and (max-width: 647px) {
@@ -318,7 +310,6 @@ table.cope-table .cope-table-number {
 
 fieldset {
   margin-top: 2em;
-
 }
 
 .email {
