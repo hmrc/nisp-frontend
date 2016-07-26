@@ -82,5 +82,5 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
   override lazy val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"
-  override val showGovUkFullYearPage: Boolean = configuration.getBoolean("govuk-full-year-page.enabled").getOrElse(true)
+  override val showGovUkFullYearPage: Boolean = configuration.getBoolean("microservice.services.features.fullNIrecord").getOrElse(false)
 }

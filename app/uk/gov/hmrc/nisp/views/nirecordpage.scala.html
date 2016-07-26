@@ -146,7 +146,7 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
             </dt>
         }
         @for(niRecordTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
-            @includes.nirecordtaxyear(niRecordTaxYear)
+            if(ApplicationConfig.showGovUkFullYearPage) includes.nirecordtaxyear(niRecordTaxYear) else includes.nirecordtaxyearNoFull(niRecordTaxYear)
         }
     } else {
         @if(niRecord.taxYears.isEmpty) {
@@ -159,7 +159,7 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
         } else {
 
             @for(taxYear <- tableStart to niRecord.taxYears.map(p => p.taxYear).min by -1) {
-              @niRecord.taxYears.find(p => p.taxYear == taxYear).map(includes.nirecordtaxyear(_)).getOrElse {
+              @niRecord.taxYears.find(p => p.taxYear == taxYear).map(if(ApplicationConfig.showGovUkFullYearPage) includes.nirecordtaxyear(_) else includes.nirecordtaxyearNoFull(_) ).getOrElse {
                 <dt>
                     <div class="ni-wrapper">
                         <div class="ni-years"> @{(taxYear)}-@{(taxYear+1).toString.substring(2,4)}</div>
