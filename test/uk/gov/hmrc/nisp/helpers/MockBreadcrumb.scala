@@ -42,6 +42,6 @@ object MockBreadcrumb extends Breadcrumb {
     override val pertaxFrontendUrl: String = "http://localhost:9232/account"
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = "http://localhost:9232/account"
-    override val showGovUkFullYearPage: Boolean = false
+    override val showFullNI: Boolean = false
   }
 }

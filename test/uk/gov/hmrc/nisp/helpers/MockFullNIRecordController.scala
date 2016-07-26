@@ -56,7 +56,7 @@ object MockFullNIRecordController extends NIRecordController {
     override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = ""
-    override val showGovUkFullYearPage: Boolean = true
+    override val showFullNI: Boolean = true
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
