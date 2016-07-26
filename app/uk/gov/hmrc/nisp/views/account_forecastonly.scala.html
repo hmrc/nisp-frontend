@@ -53,7 +53,7 @@
         <p>@NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
         @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")</p>
     </div>
-    <p>@Messages("nisp.main.estimate")</p>
+    <p>@Messages("nisp.main.caveats")</p>
     <ul class="list-bullet">
         <li>@Messages("nisp.main.notAGuarantee")</li>
         <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate)))</li>
