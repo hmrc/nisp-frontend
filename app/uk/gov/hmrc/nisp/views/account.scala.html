@@ -75,7 +75,7 @@
 
     @if(spSummary.isMQP)  {
 
-        <p>@Messages("nisp.main.estimate")</p>
+        <p>@Messages("nisp.main.caveats")</p>
         <ul class="list-bullet">
             <li>@Messages("nisp.main.notAGuarantee")</li>
             <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate)))</li>
@@ -117,7 +117,7 @@
         }
 
         @if(spSummary.forecast.scenario.equals(Scenario.FillGaps)) {
-            <p>@Messages("nisp.main.estimate")</p>
+            <p>@Messages("nisp.main.caveats")</p>
             <ul class="list-bullet">
                 <li>@Messages("nisp.main.notAGuarantee")</li>
                 <li>@Messages("nisp.main.inflation")</li>
