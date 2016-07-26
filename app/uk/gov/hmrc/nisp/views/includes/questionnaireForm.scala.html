@@ -91,12 +91,13 @@
     )
 
     <fieldset>
-        <label for="improve" class="heading-small">
+        <label for="improve" class='heading-small @if(form.errors("improve").nonEmpty) {form-field--error}'>
+            @if(form.errors("improve").nonEmpty) {<span class="error-notification">@Messages("nisp.validation.summary.error.max")</span>}
             @Messages("nisp.questionnaire.improve.question")
-        <div data-char-counter>
-            <textarea class="full-width" name="improve" id="improve" maxLength="1200" data-char-field>@form.data.get("improve")</textarea>
-        </div>
-        <small>@Messages("nisp.textentry.warning")</small>
+            <div data-char-counter>
+                <textarea class="full-width" name="improve" id="improve" maxLength="1200" data-char-field>@form.data.get("improve")</textarea>
+            </div>
+            <small>@Messages("nisp.textentry.warning")</small>
         </label>
         <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>
     </fieldset>
