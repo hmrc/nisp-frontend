@@ -22,11 +22,18 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.helpers.MockNIRecordController
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.connectors.NispConnector
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
+import uk.gov.hmrc.nisp.helpers._
 
 class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserId = "/auth/oid/mockuser"
@@ -126,6 +133,47 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     "return how to check page for authenticated user" in {
       val result = MockNIRecordController.showVoluntaryContributions(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should include ("Voluntary contributions")
+    }
+  }
+  "GET /account/nirecord (full)" should {
+    "return NI record page with details for full years - when showFullNI is true" in {
+      val controller = new MockNIRecordController {
+        override val nispConnector: NispConnector = MockNispConnector
+        override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+        override val sessionCache: SessionCache = MockSessionCache
+
+        override protected def authConnector: AuthConnector = MockAuthConnector
+
+        override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+          override val assetsPrefix: String = ""
+          override val reportAProblemNonJSUrl: String = ""
+          override val ssoUrl: Option[String] = None
+          override val betaFeedbackUnauthenticatedUrl: String = ""
+          override val contactFrontendPartialBaseUrl: String = ""
+          override val analyticsHost: String = ""
+          override val analyticsToken: Option[String] = None
+          override val betaFeedbackUrl: String = ""
+          override val reportAProblemPartialUrl: String = ""
+          override val showGovUkDonePage: Boolean = true
+          override val govUkFinishedPageUrl: String = "govukdone"
+          override val citizenAuthHost: String = ""
+          override val postSignInRedirectUrl: String = ""
+          override val notAuthorisedRedirectUrl: String = ""
+          override val identityVerification: Boolean = true
+          override val ivUpliftUrl: String = "ivuplift"
+          override val ggSignInUrl: String = "ggsignin"
+          override val twoFactorUrl: String = "twofactor"
+          override val pertaxFrontendUrl: String = ""
+          override val contactFormServiceIdentifier: String = ""
+          override val breadcrumbPartialUrl: String = ""
+          override val showFullNI = true
+        }
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      }
+      val result = controller.showFull(authenticatedFakeRequest(mockFullUserId))
+      contentAsString(result) should include("52 weeks")
     }
   }
 }

@@ -25,13 +25,15 @@ import uk.gov.hmrc.nisp.services.{MetricsService, NpsAvailabilityChecker, Citize
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-object MockNIRecordController extends NIRecordController {
+object MockNIRecordController extends MockNIRecordController {
   override val nispConnector: NispConnector = MockNispConnector
   override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
   override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val sessionCache: SessionCache = MockSessionCache
+}
 
+trait MockNIRecordController extends NIRecordController {
   override protected def authConnector: AuthConnector = MockAuthConnector
 
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
