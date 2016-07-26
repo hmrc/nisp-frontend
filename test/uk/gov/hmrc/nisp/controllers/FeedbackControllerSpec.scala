@@ -73,6 +73,7 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
       override val ivUpliftUrl: String = ""
       override val pertaxFrontendUrl: String = ""
       override val breadcrumbPartialUrl: String = ""
+      override val showGovUkFullYearPage: Boolean = false
     }
   }
 

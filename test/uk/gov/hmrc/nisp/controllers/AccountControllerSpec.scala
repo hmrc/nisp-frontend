@@ -114,6 +114,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
+            override val showGovUkFullYearPage: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -265,6 +266,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
+            override val showGovUkFullYearPage: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -298,6 +300,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
+            override val showGovUkFullYearPage: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
