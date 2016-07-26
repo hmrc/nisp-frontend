@@ -69,7 +69,7 @@ nisp.main.month = a month
 nisp.main.year = a year
 nisp.main.equivalent = This is equal to:
 nisp.main.notAGuarantee = is not a guarantee and is based on the current law
-nisp.main.isBased = is based on your latest National Insurance record ({0})
+nisp.main.isBased = is based on your latest National Insurance record <span class="nowrap">({0})</span>
 nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = does not include the pension sharing order you have in effect
@@ -98,7 +98,6 @@ nisp.main.showyourrecordUK = View your UK National Insurance record
 
 nisp.main.chart.lastprocessed.title= Estimate based on your National Insurance record up to 5 April {0}
 nisp.main.chart.spa.title = Forecast if you continue to contribute until April {0}
-
 nisp.main.chart.whichis = which is
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
@@ -174,7 +173,7 @@ nisp.excluded.spaBefore5April2016 = You will have reached State Pension age befo
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
 nisp.excluded.haveReached = You reached State Pension age on {0} when you were {1}
-nisp.excluded.willReach = You&rsquo;ll reach State Pension age on {0} when you&rsquo;ll be {1}.
+nisp.excluded.willReach = You&rsquo;ll reach State Pension age on <span class="nowrap">{0}</span> when you&rsquo;ll be {1}.
 
 nisp.excluded.helpUs.title = Help us improve this service
 nisp.excluded.helpUs.text = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
