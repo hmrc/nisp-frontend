@@ -1,4 +1,4 @@
-@(form: Form[_], OptionalErrMsg:Option[String] = None)
+@(form: Form[_])
 
 @if(form.hasErrors) {
         <div id="error-summary-display" class="flash error-summary error-summary--show " role="group" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -7,7 +7,7 @@
                 @form.errors.map { error =>
                 <li role="tooltip">
                     <a href='#@error.key' id='@error.key-error-summary' data-focuses='@error.key'>
-                        @Messages(if(OptionalErrMsg.isDefined) OptionalErrMsg.get else error.message, error.args : _*)
+                        @Messages(error.message, error.args : _*).replaceAll("""[\.\[\]]""", "")
                     </a>
                 </li>
                 }
