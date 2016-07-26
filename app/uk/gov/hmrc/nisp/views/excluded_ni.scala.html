@@ -28,18 +28,26 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
     });
 }
 
-@defining(Some(user)) { implicit userOption =>
-    @main(browserTitle=Some(Messages("nisp.main.title")), userLoggedIn = true,
-        pageTitle = Some(Messages("nisp.excluded.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-        @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
-            @exclusions.ni.mwrre()
+
+@defining(Some(user)) { implicit userOption =>    
+        @main(browserTitle=Some(Messages("nisp.main.title")), pageTitle = if(niExclusions.exclusions.contains(Exclusion.Dead)) { Some(Messages("nisp.nirecord.heading.dead"))} else {Some(Messages("nisp.nirecord.heading"))},
+          userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
+            @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
+                @exclusions.dead()
+            } else  {
+                <div class="panel-indent">
+                    @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
+                        @exclusions.ni.mwrre()
+                    }
+                    @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
+                        @exclusions.ni.isleOfMan()
+                    }
+                </div>
+            }
+           
         }
-        @if(niExclusions.exclusions.contains(Exclusion.Dead)) {
-            @exclusions.dead()
-        }
-        @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
-            @exclusions.ni.isleOfMan()
-        }
-    }
+
+   
 }

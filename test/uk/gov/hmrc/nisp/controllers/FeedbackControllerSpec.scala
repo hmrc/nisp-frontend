@@ -21,14 +21,13 @@ import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.{AnyContent, Request, Cookie}
+import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.connectors.{CustomAuditConnector, AuthenticationConnectors}
+import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors}
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
-import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.http.{HttpResponse, HttpPost}
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.partials.{FormPartialRetriever, CachedStaticHtmlPartialRetriever}
@@ -90,7 +89,7 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
   }
 
   "POST /feedback" should {
-    val fakePostRequest = FakeRequest("POST", "/checkmystatepension/feedback").withFormUrlEncodedBody("test" -> "test")
+    val fakePostRequest = FakeRequest("POST", "/check-your-state-pension/feedback").withFormUrlEncodedBody("test" -> "test")
     "return form with thank you for valid selections" in {
       when(mockHttp.POSTForm[HttpResponse](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(
         Future.successful(HttpResponse(Status.OK, responseString = Some("1234"))))
