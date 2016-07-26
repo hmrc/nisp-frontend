@@ -64,7 +64,7 @@
     }
     <div class="highlighted-event">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>
-            @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, <span class="nowrap">@Messages("nisp.main.estimate").toLowerCase()
+            @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, <span class="nowrap">@Messages("nisp.main.caveats").toLowerCase()
             @Messages("nisp.is")</span>
         </p>
         <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
@@ -126,9 +126,8 @@
             <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
 
             @includes.spChart(Html(Messages("nisp.main.chart.lastprocessed.title", spSummary.lastProcessedDate.localDate.getYear().toString())), currentChart)
-
             @if(spSummary.forecast.oldRulesCustomer) {
-                @includes.spChart(Html(Messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart))
+                @includes.spChart(Html(Messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart)
             } else {
                 @includes.spChart(Html(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())), forecastChart)
             }
