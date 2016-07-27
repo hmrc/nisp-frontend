@@ -27,7 +27,7 @@
     <div class="ni-wrapper">
         <div class="ni-years"> @niRecordTaxYear.displayableTaxYear</div>
         @if(niRecordTaxYear.qualifying){
-            <div class="ni-full">@Messages("nisp.nirecord.fullyear")</div>
+            <div class="ni-notfull">@Messages("nisp.nirecord.fullyear")</div>
         } else {
             <div class="ni-notfull">@Messages("nisp.nirecord.gap")</div>            
         }

@@ -18,15 +18,12 @@
   }
 }
 
-.ni-notfull, .ni-full {
+.ni-notfull {
   float: left;
   width: 35%;
 }
-.ni-full {
-  color: $grey-1;
-}
 
-.inactive {
+.inactive, .ni-full {
   float: right;
   width:75%;
   @media only screen and (max-width: 640px) {
