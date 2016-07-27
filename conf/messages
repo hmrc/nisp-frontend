@@ -69,7 +69,7 @@ nisp.main.month = a month
 nisp.main.year = a year
 nisp.main.equivalent = This is equal to:
 nisp.main.notAGuarantee = is not a guarantee and is based on the current law
-nisp.main.isBased = is based on your latest National Insurance record ({0})
+nisp.main.isBased = is based on your latest National Insurance record <span class="nowrap">({0})</span>
 nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = does not include the pension sharing order you have in effect
@@ -98,7 +98,6 @@ nisp.main.showyourrecordUK = View your UK National Insurance record
 
 nisp.main.chart.lastprocessed.title= Estimate based on your National Insurance record up to 5 April {0}
 nisp.main.chart.spa.title = Forecast if you continue to contribute until April {0}
-
 nisp.main.chart.whichis = which is
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
@@ -107,7 +106,7 @@ nisp.main.chart.estimateIfYouContinue.single = Forecast if you contribute anothe
 nisp.main.chart.estimateIfYouContinue.plural = Forecast if you contribute another {0} years before April {1}
 nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in year up to 5 April 2016
 
-nisp.main.overseas = As you are living or working overseas, you may be entitled to a State Pension from the country you are living or working in. <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">More information on living and working overseas (opens in new tab)</a>
+nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">As you are living or working overseas (opens in new tab)</a>, you may be entitled to a State Pension from the country you are living or working in.
 
 #**************************
 # Scenario Messages
@@ -133,7 +132,7 @@ nisp.main.context.fillGaps.viewGaps = View gaps in your record
 nisp.main.context.fillGaps.viewGapsAndCost = Gaps in your record and the cost of filling them
 nisp.main.context.fillgaps.para1.plural = You have years on your National Insurance record where you did not contribute enough.
 nisp.main.context.fillgaps.para1.singular = You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.
-nisp.main.context.fillgaps.bullet1 = filling years can increase your estimate
+nisp.main.context.fillgaps.bullet1 = filling years can increase your forecast
 nisp.main.context.fillgaps.bullet2.onlyone = you only need to fill this year to get the most you can
 nisp.main.context.fillgaps.bullet2.singular = you only need to fill 1 year to get the most you can
 nisp.main.context.fillgaps.bullet2.plural = you only need to fill {0} years to get the most you can
@@ -174,7 +173,7 @@ nisp.excluded.spaBefore5April2016 = You will have reached State Pension age befo
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
 nisp.excluded.haveReached = You reached State Pension age on {0} when you were {1}
-nisp.excluded.willReach = You&rsquo;ll reach State Pension age on {0} when you&rsquo;ll be {1}.
+nisp.excluded.willReach = You&rsquo;ll reach State Pension age on <span class="nowrap">{0}</span> when you&rsquo;ll be {1}.
 
 nisp.excluded.helpUs.title = Help us improve this service
 nisp.excluded.helpUs.text = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
@@ -281,8 +280,8 @@ nisp.nirecord.gap.selfemployed.singular = Self-employment: <strong>{0} week</str
 nisp.nirecord.gap.selfemployed.plural = Self-employment: <strong>{0} weeks</strong>
 nisp.nirecord.gap.voluntary.singular = Voluntary: <strong>{0} week</strong>
 nisp.nirecord.gap.voluntary.plural = Voluntary: <strong>{0} weeks</strong>
-nisp.nirecord.gap.whenyouareclaiming.singular = When you were claiming benefits or unable to work we credited you National Insurance for <strong>{0} week</strong>
-nisp.nirecord.gap.whenyouareclaiming.plural= When you were claiming benefits or unable to work we credited you National Insurance for <strong>{0} weeks</strong>
+nisp.nirecord.gap.whenyouareclaiming.singular = National Insurance credits: <strong>{0} week</strong> (this week may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service) 
+nisp.nirecord.gap.whenyouareclaiming.plural= National Insurance credits: <strong>{0} weeks</strong> (these may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service) 
 nisp.nirecord.unavailableyear = Your record for this year is not available yet
 nisp.nirecord.yourcontributionfrom = You have contributions from
 nisp.nirecord.gap.findoutmoreabout = Find out more about <a href="{0}">gaps in your record and how to check them</a>.
@@ -376,7 +375,7 @@ nisp.main.description.mqp = You&rsquo;ll reach State Pension age on
 nisp.mqp.notPossible = By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.
 nisp.mqp.possible = By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.
 nisp.mqp.doNext = What you can do next
-nisp.mqp.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">If you have lived or worked overseas (opens in new tab)</a>, you may be able to use your time abroad to make your years in the UK qualify for the purposes of getting any State Pension.
+nisp.mqp.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">If you have lived or worked overseas (opens in new tab)</a>, your time abroad may help you make up the 10 years you need to get any State Pension.
 
 nisp.mqp.years.dontCount.single = You also have a year on your record which does not count towards your pension because you did not contribute enough National Insurance.
 nisp.mqp.years.dontCount.plural = You also have {0} on your record which do not count towards your pension because you did not contribute enough National Insurance.

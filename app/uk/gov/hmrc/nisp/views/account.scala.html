@@ -63,9 +63,9 @@
         <h2 class="heading-medium summary">@Messages("nisp.main.summary")</h2>
     }
     <div class="highlighted-event">
-        <p>@Messages("nisp.main.basedOn") @Dates.formatDate(spSummary.statePensionAge.date.localDate)
-            @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, @Messages("nisp.main.caveats").toLowerCase()
-            @Messages("nisp.is")
+        <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span>
+            @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, <span class="nowrap">@Messages("nisp.main.caveats").toLowerCase()
+            @Messages("nisp.is")</span>
         </p>
         <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
         <p> @NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
@@ -78,7 +78,7 @@
         <p>@Messages("nisp.main.caveats")</p>
         <ul class="list-bullet">
             <li>@Messages("nisp.main.notAGuarantee")</li>
-            <li>@Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate))</li>
+            <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate)))</li>
             <li>@Html(Messages("nisp.mqp.howManyToContribute",Time.years(spSummary.forecast.yearsLeftToWork)))</li>
             <li>@Messages("nisp.main.inflation")</li>
             @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
@@ -125,19 +125,17 @@
             </ul>
             <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
 
-            @includes.spChart(Messages("nisp.main.chart.lastprocessed.title",
-                            spSummary.lastProcessedDate.localDate.getYear().toString()), currentChart)
-
+            @includes.spChart(Html(Messages("nisp.main.chart.lastprocessed.title", spSummary.lastProcessedDate.localDate.getYear().toString())), currentChart)
             @if(spSummary.forecast.oldRulesCustomer) {
-                @includes.spChart(Messages("nisp.main.chart.estimateIfYouContinue2016"), forecastChart)
+                @includes.spChart(Html(Messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart)
             } else {
-                @includes.spChart(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString()), forecastChart)
+                @includes.spChart(Html(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())), forecastChart)
             }
 
             @includes.fillGaps(spSummary, personalMaximumChart)
         }
 
-     }
+    }
 
     @if(spSummary.isAbroad) {
         @includes.abroad()
@@ -151,7 +149,8 @@
         @includes.deferral(spSummary.statePensionAge.age)
     }
 
-    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
-
+    @if(isPertaxUrl) {
+        <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+    }
   }
 }
