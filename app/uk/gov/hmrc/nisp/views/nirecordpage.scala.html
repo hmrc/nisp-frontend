@@ -166,9 +166,9 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
         <div class="ni-wrapper">
             <div class="ni-years">@Messages("nisp.nirecord.pre75Years")</div>
             @if(pre75Years > 0) {
-              <div class="ni-full">@Messages("nisp.nirecord.pre75QualifyingYears", pre75Years)</div>
+              <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYears", pre75Years))</div>
             } else {
-              <div class="ni-full">@Messages("nisp.nirecord.pre75QualifyingYearsZero")</div>
+              <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYearsZero"))</div>
             }
         </div>
       </dt>
