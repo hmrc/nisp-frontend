@@ -146,7 +146,7 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
             </dt>
         }
         @for(niRecordTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
-            if(ApplicationConfig.showFullNI) includes.nirecordtaxyear(niRecordTaxYear) else includes.nirecordtaxyearNoFull(niRecordTaxYear)
+            @if((niGaps) && (ApplicationConfig.showFullNI)){ @includes.nirecordtaxyear(niRecordTaxYear) }else{ @includes.nirecordtaxyearNoFull(niRecordTaxYear)}
         }
     } else {
         @if(niRecord.taxYears.isEmpty) {
