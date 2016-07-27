@@ -46,20 +46,20 @@
             @if(niRecordTaxYear.classOneContributions > 0 || niRecordTaxYear.classThreeCredits > 0 || niRecordTaxYear.classTwoCredits > 0){
                 <p>
                 @if(niRecordTaxYear.classOneContributions > 0){
-                    @Html(Messages("nisp.nirecord.gap.paidemployment", NispMoney.pounds(niRecordTaxYear.classOneContributions)))<br/>
+                    <p>@Html(Messages("nisp.nirecord.gap.paidemployment", NispMoney.pounds(niRecordTaxYear.classOneContributions)))</p>
                 }
                 @if(niRecordTaxYear.classTwoCredits > 0){
                     @if(niRecordTaxYear.classTwoCredits == 1){
-                        @Html(Messages("nisp.nirecord.gap.selfemployed.singular", niRecordTaxYear.classTwoCredits))<br/>
+                        <p>@Html(Messages("nisp.nirecord.gap.selfemployed.singular", niRecordTaxYear.classTwoCredits))</p>
                     }else{
-                        @Html(Messages("nisp.nirecord.gap.selfemployed.plural", niRecordTaxYear.classTwoCredits))<br/>
+                        <p>@Html(Messages("nisp.nirecord.gap.selfemployed.plural", niRecordTaxYear.classTwoCredits))</p>
                     }
                 }
                 @if(niRecordTaxYear.classThreeCredits > 0){
                     @if(niRecordTaxYear.classThreeCredits == 1){
-                        @Html(Messages("nisp.nirecord.gap.voluntary.singular", niRecordTaxYear.classThreeCredits))<br/>
+                        <p>@Html(Messages("nisp.nirecord.gap.voluntary.singular", niRecordTaxYear.classThreeCredits))</p>
                     } else {
-                        @Html(Messages("nisp.nirecord.gap.voluntary.plural", niRecordTaxYear.classThreeCredits))<br/>
+                        <p>@Html(Messages("nisp.nirecord.gap.voluntary.plural", niRecordTaxYear.classThreeCredits))</p>
                     }
                 }
                 </p>
