@@ -258,6 +258,7 @@ nisp.nirecord.heading.dead = You are unable to use this service
 nisp.nirecord.heading.uk = Your UK National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.
 nisp.nirecord.yournirecordallyears = All years.
+nisp.nirecord.youdonothaveanygaps = You do not have any gaps in your record.
 nisp.nirecord.payablevoluntarycontribs = You have {0} {1} where you can pay voluntary contributions to make {2} count towards your pension.
 nisp.nirecord.nonpayablevoluntarycontribs = You also have {0} {1} where you did not pay enough National Insurance that {2} too late to pay.
 nisp.nirecord.onlynonpayablevoluntarycontribs = You have {0} {1} where you did not pay enough National Insurance that {2} too late to pay.
@@ -302,6 +303,7 @@ nisp.nirecord.summary.yearsRemaining.single = year to contribute before 5 April 
 nisp.nirecord.pre75Years = Up to 1975
 nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
 nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
+
 
 #**************************
 # Gaps In Your Record Page

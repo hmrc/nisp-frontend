@@ -60,5 +60,6 @@ trait MockAccountController extends AccountController {
     override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = ""
+    override val showFullNI: Boolean = false
   }
 }

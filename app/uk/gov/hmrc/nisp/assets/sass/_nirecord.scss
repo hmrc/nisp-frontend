@@ -23,7 +23,7 @@
   width: 35%;
 }
 
-.ni-full, .inactive {
+.inactive, .ni-full {
   float: right;
   width:75%;
   @media only screen and (max-width: 640px) {
@@ -144,7 +144,7 @@ ul.listbullets {
   }
 }
 
-.inactive {
+.inactive, .full-inactive {
   color: $secondary-text-colour;
 }
 
