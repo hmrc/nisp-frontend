@@ -96,15 +96,15 @@ nisp.main.yearly = Yearly
 nisp.main.showyourrecord = View your National Insurance record
 nisp.main.showyourrecordUK = View your UK National Insurance record
 
-nisp.main.chart.lastprocessed.title= Estimate based on your National Insurance record up to 5 April {0}
-nisp.main.chart.spa.title = Forecast if you continue to contribute until April {0}
+nisp.main.chart.lastprocessed.title = Estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
+nisp.main.chart.spa.title = Forecast if you continue to contribute until <span class="nowrap">5 April {0}</span>
 nisp.main.chart.whichis = which is
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
 nisp.main.chart.year = a year
-nisp.main.chart.estimateIfYouContinue.single = Forecast if you contribute another year before April {1}
-nisp.main.chart.estimateIfYouContinue.plural = Forecast if you contribute another {0} years before April {1}
-nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in year up to 5 April 2016
+nisp.main.chart.estimateIfYouContinue.single = Forecast if you contribute another year before <span class="nowrap">5 April {1}</span>
+nisp.main.chart.estimateIfYouContinue.plural = Forecast if you contribute another {0} years before <span class="nowrap">5 April {1}</span>
+nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in year up to <span class="nowrap">5 April 2016</span>
 
 nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">As you are living or working overseas (opens in new tab)</a>, you may be entitled to a State Pension from the country you are living or working in.
 
@@ -297,11 +297,11 @@ nisp.nirecord.summary.fullContributions = years of full contributions
 nisp.nirecord.summary.fullContributions.single = year of full contributions
 nisp.nirecord.summary.gaps = years when you did not contribute enough
 nisp.nirecord.summary.gaps.single = year when you did not contribute enough
-nisp.nirecord.summary.yearsRemaining = years to contribute before April {0}
-nisp.nirecord.summary.yearsRemaining.single = year to contribute before April {0}
+nisp.nirecord.summary.yearsRemaining = years to contribute before 5 April {0}
+nisp.nirecord.summary.yearsRemaining.single = year to contribute before 5 April {0}
 nisp.nirecord.pre75Years = Up to 1975
-nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to 5 April 1975
-nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to 5 April 1975
+nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
+nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
 
 #**************************
 # Gaps In Your Record Page
