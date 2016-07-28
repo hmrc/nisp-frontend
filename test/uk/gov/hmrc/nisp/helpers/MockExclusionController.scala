@@ -51,6 +51,7 @@ object MockExclusionController extends ExclusionController {
     override val ivUpliftUrl: String = ""
     override val pertaxFrontendUrl: String = ""
     override val breadcrumbPartialUrl: String = ""
+    override val showFullNI: Boolean = false
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 }

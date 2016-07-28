@@ -21,9 +21,10 @@
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, tableStart: Int, recordEnded: Boolean,
-authenticationProvider: String)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+authenticationProvider: String, showFullNI: Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >
@@ -116,11 +117,18 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
 </div>
 
 @if(!niGaps){
-    <p class="lede">@Messages("nisp.nirecord.yournirecordallyears")</p>
+    @if(niSummary.numberOfPayableGaps + niSummary.numberOfNonPayableGaps > 0){
+        <p class="lede">@Messages("nisp.nirecord.yournirecordallyears")</p>
+    } else {
+        <p class="lede">@Messages("nisp.nirecord.youdonothaveanygaps")</p>
+    }
+    @if(niSummary.noOfNonQualifyingYears > 0){
+            <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niSummary.noOfNonQualifyingYears)</a></p>
+    }
 }
-@if(niSummary.noOfNonQualifyingYears > 0 && !niGaps){
-    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niSummary.noOfNonQualifyingYears)</a></p>
-}
+
+
+
 @if(niGaps) {
     <p class="lede">@Messages("nisp.nirecord.yournirecordgapyears")</p>
     <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
@@ -138,7 +146,7 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
             </dt>
         }
         @for(niRecordTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
-            @includes.nirecordtaxyear(niRecordTaxYear)
+            @if(showFullNI){ @includes.nirecordtaxyear(niRecordTaxYear) }else{ @includes.nirecordtaxyearNoFull(niRecordTaxYear)}
         }
     } else {
         @if(niRecord.taxYears.isEmpty) {
@@ -151,7 +159,7 @@ authenticationProvider: String)(implicit request: Request[_], user: NispUser, pa
         } else {
 
             @for(taxYear <- tableStart to niRecord.taxYears.map(p => p.taxYear).min by -1) {
-              @niRecord.taxYears.find(p => p.taxYear == taxYear).map(includes.nirecordtaxyear(_)).getOrElse {
+              @niRecord.taxYears.find(p => p.taxYear == taxYear).map(if(showFullNI) includes.nirecordtaxyear(_) else includes.nirecordtaxyearNoFull(_) ).getOrElse {
                 <dt>
                     <div class="ni-wrapper">
                         <div class="ni-years"> @{(taxYear)}-@{(taxYear+1).toString.substring(2,4)}</div>
