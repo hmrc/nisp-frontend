@@ -31,6 +31,7 @@ object MockNIRecordController extends MockNIRecordController {
   override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val sessionCache: SessionCache = MockSessionCache
+  override val showFullNI: Boolean = true
 }
 
 trait MockNIRecordController extends NIRecordController {
@@ -58,7 +59,7 @@ trait MockNIRecordController extends NIRecordController {
     override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = ""
-    override val showFullNI: Boolean = false
+    override val showFullNI: Boolean = true
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 

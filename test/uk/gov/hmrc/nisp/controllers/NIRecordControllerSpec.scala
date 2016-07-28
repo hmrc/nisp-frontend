@@ -143,37 +143,30 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
+        override val showFullNI = true
 
         override protected def authConnector: AuthConnector = MockAuthConnector
 
-        override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-          override val assetsPrefix: String = ""
-          override val reportAProblemNonJSUrl: String = ""
-          override val ssoUrl: Option[String] = None
-          override val betaFeedbackUnauthenticatedUrl: String = ""
-          override val contactFrontendPartialBaseUrl: String = ""
-          override val analyticsHost: String = ""
-          override val analyticsToken: Option[String] = None
-          override val betaFeedbackUrl: String = ""
-          override val reportAProblemPartialUrl: String = ""
-          override val showGovUkDonePage: Boolean = true
-          override val govUkFinishedPageUrl: String = "govukdone"
-          override val citizenAuthHost: String = ""
-          override val postSignInRedirectUrl: String = ""
-          override val notAuthorisedRedirectUrl: String = ""
-          override val identityVerification: Boolean = true
-          override val ivUpliftUrl: String = "ivuplift"
-          override val ggSignInUrl: String = "ggsignin"
-          override val twoFactorUrl: String = "twofactor"
-          override val pertaxFrontendUrl: String = ""
-          override val contactFormServiceIdentifier: String = ""
-          override val breadcrumbPartialUrl: String = ""
-          override val showFullNI = true
-        }
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       }
       val result = controller.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) should include("52 weeks")
+    }
+
+    "return NI record page with no details for full years - when showFullNI is false" in {
+      val controller = new MockNIRecordController {
+        override val nispConnector: NispConnector = MockNispConnector
+        override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+        override val sessionCache: SessionCache = MockSessionCache
+
+        override protected def authConnector: AuthConnector = MockAuthConnector
+        override val showFullNI = false
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      }
+      val result = controller.showFull(authenticatedFakeRequest(mockFullUserId))
+      contentAsString(result) shouldNot include("52 weeks")
     }
   }
 }
