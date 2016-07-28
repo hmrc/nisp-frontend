@@ -38,11 +38,13 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
   override val sessionCache: SessionCache = NispSessionCache
+  override val showFullNI: Boolean = ApplicationConfig.showFullNI
 }
 
 trait NIRecordController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   val nispConnector: NispConnector
   val customAuditConnector: CustomAuditConnector
+  val showFullNI: Boolean
 
   def showFull: Action[AnyContent] = show(niGaps = false)
   def showGaps: Action[AnyContent] = show(niGaps = true)
@@ -65,7 +67,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
 
               val tableStart = niSummary.recordEnd.getOrElse(niSummary.earningsIncludedUpTo.taxYear + 1)
 
-            Ok(nirecordpage(nino, niRecord, niSummary, niGaps, tableStart, niSummary.recordEnd.isDefined, getAuthenticationProvider(user.authContext.user.confidenceLevel)))
+            Ok(nirecordpage(nino, niRecord, niSummary, niGaps, tableStart, niSummary.recordEnd.isDefined, getAuthenticationProvider(user.authContext.user.confidenceLevel), showFullNI))
           }
         case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
           customAuditConnector.sendEvent(AccountExclusionEvent(
