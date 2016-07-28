@@ -92,7 +92,9 @@
 
     <fieldset>
         <label for="improve" class='heading-small @if(form.errors("improve").nonEmpty) {form-field--error}'>
-            @if(form.errors("improve").nonEmpty) {<span class="error-notification">@Messages("nisp.validation.summary.error.max")</span>}
+            @form.errors("improve").map{ error =>
+              <span class="error-notification">@Messages(error.message, error.args)</span>
+            }
             @Messages("nisp.questionnaire.improve.question")
             <div data-char-counter>
                 <textarea class="full-width" name="improve" id="improve" maxLength="1200" data-char-field>@form.data.get("improve")</textarea>
