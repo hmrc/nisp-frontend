@@ -466,6 +466,5 @@ nisp.tandcs.thanks = Thank you for visiting the site.
 #***********************
 
 nisp.validation.summary.heading = Error summary
-nisp.validation.summary.feedback = Your feedback is too long
 nisp.validation.summary.error.max = Maximum length is 1,200
 error.email = Enter a valid email address
