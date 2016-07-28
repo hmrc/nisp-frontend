@@ -17,11 +17,11 @@
 @(form: Form[_], postRoute: play.api.mvc.Call)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html.helpers
-
+@import uk.gov.hmrc.nisp.views.html.includes
 
 @helpers.form(postRoute) {
 
-    @helpers.errorSummary("Error summary", form)
+    @helpers.errorSummary(Messages("nisp.validation.summary.heading"), form)
 
     <input type="hidden" name="referer" id="referer" value="@form.data.get("referer")">
 
@@ -91,12 +91,17 @@
     )
 
     <fieldset>
-    @helpers.textArea(form("improve"),
-        '_label -> Messages("nisp.questionnaire.improve.question"),
-        '_labelClass -> "heading-small",
-        '_help -> Messages("nisp.textentry.warning"),
-        '_inputClass -> "full-width")
-    <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>      
+        <label for="improve" class='heading-small @if(form.errors("improve").nonEmpty) {form-field--error}'>
+            @form.errors("improve").map{ error =>
+              <span class="error-notification">@Messages(error.message, error.args)</span>
+            }
+            @Messages("nisp.questionnaire.improve.question")
+            <div data-char-counter>
+                <textarea class="full-width" name="improve" id="improve" maxLength="1200" data-char-field>@form.data.get("improve")</textarea>
+            </div>
+            <small>@Messages("nisp.textentry.warning")</small>
+        </label>
+        <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>
     </fieldset>
 
 

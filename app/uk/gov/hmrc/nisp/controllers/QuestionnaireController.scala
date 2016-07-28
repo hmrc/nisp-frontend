@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import play.api.data.Form
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
@@ -43,7 +44,14 @@ trait QuestionnaireController extends NispFrontendController with Actions with A
   def submit: Action[AnyContent] = UnauthorisedAction.async {
     implicit request =>
       QuestionnaireForm.form.bindFromRequest().fold(
-        formWithErrors => {Future.successful(BadRequest(questionnaire(formWithErrors)))},
+        formWithErrors => {
+          val replaceForm: Form[QuestionnaireForm] = {
+            formWithErrors.copy(errors = formWithErrors.errors.map { err =>
+              if(err.message == "error.maxLength") err.copy(messages = Seq("nisp.validation.summary.error.max")) else err
+            })
+          }
+          Future.successful(BadRequest(questionnaire(replaceForm)))
+        },
         value => {
           customAuditConnector.sendEvent(new QuestionnaireEvent(
             value.easyToUse,
