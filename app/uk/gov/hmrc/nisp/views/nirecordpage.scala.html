@@ -146,7 +146,7 @@ authenticationProvider: String, showFullNI: Boolean)(implicit request: Request[_
             </dt>
         }
         @for(niRecordTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
-            @if((niGaps) && (showFullNI)){ @includes.nirecordtaxyear(niRecordTaxYear) }else{ @includes.nirecordtaxyearNoFull(niRecordTaxYear)}
+            @if(showFullNI){ @includes.nirecordtaxyear(niRecordTaxYear) }else{ @includes.nirecordtaxyearNoFull(niRecordTaxYear)}
         }
     } else {
         @if(niRecord.taxYears.isEmpty) {
