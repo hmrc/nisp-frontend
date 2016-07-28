@@ -51,7 +51,7 @@
   analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <div class="panel-indent panel-border-wide panel-indent--info">
-        <p>@Html(Messages("nisp.main.description.mqp")) @Dates.formatDate(spSummary.statePensionAge.date.localDate) @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age.</p>
+        <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age.</p>
 
         @spSummary.mqp match {
             case Some(CanGetWithGaps) => {

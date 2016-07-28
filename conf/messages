@@ -56,7 +56,7 @@ nisp.main.summary = Summary
 nisp.main.h1.title = Your State Pension
 nisp.main.caveats = Your forecast
 nisp.main.forecast = Forecast
-nisp.main.howtoincreaseit = How to increase it
+nisp.main.howtoincreaseit = How to improve it
 nisp.main.cope = What affects it
 nisp.main.currentvalue = Current Value
 nisp.main.today = Today, the amount of your State Pension is
@@ -84,7 +84,7 @@ nisp.main.puttingOff = Putting off claiming
 nisp.main.puttingOff.line1 = When you are {0}, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.
 nisp.main.puttingOff.linkTitle = More on putting off claiming (opens in new tab)
 
-nisp.main.context.default = If you continue to make National Insurance contributions, your State Pension may increase before you retire.
+nisp.main.context.default = If you continue to make National Insurance contributions, your State Pension may improve before you retire.
 
 nisp.main.forecasttablerow1 = Amount based on your record up to {0}
 nisp.main.forecasttablerow2 = Amount if you continue to add until {0}
@@ -96,15 +96,15 @@ nisp.main.yearly = Yearly
 nisp.main.showyourrecord = View your National Insurance record
 nisp.main.showyourrecordUK = View your UK National Insurance record
 
-nisp.main.chart.lastprocessed.title= Estimate based on your National Insurance record up to 5 April {0}
-nisp.main.chart.spa.title = Forecast if you continue to contribute until April {0}
+nisp.main.chart.lastprocessed.title = Estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
+nisp.main.chart.spa.title = Forecast if you continue to contribute until <span class="nowrap">5 April {0}</span>
 nisp.main.chart.whichis = which is
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
 nisp.main.chart.year = a year
-nisp.main.chart.estimateIfYouContinue.single = Forecast if you contribute another year before April {1}
-nisp.main.chart.estimateIfYouContinue.plural = Forecast if you contribute another {0} years before April {1}
-nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in year up to 5 April 2016
+nisp.main.chart.estimateIfYouContinue.single = Forecast if you contribute another year before <span class="nowrap">5 April {1}</span>
+nisp.main.chart.estimateIfYouContinue.plural = Forecast if you contribute another {0} years before <span class="nowrap">5 April {1}</span>
+nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in year up to <span class="nowrap">5 April 2016</span>
 
 nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">As you are living or working overseas (opens in new tab)</a>, you may be entitled to a State Pension from the country you are living or working in.
 
@@ -132,7 +132,7 @@ nisp.main.context.fillGaps.viewGaps = View gaps in your record
 nisp.main.context.fillGaps.viewGapsAndCost = Gaps in your record and the cost of filling them
 nisp.main.context.fillgaps.para1.plural = You have years on your National Insurance record where you did not contribute enough.
 nisp.main.context.fillgaps.para1.singular = You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.
-nisp.main.context.fillgaps.bullet1 = filling years can increase your forecast
+nisp.main.context.fillgaps.bullet1 = filling years can improve your forecast
 nisp.main.context.fillgaps.bullet2.onlyone = you only need to fill this year to get the most you can
 nisp.main.context.fillgaps.bullet2.singular = you only need to fill 1 year to get the most you can
 nisp.main.context.fillgaps.bullet2.plural = you only need to fill {0} years to get the most you can
@@ -298,11 +298,12 @@ nisp.nirecord.summary.fullContributions = years of full contributions
 nisp.nirecord.summary.fullContributions.single = year of full contributions
 nisp.nirecord.summary.gaps = years when you did not contribute enough
 nisp.nirecord.summary.gaps.single = year when you did not contribute enough
-nisp.nirecord.summary.yearsRemaining = years to contribute before April {0}
-nisp.nirecord.summary.yearsRemaining.single = year to contribute before April {0}
+nisp.nirecord.summary.yearsRemaining = years to contribute before 5 April {0}
+nisp.nirecord.summary.yearsRemaining.single = year to contribute before 5 April {0}
 nisp.nirecord.pre75Years = Up to 1975
-nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to 5&nbsp;April&nbsp;1975
-nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to 5&nbsp;April&nbsp;1975
+nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
+nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
+
 
 #**************************
 # Gaps In Your Record Page
