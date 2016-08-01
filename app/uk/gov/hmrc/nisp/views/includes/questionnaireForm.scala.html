@@ -93,7 +93,7 @@
     <fieldset>
         <label for="improve" class='heading-small @if(form.errors("improve").nonEmpty) {form-field--error}'>
             @form.errors("improve").map{ error =>
-              <span class="error-notification">@Messages(error.message, error.args)</span>
+              <span class="error-notification">@Messages(error.message, error.args: _*)</span>
             }
             @Messages("nisp.questionnaire.improve.question")
             <div data-char-counter>
