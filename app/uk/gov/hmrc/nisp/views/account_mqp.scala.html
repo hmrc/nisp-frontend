@@ -53,11 +53,11 @@
     <div class="panel-indent panel-border-wide panel-indent--info">
         <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age.</p>
 
-        @spSummary.mqp match {
-            case Some(CanGetWithGaps) => {
+        @spSummary.mqp.map { mqp =>
+            @if(mqp == CanGetWithGaps) {
                 <p>@Messages("nisp.mqp.possible")</p>
             }
-            case Some(CantGet) => {
+            @if(mqp == CantGet) {
                 <p>@Html(Messages("nisp.mqp.notPossible"))</p>
             }
         }
@@ -69,33 +69,35 @@
     <p>
         @if(spSummary.isAbroad) {
             @Html(Messages("nisp.main.overseas"))
-            } else {
+        } else {
             @Html(Messages("nisp.mqp.overseas"))
-            }
+        }
     </p>
 
     <p>
         @if(spSummary.numberOfGapsPayable > 1) {
             @Messages("nisp.mqp.years.dontCount.plural", Time.years(spSummary.numberOfGapsPayable))
         } else {
-                @if(spSummary.numberOfGapsPayable < 1) {
+            @if(spSummary.numberOfGapsPayable < 1) {
                 @Messages("nisp.mqp.years.dontCount.zero")
             } else {
                 @Messages("nisp.mqp.years.dontCount.single")
             }
         }
         
-        @if(spSummary.numberOfGapsPayable > 0) { 
-            @spSummary.mqp match {
-                case Some(CanGetWithGaps) => {
-                    @if(spSummary.numberOfGapsPayable > 1 ) {
-                        @Messages("nisp.mqp.filling.may.plural") } else {
+        @if(spSummary.numberOfGapsPayable > 0) {
+            @spSummary.mqp.map { mqp =>
+                @if(mqp == CanGetWithGaps) {
+                    @if(spSummary.numberOfGapsPayable > 1) {
+                        @Messages("nisp.mqp.filling.may.plural")
+                    } else {
                         @Messages("nisp.mqp.filling.may.single")
                     }
                 }
-                case Some(CantGet) => {
-                    @if(spSummary.numberOfGapsPayable > 1 ) {
-                        @Messages("nisp.mqp.filling.never.plural") } else {
+                @if(mqp == CantGet) {
+                    @if(spSummary.numberOfGapsPayable > 1) {
+                        @Messages("nisp.mqp.filling.never.plural")
+                    } else {
                         @Messages("nisp.mqp.filling.never.single") 
                     }
                 }
@@ -104,12 +106,13 @@
 
     </p>
 
-    <p>@spSummary.mqp match {
-            case Some(CanGetWithGaps) => {
-            <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGapsAndCost")</a>
+    <p>
+        @spSummary.mqp.map { mqp =>
+            @if(mqp == CanGetWithGaps) {
+                <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGapsAndCost")</a>
             }
-            case Some(CantGet) => {
-            <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+            @if(mqp == CantGet) {
+                <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
             }
         }
     </p>    
