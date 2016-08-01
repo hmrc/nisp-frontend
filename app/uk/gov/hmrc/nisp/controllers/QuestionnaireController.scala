@@ -44,14 +44,7 @@ trait QuestionnaireController extends NispFrontendController with Actions with A
   def submit: Action[AnyContent] = UnauthorisedAction.async {
     implicit request =>
       QuestionnaireForm.form.bindFromRequest().fold(
-        formWithErrors => {
-          val replaceForm: Form[QuestionnaireForm] = {
-            formWithErrors.copy(errors = formWithErrors.errors.map { err =>
-              if(err.message == "error.maxLength") err.copy(messages = Seq("nisp.validation.summary.error.max")) else err
-            })
-          }
-          Future.successful(BadRequest(questionnaire(replaceForm)))
-        },
+        formWithErrors => Future.successful(BadRequest(questionnaire(formWithErrors))),
         value => {
           customAuditConnector.sendEvent(new QuestionnaireEvent(
             value.easyToUse,
