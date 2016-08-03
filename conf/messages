@@ -114,7 +114,7 @@ nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="check
 
 nisp.main.context.improve.heading = How to improve your State Pension
 
-nisp.main.context.improve.list.payable.singular = You have {0} year on your record that does not count towards your pension.
+nisp.main.context.improve.list.payable.singular = You have 1 year on your record that does not count towards your pension.
 nisp.main.context.improve.list.payable.plural = You have {0} years on your record that do not count towards your pension.
 
 nisp.main.context.improve.nogaps = When you reach State Pension age in {0}, you no longer have to pay National Insurance contributions.
@@ -276,12 +276,14 @@ nisp.nirecord.yearsnotfull = {0} years are not full, filling them may improve yo
 nisp.nirecord.fullyear = Full year
 nisp.nirecord.gap = Year is not full
 nisp.nirecord.gap.paidemployment = Paid employment: <strong>{0}</strong>
-nisp.nirecord.gap.selfemployed.singular = Self-employment: <strong>{0} week</strong>
+nisp.nirecord.gap.selfemployed.singular = Self-employment: <strong>1 week</strong>
 nisp.nirecord.gap.selfemployed.plural = Self-employment: <strong>{0} weeks</strong>
-nisp.nirecord.gap.voluntary.singular = Voluntary: <strong>{0} week</strong>
+nisp.nirecord.gap.voluntary.singular = Voluntary: <strong>1 week</strong>
 nisp.nirecord.gap.voluntary.plural = Voluntary: <strong>{0} weeks</strong>
-nisp.nirecord.gap.whenyouareclaiming.singular = National Insurance credits: <strong>{0} week</strong> (this week may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service) 
-nisp.nirecord.gap.whenyouareclaiming.plural= National Insurance credits: <strong>{0} weeks</strong> (these may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service) 
+nisp.nirecord.gap.whenyouareclaiming.singular = National Insurance credits: <strong>1 week</strong>
+nisp.nirecord.gap.whenyouareclaiming.plural= National Insurance credits: <strong>{0} weeks</strong>
+nisp.nirecord.gap.whenyouareclaiming.info.singular = This week may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.
+nisp.nirecord.gap.whenyouareclaiming.info.plural = These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.
 nisp.nirecord.unavailableyear = Your record for this year is not available yet
 nisp.nirecord.yourcontributionfrom = You have contributions from
 nisp.nirecord.gap.findoutmoreabout = Find out more about <a href="{0}">gaps in your record and how to check them</a>.
