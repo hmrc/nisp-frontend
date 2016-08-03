@@ -22,7 +22,7 @@
 @(showFirstParagraph: Boolean = true)(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
-    ga('send', 'pageview', '/checkmystatepension/unauthorised-confirm-identity');
+    ga('send', 'pageview', '/check-my-state-pension/unauthorised-confirm-identity');
 }
 
 @main(articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
