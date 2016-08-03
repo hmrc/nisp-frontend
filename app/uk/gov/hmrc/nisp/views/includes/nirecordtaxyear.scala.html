@@ -67,8 +67,10 @@
             @if(niRecordTaxYear.otherCredits > 0){
                 @if(niRecordTaxYear.otherCredits == 1){
                     <p>@Html(Messages("nisp.nirecord.gap.whenyouareclaiming.singular",niRecordTaxYear.otherCredits))</p>
+                    <p>@Messages("nisp.nirecord.gap.whenyouareclaiming.info.singular")</p>
                 } else {
                     <p>@Html(Messages("nisp.nirecord.gap.whenyouareclaiming.plural",niRecordTaxYear.otherCredits))</p>
+                    <p>@Messages("nisp.nirecord.gap.whenyouareclaiming.info.plural")</p>
                 }
             }
             @if(niRecordTaxYear.classOneContributions <= 0 && niRecordTaxYear.otherCredits <= 0 && niRecordTaxYear.classThreeCredits <= 0 && niRecordTaxYear.classTwoCredits <= 0){
