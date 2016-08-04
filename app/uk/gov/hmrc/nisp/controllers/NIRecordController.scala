@@ -27,14 +27,13 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models.{ExclusionsModel, NIRecord, NIResponse, NISummary}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 
 
 object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
-  override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
   override val sessionCache: SessionCache = NispSessionCache

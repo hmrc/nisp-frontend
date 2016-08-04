@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
@@ -39,7 +39,6 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequest = FakeRequest("GET", "/")
 
   def testLandingController(identityVerificationEnabled: Boolean = true): LandingController = new LandingController {
-    override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override val applicationConfig: ApplicationConfig = new ApplicationConfig {
       override val ggSignInUrl: String = ""
@@ -104,13 +103,6 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
     "return non-IV landing page when switched off" in {
       val result = testLandingController(identityVerificationEnabled = false).show(fakeRequest)
       contentAsString(result) should include ("You can use this service if you&rsquo;re")
-    }
-  }
-
-  "GET /service-unavailable" should {
-    "return service unavailable page" in {
-      val result = testLandingController().showNpsUnavailable(fakeRequest)
-      contentAsString(result) should include ("The service is unavailable due to maintenance")
     }
   }
 

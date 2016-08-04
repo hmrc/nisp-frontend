@@ -4,8 +4,6 @@ GET         /assets/*file                          controllers.Assets.at(path="/
 
 GET         /                                      uk.gov.hmrc.nisp.controllers.LandingController.show
 
-GET         /service-unavailable                   uk.gov.hmrc.nisp.controllers.LandingController.showNpsUnavailable
-
 GET         /signin/verify                         uk.gov.hmrc.nisp.controllers.LandingController.verifySignIn
 GET         /not-authorised                        uk.gov.hmrc.nisp.controllers.LandingController.showNotAuthorised(journeyId: Option[String])
 

@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
@@ -139,7 +139,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     "return NI record page with details for full years - when showFullNI is true" in {
       val controller = new MockNIRecordController {
         override val nispConnector: NispConnector = MockNispConnector
-        override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
@@ -156,7 +155,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     "return NI record page with no details for full years - when showFullNI is false" in {
       val controller = new MockNIRecordController {
         override val nispConnector: NispConnector = MockNispConnector
-        override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
