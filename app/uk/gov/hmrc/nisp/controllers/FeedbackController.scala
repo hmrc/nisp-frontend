@@ -26,7 +26,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, NispHeaderCarrierForPartialsConverter, WSHttp}
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
@@ -45,7 +45,6 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
   override def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
 
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
-  override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 

@@ -179,14 +179,6 @@ nisp.excluded.helpUs.title = Help us improve this service
 nisp.excluded.helpUs.text = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
 
 #**************************
-#  NPS Unavailable Page Messages
-#**************************
-
-nisp.npsUnavailable.title = Service is unavailable: Check your State Pension
-nisp.npsUnavailable.heading = The service is unavailable due to maintenance
-nisp.npsUnavailable.message = Try again after 5am.
-
-#**************************
 # Questionnaire Messages
 #**************************
 

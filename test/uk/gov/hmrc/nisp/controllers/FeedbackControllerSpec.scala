@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors}
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
 import uk.gov.hmrc.play.http.{HttpResponse, HttpPost}
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.partials.{FormPartialRetriever, CachedStaticHtmlPartialRetriever}
@@ -50,7 +50,6 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
     override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
 
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-    override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
     override val applicationConfig: ApplicationConfig = new ApplicationConfig {
       override val ggSignInUrl: String = ""
       override val citizenAuthHost: String = ""
