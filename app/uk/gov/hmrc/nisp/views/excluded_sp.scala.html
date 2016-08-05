@@ -50,22 +50,26 @@ canSeeNIRecord: Boolean
         <div class="panel-indent">
             @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
                     @exclusions.sp.postStatePensionAge()
-            } else { 
-
-                @if(spExclusions.contains(AmountDissonance)) {
-                    @exclusions.sp.amountDissonance()
+            } else {
+                @if(spExclusions.contains(ManualCorrespondenceIndicator)) {
+                    @exclusions.sp.isleOfMan()
                 } else {
-                    @if(spExclusions.contains(IOM)) {
-                        @exclusions.sp.isleOfMan()
+
+                    @if(spExclusions.contains(AmountDissonance)) {
+                        @exclusions.sp.amountDissonance()
                     } else {
-                        @if(spExclusions.contains(MWRRE)) {
-                            @exclusions.sp.mwrre()
+                        @if(spExclusions.contains(IsleOfMan)) {
+                            @exclusions.sp.isleOfMan()
                         } else {
-                            @if(spExclusions.contains(Abroad)) {
-                                @exclusions.sp.overseas()
+                            @if(spExclusions.contains(MarriedWomenReducedRateElection)) {
+                                @exclusions.sp.mwrre()
+                            } else {
+                                @if(spExclusions.contains(Abroad)) {
+                                    @exclusions.sp.overseas()
+                                }
                             }
                         }
-                    }                   
+                    }
                 }
 
                 <p> @Html(Messages("nisp.excluded.contactFuturePensionCentre")) </p>
@@ -84,7 +88,7 @@ canSeeNIRecord: Boolean
 
             }
         } else {
-            @if(spExclusions.contains(IOM)) {
+            @if(spExclusions.contains(IsleOfMan)) {
             
                 <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelplineIom"))</p> 
             
@@ -95,7 +99,7 @@ canSeeNIRecord: Boolean
             }
         }
 
-        @if(spExclusions.contains(MWRRE)) {
+        @if(spExclusions.contains(MarriedWomenReducedRateElection)) {
             <h2 class="heading-medium">@Messages("nisp.excluded.mwrre.improve")</h2>
             <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
             <a href="@routes.AccountController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>

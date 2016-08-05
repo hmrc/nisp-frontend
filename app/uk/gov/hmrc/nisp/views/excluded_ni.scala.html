@@ -38,10 +38,13 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
                 @exclusions.dead()
             } else  {
                 <div class="panel-indent">
-                    @if(niExclusions.exclusions.contains(Exclusion.MWRRE)) {
+                    @if(niExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
+                        @exclusions.ni.isleOfMan()
+                    }
+                    @if(niExclusions.exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
                         @exclusions.ni.mwrre()
                     }
-                    @if(niExclusions.exclusions.contains(Exclusion.IOM)) {
+                    @if(niExclusions.exclusions.contains(Exclusion.IsleOfMan)) {
                         @exclusions.ni.isleOfMan()
                     }
                 </div>
