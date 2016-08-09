@@ -24,7 +24,7 @@ import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
-import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp, excluded_sp_old}
+import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp, excluded_sp_old, excluded_mci}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.play.http.SessionKeys
@@ -44,11 +44,15 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
     nispConnector.connectToGetSPResponse(nino).map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
         if (!spExclusions.exclusions.contains(Exclusion.Dead)) {
-          Ok(excluded_sp(
-            spExclusions.exclusions,
-            spSummary.statePensionAge,
-            niExclusionOption.fold(true)(_.exclusions.isEmpty)
-          ))
+          if(spExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
+            Ok(excluded_mci())
+          } else {
+            Ok(excluded_sp(
+              spExclusions.exclusions,
+              spSummary.statePensionAge,
+              niExclusionOption.fold(true)(_.exclusions.isEmpty)
+            ))
+          }
         } else {
           Ok(excluded_sp_old(nino, spExclusions, spSummary.statePensionAge))
         }
@@ -61,10 +65,15 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val nino = user.nino.getOrElse("")
      nispConnector.connectToGetNIResponse(nino).map {
-        case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) => Ok(excluded_ni(nino, niExclusions))        
-      case _ =>
-        Logger.warn("User accessed /exclusion/nirecord as non-excluded user")
-        Redirect(routes.NIRecordController.showGaps())
+        case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
+          if(niExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
+            Ok(excluded_mci())
+          } else {
+            Ok(excluded_ni(nino, niExclusions))
+          }
+        case _ =>
+          Logger.warn("User accessed /exclusion/nirecord as non-excluded user")
+          Redirect(routes.NIRecordController.showGaps())
     }
   }
 }

@@ -22,13 +22,14 @@ import play.api.libs.json._
 object Exclusion extends Enumeration {
   type Exclusion = Value
   val Abroad = Value
-  val MWRRE = Value
+  val MarriedWomenReducedRateElection = Value
   val CustomerTooOld = Value
   val ContractedOut = Value
   val Dead = Value
   val IOM = Value
   val AmountDissonance = Value
   val PostStatePensionAge = Value
+  val ManualCorrespondenceIndicator = Value
 
   implicit val formats = new Format[Exclusion] {
     def reads(json: JsValue): JsResult[Exclusion] = JsSuccess(Exclusion.withName(json.as[String]) )

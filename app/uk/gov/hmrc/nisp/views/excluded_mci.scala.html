@@ -1,0 +1,51 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.models.enums.Exclusion
+
+@()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+
+@analyticsAdditionalJs = {
+    ga('set', {
+        'dimension20': '@Exclusion.ManualCorrespondenceIndicator',
+        'dimension38': '@user.authProvider',
+        'dimension39': '@user.confidenceLevel'
+    });
+}
+
+@defining(Some(user)) { implicit userOption =>
+    @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
+                pageTitle = None, articleClasses = Some("mainpage"),
+                analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
+        <h1 class="heading-large">There is a problem accessing your account</h1>
+        <p>We need to speak to you before you can access your personal tax account.</p>
+        <div class="section-border"><h2 class="heading-medium">DECISION TO BE MADE.    How to contact us</h2></div>
+        <ul class="list-bullet">
+            <li>Telephone: 0300 200 3300</li>
+            <li>Textphone: 0300 200 3319</li>
+            <li>Outside UK: +44 135 535 9022</li>
+        </ul>
+        <p>Phone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.</p>
+        <p>Closed Sundays and bank holidays.</p>
+        <p>Phone lines are less busy before 10am Monday to Friday.</p>
+        <p><a href="https://www.gov.uk/call-charges" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Find out about call charges (opens in a new window)</a></p>
+    }
+
+}
