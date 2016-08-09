@@ -26,7 +26,7 @@ object Exclusion extends Enumeration {
   val CustomerTooOld = Value
   val ContractedOut = Value
   val Dead = Value
-  val IOM = Value
+  val IsleOfMan = Value
   val AmountDissonance = Value
   val PostStatePensionAge = Value
   val ManualCorrespondenceIndicator = Value
