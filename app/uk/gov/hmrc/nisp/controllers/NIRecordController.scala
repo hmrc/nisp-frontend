@@ -79,11 +79,19 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
       }
   }
 
-  def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
-    Ok(nirecordGapsAndHowToCheckThem())
+  def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+    val nino = user.nino.getOrElse("")
+    nispConnector.connectToGetNIResponse(nino).map {
+      case NIResponse(_, Some(niSummary: NISummary), None) =>
+        Ok(nirecordGapsAndHowToCheckThem(niSummary))
+      case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
+        Redirect(routes.ExclusionController.showNI())
+      case _ => throw new RuntimeException("NI Response Model is empty")
+    }
   }
 
   def showVoluntaryContributions: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
     Ok(nirecordVoluntaryContributions())
   }
+
 }
