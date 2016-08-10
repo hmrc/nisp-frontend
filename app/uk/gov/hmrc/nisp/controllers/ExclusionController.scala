@@ -45,7 +45,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
         if (!spExclusions.exclusions.contains(Exclusion.Dead)) {
           if(spExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
-            Ok(excluded_mci())
+            Ok(excluded_mci(spExclusions.exclusions, Some(spSummary.statePensionAge)))
           } else {
             Ok(excluded_sp(
               spExclusions.exclusions,
@@ -67,7 +67,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
      nispConnector.connectToGetNIResponse(nino).map {
         case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
           if(niExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
-            Ok(excluded_mci())
+            Ok(excluded_mci(niExclusions.exclusions, None))
           } else {
             Ok(excluded_ni(nino, niExclusions))
           }
