@@ -34,18 +34,18 @@
                 pageTitle = None, articleClasses = Some("mainpage"),
                 analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-        <h1 class="heading-large">There is a problem accessing your account</h1>
-        <p>We need to speak to you before you can access your personal tax account.</p>
-        <div class="section-border"><h2 class="heading-medium">DECISION TO BE MADE.    How to contact us</h2></div>
+        <h1 class="heading-large">@Messages("nisp.excluded.mci.title")</h1>
+        <p>@Messages("nisp.excluded.mci.info")</p>
+        <div class="section-border"><h2 class="heading-medium">@Messages("nisp.excluded.mci.howtocontact")</h2></div>
         <ul class="list-bullet">
-            <li>Telephone: 0300 200 3300</li>
-            <li>Textphone: 0300 200 3319</li>
-            <li>Outside UK: +44 135 535 9022</li>
+            <li>@Messages("nisp.excluded.mci.howtocontact.telephone")</li>
+            <li>@Messages("nisp.excluded.mci.howtocontact.textphone")</li>
+            <li>@Messages("nisp.excluded.mci.howtocontact.outsideUK")</li>
         </ul>
-        <p>Phone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.</p>
-        <p>Closed Sundays and bank holidays.</p>
-        <p>Phone lines are less busy before 10am Monday to Friday.</p>
-        <p><a href="https://www.gov.uk/call-charges" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Find out about call charges (opens in a new window)</a></p>
+        <p>@Messages("nisp.excluded.mci.howtocontact.message1")</p>
+        <p>@Messages("nisp.excluded.mci.howtocontact.message2")</p>
+        <p>@Messages("nisp.excluded.mci.howtocontact.message3")</p>
+        <p>@Html(Messages("nisp.excluded.mci.howtocontact.link"))</p>
     }
 
 }

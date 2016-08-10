@@ -51,10 +51,6 @@ canSeeNIRecord: Boolean
             @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
                     @exclusions.sp.postStatePensionAge()
             } else {
-                @if(spExclusions.contains(ManualCorrespondenceIndicator)) {
-                    @exclusions.sp.isleOfMan()
-                } else {
-
                     @if(spExclusions.contains(AmountDissonance)) {
                         @exclusions.sp.amountDissonance()
                     } else {
@@ -69,7 +65,6 @@ canSeeNIRecord: Boolean
                                 }
                             }
                         }
-                    }
                 }
 
                 <p> @Html(Messages("nisp.excluded.contactFuturePensionCentre")) </p>
