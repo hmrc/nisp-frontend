@@ -211,10 +211,24 @@ nisp.questionnaire.satisfied.2 = Neither satisfied or dissatisfied
 nisp.questionnaire.satisfied.3 = Dissatisfied
 nisp.questionnaire.satisfied.4 = Very dissatisfied
 
-nisp.questionnaire.followupcall.question = After using this service, do you need to contact HM Revenue and Customs (HMRC)?
-nisp.questionnaire.followupcall.0 = Yes
-nisp.questionnaire.followupcall.1 = No
-nisp.questionnaire.followupcall.2 = Not sure
+nisp.questionnaire.understanding.question = After using Check your State Pension, do you feel you have:
+nisp.questionnaire.understanding.0 = A better understanding of your State Pension situation
+nisp.questionnaire.understanding.1 = Less understanding of your State Pension situation
+nisp.questionnaire.understanding.2 = No change in the understanding of your State Pension situation
+
+
+nisp.questionnaire.followupcall.question = After using Check your State Pension, will you (select all that you are likely to do):
+nisp.questionnaire.followupcall.0 = Speak to a financial advisor
+nisp.questionnaire.followupcall.1 = Speak to DWP/HMRC
+nisp.questionnaire.followupcall.2 = Speak to your employer
+nisp.questionnaire.followupcall.3 = Speak to another organisation, such as CAB or Age UK
+nisp.questionnaire.followupcall.4 = Speak to friends and family
+nisp.questionnaire.followupcall.5 = Look into my other pensions
+nisp.questionnaire.followupcall.6 = Look into my savings/other assets
+nisp.questionnaire.followupcall.7 = Get more pensions information online
+nisp.questionnaire.followupcall.8 = Pay gaps in my National Insurance record
+nisp.questionnaire.followupcall.9 = Nothing
+nisp.questionnaire.followupcall.10 = Other (please state)
 
 nisp.questionnaire.research.question = Would you like to take part in any future research to help us improve the service?
 nisp.questionnaire.research.0 = Yes

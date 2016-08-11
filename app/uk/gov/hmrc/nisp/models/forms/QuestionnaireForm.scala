@@ -22,7 +22,7 @@ import uk.gov.voa.play.form.ConditionalMappings._
 
 case class QuestionnaireForm(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int],
                              satisfied: Option[Int], followUpCall: Option[Int], improve: Option[String],
-                             research: Option[Int], email: Option[String])
+                             research: Option[Int], email: Option[String], understanding: Option[Int])
 
 object QuestionnaireForm {
   val form = Form[QuestionnaireForm](
@@ -35,7 +35,8 @@ object QuestionnaireForm {
       "followupcall" -> optional(number(0,2)),
       "improve" -> optional(text(maxLength = 1200)),
       "research" -> optional(number(0,1)),
-      "email" -> mandatoryIfEqual("research", "0", email)
+      "email" -> mandatoryIfEqual("research", "0", email),
+      "understanding" -> optional(number(0,2))
     )(QuestionnaireForm.apply)(QuestionnaireForm.unapply)
   )
 }

@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.events
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int], satisfied: Option[Int],
-                         followUpCall: Option[Int], improve: Option[String], research: Option[Int], email: Option[String], name: String, nino: String, contractedOut: String)(implicit hc: HeaderCarrier)
+                         followUpCall: Option[Int], improve: Option[String], research: Option[Int], email: Option[String], name: String, nino: String, contractedOut: String, understanding: Option[Int])(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("Questionnaire",
     Map(
       "version" -> 6.toString,
@@ -33,6 +33,7 @@ class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], l
       "email" -> research.flatMap(res => if(res == 0) email else None).map(_.toString).getOrElse("N/A"),
       "Name" -> name,
       "nino" -> nino,
-      "contractedout" -> contractedOut
+      "contractedout" -> contractedOut,
+      "understanding" -> understanding.map(_.toString).getOrElse("N/A")
     )
   )

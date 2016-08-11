@@ -79,10 +79,30 @@
     )
 
     @helpers.inputRadioGroup(
+        form("understanding"), Seq(
+                ("0", Messages("nisp.questionnaire.understanding.0")),
+                ("1", Messages("nisp.questionnaire.understanding.1")),
+                ("2", Messages("nisp.questionnaire.understanding.2"))
+        ),
+        '_legend -> Messages("nisp.questionnaire.understanding.question"),
+        '_legendClass -> "heading-small",
+        '_labelAfter -> true,
+        '_labelClass -> "block-label"
+    )
+
+    @helpers.inputRadioGroup(
         form("followupcall"), Seq(
             ("0", Messages("nisp.questionnaire.followupcall.0")),
             ("1", Messages("nisp.questionnaire.followupcall.1")),
-            ("2", Messages("nisp.questionnaire.followupcall.2"))
+            ("2", Messages("nisp.questionnaire.followupcall.2")),
+            ("3", Messages("nisp.questionnaire.followupcall.3")),
+            ("4", Messages("nisp.questionnaire.followupcall.4")),
+            ("5", Messages("nisp.questionnaire.followupcall.5")),
+            ("6", Messages("nisp.questionnaire.followupcall.6")),
+            ("7", Messages("nisp.questionnaire.followupcall.7")),
+            ("8", Messages("nisp.questionnaire.followupcall.8")),
+            ("9", Messages("nisp.questionnaire.followupcall.9")),
+            ("10", Messages("nisp.questionnaire.followupcall.10"))
         ),
         '_legend -> Messages("nisp.questionnaire.followupcall.question"),
         '_legendClass -> "heading-small",
