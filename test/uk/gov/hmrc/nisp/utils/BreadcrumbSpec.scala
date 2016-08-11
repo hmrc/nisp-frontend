@@ -70,5 +70,13 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
       MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser) should not include "Voluntary+contributions"
       MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser) should include ("Gaps+in+your+record")
     }
+
+    "return no items when hideBreadcrumb is set to true" in {
+      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser) should not include ("Account+home")
+      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser) should not include ("State+Pension")
+      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser) should not include ("NI+record")
+      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser) should not include "Voluntary+contributions"
+      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser) should not include ("Gaps+in+your+record")
+    }
   }
 }
