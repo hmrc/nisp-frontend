@@ -1,0 +1,56 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.models.enums.Exclusion
+@import uk.gov.hmrc.nisp.models.SPAgeModel
+@import uk.gov.hmrc.nisp.models.enums.Exclusion._
+
+@(spExclusions: List[Exclusion],
+statePensionAge: Option[SPAgeModel])(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+
+@analyticsAdditionalJs = {
+    ga('set', {
+    'dimension20': '@spExclusions.map(_.toString).mkString(" ") ',
+    @Html(statePensionAge.map(ageModel => s"'dimension15': '${ageModel.age}',").getOrElse(""))
+    'dimension38': '@user.authProvider',
+    'dimension39': '@user.confidenceLevel'
+    });
+}
+
+@defining(Some(user)) { implicit userOption =>
+    @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
+                pageTitle = None, articleClasses = Some("mainpage"),
+                analyticsAdditionalJs = Some(analyticsAdditionalJs),
+                hideBreadcrumb = true) {
+
+        <h1 class="heading-large">@Messages("nisp.excluded.mci.title")</h1>
+        <p>@Messages("nisp.excluded.mci.info")</p>
+        <div class="section-border"><h2 class="heading-medium">@Messages("nisp.excluded.mci.howtocontact")</h2></div>
+        <ul class="list-bullet">
+            <li>@Messages("nisp.excluded.mci.howtocontact.telephone")</li>
+            <li>@Messages("nisp.excluded.mci.howtocontact.textphone")</li>
+            <li>@Messages("nisp.excluded.mci.howtocontact.outsideUK")</li>
+        </ul>
+        <p>@Messages("nisp.excluded.mci.howtocontact.message1")</p>
+        <p>@Messages("nisp.excluded.mci.howtocontact.message2")</p>
+        <p>@Messages("nisp.excluded.mci.howtocontact.message3")</p>
+        <p>@Html(Messages("nisp.excluded.mci.howtocontact.link"))</p>
+    }
+
+}

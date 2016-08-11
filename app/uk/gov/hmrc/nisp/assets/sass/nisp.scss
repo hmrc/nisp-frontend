@@ -327,3 +327,8 @@ input[name="email"] {
 .form-field--error .form-control {
   border: 5px solid $red;
 }
+
+.section-border {
+    border-bottom: 5px solid #005ea5;
+    margin-bottom: 20px;
+}
