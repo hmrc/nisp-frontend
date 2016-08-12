@@ -40,17 +40,25 @@ statePensionAge: Option[SPAgeModel])(implicit request: Request[_], user: NispUse
                 hideBreadcrumb = true) {
 
         <h1 class="heading-large">@Messages("nisp.excluded.mci.title")</h1>
-        <p>@Messages("nisp.excluded.mci.info")</p>
-        <div class="section-border"><h2 class="heading-medium">@Messages("nisp.excluded.mci.howtocontact")</h2></div>
+        <p class="lede">@Messages("nisp.excluded.mci.info")</p>
+        <h2 class="heading-medium">@Messages("nisp.excluded.mci.howToFix")</h2>
+        <ol class="list-bullet">
+            <li>@Messages("nisp.excluded.mci.howToFix.message1")</li>
+            <li>@Html(Messages("nisp.excluded.mci.howToFix.message2"))</li>
+            <li>@Html(Messages("nisp.excluded.mci.howToFix.message3"))</li>
+            <li>@Html(Messages("nisp.excluded.mci.howToFix.message4"))</li>
+            <li>@Html(Messages("nisp.excluded.mci.howToFix.message5"))</li>
+        </ol>
+        <h2 class="heading-medium">@Messages("nisp.excluded.mci.howToContact")</h2>
         <ul class="list-bullet">
-            <li>@Messages("nisp.excluded.mci.howtocontact.telephone")</li>
-            <li>@Messages("nisp.excluded.mci.howtocontact.textphone")</li>
-            <li>@Messages("nisp.excluded.mci.howtocontact.outsideUK")</li>
+            <li>@Messages("nisp.excluded.mci.howToContact.textphone")</li>
+            <li>@Messages("nisp.excluded.mci.howToContact.outsideUK")</li>
         </ul>
-        <p>@Messages("nisp.excluded.mci.howtocontact.message1")</p>
-        <p>@Messages("nisp.excluded.mci.howtocontact.message2")</p>
-        <p>@Messages("nisp.excluded.mci.howtocontact.message3")</p>
-        <p>@Html(Messages("nisp.excluded.mci.howtocontact.link"))</p>
+
+        <p>@Messages("nisp.excluded.mci.howToContact.message1")</p>
+        <p>@Messages("nisp.excluded.mci.howToContact.message2")</p>
+        <p>@Messages("nisp.excluded.mci.howToContact.message3")</p>
+        <p>@Html(Messages("nisp.excluded.mci.howToContact.link"))</p>
     }
 
 }
