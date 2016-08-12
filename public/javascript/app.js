@@ -18,6 +18,16 @@ $(document).ready(function(){
 		 	
 	});
 
+	if($("#error-summary-display").length) {
+	    var $inputResearch = $("input[name='research']:checked").val();
+	    if(!$inputResearch) {
+	        console.log("not selected");
+	        $(".email").css("display","none");
+	    }
+
+
+	}
+
 	if($("input[name='research']").length) {
 		var $inputResearch = $("input[name='research']");
 		var $email = $("input[name='email']");
@@ -37,9 +47,37 @@ $(document).ready(function(){
 					}
 
 					if($email.val().length) {
-          	$email.val('');
+          	            $email.val('');
 					}
 			}
 		});
 	}
+
+	if($("input[name='followupcall']").length) {
+    		var $followUpCall = $("input[name='followupcall']");
+    		var $otherFollowUp = $("input[name='otherfollowup']");
+    		$(".other-follow").css("display","none")
+    		var $errorNotification = $(".error-notification");
+    		if($(".form-field--error").length) {
+    			$(".other-follow").css("display","inline-block");
+
+    		}
+
+    		$followUpCall.change(function() {
+    			if($(this).val() === '10')
+    					$(".other-follow").css("display","inline-block");
+    			else {
+    					$(".other-follow").css('display','none');
+    					if($errorNotification.length) {
+    						$errorNotification.remove();
+    						$(".error-summary").remove();
+    						$("label").removeClass("form-field--error");
+    					}
+
+    					if($otherFollowUp.val().length) {
+              	            $otherFollowUp.val('');
+    					}
+    			}
+    		});
+    	}
 });

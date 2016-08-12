@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.data.Form
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
@@ -52,6 +51,7 @@ trait QuestionnaireController extends NispFrontendController with Actions with A
             value.likelyToUse,
             value.satisfied,
             value.followUpCall,
+            value.otherFollowUp,
             value.improve,
             value.research,
             value.email,

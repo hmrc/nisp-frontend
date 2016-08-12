@@ -110,6 +110,13 @@
         '_labelClass -> "block-label"
     )
 
+        @input(
+        form("otherfollowup"),
+        '_label -> "Please state",
+        '_inputClass -> "block-label form-control",
+        '_labelClass -> "heading-small other-follow panel-indent",
+        '_maxlength -> 255)
+
     <fieldset>
         <label for="improve" class='heading-small @if(form.errors("improve").nonEmpty) {form-field--error}'>
             @form.errors("improve").map{ error =>
