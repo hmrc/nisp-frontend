@@ -148,7 +148,7 @@ nisp.excluded.mci.title = There is a problem logging you in
 nisp.excluded.mci.info = We need to speak to you before you can log in to the service.
 
 nisp.excluded.mci.howToFix = How to fix this
-nisp.excluded.mci.howToFix.message1 = Phone 0300 200 3300
+nisp.excluded.mci.howToFix.message1 = Telephone 0300 200 3300
 nisp.excluded.mci.howToFix.message2 = Say &lsquo;I can&rsquo;t log in&rsquo;
 nisp.excluded.mci.howToFix.message3 = Say &lsquo;Yes&rsquo; when asked if you are having problems logging in
 nisp.excluded.mci.howToFix.message4 = You will hear a recorded message advising you to call another number - <strong>do not hang up and redial</strong>. Stay on the line and an adviser will help you.
