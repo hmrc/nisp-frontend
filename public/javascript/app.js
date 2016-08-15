@@ -20,35 +20,26 @@ $(document).ready(function(){
 
 	if($("#error-summary-display").length) {
 	    var $inputResearch = $("input[name='research']:checked").val();
-	    if(!$inputResearch) {
-	        console.log("not selected");
+	    var $followUp = $("input[name='followupcall']:checked").val();
+	    if(!$inputResearch || $inputResearch === "1") {
 	        $(".email").css("display","none");
 	    }
-
-
+	    if(!$followUp || $followUp < "11") {
+            $(".other-follow").css("display","none");
+        }
 	}
 
 	if($("input[name='research']").length) {
 		var $inputResearch = $("input[name='research']");
 		var $email = $("input[name='email']");
-		$(".email").css("display","none")
-		var $errorNotification = $(".error-notification");
-		if($(".form-field--error").length)
-			$(".email").css("display","inline-block")
 		$inputResearch.change(function() {
 			if($(this).val() === '0') 
 					$(".email").css("display","inline-block");
 			else {					
-					$(".email").css('display','none');
-					if($errorNotification.length) {
-						$errorNotification.remove();
-						$(".error-summary").remove(); 
-						$("label").removeClass("form-field--error");
-					}
-
-					if($email.val().length) {
-          	            $email.val('');
-					}
+                $(".email").css('display','none');
+                if($email.val().length) {
+                    $email.val('');
+                }
 			}
 		});
 	}
@@ -57,23 +48,14 @@ $(document).ready(function(){
     		var $followUpCall = $("input[name='followupcall']");
     		var $otherFollowUp = $("input[name='otherfollowup']");
     		$(".other-follow").css("display","none")
-    		var $errorNotification = $(".error-notification");
     		if($(".form-field--error").length) {
-    			$(".other-follow").css("display","inline-block");
-
+    		    $(".other-follow").css("display","inline-block");
     		}
-
     		$followUpCall.change(function() {
     			if($(this).val() === '10')
     					$(".other-follow").css("display","inline-block");
     			else {
     					$(".other-follow").css('display','none');
-    					if($errorNotification.length) {
-    						$errorNotification.remove();
-    						$(".error-summary").remove();
-    						$("label").removeClass("form-field--error");
-    					}
-
     					if($otherFollowUp.val().length) {
               	            $otherFollowUp.val('');
     					}
