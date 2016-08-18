@@ -19,7 +19,10 @@ package uk.gov.hmrc.nisp.events
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int], satisfied: Option[Int],
-                         followUpCall: Option[Int], otherFollowUp: Option[String], improve: Option[String], research: Option[Int], email: Option[String], name: String, nino: String, contractedOut: String, understanding: Option[Int])(implicit hc: HeaderCarrier)
+                         understanding: Option[Int], whatWillYouDoNext: Option[String],
+                         otherFollowUp: Option[String], improve: Option[String],
+                         research: Option[Int], email: Option[String], name: String, nino: String, contractedOut: String
+                         )(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("Questionnaire",
     Map(
       "version" -> 7.toString,
@@ -27,14 +30,14 @@ class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], l
       "useitbyyourself" -> useItByYourself.map(_.toString).getOrElse("N/A"),
       "likelytouse" -> likelyToUse.map(_.toString).getOrElse("N/A"),
       "satisfied"-> satisfied.map(_.toString).getOrElse("N/A"),
-      "followupcall" -> followUpCall.map(_.toString).getOrElse("N/A"),
-      "otherfollowup" -> followUpCall.flatMap(res => if(res == 10) otherFollowUp else None).map(_.toString).getOrElse("N/A"),
+      "understanding"-> understanding.map(_.toString).getOrElse("N/A"),
+      "whatWillYouDoNext"-> whatWillYouDoNext.map(_.toString).getOrElse("N/A"),
+      "otherFollowUp" -> otherFollowUp.map(_.toString).getOrElse("N/A"),
       "improve" -> improve.map(_.toString).getOrElse("N/A"),
       "research" -> research.map(_.toString).getOrElse("N/A"),
       "email" -> research.flatMap(res => if(res == 0) email else None).map(_.toString).getOrElse("N/A"),
       "Name" -> name,
       "nino" -> nino,
-      "contractedout" -> contractedOut,
-      "understanding" -> understanding.map(_.toString).getOrElse("N/A")
+      "contractedout" -> contractedOut
     )
   )

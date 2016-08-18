@@ -90,28 +90,82 @@
         '_labelClass -> "block-label"
     )
 
-    @helpers.inputRadioGroup(
-        form("followupcall"), Seq(
-            ("0", Messages("nisp.questionnaire.followupcall.0")),
-            ("1", Messages("nisp.questionnaire.followupcall.1")),
-            ("2", Messages("nisp.questionnaire.followupcall.2")),
-            ("3", Messages("nisp.questionnaire.followupcall.3")),
-            ("4", Messages("nisp.questionnaire.followupcall.4")),
-            ("5", Messages("nisp.questionnaire.followupcall.5")),
-            ("6", Messages("nisp.questionnaire.followupcall.6")),
-            ("7", Messages("nisp.questionnaire.followupcall.7")),
-            ("8", Messages("nisp.questionnaire.followupcall.8")),
-            ("9", Messages("nisp.questionnaire.followupcall.9")),
-            ("10", Messages("nisp.questionnaire.followupcall.10"))
-        ),
-        '_legend -> Messages("nisp.questionnaire.followupcall.question"),
-        '_legendClass -> "heading-small",
-        '_labelAfter -> true,
-        '_labelClass -> "block-label"
-    )
+
+    <fieldset class="multiple-checkboxes">
+        <legend class="heading-small">@Messages("nisp.questionnaire.followupcall.question")</legend>
+
+        @helpers.singleCheckbox(
+            form("speakToFinancialAdvisor"),
+            '_label -> Messages("nisp.questionnaire.followupcall.0"),
+            '_labelClass -> "label"
+        )
+        @helpers.singleCheckbox(
+            form("speakToDWP"),
+            '_label -> Messages("nisp.questionnaire.followupcall.1"),
+            '_labelClass -> "label"
+        )
+
+        @helpers.singleCheckbox(
+            form("speakToEmployer"),
+            '_label -> Messages("nisp.questionnaire.followupcall.2"),
+            '_labelClass -> "label"
+        )
+
+
+        @helpers.singleCheckbox(
+            form("speakToAnotherOrg"),
+            '_label -> Messages("nisp.questionnaire.followupcall.3"),
+            '_labelClass -> "label"
+        )
+
+        @helpers.singleCheckbox(
+            form("speakToFriends"),
+            '_label -> Messages("nisp.questionnaire.followupcall.4"),
+            '_labelClass -> "label"
+        )
+
+        @helpers.singleCheckbox(
+            form("lookIntoOtherPensions"),
+            '_label -> Messages("nisp.questionnaire.followupcall.5"),
+            '_labelClass -> "label"
+        )
+
+        @helpers.singleCheckbox(
+            form("lookIntoSavings"),
+            '_label -> Messages("nisp.questionnaire.followupcall.6"),
+            '_labelClass -> "label"
+        )
+
+
+        @helpers.singleCheckbox(
+            form("getMoreInfoOnline"),
+            '_label -> Messages("nisp.questionnaire.followupcall.7"),
+            '_labelClass -> "label"
+        )
+
+
+        @helpers.singleCheckbox(
+            form("payGaps"),
+            '_label -> Messages("nisp.questionnaire.followupcall.8"),
+            '_labelClass -> "label"
+        )
+
+        @helpers.singleCheckbox(
+            form("nothing"),
+            '_label -> Messages("nisp.questionnaire.followupcall.9"),
+            '_labelClass -> "label"
+        )
+
+        @helpers.singleCheckbox(
+            form("other"),
+            '_label -> Messages("nisp.questionnaire.followupcall.10"),
+            '_labelClass -> "label"
+        )
+
+    </fieldset>
 
         @input(
-        form("otherfollowup"),
+        form("otherFollowUp"),
         '_label -> "Please state",
         '_inputClass -> "block-label form-control",
         '_labelClass -> "heading-small other-follow panel-indent",
@@ -149,7 +203,7 @@
         '_inputClass -> "block-label form-control",
         '_labelClass -> "heading-small email panel-indent",
         '_maxlength -> 255)
-    
+
     <div class="heading-small">
         <input class="button" type="submit" value="@Messages("nisp.submit")" />
     </div>

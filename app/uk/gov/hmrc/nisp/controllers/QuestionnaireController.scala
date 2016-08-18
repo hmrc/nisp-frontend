@@ -45,20 +45,32 @@ trait QuestionnaireController extends NispFrontendController with Actions with A
       QuestionnaireForm.form.bindFromRequest().fold(
         formWithErrors => Future.successful(BadRequest(questionnaire(formWithErrors))),
         value => {
+
+
+          val whatWillYouDoNext = Vector(
+            value.speakToFinancialAdvisor,
+            Some("moreOnline").filter(b => value.moreOnline),
+            Some("askEmployer").filter(b => value.askEmployer),
+            Some("askFriend").filter(b => value.askFriend),
+            Some("askAgent").filter(b => value.askAgent),
+            Some("dontKnow").filter(b => value.dontKnow),
+            Some("other").filter(b => value.other)).flatten
+
+
           customAuditConnector.sendEvent(new QuestionnaireEvent(
             value.easyToUse,
             value.useItByYourself,
             value.likelyToUse,
             value.satisfied,
-            value.followUpCall,
+            value.understanding,
+            value.whatWillYouDoNext,
             value.otherFollowUp,
             value.improve,
             value.research,
             value.email,
             request.session.get(NAME).getOrElse(""),
             request.session.get(NINO).getOrElse(""),
-            request.session.get(CONTRACTEDOUT).getOrElse(""),
-            value.understanding
+            request.session.get(CONTRACTEDOUT).getOrElse("")
           ))
           Future.successful(Redirect(routes.QuestionnaireController.showFinished()))
         }
