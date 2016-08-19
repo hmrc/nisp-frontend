@@ -21,7 +21,15 @@ import play.api.data.Forms._
 import uk.gov.voa.play.form.ConditionalMappings._
 
 case class QuestionnaireForm(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int],
-                             satisfied: Option[Int], understanding: Option[Int], whatWillYouDoNext: Option[String],
+                             satisfied: Option[Int], understanding: Option[Int],
+                             speakToFinancialAdvisor: Boolean,
+                             speakToDWP: Boolean,
+                             speakToAnotherOrg: Boolean,
+                             speakToFriends: Boolean,
+                             lookIntoOtherPensions: Boolean,
+                             lookIntoSavings: Boolean,
+                             payGaps: Boolean,
+                             other: Boolean,
                              otherFollowUp:Option[String], improve: Option[String],
                              research: Option[Int], email: Option[String])
 
@@ -34,8 +42,15 @@ object QuestionnaireForm {
       "likelytouse" -> optional(number(0, 3)),
       "satisfied" -> optional(number(0, 4)),
       "understanding" -> optional(number(0, 2)),
-      "whatWillYouDoNext" -> optional(text),
-      "otherFollowUp" -> optional(text),
+      "speakToFinancialAdvisor" -> boolean,
+      "speakToDWP" -> boolean,
+      "speakToAnotherOrg" -> boolean,
+      "speakToFriends" -> boolean,
+      "lookIntoOtherPensions" -> boolean,
+      "lookIntoSavings" -> boolean,
+      "payGaps" -> boolean,
+      "other" -> boolean,
+      "otherFollowUp" -> mandatoryIfEqual("other", "true", nonEmptyText),
       "improve" -> optional(text(maxLength = 1200)),
       "research" -> optional(number(0,1)),
       "email" -> mandatoryIfEqual("research", "0", email)
