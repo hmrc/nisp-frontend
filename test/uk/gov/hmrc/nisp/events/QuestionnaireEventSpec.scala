@@ -26,17 +26,17 @@ class QuestionnaireEventSpec extends UnitSpec {
    "QuestionnaireEvent" should {
 
      "not store the email address if research is No" in {
-       val event = new QuestionnaireEvent(None, None, None, None, None, true, true, false, false, false, false, false, false, None, Some("Lorem ipsum dolor sit amet."), Some(1), Some("test@test.com"), "Name", "NINO", "")
+       val event = new QuestionnaireEvent(None, None, None, None, None, None, None, Some("Lorem ipsum"), Some(1), Some("test@test.com"), "Name", "NINO", "")
        event.detail("email") shouldBe "N/A"
      }
 
      "not store the email address if research is Blank" in {
-       val event = new QuestionnaireEvent(None, None, None, None, None, true, true, false, false, false, false, false, false, None, Some("Lorem ipsum dolor sit amet."), None, Some("test@test.com"), "Name", "NINO", "")
+       val event = new QuestionnaireEvent(None, None, None, None, None, None, None, Some("Lorem ipsum"), None, Some("test@test.com"), "Name", "NINO", "")
        event.detail("email") shouldBe "N/A"
      }
 
      "store the email address if research is Yes" in {
-       val event = new QuestionnaireEvent(None, None, None, None, None, true, true, false, false, false, false, false, false, None, Some("Lorem ipsum dolor sit amet."), Some(0), Some("test@test.com"), "Name", "NINO", "")
+       val event = new QuestionnaireEvent(None, None, None, None, None, None, None, Some("Lorem ipsum "), Some(0), Some("test@test.com"), "Name", "NINO", "")
        event.detail("email") shouldBe "test@test.com"
      }
 

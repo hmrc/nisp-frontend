@@ -217,18 +217,16 @@ nisp.questionnaire.understanding.1 = Less understanding of your State Pension si
 nisp.questionnaire.understanding.2 = No change in the understanding of your State Pension situation
 
 
-nisp.questionnaire.followupcall.question = After using Check your State Pension, will you (select all that you are likely to do):
-nisp.questionnaire.followupcall.0 = Speak to a financial advisor
-nisp.questionnaire.followupcall.1 = Speak to DWP/HMRC
-nisp.questionnaire.followupcall.2 = Speak to your employer
-nisp.questionnaire.followupcall.3 = Speak to another organisation, such as CAB or Age UK
-nisp.questionnaire.followupcall.4 = Speak to friends and family
-nisp.questionnaire.followupcall.5 = Look into my other pensions
-nisp.questionnaire.followupcall.6 = Look into my savings/other assets
-nisp.questionnaire.followupcall.7 = Get more pensions information online
-nisp.questionnaire.followupcall.8 = Pay gaps in my National Insurance record
-nisp.questionnaire.followupcall.9 = Nothing
-nisp.questionnaire.followupcall.10 = Other
+nisp.questionnaire.whatwillyoudonext.question = After using Check your State Pension, will you (select all that you are likely to do):
+nisp.questionnaire.whatwillyoudonext.0 = Speak to a financial advisor or a free advice service, such as Citizens Advice Bureau or Age UK
+nisp.questionnaire.whatwillyoudonext.1 = Speak to DWP/HMRC
+nisp.questionnaire.whatwillyoudonext.2 = Speak to your employer
+nisp.questionnaire.whatwillyoudonext.3 = Speak to friends and family
+nisp.questionnaire.whatwillyoudonext.4 = Look into my other pensions/savings/other assets
+nisp.questionnaire.whatwillyoudonext.5 = Get more pensions information online
+nisp.questionnaire.whatwillyoudonext.6 = Pay gaps in my National Insurance record
+nisp.questionnaire.whatwillyoudonext.7 = Nothing
+nisp.questionnaire.whatwillyoudonext.8 = Other
 
 nisp.questionnaire.research.question = Would you like to take part in any future research to help us improve the service?
 nisp.questionnaire.research.0 = Yes

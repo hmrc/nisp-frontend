@@ -20,17 +20,15 @@ $(document).ready(function(){
 
 if($("form").length) {
 
-  if($("#research-0:checked").length === 0) {
-      $(".email").css("display","none");
-		}
 
-  if($("#followupcall-10:checked").length === 0) {
-      $(".other-follow").css("display","none");
-		}
+    if($("#whatWillYouDoNext-8:checked").length === 0) {
+        $(".other-follow").css("display","none");
+    }
+
 
 	if($(".js-error-summary-messages").length) {
 	    var $inputResearch = $("#research-0:checked").val();
-	    var $followUp = $("#followupcall-10:checked").length;
+	    var $followUp = $("#whatWillYouDoNext-8:checked").length;
 	    if($followUp === 0) {
 					console.log($followUp);
       	$(".other-follow").css("display","none");
@@ -59,19 +57,15 @@ if($("form").length) {
 		});
 	}
 
-	if($("input[name='followupcall']").length) {
-    		var $followUpCall = ($("#followupcall-10"));
-    		var $otherFollowUp = $("input[name='otherfollowup']");
-    	//	if($(".form-field--error").length)
-    		//    $(".other-follow").css("display","inline-block")
-    		$followUpCall.click(function() {
-    			if($(this).prop('checked'))
-    					$(".other-follow").css("display","inline-block");
+	if($("input[name='whatWillYouDoNext']").length) {
+    		var $followUpOther = ($("input[name=whatWillYouDoNext]"));
+    		$followUpOther.change(function() {
+    			if($('input[name=whatWillYouDoNext]:checked').val() === "8")
+    				$(".other-follow").css("display","inline-block");
     			else
-    					$(".other-follow").css('display','none')
+    				$(".other-follow").css('display','none');
     		});
     	}
-
 }
 
 });

@@ -48,13 +48,13 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("easytouse", "2"),
         ("useitbyyourself", "2"),
         ("likelytouse", "2"),
-        ("likelytoseek", "2"),
-        ("recommend", "1"),
         ("satisfied", "2"),
-        ("takepart", "1"),
+        ("understanding", "1"),
+        ("speakToFinancialAdvisor", "True"),
+        ("speakToDWP", "True"),
+        ("improve", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."),
         ("research", "0"),
         ("email", "testuser@gmail.com"),
-        ("nextsteps", "nextsteps1"),
         ("name", "test"),
         ("nino", "AY112233A")
       ))
