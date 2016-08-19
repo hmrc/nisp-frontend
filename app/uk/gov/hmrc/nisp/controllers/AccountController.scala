@@ -98,7 +98,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
               forecastChart,
               personalMaximumChart,
               isPertax,
-              futureProofPersonalMax = applicationConfig.futureProofPersonalMax && spSummary.numberOfGaps > 1
+              hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && spSummary.numberOfGaps > 1
             )).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }
 
