@@ -18,12 +18,21 @@ package uk.gov.hmrc.nisp.events
 
 import uk.gov.hmrc.play.http.HeaderCarrier
 
-class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int], satisfied: Option[Int],
-                         understanding: Option[Int], whatWillYouDoNext: Option[String],
+class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int],
+                         satisfied: Option[Int],
+                         understanding: Option[Int],
+                         speakToFinancialAdvisor: Boolean,
+                         speakToDWP: Boolean,
+                         speakToAnotherOrg: Boolean,
+                         speakToFriends: Boolean,
+                         lookIntoOtherPensions: Boolean,
+                         lookIntoSavings: Boolean,
+                         payGaps: Boolean,
+                         other: Boolean,
                          otherFollowUp: Option[String], improve: Option[String],
                          research: Option[Int], email: Option[String], name: String, nino: String, contractedOut: String
                          )(implicit hc: HeaderCarrier)
-  extends NispBusinessEvent("Questionnaire",
+extends NispBusinessEvent("Questionnaire",
     Map(
       "version" -> 7.toString,
       "easytouse" -> easyToUse.map(_.toString).getOrElse("N/A"),
@@ -31,8 +40,15 @@ class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], l
       "likelytouse" -> likelyToUse.map(_.toString).getOrElse("N/A"),
       "satisfied"-> satisfied.map(_.toString).getOrElse("N/A"),
       "understanding"-> understanding.map(_.toString).getOrElse("N/A"),
-      "whatWillYouDoNext"-> whatWillYouDoNext.map(_.toString).getOrElse("N/A"),
-      "otherFollowUp" -> otherFollowUp.map(_.toString).getOrElse("N/A"),
+      "speakToFinancialAdvisor" -> speakToFinancialAdvisor.toString(),
+      "speakToDWP" -> speakToDWP.toString(),
+      "speakToAnotherOrg" -> speakToAnotherOrg.toString(),
+      "speakToFriends" -> speakToFriends.toString(),
+      "lookIntoOtherPensions" -> lookIntoOtherPensions.toString(),
+      "lookIntoSavings" -> lookIntoSavings.toString(),
+      "payGaps" -> payGaps.toString(),
+      "other" -> other.toString(),
+      "otherFollowUp" -> (if(other) otherFollowUp else None).toString(),
       "improve" -> improve.map(_.toString).getOrElse("N/A"),
       "research" -> research.map(_.toString).getOrElse("N/A"),
       "email" -> research.flatMap(res => if(res == 0) email else None).map(_.toString).getOrElse("N/A"),
