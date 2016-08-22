@@ -50,8 +50,8 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("likelytouse", "2"),
         ("satisfied", "2"),
         ("understanding", "1"),
-        ("speakToFinancialAdvisor", "True"),
-        ("speakToDWP", "True"),
+        ("whatWillYouDoNext", "4"),
+        ("otherFollowUp", ""),
         ("improve", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."),
         ("research", "0"),
         ("email", "testuser@gmail.com"),
@@ -66,6 +66,21 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("easytouse", "2"),
         ("useitbyyourself", "2"),
         ("likelytouse", "2"),
+        ("research", "0"),
+        ("email", ""),
+        ("name", "test"),
+        ("nino", "AY112233A")
+      ))
+      contentAsString(result).contains("Error summary")
+    }
+
+    "return an error page for selecting [Other] to [What Will You Do Next], but not specifying any text" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("easytouse", "2"),
+        ("useitbyyourself", "2"),
+        ("likelytouse", "2"),
+        ("whatWillYouDoNext", "9"),
+        ("otherFollowUp", ""),
         ("research", "0"),
         ("email", ""),
         ("name", "test"),
