@@ -144,6 +144,24 @@ nisp.main.context.fillgaps.chart.plural = The most you can get by filling any {0
 # Exclusion Messages
 #**************************
 
+nisp.excluded.mci.title = There is a problem logging you in
+nisp.excluded.mci.info = We need to speak to you before you can log in to the service.
+
+nisp.excluded.mci.howToFix = How to fix this
+nisp.excluded.mci.howToFix.message1 = Telephone 0300 200 3300
+nisp.excluded.mci.howToFix.message2 = Say &lsquo;I can&rsquo;t log in&rsquo;
+nisp.excluded.mci.howToFix.message3 = Say &lsquo;Yes&rsquo; when asked if you are having problems logging in
+nisp.excluded.mci.howToFix.message4 = You will hear a recorded message advising you to call another number - <strong>do not hang up and redial</strong>. Stay on the line and an adviser will help you.
+nisp.excluded.mci.howToFix.message5 = Tell the adviser this is an &lsquo;MCI issue&rsquo;
+
+nisp.excluded.mci.howToContact = Other ways to contact us
+nisp.excluded.mci.howToContact.textphone = Textphone: 0300 200 3319
+nisp.excluded.mci.howToContact.outsideUK = Outside UK: +44 135 535 9022
+nisp.excluded.mci.howToContact.message1 = Telephone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.
+nisp.excluded.mci.howToContact.message2 = Closed Sundays and bank holidays.
+nisp.excluded.mci.howToContact.message3 = Telephone lines are less busy before 10am Monday to Friday.
+nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/call-charges" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Find out about call charges (opens in a new window)</a></p>
+
 nisp.excluded.title = You are unable to use this service
 
 nisp.excluded.amountdissonance = Sorry, your National Insurance record is a bit complicated, so we cannot give you a forecast. We&rsquo;re working on fixing this.
