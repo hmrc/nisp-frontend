@@ -59,5 +59,6 @@ trait MockAccountController extends AccountController {
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = ""
     override val showFullNI: Boolean = false
+    override val futureProofPersonalMax: Boolean = false
   }
 }
