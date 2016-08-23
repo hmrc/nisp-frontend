@@ -38,7 +38,8 @@
     analyticsAdditionalJs: Option[Html] = None,
     articleEnabled: Boolean = true,
     loginDetailsHeader: Option[Html] = None,
-    contentHeaderExtra: Option[Html] = None)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
+    contentHeaderExtra: Option[Html] = None,
+    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 @linkElement = {
     <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/nisp.css")'/>
@@ -77,7 +78,7 @@
 @betaBanner = {@if(showBetaBanner) {@layouts.betaBanner(userLoggedIn, applicationConfig.betaFeedbackUrl,applicationConfig.betaFeedbackUnauthenticatedUrl, true)}}
 
 @serviceInfoHtml = {
-    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl()(request, user)))
+    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user)))
         .getOrElse(serviceInfo(betaBanner, false, None)
         )
     }

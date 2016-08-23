@@ -44,6 +44,8 @@ object TestAccountBuilder {
   val abroadNino: String = randomNino
   val mqpAbroadNino: String = randomNino
   val hrpNino: String = randomNino
+  val fillGapSingle: String = randomNino
+  val fillGapsMultiple: String = randomNino
 
   val mappedTestAccounts = Map(
     excludedNino -> "excluded",
@@ -57,7 +59,9 @@ object TestAccountBuilder {
     noNameNino -> "noname",
     abroadNino -> "abroad",
     mqpAbroadNino -> "mqp_abroad",
-    hrpNino -> "homeresponsibilitiesprotection"
+    hrpNino -> "homeresponsibilitiesprotection",
+    fillGapSingle -> "fillgaps-singlegap",
+    fillGapsMultiple -> "fillgaps-multiple"
   )
 
   def jsonResponse(nino: String, api: String): HttpResponse = {

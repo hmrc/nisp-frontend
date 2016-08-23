@@ -43,5 +43,6 @@ object MockBreadcrumb extends Breadcrumb {
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = "http://localhost:9232/account"
     override val showFullNI: Boolean = false
+    override val futureProofPersonalMax: Boolean = false
   }
 }
