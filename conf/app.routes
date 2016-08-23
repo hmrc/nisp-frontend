@@ -4,8 +4,6 @@ GET         /assets/*file                          controllers.Assets.at(path="/
 
 GET         /                                      uk.gov.hmrc.nisp.controllers.LandingController.show
 
-GET         /service-unavailable                   uk.gov.hmrc.nisp.controllers.LandingController.showNpsUnavailable
-
 GET         /signin/verify                         uk.gov.hmrc.nisp.controllers.LandingController.verifySignIn
 GET         /not-authorised                        uk.gov.hmrc.nisp.controllers.LandingController.showNotAuthorised(journeyId: Option[String])
 
@@ -15,7 +13,7 @@ GET         /account/cope                          uk.gov.hmrc.nisp.controllers.
 GET         /signout                               uk.gov.hmrc.nisp.controllers.AccountController.signOut
 GET         /timeout                               uk.gov.hmrc.nisp.controllers.AccountController.timeout
 
-GET         /exclusion                           uk.gov.hmrc.nisp.controllers.ExclusionController.showSP
+GET         /exclusion                             uk.gov.hmrc.nisp.controllers.ExclusionController.showSP
 GET         /exclusionni                           uk.gov.hmrc.nisp.controllers.ExclusionController.showNI
 
 GET         /account/nirecord                      uk.gov.hmrc.nisp.controllers.NIRecordController.showFull

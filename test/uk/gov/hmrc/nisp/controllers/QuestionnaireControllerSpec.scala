@@ -86,6 +86,24 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       ))
       contentAsString(result).contains("Error summary")
     }
+
+    "return a thank you page for entrying 1199 characters in improve field" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("email", ""),
+        ("name", "test"),
+        ("nino", "AY112233A"),
+        ("improve", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec maximus turpis. Integer sollicitudin, ante sed finibus tincidunt, orci sem volutpat arcu, non rutrum mi nisl vitae neque. Donec vehicula, ante nec tempor condimentum, augue dolor congue mauris, a cursus sem nisl ut ligula. Quisque rhoncus bibendum metus, ac sollicitudin mauris placerat vitae. Curabitur facilisis ante et pharetra bibendum. Vestibulum sed justo nec leo porta tempor iaculis nec ex. Proin blandit tincidunt vulputate. Ut finibus metus mi. Pellentesque non volutpat lacus. Phasellus sollicitudin magna tortor, a viverra justo aliquet a. Cras nulla diam, blandit sed nulla non, convallis feugiat velit. Suspendisse diam ex, molestie at euismod a, auctor vitae purus. Aenean non consequat neque. Suspendisse et suscipit tortor. Sed eget dictum mi.\n\nPraesent ac odio non nulla tempus faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin ut lectus ac dolor vestibulum vulputate. Donec feugiat ac est sed pharetra. Mauris metus erat, bibendum sed velit nec, venenatis semper ipsum. Vivamus vitae magna nec eros porta egestas in gravida quam. Phasellus maximus posue")
+      ))
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/finished")
+    }
+
+    "return an error page for entrying 1203 characters in improve field" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("email", ""),
+        ("improve", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec maximus turpis. Integer sollicitudin, ante sed finibus tincidunt, orci sem volutpat arcu, non rutrum mi nisl vitae neque. Donec vehicula, ante nec tempor condimentum, augue dolor congue mauris, a cursus sem nisl ut ligula. Quisque rhoncus bibendum metus, ac sollicitudin mauris placerat vitae. Curabitur facilisis ante et pharetra bibendum. Vestibulum sed justo nec leo porta tempor iaculis nec ex. Proin blandit tincidunt vulputate. Ut finibus metus mi. Pellentesque non volutpat lacus. Phasellus sollicitudin magna tortor, a viverra justo aliquet a. Cras nulla diam, blandit sed nulla non, convallis feugiat velit. Suspendisse diam ex, molestie at euismod a, auctor vitae purus. Aenean non consequat neque. Suspendisse et suscipit tortor. Sed eget dictum mi.\n\nPraesent ac odio non nulla tempus faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin ut lectus ac dolor vestibulum vulputate. Donec feugiat ac est sed pharetra. Mauris metus erat, bibendum sed velit nec, venenatis semper ipsum. Vivamus vitae magna nec eros porta egestas in gravida quam. Phasellus maximus posuere.eee")
+      ))
+      contentAsString(result).contains("Error summary")
+    }
   }
 
   "GET /finished" should {

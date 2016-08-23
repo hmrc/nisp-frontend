@@ -22,7 +22,7 @@ import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.models.enums.IdentityVerificationResult
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.frontend.auth.Actions
@@ -31,14 +31,12 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import scala.concurrent.Future
 
 object LandingController extends LandingController with AuthenticationConnectors with PartialRetriever {
-  override val npsAvailabilityChecker: NpsAvailabilityChecker = NpsAvailabilityChecker
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
 }
 
 trait LandingController extends NispFrontendController with Actions with AuthorisedForNisp {
-  val npsAvailabilityChecker: NpsAvailabilityChecker
   val identityVerificationConnector: IdentityVerificationConnector
 
   def show: Action[AnyContent] = UnauthorisedAction(
@@ -49,8 +47,6 @@ trait LandingController extends NispFrontendController with Actions with Authori
         Ok(landing()).withNewSession
       }
   )
-
-  def showNpsUnavailable: Action[AnyContent] = UnauthorisedAction(implicit request => ServiceUnavailable(uk.gov.hmrc.nisp.views.html.npsUnavailable()))
 
   def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
     Redirect(routes.AccountController.show())

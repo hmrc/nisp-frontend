@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.SPAmountModel
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NpsAvailabilityChecker}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
@@ -64,9 +64,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   )
 
   def testAccountController(testNow: LocalDateTime): AccountController = new MockAccountController {
-    override val npsAvailabilityChecker: NpsAvailabilityChecker = new NpsAvailabilityChecker {
-      override def now: LocalDateTime = testNow
-    }
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   }
@@ -90,7 +87,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
       "redirect to Verify with IV disabled" in {
         val controller = new MockAccountController {
-          override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {
             override val assetsPrefix: String = ""
@@ -114,6 +110,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
+            override val showFullNI: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -163,26 +160,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
-      }
-
-      "return 200, account page (1.59.59am)" in {
-        val result = testAccountController(new LocalDateTime(2015,6,29,1,59,59)).show()(authenticatedFakeRequest())
-        redirectLocation(result) should not be Some("/check-your-state-pension/service-unavailable")
-      }
-
-      "return redirect, unavailability page for NPS down (2am)" in {
-        val result = testAccountController(new LocalDateTime(2015,6,29,2,0,0)).show()(authenticatedFakeRequest())
-        redirectLocation(result) shouldBe Some("/check-your-state-pension/service-unavailable")
-      }
-
-      "return redirect, unavailability page for NPS down (4.59.59am)" in {
-        val result = testAccountController(new LocalDateTime(2015,6,29,4,59,59)).show()(authenticatedFakeRequest())
-        redirectLocation(result) shouldBe Some("/check-your-state-pension/service-unavailable")
-      }
-
-      "return 200, account page (5am)" in {
-        val result = testAccountController(new LocalDateTime(2015,6,29,5,0,0)).show()(authenticatedFakeRequest())
-        redirectLocation(result) should not be Some("/check-your-state-pension/service-unavailable")
       }
 
       "return error for blank user" in {
@@ -241,7 +218,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
     "GET /signout" should {
       "redirect to the questionnaire page when govuk done page is disabled" in {
         val controller = new MockAccountController {
-          override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {
             override val assetsPrefix: String = ""
@@ -265,6 +241,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
+            override val showFullNI: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -274,7 +251,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
       "redirect to the gov.uk done page when govuk done page is enabled" in {
         val controller = new MockAccountController {
-          override val npsAvailabilityChecker: NpsAvailabilityChecker = MockNpsAvailabilityChecker
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {
             override val assetsPrefix: String = ""
@@ -298,6 +274,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
+            override val showFullNI: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }

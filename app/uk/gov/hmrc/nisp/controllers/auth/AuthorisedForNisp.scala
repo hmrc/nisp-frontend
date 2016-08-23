@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredicate, GovernmentGatewayProvider, VerifyProvider}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
-import uk.gov.hmrc.nisp.services.{NpsAvailabilityChecker, CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.auth._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{ConfidenceLevel, Accounts}
@@ -34,7 +34,6 @@ import scala.concurrent.Future
 
 trait AuthorisedForNisp extends Actions {
   val citizenDetailsService: CitizenDetailsService
-  val npsAvailabilityChecker: NpsAvailabilityChecker
   val applicationConfig: ApplicationConfig
 
   private type PlayRequest = Request[AnyContent] => Result
@@ -54,9 +53,6 @@ trait AuthorisedForNisp extends Actions {
     }
 
     def async(action: AsyncUserRequest): Action[AnyContent] = {
-      if (!npsAvailabilityChecker.isNPSAvailable) {
-        UnauthorisedAction(request => Redirect(routes.LandingController.showNpsUnavailable()))
-      } else {
         authedBy.async {
           authContext: AuthContext => implicit request =>
             retrieveName(authContext) flatMap { name =>
@@ -64,7 +60,6 @@ trait AuthorisedForNisp extends Actions {
             }
         }
       }
-    }
 
     def apply(action: UserRequest): Action[AnyContent] = async(user => request => Future.successful(action(user)(request)))
   }
