@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.NpsDate
+@import org.joda.time.LocalDate
 @import java.time._
 
 @(niRecordTaxYear: NIRecordTaxYear, timePoint: LocalDate = LocalDate.now())
@@ -89,7 +90,7 @@
                 ){
                         <p class="contributions-header">@Messages("nisp.nirecord.gap.youcanmakeupshortfall")</p>
 
-                        @if(timePoint.toString < Dates.shortDate(classThreePayableByDate.localDate)) {
+                        @if(NpsDate(new LocalDate()).localDate.isBefore(classThreePayableByDate.localDate)) {
                             <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate),Dates.formatDate(classThreePayableByDate.localDate)))</p>
                         } else {
                             <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontribby",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate)))</p>
