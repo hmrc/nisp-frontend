@@ -30,7 +30,8 @@
     currentChart: SPChartModel,
     forecastChart: SPChartModel,
     personalMaximumChart: SPChartModel,
-    isPertaxUrl:Boolean
+    isPertaxUrl:Boolean,
+    hidePersonalMaxYears: Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
@@ -132,7 +133,11 @@
                 @includes.spChart(Html(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())), forecastChart)
             }
 
-            @includes.fillGaps(spSummary, personalMaximumChart)
+            @if(hidePersonalMaxYears) {
+                @includes.fillGapsFutureProof(spSummary, personalMaximumChart)
+            } else {
+                @includes.fillGaps(spSummary, personalMaximumChart)
+            }
         }
 
     }

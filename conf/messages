@@ -139,6 +139,9 @@ nisp.main.context.fillgaps.bullet2.plural = you only need to fill {0} years to g
 nisp.main.context.fillgaps.chart.onlyone = The most you can get by filling this year in your record is
 nisp.main.context.fillgaps.chart.singular = The most you can get by filling any year in your record is
 nisp.main.context.fillgaps.chart.plural = The most you can get by filling any {0} years in your record is
+nisp.main.context.fillgaps.futureproof.para = You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.
+nisp.main.context.fillgaps.futureproof.chart = The most you can get is
+
 
 #**************************
 # Exclusion Messages

@@ -91,8 +91,15 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                 spSummary.forecast.forecastAmount,
                 spSummary.forecast.personalMaximum
               )
-            Ok(account(nino, spSummary, currentChart, forecastChart, personalMaximumChart, isPertax))
-               .withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+            Ok(account(
+              nino,
+              spSummary,
+              currentChart,
+              forecastChart,
+              personalMaximumChart,
+              isPertax,
+              hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && spSummary.numberOfGaps > 1
+            )).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           }
 
         case SPResponseModel(_, Some(spExclusions: ExclusionsModel), _) =>
