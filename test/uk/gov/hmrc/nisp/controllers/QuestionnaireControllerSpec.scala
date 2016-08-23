@@ -111,7 +111,27 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/finished")
     }
+    "return a thank you page for entrying 254 characters in [Please state] field" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("email", ""),
+        ("name", "test"),
+        ("nino", "AY112233A"),
+        ("whatWillYouDoNext", "8"),
+        ("otherFollowUp", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et enim pulvinar, lobortis lectus blandit, consectetur risus. Fusce malesuada elit a tellus efficitur, nec suscipit lorem maximus. Ut at odio quam. Maecenas at dolor ut lectus bibendum metus.")
+      ))
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/finished")
+    }
 
+     "return an error page for entrying 256 characters in [Please state] field" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("email", ""),
+        ("name", "test"),
+        ("nino", "AY112233A"),
+        ("whatWillYouDoNext", "8"),
+        ("otherFollowUp", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et enim pulvinar, lobortis lectus blandit, consectetur risus. Fusce malesuada elit a tellus efficitur, nec suscipit lorem maximus. Ut at odio quam. Maecenas at dolor ut lectus bibendum a metus donec.")
+      ))
+      contentAsString(result).contains("Error summary")
+    }
     "return an error page for entrying 1203 characters in improve field" in {
       val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
         ("email", ""),

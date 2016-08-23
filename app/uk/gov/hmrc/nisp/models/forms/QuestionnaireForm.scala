@@ -35,7 +35,7 @@ object QuestionnaireForm {
       "satisfied" -> optional(number(0, 4)),
       "understanding" -> optional(number(0, 2)),
       "whatWillYouDoNext" -> optional(number(0, 9)),
-      "otherFollowUp" -> mandatoryIfEqual("whatWillYouDoNext", "8", nonEmptyText),
+      "otherFollowUp" -> mandatoryIfEqual("whatWillYouDoNext", "8", nonEmptyText(maxLength = 255)),
       "improve" -> optional(text(maxLength = 1200)),
       "research" -> optional(number(0,1)),
       "email" -> mandatoryIfEqual("research", "0", email)
