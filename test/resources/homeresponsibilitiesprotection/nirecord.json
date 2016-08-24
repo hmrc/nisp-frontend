@@ -1,8 +1,96 @@
-
-
 {
   "niRecord": {
     "taxYears": [
+      {
+        "taxYear": 1976,
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1977,
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1978,
+        "qualifying": true,
+        "classOneContributions": 325,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1979,
+        "qualifying": true,
+        "classOneContributions": 390,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1980,
+        "qualifying": true,
+        "classOneContributions": 472.5,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1981,
+        "qualifying": true,
+        "classOneContributions": 620,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1982,
+        "qualifying": true,
+        "classOneContributions": 787.5,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1983,
+        "qualifying": true,
+        "classOneContributions": 900,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1984,
+        "qualifying": true,
+        "classOneContributions": 1333.8,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
       {
         "taxYear": 1985,
         "qualifying": false,
@@ -15,11 +103,11 @@
       },
       {
         "taxYear": 1986,
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 0,
+        "otherCredits": 52,
         "payable": false,
         "underInvestigation": false
       },
@@ -45,28 +133,28 @@
       },
       {
         "taxYear": 1989,
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 0,
+        "otherCredits": 52,
         "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 1990,
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 0,
+        "otherCredits": 52,
         "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 1991,
         "qualifying": false,
-        "classOneContributions": 0,
+        "classOneContributions": 20.69,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -76,17 +164,17 @@
       {
         "taxYear": 1992,
         "qualifying": false,
-        "classOneContributions": 0,
+        "classOneContributions": 8.28,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 0,
+        "otherCredits": 2,
         "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 1993,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 447.91,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -95,8 +183,8 @@
       },
       {
         "taxYear": 1994,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 938.61,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -105,8 +193,8 @@
       },
       {
         "taxYear": 1995,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 1046.32,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -115,8 +203,8 @@
       },
       {
         "taxYear": 1996,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 1147.98,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -125,8 +213,8 @@
       },
       {
         "taxYear": 1997,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 1296.18,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -135,8 +223,8 @@
       },
       {
         "taxYear": 1998,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 1565.76,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -145,8 +233,8 @@
       },
       {
         "taxYear": 1999,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 1763.98,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -155,8 +243,8 @@
       },
       {
         "taxYear": 2000,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 1913.39,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -165,8 +253,8 @@
       },
       {
         "taxYear": 2001,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 2011.61,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -175,8 +263,8 @@
       },
       {
         "taxYear": 2002,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 2166.7,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
@@ -186,30 +274,30 @@
       {
         "taxYear": 2003,
         "qualifying": true,
-        "classOneContributions": 0,
+        "classOneContributions": 2484.49,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 52,
+        "otherCredits": 0,
         "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 2004,
         "qualifying": true,
-        "classOneContributions": 0,
+        "classOneContributions": 2573.95,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 52,
+        "otherCredits": 0,
         "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 2005,
         "qualifying": true,
-        "classOneContributions": 0,
+        "classOneContributions": 2495.74,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 52,
+        "otherCredits": 0,
         "payable": false,
         "underInvestigation": false
       },
@@ -225,38 +313,32 @@
       },
       {
         "taxYear": 2007,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 3312,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
-        "classThreePayable": 689,
-        "classThreePayableBy": "05\/04\/2019",
-        "payable": true,
+        "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 2008,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 2699.4,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
-        "classThreePayable": 689,
-        "classThreePayableBy": "05\/04\/2019",
-        "payable": true,
+        "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 2009,
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 4259.6,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
-        "classThreePayable": 689,
-        "classThreePayableBy": "05\/04\/2019",
-        "payable": true,
+        "payable": false,
         "underInvestigation": false
       },
       {
@@ -268,6 +350,7 @@
         "otherCredits": 0,
         "classThreePayable": 626.6,
         "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableByPenalty": "05\/04\/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -280,6 +363,7 @@
         "otherCredits": 0,
         "classThreePayable": 655.2,
         "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableByPenalty": "05\/04\/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -292,6 +376,7 @@
         "otherCredits": 0,
         "classThreePayable": 689,
         "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableByPenalty": "05\/04\/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -304,25 +389,26 @@
         "otherCredits": 0,
         "classThreePayable": 704.6,
         "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableByPenalty": "05\/04\/2023",
         "payable": true,
         "underInvestigation": false
       }
     ]
   },
   "niSummary": {
-    "noOfQualifyingYears": 3,
-    "noOfNonQualifyingYears": 26,
-    "yearsToContributeUntilPensionAge": 22,
-    "spaYear": 2036,
+    "noOfQualifyingYears": 28,
+    "noOfNonQualifyingYears": 10,
+    "yearsToContributeUntilPensionAge": 13,
+    "spaYear": 2027,
     "earningsIncludedUpTo": "05\/04\/2014",
     "unavailableYear": 2014,
-    "numberOfPayableGaps": 7,
-    "numberOfNonPayableGaps": 19,
-    "canImproveWithGaps": true,
+    "numberOfPayableGaps": 4,
+    "numberOfNonPayableGaps": 6,
+    "canImproveWithGaps": false,
     "isAbroad": false,
     "recordEnd": null,
-    "finalRelevantYear": 2035,
-    "homeResponsibilitiesProtection": false
+    "finalRelevantYear": 2043,
+    "homeResponsibilitiesProtection": true
   }
 }
 

@@ -40,6 +40,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockFullUserId = "/auth/oid/mockfulluser"
   val mockBlankUserId = "/auth/oid/mockblank"
   val mockUserIdExcluded = "/auth/oid/mockexcluded"
+  val mockUserIdHRP = "/auth/oid/mockhomeresponsibilitiesprotection"
 
   val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&accountType=individual"
 
@@ -121,6 +122,15 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     "return how to check page for authenticated user" in {
       val result = MockNIRecordController.showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should include ("Gaps in your record and how to check them")
+    }
+    "return hrp message for hrp user" in {
+      val result = MockNIRecordController.showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserIdHRP))
+      contentAsString(result) should include ("Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010.")
+    }
+    "do not return hrp message for non hrp user" in {
+      val result = MockNIRecordController.showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserId))
+      contentAsString(result) should not include
+        "Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010."
     }
   }
 

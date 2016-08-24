@@ -349,6 +349,7 @@ nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3 = HM Revenue and Customs
 nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4 = BX9 1AN
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title = National Insurance credits
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc = If you were claiming benefits because you were unable to work, unemployed or caring for someone full time, these should have been credited automatically. If you think you were entitled to credits that are not on your record, check your eligibility and find out how to get them.
+nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp = Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010.
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = More on National Insurance credits (opens in new tab)
 
 #****************************
