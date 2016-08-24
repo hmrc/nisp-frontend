@@ -68,7 +68,7 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
     NIRecordTaxYear(2003,true,2484.49,0,0,0,None,None,None,false, false), NIRecordTaxYear(2004,true,2573.95,0,0,0,None,None,None,false, false), NIRecordTaxYear(2005,true,2495.74,0,0,0,None,None,None,false, false), NIRecordTaxYear(2006,false,0,0,0,0,None,None,None,false, false),
     NIRecordTaxYear(2007,true,3312,0,0,0,None,None,None,false, false), NIRecordTaxYear(2008,true,2699.4,0,0,0,None,None,None,false, false), NIRecordTaxYear(2009,true,4259.6,0,0,0,None,None,None,false, false), NIRecordTaxYear(2010,false,0,0,0,0,Some(626.6),Some(NpsDate(new LocalDate(2019,4,5))),Some(NpsDate(new LocalDate(2023,4,5))),true, false),
     NIRecordTaxYear(2011,false,0,0,0,0,Some(655.2),Some(NpsDate(new LocalDate(2019,4,5))),Some(NpsDate(new LocalDate(2023,4,5))),true, false), NIRecordTaxYear(2012,false,0,0,0,0,Some(689.0),Some(NpsDate(new LocalDate(2019,4,5))),Some(NpsDate(new LocalDate(2023,4,5))),true, false), NIRecordTaxYear(2013,false,0,0,0,0,Some(704.6),Some(NpsDate(new LocalDate(2019,4,5))),Some(NpsDate(new LocalDate(2023,4,5))),true, false)
-  ))), Some(NISummary(28,10,13,2027,NpsDate(new LocalDate(2014,4,5)),2014,None,4,6,false, false, None, 2043)), None)
+  ))), Some(NISummary(28,10,13,2027,NpsDate(new LocalDate(2014,4,5)),2014,None,4,6,false, false, None, 2043, false)), None)
 
   "SPResponse" should {
     "return SPResponse instance with a SPSummary for valid JSON" in {

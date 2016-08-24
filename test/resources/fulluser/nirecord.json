@@ -257,7 +257,8 @@
     "canImproveWithGaps": true,
     "isAbroad": false,
     "recordEnd": null,
-    "finalRelevantYear": 2019
+    "finalRelevantYear": 2019,
+    "homeResponsibilitiesProtection": false
   }
 }
 
