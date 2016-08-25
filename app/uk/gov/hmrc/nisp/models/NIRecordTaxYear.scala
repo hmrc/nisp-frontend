@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.models
 
+import org.joda.time.LocalDate
 import play.api.libs.json.Json
 import uk.gov.hmrc.nisp.utils.Constants
 
@@ -23,7 +24,25 @@ case class NIRecordTaxYear(taxYear: Int, qualifying: Boolean,classOneContributio
                            classTwoCredits: Int, classThreeCredits: Int, otherCredits: Int,
                            classThreePayable: Option[BigDecimal], classThreePayableBy: Option[NpsDate],
                            classThreePayableByPenalty: Option[NpsDate], payable: Boolean, underInvestigation: Boolean) {
+
   val displayableTaxYear: String = s"$taxYear-${(taxYear + 1).toString.substring(Constants.shortYearStartCharacter,Constants.shortYearEndCharacter)}"
+
+}
+
+
+trait isCutOffDate {
+
+  def cutOffDate(b: Option[NpsDate], c: LocalDate): Boolean = { 
+    b match {
+      case Some(a) => a.localDate.isAfter(c)
+      case None => false
+    }
+  }
+
+}
+
+object isCutOffDate extends isCutOffDate {
+
 }
 
 
