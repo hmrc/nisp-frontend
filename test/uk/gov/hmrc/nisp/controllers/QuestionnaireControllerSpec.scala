@@ -48,13 +48,13 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("easytouse", "2"),
         ("useitbyyourself", "2"),
         ("likelytouse", "2"),
-        ("likelytoseek", "2"),
-        ("recommend", "1"),
         ("satisfied", "2"),
-        ("takepart", "1"),
+        ("understanding", "1"),
+        ("whatWillYouDoNext", "4"),
+        ("otherFollowUp", ""),
+        ("improve", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."),
         ("research", "0"),
         ("email", "testuser@gmail.com"),
-        ("nextsteps", "nextsteps1"),
         ("name", "test"),
         ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino)
       ))
@@ -66,6 +66,21 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("easytouse", "2"),
         ("useitbyyourself", "2"),
         ("likelytouse", "2"),
+        ("research", "0"),
+        ("email", ""),
+        ("name", "test"),
+        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino)
+      ))
+      contentAsString(result).contains("Error summary")
+    }
+
+    "return an error page for selecting [Other] to [What Will You Do Next], but not specifying any text" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("easytouse", "2"),
+        ("useitbyyourself", "2"),
+        ("likelytouse", "2"),
+        ("whatWillYouDoNext", "9"),
+        ("otherFollowUp", ""),
         ("research", "0"),
         ("email", ""),
         ("name", "test"),
@@ -96,7 +111,27 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/finished")
     }
+    "return a thank you page for entrying 254 characters in [Please state] field" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("email", ""),
+        ("name", "test"),
+        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino),
+        ("whatWillYouDoNext", "8"),
+        ("otherFollowUp", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et enim pulvinar, lobortis lectus blandit, consectetur risus. Fusce malesuada elit a tellus efficitur, nec suscipit lorem maximus. Ut at odio quam. Maecenas at dolor ut lectus bibendum metus.")
+      ))
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/finished")
+    }
 
+     "return an error page for entrying 256 characters in [Please state] field" in {
+      val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
+        ("email", ""),
+        ("name", "test"),
+        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino),
+        ("whatWillYouDoNext", "8"),
+        ("otherFollowUp", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et enim pulvinar, lobortis lectus blandit, consectetur risus. Fusce malesuada elit a tellus efficitur, nec suscipit lorem maximus. Ut at odio quam. Maecenas at dolor ut lectus bibendum a metus donec.")
+      ))
+      contentAsString(result).contains("Error summary")
+    }
     "return an error page for entrying 1203 characters in improve field" in {
       val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
         ("email", ""),
