@@ -1,8 +1,106 @@
-
-
 {
   "niRecord": {
     "taxYears": [
+      {
+        "taxYear": 1975,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1976,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1977,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1978,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1979,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1980,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1981,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1982,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1983,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 1984,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "payable": false,
+        "underInvestigation": false
+      },
       {
         "taxYear": 1985,
         "qualifying": false,
@@ -165,21 +263,21 @@
       },
       {
         "taxYear": 2001,
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 0,
+        "otherCredits": 52,
         "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 2002,
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 0,
+        "otherCredits": 52,
         "payable": false,
         "underInvestigation": false
       },
@@ -215,24 +313,22 @@
       },
       {
         "taxYear": 2006,
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 0,
+        "otherCredits": 52,
         "payable": false,
         "underInvestigation": false
       },
       {
         "taxYear": 2007,
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 0,
-        "classThreePayable": 689,
-        "classThreePayableBy": "05\/04\/2019",
-        "payable": true,
+        "otherCredits": 52,
+        "payable": false,
         "underInvestigation": false
       },
       {
@@ -243,7 +339,8 @@
         "classThreeCredits": 0,
         "otherCredits": 0,
         "classThreePayable": 689,
-        "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableBy": "05/04/2019",
+        "classThreePayableByPenalty": "05/04/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -255,7 +352,8 @@
         "classThreeCredits": 0,
         "otherCredits": 0,
         "classThreePayable": 689,
-        "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableBy": "05/04/2019",
+        "classThreePayableByPenalty": "05/04/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -267,7 +365,8 @@
         "classThreeCredits": 0,
         "otherCredits": 0,
         "classThreePayable": 626.6,
-        "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableBy": "05/04/2019",
+        "classThreePayableByPenalty": "05/04/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -279,7 +378,8 @@
         "classThreeCredits": 0,
         "otherCredits": 0,
         "classThreePayable": 655.2,
-        "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableBy": "05/04/2019",
+        "classThreePayableByPenalty": "05/04/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -291,7 +391,8 @@
         "classThreeCredits": 0,
         "otherCredits": 0,
         "classThreePayable": 689,
-        "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableBy": "05/04/2019",
+        "classThreePayableByPenalty": "05/04/2023",
         "payable": true,
         "underInvestigation": false
       },
@@ -303,26 +404,38 @@
         "classThreeCredits": 0,
         "otherCredits": 0,
         "classThreePayable": 704.6,
-        "classThreePayableBy": "05\/04\/2019",
+        "classThreePayableBy": "05/04/2019",
+        "classThreePayableByPenalty": "05/04/2023",
+        "payable": true,
+        "underInvestigation": false
+      },
+      {
+        "taxYear": 2014,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 722.8,
+        "classThreePayableBy": "05/04/2019",
+        "classThreePayableByPenalty": "05/04/2023",
         "payable": true,
         "underInvestigation": false
       }
     ]
   },
   "niSummary": {
-    "noOfQualifyingYears": 3,
-    "noOfNonQualifyingYears": 26,
-    "yearsToContributeUntilPensionAge": 22,
-    "spaYear": 2036,
-    "earningsIncludedUpTo": "05\/04\/2014",
-    "unavailableYear": 2014,
+    "noOfQualifyingYears": 12,
+    "noOfNonQualifyingYears": 33,
+    "yearsToContributeUntilPensionAge": 5,
+    "spaYear": 2020,
+    "earningsIncludedUpTo": "05/04/2015",
+    "unavailableYear": 2015,
+    "pre75QualifyingYears": 5,
     "numberOfPayableGaps": 7,
-    "numberOfNonPayableGaps": 19,
+    "numberOfNonPayableGaps": 26,
     "canImproveWithGaps": true,
     "isAbroad": false,
-    "recordEnd": null,
-    "finalRelevantYear": 2035,
-    "homeResponsibilitiesProtection": false
+    "finalRelevantYear": 2019
   }
 }
-

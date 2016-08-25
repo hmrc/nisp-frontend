@@ -17,8 +17,9 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.models.NISummary
 
-@()(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(niSummary: NISummary)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
 @main(browserTitle = Some(Messages("nisp.nirecord.gapsinyourrecord.title")),
@@ -57,7 +58,12 @@
 <p>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1")<br/>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2")<br/>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3")<br/>@Messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4")</p>
 
 <h2 class="heading-medium">@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title")</h2>
-<p>@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc")</p>
+<p>@Html(Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc"))</p>
+@if(niSummary.homeResponsibilitiesProtection) {
+    <div class="panel-indent">
+        <p>@Html(Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp"))</p>
+    </div>
+}
 <p><a href="https://www.gov.uk/national-insurance-credits/eligibility" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancecredits">@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")</a></p>
 <div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a></div>
 }

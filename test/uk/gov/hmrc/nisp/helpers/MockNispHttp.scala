@@ -35,7 +35,10 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.invalidKeyNino,
     TestAccountBuilder.abroadNino,
-    TestAccountBuilder.mqpAbroadNino)
+    TestAccountBuilder.mqpAbroadNino,
+    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.fillGapSingle)
 
   val badRequestNino = TestAccountBuilder.nonExistentNino
 

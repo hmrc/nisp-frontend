@@ -1,5 +1,3 @@
-
-
 {
   "niRecord": {
     "taxYears": [
@@ -242,23 +240,33 @@
         "otherCredits": 0,
         "payable": false,
         "underInvestigation": false
+      },
+      {
+        "taxYear": 2014,
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 722.8,
+        "classThreePayableBy": "05/04/2019",
+        "classThreePayableByPenalty": "05/04/2023",
+        "payable": true,
+        "underInvestigation": false
       }
     ]
   },
   "niSummary": {
     "noOfQualifyingYears": 25,
-    "noOfNonQualifyingYears": 0,
-    "yearsToContributeUntilPensionAge": 6,
+    "noOfNonQualifyingYears": 1,
+    "yearsToContributeUntilPensionAge": 5,
     "spaYear": 2021,
-    "earningsIncludedUpTo": "05\/04\/2014",
-    "unavailableYear": 2014,
-    "numberOfPayableGaps": 0,
+    "earningsIncludedUpTo": "05/04/2015",
+    "unavailableYear": 2015,
+    "numberOfPayableGaps": 1,
     "numberOfNonPayableGaps": 0,
     "canImproveWithGaps": true,
     "isAbroad": false,
-    "recordEnd": null,
-    "finalRelevantYear": 2019,
-    "homeResponsibilitiesProtection": false
+    "finalRelevantYear": 2019
   }
 }
-

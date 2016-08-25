@@ -25,11 +25,15 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.connectors.NispConnector
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.SPAmountModel
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
@@ -51,6 +55,8 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdWeak =  "/auth/oid/mockweak"
   val mockUserIdAbroad = "/auth/oid/mockabroad"
   val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
+  val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
+  val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
 
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
@@ -111,6 +117,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
+            override val futureProofPersonalMax: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -242,6 +249,8 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
+            override val futureProofPersonalMax: Boolean = false
+
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -275,6 +284,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
+            override val futureProofPersonalMax: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -329,5 +339,63 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       }
     }
 
+    "when there is a Fill Gaps Scenario" when {
+      "the future config is set to off" should {
+        "show year information when there is multiple years" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
+          contentAsString(result) should include ("You have years on your National Insurance record where you did not contribute enough.")
+          contentAsString(result) should include ("filling years can improve your forecast")
+          contentAsString(result) should include ("you only need to fill 7 years to get the most you can")
+          contentAsString(result) should include ("The most you can get by filling any 7 years in your record is")
+        }
+        "show specific text when is only one payable gap" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
+          contentAsString(result) should include ("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
+          contentAsString(result) should include ("The most you can get by filling this year in your record is")
+        }
+      }
+
+      "the future proof config is set to true" should {
+        val controller = new MockAccountController {
+          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+            override val assetsPrefix: String = ""
+            override val reportAProblemNonJSUrl: String = ""
+            override val ssoUrl: Option[String] = None
+            override val betaFeedbackUnauthenticatedUrl: String = ""
+            override val contactFrontendPartialBaseUrl: String = ""
+            override val govUkFinishedPageUrl: String = "govukdone"
+            override val showGovUkDonePage: Boolean = true
+            override val analyticsHost: String = ""
+            override val analyticsToken: Option[String] = None
+            override val betaFeedbackUrl: String = ""
+            override val reportAProblemPartialUrl: String = ""
+            override val citizenAuthHost: String = ""
+            override val postSignInRedirectUrl: String = ""
+            override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = false
+            override val ivUpliftUrl: String = "ivuplift"
+            override val ggSignInUrl: String = "ggsignin"
+            override val twoFactorUrl: String = "twofactor"
+            override val pertaxFrontendUrl: String = ""
+            override val contactFormServiceIdentifier: String = ""
+            override val breadcrumbPartialUrl: String = ""
+            override val showFullNI: Boolean = false
+            override val futureProofPersonalMax: Boolean = true
+          }
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        }
+        "show less text when there multiple years" in {
+          val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
+          contentAsString(result) should include ("You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.")
+          contentAsString(result) should include ("The most you can get is")
+        }
+        "show ordinary text when is only one payable gap" in {
+          val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
+          contentAsString(result) should include ("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
+          contentAsString(result) should include ("The most you can get by filling this year in your record is")
+        }
+      }
+    }
   }
 }
