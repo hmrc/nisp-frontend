@@ -56,7 +56,6 @@ trait MicroService {
       libraryDependencies ++= appDependencies,
       playRunHooks <+= baseDirectory.map(base => Grunt(base)),
       parallelExecution in Test := false,
-      fork in Test := true,
       retrieveManaged := true
     )
     .configs(IntegrationTest)
