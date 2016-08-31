@@ -28,6 +28,20 @@
 @(nino: String, spSummary: SPSummaryModel, mqp: Option[MQPScenario], numberOfYearsMissing: Int,
   isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
+@sidebar = {
+<div class="sidebar-border" >
+
+    <h2>@Messages("nisp.nirecord.helpline.getHelp")</h2>
+
+    <p>@Messages("nisp.nirecord.helpline.number")</p>
+
+    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.openTimes")</p>
+
+    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.callsCost")</p>
+
+</div>
+}
+
 @analyticsAdditionalJs = {
     ga('set', {
         'dimension7':  '@spSummary.forecast.scenario',
@@ -48,6 +62,7 @@
 
 @defining(Some(user)) { implicit userOption =>
 @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
+  sidebarLinks = Some(sidebar),
   analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <div class="panel-indent panel-border-wide panel-indent--info">

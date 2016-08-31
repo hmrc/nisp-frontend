@@ -330,6 +330,10 @@ nisp.nirecord.summary.yearsRemaining.single = year to contribute before 5 April 
 nisp.nirecord.pre75Years = Up to 1975
 nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
 nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
+nisp.nirecord.helpline.getHelp = Get help
+nisp.nirecord.helpline.number = Helpline 0345 608 0126
+nisp.nirecord.helpline.openTimes = Monday to Friday: 8am to 6pm
+nisp.nirecord.helpline.callsCost = Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.
 
 
 #**************************
