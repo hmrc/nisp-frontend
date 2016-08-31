@@ -24,8 +24,22 @@
 
 @(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
+@sidebar = {
+<div class="sidebar-border" >
+
+    <h2>@Messages("nisp.nirecord.helpline.getHelp")</h2>
+
+    <p>@Messages("nisp.nirecord.helpline.number")</p>
+
+    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.openTimes")</p>
+
+    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.callsCost")</p>
+
+</div>
+}
+
 @defining(Some(user)) { implicit userOption =>
-@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.cope.youWereContractedOut"))) {
+@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.cope.youWereContractedOut")), sidebarLinks = Some(sidebar)) {
 
     <p>@Html(Messages("nisp.cope.inThePast"))</p>
 

@@ -24,6 +24,20 @@
 
 @(nino: String, spSummary: SPSummaryModel, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
+@sidebar = {
+<div class="sidebar-border" >
+
+    <h2>@Messages("nisp.nirecord.helpline.getHelp")</h2>
+
+    <p>@Messages("nisp.nirecord.helpline.number")</p>
+
+    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.openTimes")</p>
+
+    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.callsCost")</p>
+
+</div>
+}
+
 @analyticsAdditionalJs(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever) = {
     ga('set', {
         'dimension7':  '@spSummary.forecast.scenario',
@@ -45,7 +59,7 @@
 @pageTitle = { @Messages("nisp.main.h1.title") }
 
 @defining(Some(user)) { implicit userOption =>
-@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs), sidebarLinks = Some(sidebar)) {
 
     <div class="highlighted-event">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, <span class="nowrap">@Messages("nisp.main.caveats").toLowerCase() @Messages("nisp.is")</span></p>
