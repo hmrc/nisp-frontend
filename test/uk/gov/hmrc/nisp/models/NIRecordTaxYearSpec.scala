@@ -30,5 +30,10 @@ class NIRecordTaxYearSpec extends isCutOffDate with UnitSpec  {
       testCutOffDate shouldBe false
     }
 
+     "return false if current date is the same with [payable gaps by] date" in {
+      val testCutOffDate = isCutOffDate.cutOffDate(Some(NpsDate(2019,4,5)),new LocalDate(2019,4,5))           
+      testCutOffDate shouldBe false
+    }
+
   }
 }
