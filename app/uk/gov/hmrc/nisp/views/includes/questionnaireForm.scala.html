@@ -79,16 +79,42 @@
     )
 
     @helpers.inputRadioGroup(
-        form("followupcall"), Seq(
-            ("0", Messages("nisp.questionnaire.followupcall.0")),
-            ("1", Messages("nisp.questionnaire.followupcall.1")),
-            ("2", Messages("nisp.questionnaire.followupcall.2"))
+        form("understanding"), Seq(
+                ("0", Messages("nisp.questionnaire.understanding.0")),
+                ("1", Messages("nisp.questionnaire.understanding.1")),
+                ("2", Messages("nisp.questionnaire.understanding.2"))
         ),
-        '_legend -> Messages("nisp.questionnaire.followupcall.question"),
+        '_legend -> Messages("nisp.questionnaire.understanding.question"),
         '_legendClass -> "heading-small",
         '_labelAfter -> true,
         '_labelClass -> "block-label"
     )
+
+    @helpers.inputRadioGroup(
+        form("whatWillYouDoNext"), Seq(
+            ("0", Messages("nisp.questionnaire.whatwillyoudonext.0")),
+            ("1", Messages("nisp.questionnaire.whatwillyoudonext.1")),
+            ("2", Messages("nisp.questionnaire.whatwillyoudonext.2")),
+            ("3", Messages("nisp.questionnaire.whatwillyoudonext.3")),
+            ("4", Messages("nisp.questionnaire.whatwillyoudonext.4")),
+            ("5", Messages("nisp.questionnaire.whatwillyoudonext.5")),
+            ("6", Messages("nisp.questionnaire.whatwillyoudonext.6")),
+            ("7", Messages("nisp.questionnaire.whatwillyoudonext.7")),
+            ("8", Messages("nisp.questionnaire.whatwillyoudonext.8"))
+        ),
+        '_legend -> Messages("nisp.questionnaire.whatwillyoudonext.question"),
+        '_legendClass -> "heading-small",
+        '_labelAfter -> true,
+        '_labelClass -> "block-label"
+    )
+
+
+        @input(
+        form("otherFollowUp"),
+        '_label -> "Please state",
+        '_inputClass -> "block-label form-control",
+        '_labelClass -> "heading-small other-follow panel-indent",
+        '_maxlength -> 255)
 
     <fieldset>
         <label for="improve" class='heading-small @if(form.errors("improve").nonEmpty) {form-field--error}'>
@@ -122,7 +148,7 @@
         '_inputClass -> "block-label form-control",
         '_labelClass -> "heading-small email panel-indent",
         '_maxlength -> 255)
-    
+
     <div class="heading-small">
         <input class="button" type="submit" value="@Messages("nisp.submit")" />
     </div>
