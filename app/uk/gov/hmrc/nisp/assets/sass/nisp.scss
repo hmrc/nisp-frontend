@@ -72,6 +72,12 @@ h2.summary {
   border-top: 10px solid $govuk-blue;
 }
 
+.backlink {
+  @media only screen and (max-width: 640px) {
+    display: none;
+  }
+}
+
 /*------------------------------------*\
     #HEADER - Global Breadcrumb
 \*------------------------------------*/
@@ -287,7 +293,7 @@ textarea {
 }
   
 /*----------------------------------*\
-    # Cope Table
+    # Cope Page
 \*----------------------------------*/
 
 table.cope-table td {
@@ -306,6 +312,13 @@ table.cope-table th {
 
 table.cope-table .cope-table-number {
   text-align: right;
+}
+
+.copeback {
+  display: none;
+  @media only screen and (max-width: 640px) {
+      display: inline-block;
+  }
 }
 
 /*------------------------------------*\
