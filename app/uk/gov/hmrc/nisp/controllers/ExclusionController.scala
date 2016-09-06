@@ -42,7 +42,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
     val nino = user.nino.getOrElse("")
 
     nispConnector.connectToGetSPResponse(nino).map {
-      case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
+      case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption, Some(schemeMembership: SchemeMembershipModel)) =>
         if (!spExclusions.exclusions.contains(Exclusion.Dead)) {
           if(spExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
             Ok(excluded_mci(spExclusions.exclusions, Some(spSummary.statePensionAge)))

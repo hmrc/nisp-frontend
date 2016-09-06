@@ -16,13 +16,13 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.views.formatting.Dates
-@import uk.gov.hmrc.nisp.models.SPSummaryModel
+@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SchemeMembershipModel}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, isPertaxUrl:Boolean, schemeMembershipModel: SchemeMembershipModel)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -53,7 +53,14 @@
     <p>@Messages("nisp.cope.definition")</p>
     <p>@Messages("nisp.cope.workplace")</p>
     <p>@Messages("nisp.cope.table.estimate.title") <span class="heading-small">@NispMoney.pounds(copeEstimate) @Messages("nisp.main.chart.week")</span>.</p>
+    <p>@Messages("nisp.cope.otherPensionSchemes")</p>
+
+    <p>@Messages("nisp.cope.table.title1")</p>
+    <p>@Messages("nisp.cope.table.youWereContractedOut")</p>
+    <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.cope.table.viewYourNationalInsuranceRecord")</a>
     <p>@Html(Messages("nisp.main.cope.linkTitle"))</p>
     <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
+
+    <p>@schemeMembershipModel.schemeStartDate</p>
 }
 }

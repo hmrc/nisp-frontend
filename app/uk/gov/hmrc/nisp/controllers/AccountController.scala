@@ -34,6 +34,8 @@ import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
+import scala.concurrent.Future
+
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
   override val sessionCache: SessionCache = NispSessionCache
@@ -54,15 +56,22 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       val nino = user.nino.getOrElse("")
 
       nispConnector.connectToGetSPResponse(nino).map {
+
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
           if(spSummary.contractedOutFlag) {
-            Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax))
+            nispConnector.connectToGetSchemeMembership(nino).map {
+              case Some(schemeMembershipModel: SchemeMembershipModel) =>
+              Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+                spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, Some(schemeMembershipModel)))
+              case _ => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+                spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, None))
+            }
           } else {
             Redirect(routes.AccountController.show())
           }
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
+
     }
   }
 

@@ -18,9 +18,11 @@ package uk.gov.hmrc.nisp.models
 
 import play.api.libs.json.Json
 
-case class SPResponseModel(spSummary: Option[SPSummaryModel], spExclusions: Option[ExclusionsModel] = None,
-                           niExclusions: Option[ExclusionsModel] = None)
+case class SchemeMembershipModel (
+                              schemeStartDate: Option[NpsDate],
+                              schemeEndDate: Option[NpsDate]
+                            )
 
-object SPResponseModel {
-  implicit val formats = Json.format[SPResponseModel]
+object SchemeMembershipModel {
+  implicit val formats = Json.format[SchemeMembershipModel]
 }
