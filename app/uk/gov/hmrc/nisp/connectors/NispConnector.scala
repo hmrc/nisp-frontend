@@ -47,15 +47,15 @@ trait NispConnector {
 
   def connectToGetSPResponse(nino: String)(implicit hc: HeaderCarrier): Future[SPResponseModel] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/spsummary"
-    retrieveFromCache[SPResponseModel](APIType.SP, urlToRead) map (_.getOrElse(SPResponseModel(None, None)))
+    retrieveFromCache[SPResponseModel](APIType.SP, urlToRead)
   }
 
   def connectToGetNIResponse(nino: String)(implicit hc: HeaderCarrier): Future[NIResponse] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/nirecord"
-    retrieveFromCache[NIResponse](APIType.NI, urlToRead) map (_.getOrElse(NIResponse(None, None, None)))
+    retrieveFromCache[NIResponse](APIType.NI, urlToRead)
   }
 
-  private def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[Option[A]] = {
+  private def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val keystoreTimerContext = MetricsService.keystoreReadTimer.time()
 
     sessionCache.fetchAndGetEntry[A](api.toString).flatMap { keystoreResult =>
@@ -64,22 +64,17 @@ trait NispConnector {
       keystoreResult match {
         case Some(data) =>
           MetricsService.keystoreHitCounter.inc()
-          Future.successful(Some(data))
+          Future.successful(data)
         case None =>
           MetricsService.keystoreMissCounter.inc()
-          connectToMicroservice[A](url, api) map {
+          connectToMicroservice[A](url, api) flatMap {
             case Success(data) =>
-              Some(cacheResult(data, api.toString))
+              Future.successful(cacheResult(data, api.toString))
             case Failure(ex) =>
               MetricsService.failedCounters(api).inc()
-              Logger.error(s"Backend microservice has returned no data for $api Response: $ex")
-              None
+              Future.failed(ex)
           }
       }
-    } recover {
-      case ex =>
-        MetricsService.keystoreReadFailed.inc()
-        None
     }
   }
 

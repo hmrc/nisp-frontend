@@ -35,15 +35,15 @@ object QuestionnaireController extends QuestionnaireController with PartialRetri
 trait QuestionnaireController extends NispFrontendController with Actions with AuthenticationConnectors {
   val customAuditConnector: CustomAuditConnector
 
-  def show: Action[AnyContent] = UnauthorisedAction.async {
+  def show: Action[AnyContent] = UnauthorisedAction {
     implicit request =>
-      Future.successful(Ok(questionnaire(QuestionnaireForm.form)))
+      Ok(questionnaire(QuestionnaireForm.form))
   }
 
-  def submit: Action[AnyContent] = UnauthorisedAction.async {
+  def submit: Action[AnyContent] = UnauthorisedAction {
     implicit request =>
       QuestionnaireForm.form.bindFromRequest().fold(
-        formWithErrors => Future.successful(BadRequest(questionnaire(formWithErrors))),
+        formWithErrors => BadRequest(questionnaire(formWithErrors)),
         value => {
           customAuditConnector.sendEvent(new QuestionnaireEvent(
             value.easyToUse,
@@ -60,7 +60,7 @@ trait QuestionnaireController extends NispFrontendController with Actions with A
             request.session.get(NINO).getOrElse(""),
             request.session.get(CONTRACTEDOUT).getOrElse("")
           ))
-          Future.successful(Redirect(routes.QuestionnaireController.showFinished()))
+          Redirect(routes.QuestionnaireController.showFinished())
         }
       )
   }
