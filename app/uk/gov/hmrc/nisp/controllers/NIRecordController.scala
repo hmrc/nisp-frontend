@@ -27,9 +27,9 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models.{ExclusionsModel, NIRecord, NIResponse, NISummary}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
-import org.joda.time.LocalDate
+import org.joda.time.{DateTimeZone, LocalDate}
 
 
 object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
@@ -45,6 +45,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
   val nispConnector: NispConnector
   val customAuditConnector: CustomAuditConnector
   val showFullNI: Boolean
+  val currentDate = new LocalDate(DateTimeZone.forID("Europe/London"))
 
   def showFull: Action[AnyContent] = show(niGaps = false)
   def showGaps: Action[AnyContent] = show(niGaps = true)
@@ -66,7 +67,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
               niSummary.spaYear))
 
               val tableStart = niSummary.recordEnd.getOrElse(niSummary.earningsIncludedUpTo.taxYear + 1)
-              val currentDate = new LocalDate()
+              
 
             Ok(nirecordpage(nino, niRecord, niSummary, niGaps, tableStart, niSummary.recordEnd.isDefined, getAuthenticationProvider(user.authContext.user.confidenceLevel), showFullNI, currentDate))
           }
