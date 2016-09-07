@@ -110,5 +110,6 @@ trait NispConnector {
     errors.map(p => p._1 + " - " + p._2.map(_.message).mkString(",")).mkString(" | ")
   }
 
-  private class JsonValidationException(message: String) extends Exception(message)
+  private[connectors] class JsonValidationException(message: String) extends Exception(message)
 }
+
