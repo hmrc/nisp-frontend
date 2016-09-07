@@ -18,11 +18,11 @@ package uk.gov.hmrc.nisp.models
 
 import play.api.libs.json.Json
 
-case class SchemeMembershipModel (
+case class SchemeMembership (
                               schemeStartDate: Option[NpsDate],
                               schemeEndDate: Option[NpsDate]
                             )
 
-object SchemeMembershipModel {
-  implicit val formats = Json.format[SchemeMembershipModel]
+object SchemeMembership {
+  implicit val formats = Json.format[SchemeMembership]
 }

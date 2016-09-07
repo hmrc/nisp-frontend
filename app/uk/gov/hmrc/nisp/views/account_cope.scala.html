@@ -16,14 +16,14 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.views.formatting.Dates
-@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SchemeMembershipModel}
+@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SchemeMembership}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.models.NpsDate
 
-@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, isPertaxUrl:Boolean, schemeMembership: SchemeMembershipModel)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, isPertaxUrl:Boolean, schemeMembership: List[SchemeMembership])(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -62,6 +62,6 @@
     <p>@Html(Messages("nisp.main.cope.linkTitle"))</p>
     <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
 
-    <p>@schemeMembershipModel.schemeStartDate</p>
+    <p>schemeMembershipModel.schemeStartDate</p>
 }
 }

@@ -50,24 +50,26 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
 
-  def showCope: Action[AnyContent] = (AuthorisedByAny.async).asInstanceOf[Result] { implicit user => implicit request =>
+  def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
-      val npsSPResponseFuture = nispConnector.connectToGetSPResponse(nino)
-      val npsSchemeMembershipFuture = nispConnector.connectToGetSchemeMembership(nino)
+      val spResponseF = nispConnector.connectToGetSPResponse(nino)
+      val schemeMembershipF = nispConnector.connectToGetSchemeMembership(nino)
       for (
-        npsSPResponse <- npsSPResponseFuture;
-        npsSchemeMembership <- npsSchemeMembershipFuture
+        spResponse <- spResponseF;
+        schemeMembership <- schemeMembershipF
       ) yield {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
-          if(spSummary.contractedOutFlag) {
-            Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax,npsSchemeMembership))
-          }
-          else {
-            Redirect(routes.AccountController.show())
-          }
-        case _ => throw new RuntimeException("SP Response Model is empty")
+        spResponse match {
+          case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
+            if(spSummary.contractedOutFlag) {
+              Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+                spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, schemeMembership))
+            } else {
+              Redirect(routes.AccountController.show())
+            }
+          case _ => Redirect(routes.AccountController.show())
+
+        }
       }
     }
   }
