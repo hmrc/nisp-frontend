@@ -58,48 +58,49 @@ trait NispConnector {
   private def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val keystoreTimerContext = MetricsService.keystoreReadTimer.time()
 
-    sessionCache.fetchAndGetEntry[A](api.toString).flatMap { keystoreResult =>
+    val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
+    sessionCacheF.onFailure {
+      case _ => MetricsService.keystoreReadFailed.inc()
+    }
+    sessionCacheF.flatMap { keystoreResult =>
       keystoreTimerContext.stop()
-
       keystoreResult match {
         case Some(data) =>
           MetricsService.keystoreHitCounter.inc()
           Future.successful(data)
         case None =>
           MetricsService.keystoreMissCounter.inc()
-          connectToMicroservice[A](url, api) flatMap {
-            case Success(data) =>
-              Future.successful(cacheResult(data, api.toString))
-            case Failure(ex) =>
-              MetricsService.failedCounters(api).inc()
-              Future.failed(ex)
+          connectToMicroservice[A](url, api) map {
+            data: A => cacheResult(data, api.toString)
           }
       }
     }
   }
 
-  private def connectToMicroservice[A](urlToRead: String, apiType: APIType)(implicit hc: HeaderCarrier, formats: Format[A]): Future[Try[A]] = {
+  private def connectToMicroservice[A](urlToRead: String, apiType: APIType)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val timerContext = MetricsService.timers(apiType).time()
 
-    http.GET[HttpResponse](urlToRead).map {
-      timerContext.stop()
+    val httpResponseF = http.GET[HttpResponse](urlToRead)
+    httpResponseF onSuccess {
+      case _ => timerContext.stop()
+    }
+    httpResponseF onFailure {
+      case _ => MetricsService.failedCounters(apiType).inc()
+    }
+    httpResponseF.map {
       httpResponse => httpResponse.json.validate[A].fold(
-        errs => Failure(new JsonValidationException(s"Unable to deserialise: ${formatJsonErrors(errs)}")), valid => Success(valid)
+        errs => throw new JsonValidationException(s"Unable to deserialise: ${formatJsonErrors(errs)}"), valid => valid
       )
-    } recover {
-      // http-verbs throws java exceptions, convert to Try
-      case ex =>
-        Failure(ex)
     }
   }
 
   private def cacheResult[A](a:A,name: String)(implicit hc: HeaderCarrier, formats: Format[A]): A = {
     val timerContext = MetricsService.keystoreWriteTimer.time()
-    val cacheFuture = sessionCache.cache[A](name, a)
-    cacheFuture.onSuccess {
+    val cacheF = sessionCache.cache[A](name, a)
+    cacheF.onSuccess {
       case _ => timerContext.stop()
     }
-    cacheFuture.onFailure {
+    cacheF.onFailure {
       case _ => MetricsService.keystoreWriteFailed.inc()
     }
     a
