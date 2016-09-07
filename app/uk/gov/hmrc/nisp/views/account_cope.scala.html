@@ -21,8 +21,9 @@
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.models.NpsDate
 
-@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, isPertaxUrl:Boolean, schemeMembershipModel: SchemeMembershipModel)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(nino: String, forecastAmount: BigDecimal, copeEstimate: BigDecimal, totalPension: BigDecimal, isPertaxUrl:Boolean, schemeMembership: SchemeMembershipModel)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >

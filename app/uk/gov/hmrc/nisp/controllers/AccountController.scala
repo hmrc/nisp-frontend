@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.mvc.{Action, AnyContent, Request, Session}
+import play.api.mvc.{Action, AnyContent, Request, Session, Result}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
@@ -28,13 +28,12 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
-import scala.concurrent.Future
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
@@ -51,27 +50,25 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
 
-  def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+  def showCope: Action[AnyContent] = (AuthorisedByAny.async).asInstanceOf[Result] { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
-
-      nispConnector.connectToGetSPResponse(nino).map {
-
+      val npsSPResponseFuture = nispConnector.connectToGetSPResponse(nino)
+      val npsSchemeMembershipFuture = nispConnector.connectToGetSchemeMembership(nino)
+      for (
+        npsSPResponse <- npsSPResponseFuture;
+        npsSchemeMembership <- npsSchemeMembershipFuture
+      ) yield {
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
           if(spSummary.contractedOutFlag) {
-            nispConnector.connectToGetSchemeMembership(nino).map {
-              case Some(schemeMembershipModel: SchemeMembershipModel) =>
-              Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-                spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, Some(schemeMembershipModel)))
-              case _ => Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-                spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, None))
-            }
-          } else {
+            Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax,npsSchemeMembership))
+          }
+          else {
             Redirect(routes.AccountController.show())
           }
         case _ => throw new RuntimeException("SP Response Model is empty")
       }
-
     }
   }
 
