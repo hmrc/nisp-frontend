@@ -18,15 +18,17 @@ package uk.gov.hmrc.nisp.connectors
 
 import org.joda.time.LocalDate
 import org.scalatest.BeforeAndAfter
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
-import uk.gov.hmrc.nisp.helpers.{TestAccountBuilder, MockNispConnector}
+import uk.gov.hmrc.nisp.connectors.NispConnector.JsonValidationException
+import uk.gov.hmrc.nisp.helpers.{MockNispConnector, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Scenario
-import uk.gov.hmrc.play.http.{HeaderCarrier, UserId}
+import uk.gov.hmrc.play.http.{BadRequestException, HeaderCarrier, UserId}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter with OneAppPerSuite {
+class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter with OneAppPerSuite with ScalaFutures {
   val nino = TestAccountBuilder.regularNino
   val errorNino = TestAccountBuilder.nonExistentNino
   val invalidKeyNino = TestAccountBuilder.invalidKeyNino
@@ -79,9 +81,10 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
       MockNispConnector.connectToGetSPResponse(nino)(new HeaderCarrier()).spSummary shouldBe Some(spSummary)
     }
 
-    "return None for invalid JSON key" in {
-      MockNispConnector.connectToGetSPResponse(invalidKeyNino)(new HeaderCarrier()).spSummary.isEmpty shouldBe true
-      MockNispConnector.connectToGetSPResponse(invalidKeyNino)(new HeaderCarrier()).spExclusions.isEmpty shouldBe true
+    "return JsonValidationException for invalid JSON key" in {
+      ScalaFutures.whenReady(MockNispConnector.connectToGetSPResponse(invalidKeyNino)(new HeaderCarrier()).failed) { e =>
+        e shouldBe a [JsonValidationException]
+      }
     }
 
     "return None for blank response" in {
@@ -89,9 +92,10 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
       MockNispConnector.connectToGetSPResponse(blankNino)(new HeaderCarrier()).spExclusions.isEmpty shouldBe true
     }
 
-    "return None for BadRequest result from microservice" in {
-      MockNispConnector.connectToGetSPResponse(errorNino)(new HeaderCarrier()).spSummary.isEmpty shouldBe true
-      MockNispConnector.connectToGetSPResponse(errorNino)(new HeaderCarrier()).spExclusions.isEmpty shouldBe true
+    "return BadRequestException for BadRequest result from microservice" in {
+      ScalaFutures.whenReady(MockNispConnector.connectToGetSPResponse(errorNino)(new HeaderCarrier()).failed){ e =>
+        e shouldBe a [BadRequestException]
+      }
     }
 
     "return cached SPResponse if existing" in {
@@ -106,12 +110,16 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
       MockNispConnector.connectToGetNIResponse(nino)(new HeaderCarrier()).niSummary shouldBe niResponse.niSummary
     }
 
-    "return None for invalid JSON key in NI Record" in {
-      MockNispConnector.connectToGetNIResponse(invalidKeyNino)(new HeaderCarrier()).niRecord.isEmpty shouldBe true
+    "return JsonValidationException for invalid JSON key in NI Record" in {
+      ScalaFutures.whenReady(MockNispConnector.connectToGetNIResponse(invalidKeyNino)(new HeaderCarrier()).failed) { e =>
+        e shouldBe a [JsonValidationException]
+      }
     }
 
-    "return None for BadRequest result from microservice in NI Record" in {
-      MockNispConnector.connectToGetNIResponse(errorNino)(new HeaderCarrier()).niRecord.isEmpty shouldBe true
+    "return a BadRequestException for BadRequest result from microservice in NI Record" in {
+      ScalaFutures.whenReady(MockNispConnector.connectToGetNIResponse(errorNino)(new HeaderCarrier()).failed){ e =>
+        e shouldBe a [BadRequestException]
+      }
     }
 
     "return cached NIResponse if existing" in {

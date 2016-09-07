@@ -1,8 +1,10 @@
 {
-  "ninoAAAAAAAAAAAAAAAAAA": "<NINO>",
-  "name": "Oliver Williamson",
-  "calculationYear": 2014,
-  "statePensionAge": 65,
-  "statePensionDate": "2017-05-30",
-  "statePensionAmount": 140.40
+  "niRecord": {
+    "ninoAAAAAAAAAAAAAAAAAA": "<NINO>",
+    "name": "Oliver Williamson",
+    "calculationYear": 2014,
+    "statePensionAge": 65,
+    "statePensionDate": "2017-05-30",
+    "statePensionAmount": 140.40
+  }
 }

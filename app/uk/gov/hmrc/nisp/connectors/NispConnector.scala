@@ -47,64 +47,60 @@ trait NispConnector {
 
   def connectToGetSPResponse(nino: String)(implicit hc: HeaderCarrier): Future[SPResponseModel] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/spsummary"
-    retrieveFromCache[SPResponseModel](APIType.SP, urlToRead) map (_.getOrElse(SPResponseModel(None, None)))
+    retrieveFromCache[SPResponseModel](APIType.SP, urlToRead)
   }
 
   def connectToGetNIResponse(nino: String)(implicit hc: HeaderCarrier): Future[NIResponse] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/nirecord"
-    retrieveFromCache[NIResponse](APIType.NI, urlToRead) map (_.getOrElse(NIResponse(None, None, None)))
+    retrieveFromCache[NIResponse](APIType.NI, urlToRead)
   }
 
-  private def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[Option[A]] = {
+  private def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val keystoreTimerContext = MetricsService.keystoreReadTimer.time()
 
-    sessionCache.fetchAndGetEntry[A](api.toString).flatMap { keystoreResult =>
+    val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
+    sessionCacheF.onFailure {
+      case _ => MetricsService.keystoreReadFailed.inc()
+    }
+    sessionCacheF.flatMap { keystoreResult =>
       keystoreTimerContext.stop()
-
       keystoreResult match {
         case Some(data) =>
           MetricsService.keystoreHitCounter.inc()
-          Future.successful(Some(data))
+          Future.successful(data)
         case None =>
           MetricsService.keystoreMissCounter.inc()
           connectToMicroservice[A](url, api) map {
-            case Success(data) =>
-              Some(cacheResult(data, api.toString))
-            case Failure(ex) =>
-              MetricsService.failedCounters(api).inc()
-              Logger.error(s"Backend microservice has returned no data for $api Response: $ex")
-              None
+            data: A => cacheResult(data, api.toString)
           }
       }
-    } recover {
-      case ex =>
-        MetricsService.keystoreReadFailed.inc()
-        None
     }
   }
 
-  private def connectToMicroservice[A](urlToRead: String, apiType: APIType)(implicit hc: HeaderCarrier, formats: Format[A]): Future[Try[A]] = {
+  private def connectToMicroservice[A](urlToRead: String, apiType: APIType)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val timerContext = MetricsService.timers(apiType).time()
 
-    http.GET[HttpResponse](urlToRead).map {
-      timerContext.stop()
+    val httpResponseF = http.GET[HttpResponse](urlToRead)
+    httpResponseF onSuccess {
+      case _ => timerContext.stop()
+    }
+    httpResponseF onFailure {
+      case _ => MetricsService.failedCounters(apiType).inc()
+    }
+    httpResponseF.map {
       httpResponse => httpResponse.json.validate[A].fold(
-        errs => Failure(new JsonValidationException(s"Unable to deserialise: ${formatJsonErrors(errs)}")), valid => Success(valid)
+        errs => throw new JsonValidationException(s"Unable to deserialise: ${formatJsonErrors(errs)}"), valid => valid
       )
-    } recover {
-      // http-verbs throws java exceptions, convert to Try
-      case ex =>
-        Failure(ex)
     }
   }
 
   private def cacheResult[A](a:A,name: String)(implicit hc: HeaderCarrier, formats: Format[A]): A = {
     val timerContext = MetricsService.keystoreWriteTimer.time()
-    val cacheFuture = sessionCache.cache[A](name, a)
-    cacheFuture.onSuccess {
+    val cacheF = sessionCache.cache[A](name, a)
+    cacheF.onSuccess {
       case _ => timerContext.stop()
     }
-    cacheFuture.onFailure {
+    cacheF.onFailure {
       case _ => MetricsService.keystoreWriteFailed.inc()
     }
     a
@@ -114,5 +110,6 @@ trait NispConnector {
     errors.map(p => p._1 + " - " + p._2.map(_.message).mkString(",")).mkString(" | ")
   }
 
-  private class JsonValidationException(message: String) extends Exception(message)
+  private[connectors] class JsonValidationException(message: String) extends Exception(message)
 }
+
