@@ -16,12 +16,17 @@
 
 package uk.gov.hmrc.nisp.models
 
+import org.joda.time.format.DateTimeFormat
 import play.api.libs.json.Json
 
 case class SchemeMembership (
                               schemeStartDate: Option[NpsDate],
                               schemeEndDate: Option[NpsDate]
-                            )
+                            ) {
+  val dateFormat = DateTimeFormat.forPattern("MMM yyyy")
+  val startDateFormatted = schemeStartDate.map(_.localDate.toString(dateFormat)).getOrElse("Wrong")
+  val endDateFormatted = schemeEndDate.map(_.localDate.toString(dateFormat)).getOrElse("April 2016")
+}
 
 object SchemeMembership {
   implicit val formats = Json.format[SchemeMembership]

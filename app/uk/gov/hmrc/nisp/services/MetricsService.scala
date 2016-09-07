@@ -23,12 +23,14 @@ object MetricsService {
 
   val timers = Map(
     APIType.SP -> MetricsRegistry.defaultRegistry.timer("sp-response-timer"),
-    APIType.NI -> MetricsRegistry.defaultRegistry.timer("ni-response-timer")
+    APIType.NI -> MetricsRegistry.defaultRegistry.timer("ni-response-timer"),
+    APIType.SchemeMembership-> MetricsRegistry.defaultRegistry.timer("scheme-membership-response-timer")
   )
 
   val failedCounters = Map(
     APIType.SP -> MetricsRegistry.defaultRegistry.counter("sp-failed-counter"),
-    APIType.NI -> MetricsRegistry.defaultRegistry.counter("ni-failed-counter")
+    APIType.NI -> MetricsRegistry.defaultRegistry.counter("ni-failed-counter"),
+    APIType.SchemeMembership -> MetricsRegistry.defaultRegistry.counter("scheme-membership-failed-counter")
   )
 
   val keystoreReadTimer = MetricsRegistry.defaultRegistry.timer("keystore-read-timer")

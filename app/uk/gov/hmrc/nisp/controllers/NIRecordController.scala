@@ -75,7 +75,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
             niExclusions.exclusions
           ))
           Redirect(routes.ExclusionController.showNI())
-        case _ => throw new RuntimeException("NI Response Model is empty")
+        case _ => throw new RuntimeException("NI Response Model is unmatchable. This is probably a logic error.")
       }
   }
 
@@ -86,7 +86,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
         Ok(nirecordGapsAndHowToCheckThem(niSummary))
       case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
         Redirect(routes.ExclusionController.showNI())
-      case _ => throw new RuntimeException("NI Response Model is empty")
+      case _ => throw new RuntimeException("NI Response Model is unmatchable. This is probably a logic error.")
     }
   }
 

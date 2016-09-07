@@ -117,7 +117,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
             spExclusions.exclusions
           ))
           Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
-        case _ => throw new RuntimeException("SP Response Model is empty")
+        case _ => throw new RuntimeException("SP Response Model is unmatchable. This is probably a logic error.")
       }
     }
   }

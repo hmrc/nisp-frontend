@@ -56,12 +56,15 @@
     <p>@Messages("nisp.cope.table.estimate.title") <span class="heading-small">@NispMoney.pounds(copeEstimate) @Messages("nisp.main.chart.week")</span>.</p>
     <p>@Messages("nisp.cope.otherPensionSchemes")</p>
 
-    <p>@Messages("nisp.cope.table.title1")</p>
-    <p>@Messages("nisp.cope.table.youWereContractedOut")</p>
-    <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.cope.table.viewYourNationalInsuranceRecord")</a>
+    <h2 class="heading-medium">@Messages("nisp.cope.table.title1")</h2>
+    <table>
+        <tr><th>@Messages("nisp.from")</th><th>@Messages("nisp.to")</th></tr>
+        @for(value <- schemeMembership){<tr><td>@value.startDateFormatted</td><td>@value.endDateFormatted</td></tr>}
+    </table>
+
     <p>@Html(Messages("nisp.main.cope.linkTitle"))</p>
+
     <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
 
-    <p>schemeMembershipModel.schemeStartDate</p>
 }
 }
