@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.wiring.{NispSessionCache, WSHttp}
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.enums.APIType.APIType
-import uk.gov.hmrc.nisp.models.{NIResponse, SPResponseModel}
+import uk.gov.hmrc.nisp.models.{SchemeMembership, NIResponse, SPResponseModel}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
@@ -53,6 +53,11 @@ trait NispConnector {
   def connectToGetNIResponse(nino: String)(implicit hc: HeaderCarrier): Future[NIResponse] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/nirecord"
     retrieveFromCache[NIResponse](APIType.NI, urlToRead)
+  }
+
+  def connectToGetSchemeMembership(nino: String)(implicit hc: HeaderCarrier): Future[List[SchemeMembership]] = {
+    val urlToRead = s"$serviceUrl/nisp/$nino/schememembership"
+    retrieveFromCache[List[SchemeMembership]](APIType.SchemeMembership, urlToRead)
   }
 
   private def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {

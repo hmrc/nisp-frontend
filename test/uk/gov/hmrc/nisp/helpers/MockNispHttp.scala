@@ -51,6 +51,7 @@ object MockNispHttp extends MockitoSugar {
   def setupNinoEndpoints(nino: String): Unit = {
     createMockedURL(s"nisp/$nino/spsummary", TestAccountBuilder.jsonResponse(nino, "summary"))
     createMockedURL(s"nisp/$nino/nirecord", TestAccountBuilder.jsonResponse(nino, "nirecord"))
+    createMockedURL(s"nisp/$nino/schememembership", TestAccountBuilder.jsonResponse(nino, "schememembership"))
   }
 
   ninos.foreach(setupNinoEndpoints)
