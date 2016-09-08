@@ -183,6 +183,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       "return COPE page for contracted out (B) user" in {
         val result = MockAccountController.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
         contentAsString(result) should include ("You were contracted out")
+        contentAsString(result) should include ("<tr><td>April 1980</td><td>October 1997</td>")
       }
 
       "return abroad message for abroad user" in {
@@ -193,13 +194,13 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       "return abroad message for forecast only user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
         contentAsString(result) should include ("As you are living or working overseas")
-        contentAsString(result) should not include ("£80.38")
+        contentAsString(result) should not include "£80.38"
       }
 
       "return abroad message for an mqp user instead of standard mqp overseas message" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
         contentAsString(result) should include ("As you are living or working overseas")
-        contentAsString(result) should not include ("If you have lived or worked overseas")
+        contentAsString(result) should not include "If you have lived or worked overseas"
       }
 
       "redirect to account page for non contracted out user" in {
