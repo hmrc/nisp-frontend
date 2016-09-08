@@ -56,7 +56,7 @@ trait NispConnector {
   }
 
   def connectToGetSchemeMembership(nino: String)(implicit hc: HeaderCarrier): Future[List[SchemeMembership]] = {
-    val urlToRead = s"$serviceUrl/nisp/$nino/schemesummary"
+    val urlToRead = s"$serviceUrl/nisp/$nino/schememembership"
     retrieveFromCache[List[SchemeMembership]](APIType.SchemeMembership, urlToRead)
   }
 
