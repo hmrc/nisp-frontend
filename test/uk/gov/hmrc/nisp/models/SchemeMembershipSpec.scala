@@ -24,12 +24,21 @@ class SchemeMembershipSpec extends UnitSpec {
   "SchemeMembership formatting" should {
     "return April 2016 for SchemeEndDate (2016,4,5) " in {
       SchemeMembership(new LocalDate(2015, 4, 6), new LocalDate(2016, 4, 5)).endDateFormatted contains "April 2016"
+    }
+    "return January 2016 for SchemeEndDate (2016,1,5) " in {
       SchemeMembership(new LocalDate(2015, 4, 6), new LocalDate(2016, 1, 5)).endDateFormatted contains "January 2016"
+    }
+    "return December 2016 for SchemeEndDate (2016,12,5) " in {
       SchemeMembership(new LocalDate(2015, 4, 6), new LocalDate(2016, 12, 5)).endDateFormatted contains "December 2016"
     }
-    "return April 1999 for SchemeStartDate (1999,4,5) " in {
+
+    "return April 1999 for SchemeStartDate (1999,4,6) " in {
       SchemeMembership(new LocalDate(1999, 4, 6), new LocalDate(2016, 4, 5)).startDateFormatted contains "April 1999"
+    }
+    "return November 2015 for SchemeStartDate (2015, 11, 6) " in {
       SchemeMembership(new LocalDate(2015, 11, 6), new LocalDate(2016, 4, 5)).startDateFormatted contains "November 2015"
+    }
+    "return June 2015 for SchemeStartDate (2015, 6, 6) " in {
       SchemeMembership(new LocalDate(2015, 6, 6), new LocalDate(2016, 4, 5)).startDateFormatted contains "June 2015"
     }
   }

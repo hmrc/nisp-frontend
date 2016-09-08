@@ -57,6 +57,7 @@
     <p>@Messages("nisp.cope.otherPensionSchemes")</p>
 
     <h2 class="heading-medium">@Messages("nisp.cope.table.title1")</h2>
+    <p>@Messages("nisp.cope.table.youWereContractedOut")</p>
     <table>
         <tr><th>@Messages("nisp.from")</th><th>@Messages("nisp.to")</th></tr>
         @for(value <- schemeMembership){<tr><td>@value.startDateFormatted</td><td>@value.endDateFormatted</td></tr>}
