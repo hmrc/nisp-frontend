@@ -30,8 +30,8 @@ object GovernmentGatewayProvider extends GovernmentGateway {
   override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] =
     Future.successful(Redirect(routes.AccountController.timeout().url))
 
-  override def login: String = ggSignInUrl
+  override val additionalLoginParameters: Map[String, Seq[String]] = Map("accountType" -> Seq("individual"))
+  override val continueURL: String = ApplicationConfig.postSignInRedirectUrl
+  override val loginURL: String = ApplicationConfig.ggSignInUrl
 
-  private val ggSignInUrl = s"${ApplicationConfig.ggSignInUrl}?" +
-    s"continue=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}&accountType=individual"
 }

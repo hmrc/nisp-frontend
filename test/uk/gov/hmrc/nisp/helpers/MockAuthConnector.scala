@@ -51,7 +51,7 @@ object MockAuthConnector extends AuthConnector {
   )
 
   private def payeAuthority(id: String, nino: String): Option[Authority] =
-    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", Nino(nino)))), None, None, testCredentialStrength(nino), L500))
+    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", Nino(nino)))), None, None, testCredentialStrength(nino), L500, None, None))
 
   private def testCredentialStrength(nino: String): CredentialStrength =
     if (nino == TestAccountBuilder.weakNino) CredentialStrength.Weak else CredentialStrength.Strong

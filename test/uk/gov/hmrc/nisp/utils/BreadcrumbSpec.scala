@@ -32,7 +32,7 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequestHowToImproveGaps = FakeRequest("GET", "/account/nirecord/gapsandhowtocheck")
 
   val authContext = new AuthContext(LoggedInUser("testName", None, None, None, CredentialStrength.Strong, ConfidenceLevel.L200),
-    principal = Principal(None,Accounts()), None)
+    principal = Principal(None,Accounts()), None, None, None)
 
   val nispUser: NispUser = {
     new NispUser(authContext, Some("testName"), "testAuthProvider")
