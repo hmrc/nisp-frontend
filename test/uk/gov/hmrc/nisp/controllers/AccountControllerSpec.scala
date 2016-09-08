@@ -58,7 +58,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
 
-  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&accountType=individual"
+  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
   lazy val fakeRequest = FakeRequest()

@@ -24,6 +24,7 @@ import scala.concurrent.Future
 object NispAuthProvider extends AnyAuthenticationProvider {
   override def ggwAuthenticationProvider: GovernmentGateway = GovernmentGatewayProvider
   override def verifyAuthenticationProvider: Verify = VerifyProvider
-  override def login: String = GovernmentGatewayProvider.login
+  override def login: String = ??? // Default is GG. Unable to use this based on library, just override redirectToLogin.
+  override def redirectToLogin(implicit request: Request[_]): Future[FailureResult] = GovernmentGatewayProvider.redirectToLogin
   override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] = GovernmentGatewayProvider.handleSessionTimeout
 }
