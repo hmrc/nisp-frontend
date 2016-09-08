@@ -455,7 +455,7 @@ nisp.cope.table.title1 = When you were contracted out
 nisp.cope.table.youWereContractedOut = You were part of a contracted out pension scheme during these periods.
 
 nisp.main.cope.linkTitle = More about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE amount (opens in new tab)</a>.
-
+nisp.main.cope.linkTitle.old = Find out more about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE estimate (opens in new tab)</a>.
 #**************************
 #  Not Authorised IV Messages
 #**************************
