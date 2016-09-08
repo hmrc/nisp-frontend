@@ -63,7 +63,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
           case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
             if(spSummary.contractedOutFlag) {
               Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-                spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, schemeMembership))
+                spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, schemeMembership, applicationConfig.copeTable))
             } else {
               Redirect(routes.AccountController.show())
             }
