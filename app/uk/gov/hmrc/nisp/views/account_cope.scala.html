@@ -59,8 +59,8 @@
     <h2 class="heading-medium">@Messages("nisp.cope.table.title1")</h2>
     <p>@Messages("nisp.cope.table.youWereContractedOut")</p>
     <table>
-        <tr><th>@Messages("nisp.from")</th><th>@Messages("nisp.to")</th></tr>
-        @for(value <- schemeMembership){<tr><td>@value.startDateFormatted</td><td>@value.endDateFormatted</td></tr>}
+        <thead><tr><th>@Messages("nisp.from")</th><th>@Messages("nisp.to")</th></tr></thead>
+        <tbody>@for(value <- schemeMembership){<tr><td>@value.startDateFormatted</td><td>@value.endDateFormatted</td></tr>}</tbody>
     </table>
 
     <p>@Html(Messages("nisp.main.cope.linkTitle"))</p>
