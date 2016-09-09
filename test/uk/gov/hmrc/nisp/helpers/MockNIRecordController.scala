@@ -62,6 +62,7 @@ trait MockNIRecordController extends NIRecordController {
     override val breadcrumbPartialUrl: String = ""
     override val showFullNI: Boolean = true
     override val futureProofPersonalMax: Boolean = false
+    override val copeTable: Boolean = false
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 

@@ -58,7 +58,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
 
-  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&accountType=individual"
+  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
   lazy val fakeRequest = FakeRequest()
@@ -118,6 +118,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
+            override val copeTable: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -185,6 +186,77 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
         contentAsString(result) should include ("You were contracted out")
       }
 
+      "show COPE table when the user is contracted out and the copeTable feature flag is set to true" in {
+        val controller = new MockAccountController {
+          override val citizenDetailsService = MockCitizenDetailsService
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+            override val assetsPrefix: String = ""
+            override val reportAProblemNonJSUrl: String = ""
+            override val ssoUrl: Option[String] = None
+            override val betaFeedbackUnauthenticatedUrl: String = ""
+            override val contactFrontendPartialBaseUrl: String = ""
+            override val analyticsHost: String = ""
+            override val analyticsToken: Option[String] = None
+            override val betaFeedbackUrl: String = ""
+            override val reportAProblemPartialUrl: String = ""
+            override val showGovUkDonePage: Boolean = true
+            override val govUkFinishedPageUrl: String = "govukdone"
+            override val citizenAuthHost: String = ""
+            override val postSignInRedirectUrl: String = ""
+            override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = true
+            override val ivUpliftUrl: String = "ivuplift"
+            override val ggSignInUrl: String = "ggsignin"
+            override val twoFactorUrl: String = "twofactor"
+            override val pertaxFrontendUrl: String = ""
+            override val contactFormServiceIdentifier: String = ""
+            override val breadcrumbPartialUrl: String = ""
+            override val showFullNI: Boolean = false
+            override val futureProofPersonalMax: Boolean = false
+            override val copeTable: Boolean = true
+          }
+        }
+        val result = controller.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
+        contentAsString(result) should include ("<tr><td>April 1980</td><td>October 1997</td>")
+
+      }
+
+      "do not show COPE table when the user is contracted out the copeTable feature flag is set to false" in {
+        val controller = new MockAccountController {
+          override val citizenDetailsService = MockCitizenDetailsService
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+            override val assetsPrefix: String = ""
+            override val reportAProblemNonJSUrl: String = ""
+            override val ssoUrl: Option[String] = None
+            override val betaFeedbackUnauthenticatedUrl: String = ""
+            override val contactFrontendPartialBaseUrl: String = ""
+            override val analyticsHost: String = ""
+            override val analyticsToken: Option[String] = None
+            override val betaFeedbackUrl: String = ""
+            override val reportAProblemPartialUrl: String = ""
+            override val showGovUkDonePage: Boolean = true
+            override val govUkFinishedPageUrl: String = "govukdone"
+            override val citizenAuthHost: String = ""
+            override val postSignInRedirectUrl: String = ""
+            override val notAuthorisedRedirectUrl: String = ""
+            override val identityVerification: Boolean = true
+            override val ivUpliftUrl: String = "ivuplift"
+            override val ggSignInUrl: String = "ggsignin"
+            override val twoFactorUrl: String = "twofactor"
+            override val pertaxFrontendUrl: String = ""
+            override val contactFormServiceIdentifier: String = ""
+            override val breadcrumbPartialUrl: String = ""
+            override val showFullNI: Boolean = false
+            override val futureProofPersonalMax: Boolean = false
+            override val copeTable: Boolean = false
+          }
+        }
+        val result = controller.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
+        contentAsString(result) shouldNot include ("<tr><td>April 1980</td><td>October 1997</td>")
+      }
+
       "return abroad message for abroad user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdAbroad))
         contentAsString(result) should include ("As you are living or working overseas")
@@ -193,13 +265,13 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
       "return abroad message for forecast only user" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
         contentAsString(result) should include ("As you are living or working overseas")
-        contentAsString(result) should not include ("£80.38")
+        contentAsString(result) should not include "£80.38"
       }
 
       "return abroad message for an mqp user instead of standard mqp overseas message" in {
         val result = MockAccountController.show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
         contentAsString(result) should include ("As you are living or working overseas")
-        contentAsString(result) should not include ("If you have lived or worked overseas")
+        contentAsString(result) should not include "If you have lived or worked overseas"
       }
 
       "redirect to account page for non contracted out user" in {
@@ -250,7 +322,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
-
+            override val copeTable: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -285,6 +357,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
+            override val copeTable: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -382,6 +455,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = true
+            override val copeTable: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.models
 
-import org.joda.time.{PeriodType, Period, LocalDate}
+import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.data.validation.ValidationError
 import play.api.libs.json._

@@ -44,7 +44,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserIdHRP = "/auth/oid/mockhomeresponsibilitiesprotection"
   val mockUserWithGaps ="/auth/oid/mockfillgapsmultiple"
 
-  val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&accountType=individual"
+  val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
 
   lazy val fakeRequest = FakeRequest()
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(

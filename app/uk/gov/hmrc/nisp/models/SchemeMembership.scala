@@ -16,11 +16,19 @@
 
 package uk.gov.hmrc.nisp.models
 
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import play.api.libs.json.Json
 
-case class SPResponseModel(spSummary: Option[SPSummaryModel], spExclusions: Option[ExclusionsModel] = None,
-                           niExclusions: Option[ExclusionsModel] = None)
+case class SchemeMembership (
+                              schemeStartDate: LocalDate,
+                              schemeEndDate: LocalDate
+                            ) {
+  val dateFormat = DateTimeFormat.forPattern("MMMM yyyy")
+  val startDateFormatted = schemeStartDate.toString(dateFormat)
+  val endDateFormatted = schemeEndDate.toString(dateFormat)
+}
 
-object SPResponseModel {
-  implicit val formats = Json.format[SPResponseModel]
+object SchemeMembership {
+  implicit val formats = Json.format[SchemeMembership]
 }

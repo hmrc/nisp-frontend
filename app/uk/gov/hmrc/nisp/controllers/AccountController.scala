@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.mvc.{Action, AnyContent, Request, Session}
+import play.api.mvc.{Action, AnyContent, Request, Session, Result}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
@@ -28,11 +28,12 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
@@ -52,16 +53,28 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
       val nino = user.nino.getOrElse("")
+      val spResponseF = nispConnector.connectToGetSPResponse(nino)
+      val schemeMembershipF = nispConnector.connectToGetSchemeMembership(nino)
+      for (
+        spResponse <- spResponseF;
+        schemeMembership <- schemeMembershipF
+      ) yield {
+        spResponse match {
+          case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
+            if(spSummary.contractedOutFlag) {
+              if(applicationConfig.copeTable) {
+                Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+                  spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, schemeMembership))
+              } else {
+                Ok(account_cope_old(nino, spSummary.forecast.forecastAmount.week,
+                  spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax))
+              }
+            } else {
+              Redirect(routes.AccountController.show())
+            }
+          case _ => Redirect(routes.AccountController.show())
 
-      nispConnector.connectToGetSPResponse(nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
-          if(spSummary.contractedOutFlag) {
-            Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
-              spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax))
-          } else {
-            Redirect(routes.AccountController.show())
-          }
-        case _ => throw new RuntimeException("SP Response Model is empty")
+        }
       }
     }
   }
@@ -109,7 +122,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
             spExclusions.exclusions
           ))
           Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
-        case _ => throw new RuntimeException("SP Response Model is empty")
+        case _ => throw new RuntimeException("SP Response Model is unmatchable. This is probably a logic error.")
       }
     }
   }
