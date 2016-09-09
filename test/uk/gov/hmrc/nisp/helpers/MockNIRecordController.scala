@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import org.joda.time.LocalDate
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
@@ -31,6 +32,7 @@ object MockNIRecordController extends MockNIRecordController {
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val sessionCache: SessionCache = MockSessionCache
   override val showFullNI: Boolean = true
+  override val currentDate = new LocalDate(2016,9,9)
 }
 
 trait MockNIRecordController extends NIRecordController {

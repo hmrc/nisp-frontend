@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
+import org.joda.time.LocalDate
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
@@ -41,6 +42,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockBlankUserId = "/auth/oid/mockblank"
   val mockUserIdExcluded = "/auth/oid/mockexcluded"
   val mockUserIdHRP = "/auth/oid/mockhomeresponsibilitiesprotection"
+  val mockUserWithGaps ="/auth/oid/mockfillgapsmultiple"
 
   val ggSignInUrl = s"http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&accountType=individual"
 
@@ -145,6 +147,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
       contentAsString(result) should include ("Voluntary contributions")
     }
   }
+
   "GET /account/nirecord (full)" should {
     "return NI record page with details for full years - when showFullNI is true" in {
       val controller = new MockNIRecordController {
@@ -153,6 +156,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
         override val showFullNI = true
+        override val currentDate = new LocalDate(2016,9,9)
 
         override protected def authConnector: AuthConnector = MockAuthConnector
 
@@ -168,6 +172,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
+        override val currentDate = new LocalDate(2016,9,9)
 
         override protected def authConnector: AuthConnector = MockAuthConnector
         override val showFullNI = false
@@ -177,4 +182,24 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
       contentAsString(result) shouldNot include("52 weeks")
     }
   }
+
+  "GET /account/nirecord (Gaps)" should {
+    "return NI record page with diffent messages about paying fillable - if current date is beyond 2019" in {
+      val controller = new MockNIRecordController {
+        override val nispConnector: NispConnector = MockNispConnector
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+        override val sessionCache: SessionCache = MockSessionCache
+        override val showFullNI = false
+        override val currentDate = new LocalDate(2017, 9, 9)
+
+        override protected def authConnector: AuthConnector = MockAuthConnector
+
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      }
+      val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      contentAsString(result) should include("This shortfall may increase after")
+    }
+  }
+
 }

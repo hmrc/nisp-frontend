@@ -27,9 +27,9 @@ case class NIRecordTaxYear(taxYear: Int, qualifying: Boolean,classOneContributio
 
 	val displayableTaxYear: String = s"$taxYear-${(taxYear + 1).toString.substring(Constants.shortYearStartCharacter,Constants.shortYearEndCharacter)}"
 
-	val checkCutOffDate:(Option[NpsDate],LocalDate) => Boolean = (localClassThreePayableBy,currentDate) => {
-  		localClassThreePayableBy match {
-    		case Some(localClassThreePayableBy) => localClassThreePayableBy.localDate.isAfter(currentDate)
+	val checkCutOffDate:(LocalDate) => Boolean = (currentDate) => {
+  		classThreePayableBy match {
+    		case Some(classThreePayableBy) => classThreePayableBy.localDate.isAfter(currentDate)
     		case None => false
   		}
  	}

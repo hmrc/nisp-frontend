@@ -39,13 +39,14 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
   override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
   override val sessionCache: SessionCache = NispSessionCache
   override val showFullNI: Boolean = ApplicationConfig.showFullNI
+  override val currentDate = new LocalDate(DateTimeZone.forID("Europe/London"))
 }
 
 trait NIRecordController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   val nispConnector: NispConnector
   val customAuditConnector: CustomAuditConnector
   val showFullNI: Boolean
-  val currentDate = new LocalDate(DateTimeZone.forID("Europe/London"))
+  val currentDate: LocalDate
 
   def showFull: Action[AnyContent] = show(niGaps = false)
   def showGaps: Action[AnyContent] = show(niGaps = true)
