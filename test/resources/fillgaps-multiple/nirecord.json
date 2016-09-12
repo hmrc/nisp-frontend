@@ -436,6 +436,7 @@
     "numberOfNonPayableGaps": 26,
     "canImproveWithGaps": true,
     "isAbroad": false,
-    "finalRelevantYear": 2019
+    "finalRelevantYear": 2019,
+    "homeResponsibilitiesProtection": false
   }
 }
