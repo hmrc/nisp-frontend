@@ -22,9 +22,10 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
+@import org.joda.time.LocalDate
 
 @(nino: String, niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, tableStart: Int, recordEnded: Boolean,
-authenticationProvider: String, showFullNI: Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >
@@ -147,7 +148,7 @@ authenticationProvider: String, showFullNI: Boolean)(implicit request: Request[_
             </dt>
         }
         @for(niRecordTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
-            @if(showFullNI){ @includes.nirecordtaxyear(niRecordTaxYear) }else{ @includes.nirecordtaxyearNoFull(niRecordTaxYear)}
+            @if(showFullNI){ @includes.nirecordtaxyear(niRecordTaxYear, currentDate) }else{ @includes.nirecordtaxyearNoFull(niRecordTaxYear, currentDate)}
         }
     } else {
         @if(niRecord.taxYears.isEmpty) {
@@ -160,7 +161,8 @@ authenticationProvider: String, showFullNI: Boolean)(implicit request: Request[_
         } else {
 
             @for(taxYear <- tableStart to niRecord.taxYears.map(p => p.taxYear).min by -1) {
-              @niRecord.taxYears.find(p => p.taxYear == taxYear).map(if(showFullNI) includes.nirecordtaxyear(_) else includes.nirecordtaxyearNoFull(_) ).getOrElse {
+              @niRecord.taxYears.find(p => p.taxYear == taxYear).map(if(showFullNI) includes.nirecordtaxyear(_, currentDate) 
+              else includes.nirecordtaxyearNoFull(_, currentDate) ).getOrElse {
                 <dt>
                     <div class="ni-wrapper">
                         <div class="ni-years"> @{(taxYear)}-@{(taxYear+1).toString.substring(2,4)}</div>

@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.models
 
+import org.joda.time.LocalDate
 import play.api.libs.json.Json
 import uk.gov.hmrc.nisp.utils.Constants
 
@@ -23,10 +24,18 @@ case class NIRecordTaxYear(taxYear: Int, qualifying: Boolean,classOneContributio
                            classTwoCredits: Int, classThreeCredits: Int, otherCredits: Int,
                            classThreePayable: Option[BigDecimal], classThreePayableBy: Option[NpsDate],
                            classThreePayableByPenalty: Option[NpsDate], payable: Boolean, underInvestigation: Boolean) {
-  val displayableTaxYear: String = s"$taxYear-${(taxYear + 1).toString.substring(Constants.shortYearStartCharacter,Constants.shortYearEndCharacter)}"
-}
 
+	val displayableTaxYear: String = s"$taxYear-${(taxYear + 1).toString.substring(Constants.shortYearStartCharacter,Constants.shortYearEndCharacter)}"
+
+	def currentDateAfterCutOff(currentDate: LocalDate): Boolean = {
+  		classThreePayableBy match {
+    		case Some(classThreeDate) => currentDate.isAfter(classThreeDate.localDate)
+    		case None => false
+  		}
+ 	}
+}
 
 object NIRecordTaxYear {
   implicit val formats = Json.format[NIRecordTaxYear]
+
 }
