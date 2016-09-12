@@ -89,10 +89,10 @@
                 ){
                         <p class="contributions-header">@Messages("nisp.nirecord.gap.youcanmakeupshortfall")</p>
 
-                        @if(niRecordTaxYear.checkCutOffDate(currentDate)) {
-                            <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate),Dates.formatDate(classThreePayableByDate.localDate)))</p>
+                        @if(niRecordTaxYear.currentDateAfterCutOff(currentDate)) {
+                            <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontribaftercutoff",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate)))</p>
                         } else {
-                            <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontribby",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate)))</p>
+                            <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate),Dates.formatDate(classThreePayableByDate.localDate)))</p>
                         }
 
                         <p>@Html(Messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>

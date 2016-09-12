@@ -20,21 +20,21 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class NIRecordTaxYearSpec extends UnitSpec  {
   "NIRecordTaxYear cutOffDate" should {
-    "return true if [payable gaps by] date is after the current date" in {
+    "return true if the current date is after [payable gaps by] date" in {
       val fakeNIRecordTaxYear = NIRecordTaxYear(2014,false,0,0,0,0,None,Some(NpsDate(2019,4,5)),Some(NpsDate(2023,4,5)),true,false)
-      val testCutOffDate = fakeNIRecordTaxYear.checkCutOffDate(new LocalDate(2016,8,25))
+      val testCutOffDate = fakeNIRecordTaxYear.currentDateAfterCutOff(new LocalDate(2019,4,6))
       testCutOffDate shouldBe true
     }
 
-     "return false if current date is after [payable gaps by] date" in {
+     "return false if current date is before [payable gaps by] date" in {
       val fakeNIRecordTaxYear = NIRecordTaxYear(2014,false,0,0,0,0,None,Some(NpsDate(2019,4,5)),Some(NpsDate(2023,4,5)),true,false)
-      val testCutOffDate = fakeNIRecordTaxYear.checkCutOffDate(new LocalDate(2019,8,25))
+      val testCutOffDate = fakeNIRecordTaxYear.currentDateAfterCutOff(new LocalDate(2019,4,4))
       testCutOffDate shouldBe false
     }
 
      "return false if current date is the same with [payable gaps by] date" in {
       val fakeNIRecordTaxYear = NIRecordTaxYear(2014,false,0,0,0,0,None,Some(NpsDate(2019,4,5)),Some(NpsDate(2023,4,5)),true,false)
-      val testCutOffDate = fakeNIRecordTaxYear.checkCutOffDate(new LocalDate(2019,4,5))
+      val testCutOffDate = fakeNIRecordTaxYear.currentDateAfterCutOff(new LocalDate(2019,4,5))
       testCutOffDate shouldBe false
     }
 

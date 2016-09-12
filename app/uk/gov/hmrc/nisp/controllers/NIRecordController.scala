@@ -48,19 +48,19 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
   val showFullNI: Boolean
   val currentDate: LocalDate
 
-  def showFull: Action[AnyContent] = show(niGaps = false)
-  def showGaps: Action[AnyContent] = show(niGaps = true)
+  def showFull: Action[AnyContent] = show(gapsOnly = false)
+  def showGaps: Action[AnyContent] = show(gapsOnly = true)
   def pta: Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
     setFromPertax
     Redirect(routes.NIRecordController.showFull())
   }
 
-  private def show(niGaps: Boolean): Action[AnyContent] = AuthorisedByAny.async {
+  private def show(gapsOnly: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user => implicit request =>
       val nino = user.nino.getOrElse("")
       nispConnector.connectToGetNIResponse(nino).map {
         case NIResponse(Some(niRecord: NIRecord), Some(niSummary: NISummary), None) =>
-          if (niGaps && niSummary.noOfNonQualifyingYears < 1) {
+          if (gapsOnly && niSummary.noOfNonQualifyingYears < 1) {
             Redirect(routes.NIRecordController.showFull())
           } else {
             customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
@@ -70,7 +70,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
               val tableStart = niSummary.recordEnd.getOrElse(niSummary.earningsIncludedUpTo.taxYear + 1)
               
 
-            Ok(nirecordpage(nino, niRecord, niSummary, niGaps, tableStart, niSummary.recordEnd.isDefined, getAuthenticationProvider(user.authContext.user.confidenceLevel), showFullNI, currentDate))
+            Ok(nirecordpage(nino, niRecord, niSummary, gapsOnly, tableStart, niSummary.recordEnd.isDefined, getAuthenticationProvider(user.authContext.user.confidenceLevel), showFullNI, currentDate))
           }
         case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
           customAuditConnector.sendEvent(AccountExclusionEvent(

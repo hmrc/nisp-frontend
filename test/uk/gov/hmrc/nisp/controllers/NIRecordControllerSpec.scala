@@ -184,21 +184,49 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   }
 
   "GET /account/nirecord (Gaps)" should {
-    "return NI record page with diffent messages about paying fillable - if current date is beyond 2019" in {
+    "return NI record page - gap details should not show shortfall may increase messages - if current date is after 5 April 2019" in {
       val controller = new MockNIRecordController {
         override val nispConnector: NispConnector = MockNispConnector
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
         override val showFullNI = false
-        override val currentDate = new LocalDate(2017, 9, 9)
-
+        override val currentDate = new LocalDate(2019,4,6)
         override protected def authConnector: AuthConnector = MockAuthConnector
-
         override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       }
       val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
-      contentAsString(result) should include("This shortfall may increase after")
+      contentAsString(result) should not include("shortfall may increase")
+    }
+
+    "return NI record page - gap details should show shortfall may increase messages - if current date is before 5 April 2019" in {
+      val controller = new MockNIRecordController {
+        override val nispConnector: NispConnector = MockNispConnector
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+        override val sessionCache: SessionCache = MockSessionCache
+        override val showFullNI = false
+        override val currentDate = new LocalDate(2019,4,4)
+        override protected def authConnector: AuthConnector = MockAuthConnector
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      }
+      val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      contentAsString(result) should include("shortfall may increase")
+    }
+
+    "return NI record page - gap details should show shortfall may increase messages - if current date is same 5 April 2019" in {
+      val controller = new MockNIRecordController {
+        override val nispConnector: NispConnector = MockNispConnector
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+        override val sessionCache: SessionCache = MockSessionCache
+        override val showFullNI = false
+        override val currentDate = new LocalDate(2019,4,5)
+        override protected def authConnector: AuthConnector = MockAuthConnector
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      }
+      val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      contentAsString(result) should include("shortfall may increase")
     }
   }
 
