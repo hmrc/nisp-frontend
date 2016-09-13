@@ -21,7 +21,8 @@
  * Survey form styling
  */
  
-$help-notice-background:'/checkmystatepension/assets/img/icons/icon-important.png';
+$help-notice-background:'/check-your-state-pension/assets/img/icons/icon-important.png';
+$breadcrumb: '/check-your-state-pension/assets/img/icons/breadcrumb-separator.png';
 
 @import 'colours';
 
@@ -85,14 +86,15 @@ h2.summary {
 #global-breadcrumb {
   border-bottom: 0;
   padding-bottom: 0;
-}
-
-#global-breadcrumb ol {
-  padding: .75em 0 .55em;
-}
-
-#global-breadcrumb ol li a:focus {
-  outline: 3px solid #ffbf47;
+  nav ol li {
+    background-image:url($breadcrumb)
+  }
+  ol {
+    padding: .75em 0 .55em;
+    li a:focus {
+      outline: 3px solid #ffbf47;
+    }
+  }
 }
 
 .service-info-p {
