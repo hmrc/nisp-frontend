@@ -47,6 +47,6 @@
     "mqp": null,
     "isAbroad": false
   },
-  "spExclusions":{"exclusions":["ContractedOut","CustomerTooOld"]},
+  "spExclusions":{"exclusions":["ContractedOut","PostStatePensionAge"]},
   "niExclusions":{"exclusions":[]}
 }
