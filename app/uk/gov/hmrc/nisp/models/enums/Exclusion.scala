@@ -16,14 +16,12 @@
 
 package uk.gov.hmrc.nisp.models.enums
 
-import play.api.i18n.Messages
 import play.api.libs.json._
 
 object Exclusion extends Enumeration {
   type Exclusion = Value
   val Abroad = Value
   val MarriedWomenReducedRateElection = Value
-  val CustomerTooOld = Value
   val ContractedOut = Value
   val Dead = Value
   val IsleOfMan = Value

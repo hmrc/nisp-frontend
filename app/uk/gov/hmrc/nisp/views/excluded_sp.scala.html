@@ -42,13 +42,13 @@ canSeeNIRecord: Boolean
                 pageTitle = Some(Messages("nisp.main.h1.title")), articleClasses = Some("mainpage"),
                 analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-        @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
+        @if(spExclusions.contains(PostStatePensionAge)) {
             <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age) </h2>
         } else {
             <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age)) </h2>
         }
         <div class="panel-indent">
-            @if(spExclusions.contains(CustomerTooOld) || spExclusions.contains(PostStatePensionAge)) {
+            @if(spExclusions.contains(PostStatePensionAge)) {
                     @exclusions.sp.postStatePensionAge()
             } else {
                     @if(spExclusions.contains(AmountDissonance)) {

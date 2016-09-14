@@ -43,9 +43,6 @@
         @if(spExclusions.exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
             @viewExclusions(){@exclusions.sp.mwrre()}
         }
-        @if(spExclusions.exclusions.contains(Exclusion.CustomerTooOld)) {
-            @viewExclusions(){@exclusions.sp.spaBefore5April2016()}
-        }
         @if(spExclusions.exclusions.contains(Exclusion.Dead)) {
             @exclusions.dead()
         }
