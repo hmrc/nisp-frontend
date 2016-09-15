@@ -37,7 +37,7 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
   val cachedUserId = UserId(s"/auth/oid/$cachedNinoAndUsername")
 
   def spSummary: SPSummaryModel = SPSummaryModel(
-    TestAccountBuilder.regularNino,
+    TestAccountBuilder.regularNino.nino,
     NpsDate(2014,4,5),
     SPAmountModel(150.26,653.36,7840.35),
     SPAgeModel(66,NpsDate(2027,9,26)),
@@ -100,7 +100,7 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
 
     "return cached SPResponse if existing" in {
       MockNispConnector.connectToGetSPResponse(cachedNinoAndUsername)(new HeaderCarrier(userId = Some(cachedUserId))).spSummary
-        .map(_.copy(nino = TestAccountBuilder.regularNino)) shouldBe Some(spSummary)
+        .map(_.copy(nino = TestAccountBuilder.regularNino.nino)) shouldBe Some(spSummary)
     }
   }
 

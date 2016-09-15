@@ -17,8 +17,9 @@
 package uk.gov.hmrc.nisp.services
 
 import play.api.Logger
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
-import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
+import uk.gov.hmrc.nisp.models.citizen.Citizen
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
@@ -31,7 +32,7 @@ object CitizenDetailsService extends CitizenDetailsService {
 trait CitizenDetailsService {
   val citizenDetailsConnector: CitizenDetailsConnector
 
-  def retrievePerson(nino: String)(implicit hc: HeaderCarrier): Future[Option[Citizen]] = {
+  def retrievePerson(nino: Nino)(implicit hc: HeaderCarrier): Future[Option[Citizen]] = {
     citizenDetailsConnector.connectToGetPersonDetails(nino) map(_.citizens.headOption) recover {
       case ex =>
         Logger.error(s"Citizen details returned error: ${ex.toString}")

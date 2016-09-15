@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(nino: String, niExclusions: ExclusionsModel)(implicit request: Request[_], user: NispUser,
+@(niExclusions: ExclusionsModel)(implicit request: Request[_], user: NispUser,
 partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {

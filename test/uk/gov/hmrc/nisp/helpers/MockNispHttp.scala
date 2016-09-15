@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.helpers
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.http.{BadRequestException, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
@@ -48,7 +49,7 @@ object MockNispHttp extends MockitoSugar {
   def createFailedMockedURL(urlEndsWith: String): Unit =
     when(mockHttp.GET[HttpResponse](Matchers.endsWith(urlEndsWith))(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new BadRequestException("")))
 
-  def setupNinoEndpoints(nino: String): Unit = {
+  def setupNinoEndpoints(nino: Nino): Unit = {
     createMockedURL(s"nisp/$nino/spsummary", TestAccountBuilder.jsonResponse(nino, "summary"))
     createMockedURL(s"nisp/$nino/nirecord", TestAccountBuilder.jsonResponse(nino, "nirecord"))
     createMockedURL(s"nisp/$nino/schememembership", TestAccountBuilder.jsonResponse(nino, "schememembership"))
