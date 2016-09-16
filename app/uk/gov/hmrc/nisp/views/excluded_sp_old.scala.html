@@ -21,7 +21,7 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import exclusions.viewExclusions
 
-@(nino: String, spExclusions: ExclusionsModel, statePensionAge: SPAgeModel)(implicit request: Request[_], user: NispUser,
+@(spExclusions: ExclusionsModel, statePensionAge: SPAgeModel)(implicit request: Request[_], user: NispUser,
   partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {

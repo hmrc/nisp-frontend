@@ -20,8 +20,9 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
-import play.api.libs.json.{Json, JsValue}
-import uk.gov.hmrc.play.http.{BadRequestException, NotFoundException, HttpResponse, HttpPost}
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.play.http.{BadRequestException, HttpPost, HttpResponse, NotFoundException}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -45,11 +46,11 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     TestAccountBuilder.fillGapsMultiple
   )
 
-  def createMockedURL(nino: String, response: Future[HttpResponse]): Unit =
+  def createMockedURL(nino: Nino, response: Future[HttpResponse]): Unit =
     when(mockHttp.POST[JsValue, HttpResponse](Matchers.endsWith(s"citizen-details/$nino/designatory-details/summary"), Matchers.any(),
       Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(response)
 
-  private def setupCitizenDetailsMocking(nino: String) =
+  private def setupCitizenDetailsMocking(nino: Nino) =
     createMockedURL(nino, TestAccountBuilder.jsonResponse(nino, "citizen-details"))
 
   ninos.foreach(setupCitizenDetailsMocking)

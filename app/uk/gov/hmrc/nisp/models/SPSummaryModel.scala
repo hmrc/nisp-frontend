@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.nisp.models
 
-import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
-import uk.gov.hmrc.nisp.models.enums.SPContextMessage
-import SPContextMessage.SPContextMessage
 import play.api.libs.json.Json
+import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
+import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
 
 case class SPSummaryModel( nino: String,
                            lastProcessedDate: NpsDate,

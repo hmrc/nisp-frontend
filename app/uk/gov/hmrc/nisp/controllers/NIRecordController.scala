@@ -57,24 +57,22 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
 
   private def show(gapsOnly: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user => implicit request =>
-      val nino = user.nino.getOrElse("")
-      nispConnector.connectToGetNIResponse(nino).map {
+      nispConnector.connectToGetNIResponse(user.nino).map {
         case NIResponse(Some(niRecord: NIRecord), Some(niSummary: NISummary), None) =>
           if (gapsOnly && niSummary.noOfNonQualifyingYears < 1) {
             Redirect(routes.NIRecordController.showFull())
           } else {
-            customAuditConnector.sendEvent(NIRecordEvent(nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
+            customAuditConnector.sendEvent(NIRecordEvent(user.nino.nino, niSummary.yearsToContributeUntilPensionAge, niSummary.noOfQualifyingYears,
               niSummary.noOfNonQualifyingYears, niSummary.numberOfPayableGaps, niSummary.numberOfNonPayableGaps, niSummary.pre75QualifyingYears.getOrElse(0),
               niSummary.spaYear))
 
               val tableStart = niSummary.recordEnd.getOrElse(niSummary.earningsIncludedUpTo.taxYear + 1)
-              
 
-            Ok(nirecordpage(nino, niRecord, niSummary, gapsOnly, tableStart, niSummary.recordEnd.isDefined, getAuthenticationProvider(user.authContext.user.confidenceLevel), showFullNI, currentDate))
+            Ok(nirecordpage(niRecord, niSummary, gapsOnly, tableStart, niSummary.recordEnd.isDefined, getAuthenticationProvider(user.authContext.user.confidenceLevel), showFullNI, currentDate))
           }
         case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
           customAuditConnector.sendEvent(AccountExclusionEvent(
-            nino,
+            user.nino.nino,
             user.name,
             niExclusions.exclusions
           ))
@@ -84,8 +82,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
   }
 
   def showGapsAndHowToCheckThem: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    val nino = user.nino.getOrElse("")
-    nispConnector.connectToGetNIResponse(nino).map {
+    nispConnector.connectToGetNIResponse(user.nino).map {
       case NIResponse(_, Some(niSummary: NISummary), None) =>
         Ok(nirecordGapsAndHowToCheckThem(niSummary))
       case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>

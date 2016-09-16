@@ -39,9 +39,8 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   val nispConnector: NispConnector
 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    val nino = user.nino.getOrElse("")
 
-    nispConnector.connectToGetSPResponse(nino).map {
+    nispConnector.connectToGetSPResponse(user.nino).map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
         if (!spExclusions.exclusions.contains(Exclusion.Dead)) {
           if(spExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
@@ -54,7 +53,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
             ))
           }
         } else {
-          Ok(excluded_sp_old(nino, spExclusions, spSummary.statePensionAge))
+          Ok(excluded_sp_old(spExclusions, spSummary.statePensionAge))
         }
       case _ =>
         Logger.warn("User accessed /exclusion as non-excluded user")
@@ -63,13 +62,12 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   }
 
   def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    val nino = user.nino.getOrElse("")
-     nispConnector.connectToGetNIResponse(nino).map {
+     nispConnector.connectToGetNIResponse(user.nino).map {
         case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
           if(niExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
             Ok(excluded_mci(niExclusions.exclusions, None))
           } else {
-            Ok(excluded_ni(nino, niExclusions))
+            Ok(excluded_ni(niExclusions))
           }
         case _ =>
           Logger.warn("User accessed /exclusion/nirecord as non-excluded user")

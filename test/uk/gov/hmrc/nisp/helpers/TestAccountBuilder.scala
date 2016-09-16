@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.helpers
 
 import play.api.http.Status
 import play.api.libs.json.Json
-import uk.gov.hmrc.domain.Generator
+import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.play.http.HttpResponse
 
 import scala.io.Source
@@ -26,26 +26,26 @@ import scala.util.Random
 
 object TestAccountBuilder {
 
-  def randomNino: String = new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA")
+  def randomNino: Nino = Nino(new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA"))
 
-  val nonExistentNino: String = randomNino
-  val excludedNino: String = randomNino
-  val regularNino: String = randomNino
-  val mqpNino: String = randomNino
-  val forecastOnlyNino: String = randomNino
-  val contractedOutBTestNino: String = randomNino.replaceAll("[02468]", "1")
-  val fullUserNino: String = randomNino
-  val blankNino: String = randomNino
-  val notFoundNino: String = randomNino
-  val invalidKeyNino: String = randomNino
-  val cachedNino: String = randomNino
-  val noNameNino: String = randomNino
-  val weakNino: String = randomNino
-  val abroadNino: String = randomNino
-  val mqpAbroadNino: String = randomNino
-  val hrpNino: String = randomNino
-  val fillGapSingle: String = randomNino
-  val fillGapsMultiple: String = randomNino
+  val nonExistentNino: Nino = randomNino
+  val excludedNino: Nino = randomNino
+  val regularNino: Nino = randomNino
+  val mqpNino: Nino = randomNino
+  val forecastOnlyNino: Nino = randomNino
+  val contractedOutBTestNino: Nino = Nino(randomNino.nino.replaceAll("[02468]", "1"))
+  val fullUserNino: Nino = randomNino
+  val blankNino: Nino = randomNino
+  val notFoundNino: Nino = randomNino
+  val invalidKeyNino: Nino = randomNino
+  val cachedNino: Nino = randomNino
+  val noNameNino: Nino = randomNino
+  val weakNino: Nino = randomNino
+  val abroadNino: Nino = randomNino
+  val mqpAbroadNino: Nino = randomNino
+  val hrpNino: Nino = randomNino
+  val fillGapSingle: Nino = randomNino
+  val fillGapsMultiple: Nino = randomNino
 
   val mappedTestAccounts = Map(
     excludedNino -> "excluded",
@@ -64,9 +64,9 @@ object TestAccountBuilder {
     fillGapsMultiple -> "fillgaps-multiple"
   )
 
-  def jsonResponse(nino: String, api: String): HttpResponse = {
+  def jsonResponse(nino: Nino, api: String): HttpResponse = {
     val jsonFile = fileContents(s"test/resources/${mappedTestAccounts(nino)}/$api.json")
-    HttpResponse(Status.OK, Some(Json.parse(jsonFile.replace("<NINO>", nino))))
+    HttpResponse(Status.OK, Some(Json.parse(jsonFile.replace("<NINO>", nino.nino))))
   }
 
   private def fileContents(filename: String): String = Source.fromFile(filename).mkString

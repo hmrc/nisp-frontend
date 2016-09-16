@@ -52,9 +52,8 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
   def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
-      val nino = user.nino.getOrElse("")
-      val spResponseF = nispConnector.connectToGetSPResponse(nino)
-      val schemeMembershipF = nispConnector.connectToGetSchemeMembership(nino)
+      val spResponseF = nispConnector.connectToGetSPResponse(user.nino)
+      val schemeMembershipF = nispConnector.connectToGetSchemeMembership(user.nino)
       for (
         spResponse <- spResponseF;
         schemeMembership <- schemeMembershipF
@@ -63,10 +62,10 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
           case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
             if(spSummary.contractedOutFlag) {
               if(applicationConfig.copeTable) {
-                Ok(account_cope(nino, spSummary.forecast.forecastAmount.week,
+                Ok(account_cope(spSummary.forecast.forecastAmount.week,
                   spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, schemeMembership))
               } else {
-                Ok(account_cope_old(nino, spSummary.forecast.forecastAmount.week,
+                Ok(account_cope_old(spSummary.forecast.forecastAmount.week,
                   spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax))
               }
             } else {
@@ -81,21 +80,20 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
-      val nino = user.nino.getOrElse("")
 
-      nispConnector.connectToGetSPResponse(nino).map {
+      nispConnector.connectToGetSPResponse(user.nino).map {
         case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
 
-          customAuditConnector.sendEvent(AccountAccessEvent(nino, spSummary.contextMessage,
+          customAuditConnector.sendEvent(AccountAccessEvent(user.nino.nino, spSummary.contextMessage,
             spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecast.forecastAmount.week,
             spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario,
             spSummary.copeAmount.week, user.authProviderOld))
 
           if (spSummary.mqp.fold(false) (_ != MQPScenario.ContinueWorking)) {
             val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-            Ok(account_mqp(nino, spSummary, spSummary.mqp, yearsMissing, isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
+            Ok(account_mqp(spSummary, spSummary.mqp, yearsMissing, isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
           } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
-            Ok(account_forecastonly(nino, spSummary, isPertax)).withSession(storeUserInfoInSession(user,
+            Ok(account_forecastonly(spSummary, isPertax)).withSession(storeUserInfoInSession(user,
                spSummary.contractedOutFlag))
           } else {
             val (currentChart, forecastChart, personalMaximumChart) =
@@ -105,7 +103,6 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                 spSummary.forecast.personalMaximum
               )
             Ok(account(
-              nino,
               spSummary,
               currentChart,
               forecastChart,
@@ -117,7 +114,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
         case SPResponseModel(_, Some(spExclusions: ExclusionsModel), _) =>
           customAuditConnector.sendEvent(AccountExclusionEvent(
-            nino,
+            user.nino.nino,
             user.name,
             spExclusions.exclusions
           ))
@@ -156,7 +153,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   private def storeUserInfoInSession(user: NispUser, contractedOut: Boolean)(implicit request: Request[AnyContent]): Session = {
     request.session +
       (NAME -> user.name.getOrElse("N/A")) +
-      (NINO -> user.nino.getOrElse("")) +
+      (NINO -> user.nino.nino) +
       (CONTRACTEDOUT -> contractedOut.toString)
   }
 

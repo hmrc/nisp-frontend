@@ -17,8 +17,9 @@
 package uk.gov.hmrc.nisp.models.citizen
 
 import play.api.libs.json.Json
+import uk.gov.hmrc.domain.Nino
 
-case class Citizen(nino:String, name: Option[CidName]=None, dateOfBirth: Option[String]=None) {
+case class Citizen(nino: Nino, name: Option[CidName]=None, dateOfBirth: Option[String]=None) {
   def getNameFormatted: Option[String] = {
     name match {
       case Some(CidName(Some(firstName), Some(lastName))) => Some("%s %s".format(firstName, lastName))
