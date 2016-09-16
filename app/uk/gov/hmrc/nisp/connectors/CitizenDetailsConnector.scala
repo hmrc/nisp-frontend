@@ -17,8 +17,9 @@
 package uk.gov.hmrc.nisp.connectors
 
 import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
-import uk.gov.hmrc.nisp.models.citizen.{CitizenDetailsResponse, CitizenDetailsRequest}
+import uk.gov.hmrc.nisp.models.citizen.{CitizenDetailsRequest, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -35,9 +36,9 @@ trait CitizenDetailsConnector {
   val serviceUrl: String
   def http: HttpPost
 
-  private def url(nino: String) = s"$serviceUrl/citizen-details/$nino/designatory-details/summary"
+  private def url(nino: Nino) = s"$serviceUrl/citizen-details/$nino/designatory-details/summary"
 
-  def connectToGetPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
+  def connectToGetPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
     val jsonRequest = Json.toJson(CitizenDetailsRequest(Set(nino)))
 
     val context = MetricsService.citizenDetailsTimer.time()

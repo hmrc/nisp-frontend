@@ -17,11 +17,13 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import org.joda.time.DateTime
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.nisp.exceptions.EmptyPayeException
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 
 case class NispUser(authContext: AuthContext, name: Option[String], authProvider: String) {
-  def nino: Option[String] = authContext.principal.accounts.paye.map(_.nino.nino)
+  def nino: Nino = authContext.principal.accounts.paye.map(_.nino).getOrElse(throw new EmptyPayeException("AuthContext does not have PAYE Details"))
   def previouslyLoggedInAt: Option[DateTime] = authContext.user.previouslyLoggedInAt
   val authProviderOld = if(authContext.user.confidenceLevel.level == 500) Constants.verify else Constants.iv
   val confidenceLevel = authContext.user.confidenceLevel

@@ -19,18 +19,19 @@ package uk.gov.hmrc.nisp.connectors
 import play.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{Format, JsPath}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.wiring.{NispSessionCache, WSHttp}
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.enums.APIType.APIType
-import uk.gov.hmrc.nisp.models.{SchemeMembership, NIResponse, SPResponseModel}
+import uk.gov.hmrc.nisp.models.{NIResponse, SPResponseModel, SchemeMembership}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
-import scala.util.{Success, Try, Failure}
+import scala.util.{Failure, Success, Try}
 
 object NispConnector extends NispConnector with ServicesConfig {
   override val serviceUrl = baseUrl("nisp")
@@ -45,17 +46,17 @@ trait NispConnector {
   def serviceUrl: String
   def sessionCache: SessionCache
 
-  def connectToGetSPResponse(nino: String)(implicit hc: HeaderCarrier): Future[SPResponseModel] = {
+  def connectToGetSPResponse(nino: Nino)(implicit hc: HeaderCarrier): Future[SPResponseModel] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/spsummary"
     retrieveFromCache[SPResponseModel](APIType.SP, urlToRead)
   }
 
-  def connectToGetNIResponse(nino: String)(implicit hc: HeaderCarrier): Future[NIResponse] = {
+  def connectToGetNIResponse(nino: Nino)(implicit hc: HeaderCarrier): Future[NIResponse] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/nirecord"
     retrieveFromCache[NIResponse](APIType.NI, urlToRead)
   }
 
-  def connectToGetSchemeMembership(nino: String)(implicit hc: HeaderCarrier): Future[List[SchemeMembership]] = {
+  def connectToGetSchemeMembership(nino: Nino)(implicit hc: HeaderCarrier): Future[List[SchemeMembership]] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/schememembership"
     retrieveFromCache[List[SchemeMembership]](APIType.SchemeMembership, urlToRead)
   }

@@ -16,19 +16,17 @@
 
 package uk.gov.hmrc.nisp.controllers.auth
 
-import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredicate, GovernmentGatewayProvider, VerifyProvider}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredicate, VerifyProvider}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.routes
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.exceptions.EmptyPayeException
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.auth._
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{ConfidenceLevel, Accounts}
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 
 import scala.concurrent.Future
 
@@ -81,10 +79,10 @@ trait AuthorisedForNisp extends Actions {
     }
   }
 
-  private def retrieveNino(principal: Principal): String = {
+  private def retrieveNino(principal: Principal): Nino = {
     principal.accounts.paye match {
-      case Some(account) => account.nino.toString()
-      case None => Logger.warn("User Paye account is empty"); ""
+      case Some(account) => account.nino
+      case None => throw new EmptyPayeException("PAYE Account is empty")
     }
   }
 

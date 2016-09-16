@@ -50,10 +50,10 @@ object MockAuthConnector extends AuthConnector {
     userID("mockfillgapssingle") -> TestAccountBuilder.fillGapSingle
   )
 
-  private def payeAuthority(id: String, nino: String): Option[Authority] =
-    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", Nino(nino)))), None, None, testCredentialStrength(nino), L500, None, None))
+  private def payeAuthority(id: String, nino: Nino): Option[Authority] =
+    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", nino))), None, None, testCredentialStrength(nino), L500, None, None))
 
-  private def testCredentialStrength(nino: String): CredentialStrength =
+  private def testCredentialStrength(nino: Nino): CredentialStrength =
     if (nino == TestAccountBuilder.weakNino) CredentialStrength.Weak else CredentialStrength.Strong
 
   override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] =
