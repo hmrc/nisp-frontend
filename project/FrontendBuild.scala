@@ -43,7 +43,7 @@ private object AppDependencies {
 
   private val playHealthVersion = "1.1.0"
   private val govukTemplateVersion = "4.0.0"
-  private val httpCachingClientVersion = "5.5.0"
+  private val httpCachingClientVersion = "5.6.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "frontend-bootstrap" % "6.7.0",

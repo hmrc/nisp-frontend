@@ -33,6 +33,7 @@ canSeeNIRecord: Boolean
         'dimension20': '@spExclusions.map(_.toString).mkString(" ") ',
         'dimension15': '@statePensionAge.age',
         'dimension38': '@user.authProvider',
+        @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
         'dimension39': '@user.confidenceLevel'
     });
 }

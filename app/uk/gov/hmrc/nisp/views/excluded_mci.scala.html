@@ -29,6 +29,7 @@ statePensionAge: Option[SPAgeModel])(implicit request: Request[_], user: NispUse
     'dimension20': '@spExclusions.map(_.toString).mkString(" ") ',
     @Html(statePensionAge.map(ageModel => s"'dimension15': '${ageModel.age}',").getOrElse(""))
     'dimension38': '@user.authProvider',
+    @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
     'dimension39': '@user.confidenceLevel'
     });
 }
