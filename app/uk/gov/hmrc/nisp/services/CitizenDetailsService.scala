@@ -35,7 +35,7 @@ trait CitizenDetailsService {
   def retrievePerson(nino: Nino)(implicit hc: HeaderCarrier): Future[Option[Citizen]] = {
     citizenDetailsConnector.connectToGetPersonDetails(nino) map(_.citizens.headOption) recover {
       case ex =>
-        Logger.error(s"Citizen details returned error: ${ex.toString}")
+        Logger.error(s"Citizen details returned error: ${ex.getMessage}", ex)
         None
     }
   }
