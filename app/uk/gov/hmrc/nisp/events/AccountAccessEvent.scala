@@ -22,9 +22,10 @@ import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 object AccountAccessEvent {
-  def apply(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal, statePensionForecast: BigDecimal,
-            dateOfBirth: NpsDate, name: Option[String], contractedOutFlag: Boolean = false, forecastScenario: Scenario,
-            copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier): AccountAccessEvent =
+  def apply(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal,
+            statePensionForecast: BigDecimal, dateOfBirth: NpsDate, name: Option[String], sex: Option[String],
+            contractedOutFlag: Boolean = false, forecastScenario: Scenario, copeAmount: BigDecimal,
+            authenticationProvider: String)(implicit hc: HeaderCarrier): AccountAccessEvent =
     new AccountAccessEvent(
       nino,
       contextMessage,
@@ -33,6 +34,7 @@ object AccountAccessEvent {
       statePensionForecast,
       dateOfBirth,
       name.getOrElse("N/A"),
+      sex.getOrElse("N/A"),
       contractedOutFlag,
       forecastScenario,
       copeAmount,
@@ -40,7 +42,7 @@ object AccountAccessEvent {
     )
 }
 class AccountAccessEvent(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal,
-                         statePensionForecast: BigDecimal, dateOfBirth: NpsDate, name: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
+                         statePensionForecast: BigDecimal, dateOfBirth: NpsDate, name: String, sex: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
                          copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("AccountPage",
     Map(
@@ -51,6 +53,7 @@ class AccountAccessEvent(nino: String, contextMessage: Option[SPContextMessage],
       "StatePensionForecast" -> statePensionForecast.toString(),
       "DateOfBirth" -> dateOfBirth.toNpsString,
       "Name" -> name,
+      "Sex" -> sex,
       "ContractedOut" -> contractedOutFlag.toString,
       "ForecastScenario" -> forecastScenario.toString,
       "COPEAmount" -> copeAmount.toString(),

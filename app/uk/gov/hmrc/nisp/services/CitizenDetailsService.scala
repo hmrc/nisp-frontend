@@ -33,7 +33,7 @@ trait CitizenDetailsService {
   val citizenDetailsConnector: CitizenDetailsConnector
 
   def retrievePerson(nino: Nino)(implicit hc: HeaderCarrier): Future[Option[Citizen]] = {
-    citizenDetailsConnector.connectToGetPersonDetails(nino) map(_.citizens.headOption) recover {
+    citizenDetailsConnector.connectToGetPersonDetails(nino) map ( citizen => Some(citizen.person)) recover {
       case ex =>
         Logger.error(s"Citizen details returned error: ${ex.getMessage}", ex)
         None
