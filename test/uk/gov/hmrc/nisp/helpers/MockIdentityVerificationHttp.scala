@@ -21,7 +21,6 @@ import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.nisp.models.enums.IdentityVerificationResult
 import uk.gov.hmrc.play.http.{HttpResponse, HttpGet}
 
 import scala.concurrent.Future
@@ -41,7 +40,8 @@ object MockIdentityVerificationHttp extends MockitoSugar {
     "technical-issue-journey-id" -> "test/resources/identity-verification/technical-issue.json",
     "precondition-failed-journey-id" -> "test/resources/identity-verification/precondition-failed.json",
     "invalid-journey-id" -> "test/resources/identity-verification/invalid-result.json",
-    "invalid-fields-journey-id" -> "test/resources/identity-verification/invalid-fields.json"
+    "invalid-fields-journey-id" -> "test/resources/identity-verification/invalid-fields.json",
+    "failed-iv-journey-id" -> "test/resources/identity-verification/failed-iv.json"
   )
 
   def mockJourneyId(journeyId: String): Unit = {
