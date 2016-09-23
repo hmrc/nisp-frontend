@@ -77,10 +77,4 @@ trait IdentityVerificationConnector {
 
     ivFuture
   }
-
-  private def formatJsonErrors(errors: Seq[(JsPath, Seq[ValidationError])]): String = {
-    errors.map(p => p._1 + " - " + p._2.map(_.message).mkString(",")).mkString(" | ")
-  }
-
-  private[connectors] class JsonValidationException(message: String) extends Exception(message)
 }
