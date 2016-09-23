@@ -16,18 +16,20 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import play.api.Logger
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
+import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.models.enums.IdentityVerificationResult
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
+
+
 import scala.concurrent.Future
 
 object LandingController extends LandingController with AuthenticationConnectors with PartialRetriever {
@@ -54,16 +56,21 @@ trait LandingController extends NispFrontendController with Actions with Authori
 
   def showNotAuthorised(journeyId: Option[String]) : Action[AnyContent] = UnauthorisedAction.async {implicit request =>
     val result = journeyId map { id =>
+
+      import IdentityVerificationSuccessResponse._
+
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult map {
-        case IdentityVerificationResult.FailedMatching => not_authorised()
-        case IdentityVerificationResult.InsufficientEvidence => not_authorised()
-        case IdentityVerificationResult.TechnicalIssue => technical_issue()
-        case IdentityVerificationResult.LockedOut => locked_out()
-        case IdentityVerificationResult.Timeout => timeout()
-        case IdentityVerificationResult.Incomplete => not_authorised()
-        case IdentityVerificationResult.PreconditionFailed => not_authorised()
-        case IdentityVerificationResult.UserAborted => not_authorised()
+        case IdentityVerificationSuccessResponse(FailedMatching) => not_authorised()
+        case IdentityVerificationSuccessResponse(InsufficientEvidence) => not_authorised()
+        case IdentityVerificationSuccessResponse(TechnicalIssue) => technical_issue()
+        case IdentityVerificationSuccessResponse(LockedOut) => locked_out()
+        case IdentityVerificationSuccessResponse(Timeout) => timeout()
+        case IdentityVerificationSuccessResponse(Incomplete) => not_authorised()
+        case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => not_authorised()
+        case IdentityVerificationSuccessResponse(UserAborted) => not_authorised()
+        case IdentityVerificationSuccessResponse(FailedIV) => not_authorised()
+        case response => Logger.warn(s"Unhandled Response from Identity Verification: $response"); technical_issue()
       }
     } getOrElse Future.successful(not_authorised(showFirstParagraph = false)) // 2FA returns no journeyId
 

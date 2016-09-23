@@ -17,15 +17,34 @@
 package uk.gov.hmrc.nisp.connectors
 
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsPath, Json}
+import play.api.http.Status._
+import play.api.libs.json.{JsPath, JsValue}
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
-import uk.gov.hmrc.nisp.models.enums.IdentityVerificationResult.IdentityVerificationResult
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.{HttpResponse, HttpGet, HeaderCarrier}
 import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse, NotFoundException}
 
 import scala.concurrent.Future
+
+sealed trait IdentityVerificationResponse
+case object IdentityVerificationForbiddenResponse extends IdentityVerificationResponse
+case object IdentityVerificationNotFoundResponse extends IdentityVerificationResponse
+case class IdentityVerificationErrorResponse(cause: Throwable) extends IdentityVerificationResponse
+case class IdentityVerificationSuccessResponse(result: String) extends IdentityVerificationResponse
+object IdentityVerificationSuccessResponse {
+  val Success = "Success"
+  val Incomplete = "Incomplete"
+  val FailedMatching = "FailedMatching"
+  val InsufficientEvidence = "InsufficientEvidence"
+  val LockedOut = "LockedOut"
+  val UserAborted = "UserAborted"
+  val Timeout = "Timeout"
+  val TechnicalIssue = "TechnicalIssue"
+  val PreconditionFailed = "PreconditionFailed"
+  val FailedIV = "FailedIV"
+}
 
 object IdentityVerificationConnector extends IdentityVerificationConnector with ServicesConfig {
   override val serviceUrl = baseUrl("identity-verification")
@@ -38,22 +57,22 @@ trait IdentityVerificationConnector {
 
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
 
-  private[connectors] case class IdentityVerificationResponse(result: IdentityVerificationResult)
-  private implicit val formats = Json.format[IdentityVerificationResponse]
-
-  def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResult] = {
+  def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResponse] = {
     val context = MetricsService.identityVerificationTimer.time()
-    val ivFuture = http.GET[HttpResponse](url(journeyId)).flatMap { httpResponse =>
+    val ivFuture = http.GET[HttpResponse](url(journeyId)).map { httpResponse =>
       context.stop()
-      httpResponse.json.validate[IdentityVerificationResponse].fold(
-        errs => Future.failed(new JsonValidationException(s"Unable to deserialise: ${formatJsonErrors(errs)}")),
-        valid => Future.successful(valid.result)
-      )
-    }
-
-    ivFuture onFailure {
-      case e: Exception =>
+      val result = (httpResponse.json \ "result").as[String]
+      IdentityVerificationSuccessResponse(result)
+    } recover {
+       case e: NotFoundException =>
         MetricsService.identityVerificationFailedCounter.inc()
+        IdentityVerificationNotFoundResponse
+       case Upstream4xxResponse(_, FORBIDDEN, _, _) =>
+        MetricsService.identityVerificationFailedCounter.inc()
+        IdentityVerificationForbiddenResponse
+      case e: Throwable =>
+        MetricsService.identityVerificationFailedCounter.inc()
+        IdentityVerificationErrorResponse(e)
     }
 
     ivFuture
