@@ -29,8 +29,7 @@ if($("form").length) {
 	if($(".js-error-summary-messages").length) {
 	    var $inputResearch = $("#research-0:checked").val();
 	    var $followUp = $("#whatWillYouDoNext-8:checked").length;
-	    if($followUp === 0) {
-					console.log($followUp);
+	    if($followUp === 0) {					
       	$(".other-follow").css("display","none");
 			}
 
@@ -43,8 +42,7 @@ if($("form").length) {
 	if($("input[name='research']").length) {
 		var $inputResearch = $("input[name='research']");
 		var $email = $("input[name='email']");
-		$inputResearch.change(function() {
-				console.log("I am in!!!!");
+		$inputResearch.change(function() {				
 			if($(this).val() === '0') {
 					$(".email").css("display","inline-block");
 			}
