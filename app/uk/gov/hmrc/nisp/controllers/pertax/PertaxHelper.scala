@@ -33,11 +33,11 @@ trait PertaxHelper {
 
   def setFromPertax(implicit hc: HeaderCarrier): Unit = {
     val timerContext = metricsService.keystoreWriteTimer.time()
-    val cacheFuture = sessionCache.cache(PERTAX, true)
-    cacheFuture.onSuccess {
+    val cacheF = sessionCache.cache(PERTAX, true)
+    cacheF.onSuccess {
       case _ => timerContext.stop()
     }
-    cacheFuture.onFailure {
+    cacheF.onFailure {
       case _ => metricsService.keystoreWriteFailed.inc()
     }
   }
