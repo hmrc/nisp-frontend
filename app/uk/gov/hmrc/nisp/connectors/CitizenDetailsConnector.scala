@@ -30,18 +30,20 @@ import scala.concurrent.Future
 object CitizenDetailsConnector extends CitizenDetailsConnector with ServicesConfig {
   override val serviceUrl = baseUrl("citizen-details")
   override def http: HttpPost = WSHttp
+  override val metricsService: MetricsService = MetricsService
 }
 
 trait CitizenDetailsConnector {
   val serviceUrl: String
   def http: HttpPost
+  val metricsService: MetricsService
 
   private def url(nino: Nino) = s"$serviceUrl/citizen-details/$nino/designatory-details/summary"
 
   def connectToGetPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
     val jsonRequest = Json.toJson(CitizenDetailsRequest(Set(nino)))
 
-    val context = MetricsService.citizenDetailsTimer.time()
+    val context = metricsService.citizenDetailsTimer.time()
 
     val result = http.POST[JsValue, HttpResponse](url(nino), jsonRequest).map {
       context.stop()
@@ -50,7 +52,7 @@ trait CitizenDetailsConnector {
 
     result onFailure {
       case e: Exception =>
-        MetricsService.citizenDetailsFailedCounter.inc()
+        metricsService.citizenDetailsFailedCounter.inc()
     }
 
     result

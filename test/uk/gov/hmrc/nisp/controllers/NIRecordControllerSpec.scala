@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
@@ -160,7 +160,8 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
         override protected def authConnector: AuthConnector = MockAuthConnector
 
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override val metricsService: MetricsService = MockMetricsService
       }
       val result = controller.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) should include("52 weeks")
@@ -177,6 +178,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override protected def authConnector: AuthConnector = MockAuthConnector
         override val showFullNI = false
         override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override val metricsService: MetricsService = MockMetricsService
       }
       val result = controller.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) shouldNot include("52 weeks")
@@ -194,6 +196,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override val currentDate = new LocalDate(2019,4,6)
         override protected def authConnector: AuthConnector = MockAuthConnector
         override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override val metricsService: MetricsService = MockMetricsService
       }
       val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should not include("shortfall may increase")
@@ -209,6 +212,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override val currentDate = new LocalDate(2019,4,4)
         override protected def authConnector: AuthConnector = MockAuthConnector
         override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override val metricsService: MetricsService = MockMetricsService
       }
       val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should include("shortfall may increase")
@@ -224,6 +228,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override val currentDate = new LocalDate(2019,4,5)
         override protected def authConnector: AuthConnector = MockAuthConnector
         override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override val metricsService: MetricsService = MockMetricsService
       }
       val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should include("shortfall may increase")

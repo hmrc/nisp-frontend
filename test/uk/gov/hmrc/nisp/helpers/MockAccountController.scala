@@ -34,6 +34,7 @@ trait MockAccountController extends AccountController {
   override protected implicit def authConnector: AuthConnector = MockAuthConnector
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val sessionCache: SessionCache = MockSessionCache
+  override val metricsService: MetricsService = MockMetricsService
 
   override def nispConnector: NispConnector = MockNispConnector
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
