@@ -36,24 +36,6 @@
 @defining(Some(user)) { implicit userOption =>
     @main(browserTitle=Some(Messages("nisp.main.title")), userLoggedIn = true,
         pageTitle = Some(Messages("nisp.excluded.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-
-        @if(spExclusions.exclusions.contains(Exclusion.Abroad)) {
-            @viewExclusions(){@exclusions.sp.overseas()}
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
-            @viewExclusions(){@exclusions.sp.mwrre()}
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.Dead)) {
-            @exclusions.dead()
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.IsleOfMan)) {
-            @viewExclusions(){@exclusions.sp.isleOfMan()}
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.AmountDissonance)) {
-            @viewExclusions(){@exclusions.sp.amountDissonance()}
-        }
-        @if(spExclusions.exclusions.contains(Exclusion.PostStatePensionAge)) {
-            @viewExclusions(){@exclusions.sp.postStatePensionAge()}
-        }
+        @exclusions.dead()
     }
 }

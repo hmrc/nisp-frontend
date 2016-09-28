@@ -34,6 +34,9 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserId = "/auth/oid/" + mockUsername
   val mockUserIdExcluded = "/auth/oid/mockexcluded"
 
+  val mockUserIdExcludedDeadMarried = "/auth/oid/mockexcluded-dead-married"
+
+
   "GET /exclusion" should {
     "return exclusion page for excluded user" in {
       val result = MockExclusionController.showSP()(fakeRequest.withSession(
@@ -55,6 +58,19 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
       ))
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
+    }
+
+    "return only dead message when multiple exclusions" in {
+      val result = MockExclusionController.showSP()(fakeRequest.withSession(
+        SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+        SessionKeys.userId -> mockUserIdExcludedDeadMarried,
+        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+      ))
+
+      contentAsString(result).contains ("You are unable to use this service") shouldBe true
+      contentAsString(result).contains ("Please contact HMRC National Insurance helpline on 0300 200 3500.") shouldBe true
+      contentAsString(result).contains ("We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab)") shouldBe false
     }
   }
 

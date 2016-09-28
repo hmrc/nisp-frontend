@@ -23,8 +23,8 @@ import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
-import uk.gov.hmrc.nisp.views.html.{excluded_ni, excluded_sp, excluded_sp_old, excluded_mci}
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.play.http.SessionKeys
@@ -42,18 +42,16 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
 
     nispConnector.connectToGetSPResponse(user.nino).map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
-        if (!spExclusions.exclusions.contains(Exclusion.Dead)) {
-          if(spExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
-            Ok(excluded_mci(spExclusions.exclusions, Some(spSummary.statePensionAge)))
-          } else {
-            Ok(excluded_sp(
-              spExclusions.exclusions,
-              spSummary.statePensionAge,
-              niExclusionOption.fold(true)(_.exclusions.isEmpty)
-            ))
-          }
+        if (spExclusions.exclusions.contains(Exclusion.Dead)) {
+          Ok(excluded_dead(spExclusions, spSummary.statePensionAge))
+        } else if (spExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
+          Ok(excluded_mci(spExclusions.exclusions, Some(spSummary.statePensionAge)))
         } else {
-          Ok(excluded_sp_old(spExclusions, spSummary.statePensionAge))
+          Ok(excluded_sp(
+            spExclusions.exclusions,
+            spSummary.statePensionAge,
+            niExclusionOption.fold(true)(_.exclusions.isEmpty)
+          ))
         }
       case _ =>
         Logger.warn("User accessed /exclusion as non-excluded user")
