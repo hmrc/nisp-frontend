@@ -70,12 +70,11 @@
         }
 
     <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h2>
-    @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
-        <p>@Html(Messages("nisp.main.after", (spSummary.statePensionAge.date.localDate.getYear).toString()))</p>
-    } else  {
+    @if(spSummary.forecast.yearsLeftToWork != spSummary.yearsToContributeUntilPensionAge) {
         <p>@Messages("nisp.main.context.willReach") @Html(Messages("nisp.main.context.reachMax.needToPay", (spSummary.statePensionAge.date.localDate.getYear).toString())) </p>
-        <p>@Html(Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate)))</p>
     }
+
+    <p>@Html(Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate)))</p>
 }
 
 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
