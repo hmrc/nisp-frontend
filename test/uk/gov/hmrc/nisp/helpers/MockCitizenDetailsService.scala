@@ -17,12 +17,13 @@
 package uk.gov.hmrc.nisp.helpers
 
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
 import uk.gov.hmrc.play.http.HttpPost
 
 object MockCitizenDetailsService extends CitizenDetailsService {
   override val citizenDetailsConnector: CitizenDetailsConnector = new CitizenDetailsConnector {
     override def http: HttpPost = MockCitizenDetailsHttp.mockHttp
     override val serviceUrl: String = ""
+    override val metricsService: MetricsService = MockMetricsService
   }
 }

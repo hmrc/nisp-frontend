@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.mvc.{Action, AnyContent, Request, Session, Result}
+import play.api.mvc.{Action, AnyContent, Request, Result, Session}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
@@ -28,7 +28,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
@@ -42,6 +42,7 @@ object AccountController extends AccountController with AuthenticationConnectors
   override val customAuditConnector = CustomAuditConnector
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
+  override val metricsService: MetricsService = MetricsService
 }
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {

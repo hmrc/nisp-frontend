@@ -23,4 +23,5 @@ import uk.gov.hmrc.play.http.HttpGet
 object MockIdentityVerificationConnector extends IdentityVerificationConnector {
   override val serviceUrl: String = ""
   override def http: HttpGet = MockIdentityVerificationHttp.mockHttp
+  override val metricsService: MetricsService = MockMetricsService
 }

@@ -49,29 +49,31 @@ object IdentityVerificationSuccessResponse {
 object IdentityVerificationConnector extends IdentityVerificationConnector with ServicesConfig {
   override val serviceUrl = baseUrl("identity-verification")
   override def http: HttpGet = WSHttp
+  override val metricsService: MetricsService = MetricsService
 }
 
 trait IdentityVerificationConnector {
   val serviceUrl: String
   def http: HttpGet
+  val metricsService: MetricsService
 
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
 
   def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResponse] = {
-    val context = MetricsService.identityVerificationTimer.time()
+    val context = metricsService.identityVerificationTimer.time()
     val ivFuture = http.GET[HttpResponse](url(journeyId)).map { httpResponse =>
       context.stop()
       val result = (httpResponse.json \ "result").as[String]
       IdentityVerificationSuccessResponse(result)
     } recover {
        case e: NotFoundException =>
-        MetricsService.identityVerificationFailedCounter.inc()
+        metricsService.identityVerificationFailedCounter.inc()
         IdentityVerificationNotFoundResponse
        case Upstream4xxResponse(_, FORBIDDEN, _, _) =>
-        MetricsService.identityVerificationFailedCounter.inc()
+        metricsService.identityVerificationFailedCounter.inc()
         IdentityVerificationForbiddenResponse
       case e: Throwable =>
-        MetricsService.identityVerificationFailedCounter.inc()
+        metricsService.identityVerificationFailedCounter.inc()
         IdentityVerificationErrorResponse(e)
     }
 

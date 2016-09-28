@@ -29,31 +29,32 @@ import scala.concurrent.Future
 trait PertaxHelper {
 
   val sessionCache: SessionCache
+  val metricsService: MetricsService
 
   def setFromPertax(implicit hc: HeaderCarrier): Unit = {
-    val timerContext = MetricsService.keystoreWriteTimer.time()
-    val cacheFuture = sessionCache.cache(PERTAX, true)
-    cacheFuture.onSuccess {
+    val timerContext = metricsService.keystoreWriteTimer.time()
+    val cacheF = sessionCache.cache(PERTAX, true)
+    cacheF.onSuccess {
       case _ => timerContext.stop()
     }
-    cacheFuture.onFailure {
-      case _ => MetricsService.keystoreWriteFailed.inc()
+    cacheF.onFailure {
+      case _ => metricsService.keystoreWriteFailed.inc()
     }
   }
 
   def isFromPertax(implicit hc: HeaderCarrier): Future[Boolean] = {
-    val keystoreTimerContext = MetricsService.keystoreReadTimer.time()
+    val keystoreTimerContext = metricsService.keystoreReadTimer.time()
     sessionCache.fetchAndGetEntry[Boolean](PERTAX).map { keystoreResult =>
       keystoreTimerContext.stop()
       keystoreResult match  {
-        case Some(isPertax) => MetricsService.keystoreHitCounter.inc(); isPertax
+        case Some(isPertax) => metricsService.keystoreHitCounter.inc(); isPertax
         case None =>
-          MetricsService.keystoreMissCounter.inc()
+          metricsService.keystoreMissCounter.inc()
           false
       }
     } recover {
       case ex =>
-        MetricsService.keystoreReadFailed.inc()
+        metricsService.keystoreReadFailed.inc()
         false
     }
   }
