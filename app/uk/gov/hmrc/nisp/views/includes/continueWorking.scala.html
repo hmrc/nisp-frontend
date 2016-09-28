@@ -21,13 +21,14 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 
+
 @(spSummary: SPSummaryModel, currentChart: SPChartModel, forecastChart: SPChartModel)
 
 @if(spSummary.isMQP)  {
 
     <h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
     <p>@Html(Messages("nisp.mqp.cannotImprove"))</p>
-    <p>@Messages("nisp.main.continueWorking.whenYouReachSPA", Dates.formatDate(spSummary.statePensionAge.date.localDate))</p>
+    <p>@Html(Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate)))</p>
 
 } else {
 
@@ -70,9 +71,10 @@
 
     <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h2>
     @if(spSummary.forecast.yearsLeftToWork == spSummary.yearsToContributeUntilPensionAge) {
-        <p>@Messages("nisp.main.after", (spSummary.statePensionAge.date.localDate.getYear).toString())</p>
+        <p>@Html(Messages("nisp.main.after", (spSummary.statePensionAge.date.localDate.getYear).toString()))</p>
     } else  {
-        <p>@Html(Messages("nisp.main.context.continueWorkingMax.stillNeedToPay", NispMoney.pounds(forecastChart.amountModel.week),(spSummary.statePensionAge.date.localDate.getYear).toString())) </p>
+        <p>@Messages("nisp.main.context.willReach") @Html(Messages("nisp.main.context.reachMax.needToPay", (spSummary.statePensionAge.date.localDate.getYear).toString())) </p>
+        <p>@Html(Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate)))</p>
     }
 }
 
