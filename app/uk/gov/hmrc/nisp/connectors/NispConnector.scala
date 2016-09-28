@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import play.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{Format, JsPath}
 import uk.gov.hmrc.domain.Nino
@@ -31,13 +30,13 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 
 object NispConnector extends NispConnector with ServicesConfig {
   override val serviceUrl = baseUrl("nisp")
 
   override def http: HttpGet = WSHttp
   override def sessionCache: SessionCache = NispSessionCache
+  override val metricsService: MetricsService = MetricsService
 }
 
 trait NispConnector {
@@ -45,6 +44,7 @@ trait NispConnector {
   def http: HttpGet
   def serviceUrl: String
   def sessionCache: SessionCache
+  val metricsService: MetricsService
 
   def connectToGetSPResponse(nino: Nino)(implicit hc: HeaderCarrier): Future[SPResponseModel] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/spsummary"
@@ -62,20 +62,20 @@ trait NispConnector {
   }
 
   private def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
-    val keystoreTimerContext = MetricsService.keystoreReadTimer.time()
+    val keystoreTimerContext = metricsService.keystoreReadTimer.time()
 
     val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
     sessionCacheF.onFailure {
-      case _ => MetricsService.keystoreReadFailed.inc()
+      case _ => metricsService.keystoreReadFailed.inc()
     }
     sessionCacheF.flatMap { keystoreResult =>
       keystoreTimerContext.stop()
       keystoreResult match {
         case Some(data) =>
-          MetricsService.keystoreHitCounter.inc()
+          metricsService.keystoreHitCounter.inc()
           Future.successful(data)
         case None =>
-          MetricsService.keystoreMissCounter.inc()
+          metricsService.keystoreMissCounter.inc()
           connectToMicroservice[A](url, api) map {
             data: A => cacheResult(data, api.toString)
           }
@@ -84,14 +84,14 @@ trait NispConnector {
   }
 
   private def connectToMicroservice[A](urlToRead: String, apiType: APIType)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
-    val timerContext = MetricsService.timers(apiType).time()
+    val timerContext = metricsService.startTimer(apiType)
 
     val httpResponseF = http.GET[HttpResponse](urlToRead)
     httpResponseF onSuccess {
       case _ => timerContext.stop()
     }
     httpResponseF onFailure {
-      case _ => MetricsService.failedCounters(apiType).inc()
+      case _ => metricsService.incrementFailedCounter(apiType)
     }
     httpResponseF.map {
       httpResponse => httpResponse.json.validate[A].fold(
@@ -101,13 +101,13 @@ trait NispConnector {
   }
 
   private def cacheResult[A](a:A,name: String)(implicit hc: HeaderCarrier, formats: Format[A]): A = {
-    val timerContext = MetricsService.keystoreWriteTimer.time()
+    val timerContext = metricsService.keystoreWriteTimer.time()
     val cacheF = sessionCache.cache[A](name, a)
     cacheF.onSuccess {
       case _ => timerContext.stop()
     }
     cacheF.onFailure {
-      case _ => MetricsService.keystoreWriteFailed.inc()
+      case _ => metricsService.keystoreWriteFailed.inc()
     }
     a
   }

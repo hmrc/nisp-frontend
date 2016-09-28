@@ -33,6 +33,7 @@ object MockNIRecordController extends MockNIRecordController {
   override val sessionCache: SessionCache = MockSessionCache
   override val showFullNI: Boolean = true
   override val currentDate = new LocalDate(2016,9,9)
+  override val metricsService: MetricsService = MockMetricsService
 }
 
 trait MockNIRecordController extends NIRecordController {

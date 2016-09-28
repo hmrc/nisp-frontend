@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models.{ExclusionsModel, NIRecord, NIResponse, NISummary}
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import org.joda.time.{DateTimeZone, LocalDate}
 
@@ -40,6 +40,7 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
   override val sessionCache: SessionCache = NispSessionCache
   override val showFullNI: Boolean = ApplicationConfig.showFullNI
   override val currentDate = new LocalDate(DateTimeZone.forID("Europe/London"))
+  override val metricsService: MetricsService = MetricsService
 }
 
 trait NIRecordController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
