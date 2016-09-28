@@ -47,7 +47,8 @@ object MockAuthConnector extends AuthConnector {
     userID("mockmqpabroad") -> TestAccountBuilder.mqpAbroadNino,
     userID("mockhomeresponsibilitiesprotection") -> TestAccountBuilder.hrpNino,
     userID("mockfillgapsmultiple") -> TestAccountBuilder.fillGapsMultiple,
-    userID("mockfillgapssingle") -> TestAccountBuilder.fillGapSingle
+    userID("mockfillgapssingle") -> TestAccountBuilder.fillGapSingle,
+    userID("mockexcluded-dead-married") -> TestAccountBuilder.excludedDeadMarried
   )
 
   private def payeAuthority(id: String, nino: Nino): Option[Authority] =
