@@ -24,6 +24,7 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
+        @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
         'dimension20': '@niExclusions.exclusions.map(_.toString).mkString(" ") '
     });
 }

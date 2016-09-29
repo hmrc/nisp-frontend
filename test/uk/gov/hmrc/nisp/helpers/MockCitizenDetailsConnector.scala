@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.models.citizen
+package uk.gov.hmrc.nisp.helpers
 
-import play.api.libs.json.{Json, Format}
+import org.scalatest.mock.MockitoSugar
+import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
+import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 
-case class CitizenDetailsResponse(person: Citizen)
-
-object CitizenDetailsResponse{
-  implicit val formats: Format[CitizenDetailsResponse] = Json.format[CitizenDetailsResponse]
+object MockCitizenDetailsConnector extends CitizenDetailsConnector with MockitoSugar{
+  override val serviceUrl: String = ""
+  override val http: HttpGet = MockCitizenDetailsHttp.mockHttp
+  implicit val hc = HeaderCarrier()
+  override val metricsService: MetricsService = MockMetricsService
 }
