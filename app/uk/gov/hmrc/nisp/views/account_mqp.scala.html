@@ -55,6 +55,7 @@
         'dimension22': '@user.authProviderOld',
         'dimension38': '@user.authProvider',
         'dimension39': '@user.confidenceLevel',
+        @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
         'metric5': 1
     });
 }

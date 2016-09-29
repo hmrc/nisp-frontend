@@ -16,18 +16,25 @@
 
 package uk.gov.hmrc.nisp.models.citizen
 
-import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-case class Citizen(nino: Nino, name: Option[CidName]=None, dateOfBirth: Option[String]=None) {
+case class Citizen(nino:Nino, firstName: Option[String]=None, lastName: Option[String]=None, sex: Option[String]=None) {
+
   def getNameFormatted: Option[String] = {
-    name match {
-      case Some(CidName(Some(firstName), Some(lastName))) => Some("%s %s".format(firstName, lastName))
+    (firstName, lastName) match {
+      case (Some(firstName), Some(lastName)) => Some("%s %s".format(firstName, lastName))
       case _ => None
     }
   }
 }
 
 object Citizen {
-  implicit val formats = Json.format[Citizen]
+  implicit val formats: Format[Citizen] = (
+    (__ \ "nino").format[Nino] and
+    (__ \ "firstName").format[Option[String]] and
+    (__ \ "lastName").format[Option[String]] and
+    (__ \ "sex").format[Option[String]]
+    )(Citizen.apply, unlift(Citizen.unapply))
 }

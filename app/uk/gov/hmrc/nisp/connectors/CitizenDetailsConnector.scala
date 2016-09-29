@@ -16,36 +16,30 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
-import uk.gov.hmrc.nisp.models.citizen.{CitizenDetailsRequest, CitizenDetailsResponse}
+import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, HttpResponse}
+import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-
 import scala.concurrent.Future
 
 object CitizenDetailsConnector extends CitizenDetailsConnector with ServicesConfig {
   override val serviceUrl = baseUrl("citizen-details")
-  override def http: HttpPost = WSHttp
   override val metricsService: MetricsService = MetricsService
+  override def http: HttpGet = WSHttp
 }
 
 trait CitizenDetailsConnector {
   val serviceUrl: String
-  def http: HttpPost
   val metricsService: MetricsService
-
-  private def url(nino: Nino) = s"$serviceUrl/citizen-details/$nino/designatory-details/summary"
+  def http: HttpGet
 
   def connectToGetPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
-    val jsonRequest = Json.toJson(CitizenDetailsRequest(Set(nino)))
 
     val context = metricsService.citizenDetailsTimer.time()
-
-    val result = http.POST[JsValue, HttpResponse](url(nino), jsonRequest).map {
+    val result = http.GET[HttpResponse](s"$serviceUrl/citizen-details/$nino/designatory-details").map {
       context.stop()
       _.json.as[CitizenDetailsResponse]
     }

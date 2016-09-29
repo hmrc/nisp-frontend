@@ -87,7 +87,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
           customAuditConnector.sendEvent(AccountAccessEvent(user.nino.nino, spSummary.contextMessage,
             spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecast.forecastAmount.week,
-            spSummary.dateOfBirth, user.name, spSummary.contractedOutFlag, spSummary.forecast.scenario,
+            spSummary.dateOfBirth, user.name, user.sex, spSummary.contractedOutFlag, spSummary.forecast.scenario,
             spSummary.copeAmount.week, user.authProviderOld))
 
           if (spSummary.mqp.fold(false) (_ != MQPScenario.ContinueWorking)) {

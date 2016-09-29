@@ -21,6 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredicate, VerifyProvider}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.exceptions.EmptyPayeException
+import uk.gov.hmrc.nisp.models.citizen.Citizen
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.auth._
@@ -53,8 +54,13 @@ trait AuthorisedForNisp extends Actions {
     def async(action: AsyncUserRequest): Action[AnyContent] = {
         authedBy.async {
           authContext: AuthContext => implicit request =>
-            retrieveName(authContext) flatMap { name =>
-              action(NispUser(authContext, name, request.session.get(SessionKeys.authProvider).getOrElse("")))(request)
+            retrievePerson(authContext) flatMap { citizen =>
+              action(NispUser(
+                authContext = authContext,
+                name = citizen.flatMap(_.getNameFormatted),
+                authProvider = request.session.get(SessionKeys.authProvider).getOrElse(""),
+                sex = citizen.flatMap(_.sex)
+              ))(request)
             }
         }
       }
@@ -65,19 +71,8 @@ trait AuthorisedForNisp extends Actions {
   object AuthorisedByAny extends AuthorisedBy(NispAnyRegime)
   object AuthorisedByVerify extends AuthorisedBy(NispVerifyRegime)
 
-  def retrieveName(authContext: AuthContext)(implicit request: Request[AnyContent]): Future[Option[String]] = {
-    val nino = retrieveNino(authContext.principal)
-    citizenDetailsService.retrievePerson(nino).map { citizenOption =>
-      for (
-        citizen <- citizenOption;
-        name <- citizen.name;
-        firstName <- name.firstName;
-        lastName <- name.lastName
-      ) yield {
-        s"$firstName $lastName"
-      }
-    }
-  }
+  def retrievePerson(authContext: AuthContext)(implicit request: Request[AnyContent]): Future[Option[Citizen]] =
+    citizenDetailsService.retrievePerson(retrieveNino(authContext.principal))
 
   private def retrieveNino(principal: Principal): Nino = {
     principal.accounts.paye match {
