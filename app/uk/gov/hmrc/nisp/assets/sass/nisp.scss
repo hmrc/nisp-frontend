@@ -10,8 +10,6 @@
  *
  * Amount Box
  *
- * Exception Errors
- *
  * Questionnaire
  *
  * Chart lines
@@ -28,7 +26,7 @@ $breadcrumb: '/check-your-state-pension/assets/img/icons/breadcrumb-separator.pn
 @import 'nirecord';
 
 $light-bg-chart-bar:#C1DFE4;
-$background-error-message:rgba(223,48,52,0.05);
+
 
 /*------------------------------------*\
     #General Section
@@ -196,22 +194,6 @@ div.panel-indent{
  } 
 }
 
-/*------------------------------------*\
-    #Exception Errors
-\*------------------------------------*/
-
-.errorMessage {
-  background-color: $background-error-message;
-  border-left: 5px solid $mellow-red;
-  margin-bottom: 30px;
-  margin-top: 30px;
-}
-
-.errorMessageContent {
-  padding: 10px;
-  width: 80%;
-  margin-left: 65px;
-}
 
 /*------------------------------------*\
     #Questionnaire
