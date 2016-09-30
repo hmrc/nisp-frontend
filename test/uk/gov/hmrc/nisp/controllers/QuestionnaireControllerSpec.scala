@@ -20,9 +20,8 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, MockCustomAuditConnector, MockAccountController}
+import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, MockCustomAuditConnector, TestAccountBuilder}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -56,7 +55,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("research", "0"),
         ("email", "testuser@gmail.com"),
         ("name", "test"),
-        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino)
+        ("nino", TestAccountBuilder.randomNino.nino)
       ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/finished")
     }
@@ -69,7 +68,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("research", "0"),
         ("email", ""),
         ("name", "test"),
-        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino)
+        ("nino", TestAccountBuilder.randomNino.nino)
       ))
       contentAsString(result).contains("Error summary")
     }
@@ -84,7 +83,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("research", "0"),
         ("email", ""),
         ("name", "test"),
-        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino)
+        ("nino", TestAccountBuilder.randomNino.nino)
       ))
       contentAsString(result).contains("Error summary")
     }
@@ -97,7 +96,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
         ("research", "0"),
         ("email", "testuser@"),
         ("name", "test"),
-        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino)
+        ("nino", TestAccountBuilder.randomNino.nino)
       ))
       contentAsString(result).contains("Error summary")
     }
@@ -106,7 +105,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
         ("email", ""),
         ("name", "test"),
-        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino),
+        ("nino", TestAccountBuilder.randomNino.nino),
         ("improve", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec maximus turpis. Integer sollicitudin, ante sed finibus tincidunt, orci sem volutpat arcu, non rutrum mi nisl vitae neque. Donec vehicula, ante nec tempor condimentum, augue dolor congue mauris, a cursus sem nisl ut ligula. Quisque rhoncus bibendum metus, ac sollicitudin mauris placerat vitae. Curabitur facilisis ante et pharetra bibendum. Vestibulum sed justo nec leo porta tempor iaculis nec ex. Proin blandit tincidunt vulputate. Ut finibus metus mi. Pellentesque non volutpat lacus. Phasellus sollicitudin magna tortor, a viverra justo aliquet a. Cras nulla diam, blandit sed nulla non, convallis feugiat velit. Suspendisse diam ex, molestie at euismod a, auctor vitae purus. Aenean non consequat neque. Suspendisse et suscipit tortor. Sed eget dictum mi.\n\nPraesent ac odio non nulla tempus faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin ut lectus ac dolor vestibulum vulputate. Donec feugiat ac est sed pharetra. Mauris metus erat, bibendum sed velit nec, venenatis semper ipsum. Vivamus vitae magna nec eros porta egestas in gravida quam. Phasellus maximus posue")
       ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/finished")
@@ -115,7 +114,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
         ("email", ""),
         ("name", "test"),
-        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino),
+        ("nino", TestAccountBuilder.randomNino.nino),
         ("whatWillYouDoNext", "8"),
         ("otherFollowUp", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et enim pulvinar, lobortis lectus blandit, consectetur risus. Fusce malesuada elit a tellus efficitur, nec suscipit lorem maximus. Ut at odio quam. Maecenas at dolor ut lectus bibendum metus.")
       ))
@@ -126,7 +125,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = testQuestionnaireController.submit(fakeRequest.withFormUrlEncodedBody(
         ("email", ""),
         ("name", "test"),
-        ("nino", uk.gov.hmrc.nisp.helpers.TestAccountBuilder.randomNino.nino),
+        ("nino", TestAccountBuilder.randomNino.nino),
         ("whatWillYouDoNext", "8"),
         ("otherFollowUp", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et enim pulvinar, lobortis lectus blandit, consectetur risus. Fusce malesuada elit a tellus efficitur, nec suscipit lorem maximus. Ut at odio quam. Maecenas at dolor ut lectus bibendum a metus donec.")
       ))
