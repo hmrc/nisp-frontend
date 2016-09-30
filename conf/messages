@@ -76,8 +76,7 @@ nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = does not include the pension sharing order you have in effect
 nisp.main.whenYoullBe = when you&rsquo;ll be
-nisp.main.after = When you reach State Pension age in {0}, you no longer have to pay National Insurance contributions.
-nisp.main.continueWorking.whenYouReachSPA = When you reach State Pension age, {0}, you no longer have to pay National Insurance contributions.
+nisp.main.after = After State Pension age, <span class="nowrap">{0}</span>, you no longer have to pay National Insurance contributions.
 
 nisp.main.reach = You&rsquo;ll reach State Pension age when you are
 nisp.main.basedOn = You can get your State Pension on
@@ -124,8 +123,8 @@ nisp.main.context.improve.nogaps = When you reach State Pension age in {0}, you 
 nisp.main.context.improve.para1.plural = You have years on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
 nisp.main.context.improve.para1.singular = You have a year on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
 nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS.
-nisp.main.context.forecastonly.para1 = You still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
 
+nisp.main.context.willReach = You cannot improve your forecast any further, unless you choose to put off claiming.
 nisp.main.context.reachMax.needToPay = You&rsquo;ll still need to pay National Insurance contributions until {0} as they fund other state benefits and the NHS.
 nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach {0}, you still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
 
@@ -427,7 +426,6 @@ nisp.mqp.privatePension = You may have a private pension. Use the free service t
 nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
 nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
 
-nisp.mqp.cannotImprove = You cannot improve your forecast any further, unless you choose to put off claiming. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS.
 nisp.mqp.howManyToContribute = assumes that you&rsquo;ll contribute another {0}
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
