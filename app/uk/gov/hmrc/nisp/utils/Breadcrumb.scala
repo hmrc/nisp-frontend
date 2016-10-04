@@ -50,10 +50,17 @@ trait Breadcrumb {
     initialBreadCrumbList ::: items.flatten
   }
 
-  def generateHeaderUrl(hideBreadcrumb: Boolean = false) (implicit request:Request[_], user: NispUser): String = {
-    mainContentHeaderPartialUrl + "?name=" + s"${URLEncoder.encode(user.name.getOrElse(""),"UTF-8")}" + "&" +
-      user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
-      (if(hideBreadcrumb) "" else buildBreadCrumb(request).map{case (name: String, url: String) => s"item_text=$name&item_url=$url"}.mkString("&")) +
-      "&showBetaBanner=true&deskProToken='NISP'"
+  def generateHeaderUrl(hideBreadcrumb: Boolean = false) (implicit request:Request[_], user: NispUser): String =  {
+    if(user.name.isDefined) {
+        mainContentHeaderPartialUrl + "?name=" + s"${URLEncoder.encode(user.name.getOrElse(""), "UTF-8")}" + "&" +
+          user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
+          (if (hideBreadcrumb) "" else buildBreadCrumb(request).map { case (name: String, url: String) => s"item_text=$name&item_url=$url" }.mkString("&")) +
+          "&showBetaBanner=true&deskProToken='NISP'"
+    }
+    else {
+        mainContentHeaderPartialUrl + "?" + user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
+          (if (hideBreadcrumb) "" else buildBreadCrumb(request).map { case (name: String, url: String) => s"item_text=$name&item_url=$url" }.mkString("&")) +
+          "&showBetaBanner=true&deskProToken='NISP'"
+    }
   }
 }
