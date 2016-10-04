@@ -43,7 +43,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
     nispConnector.connectToGetSPResponse(user.nino).map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
         if (spExclusions.exclusions.contains(Exclusion.Dead)) {
-          Ok(excluded_dead(spExclusions, spSummary.statePensionAge))
+          Ok(excluded_dead(spExclusions, Some(spSummary.statePensionAge)))
         } else if (spExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
           Ok(excluded_mci(spExclusions.exclusions, Some(spSummary.statePensionAge)))
         } else {
@@ -62,7 +62,10 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
      nispConnector.connectToGetNIResponse(user.nino).map {
         case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
-          if(niExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
+          if(niExclusions.exclusions.contains(Exclusion.Dead)) {
+            Ok(excluded_dead(niExclusions, None))
+          }
+          else if(niExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
             Ok(excluded_mci(niExclusions.exclusions, None))
           } else {
             Ok(excluded_ni(niExclusions))
