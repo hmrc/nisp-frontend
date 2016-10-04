@@ -51,16 +51,13 @@ trait Breadcrumb {
   }
 
   def generateHeaderUrl(hideBreadcrumb: Boolean = false) (implicit request:Request[_], user: NispUser): String =  {
-    if(user.name.isDefined) {
-        mainContentHeaderPartialUrl + "?name=" + s"${URLEncoder.encode(user.name.getOrElse(""), "UTF-8")}" + "&" +
-          user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
-          (if (hideBreadcrumb) "" else buildBreadCrumb(request).map { case (name: String, url: String) => s"item_text=$name&item_url=$url" }.mkString("&")) +
-          "&showBetaBanner=true&deskProToken='NISP'"
-    }
-    else {
-        mainContentHeaderPartialUrl + "?" + user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("") +
-          (if (hideBreadcrumb) "" else buildBreadCrumb(request).map { case (name: String, url: String) => s"item_text=$name&item_url=$url" }.mkString("&")) +
-          "&showBetaBanner=true&deskProToken='NISP'"
-    }
+
+    val name: String =  if(user.name.isDefined) {"?name=" + s"${URLEncoder.encode(user.name.getOrElse(""), "UTF-8")}"} else "?"
+    val lastLogin =  user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("")
+    val showBreadcrumb = if (hideBreadcrumb) "" else  { buildBreadCrumb(request).map {
+        case (name: String, url: String) => s"item_text=$name&item_url=$url" }.mkString("&")} +
+              "&showBetaBanner=true&deskProToken='NISP'"
+    mainContentHeaderPartialUrl.concat(name).concat(lastLogin).concat(showBreadcrumb)
+
   }
 }
