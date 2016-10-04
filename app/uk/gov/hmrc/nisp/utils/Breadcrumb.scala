@@ -51,13 +51,14 @@ trait Breadcrumb {
   }
 
   def generateHeaderUrl(hideBreadcrumb: Boolean = false) (implicit request:Request[_], user: NispUser): String =  {
-
-    val name: String =  if(user.name.isDefined) {"?name=" + s"${URLEncoder.encode(user.name.getOrElse(""), "UTF-8")}"} else "?"
+    val name: String =  user.name.map("?name=" + URLEncoder.encode(_,"UTF-8") + "&").getOrElse("?")
     val lastLogin =  user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("")
     val showBreadcrumb = if (hideBreadcrumb) "" else  { buildBreadCrumb(request).map {
-        case (name: String, url: String) => s"item_text=$name&item_url=$url" }.mkString("&")} +
-              "&showBetaBanner=true&deskProToken='NISP'"
-    mainContentHeaderPartialUrl.concat(name).concat(lastLogin).concat(showBreadcrumb)
+        case (name: String, url: String) => s"item_text=$name&item_url=$url" }.mkString("&")}
+    val showBetaBanner = "&showBetaBanner=true&deskProToken='NISP'"
+    mainContentHeaderPartialUrl.concat(name).concat(lastLogin).concat(showBreadcrumb).concat(showBetaBanner)
+
+
 
   }
 }
