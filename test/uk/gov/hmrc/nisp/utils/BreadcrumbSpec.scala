@@ -50,16 +50,12 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
       MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser) should not include "Gaps+in+your+record"
     }
 
-    "return an item text without a 'name' variable, when user.name has no value" in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, emptyNispUser) should not include ("account?name=")
+    "return a breadcrumb url without a 'name' variable, when user.name has no value" in {
+      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, emptyNispUser) should not include ("name=")
     }
 
-    "return an item text with no 'name' variable, when user.name has no value" in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, emptyNispUser) should include ("account?item_text")
-    }
-
-    "return an item text with users' name, when user.name has value " in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser) should include ("account?name=" + nispUser.name.get)
+    "return a breadcrumb url with users' name, when user.name has value " in {
+      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser) should include ("name=" + nispUser.name.get)
     }
 
     "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gaps" in {
