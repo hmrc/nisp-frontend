@@ -42,12 +42,12 @@ import uk.gov.hmrc.time.DateTimeUtils.now
 class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfter with OneAppPerSuite {
 
   val mockUserNino = TestAccountBuilder.regularNino
-  val mockUserNinoExcluded = TestAccountBuilder.excludedNino
+  val mockUserNinoExcluded = TestAccountBuilder.excludedAll
   val mockUserNinoNotFound = TestAccountBuilder.blankNino
   val json = s"test/resources/$mockUserNino.json"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
-  val mockUserIdExcluded = "/auth/oid/mockexcluded"
+  val mockUserIdExcluded = "/auth/oid/mockexcludedall"
   val mockUserIdContractedOut = "/auth/oid/mockcontractedout"
   val mockUserIdBlank = "/auth/oid/mockblank"
   val mockUserIdMQP = "/auth/oid/mockmqp"

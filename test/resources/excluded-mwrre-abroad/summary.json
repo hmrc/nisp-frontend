@@ -8,24 +8,24 @@
       "year": 2420.04
     },
     "statePensionAge": {
-      "age": 67,
-      "date": "18/07/2021"
+      "age": 65,
+      "date": "18/07/2017"
     },
     "contextMessage": "ScenarioEight",
-    "finalRelevantYear": 2020,
-    "numberOfQualifyingYears": 12,
+    "finalRelevantYear": 2016,
+    "numberOfQualifyingYears": 35,
     "numberOfGaps": 24,
     "numberOfGapsPayable": 8,
-    "yearsToContributeUntilPensionAge": 7,
+    "yearsToContributeUntilPensionAge": 3,
     "hasPsod": false,
-    "dateOfBirth": "18/05/1954",
+    "dateOfBirth": "18/07/1952",
     "forecast": {
       "forecastAmount": {
         "week": 155.55,
         "month": 622.35,
         "year": 76022.24
       },
-      "yearsLeftToWork": 4,
+      "yearsLeftToWork": 3,
       "personalMaximum": {
         "week": 155.55,
         "month": 622.35,
@@ -35,18 +35,18 @@
       "scenario": "Reached",
       "oldRulesCustomer": false
     },
-    "fullNewStatePensionAmount": 151.25,
-    "contractedOutFlag": true,
+    "fullNewStatePensionAmount": 155.65,
+    "contractedOutFlag": false,
     "forecastOnlyFlag": false,
     "customerAge": 61,
     "copeAmount": {
-      "week": 50,
-      "month": 217.41,
-      "year": 2608.93
+      "week": 0,
+      "month": 0,
+      "year": 0
     },
     "mqp": null,
-    "isAbroad": false
+    "isAbroad": true
   },
-  "spExclusions":{"exclusions":["Dead","MarriedWomenReducedRateElection"]},
-  "niExclusions":{"exclusions":[]}
+  "spExclusions":{"exclusions":["MarriedWomenReducedRateElection", "Abroad"]},
+  "niExclusions":{"exclusions":["MarriedWomenReducedRateElection"]}
 }

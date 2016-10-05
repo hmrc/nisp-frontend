@@ -29,7 +29,6 @@ object MockNispHttp extends MockitoSugar {
   val ninos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.blankNino,
-    TestAccountBuilder.excludedNino,
     TestAccountBuilder.fullUserNino,
     TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.mqpNino,
@@ -40,7 +39,14 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.fillGapsMultiple,
     TestAccountBuilder.fillGapSingle,
-    TestAccountBuilder.excludedDeadMarried)
+
+    TestAccountBuilder.excludedAll,
+    TestAccountBuilder.excludedAllButDead,
+    TestAccountBuilder.excludedAllButDeadMCI,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
+    TestAccountBuilder.excludedIomMwrreAbroad,
+    TestAccountBuilder.excludedMwrreAbroad,
+    TestAccountBuilder.excludedAbroad)
 
   val badRequestNino = TestAccountBuilder.nonExistentNino
 

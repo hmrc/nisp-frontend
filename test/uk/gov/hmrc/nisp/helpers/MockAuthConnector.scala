@@ -36,7 +36,6 @@ object MockAuthConnector extends AuthConnector {
 
   val usernameToNino = Map(
     userID("mockuser") -> TestAccountBuilder.regularNino,
-    userID("mockexcluded") -> TestAccountBuilder.excludedNino,
     userID("mockfulluser") -> TestAccountBuilder.fullUserNino,
     userID("mockblank") -> TestAccountBuilder.blankNino,
     userID("mockcontractedout") -> TestAccountBuilder.contractedOutBTestNino,
@@ -48,7 +47,14 @@ object MockAuthConnector extends AuthConnector {
     userID("mockhomeresponsibilitiesprotection") -> TestAccountBuilder.hrpNino,
     userID("mockfillgapsmultiple") -> TestAccountBuilder.fillGapsMultiple,
     userID("mockfillgapssingle") -> TestAccountBuilder.fillGapSingle,
-    userID("mockexcluded-dead-married") -> TestAccountBuilder.excludedDeadMarried
+
+    userID("mockexcludedall") -> TestAccountBuilder.excludedAll,
+    userID("mockexcludedallbutdead") -> TestAccountBuilder.excludedAllButDead,
+    userID("mockexcludedallbutdeadmci") -> TestAccountBuilder.excludedAllButDeadMCI,
+    userID("mockexcludeddissonanceiommwrreabroad") -> TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
+    userID("mockexcludediommwrreabroad") -> TestAccountBuilder.excludedIomMwrreAbroad,
+    userID("mockexcludedmwrreabroad") -> TestAccountBuilder.excludedMwrreAbroad,
+    userID("mockexcludedabroad") -> TestAccountBuilder.excludedAbroad
   )
 
   private def payeAuthority(id: String, nino: Nino): Option[Authority] =
