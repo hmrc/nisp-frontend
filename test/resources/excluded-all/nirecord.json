@@ -1,0 +1,6 @@
+{
+  "niExclusions": {
+    "exclusions":["Dead", "ManualCorrespondenceIndicator", "MarriedWomenReducedRateElection", "IsleOfMan"]
+  }
+}
+
