@@ -37,6 +37,9 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
   val nispUser: NispUser = {
     new NispUser(authContext, Some("testName"), "testAuthProvider",Some("M"))
   }
+  val emptyNispUser: NispUser = {
+    new NispUser(authContext, None, "testAuthProvider",Some("M"))
+  }
 
   "Breadcrumb utils" should {
     "return a item text as Account Home and State Pension" in {
@@ -45,6 +48,14 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
       MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser) should not include ("NI+record")
       MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser) should not include "Voluntary+contributions"
       MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser) should not include "Gaps+in+your+record"
+    }
+
+    "return a breadcrumb url without a 'name' variable, when user.name has no value" in {
+      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, emptyNispUser) should not include ("name=")
+    }
+
+    "return a breadcrumb url with users' name, when user.name has value " in {
+      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser) should include ("name=" + nispUser.name.get)
     }
 
     "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gaps" in {
