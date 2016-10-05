@@ -29,7 +29,6 @@ object TestAccountBuilder {
   def randomNino: Nino = Nino(new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA"))
 
   val nonExistentNino: Nino = randomNino
-  val excludedNino: Nino = randomNino
   val regularNino: Nino = randomNino
   val mqpNino: Nino = randomNino
   val forecastOnlyNino: Nino = randomNino
@@ -46,16 +45,22 @@ object TestAccountBuilder {
   val hrpNino: Nino = randomNino
   val fillGapSingle: Nino = randomNino
   val fillGapsMultiple: Nino = randomNino
-  val excludedDeadMarried: Nino = randomNino
+
+  val excludedAll: Nino = randomNino
+  val excludedAllButDead: Nino = randomNino
+  val excludedAllButDeadMCI: Nino = randomNino
+  val excludedDissonanceIomMwrreAbroad: Nino = randomNino
+  val excludedIomMwrreAbroad: Nino = randomNino
+  val excludedMwrreAbroad: Nino = randomNino
+  val excludedAbroad: Nino = randomNino
 
   val mappedTestAccounts = Map(
-    excludedNino -> "excluded",
     regularNino -> "regular",
     mqpNino -> "mqp",
     forecastOnlyNino -> "forecastonly",
     contractedOutBTestNino -> "contractedout",
-    fullUserNino ->  "fulluser",
-    blankNino ->  "blank",
+    fullUserNino -> "fulluser",
+    blankNino -> "blank",
     invalidKeyNino -> "invalidkey",
     noNameNino -> "noname",
     abroadNino -> "abroad",
@@ -63,7 +68,14 @@ object TestAccountBuilder {
     hrpNino -> "homeresponsibilitiesprotection",
     fillGapSingle -> "fillgaps-singlegap",
     fillGapsMultiple -> "fillgaps-multiple",
-    excludedDeadMarried -> "excluded-dead-mwrre"
+
+    excludedAll -> "excluded-all",
+    excludedAllButDead -> "excluded-all-but-dead",
+    excludedAllButDeadMCI -> "excluded-all-but-dead-mci",
+    excludedDissonanceIomMwrreAbroad -> "excluded-dissonance-iom-mwrre-abroad",
+    excludedIomMwrreAbroad -> "excluded-iom-mwrre-abroad",
+    excludedMwrreAbroad -> "excluded-mwrre-abroad",
+    excludedAbroad -> "excluded-abroad"
   )
 
   def jsonResponse(nino: Nino, api: String): HttpResponse = {

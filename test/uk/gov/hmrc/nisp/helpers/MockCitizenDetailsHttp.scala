@@ -29,7 +29,6 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
   val ninos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.blankNino,
-    TestAccountBuilder.excludedNino,
     TestAccountBuilder.fullUserNino,
     TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.mqpNino,
@@ -40,7 +39,14 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.fillGapSingle,
     TestAccountBuilder.fillGapsMultiple,
-    TestAccountBuilder.excludedDeadMarried
+
+    TestAccountBuilder.excludedAll,
+    TestAccountBuilder.excludedAllButDead,
+    TestAccountBuilder.excludedAllButDeadMCI,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
+    TestAccountBuilder.excludedIomMwrreAbroad,
+    TestAccountBuilder.excludedMwrreAbroad,
+    TestAccountBuilder.excludedAbroad
   )
 
   def createMockedURL(nino: Nino, response: Future[HttpResponse]): Unit =

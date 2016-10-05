@@ -40,7 +40,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserId = "/auth/oid/mockuser"
   val mockFullUserId = "/auth/oid/mockfulluser"
   val mockBlankUserId = "/auth/oid/mockblank"
-  val mockUserIdExcluded = "/auth/oid/mockexcluded"
+  val mockUserIdExcluded = "/auth/oid/mockexcludedall"
   val mockUserIdHRP = "/auth/oid/mockhomeresponsibilitiesprotection"
   val mockUserWithGaps ="/auth/oid/mockfillgapsmultiple"
 
