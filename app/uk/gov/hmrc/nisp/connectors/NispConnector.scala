@@ -46,6 +46,7 @@ trait NispConnector {
   def sessionCache: SessionCache
   val metricsService: MetricsService
 
+  @deprecated("Should not be used. Use StatePensionService.getSummary instead", "8.15.0")
   def connectToGetSPResponse(nino: Nino)(implicit hc: HeaderCarrier): Future[SPResponseModel] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/spsummary"
     retrieveFromCache[SPResponseModel](APIType.SP, urlToRead)

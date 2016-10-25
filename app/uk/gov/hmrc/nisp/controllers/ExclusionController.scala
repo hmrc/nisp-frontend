@@ -23,39 +23,41 @@ import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, StatePensionService}
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.play.http.SessionKeys
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
-  override val nispConnector: NispConnector = NispConnector
+  override val nispConnector = NispConnector
+  override val statePensionService = StatePensionService
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
 trait ExclusionController extends NispFrontendController with AuthorisedForNisp {
   val nispConnector: NispConnector
+  val statePensionService: StatePensionService
 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-
-    nispConnector.connectToGetSPResponse(user.nino).map {
-      case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), niExclusionOption) =>
-        if (spExclusions.exclusions.contains(Exclusion.Dead)) {
-          Ok(excluded_dead(spExclusions, Some(spSummary.statePensionAge)))
-        } else if (spExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
-          Ok(excluded_mci(spExclusions.exclusions, Some(spSummary.statePensionAge)))
-        } else {
-          Ok(excluded_sp(
-            spExclusions.exclusions,
-            spSummary.statePensionAge,
-            niExclusionOption.fold(true)(_.exclusions.isEmpty)
-          ))
-        }
-      case _ =>
-        Logger.warn("User accessed /exclusion as non-excluded user")
-        Redirect(routes.AccountController.show())
+    for(
+      statePension <- statePensionService.getSummary(user.nino);
+      niResponse <- nispConnector.connectToGetNIResponse(user.nino)
+    ) yield {
+      statePension match {
+        case Left(exclusion) =>
+          if (exclusion.exclusionReasons.contains(Exclusion.Dead))
+            Ok(excluded_dead(exclusion.exclusionReasons, Some(exclusion.pensionAge)))
+          else if (exclusion.exclusionReasons.contains(Exclusion.ManualCorrespondenceIndicator))
+            Ok(excluded_mci(exclusion.exclusionReasons, Some(exclusion.pensionAge)))
+          else {
+            Ok(excluded_sp(exclusion.exclusionReasons, exclusion.pensionAge, exclusion.pensionDate, niResponse.niExclusions.isEmpty))
+          }
+        case _ =>
+          Logger.warn("User accessed /exclusion as non-excluded user")
+          Redirect(routes.AccountController.show())
+      }
     }
   }
 
@@ -63,7 +65,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
      nispConnector.connectToGetNIResponse(user.nino).map {
         case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
           if(niExclusions.exclusions.contains(Exclusion.Dead)) {
-            Ok(excluded_dead(niExclusions, None))
+            Ok(excluded_dead(niExclusions.exclusions, None))
           }
           else if(niExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
             Ok(excluded_mci(niExclusions.exclusions, None))

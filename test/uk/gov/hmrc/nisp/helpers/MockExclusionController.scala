@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.ExclusionController
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
@@ -55,4 +55,5 @@ object MockExclusionController extends ExclusionController {
     override val copeTable: Boolean = false
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  override val statePensionService: StatePensionService = MockStatePensionService
 }
