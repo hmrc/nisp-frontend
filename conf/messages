@@ -76,7 +76,7 @@ nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = does not include the pension sharing order you have in effect
 nisp.main.whenYoullBe = when you&rsquo;ll be
-nisp.main.after = After State Pension age, <span class="nowrap">{0}</span>, you no longer have to pay National Insurance contributions.
+nisp.main.after = After State Pension age, <span class="nowrap">{0}</span>, you no longer pay National Insurance contributions.
 
 nisp.main.reach = You&rsquo;ll reach State Pension age when you are
 nisp.main.basedOn = You can get your State Pension on
@@ -118,7 +118,7 @@ nisp.main.context.improve.heading = How to improve your State Pension
 nisp.main.context.improve.list.payable.singular = You have 1 year on your record that does not count towards your pension.
 nisp.main.context.improve.list.payable.plural = You have {0} years on your record that do not count towards your pension.
 
-nisp.main.context.improve.nogaps = When you reach State Pension age in {0}, you no longer have to pay National Insurance contributions.
+nisp.main.context.improve.nogaps = When you reach State Pension age in {0}, you no longer pay National Insurance contributions.
 
 nisp.main.context.improve.para1.plural = You have years on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
 nisp.main.context.improve.para1.singular = You have a year on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
