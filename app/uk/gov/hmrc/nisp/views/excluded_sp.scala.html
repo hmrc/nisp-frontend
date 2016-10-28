@@ -21,17 +21,19 @@
 @import uk.gov.hmrc.nisp.models.SPAgeModel
 @import uk.gov.hmrc.nisp.models.enums.Exclusion._
 @import uk.gov.hmrc.play.views.formatting.Dates
+@import org.joda.time.LocalDate
 
 @(
-spExclusions: List[Exclusion],
-statePensionAge: SPAgeModel,
+exclusionReasons: List[Exclusion],
+statePensionAge: Int,
+statePensionAgeDate: LocalDate,
 canSeeNIRecord: Boolean
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension20': '@spExclusions.map(_.toString).mkString(" ") ',
-        'dimension15': '@statePensionAge.age',
+        'dimension20': '@exclusionReasons.map(_.toString).mkString(" ") ',
+        'dimension15': '@statePensionAge',
         'dimension38': '@user.authProvider',
         @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
         'dimension39': '@user.confidenceLevel'
@@ -43,25 +45,25 @@ canSeeNIRecord: Boolean
                 pageTitle = Some(Messages("nisp.main.h1.title")), articleClasses = Some("mainpage"),
                 analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
-        @if(spExclusions.contains(PostStatePensionAge)) {
-            <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age) </h2>
+        @if(exclusionReasons.contains(PostStatePensionAge)) {
+            <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(statePensionAgeDate), statePensionAge) </h2>
         } else {
-            <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", Dates.formatDate(statePensionAge.date.localDate), statePensionAge.age)) </h2>
+            <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", Dates.formatDate(statePensionAgeDate), statePensionAge)) </h2>
         }
         <div class="panel-indent">
-            @if(spExclusions.contains(PostStatePensionAge)) {
+            @if(exclusionReasons.contains(PostStatePensionAge)) {
                     @exclusions.sp.postStatePensionAge()
             } else {
-                    @if(spExclusions.contains(AmountDissonance)) {
+                    @if(exclusionReasons.contains(AmountDissonance)) {
                         @exclusions.sp.amountDissonance()
                     } else {
-                        @if(spExclusions.contains(IsleOfMan)) {
+                        @if(exclusionReasons.contains(IsleOfMan)) {
                             @exclusions.sp.isleOfMan()
                         } else {
-                            @if(spExclusions.contains(MarriedWomenReducedRateElection)) {
+                            @if(exclusionReasons.contains(MarriedWomenReducedRateElection)) {
                                 @exclusions.sp.mwrre()
                             } else {
-                                @if(spExclusions.contains(Abroad)) {
+                                @if(exclusionReasons.contains(Abroad)) {
                                     @exclusions.sp.overseas()
                                 }
                             }
@@ -72,7 +74,7 @@ canSeeNIRecord: Boolean
             }
         </div>
         @if(canSeeNIRecord) {
-            @if(spExclusions.contains(Abroad)) {
+            @if(exclusionReasons.contains(Abroad)) {
 
                 <p>@Messages("nisp.excluded.niRecordIntroUK")</p>
                 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecordUK")</a>
@@ -84,7 +86,7 @@ canSeeNIRecord: Boolean
 
             }
         } else {
-            @if(spExclusions.contains(IsleOfMan)) {
+            @if(exclusionReasons.contains(IsleOfMan)) {
             
                 <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelplineIom"))</p> 
             
@@ -95,7 +97,7 @@ canSeeNIRecord: Boolean
             }
         }
 
-        @if(spExclusions.contains(MarriedWomenReducedRateElection)) {
+        @if(exclusionReasons.contains(MarriedWomenReducedRateElection)) {
             <h2 class="heading-medium">@Messages("nisp.excluded.mwrre.improve")</h2>
             <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
             <a href="@routes.AccountController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>
