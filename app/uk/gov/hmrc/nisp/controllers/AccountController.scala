@@ -28,7 +28,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
@@ -37,6 +37,7 @@ import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
+  override val statePensionService: StatePensionService = StatePensionService
   override val sessionCache: SessionCache = NispSessionCache
 
   override val customAuditConnector = CustomAuditConnector
@@ -47,33 +48,36 @@ object AccountController extends AccountController with AuthenticationConnectors
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
   def nispConnector: NispConnector
+  def statePensionService: StatePensionService
 
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
 
   def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
-      val spResponseF = nispConnector.connectToGetSPResponse(user.nino)
+      val statePensionResponseF = statePensionService.getSummary(user.nino)
       val schemeMembershipF = nispConnector.connectToGetSchemeMembership(user.nino)
       for (
-        spResponse <- spResponseF;
+        statePensionResponse <- statePensionResponseF;
         schemeMembership <- schemeMembershipF
       ) yield {
-        spResponse match {
-          case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
-            if(spSummary.contractedOutFlag) {
-              if(applicationConfig.copeTable) {
-                Ok(account_cope(spSummary.forecast.forecastAmount.week,
-                  spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax, schemeMembership))
-              } else {
-                Ok(account_cope_old(spSummary.forecast.forecastAmount.week,
-                  spSummary.copeAmount.week, spSummary.forecast.forecastAmount.week + spSummary.copeAmount.week, isPertax))
-              }
-            } else {
-              Redirect(routes.AccountController.show())
-            }
-          case _ => Redirect(routes.AccountController.show())
 
+        statePensionResponse match {
+          case Right(statePension) if statePension.contractedOut => {
+            if(applicationConfig.copeTable) {
+              Ok(account_cope(
+                statePension.amounts.cope.weeklyAmount,
+                isPertax,
+                schemeMembership
+              ))
+            } else {
+              Ok(account_cope_old(
+                statePension.amounts.cope.weeklyAmount,
+                isPertax
+              ))
+            }
+          }
+          case _ => Redirect(routes.AccountController.show())
         }
       }
     }

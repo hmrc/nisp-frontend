@@ -41,9 +41,13 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   val statePensionService: StatePensionService
 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+
+    val statePensionF = statePensionService.getSummary(user.nino)
+    val niResponseF = nispConnector.connectToGetNIResponse(user.nino)
+
     for(
-      statePension <- statePensionService.getSummary(user.nino);
-      niResponse <- nispConnector.connectToGetNIResponse(user.nino)
+      statePension <- statePensionF;
+      niResponse <- niResponseF
     ) yield {
       statePension match {
         case Left(exclusion) =>
