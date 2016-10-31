@@ -21,7 +21,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.AccountController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.services.{MetricsService}
+import uk.gov.hmrc.nisp.services.{MetricsService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
@@ -37,6 +37,7 @@ trait MockAccountController extends AccountController {
   override val metricsService: MetricsService = MockMetricsService
 
   override def nispConnector: NispConnector = MockNispConnector
+  override val statePensionService: StatePensionService = MockStatePensionService
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = ""
     override val reportAProblemNonJSUrl: String = ""

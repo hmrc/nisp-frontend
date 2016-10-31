@@ -58,7 +58,13 @@ trait NispConnection {
             spSummary.forecast.personalMaximum.week,
             spSummary.forecast.personalMaximum.month,
             spSummary.forecast.personalMaximum.year),
-          cope = StatePensionAmount(None, None, 0, 0, 0)
+          cope = StatePensionAmount(
+            None,
+            None,
+            spSummary.copeAmount.week,
+            spSummary.copeAmount.month,
+            spSummary.copeAmount.year
+          )
         ),
         pensionAge = spSummary.statePensionAge.age,
         pensionDate = spSummary.statePensionAge.date.localDate,
