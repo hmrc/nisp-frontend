@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.utils
 
+import org.joda.time.LocalDate
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
@@ -35,10 +36,10 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
     principal = Principal(None,Accounts()), None, None, None)
 
   val nispUser: NispUser = {
-    new NispUser(authContext, Some("testName"), "testAuthProvider",Some("M"))
+    new NispUser(authContext, Some("testName"), "testAuthProvider",Some("M"), Some(new LocalDate(1999, 12, 31)), None)
   }
   val emptyNispUser: NispUser = {
-    new NispUser(authContext, None, "testAuthProvider",Some("M"))
+    new NispUser(authContext, None, "testAuthProvider",Some("M"), Some(new LocalDate(1999, 12, 31)), None)
   }
 
   "Breadcrumb utils" should {

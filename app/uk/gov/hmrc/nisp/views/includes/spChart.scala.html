@@ -20,4 +20,4 @@
 @(chartTitle: Html, spChartModel: SPChartModel)
 
 @chart(chartTitle, spChartModel.width,
-Html(s"${NispMoney.pounds(spChartModel.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+Html(s"${NispMoney.pounds(spChartModel.amountModel.weeklyAmount)} ${Messages("nisp.main.chart.week")}"))

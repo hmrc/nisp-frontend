@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nisp.models.citizen
 
-import play.api.libs.json.{Json, Format}
+import play.api.libs.json.Json
 
-case class CitizenDetailsResponse(person: Citizen, address: Address)
+case class Address(country: Option[String])
 
-object CitizenDetailsResponse{
-  implicit val formats: Format[CitizenDetailsResponse] = Json.format[CitizenDetailsResponse]
+object Address {
+  implicit val formats = Json.format[Address]
 }

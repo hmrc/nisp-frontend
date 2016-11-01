@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.nisp.models.citizen
 
+import org.joda.time.{DateTime, LocalDate}
 import uk.gov.hmrc.domain.Nino
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class Citizen(nino:Nino, firstName: Option[String]=None, lastName: Option[String]=None, sex: Option[String]=None) {
-
+case class Citizen(nino: Nino, firstName: Option[String] = None, lastName: Option[String] = None,
+                   sex: Option[String] = None, dateOfBirth: LocalDate) {
   def getNameFormatted: Option[String] = {
     (firstName, lastName) match {
       case (Some(firstName), Some(lastName)) => Some("%s %s".format(firstName, lastName))
@@ -31,10 +32,16 @@ case class Citizen(nino:Nino, firstName: Option[String]=None, lastName: Option[S
 }
 
 object Citizen {
+
+  val dateReads = Reads[LocalDate]( value => value.validate[Long].map(new LocalDate(_)))
+  val dateWrites = Writes[LocalDate](date => Json.toJson(date.toDateTimeAtStartOfDay.getMillis))
+  val dateFormats: Format[LocalDate] = Format(dateReads, dateWrites)
+
   implicit val formats: Format[Citizen] = (
-    (__ \ "nino").format[Nino] and
-    (__ \ "firstName").format[Option[String]] and
-    (__ \ "lastName").format[Option[String]] and
-    (__ \ "sex").format[Option[String]]
-    )(Citizen.apply, unlift(Citizen.unapply))
+      (__ \ "nino").format[Nino] and
+      (__ \ "firstName").format[Option[String]] and
+      (__ \ "lastName").format[Option[String]] and
+      (__ \ "sex").format[Option[String]] and
+      (__ \ "dateOfBirth").format[LocalDate](dateFormats)
+    ) (Citizen.apply, unlift(Citizen.unapply))
 }

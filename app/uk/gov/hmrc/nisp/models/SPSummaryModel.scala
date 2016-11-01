@@ -18,13 +18,11 @@ package uk.gov.hmrc.nisp.models
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
-import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
 
 case class SPSummaryModel( nino: String,
                            lastProcessedDate: NpsDate,
                            statePensionAmount: SPAmountModel,
                            statePensionAge: SPAgeModel,
-                           contextMessage: Option[SPContextMessage],
                            finalRelevantYear: Int,
                            numberOfQualifyingYears: Int,
                            numberOfGaps: Int,

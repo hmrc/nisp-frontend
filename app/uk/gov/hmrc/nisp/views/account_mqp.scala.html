@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.formatting.Time
 @import uk.gov.hmrc.play.views.formatting.Dates
-@import uk.gov.hmrc.nisp.models.SPSummaryModel
+@import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.models.enums.MQPScenario._
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
@@ -25,8 +25,16 @@
 @import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(spSummary: SPSummaryModel, mqp: Option[MQPScenario], numberOfYearsMissing: Int,
-  isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(
+  statePension: StatePension,
+  numberOfGaps: Int,
+  numberOfPayableGaps: Int,
+  numberOfYearsMissing: Int,
+  isAbroad: Boolean,
+  customerAge: Option[Int],
+  isPertaxUrl: Boolean,
+  yearsToContributeUntilPensionAge: Int
+)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -43,18 +51,19 @@
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension7':  '@spSummary.forecast.scenario',
-        'dimension8':  '@spSummary.forecast.forecastAmount.week',
-        'dimension10': '@spSummary.numberOfQualifyingYears',
-        'dimension11': '@spSummary.numberOfGaps',
-        'dimension12': '@spSummary.numberOfGapsPayable',
-        'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
-        'dimension14': '@spSummary.contractedOutFlag',
-        'dimension15': '@spSummary.statePensionAge.age',
-        'dimension16': '@spSummary.copeAmount.week',
+        'dimension7':  '@statePension.forecastScenario',
+        'dimension8':  '@statePension.amounts.forecast.weeklyAmount',
+        'dimension10': '@statePension.numberOfQualifyingYears',
+        'dimension11': '@numberOfGaps',
+        'dimension12': '@numberOfPayableGaps',
+        'dimension13': '@yearsToContributeUntilPensionAge',
+        'dimension14': '@statePension.contractedOut',
+        'dimension15': '@statePension.pensionAge',
+        'dimension16': '@statePension.amounts.cope.weeklyAmount',
         'dimension22': '@user.authProviderOld',
         'dimension38': '@user.authProvider',
         'dimension39': '@user.confidenceLevel',
+        @Html(customerAge.map( age => s"'dimension40': '$age',").getOrElse(""))
         @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
         'metric5': 1
     });
@@ -66,9 +75,9 @@
   analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <div class="panel-indent panel-border-wide panel-indent--info">
-        <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age.</p>
+        <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@Dates.formatDate(statePension.pensionDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @statePension.pensionAge.</p>
 
-        @spSummary.mqp.map { mqp =>
+        @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
                 <p>@Messages("nisp.mqp.possible")</p>
             }
@@ -82,7 +91,7 @@
 
     <h2 class="heading-medium">@Messages("nisp.mqp.doNext")</h2>
     <p>
-        @if(spSummary.isAbroad) {
+        @if(isAbroad) {
             @Html(Messages("nisp.main.overseas"))
         } else {
             @Html(Messages("nisp.mqp.overseas"))
@@ -90,27 +99,27 @@
     </p>
 
     <p>
-        @if(spSummary.numberOfGapsPayable > 1) {
-            @Messages("nisp.mqp.years.dontCount.plural", Time.years(spSummary.numberOfGapsPayable))
+        @if(numberOfPayableGaps > 1) {
+            @Messages("nisp.mqp.years.dontCount.plural", Time.years(numberOfPayableGaps))
         } else {
-            @if(spSummary.numberOfGapsPayable < 1) {
+            @if(numberOfPayableGaps < 1) {
                 @Messages("nisp.mqp.years.dontCount.zero")
             } else {
                 @Messages("nisp.mqp.years.dontCount.single")
             }
         }
         
-        @if(spSummary.numberOfGapsPayable > 0) {
-            @spSummary.mqp.map { mqp =>
+        @if(numberOfPayableGaps > 0) {
+            @statePension.mqpScenario.map { mqp =>
                 @if(mqp == CanGetWithGaps) {
-                    @if(spSummary.numberOfGapsPayable > 1) {
+                    @if(numberOfPayableGaps > 1) {
                         @Messages("nisp.mqp.filling.may.plural")
                     } else {
                         @Messages("nisp.mqp.filling.may.single")
                     }
                 }
                 @if(mqp == CantGet) {
-                    @if(spSummary.numberOfGapsPayable > 1) {
+                    @if(numberOfPayableGaps > 1) {
                         @Messages("nisp.mqp.filling.never.plural")
                     } else {
                         @Messages("nisp.mqp.filling.never.single") 
@@ -122,7 +131,7 @@
     </p>
 
     <p>
-        @spSummary.mqp.map { mqp =>
+        @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
                 <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGapsAndCost")</a>
             }
@@ -132,11 +141,11 @@
         }
     </p>    
    
-    <p>@Html(Messages("nisp.mqp.afterSpa", Dates.formatDate(spSummary.statePensionAge.date.localDate)))</p>
+    <p>@Html(Messages("nisp.mqp.afterSpa", Dates.formatDate(statePension.pensionDate)))</p>
 
     <!-- WHAT ELSE YOU CAN DO -->
 
-    <h2 class="heading-medium">@Messages("nisp.mqp.whatEsle")</h2>
+    <h2 class="heading-medium">@Messages("nisp.mqp.whatElse")</h2>
     <p>@Html(Messages("nisp.mqp.privatePension"))</p>
     <p>@Html(Messages("nisp.mqp.pensionCredit"))</p>
     <p>@Html(Messages("nisp.mqp.moneyAdvice"))</p>

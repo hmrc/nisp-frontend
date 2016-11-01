@@ -16,13 +16,14 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.views.formatting.Dates
-@import uk.gov.hmrc.nisp.models.SPSummaryModel
+@import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(spSummary: SPSummaryModel, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Option[Int], isAbroad: Boolean, isPertaxUrl:Boolean,
+yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -40,18 +41,19 @@
 
 @analyticsAdditionalJs(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever) = {
     ga('set', {
-        'dimension7':  '@spSummary.forecast.scenario',
-        'dimension8':  '@spSummary.forecast.forecastAmount.week',
-        'dimension10': '@spSummary.numberOfQualifyingYears',
-        'dimension11': '@spSummary.numberOfGaps',
-        'dimension12': '@spSummary.numberOfGapsPayable',
-        'dimension13': '@spSummary.yearsToContributeUntilPensionAge',
-        'dimension14': '@spSummary.contractedOutFlag',
-        'dimension15': '@spSummary.statePensionAge.age',
-        'dimension16': '@spSummary.copeAmount.week',
+        'dimension7':  '@statePension.forecastScenario',
+        'dimension8':  '@statePension.amounts.forecast.annualAmount',
+        'dimension10': '@statePension.numberOfQualifyingYears',
+        'dimension11': '@numberOfGaps',
+        'dimension12': '@numberOfGapsPayable',
+        'dimension13': '@yearsToContributeUntilPensionAge',
+        'dimension14': '@statePension.contractedOut',
+        'dimension15': '@statePension.pensionAge',
+        'dimension16': '@statePension.amounts.cope.weeklyAmount',
         'dimension22': '@user.authProviderOld',
         'dimension38': '@user.authProvider',
         'dimension39': '@user.confidenceLevel',
+        @Html(customerAge.map( age => s"'dimension40': '$age',").getOrElse(""))
         @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
         'metric5': 1
     });
@@ -63,33 +65,35 @@
 @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs), sidebarLinks = Some(sidebar)) {
 
     <div class="highlighted-event">
-        <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(spSummary.statePensionAge.date.localDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @spSummary.statePensionAge.age, <span class="nowrap">@Messages("nisp.main.caveats").toLowerCase() @Messages("nisp.is")</span></p>
-        <p><em>@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.week")</em></p>
-        <p>@NispMoney.pounds(spSummary.forecast.forecastAmount.month) @Messages("nisp.main.month"),
-        @NispMoney.pounds(spSummary.forecast.forecastAmount.year) @Messages("nisp.main.year")</p>
+        <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(statePension.pensionDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @statePension.pensionAge, <span class="nowrap">@Messages("nisp.main.caveats").toLowerCase() @Messages("nisp.is")</span></p>
+        <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.week")</em></p>
+        <p>@NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @Messages("nisp.main.month"),
+        @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @Messages("nisp.main.year")</p>
     </div>
     <p>@Messages("nisp.main.caveats")</p>
     <ul class="list-bullet">
         <li>@Messages("nisp.main.notAGuarantee")</li>
-        <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(spSummary.lastProcessedDate.localDate)))</li>
+        <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
         <li>@Messages("nisp.main.inflation")</li>
-        @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
+        @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
     </ul>
-    <h2 class="heading-medium">@NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h2>
+    <h2 class="heading-medium">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.mostYouCanGet")</h2>
     <p>@Messages("nisp.main.cantImprove")</p>
-    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (spSummary.finalRelevantYear+1).toString()))</p>
+    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", statePension.finalRelevantEndYear.toString()))</p>
     <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
 
-    @if(spSummary.isAbroad) {
+    @if(isAbroad) {
         @includes.abroad()
     }
 
-    @if(spSummary.contractedOutFlag) {
+    @if(statePension.contractedOut) {
         @includes.contractedOut()
     }
 
-    @if(spSummary.customerAge > Constants.deferralCutOffAge) {
-        @includes.deferral(spSummary.statePensionAge.age)
+    @customerAge.foreach { age =>
+        @if(age > Constants.deferralCutOffAge) {
+            @includes.deferral(statePension.pensionAge)
+        }
     }
 
     @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}

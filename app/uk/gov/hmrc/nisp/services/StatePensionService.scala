@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.services
 
+import org.joda.time.{DateTime, LocalDate}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.models._
@@ -23,10 +24,15 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import uk.gov.hmrc.time.CurrentTaxYear
 
 
-trait StatePensionService {
+trait StatePensionService extends CurrentTaxYear {
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]]
+
+  def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int = {
+    finalRelevantYearStart - taxYearFor(earningsIncludedUpTo).startYear
+  }
 }
 
 trait NispConnection {
@@ -38,29 +44,24 @@ trait NispConnection {
         earningsIncludedUpTo = spSummary.lastProcessedDate.localDate,
         amounts = StatePensionAmounts(
           protectedPayment = spSummary.forecast.oldRulesCustomer,
-          current = StatePensionAmount(
-            None,
-            None,
+          current = StatePensionAmountRegular(
             spSummary.statePensionAmount.week,
             spSummary.statePensionAmount.month,
             spSummary.statePensionAmount.year
           ),
-          forecast = StatePensionAmount(
-            Some(spSummary.forecast.yearsLeftToWork),
-            None,
+          forecast = StatePensionAmountForecast(
+            spSummary.forecast.yearsLeftToWork,
             spSummary.forecast.forecastAmount.week,
             spSummary.forecast.forecastAmount.month,
             spSummary.forecast.forecastAmount.year
           ),
-          maximum = StatePensionAmount(
-            Some(spSummary.forecast.yearsLeftToWork),
-            Some(spSummary.forecast.minGapsToFillToReachMaximum),
+          maximum = StatePensionAmountMaximum(
+            spSummary.forecast.yearsLeftToWork,
+            spSummary.forecast.minGapsToFillToReachMaximum,
             spSummary.forecast.personalMaximum.week,
             spSummary.forecast.personalMaximum.month,
             spSummary.forecast.personalMaximum.year),
-          cope = StatePensionAmount(
-            None,
-            None,
+          cope = StatePensionAmountRegular(
             spSummary.copeAmount.week,
             spSummary.copeAmount.month,
             spSummary.copeAmount.year
@@ -88,4 +89,5 @@ trait NispConnection {
 
 object StatePensionService extends StatePensionService with NispConnection {
   override val nisp: NispConnector = NispConnector
+  override def now: () => DateTime = () => DateTime.now(ukTime)
 }

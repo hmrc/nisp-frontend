@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
-import org.joda.time.LocalDateTime
+import org.joda.time.{LocalDate, LocalDateTime}
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
@@ -30,7 +30,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.SPAmountModel
+import uk.gov.hmrc.nisp.models.{SPAmountModel, StatePensionAmount, StatePensionAmountRegular}
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
@@ -376,7 +376,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
     "calculate chart widths" should {
       def calculateCharts(currentAmount: BigDecimal, forecastAmount: BigDecimal, personalMax: BigDecimal) =
-        MockAccountController.calculateChartWidths(SPAmountModel(currentAmount, 0, 0), SPAmountModel(forecastAmount, 0, 0), SPAmountModel(personalMax, 0, 0))
+        MockAccountController.calculateChartWidths(StatePensionAmountRegular(currentAmount, 0, 0), StatePensionAmountRegular(forecastAmount, 0, 0), StatePensionAmountRegular(personalMax, 0, 0))
 
       "current chart is 100 when current amount is higher" in {
         val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 30, 0)
@@ -459,7 +459,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
-        "show less text when there multiple years" in {
+        "show less text when there are multiple years" in {
           val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include ("You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.")
           contentAsString(result) should include ("The most you can get is")
@@ -469,6 +469,19 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
           contentAsString(result) should include ("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
           contentAsString(result) should include ("The most you can get by filling this year in your record is")
         }
+      }
+    }
+
+    "calculateAge" should {
+      "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-10-28" in {
+        AccountController.calculateAge(new LocalDate(1986, 10, 28), new LocalDate(2016, 11, 2)) shouldBe 30
+      }
+      "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-2" in {
+        AccountController.calculateAge(new LocalDate(1986, 11, 2), new LocalDate(2016, 11, 2)) shouldBe 30
+
+      }
+      "return 29 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-3" in {
+        AccountController.calculateAge(new LocalDate(1986, 11, 3), new LocalDate(2016, 11, 2)) shouldBe 29
       }
     }
   }

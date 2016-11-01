@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.models.enums
+package uk.gov.hmrc.nisp.utils
 
-import play.api.libs.json.{JsString, Json}
-import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
-import uk.gov.hmrc.play.test.UnitSpec
+object Country {
 
-class SPContextMessageSpec extends UnitSpec {
-  "SPContextMessage" when {
-    "serialising to JSON" should {
-      "return JSString" in {
-        Json.toJson(SPContextMessage.ScenarioOne) shouldBe JsString("ScenarioOne")
-      }
-    }
-
-    "deserialising from JSON" should {
-      "return SPContextMessage.ScenarioOne" in {
-        JsString("ScenarioOne").as[SPContextMessage] shouldBe SPContextMessage.ScenarioOne
-      }
+  def isAbroad(countryName: String): Boolean = {
+    countryName match {
+      case GREAT_BRITAIN => false
+      case ISLE_OF_MAN=> false
+      case ENGLAND => false
+      case SCOTLAND => false
+      case WALES => false
+      case NORTHERN_IRELAND => false
+      case _ => true
     }
   }
+
+  final val GREAT_BRITAIN = "GREAT BRITAIN"
+  final val ISLE_OF_MAN = "ISLE OF MAN"
+  final val ENGLAND = "ENGLAND"
+  final val SCOTLAND = "SCOTLAND"
+  final val WALES = "WALES"
+  final val NORTHERN_IRELAND = "NORTHERN IRELAND"
+
 }

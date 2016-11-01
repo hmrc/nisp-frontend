@@ -60,4 +60,5 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
   createMockedURL(TestAccountBuilder.notFoundNino, Future.failed(new NotFoundException("")))
   createMockedURL(TestAccountBuilder.nonExistentNino, Future.failed(new NotFoundException("")))
   createMockedURL(TestAccountBuilder.blankNino, Future.failed(new BadRequestException("")))
+  createMockedURL(TestAccountBuilder.internalServerError, Future.failed(new Upstream5xxResponse("CRITICAL FAILURE", 500, 500)))
 }

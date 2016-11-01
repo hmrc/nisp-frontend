@@ -16,19 +16,18 @@
 
 package uk.gov.hmrc.nisp.events
 
-import uk.gov.hmrc.nisp.models.NpsDate
-import uk.gov.hmrc.nisp.models.enums.SPContextMessage.SPContextMessage
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 object AccountAccessEvent {
-  def apply(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal,
-            statePensionForecast: BigDecimal, dateOfBirth: NpsDate, name: Option[String], sex: Option[String],
+  def apply(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,
+            statePensionForecast: BigDecimal, dateOfBirth: Option[LocalDate], name: Option[String], sex: Option[String],
             contractedOutFlag: Boolean = false, forecastScenario: Scenario, copeAmount: BigDecimal,
             authenticationProvider: String)(implicit hc: HeaderCarrier): AccountAccessEvent =
     new AccountAccessEvent(
       nino,
-      contextMessage,
       statePensionAge,
       statePensionAmount,
       statePensionForecast,
@@ -41,17 +40,16 @@ object AccountAccessEvent {
       authenticationProvider
     )
 }
-class AccountAccessEvent(nino: String, contextMessage: Option[SPContextMessage], statePensionAge: NpsDate, statePensionAmount: BigDecimal,
-                         statePensionForecast: BigDecimal, dateOfBirth: NpsDate, name: String, sex: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
+class AccountAccessEvent(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,
+                         statePensionForecast: BigDecimal, dateOfBirth: Option[LocalDate], name: String, sex: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
                          copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("AccountPage",
     Map(
       "nino" -> nino,
-      "Scenario" -> contextMessage.fold("")(_.toString),
-      "StatePensionAge" -> statePensionAge.toNpsString,
+      "StatePensionAge" -> DateTimeFormat.forPattern("dd/MM/yyyy").print(statePensionAge),
       "StatePensionAmount" -> statePensionAmount.toString(),
       "StatePensionForecast" -> statePensionForecast.toString(),
-      "DateOfBirth" -> dateOfBirth.toNpsString,
+      "DateOfBirth" -> dateOfBirth.map(date => DateTimeFormat.forPattern("dd/MM/yyyy").print(date)).getOrElse(""),
       "Name" -> name,
       "Sex" -> sex,
       "ContractedOut" -> contractedOutFlag.toString,

@@ -3,9 +3,9 @@
     "nino": "<NINO>",
     "lastProcessedDate": "05/04/2014",
     "statePensionAmount": {
-      "week": 14.57,
-      "month": 63.35,
-      "year": 760.24
+      "week": 0,
+      "month": 0,
+      "year": 0
     },
     "statePensionAge": {
       "age": 40,

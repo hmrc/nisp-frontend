@@ -54,6 +54,8 @@ object TestAccountBuilder {
   val excludedMwrreAbroad: Nino = randomNino
   val excludedAbroad: Nino = randomNino
 
+  val internalServerError: Nino = randomNino
+
   val mappedTestAccounts = Map(
     regularNino -> "regular",
     mqpNino -> "mqp",

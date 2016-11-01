@@ -14,16 +14,16 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
+@import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.utils.Constants
 
-@(spSummary: SPSummaryModel, personalMaximumChart: SPChartModel)
+@(statePension: StatePension, numberOfGaps: Int, personalMaximumChart: SPChartModel)
 
     <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
-    @if(spSummary.numberOfGaps == 1) {
+    @if(numberOfGaps == 1) {
         <p>@Messages("nisp.main.context.fillgaps.para1.singular")</p>
         @spChart(Html(Messages("nisp.main.context.fillgaps.chart.onlyone")), personalMaximumChart)
     } else {
@@ -31,14 +31,14 @@
         <ul class="list-bullet">
             <li>@Messages("nisp.main.context.fillgaps.bullet1")</li>
 
-            @if(spSummary.forecast.minGapsToFillToReachMaximum == 1) {
+            @if(statePension.amounts.maximum.gapsToFill == 1) {
                     <li>@Messages("nisp.main.context.fillgaps.bullet2.singular")</li>
                 </ul>
                 @spChart(Html(Messages("nisp.main.context.fillgaps.chart.singular")), personalMaximumChart)
             } else {
-                    <li>@Messages("nisp.main.context.fillgaps.bullet2.plural", spSummary.forecast.minGapsToFillToReachMaximum)</li>
+                    <li>@Messages("nisp.main.context.fillgaps.bullet2.plural", statePension.amounts.maximum.gapsToFill )</li>
                 </ul>
-                @spChart(Html(Messages("nisp.main.context.fillgaps.chart.plural", spSummary.forecast.minGapsToFillToReachMaximum)), personalMaximumChart)
+                @spChart(Html(Messages("nisp.main.context.fillgaps.chart.plural", statePension.amounts.maximum.gapsToFill)), personalMaximumChart)
             }
     }
 
