@@ -61,7 +61,7 @@ trait AuthorisedForNisp extends Actions {
                 authProvider = request.session.get(SessionKeys.authProvider).getOrElse(""),
                 sex = citizen.flatMap(_.person.sex),
                 dateOfBirth = citizen.map(_.person.dateOfBirth),
-                address = citizen.map(_.address)
+                address = citizen.flatMap(_.address)
               ))(request)
             }
         }

@@ -100,6 +100,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
           case (Right(statePension), NIResponse(_, Some(niSummary), None)) =>
             customAuditConnector.sendEvent(
 
+
               AccountAccessEvent(user.nino.nino,
                 statePension.pensionDate,
                 statePension.amounts.current.weeklyAmount,
