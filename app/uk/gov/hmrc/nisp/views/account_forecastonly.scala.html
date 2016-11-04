@@ -90,7 +90,7 @@ yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispU
         @includes.contractedOut()
     }
 
-    @customerAge.foreach { age =>
+    @for(age <- customerAge) {
         @if(age > Constants.deferralCutOffAge) {
             @includes.deferral(statePension.pensionAge)
         }

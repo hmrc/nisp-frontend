@@ -169,12 +169,10 @@
         @includes.contractedOut()
     }
 
-    @customerAge.foreach { age =>
-
-      @if(age > Constants.deferralCutOffAge) {
-        @includes.deferral(statePension.pensionAge)
-      }
-
+    @for(age <- customerAge) {
+        @if(age > Constants.deferralCutOffAge) {
+            @includes.deferral(statePension.pensionAge)
+        }
     }
 
     @if(isPertaxUrl) {
