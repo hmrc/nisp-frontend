@@ -20,7 +20,8 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.http.{BadRequestException, HttpGet, HttpResponse}
+import uk.gov.hmrc.nisp.helpers
+import uk.gov.hmrc.play.http.{BadRequestException, HttpGet, HttpResponse, Upstream4xxResponse}
 
 import scala.concurrent.Future
 
@@ -48,22 +49,51 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.excludedMwrreAbroad,
     TestAccountBuilder.excludedAbroad)
 
-  val badRequestNino = TestAccountBuilder.nonExistentNino
-
-  def createMockedURL(urlEndsWith: String, response: HttpResponse): Unit =
-    when(mockHttp.GET[HttpResponse](Matchers.endsWith(urlEndsWith))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(response))
+  def createMockedURL(urlEndsWith: String, response: Future[HttpResponse]): Unit =
+    when(mockHttp.GET[HttpResponse](Matchers.endsWith(urlEndsWith))(Matchers.any(), Matchers.any())).thenReturn(response)
 
   def createFailedMockedURL(urlEndsWith: String): Unit =
     when(mockHttp.GET[HttpResponse](Matchers.endsWith(urlEndsWith))(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new BadRequestException("")))
 
-  def setupNinoEndpoints(nino: Nino): Unit = {
+  def setupNispEndpoints(nino: Nino): Unit = {
     createMockedURL(s"nisp/$nino/spsummary", TestAccountBuilder.jsonResponse(nino, "summary"))
     createMockedURL(s"nisp/$nino/nirecord", TestAccountBuilder.jsonResponse(nino, "nirecord"))
     createMockedURL(s"nisp/$nino/schememembership", TestAccountBuilder.jsonResponse(nino, "schememembership"))
   }
 
-  ninos.foreach(setupNinoEndpoints)
+  def setupStatePensionEndpoints(nino: Nino): Unit = {
+    createMockedURL(s"ni/$nino", TestAccountBuilder.jsonResponse(nino, "state-pension"))
+  }
+
+  // NISP
+
+  ninos.foreach(setupNispEndpoints)
+
+  val badRequestNino = TestAccountBuilder.nonExistentNino
 
   createFailedMockedURL(s"nisp/$badRequestNino/spsummary")
   createFailedMockedURL(s"nisp/$badRequestNino/nirecord")
+
+  // State Pension
+
+  val spNinos = List(
+    TestAccountBuilder.regularNino,
+    TestAccountBuilder.excludedAllButDeadMCI
+  )
+
+  spNinos.foreach(setupStatePensionEndpoints)
+
+  when(mockHttp.GET[HttpResponse](Matchers.endsWith(s"ni/${TestAccountBuilder.excludedAll}"))(Matchers.any(), Matchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+  when(mockHttp.GET[HttpResponse](Matchers.endsWith(s"ni/${TestAccountBuilder.excludedAllButDead}"))(Matchers.any(), Matchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"TThe customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
 }

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.models.enums
+package uk.gov.hmrc.nisp.utils
 
-object APIType extends Enumeration {
-  type APIType = Value
+import play.api.libs.json.{JsError, JsSuccess, Reads}
 
-  val NI = Value
-  val SP = Value
-  val SchemeMembership = Value
-  val StatePension = Value
+object EitherReads {
+  implicit def eitherReads[A, B](implicit A: Reads[A], B: Reads[B]): Reads[Either[A, B]] =
+    Reads[Either[A, B]] { json =>
+      A.reads(json) match {
+        case JsSuccess(value, path) => JsSuccess(Left(value), path)
+        case JsError(e1) => B.reads(json) match {
+          case JsSuccess(value, path) => JsSuccess(Right(value), path)
+          case JsError(e2) => JsError(JsError.merge(e1, e2))
+        }
+      }
+    }
 }

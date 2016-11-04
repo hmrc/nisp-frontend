@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.models.enums
+package uk.gov.hmrc.nisp.helpers
 
-object APIType extends Enumeration {
-  type APIType = Value
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.connectors.StatePensionConnector
+import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.play.http.HttpGet
 
-  val NI = Value
-  val SP = Value
-  val SchemeMembership = Value
-  val StatePension = Value
+object MockStatePensionConnector extends StatePensionConnector {
+  override def http: HttpGet = MockNispHttp.mockHttp
+  override def sessionCache: SessionCache = MockSessionCache
+  override def serviceUrl: String = ""
+  override val metricsService: MetricsService = MockMetricsService
 }

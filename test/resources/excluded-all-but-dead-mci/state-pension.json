@@ -1,0 +1,16 @@
+{
+  "exclusionReasons": [
+    "PostStatePensionAge",
+    "AmountDissonance",
+    "MarriedWomenReducedRateElection",
+    "IsleOfMan",
+    "Abroad"
+  ],
+  "pensionAge": 65,
+  "pensionDate": "2017-07-18",
+  "_links" : {
+    "self": {
+      "href": "/state-pension/ni/NINO"
+    }
+  }
+}

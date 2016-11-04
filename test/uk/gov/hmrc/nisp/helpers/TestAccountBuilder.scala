@@ -21,8 +21,10 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.play.http.HttpResponse
 
+import scala.concurrent.Future
 import scala.io.Source
 import scala.util.Random
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object TestAccountBuilder {
 
@@ -36,6 +38,7 @@ object TestAccountBuilder {
   val fullUserNino: Nino = randomNino
   val blankNino: Nino = randomNino
   val notFoundNino: Nino = randomNino
+  
   val invalidKeyNino: Nino = randomNino
   val cachedNino: Nino = randomNino
   val noNameNino: Nino = randomNino
@@ -80,10 +83,11 @@ object TestAccountBuilder {
     excludedAbroad -> "excluded-abroad"
   )
 
-  def jsonResponse(nino: Nino, api: String): HttpResponse = {
-    val jsonFile = fileContents(s"test/resources/${mappedTestAccounts(nino)}/$api.json")
-    HttpResponse(Status.OK, Some(Json.parse(jsonFile.replace("<NINO>", nino.nino))))
+  def jsonResponse(nino: Nino, api: String): Future[HttpResponse] = {
+    fileContents(s"test/resources/${mappedTestAccounts(nino)}/$api.json").map { string: String =>
+      HttpResponse(Status.OK, Some(Json.parse(string.replace("<NINO>", nino.nino))))
+    }
   }
 
-  private def fileContents(filename: String): String = Source.fromFile(filename).mkString
+  private def fileContents(filename: String): Future[String] = Future { Source.fromFile(filename).mkString }
 }
