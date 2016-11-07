@@ -18,10 +18,14 @@ package uk.gov.hmrc.nisp.connectors
 
 import play.api.libs.json.{Format, Json, Writes}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.config.wiring.{NispSessionCache, WSHttp}
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.{StatePension, StatePensionExclusion}
+import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 
 import scala.concurrent.Future
 
@@ -42,4 +46,12 @@ trait StatePensionConnector extends BackendConnector {
     val headerCarrier = hc.copy(extraHeaders = hc.extraHeaders :+ apiHeader)
     retrieveFromCache[Either[StatePensionExclusion, StatePension]](APIType.StatePension, urlToRead)(headerCarrier, formats)
   }
+}
+
+object StatePensionConnector extends StatePensionConnector with ServicesConfig {
+  override val serviceUrl = baseUrl("state-pension")
+
+  override def http: HttpGet = WSHttp
+  override def sessionCache: SessionCache = NispSessionCache
+  override val metricsService: MetricsService = MetricsService
 }

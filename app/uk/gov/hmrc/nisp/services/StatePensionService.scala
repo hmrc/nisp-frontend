@@ -89,7 +89,7 @@ trait NispConnection {
   }
 }
 
-object StatePensionService extends StatePensionService with NispConnection {
+object NispStatePensionService extends StatePensionService with NispConnection {
   override val nisp: NispConnector = NispConnector
   override def now: () => DateTime = () => DateTime.now(ukTime)
 }
@@ -108,4 +108,9 @@ trait StatePensionConnection {
         Left(StatePensionExclusion(List(Exclusion.ManualCorrespondenceIndicator)))
     }
   }
+}
+
+object StatePensionService extends StatePensionService with StatePensionConnection {
+  override def now: () => DateTime = () => DateTime.now(ukTime)
+  override val statePensionConnector: StatePensionConnector = StatePensionConnector
 }

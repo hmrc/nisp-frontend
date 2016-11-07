@@ -84,7 +84,7 @@ trait AuthorisedForNisp extends Actions {
   }
 
   trait NispRegime extends TaxRegime {
-    override def isAuthorised(accounts: Accounts): Boolean = true
+    override def isAuthorised(accounts: Accounts): Boolean = accounts.paye.isDefined
     override def authenticationType: AuthenticationProvider = NispAuthProvider
   }
 
