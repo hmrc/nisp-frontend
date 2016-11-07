@@ -17,45 +17,98 @@
 package uk.gov.hmrc.nisp.services
 
 import org.joda.time.LocalDate
-import uk.gov.hmrc.nisp.helpers.MockStatePensionService
+import org.scalatest.concurrent.ScalaFutures
+import uk.gov.hmrc.nisp.helpers.{MockStatePensionServiceViaNisp, MockStatePensionServiceViaStatePension, TestAccountBuilder}
+import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
-class StatePensionServiceSpec extends UnitSpec {
+class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
 
   "yearsToContributeUntilPensionAge" should {
     "shouldBe 2 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2016-4-5" in {
-      MockStatePensionService.yearsToContributeUntilPensionAge(
+      MockStatePensionServiceViaNisp.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2016, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 2
     }
 
     "shouldBe 3 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2015-4-5" in {
-      MockStatePensionService.yearsToContributeUntilPensionAge(
+      MockStatePensionServiceViaNisp.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2015, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 3
     }
 
     "shouldBe 1 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2017-4-5" in {
-      MockStatePensionService.yearsToContributeUntilPensionAge(
+      MockStatePensionServiceViaNisp.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2017, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 1
     }
 
     "shouldBe 0 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2018-4-5" in {
-      MockStatePensionService.yearsToContributeUntilPensionAge(
+      MockStatePensionServiceViaNisp.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2018, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 0
     }
 
     "shouldBe 0 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2017-4-6" in {
-      MockStatePensionService.yearsToContributeUntilPensionAge(
+      MockStatePensionServiceViaNisp.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2017, 4, 6),
         finalRelevantYearStart = 2017
       ) shouldBe 0
+    }
+  }
+
+  "StatePensionConnection" should {
+
+    implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
+
+    "transform the Dead 403 into a Left(StatePensionExclusion(Dead))" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAll)) { exclusion =>
+        exclusion shouldBe Left(StatePensionExclusion(List(Exclusion.Dead)))
+      }
+    }
+
+    "transform the MCI 403 into a Left(StatePensionExclusion(MCI))" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAllButDead)) { exclusion =>
+        exclusion shouldBe Left(StatePensionExclusion(List(Exclusion.ManualCorrespondenceIndicator)))
+      }
+    }
+
+    "return the connector response for a regular user" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.regularNino)) { statePension =>
+        statePension shouldBe Right(StatePension(
+          new LocalDate(2015, 4, 5),
+          StatePensionAmounts(
+            false,
+            StatePensionAmountRegular(133.41, 580.1, 6961.14),
+            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+            StatePensionAmountRegular(0, 0, 0)
+          ),
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65
+        ))
+      }
+    }
+
+    "return the connector response for all the exclusions except MCI and Dead" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAllButDeadMCI)) { statePension =>
+        statePension shouldBe Left(StatePensionExclusion(
+          List(
+            Exclusion.PostStatePensionAge,
+            Exclusion.AmountDissonance,
+            Exclusion.MarriedWomenReducedRateElection,
+            Exclusion.IsleOfMan,
+            Exclusion.Abroad
+          ),
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18))
+        ))
+      }
     }
   }
 

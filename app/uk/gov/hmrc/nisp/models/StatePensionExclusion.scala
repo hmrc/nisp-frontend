@@ -21,8 +21,8 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 
 case class StatePensionExclusion(exclusionReasons: List[Exclusion.Exclusion],
-                                 pensionAge: Int,
-                                 pensionDate: LocalDate)
+                                 pensionAge: Option[Int] = None,
+                                 pensionDate: Option[LocalDate] = None)
 
 object StatePensionExclusion {
   implicit val formats = Json.format[StatePensionExclusion]

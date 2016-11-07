@@ -52,9 +52,9 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
       statePension match {
         case Left(exclusion) =>
           if (exclusion.exclusionReasons.contains(Exclusion.Dead))
-            Ok(excluded_dead(exclusion.exclusionReasons, Some(exclusion.pensionAge)))
+            Ok(excluded_dead(exclusion.exclusionReasons, exclusion.pensionAge))
           else if (exclusion.exclusionReasons.contains(Exclusion.ManualCorrespondenceIndicator))
-            Ok(excluded_mci(exclusion.exclusionReasons, Some(exclusion.pensionAge)))
+            Ok(excluded_mci(exclusion.exclusionReasons, exclusion.pensionAge))
           else {
             Ok(excluded_sp(exclusion.exclusionReasons, exclusion.pensionAge, exclusion.pensionDate, niResponse.niExclusions.isEmpty))
           }

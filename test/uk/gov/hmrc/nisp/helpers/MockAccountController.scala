@@ -37,7 +37,7 @@ trait MockAccountController extends AccountController {
   override val metricsService: MetricsService = MockMetricsService
 
   override def nispConnector: NispConnector = MockNispConnector
-  override val statePensionService: StatePensionService = MockStatePensionService
+  override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = ""
     override val reportAProblemNonJSUrl: String = ""

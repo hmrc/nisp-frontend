@@ -17,11 +17,18 @@
 package uk.gov.hmrc.nisp.helpers
 
 import org.joda.time.{DateTime, LocalDate}
-import uk.gov.hmrc.nisp.connectors.NispConnector
-import uk.gov.hmrc.nisp.services.{NispConnection, StatePensionService}
+import uk.gov.hmrc.nisp.connectors.{NispConnector, StatePensionConnector}
+import uk.gov.hmrc.nisp.services.{NispConnection, StatePensionConnection, StatePensionService}
 
-object MockStatePensionService extends StatePensionService with NispConnection {
+object MockStatePensionServiceViaNisp extends StatePensionService with NispConnection {
   override val nisp: NispConnector = MockNispConnector
 
   override def now: () => DateTime = () => new DateTime(new LocalDate(2016, 11, 1))
+}
+
+
+object MockStatePensionServiceViaStatePension extends StatePensionService with StatePensionConnection {
+  override def now: () => DateTime = () => new DateTime(new LocalDate(2016, 11, 1))
+
+  override val statePensionConnector: StatePensionConnector = MockStatePensionConnector
 }

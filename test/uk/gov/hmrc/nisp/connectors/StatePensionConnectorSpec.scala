@@ -75,8 +75,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
             Exclusion.IsleOfMan,
             Exclusion.Abroad
           ),
-          pensionAge = 65,
-          pensionDate = new LocalDate(2017, 7, 18)
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18))
         ))
       }
     }

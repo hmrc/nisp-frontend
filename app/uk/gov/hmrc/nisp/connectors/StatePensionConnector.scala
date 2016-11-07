@@ -20,11 +20,10 @@ import play.api.libs.json.{Format, Json, Writes}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.{StatePension, StatePensionExclusion}
+import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 
 trait StatePensionConnector extends BackendConnector {
   implicit val reads = eitherReads[StatePensionExclusion, StatePension]
@@ -36,8 +35,11 @@ trait StatePensionConnector extends BackendConnector {
 
   implicit val formats = Format[Either[StatePensionExclusion, StatePension]](reads, writes)
 
+  val apiHeader = "Accept" -> "application/vnd.hmrc.1.0+json"
+
   def getStatePension(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]] = {
     val urlToRead = s"$serviceUrl/ni/$nino"
-    retrieveFromCache[Either[StatePensionExclusion, StatePension]](APIType.StatePension, urlToRead)
+    val headerCarrier = hc.copy(extraHeaders = hc.extraHeaders :+ apiHeader)
+    retrieveFromCache[Either[StatePensionExclusion, StatePension]](APIType.StatePension, urlToRead)(headerCarrier, formats)
   }
 }
