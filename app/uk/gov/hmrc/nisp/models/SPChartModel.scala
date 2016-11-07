@@ -16,4 +16,4 @@
 
 package uk.gov.hmrc.nisp.models
 
-case class SPChartModel(width: Int, amountModel: SPAmountModel)
+case class SPChartModel(width: Int, amountModel: StatePensionAmount)

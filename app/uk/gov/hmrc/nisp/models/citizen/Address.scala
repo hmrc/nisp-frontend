@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.helpers
+package uk.gov.hmrc.nisp.models.citizen
 
-import org.joda.time.{DateTime, LocalDate}
-import uk.gov.hmrc.nisp.connectors.NispConnector
-import uk.gov.hmrc.nisp.services.{NispConnection, StatePensionService}
+import play.api.libs.json.Json
 
-object MockStatePensionService extends StatePensionService with NispConnection {
-  override val nisp: NispConnector = MockNispConnector
+case class Address(country: Option[String])
 
-  override def now: () => DateTime = () => new DateTime(new LocalDate(2016, 11, 1))
+object Address {
+  implicit val formats = Json.format[Address]
 }

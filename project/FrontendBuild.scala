@@ -46,6 +46,7 @@ private object AppDependencies {
   private val httpCachingClientVersion = "5.6.0"
 
   val compile = Seq(
+    "uk.gov.hmrc" %% "tax-year" % "0.2.0",
     "uk.gov.hmrc" %% "frontend-bootstrap" % "6.7.0",
     "uk.gov.hmrc" %% "play-partials" % "4.5.0",
     "uk.gov.hmrc" %% "play-authorised-frontend" % "5.5.0",

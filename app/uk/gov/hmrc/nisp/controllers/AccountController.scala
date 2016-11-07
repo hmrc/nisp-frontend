@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.mvc.{Action, AnyContent, Request, Result, Session}
+import org.joda.time.{LocalDate, Period}
+import play.api.mvc.{Action, AnyContent, Request, Session}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
@@ -33,6 +34,7 @@ import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.time.CurrentTaxYear
 
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
@@ -46,8 +48,9 @@ object AccountController extends AccountController with AuthenticationConnectors
   override val metricsService: MetricsService = MetricsService
 }
 
-trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {
+trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
   def nispConnector: NispConnector
+
   def statePensionService: StatePensionService
 
   val customAuditConnector: CustomAuditConnector
@@ -64,7 +67,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
         statePensionResponse match {
           case Right(statePension) if statePension.contractedOut => {
-            if(applicationConfig.copeTable) {
+            if (applicationConfig.copeTable) {
               Ok(account_cope(
                 statePension.amounts.cope.weeklyAmount,
                 isPertax,
@@ -86,45 +89,91 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     isFromPertax.flatMap { isPertax =>
 
-      nispConnector.connectToGetSPResponse(user.nino).map {
-        case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) =>
+      val statePensionResponseF = statePensionService.getSummary(user.nino)
+      val niResponseF = nispConnector.connectToGetNIResponse(user.nino)
 
-          customAuditConnector.sendEvent(AccountAccessEvent(user.nino.nino, spSummary.contextMessage,
-            spSummary.statePensionAge.date, spSummary.statePensionAmount.week, spSummary.forecast.forecastAmount.week,
-            spSummary.dateOfBirth, user.name, user.sex, spSummary.contractedOutFlag, spSummary.forecast.scenario,
-            spSummary.copeAmount.week, user.authProviderOld))
+      for (
+        statePensionResponse <- statePensionResponseF;
+        niResponse <- niResponseF
+      ) yield {
+        (statePensionResponse, niResponse) match {
+          case (Right(statePension), NIResponse(_, Some(niSummary), None)) =>
+            customAuditConnector.sendEvent(
 
-          if (spSummary.mqp.fold(false) (_ != MQPScenario.ContinueWorking)) {
-            val yearsMissing = Constants.minimumQualifyingYearsNSP - spSummary.numberOfQualifyingYears
-            Ok(account_mqp(spSummary, spSummary.mqp, yearsMissing, isPertax)).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
-          } else if (spSummary.forecast.scenario.equals(Scenario.ForecastOnly)) {
-            Ok(account_forecastonly(spSummary, isPertax)).withSession(storeUserInfoInSession(user,
-               spSummary.contractedOutFlag))
-          } else {
-            val (currentChart, forecastChart, personalMaximumChart) =
-              calculateChartWidths(
-                spSummary.statePensionAmount,
-                spSummary.forecast.forecastAmount,
-                spSummary.forecast.personalMaximum
-              )
-            Ok(account(
-              spSummary,
-              currentChart,
-              forecastChart,
-              personalMaximumChart,
-              isPertax,
-              hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && spSummary.numberOfGaps > 1
-            )).withSession(storeUserInfoInSession(user, spSummary.contractedOutFlag))
-          }
 
-        case SPResponseModel(_, Some(spExclusions: ExclusionsModel), _) =>
-          customAuditConnector.sendEvent(AccountExclusionEvent(
-            user.nino.nino,
-            user.name,
-            spExclusions.exclusions
-          ))
-          Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
-        case _ => throw new RuntimeException("SP Response Model is unmatchable. This is probably a logic error.")
+              AccountAccessEvent(user.nino.nino,
+                statePension.pensionDate,
+                statePension.amounts.current.weeklyAmount,
+                statePension.amounts.forecast.weeklyAmount,
+                user.dateOfBirth,
+                user.name,
+                user.sex,
+                statePension.contractedOut,
+                statePension.forecastScenario,
+                statePension.amounts.cope.weeklyAmount,
+                user.authProviderOld
+              ))
+
+            val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
+              statePension.earningsIncludedUpTo,
+              statePension.finalRelevantStartYear
+            )
+
+            if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
+              val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
+              Ok(account_mqp(
+                statePension,
+                niSummary.noOfNonQualifyingYears,
+                niSummary.numberOfPayableGaps,
+                yearsMissing,
+                user.livesAbroad,
+                user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                isPertax,
+                yearsToContributeUntilPensionAge
+              )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+            } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
+
+              Ok(account_forecastonly(
+                statePension,
+                niSummary.noOfNonQualifyingYears,
+                niSummary.numberOfPayableGaps,
+                user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                user.livesAbroad,
+                isPertax,
+                yearsToContributeUntilPensionAge
+              )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+
+            } else {
+              val (currentChart, forecastChart, personalMaximumChart) =
+                calculateChartWidths(
+                  statePension.amounts.current,
+                  statePension.amounts.forecast,
+                  statePension.amounts.maximum
+                )
+              Ok(account(
+                statePension,
+                niSummary.noOfNonQualifyingYears,
+                niSummary.numberOfPayableGaps,
+                currentChart,
+                forecastChart,
+                personalMaximumChart,
+                isPertax,
+                hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && niSummary.noOfNonQualifyingYears > 1,
+                user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                user.livesAbroad,
+                yearsToContributeUntilPensionAge
+              )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+            }
+
+          case (Left(statePensionExclusion), _) =>
+            customAuditConnector.sendEvent(AccountExclusionEvent(
+              user.nino.nino,
+              user.name,
+              statePensionExclusion.exclusionReasons
+            ))
+            Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
+          case _ => throw new RuntimeException("AccountController: NIResponse Model is unmatchable. This is probably a logic error.")
+        }
       }
     }
   }
@@ -133,23 +182,23 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
     setFromPertax
     Redirect(routes.AccountController.show())
   }
-  
-  def calculateChartWidths(current: SPAmountModel, forecast: SPAmountModel, personalMaximum: SPAmountModel): (SPChartModel, SPChartModel, SPChartModel) = {
+
+  def calculateChartWidths(current: StatePensionAmount, forecast: StatePensionAmount, personalMaximum: StatePensionAmount): (SPChartModel, SPChartModel, SPChartModel) = {
     // scalastyle:off magic.number
-    if (personalMaximum.week > forecast.week) {
-      val currentChart = SPChartModel((current.week/personalMaximum.week * 100).toInt.max(Constants.chartWidthMinimum), current)
-      val forecastChart = SPChartModel((forecast.week/personalMaximum.week * 100).toInt.max(Constants.chartWidthMinimum), forecast)
+    if (personalMaximum.weeklyAmount > forecast.weeklyAmount) {
+      val currentChart = SPChartModel((current.weeklyAmount / personalMaximum.weeklyAmount * 100).toInt.max(Constants.chartWidthMinimum), current)
+      val forecastChart = SPChartModel((forecast.weeklyAmount / personalMaximum.weeklyAmount * 100).toInt.max(Constants.chartWidthMinimum), forecast)
       val personalMaxChart = SPChartModel(100, personalMaximum)
       (currentChart, forecastChart, personalMaxChart)
     } else {
-      if (forecast.week > current.week) {
-        val currentPercentage = (current.week / forecast.week * 100).toInt
+      if (forecast.weeklyAmount > current.weeklyAmount) {
+        val currentPercentage = (current.weeklyAmount / forecast.weeklyAmount * 100).toInt
         val currentChart = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), current)
         val forecastChart = SPChartModel(100, forecast)
         (currentChart, forecastChart, forecastChart)
       } else {
         val currentChart = SPChartModel(100, current)
-        val forecastChart = SPChartModel((forecast.week / current.week * 100).toInt, forecast)
+        val forecastChart = SPChartModel((forecast.weeklyAmount / current.weeklyAmount * 100).toInt, forecast)
         (currentChart, forecastChart, forecastChart)
       }
     }
@@ -160,6 +209,10 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       (NAME -> user.name.getOrElse("N/A")) +
       (NINO -> user.nino.nino) +
       (CONTRACTEDOUT -> contractedOut.toString)
+  }
+
+  private[controllers] def calculateAge(dateOfBirth: LocalDate, currentDate: LocalDate): Int = {
+    new Period(dateOfBirth, currentDate).getYears
   }
 
   def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>

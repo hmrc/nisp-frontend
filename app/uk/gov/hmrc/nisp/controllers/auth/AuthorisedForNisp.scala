@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredicate, VerifyProvider}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.exceptions.EmptyPayeException
-import uk.gov.hmrc.nisp.models.citizen.Citizen
+import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.auth._
@@ -57,9 +57,11 @@ trait AuthorisedForNisp extends Actions {
             retrievePerson(authContext) flatMap { citizen =>
               action(NispUser(
                 authContext = authContext,
-                name = citizen.flatMap(_.getNameFormatted),
+                name = citizen.flatMap(_.person.getNameFormatted),
                 authProvider = request.session.get(SessionKeys.authProvider).getOrElse(""),
-                sex = citizen.flatMap(_.sex)
+                sex = citizen.flatMap(_.person.sex),
+                dateOfBirth = citizen.map(_.person.dateOfBirth),
+                address = citizen.flatMap(_.address)
               ))(request)
             }
         }
@@ -71,7 +73,7 @@ trait AuthorisedForNisp extends Actions {
   object AuthorisedByAny extends AuthorisedBy(NispAnyRegime)
   object AuthorisedByVerify extends AuthorisedBy(NispVerifyRegime)
 
-  def retrievePerson(authContext: AuthContext)(implicit request: Request[AnyContent]): Future[Option[Citizen]] =
+  def retrievePerson(authContext: AuthContext)(implicit request: Request[AnyContent]): Future[Option[CitizenDetailsResponse]] =
     citizenDetailsService.retrievePerson(retrieveNino(authContext.principal))
 
   private def retrieveNino(principal: Principal): Nino = {

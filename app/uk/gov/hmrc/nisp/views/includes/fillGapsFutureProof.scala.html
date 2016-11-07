@@ -14,18 +14,18 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
+@import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.utils.Constants
 
-@(spSummary: SPSummaryModel, personalMaximumChart: SPChartModel)
+@(statePension: StatePension, personalMaximumChart: SPChartModel)
 
 <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
 
 <p>@Messages("nisp.main.context.fillgaps.futureproof.para")</p>
 
-@spChart(Html(Messages("nisp.main.context.fillgaps.futureproof.chart", spSummary.forecast.minGapsToFillToReachMaximum)), personalMaximumChart)
+@spChart(Html(Messages("nisp.main.context.fillgaps.futureproof.chart", statePension.amounts.maximum.gapsToFill)), personalMaximumChart)
 
 <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGapsAndCost")</a>

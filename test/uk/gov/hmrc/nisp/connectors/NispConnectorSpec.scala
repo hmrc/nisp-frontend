@@ -41,7 +41,6 @@ class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter 
     NpsDate(2014,4,5),
     SPAmountModel(150.26,653.36,7840.35),
     SPAgeModel(66,NpsDate(2027,9,26)),
-    contextMessage = None,
     finalRelevantYear = 2043,
     numberOfQualifyingYears = 25,
     numberOfGaps = 6,

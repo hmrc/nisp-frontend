@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SPChartModel}
+@import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.controllers.routes
@@ -22,13 +22,13 @@
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 
 
-@(spSummary: SPSummaryModel, currentChart: SPChartModel, forecastChart: SPChartModel)
+@(statePension: StatePension, yearsToContributeUntilPensionAge: Int, currentChart: SPChartModel, forecastChart: SPChartModel)
 
-@if(spSummary.isMQP)  {
+@if(statePension.mqpScenario.isDefined)  {
 
-    <h3 class="heading-medium"> @NispMoney.pounds(spSummary.forecast.forecastAmount.week) @Messages("nisp.main.mostYouCanGet")</h3>
-    <p>@Messages("nisp.main.context.willReach") @Html(Messages("nisp.main.context.reachMax.needToPay", (spSummary.statePensionAge.date.localDate.getYear).toString())) </p>
-    <p>@Html(Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate)))</p>
+    <h3 class="heading-medium"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.mostYouCanGet")</h3>
+    <p>@Messages("nisp.main.context.willReach") @Html(Messages("nisp.main.context.reachMax.needToPay", (statePension.pensionDate.getYear).toString())) </p>
+    <p>@Html(Messages("nisp.main.after", Dates.formatDate(statePension.pensionDate)))</p>
 
 } else {
 
@@ -36,45 +36,45 @@
     <ul class="list-bullet">
         <li>@Messages("nisp.main.notAGuarantee")</li>
         <li>@Messages("nisp.main.inflation")</li>
-        @if(spSummary.hasPsod) {<li>@Messages("nisp.main.psod")</li>}
+        @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
     </ul>
     <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
-        @chart(Html(Messages("nisp.main.chart.lastprocessed.title",spSummary.lastProcessedDate.localDate.getYear().toString())),
-                currentChart.width, Html(s"${NispMoney.pounds(currentChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+        @chart(Html(Messages("nisp.main.chart.lastprocessed.title",statePension.earningsIncludedUpTo.getYear().toString())),
+                currentChart.width, Html(s"${NispMoney.pounds(currentChart.amountModel.weeklyAmount)} ${Messages("nisp.main.chart.week")}"))
 
-        @spSummary.forecast.scenario match  {
+        @statePension.forecastScenario match  {
 
             case Scenario.ContinueWorkingMax => {
 
-                @if(spSummary.forecast.oldRulesCustomer) {
+                @if(statePension.amounts.protectedPayment) {
                     @chart(Html(Messages("nisp.main.chart.estimateIfYouContinue2016",
-                    (spSummary.finalRelevantYear+1).toString())), forecastChart.width,
-                    Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                    (statePension.finalRelevantEndYear).toString())), forecastChart.width,
+                    Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${Messages("nisp.main.chart.week")}"))
                 } else {
-                    @if(spSummary.forecast.yearsLeftToWork==1) {
+                    @if(statePension.amounts.forecast.yearsToWork==1) {
                         @chart(Html(Messages("nisp.main.chart.estimateIfYouContinue.single",1,
-                            (spSummary.finalRelevantYear+1).toString())), forecastChart.width,
-                            Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                            (statePension.finalRelevantEndYear).toString())), forecastChart.width,
+                            Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${Messages("nisp.main.chart.week")}"))
                     } else {
-                        @chart(Html(Messages("nisp.main.chart.estimateIfYouContinue.plural", spSummary.forecast.yearsLeftToWork,
-                            (spSummary.finalRelevantYear+1).toString())), forecastChart.width,
-                            Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                        @chart(Html(Messages("nisp.main.chart.estimateIfYouContinue.plural", statePension.amounts.forecast.yearsToWork,
+                            (statePension.finalRelevantEndYear).toString())), forecastChart.width,
+                            Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${Messages("nisp.main.chart.week")}"))
                     }
                 }
             }
 
             case Scenario.ContinueWorkingNonMax  => {
-                    @chart(Html(Messages("nisp.main.chart.spa.title",(spSummary.finalRelevantYear+1).toString())), forecastChart.width,
-                        Html(s"${NispMoney.pounds(forecastChart.amountModel.week)} ${Messages("nisp.main.chart.week")}"))
+                    @chart(Html(Messages("nisp.main.chart.spa.title",(statePension.finalRelevantEndYear).toString())), forecastChart.width,
+                        Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${Messages("nisp.main.chart.week")}"))
             }
         }
 
-    <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.week) @Messages("nisp.main.mostYouCanGet")</h2>
-    @if(spSummary.forecast.yearsLeftToWork != spSummary.yearsToContributeUntilPensionAge) {
-        <p>@Messages("nisp.main.context.willReach") @Html(Messages("nisp.main.context.reachMax.needToPay", (spSummary.statePensionAge.date.localDate.getYear).toString())) </p>
+    <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.weeklyAmount) @Messages("nisp.main.mostYouCanGet")</h2>
+    @if(statePension.amounts.forecast.yearsToWork != yearsToContributeUntilPensionAge) {
+        <p>@Messages("nisp.main.context.willReach") @Html(Messages("nisp.main.context.reachMax.needToPay", (statePension.pensionDate.getYear).toString())) </p>
     }
 
-    <p>@Html(Messages("nisp.main.after", Dates.formatDate(spSummary.statePensionAge.date.localDate)))</p>
+    <p>@Html(Messages("nisp.main.after", Dates.formatDate(statePension.pensionDate)))</p>
 }
 
 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>

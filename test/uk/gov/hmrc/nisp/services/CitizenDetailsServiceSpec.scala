@@ -16,13 +16,15 @@
 
 package uk.gov.hmrc.nisp.services
 
+import org.joda.time.LocalDate
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.nisp.helpers.{MockCitizenDetailsService, TestAccountBuilder}
-import uk.gov.hmrc.nisp.models.citizen.Citizen
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsResponse}
+import uk.gov.hmrc.play.http
+import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream5xxResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -35,38 +37,45 @@ class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAn
 
   "CitizenDetailsService" should {
     "return something for valid NINO" in {
-      val person: Future[Option[Citizen]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
+      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
       whenReady(person) {p =>
         p should not be None
       }
     }
 
     "return None for bad NINO" in {
-      val person: Future[Option[Citizen]] = MockCitizenDetailsService.retrievePerson(nonExistentNino)(new HeaderCarrier())
+      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nonExistentNino)(new HeaderCarrier())
       whenReady(person) {p =>
         p shouldBe None
       }
     }
 
     "return None for bad request" in {
-      val person: Future[Option[Citizen]] = MockCitizenDetailsService.retrievePerson(badRequestNino)(new HeaderCarrier())
+      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(badRequestNino)(new HeaderCarrier())
       whenReady(person) {p =>
         p shouldBe None
       }
     }
 
-    "return correct name and gender for NINO" in {
-      val person: Future[Option[Citizen]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
+    "return a Failed Future for a 5XX error" in {
+      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(TestAccountBuilder.internalServerError)(new HeaderCarrier())
+      whenReady(person.failed) { ex =>
+        ex shouldBe a [Upstream5xxResponse]
+      }
+    }
+
+    "return correct name, gender and Date of Birth for NINO" in {
+      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p.map(_.copy(nino = nino)) shouldBe Some(Citizen(nino, Some("AHMED"), Some("BRENNAN"), Some("M")))
+        p.map(_.person.copy(nino = nino)) shouldBe Some(Citizen(nino, Some("AHMED"), Some("BRENNAN"), Some("M"), new LocalDate(1954, 3, 9)))
       }
     }
 
     "return formatted name of None if Citizen returns without a name" in {
-      val person: Future[Option[Citizen]] = MockCitizenDetailsService.retrievePerson(nonamenino)(new HeaderCarrier())
+      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nonamenino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p shouldBe Some(Citizen(nonamenino, None, None, None))
-        p.get.getNameFormatted shouldBe None
+        p shouldBe Some(CitizenDetailsResponse(Citizen(nonamenino, None, None, None, new LocalDate(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
+        p.get.person.getNameFormatted shouldBe None
       }
     }
   }

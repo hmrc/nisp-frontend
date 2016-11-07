@@ -18,24 +18,53 @@ package uk.gov.hmrc.nisp.models
 
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
+import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
+import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
+import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
+import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.time.CurrentTaxYear
 
-case class StatePensionAmount(yearsToWork: Option[Int],
-                              gapsToFill: Option[Int],
-                              weeklyAmount: BigDecimal,
-                              monthlyAmount: BigDecimal,
-                              annualAmount: BigDecimal) {
 
+sealed trait StatePensionAmount {
+  val weeklyAmount: BigDecimal
+  val monthlyAmount: BigDecimal
+  val annualAmount: BigDecimal
 }
-object StatePensionAmount {
-  implicit val formats = Json.format[StatePensionAmount]
+
+
+case class StatePensionAmountRegular(weeklyAmount: BigDecimal,
+                                     monthlyAmount: BigDecimal,
+                                     annualAmount: BigDecimal) extends StatePensionAmount
+
+object StatePensionAmountRegular {
+  implicit val formats = Json.format[StatePensionAmountRegular]
 }
 
+case class StatePensionAmountForecast(yearsToWork: Int,
+                                      weeklyAmount: BigDecimal,
+                                      monthlyAmount: BigDecimal,
+                                      annualAmount: BigDecimal) extends StatePensionAmount {
+}
+
+object StatePensionAmountForecast {
+  implicit val formats = Json.format[StatePensionAmountForecast]
+}
+
+case class StatePensionAmountMaximum(yearsToWork: Int,
+                                     gapsToFill: Int,
+                                     weeklyAmount: BigDecimal,
+                                     monthlyAmount: BigDecimal,
+                                     annualAmount: BigDecimal) extends StatePensionAmount
+
+object StatePensionAmountMaximum {
+  implicit val formats = Json.format[StatePensionAmountMaximum]
+}
 
 case class StatePensionAmounts(protectedPayment: Boolean,
-                               current: StatePensionAmount,
-                               forecast: StatePensionAmount,
-                               maximum: StatePensionAmount,
-                               cope: StatePensionAmount)
+                               current: StatePensionAmountRegular,
+                               forecast: StatePensionAmountForecast,
+                               maximum: StatePensionAmountMaximum,
+                               cope: StatePensionAmountRegular)
 
 object StatePensionAmounts {
   implicit val formats = Json.format[StatePensionAmounts]
@@ -51,7 +80,46 @@ case class StatePension(earningsIncludedUpTo: LocalDate,
                         pensionSharingOrder: Boolean,
                         currentFullWeeklyPensionAmount: BigDecimal) {
 
-  val contractedOut: Boolean = amounts.cope.weeklyAmount > 0
+  lazy val contractedOut: Boolean = amounts.cope.weeklyAmount > 0
+
+  lazy val forecastScenario: Scenario = {
+    if (amounts.maximum.weeklyAmount == 0) {
+      Scenario.CantGetPension
+    } else if(amounts.maximum.weeklyAmount > amounts.forecast.weeklyAmount) {
+      Scenario.FillGaps
+    } else {
+      if(amounts.forecast.weeklyAmount > amounts.current.weeklyAmount) {
+
+        if (amounts.forecast.weeklyAmount >= currentFullWeeklyPensionAmount)
+          Scenario.ContinueWorkingMax
+        else Scenario.ContinueWorkingNonMax
+
+      } else if(amounts.forecast.weeklyAmount == amounts.current.weeklyAmount) {
+        Scenario.Reached
+      } else {
+        Scenario.ForecastOnly
+      }
+    }
+  }
+
+  lazy val mqpScenario: Option[MQPScenario] = {
+    if (amounts.current.weeklyAmount > 0 && numberOfQualifyingYears >= Constants.minimumQualifyingYearsNSP) {
+      None
+    } else {
+      if (amounts.forecast.weeklyAmount > 0) {
+        Some(MQPScenario.ContinueWorking)
+      } else {
+        if (amounts.maximum.weeklyAmount > 0) {
+          Some(MQPScenario.CanGetWithGaps)
+        } else {
+          Some(MQPScenario.CantGet)
+        }
+      }
+    }
+  }
+
+  lazy val finalRelevantStartYear: Int = Integer.parseInt(finalRelevantYear.substring(0, 4))
+  lazy val finalRelevantEndYear: Int = finalRelevantStartYear + 1
 }
 
 object StatePension {
