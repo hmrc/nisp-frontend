@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.services
 
 import org.joda.time.LocalDate
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.time.{Millis, Seconds, Span}
 import uk.gov.hmrc.nisp.helpers.{MockStatePensionServiceViaNisp, MockStatePensionServiceViaStatePension, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
@@ -25,6 +26,9 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
 class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
+
+  implicit val defaultPatience =
+    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   "yearsToContributeUntilPensionAge" should {
     "shouldBe 2 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2016-4-5" in {
