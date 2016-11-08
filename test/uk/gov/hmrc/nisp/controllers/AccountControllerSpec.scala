@@ -119,6 +119,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val copeTable: Boolean = false
+            override val useStatePensionAPI: Boolean = true
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -215,6 +216,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val copeTable: Boolean = true
+            override val useStatePensionAPI: Boolean = true
           }
         }
         val result = controller.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
@@ -251,6 +253,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val copeTable: Boolean = false
+            override val useStatePensionAPI: Boolean = true
           }
         }
         val result = controller.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
@@ -323,6 +326,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val copeTable: Boolean = false
+            override val useStatePensionAPI: Boolean = true
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -358,6 +362,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val copeTable: Boolean = false
+            override val useStatePensionAPI: Boolean = true
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -456,6 +461,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = true
             override val copeTable: Boolean = false
+            override val useStatePensionAPI: Boolean = true
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
