@@ -1,0 +1,40 @@
+{
+  "earningsIncludedUpTo": "2015-04-05",
+  "amounts": {
+    "protectedPayment": false,
+    "current": {
+      "weeklyAmount": 133.41,
+      "monthlyAmount": 580.1,
+      "annualAmount": 6961.14
+    },
+    "forecast": {
+      "yearsToWork": 3,
+      "weeklyAmount": 146.76,
+      "monthlyAmount": 638.14,
+      "annualAmount": 7657.73
+    },
+    "maximum": {
+      "yearsToWork": 3,
+      "gapsToFill": 2,
+      "weeklyAmount": 155.65,
+      "monthlyAmount": 676.8,
+      "annualAmount": 8121.59
+    },
+    "cope": {
+      "weeklyAmount": 0,
+      "monthlyAmount": 0,
+      "annualAmount": 0
+    }
+  },
+  "pensionAge": 64,
+  "pensionDate": "2018-07-06",
+  "finalRelevantYear": "2017-18",
+  "numberOfQualifyingYears": 30,
+  "pensionSharingOrder": false,
+  "currentFullWeeklyPensionAmount": 155.65,
+  "_links" : {
+    "self": {
+      "href": "/state-pension/ni/QQ123456A"
+    }
+  }
+}

@@ -37,7 +37,7 @@ trait MockAccountController extends AccountController {
   override val metricsService: MetricsService = MockMetricsService
 
   override def nispConnector: NispConnector = MockNispConnector
-  override val statePensionService: StatePensionService = MockStatePensionService
+  override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = ""
     override val reportAProblemNonJSUrl: String = ""
@@ -63,5 +63,6 @@ trait MockAccountController extends AccountController {
     override val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
     override val copeTable: Boolean = false
+    override val useStatePensionAPI: Boolean = true
   }
 }

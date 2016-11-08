@@ -22,4 +22,5 @@ object APIType extends Enumeration {
   val NI = Value
   val SP = Value
   val SchemeMembership = Value
+  val StatePension = Value
 }

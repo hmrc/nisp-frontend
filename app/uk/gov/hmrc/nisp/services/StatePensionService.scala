@@ -17,10 +17,12 @@
 package uk.gov.hmrc.nisp.services
 
 import org.joda.time.{DateTime, LocalDate}
+import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.connectors.NispConnector
+import uk.gov.hmrc.nisp.connectors.{NispConnector, StatePensionConnector}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 
 import scala.concurrent.Future
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
@@ -78,8 +80,8 @@ trait NispConnection {
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), _) =>
         Left(StatePensionExclusion(
           exclusionReasons = spExclusions.exclusions,
-          pensionAge = spSummary.statePensionAge.age,
-          pensionDate = spSummary.statePensionAge.date.localDate
+          pensionAge = Some(spSummary.statePensionAge.age),
+          pensionDate = Some(spSummary.statePensionAge.date.localDate)
         ))
 
       case _ => throw new RuntimeException("SP Response Model is unmatchable. This is probably a logic error.")
@@ -87,7 +89,28 @@ trait NispConnection {
   }
 }
 
-object StatePensionService extends StatePensionService with NispConnection {
+object NispStatePensionService extends StatePensionService with NispConnection {
   override val nisp: NispConnector = NispConnector
   override def now: () => DateTime = () => DateTime.now(ukTime)
+}
+
+trait StatePensionConnection {
+  val statePensionConnector: StatePensionConnector
+
+  final val exclusionCodeDead = "EXCLUSION_DEAD"
+  final val exclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
+
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]] = {
+    statePensionConnector.getStatePension(nino) recover {
+      case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeDead) =>
+        Left(StatePensionExclusion(List(Exclusion.Dead)))
+      case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeManualCorrespondence) =>
+        Left(StatePensionExclusion(List(Exclusion.ManualCorrespondenceIndicator)))
+    }
+  }
+}
+
+object StatePensionService extends StatePensionService with StatePensionConnection {
+  override def now: () => DateTime = () => DateTime.now(ukTime)
+  override val statePensionConnector: StatePensionConnector = StatePensionConnector
 }

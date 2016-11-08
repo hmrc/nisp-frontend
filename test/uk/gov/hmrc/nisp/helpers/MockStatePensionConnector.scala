@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.models
+package uk.gov.hmrc.nisp.helpers
 
-import org.joda.time.LocalDate
-import play.api.libs.json.Json
-import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.connectors.StatePensionConnector
+import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.play.http.HttpGet
 
-case class StatePensionExclusion(exclusionReasons: List[Exclusion.Exclusion],
-                                 pensionAge: Option[Int] = None,
-                                 pensionDate: Option[LocalDate] = None)
-
-object StatePensionExclusion {
-  implicit val formats = Json.format[StatePensionExclusion]
+object MockStatePensionConnector extends StatePensionConnector {
+  override def http: HttpGet = MockNispHttp.mockHttp
+  override def sessionCache: SessionCache = MockSessionCache
+  override def serviceUrl: String = ""
+  override val metricsService: MetricsService = MockMetricsService
 }

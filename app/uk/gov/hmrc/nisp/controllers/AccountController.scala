@@ -29,7 +29,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NispStatePensionService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
@@ -39,13 +39,13 @@ import uk.gov.hmrc.time.CurrentTaxYear
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
   override val nispConnector: NispConnector = NispConnector
-  override val statePensionService: StatePensionService = StatePensionService
   override val sessionCache: SessionCache = NispSessionCache
-
   override val customAuditConnector = CustomAuditConnector
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val metricsService: MetricsService = MetricsService
+  override val statePensionService: StatePensionService =
+    if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
 }
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
