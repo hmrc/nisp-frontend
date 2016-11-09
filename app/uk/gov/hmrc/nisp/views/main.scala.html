@@ -58,7 +58,7 @@
 }
 
 @head = {
-    @layouts.head(applicationConfig.assetsPrefix, Some(linkElement), None)
+    @layouts.head(Some(linkElement), None)
 }
 
 @insideHeader = {
@@ -133,7 +133,6 @@
 @bodyEnd = {
     @layouts.footer(analyticsToken = applicationConfig.analyticsToken,
         analyticsHost = applicationConfig.analyticsHost,
-        assetsPrefix = applicationConfig.assetsPrefix,
         ssoUrl = applicationConfig.ssoUrl,
         scriptElem = None,
         gaCalls = gaCalls,
