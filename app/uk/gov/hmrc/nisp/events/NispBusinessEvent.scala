@@ -28,5 +28,6 @@ abstract class NispBusinessEvent(auditType: String, detail: Map[String, String])
       "clientIP" -> (hc.forwarded match {
         case Some(ForwardedFor(someVal)) => Try(someVal.split(',').head).getOrElse("")
         case None => ""
-      })
+      }),
+      "X-Request-ID" -> hc.requestId.map(_.value).getOrElse("")
     ))
