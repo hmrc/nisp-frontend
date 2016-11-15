@@ -29,5 +29,6 @@ abstract class NispBusinessEvent(auditType: String, detail: Map[String, String])
         case Some(ForwardedFor(someVal)) => Try(someVal.split(',').head).getOrElse("")
         case None => ""
       }),
-      "X-Request-ID" -> hc.requestId.map(_.value).getOrElse("")
+      "X-Request-ID" -> hc.requestId.map(_.value).getOrElse(""),
+      "X-Session-ID" -> hc.sessionId.map(_.value).getOrElse("")
     ))
