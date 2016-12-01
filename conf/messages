@@ -168,7 +168,7 @@ nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/call-charges" 
 
 nisp.excluded.title = You are unable to use this service
 
-nisp.excluded.amountdissonance = Sorry, your National Insurance record is a bit complicated, so we cannot give you a forecast. We&rsquo;re working on fixing this.
+nisp.excluded.amountdissonance = We&rsquo;re unable to calculate your State Pension forecast at the moment and we&rsquo;re working on fixing this.
 
 nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a> to get an estimate of your State Pension, based on your current National Insurance record.
 
