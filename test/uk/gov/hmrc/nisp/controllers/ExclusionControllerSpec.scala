@@ -50,7 +50,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
   val mciMessaging = "We need to speak to you before you can log in to the service."
   val postSPAMessaging = "If you have not already started <a href=\"https://www.gov.uk/claim-state-pension-online\" rel=\"external\" data-journey-click=\"checkmystatepension:external:claimstatepension\">claiming your State Pension</a>, you can <a href=\"https://www.gov.uk/deferring-state-pension\" rel=\"external\" data-journey-click=\"checkmystatepension:external:deferstatepension\" target=\"_blank\">put off claiming your State Pension (opens in new tab)</a> and this may mean you get extra State Pension when you do want to claim it."
-  val dissonanceMessaging = "Sorry, your National Insurance record is a bit complicated, so we cannot give you a forecast. We&rsquo;re working on fixing this."
+  val dissonanceMessaging = "We&rsquo;re unable to calculate your State Pension forecast at the moment and we&rsquo;re working on fixing this."
   val isleOfManMessagingSP = "We&rsquo;re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme."
   val isleOfManMessagingNI = "We&rsquo;re unable to show your National Insurance record as you have contributions from the Isle of Man."
   val mwrreMessagingSP = "We&rsquo;re unable to calculate your State Pension forecast as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)"
