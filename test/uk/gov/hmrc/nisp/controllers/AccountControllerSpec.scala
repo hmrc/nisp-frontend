@@ -295,6 +295,83 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
         ))
         redirectLocation(result) shouldBe Some(twoFactorUrl)
       }
+
+      "display the correct Google Analytics code" should {
+        "dimension7 should be the scenario" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension7': 'FillGaps'" shouldBe true
+        }
+
+        "dimension8 should be the forecast weekly amount" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension8': '146.76'" shouldBe true
+        }
+
+        "dimension10 should be the number of qualifying years" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension10': '30'" shouldBe true
+        }
+
+        "dimension11 should be the number of gaps" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension11': '10'" shouldBe true
+        }
+
+        "dimension12 should be the number of gaps payable" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension12': '4'" shouldBe true
+        }
+
+        "dimension13 should be years until state pension age" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension13': '3'" shouldBe true
+        }
+
+        "dimension14 should be if the user is contracted out" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension14': 'false'" shouldBe true
+        }
+
+        "dimension15 should be the pension age" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension15': '64'" shouldBe true
+        }
+
+        "dimension16 should be the COPE amount" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension16': '0'" shouldBe true
+        }
+
+        "dimension22 should be the old auth provider" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension22': 'verify'" shouldBe true
+        }
+
+        "dimension38 should be the auth provider" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension38': 'IDA'" shouldBe true
+        }
+
+        "dimension39 should be the confidence level" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension39': '500'" shouldBe true
+        }
+
+        "dimension40 should be the customer age" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension40': '62'" shouldBe true
+        }
+
+        "dimension41 should be the sex" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'dimension41': 'M'" shouldBe true
+        }
+
+        "metric should be 1" in {
+          val result = MockAccountController.show()(authenticatedFakeRequest(mockUserId))
+          contentAsString(result) contains "'metric5': 1" shouldBe true
+        }
+      }
     }
 
     "GET /signout" should {
