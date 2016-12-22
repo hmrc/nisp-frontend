@@ -143,7 +143,7 @@
                 <li>@Messages("nisp.main.inflation")</li>
                 @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
             </ul>
-            <h2 class="heading-medium">@Messages("nisp.main.breakdown")</h2>
+            <h2 class="heading-medium">@Messages("nisp.main.continueContribute")</h2>
 
             @includes.spChart(Html(Messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
             @if(statePension.amounts.protectedPayment) {
