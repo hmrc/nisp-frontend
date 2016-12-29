@@ -71,7 +71,7 @@ nisp.main.month = a month
 nisp.main.year = a year
 nisp.main.equivalent = This is equal to:
 nisp.main.notAGuarantee = is not a guarantee and is based on the current law
-nisp.main.isBased = is based on your latest National Insurance record <span class="nowrap">({0})</span>
+nisp.main.isBased = is based on your National Insurance record up to <span class="nowrap">{0}</span>
 nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = does not include the pension sharing order you have in effect
