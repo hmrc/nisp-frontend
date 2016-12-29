@@ -98,7 +98,7 @@ nisp.main.showyourrecord = View your National Insurance record
 nisp.main.showyourrecordUK = View your UK National Insurance record
 
 nisp.main.chart.lastprocessed.title = Estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
-nisp.main.chart.spa.title = Forecast if you continue to contribute until <span class="nowrap">5 April {0}</span>
+nisp.main.chart.spa.title = Forecast if you contribute until <span class="nowrap">5 April {0}</span>
 nisp.main.chart.whichis = which is
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
