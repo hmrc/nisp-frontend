@@ -1,9 +1,14 @@
-Frontend of the National Insurance and new State Pension application
+[Check your State Pension] Frontend
 ====================================================================
 
 [![Build Status](https://travis-ci.org/hmrc/nisp-frontend.svg?branch=master)](https://travis-ci.org/hmrc/nisp-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/nisp-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/nisp-frontend/_latestVersion)
 
-This service provides the frontend endpoint for the [National Insurance and State Pensions project](https://github.com/hmrc/nisp).
+This service provides the frontend endpoint for the [Check your State Pension] project, formally known as the National Insurance and State Pension project.
+
+Other components:
+* [Legacy Backend](https://github.com/hmrc/nisp)
+* [State Pension Backend](https://github.com/hmrc/state-pension)
+* [National Insurance Backend](https://github.com/hmrc/national-insurance-record)
 
 Summary
 ---------
@@ -24,7 +29,7 @@ This service is written in [Scala](http://www.scala-lang.org/) and [Play](http:/
 Authentication
 ------------
 
-This customer logs into this service using [GOV.UK Verify](https://www.gov.uk/government/publications/introducing-govuk-verify/introducing-govuk-verify)
+This customer logs into this service using [GOV.UK Verify](https://www.gov.uk/government/publications/introducing-govuk-verify/introducing-govuk-verify) and the [Government Gateway](https://www.gov.uk/government-gateway)
 
 
 Acronyms
@@ -66,4 +71,5 @@ This code is open source software licensed under the [Apache 2.0 License]("http:
 [State Pension]: https://www.gov.uk/new-state-pension/overview
 [SP]: https://www.gov.uk/new-state-pension/overview
 [JSON]: http://json.org/
+[Check your State Pension]: https://www.gov.uk/check-state-pension
 

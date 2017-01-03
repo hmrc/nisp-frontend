@@ -61,7 +61,7 @@ nisp.main.howtoincreaseit = How to improve it
 nisp.main.cope = What affects it
 nisp.main.currentvalue = Current Value
 nisp.main.today = Today, the amount of your State Pension is
-nisp.main.breakdown = Breakdown
+nisp.main.continueContribute = You need to continue to contribute National Insurance to reach your forecast
 nisp.main.forecastonly.h2.title = Your forecast is the most you can get
 nisp.main.mostYouCanGet = is the most you can get
 nisp.main.cantImprove = You cannot improve your forecast any more.
@@ -70,7 +70,7 @@ nisp.main.month = a month
 nisp.main.year = a year
 nisp.main.equivalent = This is equal to:
 nisp.main.notAGuarantee = is not a guarantee and is based on the current law
-nisp.main.isBased = is based on your latest National Insurance record <span class="nowrap">({0})</span>
+nisp.main.isBased = is based on your National Insurance record up to <span class="nowrap">{0}</span>
 nisp.main.inflation = does not include any increase due to inflation
 
 nisp.main.psod = does not include the pension sharing order you have in effect
@@ -97,7 +97,7 @@ nisp.main.showyourrecord = View your National Insurance record
 nisp.main.showyourrecordUK = View your UK National Insurance record
 
 nisp.main.chart.lastprocessed.title = Estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
-nisp.main.chart.spa.title = Forecast if you continue to contribute until <span class="nowrap">5 April {0}</span>
+nisp.main.chart.spa.title = Forecast if you contribute until <span class="nowrap">5 April {0}</span>
 nisp.main.chart.whichis = which is
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
@@ -420,7 +420,6 @@ nisp.mqp.filling.may.single = Filling one year may get you some State Pension.
 nisp.mqp.filling.may.plural = Filling some of these years may get you some State Pension.
 nisp.mqp.afterSpa = After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.whatElse = What else you can do
-nisp.mqp.privatePension = You may have a private pension. Use the free service to <a href="https://www.gov.uk/find-lost-pension" rel="external" target="_blank" data-journey-click="checkmystatepension:external:findlostpension">find pension contact details (opens in new tab)</a>.
 nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
 nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
 
