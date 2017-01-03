@@ -1,4 +1,4 @@
-Frontend of the National Insurance and new State Pension application
+Frontend of [Check your State Pension](https://www.gov.uk/check-state-pension)
 ====================================================================
 
 [![Build Status](https://travis-ci.org/hmrc/nisp-frontend.svg?branch=master)](https://travis-ci.org/hmrc/nisp-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/nisp-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/nisp-frontend/_latestVersion)
