@@ -76,12 +76,6 @@
         sidebarLinks = Some(sidebar),
         articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
     
-    @if(statePension.mqpScenario.isEmpty &&
-        (statePension.forecastScenario.equals(Scenario.FillGaps) ||
-         statePension.forecastScenario.equals(Scenario.ContinueWorkingMax) ||
-         statePension.forecastScenario.equals(Scenario.ContinueWorkingNonMax))) {
-        <h2 class="heading-medium summary">@Messages("nisp.main.summary")</h2>
-    }
     <div class="highlighted-event">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(statePension.pensionDate)</span>
             @Html(Messages("nisp.main.whenYoullBe")) @statePension.pensionAge, <span class="nowrap">@Messages("nisp.main.caveats").toLowerCase()
