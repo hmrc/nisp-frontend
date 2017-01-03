@@ -6,9 +6,9 @@ Frontend of [Check your State Pension]
 This service provides the frontend endpoint for the [Check your State Pension] project, formally known as the National Insurance and State Pension project.
 
 Other components:
-[Legacy Backend](https://github.com/hmrc/nisp)
-[State Pension Backend](https://github.com/hmrc/state-pension)
-[National Insurance Backend](https://github.com/hmrc/national-insurance-record)
+* [Legacy Backend](https://github.com/hmrc/nisp)
+* [State Pension Backend](https://github.com/hmrc/state-pension)
+* [National Insurance Backend](https://github.com/hmrc/national-insurance-record)
 
 Summary
 ---------
