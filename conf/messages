@@ -468,7 +468,7 @@ nisp.iv.failure.technical.button = Try again
 
 nisp.iv.failure.lockedout.title = Maximum number of attempts reached
 nisp.iv.failure.lockedout.intro = You have reached the maximum number of attempts to confirm your identity.
-nisp.iv.failure.lockedout.tryagain = You can try again in 7 days.
+nisp.iv.failure.lockedout.tryagain = You can try again in 24 hours.
 
 nisp.iv.failure.timeout.title = Your session has ended due to inactivity
 nisp.iv.failure.timeout.message = Your session has ended because you have not done anything for 15 minutes.
