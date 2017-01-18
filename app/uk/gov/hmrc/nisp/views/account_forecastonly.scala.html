@@ -77,7 +77,7 @@ yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispU
         <li>@Messages("nisp.main.inflation")</li>
         @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
     </ul>
-    <h2 class="heading-medium">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("dd")</h2>
+    <h2 class="heading-medium">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.mostYouCanGet")</h2>
     <p>@Messages("nisp.main.cantImprove")</p>
     <p>@Html(Messages("nisp.main.context.reachMax.needToPay", statePension.finalRelevantEndYear.toString()))</p>
     <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
