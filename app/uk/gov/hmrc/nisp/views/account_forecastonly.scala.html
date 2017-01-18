@@ -79,7 +79,7 @@ yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispU
     </ul>
     <h2 class="heading-medium">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.mostYouCanGet")</h2>
     <p>@Messages("nisp.main.cantImprove")</p>
-    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", statePension.finalRelevantEndYear.toString()))</p>
+    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (Dates.formatDate(statePension.pensionDate)).toString()))</p>
     <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
 
     @if(isAbroad) {
