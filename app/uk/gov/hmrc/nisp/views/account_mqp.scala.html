@@ -75,7 +75,7 @@
   analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <div class="panel-indent panel-border-wide panel-indent--info">
-        <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@Dates.formatDate(statePension.pensionDate)</span> @Html(Messages("nisp.main.whenYoullBe")) @statePension.pensionAge.</p>
+        <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@Dates.formatDate(statePension.pensionDate). </span></p>
 
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {

@@ -25,17 +25,17 @@
 
 
 @(
-    statePension: StatePension,
-    numberOfGaps: Int,
-    numberOfGapsPayable: Int,
-    currentChart: SPChartModel,
-    forecastChart: SPChartModel,
-    personalMaximumChart: SPChartModel,
-    isPertaxUrl:Boolean,
-    hidePersonalMaxYears: Boolean,
-    customerAge: Option[Int],
-    isAbroad: Boolean,
-    yearsToContributeUntilPensionAge: Int
+statePension: StatePension,
+numberOfGaps: Int,
+numberOfGapsPayable: Int,
+currentChart: SPChartModel,
+forecastChart: SPChartModel,
+personalMaximumChart: SPChartModel,
+isPertaxUrl:Boolean,
+hidePersonalMaxYears: Boolean,
+customerAge: Option[Int],
+isAbroad: Boolean,
+yearsToContributeUntilPensionAge: Int
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
@@ -52,125 +52,125 @@
 }
 
 @analyticsAdditionalJs = {
-    ga('set', {
-        'dimension7': '@statePension.forecastScenario',
-        'dimension8': '@statePension.amounts.forecast.weeklyAmount',
-        'dimension10': '@statePension.numberOfQualifyingYears',
-        'dimension11': '@numberOfGaps',
-        'dimension12': '@numberOfGapsPayable',
-        'dimension13': '@yearsToContributeUntilPensionAge',
-        'dimension14': '@statePension.contractedOut',
-        'dimension15': '@statePension.pensionAge',
-        'dimension16': '@statePension.amounts.cope.weeklyAmount',
-        'dimension22': '@user.authProviderOld',
-        'dimension38': '@user.authProvider',
-        'dimension39': '@user.confidenceLevel',
-        @Html(customerAge.map( age => s"'dimension40': '$age',").getOrElse(""))
-        @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
-        'metric5': 1
-    });
+ga('set', {
+'dimension7': '@statePension.forecastScenario',
+'dimension8': '@statePension.amounts.forecast.weeklyAmount',
+'dimension10': '@statePension.numberOfQualifyingYears',
+'dimension11': '@numberOfGaps',
+'dimension12': '@numberOfGapsPayable',
+'dimension13': '@yearsToContributeUntilPensionAge',
+'dimension14': '@statePension.contractedOut',
+'dimension15': '@statePension.pensionAge',
+'dimension16': '@statePension.amounts.cope.weeklyAmount',
+'dimension22': '@user.authProviderOld',
+'dimension38': '@user.authProvider',
+'dimension39': '@user.confidenceLevel',
+@Html(customerAge.map( age => s"'dimension40': '$age',").getOrElse(""))
+@Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
+'metric5': 1
+});
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
-        sidebarLinks = Some(sidebar),
-        articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-    
-    <div class="highlighted-event">
-        <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(statePension.pensionDate)</span>
-            @Html(Messages("nisp.main.whenYoullBe")) @statePension.pensionAge, <span class="nowrap">@Messages("nisp.main.caveats").toLowerCase()
+@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
+sidebarLinks = Some(sidebar),
+articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+
+<div class="highlighted-event">
+    <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(statePension.pensionDate). </span>
+        <span class="nowrap">@Messages("nisp.main.caveats")
             @Messages("nisp.is")</span>
-        </p>
-        <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.week")</em></p>
-        <p> @NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @Messages("nisp.main.month"),
-            @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @Messages("nisp.main.year")
-        </p>
-    </div>
+    </p>
+    <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.week")</em></p>
+    <p> @NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @Messages("nisp.main.month"),
+        @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @Messages("nisp.main.year")
+    </p>
+</div>
 
-    @if(statePension.mqpScenario.isDefined)  {
+@if(statePension.mqpScenario.isDefined)  {
 
-        <p>@Messages("nisp.main.caveats")</p>
-        <ul class="list-bullet">
-            <li>@Messages("nisp.main.notAGuarantee")</li>
-            <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
-            <li>@Html(Messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)))</li>
-            <li>@Messages("nisp.main.inflation")</li>
-            @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
-        </ul>
-        @if(statePension.numberOfQualifyingYears > 0) {
-            <p>@Messages("nisp.mqp.youCurrentlyHave", Time.years(statePension.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
-        } else {
-            <p>@Messages("nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP)
-        }
-
-        @if(!isAbroad) {
-            <div class="panel-indent">
-                <p>@Html(Messages("nisp.mqp.overseas"))</p>
-            </div>
-        }
-
-        @statePension.forecastScenario match {
-
-            case Scenario.ContinueWorkingMax | Scenario.ContinueWorkingNonMax  => {
-                @includes.continueWorking(statePension, yearsToContributeUntilPensionAge, currentChart, forecastChart)
-            }
-
-            case Scenario.FillGaps => {
-                @includes.fillGapsMQP()
-            }
-        }
-
-    } else {
-
-        @if(statePension.forecastScenario.equals(Scenario.Reached)) {
-            @includes.reached(statePension)
-        }
-
-        @if(statePension.forecastScenario.equals(Scenario.ContinueWorkingMax) || statePension.forecastScenario.equals(Scenario.ContinueWorkingNonMax)) {
-            @includes.continueWorking(statePension, yearsToContributeUntilPensionAge, currentChart, forecastChart)
-        }
-
-        @if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
-            <p>@Messages("nisp.main.caveats")</p>
-            <ul class="list-bullet">
-                <li>@Messages("nisp.main.notAGuarantee")</li>
-                <li>@Messages("nisp.main.inflation")</li>
-                @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
-            </ul>
-            <h2 class="heading-medium">@Messages("nisp.main.continueContribute")</h2>
-
-            @includes.spChart(Html(Messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
-            @if(statePension.amounts.protectedPayment) {
-                @includes.spChart(Html(Messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart)
-            } else {
-                @includes.spChart(Html(Messages("nisp.main.chart.spa.title",(statePension.finalRelevantEndYear).toString())), forecastChart)
-            }
-
-            @if(hidePersonalMaxYears) {
-                @includes.fillGapsFutureProof(statePension, personalMaximumChart)
-            } else {
-                @includes.fillGaps(statePension, numberOfGaps, personalMaximumChart)
-            }
-        }
-
+<p>@Messages("nisp.main.caveats")</p>
+<ul class="list-bullet">
+    <li>@Messages("nisp.main.notAGuarantee")</li>
+    <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
+    <li>@Html(Messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)))</li>
+    <li>@Messages("nisp.main.inflation")</li>
+    @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
+</ul>
+@if(statePension.numberOfQualifyingYears > 0) {
+<p>@Messages("nisp.mqp.youCurrentlyHave", Time.years(statePension.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
+} else {
+<p>@Messages("nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP)
     }
 
-    @if(isAbroad) {
-        @includes.abroad()
-    }
+    @if(!isAbroad) {
+    <div class="panel-indent">
+<p>@Html(Messages("nisp.mqp.overseas"))</p>
+</div>
+}
 
-    @if(statePension.contractedOut) {
-        @includes.contractedOut()
-    }
+@statePension.forecastScenario match {
 
-    @for(age <- customerAge) {
-        @if(age > Constants.deferralCutOffAge) {
-            @includes.deferral(statePension.pensionAge)
-        }
-    }
+case Scenario.ContinueWorkingMax | Scenario.ContinueWorkingNonMax  => {
+@includes.continueWorking(statePension, yearsToContributeUntilPensionAge, currentChart, forecastChart)
+}
 
-    @if(isPertaxUrl) {
-        <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
-    }
-  }
+case Scenario.FillGaps => {
+@includes.fillGapsMQP()
+}
+}
+
+} else {
+
+@if(statePension.forecastScenario.equals(Scenario.Reached)) {
+@includes.reached(statePension)
+}
+
+@if(statePension.forecastScenario.equals(Scenario.ContinueWorkingMax) || statePension.forecastScenario.equals(Scenario.ContinueWorkingNonMax)) {
+@includes.continueWorking(statePension, yearsToContributeUntilPensionAge, currentChart, forecastChart)
+}
+
+@if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
+<p>@Messages("nisp.main.caveats")</p>
+<ul class="list-bullet">
+    <li>@Messages("nisp.main.notAGuarantee")</li>
+    <li>@Messages("nisp.main.inflation")</li>
+    @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
+</ul>
+<h2 class="heading-medium">@Messages("nisp.main.continueContribute")</h2>
+
+@includes.spChart(Html(Messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
+@if(statePension.amounts.protectedPayment) {
+@includes.spChart(Html(Messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart)
+} else {
+@includes.spChart(Html(Messages("nisp.main.chart.spa.title",(statePension.finalRelevantEndYear).toString())), forecastChart)
+}
+
+@if(hidePersonalMaxYears) {
+@includes.fillGapsFutureProof(statePension, personalMaximumChart)
+} else {
+@includes.fillGaps(statePension, numberOfGaps, personalMaximumChart)
+}
+}
+
+}
+
+@if(isAbroad) {
+@includes.abroad()
+}
+
+@if(statePension.contractedOut) {
+@includes.contractedOut()
+}
+
+@for(age <- customerAge) {
+@if(age > Constants.deferralCutOffAge) {
+@includes.deferral(statePension.pensionAge)
+}
+}
+
+@if(isPertaxUrl) {
+<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+}
+}
 }
