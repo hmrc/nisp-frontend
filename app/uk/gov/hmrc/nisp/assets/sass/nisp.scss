@@ -63,7 +63,7 @@ h2.summary {
 }
 
 .nowrap {
-  white-space:nowrap; 
+  white-space:nowrap;
 }
 
 .helpline-sidebar {
@@ -160,7 +160,7 @@ div.panel-indent{
   margin: 1.5em 0 1em;
 
   @media only screen and (max-width: 640px) {
-    padding: 0.5em 0.75em 0.25em 0.75em;
+    padding: 0.5em 0.5em 0.25em 0.75em;
     margin: 0 -15px;
    }
     
@@ -181,13 +181,17 @@ div.panel-indent{
       line-height: 1;
       font-style: normal;
       margin-bottom: 0;
-      font-weight: 800;        
+      font-weight: 800;
+          @media only screen and (max-width: 800px) {
+                   font-size: 53px;
+                   margin: 0;
+                 }
       @media only screen and (max-width: 640px) {
-        font-size: 53px;
+        font-size: 43px;
         margin: 0;
       }
       @media only screen and (max-width: 320px) {
-        font-size: 43px;
+        font-size: 33px;
         margin: 0;
       }        
     }
