@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.utils
 object Country {
 
   def isAbroad(countryName: String): Boolean = {
+
     countryName match {
       case GREAT_BRITAIN => false
       case ISLE_OF_MAN=> false
@@ -26,6 +27,7 @@ object Country {
       case SCOTLAND => false
       case WALES => false
       case NORTHERN_IRELAND => false
+      case NOT_SPECIFIED  => false
       case _ => true
     }
   }
@@ -36,5 +38,6 @@ object Country {
   final val SCOTLAND = "SCOTLAND"
   final val WALES = "WALES"
   final val NORTHERN_IRELAND = "NORTHERN IRELAND"
+  final val NOT_SPECIFIED = "NOT SPECIFIED OR NOT USED"
 
 }
