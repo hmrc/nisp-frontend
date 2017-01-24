@@ -55,6 +55,12 @@ h2.summary {
   margin-bottom: 0;
   margin-top: 0.5em;
 }
+.heading-bottom-margin{
+@media only screen and (max-width: 640px) {
+   margin-bottom: .5em;
+  }
+
+}
 
 .mainpage {
   @media only screen and (min-width: 640px) {
