@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.bouncycastle.jce.provider.JCEKeyGenerator.RIPEMD128HMAC
+import org.joda.time.LocalDate
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
-import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
+import uk.gov.hmrc.nisp.connectors.{NationalInsuranceConnector, NispConnector}
+import uk.gov.hmrc.nisp.models.{NIRecordTaxYear, NIResponse, NationalInsuranceRecord, NationalInsuranceTaxYear}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
@@ -41,17 +41,72 @@ trait NationalInsuranceConnection {
 
   final val ExclusionErrorCode = 403
 
-   val nationalInsuranceConnector: NationalInsuranceConnector
-   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
-     nationalInsuranceConnector.getNationalInsurance(nino) map ( Right(_) ) recover {
-       case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead) =>
-         Left(Exclusion.Dead)
-       case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeManualCorrespondence) =>
-         Left(Exclusion.ManualCorrespondenceIndicator)
-       case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeIsleOfMan) =>
-         Left(Exclusion.IsleOfMan)
-       case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeMarriedWomen) =>
-         Left(Exclusion.MarriedWomenReducedRateElection)
-     }
-   }
+  val nationalInsuranceConnector: NationalInsuranceConnector
+
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
+    nationalInsuranceConnector.getNationalInsurance(nino) map (Right(_)) recover {
+      case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead) =>
+        Left(Exclusion.Dead)
+      case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeManualCorrespondence) =>
+        Left(Exclusion.ManualCorrespondenceIndicator)
+      case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeIsleOfMan) =>
+        Left(Exclusion.IsleOfMan)
+      case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeMarriedWomen) =>
+        Left(Exclusion.MarriedWomenReducedRateElection)
+    }
+  }
+}
+
+trait NispConnectionNI {
+  val nispConnector: NispConnector
+
+  private def filterExclusions(exclusions: List[Exclusion]): Exclusion = {
+    if (exclusions.contains(Exclusion.Dead)) {
+      Exclusion.Dead
+    } else if (exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
+      Exclusion.ManualCorrespondenceIndicator
+    } else if (exclusions.contains(Exclusion.IsleOfMan)) {
+      Exclusion.IsleOfMan
+    } else if (exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
+      Exclusion.MarriedWomenReducedRateElection
+    } else {
+      throw new RuntimeException(s"Un-accounted for exclusion in NispConnectionNI: $exclusions")
+    }
+  }
+
+  private def transformTaxYear(niRecordTaxYear: NIRecordTaxYear): NationalInsuranceTaxYear = {
+    NationalInsuranceTaxYear(
+      taxYear = "",
+      qualifying = false,
+      classOneContributions = 0,
+      classTwoCredits = 0,
+      classThreeCredits = 0,
+      otherCredits = 0,
+      classThreePayable = 0,
+      classThreePayableBy = None,
+      classThreePayableByPenalty = None,
+      payable = false,
+      underInvestigation = false
+    )
+  }
+
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
+    nispConnector.connectToGetNIResponse(nino) map {
+      case NIResponse(_, _, Some(exclusionsModel)) => {
+        Left(filterExclusions(exclusionsModel.exclusions))
+      }
+      case NIResponse(Some(record), Some(summary), None) => {
+        Right(NationalInsuranceRecord(
+          qualifyingYears = summary.noOfQualifyingYears,
+          qualifyingYearsPriorTo1975 = summary.pre75QualifyingYears.getOrElse(0),
+          numberOfGaps = summary.noOfNonQualifyingYears,
+          numberOfGapsPayable = summary.numberOfPayableGaps,
+          homeResponsibilitiesProtection = summary.homeResponsibilitiesProtection,
+          earningsIncludedUpTo = summary.earningsIncludedUpTo.localDate,
+          taxYears = record.taxYears map transformTaxYear
+        ))
+      }
+      case _ => throw new RuntimeException("NI Response Model is unmatchable. This is probably a logic error.")
+    }
+  }
 }

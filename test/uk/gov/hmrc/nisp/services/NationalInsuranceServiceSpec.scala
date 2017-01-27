@@ -16,19 +16,21 @@
 
 package uk.gov.hmrc.nisp.services
 
+import akka.actor.DeadLetter
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear}
+import uk.gov.hmrc.nisp.connectors.{NationalInsuranceConnector, NispConnector}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
+import scala.util
 import scala.util.Random
 
 
@@ -36,7 +38,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
   def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
 
-  implicit val headcarrier = HeaderCarrier()
+  implicit val headerCarrier = HeaderCarrier()
 
   "NationalInsuranceConnection" when {
 
@@ -56,7 +58,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
             classOneContributions = 12345.45,
             classTwoCredits = 0,
             classThreeCredits = 0,
-            otherCredits =  0,
+            otherCredits = 0,
             classThreePayable = 0,
             classThreePayableBy = None,
             classThreePayableByPenalty = None,
@@ -69,7 +71,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
             classOneContributions = 123,
             classTwoCredits = 1,
             classThreeCredits = 1,
-            otherCredits =  1,
+            otherCredits = 1,
             classThreePayable = 456.58,
             classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
             classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
@@ -87,7 +89,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
       "return a Right(NationalInsuranceRecord)" in {
         service.getSummary(generateNino).isRight shouldBe true
-        service.getSummary(generateNino).right.get shouldBe a [NationalInsuranceRecord]
+        service.getSummary(generateNino).right.get shouldBe a[NationalInsuranceRecord]
       }
 
       "return unmodified data" in {
@@ -105,10 +107,10 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         }
         when(service.nationalInsuranceConnector.getNationalInsurance(Matchers.any())(Matchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
-          message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
-          upstreamResponseCode = 403,
-          reportAs = 500
-        )))
+            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
+            upstreamResponseCode = 403,
+            reportAs = 500
+          )))
 
         whenReady(service.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.Dead)
@@ -169,6 +171,217 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         }
       }
     }
+  }
+
+  "NispConnectionNI" when {
+
+    "There is all of the exclusions (Dead, MCI, Isle of Man and MWRRE)" should {
+
+      "return the dead exclusion" in {
+        val service = new NationalInsuranceService with NispConnectionNI {
+          override val nispConnector: NispConnector = mock[NispConnector]
+        }
+
+        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(NIResponse(
+            None,
+            None,
+            niExclusions = Some(ExclusionsModel(List(
+              Exclusion.Dead,
+              Exclusion.ManualCorrespondenceIndicator,
+              Exclusion.IsleOfMan,
+              Exclusion.MarriedWomenReducedRateElection
+            )))
+          )))
+
+        whenReady(service.getSummary(generateNino)(headerCarrier)) { ex =>
+          ex shouldBe Left(Exclusion.Dead)
+        }
+
+      }
+
+    }
+
+    "There is the exclusions MCI, Isle of Man and MWRRE" should {
+
+      "return the MCI exclusion" in {
+        val service = new NationalInsuranceService with NispConnectionNI {
+          override val nispConnector: NispConnector = mock[NispConnector]
+        }
+
+        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(NIResponse(
+            None,
+            None,
+            niExclusions = Some(ExclusionsModel(List(
+              Exclusion.ManualCorrespondenceIndicator,
+              Exclusion.IsleOfMan,
+              Exclusion.MarriedWomenReducedRateElection
+            )))
+          )))
+
+        whenReady(service.getSummary(generateNino)(headerCarrier)) { ex =>
+          ex shouldBe Left(Exclusion.ManualCorrespondenceIndicator)
+        }
+
+      }
+
+    }
+
+    "There is the exclusions Isle of Man and MWRRE" should {
+
+      "return the Isle of Man exclusion" in {
+        val service = new NationalInsuranceService with NispConnectionNI {
+          override val nispConnector: NispConnector = mock[NispConnector]
+        }
+
+        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(NIResponse(
+            None,
+            None,
+            niExclusions = Some(ExclusionsModel(List(
+              Exclusion.IsleOfMan,
+              Exclusion.MarriedWomenReducedRateElection
+            )))
+          )))
+
+        whenReady(service.getSummary(generateNino)(headerCarrier)) { ex =>
+          ex shouldBe Left(Exclusion.IsleOfMan)
+        }
+
+      }
+
+    }
+
+    "There is the MWRRE exclusion" should {
+
+      "return the MWRRE exclusion" in {
+        val service = new NationalInsuranceService with NispConnectionNI {
+          override val nispConnector: NispConnector = mock[NispConnector]
+        }
+
+        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(NIResponse(
+            None,
+            None,
+            niExclusions = Some(ExclusionsModel(List(
+              Exclusion.MarriedWomenReducedRateElection
+            )))
+          )))
+
+        whenReady(service.getSummary(generateNino)(headerCarrier)) { ex =>
+          ex shouldBe Left(Exclusion.MarriedWomenReducedRateElection)
+        }
+
+      }
+
+    }
+
+    "there is a regular response" should {
+
+      val service = new NationalInsuranceService with NispConnectionNI {
+        override val nispConnector: NispConnector = mock[NispConnector]
+      }
+
+      when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+        .thenReturn(Future.successful(NIResponse(
+          Some(NIRecord(List(
+            NIRecordTaxYear(
+              2015,
+              qualifying = true,
+              classOneContributions = 12345.60,
+              classTwoCredits = 27,
+              classThreeCredits = 12,
+              otherCredits = 2,
+              classThreePayableBy = None,
+              classThreePayableByPenalty = None,
+              classThreePayable = None,
+              payable = false,
+              underInvestigation = true
+            ),
+            NIRecordTaxYear(
+              1999,
+              qualifying = false,
+              classOneContributions = 52.12,
+              classTwoCredits = 1,
+              classThreeCredits = 1,
+              otherCredits = 1,
+              classThreePayableBy = Some(NpsDate(2019, 4, 5)),
+              classThreePayableByPenalty = Some(NpsDate(2023, 4, 5)),
+              classThreePayable = Some(311.1),
+              payable = true,
+              underInvestigation = false
+            ),
+            NIRecordTaxYear(
+              1981,
+              qualifying = false,
+              classOneContributions = 0,
+              classTwoCredits = 18,
+              classThreeCredits = 0,
+              otherCredits = 20,
+              classThreePayableBy = None,
+              classThreePayableByPenalty = None,
+              classThreePayable = Some(0),
+              payable = false,
+              underInvestigation = true
+            )
+
+          ))),
+          Some(NISummary(
+            noOfQualifyingYears = 33,
+            noOfNonQualifyingYears = 5,
+            yearsToContributeUntilPensionAge = 10,
+            spaYear = 2017,
+            earningsIncludedUpTo = NpsDate(2016, 4, 5),
+            unavailableYear = 2016,
+            pre75QualifyingYears = Some(5),
+            numberOfNonPayableGaps = 3,
+            numberOfPayableGaps = 2,
+            canImproveWithGaps = true,
+            isAbroad = false,
+            recordEnd = None,
+            finalRelevantYear = 2020,
+            homeResponsibilitiesProtection = true
+          )),
+          None
+        )))
+
+      val serviceResponse: NationalInsuranceRecord = service.getSummary(generateNino).right.get
+
+      "map qualifyingYears from niSummary.noOfQualifyingYears" in {
+        serviceResponse.qualifyingYears shouldBe 33
+      }
+
+      "map qualifyingYearsPriorTo1975 from niSummary.pre75QualifyingYears" in {
+        serviceResponse.qualifyingYearsPriorTo1975 shouldBe 5
+      }
+
+      "map numberOfGaps from niSummary.noOfNonQualifyingYears" in {
+        serviceResponse.numberOfGaps shouldBe 5
+      }
+
+      "map numberOfGapsPayable from niSummary.numberOfPayableGaps" in {
+        serviceResponse.numberOfGapsPayable shouldBe 2
+      }
+
+      "map homeResponsibilitiesProtection from niSummary.homeResponsibilitiesProtection" in {
+        serviceResponse.homeResponsibilitiesProtection shouldBe true
+      }
+
+      "map earningsIncludedUpTo from niSummary.earningsIncludedUpTo" in {
+        serviceResponse.earningsIncludedUpTo shouldBe new LocalDate(2016, 4, 5)
+      }
+
+      "should pull the list of tax years from niRecord response" in {
+        serviceResponse.taxYears.size shouldBe 3
+      }
+
+      "map the first tax year correctly which" should {
+
+        
+      }
+    }
+
   }
 
 }
