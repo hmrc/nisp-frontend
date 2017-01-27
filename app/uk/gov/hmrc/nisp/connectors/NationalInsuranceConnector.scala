@@ -16,32 +16,21 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import play.api.libs.json.{Format, Json, Writes}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusion}
-import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 
 trait NationalInsuranceConnector extends BackendConnector {
 
-  private implicit val reads = eitherReads[StatePensionExclusion, NationalInsuranceRecord]
-
-  private implicit val writes = Writes[Either[StatePensionExclusion, NationalInsuranceRecord]] {
-    case Left(exclusion) => Json.toJson(exclusion)
-    case Right(statePension) => Json.toJson(statePension)
-  }
-
-  private implicit val formats = Format[Either[StatePensionExclusion, NationalInsuranceRecord]](reads, writes)
-
   private val apiHeader = "Accept" -> "application/vnd.hmrc.1.0+json"
 
-  def getNationalInsurance(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, NationalInsuranceRecord]] = {
+  def getNationalInsurance(nino: Nino)(implicit hc: HeaderCarrier): Future[NationalInsuranceRecord] = {
     val urlToRead = s"$serviceUrl/ni/$nino"
     val headerCarrier = hc.copy(extraHeaders = hc.extraHeaders :+ apiHeader)
-    retrieveFromCache[Either[StatePensionExclusion, NationalInsuranceRecord]](APIType.NationalInsurance, urlToRead)(headerCarrier, formats)
+    retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead)(headerCarrier, NationalInsuranceRecord.formats)
   }
 
 }

@@ -38,21 +38,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
 
     "there is a regular user" should {
 
-      val either = MockNationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier)
-
-      "return a Right" in {
-        whenReady(either) { record =>
-          record.isRight shouldBe true
-        }
-      }
-
-      "return a Right(NationalInsuranceRecord)" in {
-        whenReady(either) { record =>
-          record.right.get shouldBe a[NationalInsuranceRecord]
-        }
-      }
-
-      val nationalInsuranceRecord = either.right.get
+      val nationalInsuranceRecord = MockNationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier)
 
       "return a National Insurance Record with 28 qualifying years" in {
         nationalInsuranceRecord.qualifyingYears shouldBe 28
