@@ -22,10 +22,12 @@ import uk.gov.hmrc.nisp.connectors.{NationalInsuranceConnector, NispConnector}
 import uk.gov.hmrc.nisp.models.{NIRecordTaxYear, NIResponse, NationalInsuranceRecord, NationalInsuranceTaxYear}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 
 import scala.concurrent.Future
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import uk.gov.hmrc.time.TaxYear
 
 trait NationalInsuranceService {
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]]
@@ -74,19 +76,24 @@ trait NispConnectionNI {
     }
   }
 
+  private[services] def startYearToTaxYear(startYear: Int): String = {
+    val endYear = TaxYear(startYear).finishYear
+    s"$startYear-${endYear.toString.substring(Constants.shortYearStartCharacter, Constants.shortYearEndCharacter)}"
+  }
+
   private def transformTaxYear(niRecordTaxYear: NIRecordTaxYear): NationalInsuranceTaxYear = {
     NationalInsuranceTaxYear(
-      taxYear = "",
-      qualifying = false,
-      classOneContributions = 0,
-      classTwoCredits = 0,
-      classThreeCredits = 0,
-      otherCredits = 0,
-      classThreePayable = 0,
-      classThreePayableBy = None,
-      classThreePayableByPenalty = None,
-      payable = false,
-      underInvestigation = false
+      taxYear = startYearToTaxYear(niRecordTaxYear.taxYear),
+      qualifying = niRecordTaxYear.qualifying,
+      classOneContributions = niRecordTaxYear.classOneContributions,
+      classTwoCredits = niRecordTaxYear.classTwoCredits,
+      classThreeCredits = niRecordTaxYear.classThreeCredits,
+      otherCredits = niRecordTaxYear.otherCredits,
+      classThreePayable = niRecordTaxYear.classThreePayable.getOrElse(0),
+      classThreePayableBy = niRecordTaxYear.classThreePayableBy.map(_.localDate),
+      classThreePayableByPenalty = niRecordTaxYear.classThreePayableByPenalty.map(_.localDate),
+      payable = niRecordTaxYear.payable,
+      underInvestigation = niRecordTaxYear.underInvestigation
     )
   }
 

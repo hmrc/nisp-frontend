@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.services
 
-import akka.actor.DeadLetter
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -30,7 +29,6 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
-import scala.util
 import scala.util.Random
 
 
@@ -378,10 +376,180 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
       "map the first tax year correctly which" should {
 
-        
+        "have a tax year of 2015-16" in {
+          serviceResponse.taxYears.head.taxYear shouldBe "2015-16"
+        }
+
+        "be qualifying" in {
+          serviceResponse.taxYears.head.qualifying shouldBe true
+        }
+
+        "have 12345.60 class one contributions" in {
+          serviceResponse.taxYears.head.classOneContributions shouldBe 12345.60
+        }
+
+        "have 27 class two credits" in {
+          serviceResponse.taxYears.head.classTwoCredits shouldBe 27
+        }
+
+        "have 12 class three credits" in {
+          serviceResponse.taxYears.head.classThreeCredits shouldBe 12
+        }
+
+        "have 2 other credits" in {
+          serviceResponse.taxYears.head.otherCredits shouldBe 2
+        }
+
+        "have no class three payable" in {
+          serviceResponse.taxYears.head.classThreePayable shouldBe 0
+        }
+
+        "have no class three payable by" in {
+          serviceResponse.taxYears.head.classThreePayableBy shouldBe None
+        }
+
+        "have no class three payable by penalty" in {
+          serviceResponse.taxYears.head.classThreePayableByPenalty shouldBe None
+        }
+
+        "be not payable" in {
+          serviceResponse.taxYears.head.payable shouldBe false
+        }
+
+        "be under investigation" in {
+          serviceResponse.taxYears.head.underInvestigation shouldBe true
+        }
+
+      }
+
+      "map the second tax year correctly which" should {
+
+        "have a tax year of 1999-00" in {
+          serviceResponse.taxYears(1).taxYear shouldBe "1999-00"
+        }
+
+        "be not qualifying" in {
+          serviceResponse.taxYears(1).qualifying shouldBe false
+        }
+
+        "have 52.12 class one contributions" in {
+          serviceResponse.taxYears(1).classOneContributions shouldBe 52.12
+        }
+
+        "have 1 class two credits" in {
+          serviceResponse.taxYears(1).classTwoCredits shouldBe 1
+        }
+
+        "have 1 class three credits" in {
+          serviceResponse.taxYears(1).classThreeCredits shouldBe 1
+        }
+
+        "have 1 other credits" in {
+          serviceResponse.taxYears(1).otherCredits shouldBe 1
+        }
+
+        "have 311.10 class three payable" in {
+          serviceResponse.taxYears(1).classThreePayable shouldBe 311.10
+        }
+
+        "have class three payable by of 5/4/2019" in {
+          serviceResponse.taxYears(1).classThreePayableBy shouldBe Some(new LocalDate(2019, 4, 5))
+        }
+
+        "have class three payable by penalty of 5/4/2023" in {
+          serviceResponse.taxYears(1).classThreePayableByPenalty shouldBe Some(new LocalDate(2023, 4, 5))
+        }
+
+        "be payable" in {
+          serviceResponse.taxYears(1).payable shouldBe true
+        }
+
+        "be not under investigation" in {
+          serviceResponse.taxYears(1).underInvestigation shouldBe false
+        }
+
+      }
+
+      "map the last tax year correctly which" should {
+
+        "have a tax year of 1981-82" in {
+          serviceResponse.taxYears(2).taxYear shouldBe "1981-82"
+        }
+
+        "be not qualifying" in {
+          serviceResponse.taxYears(2).qualifying shouldBe false
+        }
+
+        "have 0 class one contributions" in {
+          serviceResponse.taxYears(2).classOneContributions shouldBe 0
+        }
+
+        "have 18 class two credits" in {
+          serviceResponse.taxYears(2).classTwoCredits shouldBe 18
+        }
+
+        "have 0 class three credits" in {
+          serviceResponse.taxYears(2).classThreeCredits shouldBe 0
+        }
+
+        "have 20 other credits" in {
+          serviceResponse.taxYears(2).otherCredits shouldBe 20
+        }
+
+        "have no class three payable" in {
+          serviceResponse.taxYears(2).classThreePayable shouldBe 0
+        }
+
+        "have no class three payable by" in {
+          serviceResponse.taxYears(2).classThreePayableBy shouldBe None
+        }
+
+        "have no class three payable by penalty" in {
+          serviceResponse.taxYears(2).classThreePayableByPenalty shouldBe None
+        }
+
+        "be not payable" in {
+          serviceResponse.taxYears(2).payable shouldBe false
+        }
+
+        "be under investigation" in {
+          serviceResponse.taxYears(2).underInvestigation shouldBe true
+        }
+
+      }
+    }
+
+    "startYearToTaxYear" when {
+      "startYear is 1999" should {
+        "return 1999-00" in {
+          val connection = new NispConnectionNI {
+            override lazy val nispConnector: NispConnector = ???
+          }
+          connection.startYearToTaxYear(1999) shouldBe "1999-00"
+        }
+      }
+
+      "startYear is 2015" should {
+        "return 2015-16" in {
+          val connection = new NispConnectionNI {
+            override lazy val nispConnector: NispConnector = ???
+          }
+          connection.startYearToTaxYear(2015) shouldBe "2015-16"
+        }
+      }
+
+      "startYear is 2009" should {
+        "return 2009-10" in {
+          val connection = new NispConnectionNI {
+            override lazy val nispConnector: NispConnector = ???
+          }
+          connection.startYearToTaxYear(2009) shouldBe "2009-10"
+        }
       }
     }
 
   }
+
+
 
 }
