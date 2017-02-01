@@ -37,7 +37,7 @@ trait StatePensionService extends CurrentTaxYear {
   }
 }
 
-trait NispConnection {
+trait NispConnectionSP {
   val nisp: NispConnector
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]] = {
@@ -89,7 +89,7 @@ trait NispConnection {
   }
 }
 
-object NispStatePensionService extends StatePensionService with NispConnection {
+object NispStatePensionService extends StatePensionService with NispConnectionSP {
   override val nisp: NispConnector = NispConnector
   override def now: () => DateTime = () => DateTime.now(ukTime)
 }
