@@ -105,23 +105,4 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
   }
 
-  "Exclusion Dead template" should {
-    "render page with heading  You are unable to use this service " in {
-      var sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65)) ;
-      val htmlAccountDoc = asDocument(contentAsString(sResult));
-      assertElementContainsText(htmlAccountDoc ,"article.content__body>h1" , Messages("nisp.excluded.title"))
-    }
-    "render page with text  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
-      var sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65)) ;
-      val htmlAccountDoc = asDocument(contentAsString(sResult));
-      assertElementContainsText(htmlAccountDoc ,"article.content__body>p" , Messages("nisp.excluded.dead"))
-    }
-    "render page with help text 'Get help with this page.' " in {
-      var sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65)) ;
-      val htmlAccountDoc = asDocument(contentAsString(sResult));
-      assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , Messages("Get help with this page."))
-    }
-
-  }
-
 }
