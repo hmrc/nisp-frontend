@@ -34,7 +34,7 @@ import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.{SPAmountModel, StatePensionAmount, StatePensionAmountRegular}
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.play.frontend.auth.{AuthContext, AuthenticationProviderIds, LoggedInUser, Principal}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
@@ -42,16 +42,27 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
 import play.twirl.api.Html
 import org.apache.commons.lang3.StringEscapeUtils
+import uk.gov.hmrc.nisp.controllers.auth.NispUser
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
 
 trait HtmlSpec extends UnitSpec  {
 
         implicit val request = FakeRequest()
 
-       /* implicit val authContext = {
-        val user = LoggedInUser("", None, None, None, CredentialStrength.None ,ConfidenceLevel.L500)
-        val principal = Principal(None, Accounts(ct = Some(CtAccount(link = "", utr = CtUtr("00000000")))))
+       implicit val authContext = {
+        val user = LoggedInUser("", None, None, None, CredentialStrength.None , ConfidenceLevel.L500)
+               val principal = Principal(None, accounts = Accounts(paye = Some(PayeAccount("", TestAccountBuilder.regularNino))))
         AuthContext(user, principal, None, None, None)
-        }*/
+       }
+
+        implicit val nispUser = NispUser(
+                authContext = authContext,
+                Some("First Last"),
+                "",
+                None,
+                None,
+                None
+        )
 
         def asDocument(html: String): Document = Jsoup.parse(html)
 
