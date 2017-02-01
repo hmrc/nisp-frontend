@@ -65,6 +65,7 @@ trait MockNIRecordController extends NIRecordController {
     override val futureProofPersonalMax: Boolean = false
     override val copeTable: Boolean = false
     override val useStatePensionAPI: Boolean = true
+    override var assetVersion: String = "1.0.0"
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 

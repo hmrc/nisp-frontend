@@ -42,7 +42,7 @@
     hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 @linkElement = {
-    <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/nisp.css")'/>
+    <link rel="stylesheet" href='@routes.Assets.at("stylesheets/nisp.css")?version=@{applicationConfig.assetVersion}'/>
 }
 
 @links = {
@@ -139,7 +139,7 @@
         analyticsAnonymizeIp = true,
         analyticsAdditionalJs = analyticsAdditionalJs
     )
-    <script src='@controllers.routes.Assets.at("javascript/app.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.at("javascript/app.js")' type="text/javascript"></script>
     @pageScripts
 }
 
