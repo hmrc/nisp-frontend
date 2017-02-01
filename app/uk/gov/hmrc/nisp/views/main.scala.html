@@ -42,7 +42,7 @@
     hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 @linkElement = {
-    <link rel="stylesheet" href='@routes.Assets.at("stylesheets/nisp.css")?version=@{ApplicationConfig.assetVersion}'/>
+    <link rel="stylesheet" href='@routes.Assets.at("stylesheets/nisp.css")?version=@{applicationConfig.assetVersion}'/>
 }
 
 @links = {
