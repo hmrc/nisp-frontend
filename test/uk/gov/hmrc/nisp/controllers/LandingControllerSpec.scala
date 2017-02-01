@@ -66,6 +66,7 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
       override val futureProofPersonalMax: Boolean = false
       override val copeTable: Boolean = false
       override val useStatePensionAPI: Boolean = true
+      override var assetVersion: String = "1.0.0"
     }
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
 
