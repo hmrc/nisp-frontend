@@ -50,7 +50,6 @@ trait ApplicationConfig {
   val breadcrumbPartialUrl: String
   val showFullNI: Boolean
   val futureProofPersonalMax: Boolean
-  val copeTable: Boolean
   val useStatePensionAPI: Boolean
 }
 
@@ -88,6 +87,5 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"
   override lazy val showFullNI: Boolean = configuration.getBoolean("microservice.services.features.fullNIrecord").getOrElse(false)
   override lazy val futureProofPersonalMax: Boolean = configuration.getBoolean("microservice.services.features.future-proof.personalMax").getOrElse(false)
-  override lazy val copeTable: Boolean = configuration.getBoolean("microservice.services.features.copeTable").getOrElse(false)
   override val useStatePensionAPI: Boolean = configuration.getBoolean("microservice.services.features.useStatePensionAPI").getOrElse(true)
 }
