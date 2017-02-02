@@ -32,9 +32,10 @@
 
 package uk.gov.hmrc.nisp.views
 
-import java.util.UUID
+
+
+import org.joda.time.LocalDate
 import play.api.i18n.Messages
-import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
@@ -47,15 +48,13 @@ import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers._
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.StatePensionExclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
-
-import scala.concurrent.Future
+import uk.gov.hmrc.play.views.formatting.Dates
 
 
 class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
@@ -86,22 +85,46 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   }
 
-  "Exclusion Dead template" should {
+  "Exclusion Dead" should {
+
+    lazy val sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65))
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+
     "render page with heading  You are unable to use this service " in {
-      var sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65)) ;
-      val htmlAccountDoc = asDocument(contentAsString(sResult));
-      assertElementContainsText(htmlAccountDoc ,"article.content__body>h1" , Messages("nisp.excluded.title"))
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.excluded.title")
     }
     "render page with text  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
-      var sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65)) ;
-      val htmlAccountDoc = asDocument(contentAsString(sResult));
-      assertElementContainsText(htmlAccountDoc ,"article.content__body>p" , Messages("nisp.excluded.dead"))
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p" , "nisp.excluded.dead")
     }
     "render page with help text 'Get help with this page.' " in {
-      var sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65)) ;
-      val htmlAccountDoc = asDocument(contentAsString(sResult));
-      assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , Messages("Get help with this page."))
+
+      assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , "Get help with this page.")
     }
+
+  }
+  "Exclusion Isle of Man" should {
+
+    lazy val sResult = html.excluded_sp(List(Exclusion.IsleOfMan), Some(65), Some(new LocalDate(2028, 10, 28)), true) ;
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult));
+
+    "render page with heading  'Your State Pension'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
+
+    }
+    /*"render page with heading  'You’ll reach State Pension age on' " in {
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "(nisp.excluded.willReach, @{Dates.formatDate(new LocalDate(2028, 10, 28))})")
+
+    }*/
+
+   /* "render page with text  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
+      assertElementContainsText(htmlAccountDoc ,"article.content__body>p" , Messages("nisp.excluded.isleOfMan.sp.line1"))
+    }
+
+    "render page with help text 'Get help with this page.' " in {
+      assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , Messages("nisp.excluded.isleOfMan.sp.line2"))
+    }*/
 
   }
 
