@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.views.html
 
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.{Document, Element, Entities}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nisp.helpers._
@@ -26,6 +26,8 @@ import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 import uk.gov.hmrc.play.test.UnitSpec
 import play.twirl.api.Html
 import org.apache.commons.lang3.StringEscapeUtils
+import org.jsoup.nodes
+import org.jsoup.nodes.Document
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
 
@@ -59,7 +61,7 @@ trait HtmlSpec extends UnitSpec {
 
     assertMessageKeyHasValue(expectedMessageKey)
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
-    assert(elements.first().html().replace("\n", "") == Html(Messages(expectedMessageKey)).toString())
+    assert(elements.first().html().replace("\n", "") == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
   def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
@@ -75,27 +77,32 @@ trait HtmlSpec extends UnitSpec {
     assert(expectedMessageKey != Html(Messages(expectedMessageKey)).toString(), s"$expectedMessageKey has no messages file value setup")
   }
 
-  def assertContainsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
-    assertContainsDynamicMessage(doc, cssSelector, expectedMessageKey)
-  }
-
-  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs: String*) = {
+  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs: String) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assertMessageKeyHasValue(expectedMessageKey)
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
-    val expectedString = Html(Messages(expectedMessageKey, messageArgs: _*)).toString()
 
-    assert(elements.toArray(new Array[Element](elements.size())).exists { element =>
-      element.html().replace("\n", "").contains(StringEscapeUtils.escapeHtml4(expectedString))
-    })
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs).toString())
+
+    assert(elements.first().html().replace("\n", "") == expectedString)
+
+  }
+
+  def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {
+    assert(!doc.select(cssSelector).isEmpty, "Element " + cssSelector + " was not rendered on the page.")
+  }
+
+  def assertNotRenderedByCssSelector(doc: Document, cssSelector: String) = {
+    assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
   }
 
   def assertLinkHasValue(doc: Document, id: String, linkValue: String) = {
     assert(doc.select(s"#$id").attr("href") === linkValue)
   }
+
+
 
 
   def assertElementContainsText(doc: Document, cssSelector: String, text: String) = {

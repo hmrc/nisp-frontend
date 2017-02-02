@@ -94,11 +94,11 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.excluded.title")
     }
-    "render page with text  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
+    "render page with message  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
 
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>p" , "nisp.excluded.dead")
     }
-    "render page with help text 'Get help with this page.' " in {
+    "render page with help message 'Get help with this page.' " in {
 
       assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , "Get help with this page.")
     }
@@ -106,25 +106,25 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
   }
   "Exclusion Isle of Man" should {
 
-    lazy val sResult = html.excluded_sp(List(Exclusion.IsleOfMan), Some(65), Some(new LocalDate(2028, 10, 28)), true) ;
+    lazy val sResult = html.excluded_sp(List(Exclusion.IsleOfMan), Some(40), Some(new LocalDate(2019, 9, 6)), true) ;
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult));
 
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
 
     }
-    /*"render page with heading  'You’ll reach State Pension age on' " in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "(nisp.excluded.willReach, @{Dates.formatDate(new LocalDate(2028, 10, 28))})")
+    "render page with heading  'You’ll reach State Pension age on 6 sep 2019' " in {
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2019, 9, 6)))
 
-    }*/
-
-   /* "render page with text  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
-      assertElementContainsText(htmlAccountDoc ,"article.content__body>p" , Messages("nisp.excluded.isleOfMan.sp.line1"))
     }
 
-    "render page with help text 'Get help with this page.' " in {
-      assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , Messages("nisp.excluded.isleOfMan.sp.line2"))
-    }*/
+    "render page with message  We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms." in {
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(1)" , "nisp.excluded.isleOfMan.sp.line1")
+    }
+
+    "render page with message For more information about the Retirement Pension scheme, and a link to visit scheme' " in {
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(2)", "nisp.excluded.isleOfMan.sp.line2")
+    }
 
   }
 
