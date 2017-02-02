@@ -31,7 +31,7 @@ import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.{SPAmountModel, StatePensionAmount, StatePensionAmountRegular}
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
@@ -72,6 +72,7 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
   def testAccountController(testNow: LocalDateTime): AccountController = new MockAccountController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
   }
 
   "Account controller" should {
@@ -119,8 +120,6 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val useStatePensionAPI: Boolean = true
-
-
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -485,14 +484,14 @@ class AccountControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAft
 
     "calculateAge" should {
       "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-10-28" in {
-        AccountController.calculateAge(new LocalDate(1986, 10, 28), new LocalDate(2016, 11, 2)) shouldBe 30
+        MockAccountController.calculateAge(new LocalDate(1986, 10, 28), new LocalDate(2016, 11, 2)) shouldBe 30
       }
       "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-2" in {
-        AccountController.calculateAge(new LocalDate(1986, 11, 2), new LocalDate(2016, 11, 2)) shouldBe 30
+        MockAccountController.calculateAge(new LocalDate(1986, 11, 2), new LocalDate(2016, 11, 2)) shouldBe 30
 
       }
       "return 29 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-3" in {
-        AccountController.calculateAge(new LocalDate(1986, 11, 3), new LocalDate(2016, 11, 2)) shouldBe 29
+        MockAccountController.calculateAge(new LocalDate(1986, 11, 3), new LocalDate(2016, 11, 2)) shouldBe 29
       }
     }
   }

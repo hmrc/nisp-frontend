@@ -45,16 +45,13 @@ object AccountController extends AccountController with AuthenticationConnectors
   override val metricsService: MetricsService = MetricsService
   override val statePensionService: StatePensionService =
     if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
-
-  override def nispConnector: NispConnector = NispConnector
+  override val nationalInsuranceService = ???
 }
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
 
   def statePensionService: StatePensionService
-
-  def nispConnector: NispConnector
-
+  def nationalInsuranceService: NationalInsuranceService
 
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
@@ -80,16 +77,15 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
       isFromPertax.flatMap { isPertax =>
 
         val statePensionResponseF = statePensionService.getSummary(user.nino)
-        val niResponseF = nispConnector.connectToGetNIResponse(user.nino)
+        val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
 
         for (
           statePensionResponse <- statePensionResponseF;
-          niResponse <- niResponseF
+          nationalInsuranceResponse <- nationalInsuranceResponseF
         ) yield {
-          (statePensionResponse, niResponse) match {
-            case (Right(statePension), NIResponse(_, Some(niSummary), None)) =>
+          (statePensionResponse, nationalInsuranceResponse) match {
+            case (Right(statePension), Right(nationalInsuranceRecord)) =>
               customAuditConnector.sendEvent(
-
 
                 AccountAccessEvent(user.nino.nino,
                   statePension.pensionDate,
@@ -113,8 +109,8 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                 val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
                 Ok(account_mqp(
                   statePension,
-                  niSummary.noOfNonQualifyingYears,
-                  niSummary.numberOfPayableGaps,
+                  nationalInsuranceRecord.numberOfGaps,
+                  nationalInsuranceRecord.numberOfGapsPayable,
                   yearsMissing,
                   user.livesAbroad,
                   user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
@@ -125,8 +121,8 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
                 Ok(account_forecastonly(
                   statePension,
-                  niSummary.noOfNonQualifyingYears,
-                  niSummary.numberOfPayableGaps,
+                  nationalInsuranceRecord.numberOfGaps,
+                  nationalInsuranceRecord.numberOfGapsPayable,
                   user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
                   user.livesAbroad,
                   isPertax,
@@ -142,13 +138,13 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                   )
                 Ok(account(
                   statePension,
-                  niSummary.noOfNonQualifyingYears,
-                  niSummary.numberOfPayableGaps,
+                  nationalInsuranceRecord.numberOfGaps,
+                  nationalInsuranceRecord.numberOfGapsPayable,
                   currentChart,
                   forecastChart,
                   personalMaximumChart,
                   isPertax,
-                  hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && niSummary.noOfNonQualifyingYears > 1,
+                  hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && nationalInsuranceRecord.numberOfGaps > 1,
                   user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
                   user.livesAbroad,
                   yearsToContributeUntilPensionAge
