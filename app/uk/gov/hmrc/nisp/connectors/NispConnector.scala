@@ -46,6 +46,7 @@ trait NispConnector extends BackendConnector {
     retrieveFromCache[SPResponseModel](APIType.SP, urlToRead)
   }
 
+  @deprecated("Should not be used. Use NationalInsurance.getSummary instead", "8.23.0")
   def connectToGetNIResponse(nino: Nino)(implicit hc: HeaderCarrier): Future[NIResponse] = {
     val urlToRead = s"$serviceUrl/nisp/$nino/nirecord"
     retrieveFromCache[NIResponse](APIType.NI, urlToRead)

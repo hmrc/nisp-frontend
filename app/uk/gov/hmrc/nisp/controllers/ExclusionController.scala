@@ -19,35 +19,34 @@ package uk.gov.hmrc.nisp.controllers
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NispStatePensionService, StatePensionService}
-import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, NispStatePensionService, StatePensionService}
+import uk.gov.hmrc.nisp.views.html._
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
-  override val nispConnector = NispConnector
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val statePensionService: StatePensionService =
     if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
+  override val nationalInsuranceService: NationalInsuranceService = ???
 }
 
 trait ExclusionController extends NispFrontendController with AuthorisedForNisp {
-  val nispConnector: NispConnector
+
   val statePensionService: StatePensionService
+  val nationalInsuranceService: NationalInsuranceService
 
   def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
 
     val statePensionF = statePensionService.getSummary(user.nino)
-    val niResponseF = nispConnector.connectToGetNIResponse(user.nino)
+    val nationalInsuranceF = nationalInsuranceService.getSummary(user.nino)
 
     for(
       statePension <- statePensionF;
-      niResponse <- niResponseF
+      nationalInsurance <- nationalInsuranceF
     ) yield {
       statePension match {
         case Left(exclusion) =>
@@ -56,7 +55,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
           else if (exclusion.exclusionReasons.contains(Exclusion.ManualCorrespondenceIndicator))
             Ok(excluded_mci(exclusion.exclusionReasons, exclusion.pensionAge))
           else {
-            Ok(excluded_sp(exclusion.exclusionReasons, exclusion.pensionAge, exclusion.pensionDate, niResponse.niExclusions.isEmpty))
+            Ok(excluded_sp(exclusion.exclusionReasons, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight))
           }
         case _ =>
           Logger.warn("User accessed /exclusion as non-excluded user")
@@ -66,15 +65,15 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   }
 
   def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-     nispConnector.connectToGetNIResponse(user.nino).map {
-        case NIResponse(_, _, Some(niExclusions: ExclusionsModel)) =>
-          if(niExclusions.exclusions.contains(Exclusion.Dead)) {
-            Ok(excluded_dead(niExclusions.exclusions, None))
+     nationalInsuranceService.getSummary(user.nino).map {
+        case Left(exclusion) =>
+          if(exclusion == Exclusion.Dead) {
+            Ok(excluded_dead(List(Exclusion.Dead), None))
           }
-          else if(niExclusions.exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
-            Ok(excluded_mci(niExclusions.exclusions, None))
+          else if(exclusion == Exclusion.ManualCorrespondenceIndicator) {
+            Ok(excluded_mci(List(Exclusion.ManualCorrespondenceIndicator), None))
           } else {
-            Ok(excluded_ni(niExclusions))
+            Ok(excluded_ni(exclusion))
           }
         case _ =>
           Logger.warn("User accessed /exclusion/nirecord as non-excluded user")

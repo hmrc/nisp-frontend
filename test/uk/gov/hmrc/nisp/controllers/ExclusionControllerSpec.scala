@@ -18,13 +18,21 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
+import org.joda.time.LocalDate
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.helpers.MockExclusionController
+import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, SessionKeys}
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
 
@@ -56,6 +64,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val mwrreMessagingSP = "We&rsquo;re unable to calculate your State Pension forecast as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)"
   val mwrreMessagingNI = "We&rsquo;re currently unable to show your National Insurance Record as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>."
   val abroadMessaging = "We&rsquo;re unable to calculate your UK State Pension forecast as you&rsquo;ve lived or worked abroad."
+
 
   "GET /exclusion" should {
 

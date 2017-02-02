@@ -14,18 +14,17 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.nisp.models.enums.Exclusion
-@import uk.gov.hmrc.nisp.models.ExclusionsModel
+@import uk.gov.hmrc.nisp.models.enums.Exclusion._
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(niExclusions: ExclusionsModel)(implicit request: Request[_], user: NispUser,
+@(exclusion: Exclusion)(implicit request: Request[_], user: NispUser,
 partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
         @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
-        'dimension20': '@niExclusions.exclusions.map(_.toString).mkString(" ") '
+        'dimension20': '@exclusion.toString'
     });
 }
 
@@ -35,13 +34,13 @@ partialRetriever: CachedStaticHtmlPartialRetriever)
     @main(browserTitle=Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.nirecord.heading")),
       userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
         <div class="panel-indent">
-            @if(niExclusions.exclusions.contains(Exclusion.IsleOfMan)) {
+            @if(exclusion.equals(IsleOfMan)) {
                 @exclusions.ni.isleOfMan()
             } else {
-                @if(niExclusions.exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
+                @if(exclusion.equals(MarriedWomenReducedRateElection)) {
                     @exclusions.ni.mwrre()
                 }
             }
-            </div>
+        </div>
     }
 }
