@@ -26,9 +26,12 @@
 
 @if(statePension.mqpScenario.isDefined)  {
 
+
     <h3 class="heading-medium"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.mostYouCanGet")</h3>
-    <p>@Messages("nisp.main.context.willReach") @Html(Messages("nisp.main.context.reachMax.needToPay", (statePension.pensionDate.getYear).toString())) </p>
-    <p>@Html(Messages("nisp.main.after", Dates.formatDate(statePension.pensionDate)))</p>
+    <p>@Messages("nisp.main.context.willReach")</p>
+    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (Dates.formatDate(statePension.pensionDate)).toString()))</p>
+
+
 
 } else {
 
@@ -71,10 +74,13 @@
 
     <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.weeklyAmount) @Messages("nisp.main.mostYouCanGet")</h2>
     @if(statePension.amounts.forecast.yearsToWork != yearsToContributeUntilPensionAge) {
-        <p>@Messages("nisp.main.context.willReach") @Html(Messages("nisp.main.context.reachMax.needToPay", (statePension.pensionDate.getYear).toString())) </p>
+        <p>@Messages("nisp.main.context.willReach")</p>
+        <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (Dates.formatDate(statePension.pensionDate)).toString()))</p>
     }
 
+    @if(statePension.amounts.forecast.yearsToWork == yearsToContributeUntilPensionAge){
     <p>@Html(Messages("nisp.main.after", Dates.formatDate(statePension.pensionDate)))</p>
+    }
 }
 
 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>

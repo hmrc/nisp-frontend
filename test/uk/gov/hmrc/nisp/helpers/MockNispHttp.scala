@@ -65,6 +65,10 @@ object MockNispHttp extends MockitoSugar {
     createMockedURL(s"ni/$nino", TestAccountBuilder.jsonResponse(nino, "state-pension"))
   }
 
+  def setupNationalInsuranceEndpoints(nino: Nino): Unit = {
+    createMockedURL(s"national-insurance/ni/$nino", TestAccountBuilder.jsonResponse(nino, "national-insurance-record"))
+  }
+
   // NISP
 
   ninos.foreach(setupNispEndpoints)
@@ -96,4 +100,45 @@ object MockNispHttp extends MockitoSugar {
       upstreamResponseCode = 403,
       reportAs = 500
     )))
+
+
+  // National Insurance
+
+  val niNinos = List(
+    TestAccountBuilder.regularNino
+  )
+
+  niNinos.foreach(setupNationalInsuranceEndpoints)
+
+  when(mockHttp.GET[HttpResponse](Matchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedAll}"))(Matchers.any(), Matchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+  when(mockHttp.GET[HttpResponse](Matchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedAllButDead}"))(Matchers.any(), Matchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+  when(mockHttp.GET[HttpResponse](Matchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedAllButDeadMCI}"))(Matchers.any(), Matchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+
+  when(mockHttp.GET[HttpResponse](Matchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedIomMwrreAbroad}"))(Matchers.any(), Matchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+
+
 }

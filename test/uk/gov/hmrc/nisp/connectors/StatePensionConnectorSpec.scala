@@ -57,7 +57,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
       }
     }
 
-    "return a failed Future 403 with a Dead message for all exclusion but dead" in {
+    "return a failed Future 403 with a MCI message for all exclusion but dead" in {
       whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead).failed) {
         case ex: Upstream4xxResponse =>
           ex.upstreamResponseCode shouldBe 403

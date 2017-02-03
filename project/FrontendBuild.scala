@@ -29,7 +29,8 @@ object FrontendBuild extends Build with MicroService {
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 
   override lazy val playSettings : Seq[Setting[_]] = Seq(
-    routesImport ++= Seq("uk.gov.hmrc.domain._"),
+
+      routesImport ++= Seq("uk.gov.hmrc.domain._"),
     // Turn off play's internal less compiler
     lessEntryPoints := Nil,
     // Turn off play's internal javascript compiler
@@ -69,6 +70,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0"
   )
 
+
+
   trait TestDependencies {
     lazy val scope: String = "test"
     lazy val test : Seq[ModuleID] = ???
@@ -84,7 +87,8 @@ private object AppDependencies {
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
         "org.mockito" % "mockito-all" % "1.10.19" % scope,
-        "org.scalatestplus" % "play_2.11" % "1.2.0" % scope
+        "org.scalatestplus" % "play_2.11" % "1.2.0" % scope,
+        "org.jsoup" % "jsoup" % "1.7.3" % scope
       )
     }.test
   }

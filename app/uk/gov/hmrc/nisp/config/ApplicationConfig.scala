@@ -52,11 +52,9 @@ trait ApplicationConfig {
   val futureProofPersonalMax: Boolean
   val copeTable: Boolean
   val useStatePensionAPI: Boolean
-
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
-
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
