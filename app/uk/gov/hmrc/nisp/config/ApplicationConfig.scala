@@ -52,13 +52,9 @@ trait ApplicationConfig {
   val futureProofPersonalMax: Boolean
   val copeTable: Boolean
   val useStatePensionAPI: Boolean
-  var assetVersion: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
-
-  /*var assetVersion is used to cache bust js/css files in production mode. Change this value when there is change in any of css or js files*/
-  var assetVersion = "1.0.0"
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
