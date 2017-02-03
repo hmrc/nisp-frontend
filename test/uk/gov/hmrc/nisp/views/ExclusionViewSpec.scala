@@ -104,9 +104,10 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     }
 
   }
-  "Exclusion Isle of Man" should {
 
-    lazy val sResult = html.excluded_sp(List(Exclusion.IsleOfMan), Some(40), Some(new LocalDate(2019, 9, 6)), true) ;
+  "Exclusion Isle of Man : Can't see NI Record" should {
+
+    lazy val sResult = html.excluded_sp(List(Exclusion.IsleOfMan), Some(40), Some(new LocalDate(2019, 9, 6)), false) ;
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult));
 
     "render page with heading  'Your State Pension'" in {
@@ -122,9 +123,83 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
       assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(1)" , "nisp.excluded.isleOfMan.sp.line1")
     }
 
-    "render page with message For more information about the Retirement Pension scheme, and a link to visit scheme' " in {
+    "render page with message 'For more information about the Retirement Pension scheme, visit' " in {
       assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(2)", "nisp.excluded.isleOfMan.sp.line2")
     }
+
+    "render page with message 'In the meantime, you can contact the Future Pension centre to get and estimate of your State Pension ,bases on your current National Insurence record....' " in {
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(3)", "nisp.excluded.contactFuturePensionCentre")
+    }
+
+    "render page with message 'To get a copy of your National Insurence record so far,contact the National Insurence helpline ....' " in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p", "nisp.excluded.contactNationalInsuranceHelplineIom")
+    }
+
+  }
+
+  "Exclusion Manual Correspondence Indicator(MCI)" should {
+
+    lazy val sResult = html.excluded_mci(List(Exclusion.ManualCorrespondenceIndicator), Some(40)) ;
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult));
+
+    "render page with heading  'There is a problem logging you in'" in {
+      assertEqualsMessage(htmlAccountDoc ,"h1.heading-large" , "nisp.excluded.mci.title")
+
+    }
+    "render page with text  'We need to speak to you before you can log in to the service.' " in {
+      assertEqualsMessage(htmlAccountDoc , "p.lede","nisp.excluded.mci.info")
+
+    }
+
+    "render page with text 'How to fix this'" in {
+      assertEqualsMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.mci.howToFix")
+    }
+
+    "render page with message 'Telephone 0300 200 3300' " in {
+      assertEqualsMessage(htmlAccountDoc ,"ol.list-number>li:nth-child(1)", "nisp.excluded.mci.howToFix.message1")
+    }
+
+    "render page with message 'Say ‘I can’t log in' " in {
+      assertEqualsMessage(htmlAccountDoc ,"ol.list-number>li:nth-child(2)", "nisp.excluded.mci.howToFix.message2")
+    }
+
+    "render page with message 'Say ‘Yes’ when asked if you are having problems logging in' " in {
+      assertEqualsMessage(htmlAccountDoc ,"ol.list-number>li:nth-child(3)", "nisp.excluded.mci.howToFix.message3")
+    }
+
+    "render page with message 'You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an adviser will help you.'" in {
+      assertEqualsMessage(htmlAccountDoc ,"ol.list-number>li:nth-child(4)", "nisp.excluded.mci.howToFix.message4")
+    }
+
+    "render page with message 'Tell the adviser this is an ‘MCI issue’" in {
+      assertEqualsMessage(htmlAccountDoc ,"ol.list-number>li:nth-child(5)", "nisp.excluded.mci.howToFix.message5")
+    }
+
+    "render page with message 'Other ways to contact us'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium:nth-child(5)", "nisp.excluded.mci.howToContact")
+    }
+
+    "render page with message 'Textphone: 0300 200 3319'" in {
+      assertEqualsMessage(htmlAccountDoc ,"ul.list-bullet> li:nth-child(1)", "nisp.excluded.mci.howToContact.textphone")
+    }
+
+    "render page with message 'Outside UK: +44 135 535 9022'" in {
+      assertEqualsMessage(htmlAccountDoc ,"ul.list-bullet> li:nth-child(2)", "nisp.excluded.mci.howToContact.outsideUK")
+    }
+
+    "render page with message 'Telephone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(7)", "nisp.excluded.mci.howToContact.message1")
+    }
+    "render page with message 'Closed Sundays and bank holidays.'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(8)", "nisp.excluded.mci.howToContact.message2")
+    }
+    "render page with message 'Telephone lines are less busy before 10am Monday to Friday.'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(9)", "nisp.excluded.mci.howToContact.message3")
+    }
+   /* "render page with message 'Find out about call charges (opens in a new window)'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(10)", "nisp.excluded.mci.howToContact.link")
+    }*/
+
 
   }
 
