@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+import com.typesafe.sbt.digest.Import.digest
 import sbt._
 
 object FrontendBuild extends Build with MicroService {
-  import com.typesafe.sbt.web.SbtWeb.autoImport._
+
   import sbt.Keys._
   import play.PlayImport.PlayKeys._
+  import com.typesafe.sbt.web.Import._
+  import com.typesafe.sbt.web.Import.pipelineStages
 
   val appName = "nisp-frontend"
 
@@ -31,11 +34,14 @@ object FrontendBuild extends Build with MicroService {
     lessEntryPoints := Nil,
     // Turn off play's internal javascript compiler
     javascriptEntryPoints := Nil,
+    // Used for Assest fingerprinting to Cache bust
+    pipelineStages := Seq(digest),
     // Add the views to the dist
     unmanagedResourceDirectories in Assets += baseDirectory.value / "app" / "assets",
     // Dont include the source assets in the dist package (public folder)
     excludeFilter in Assets := "js*" || "sass*"
-  ) ++ JavaScriptBuild.javaScriptUiSettings
+
+  )++ JavaScriptBuild.javaScriptUiSettings
 }
 
 private object AppDependencies {

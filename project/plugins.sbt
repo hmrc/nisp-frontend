@@ -15,3 +15,7 @@ resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksam
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.3.0")
 
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.6.0")
+
+addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.0.0")
+
+
