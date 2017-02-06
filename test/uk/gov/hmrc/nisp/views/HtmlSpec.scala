@@ -60,6 +60,12 @@ trait HtmlSpec extends UnitSpec {
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assertMessageKeyHasValue(expectedMessageKey)
+
+    println("*** ENTERED 'login' ACTION ***")
+    println(s"    content-type: ${elements.first().html().replace("\n", "")}")
+    println(s"    content-type: ${StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString()}")
+
+
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(elements.first().html().replace("\n", "") == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
@@ -77,14 +83,14 @@ trait HtmlSpec extends UnitSpec {
     assert(expectedMessageKey != Html(Messages(expectedMessageKey)).toString(), s"$expectedMessageKey has no messages file value setup")
   }
 
-  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs: String) = {
+  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String ,messageArgs2: String) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs).toString())
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs1, messageArgs2).toString())
 
     assert(elements.first().html().replace("\n", "") == expectedString)
 

@@ -115,7 +115,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
     }
     "render page with heading  'You’ll reach State Pension age on 6 sep 2019' " in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2019, 9, 6)))
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2019, 9, 6)) , null)
 
     }
 
@@ -196,11 +196,43 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     "render page with message 'Telephone lines are less busy before 10am Monday to Friday.'" in {
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(9)", "nisp.excluded.mci.howToContact.message3")
     }
-   /* "render page with message 'Find out about call charges (opens in a new window)'" in {
+    "render page with message 'Find out about call charges (opens in a new window)'" in {
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(10)", "nisp.excluded.mci.howToContact.link")
-    }*/
+    }
 
 
   }
 
+  "Exclusion Post State Pension Age" should {
+
+    lazy val sResult = html.excluded_sp(List(Exclusion.PostStatePensionAge), Some(70), Some(new LocalDate(2015, 9, 6)), true)
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+
+    "render page with heading  'Your State Pension'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
+    }
+
+    "render page with heading  You reached State Pension age on 6 September 2015 when you were 70 " in {
+
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.haveReached" , Dates.formatDate(new LocalDate(2015, 9, 6)), (70).toString)
+    }
+    "render page with message  'if you have not already started claiming your state pension you can putoff...' " in {
+
+      assertEqualsMessage(htmlAccountDoc , "div.panel-indent>p:nth-child(1)","nisp.excluded.spa")
+    }
+    "render page with help message 'See a record of the National Insurance contributions which count towards your State Pension ' " in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(4)" , "nisp.excluded.niRecordIntro")
+    }
+    "render page with help message 'View your National Insurance record' " in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(5)" , "nisp.main.showyourrecord")
+    }
+
+    "render page with help message 'Get help with this page.' " in {
+
+      assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , "Get help with this page.")
+    }
+
+  }
 }
