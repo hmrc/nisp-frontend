@@ -61,11 +61,6 @@ trait HtmlSpec extends UnitSpec {
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    println("*** ENTERED 'login' ACTION ***")
-    println(s"    content-type: ${elements.first().html().replace("\n", "")}")
-    println(s"    content-type: ${StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString()}")
-
-
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(elements.first().html().replace("\n", "") == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
