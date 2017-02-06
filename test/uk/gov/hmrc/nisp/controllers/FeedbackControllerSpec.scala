@@ -75,6 +75,7 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
       override val showFullNI: Boolean = false
       override val futureProofPersonalMax: Boolean = false
       override val useStatePensionAPI: Boolean = true
+      override val useNationalInsuranceAPI: Boolean = true
     }
   }
 

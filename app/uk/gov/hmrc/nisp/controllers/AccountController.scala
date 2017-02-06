@@ -45,7 +45,8 @@ object AccountController extends AccountController with AuthenticationConnectors
   override val metricsService: MetricsService = MetricsService
   override val statePensionService: StatePensionService =
     if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
-  override val nationalInsuranceService = ???
+  override val nationalInsuranceService: NationalInsuranceService =
+    if (applicationConfig.useNationalInsuranceAPI) NationalInsuranceService else NispNationalInsuranceService
 }
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
