@@ -229,10 +229,39 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(5)" , "nisp.main.showyourrecord")
     }
 
-    "render page with help message 'Get help with this page.' " in {
 
-      assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , "Get help with this page.")
+  }
+
+  "Exclusion Amount Dissonance" should {
+
+    lazy val sResult = html.excluded_sp(List(Exclusion.AmountDissonance), Some(70), Some(new LocalDate(2015, 9, 6)), true)
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+
+    "render page with heading  'Your State Pension'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
+    }
+
+    "render page with text  You will reach your  State Pension age on 6 September 2015" in {
+
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2015, 9, 6)) , null)
+    }
+    "render page with text  We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(1)" , "nisp.excluded.amountdissonance")
+    }
+    "render page with text  In the meantime, you can contact the Future Pension Centre (opens in new tab) to get an estimate of your State Pension, based on your current National Insurance record." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(2)" , "nisp.excluded.contactFuturePensionCentre")
+    }
+    "render page with text  See a record of the National Insurance contributions which count towards your State Pension and check for any gaps." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(4)" , "nisp.excluded.niRecordIntro")
+    }
+    "render page with text View your National Insurance record for Dissonance" in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(5)" , "nisp.main.showyourrecord")
     }
 
   }
+
 }
