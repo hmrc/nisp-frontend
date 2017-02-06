@@ -59,7 +59,7 @@ trait HtmlSpec extends UnitSpec {
 
     assertMessageKeyHasValue(expectedMessageKey)
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
-    assert(elements.first().html().replace("\n", "") == Html(Messages(expectedMessageKey)).toString())
+    assert(elements.first().html().replace("\n", "") == StringEscapeUtils.escapeHtml4(Html(Messages(expectedMessageKey)).toString()))
   }
 
   def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
