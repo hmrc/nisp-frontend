@@ -95,11 +95,11 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
 
   private[controllers] def generateTableList(tableStart: String, tableEnd: String): Seq[String] = {
     require(tableStart >= tableEnd)
-    require(tableStart.take(4).forall(_.isDigit))
-    require(tableEnd.take(4).forall(_.isDigit))
+    require(tableStart.take(Constants.yearStringLength).forall(_.isDigit))
+    require(tableEnd.take(Constants.yearStringLength).forall(_.isDigit))
 
-    val start = tableStart.take(4).toInt
-    val end = tableEnd.take(4).toInt
+    val start = tableStart.take(Constants.yearStringLength).toInt
+    val end = tableEnd.take(Constants.yearStringLength).toInt
 
     (start to end by -1) map Formatting.startYearToTaxYear
   }

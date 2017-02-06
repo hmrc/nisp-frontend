@@ -50,4 +50,5 @@ object Constants {
   val niRecordStartYear = 1975
   val niRecordMinAge = 16
 
+  var yearStringLength = 4
 }
