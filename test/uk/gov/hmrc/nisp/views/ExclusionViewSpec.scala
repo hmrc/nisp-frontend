@@ -300,4 +300,104 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     }
   }
 
+  "Exclusion Overseas or Abroad" should {
+
+    lazy val sResult = html.excluded_sp(List(Exclusion.Abroad), Some(37), Some(new LocalDate(2017, 9, 6)), true)
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+
+    "render page with heading  'Your State Pension'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
+    }
+
+    "render page with text - You will reach your  State Pension age on 6 September 2015" in {
+
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2017, 9, 6)) , null)
+    }
+
+    "render page with text  We’re unable to calculate your State Pension forecast as you have lived or worked abroad." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(1)" , "nisp.excluded.overseas")
+    }
+    "render page with text In the meantime, you can contact the Future Pension Centre (opens in new tab) to get an estimate of your State Pension, based on your current National Insurance record." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(2)" , "nisp.excluded.contactFuturePensionCentre")
+    }
+
+    "render page with text - See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(4)" , "nisp.excluded.niRecordIntroUK")
+    }
+    "render page with link View your UK National Insurance record " in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(5)" , "nisp.main.showyourrecordUK")
+    }
+
+  }
+  "Multiple Exclusion: Abroad and post state pension age" should {
+
+    lazy val sResult = html.excluded_sp(List(Exclusion.Abroad,Exclusion.PostStatePensionAge), Some(64), Some(new LocalDate(2016, 9, 6)), true)
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+
+    "render page with heading  'Your State Pension'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
+    }
+
+    "render page with text - You have  reachd your  State Pension age on 6 September 2015 when you were 65" in {
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.haveReached" , Dates.formatDate(new LocalDate(2016, 9, 6)) , "64")
+    }
+
+    "render page with message 'if you have not already started claiming your state pension you can putoff...' " in {
+
+      assertEqualsMessage(htmlAccountDoc , "div.panel-indent>p:nth-child(1)","nisp.excluded.spa")
+    }
+
+    "render page with text - See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(4)" , "nisp.excluded.niRecordIntroUK")
+    }
+    "render page with link View your UK National Insurance record " in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(5)" , "nisp.main.showyourrecordUK")
+    }
+
+  }
+  "Multiple Exclusion: Dissonance and Married women" should {
+
+    lazy val sResult = html.excluded_sp(List(Exclusion.AmountDissonance,Exclusion.MarriedWomenReducedRateElection), Some(37), Some(new LocalDate(2017, 9, 6)), true)
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+
+    "render page with heading  'Your State Pension'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
+    }
+
+    "render page with text - You will reach your  State Pension age on 6 September 2017" in {
+
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2017, 9, 6)) , null)
+    }
+    "render page with text  We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(1)" , "nisp.excluded.amountdissonance")
+    }
+    "render page with text  In the meantime, you can contact the Future Pension Centre (opens in new tab) to get an estimate of your State Pension, based on your current National Insurance record." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(2)" , "nisp.excluded.contactFuturePensionCentre")
+    }
+    "render page with text  See a record of the National Insurance contributions which count towards your State Pension and check for any gaps." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(4)" , "nisp.excluded.niRecordIntro")
+    }
+    "render page with text View your National Insurance record for Dissonance" in {
+
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(5)" , "nisp.main.showyourrecord")
+    }
+    "render page with text - Help us improve this service" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h2:nth-child(6)" , "nisp.excluded.mwrre.improve")
+    }
+    "render page with text If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave..." in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(7)" , "nisp.excluded.mwrre.futureResearch")
+    }
+    "render page with link having  text sign out and leave feedback " in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(8)" , "nisp.excluded.mwrre.signOut")
+    }
+  }
 }
