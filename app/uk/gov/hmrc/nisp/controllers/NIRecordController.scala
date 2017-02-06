@@ -99,7 +99,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
     require(tableEnd.take(4).forall(_.isDigit))
 
     val start = tableStart.take(4).toInt
-    val end  = tableEnd.take(4).toInt
+    val end = tableEnd.take(4).toInt
 
     (start to end by -1) map Formatting.startYearToTaxYear
   }
@@ -107,10 +107,6 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
   private def show(gapsOnlyView: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user =>
       implicit request =>
-
-        //TODO multiple unavailable years
-        //TODO Take into Account SP Exclusions!!
-
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
         val statePensionResponseF = statePensionService.getSummary(user.nino)
 
@@ -118,39 +114,44 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
           nationalInsuranceRecordResponse <- nationalInsuranceResponseF;
           statePensionResponse <- statePensionResponseF
         ) yield {
-          (nationalInsuranceRecordResponse, statePensionResponse) match {
-            case (Right(niRecord), Right(statePension)) =>
+          nationalInsuranceRecordResponse match {
+            case Right(niRecord) =>
               if (gapsOnlyView && niRecord.numberOfGaps < 1) {
                 Redirect(routes.NIRecordController.showFull())
               } else {
-                val yearsToContribute = statePensionService.yearsToContributeUntilPensionAge(statePension.earningsIncludedUpTo, statePension.finalRelevantStartYear)
+                val finalRelevantStartYear = statePensionResponse match {
+                  case Left(spExclusion) => spExclusion.finalRelevantStartYear
+                    .getOrElse(throw new RuntimeException(s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion"))
+                  case Right(sp) => sp.finalRelevantStartYear
+                }
+                val yearsToContribute = statePensionService.yearsToContributeUntilPensionAge(niRecord.earningsIncludedUpTo, finalRelevantStartYear)
+                val recordHasEnded = yearsToContribute < 1
+                val tableStart: String =
+                  if (recordHasEnded) Formatting.startYearToTaxYear(finalRelevantStartYear)
+                  else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
+                val tableEnd: String = niRecord.taxYears.last.taxYear
 
                 sendAuditEvent(user.nino, niRecord, yearsToContribute)
 
-                val recordHasEnded = yearsToContribute < 1
-                val tableStart: String = if (recordHasEnded) statePension.finalRelevantYear else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
-                val tableEnd: String = niRecord.taxYears.last.taxYear
-
                 Ok(nirecordpage(
-                  generateTableList(tableStart, tableEnd),
-                  niRecord,
-                  gapsOnlyView,
-                  recordHasEnded,
-                  yearsToContribute,
-                  statePension.finalRelevantEndYear,
-                  showPre1975Years(niRecord.dateOfEntry, user.dateOfBirth),
-                  getAuthenticationProvider(user.authContext.user.confidenceLevel),
-                  showFullNI,
-                  currentDate))
+                  tableList = generateTableList(tableStart, tableEnd),
+                  niRecord = niRecord,
+                  gapsOnlyView = gapsOnlyView,
+                  recordHasEnded = recordHasEnded,
+                  yearsToContribute = yearsToContribute,
+                  finalRelevantEndYear = finalRelevantStartYear + 1,
+                  showPre1975Years = showPre1975Years(niRecord.dateOfEntry, user.dateOfBirth),
+                  authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel),
+                  showFullNI = showFullNI,
+                  currentDate = currentDate))
               }
-            case (Left(exclusion), _) =>
+            case Left(exclusion) =>
               customAuditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
                 List(exclusion)
               ))
               Redirect(routes.ExclusionController.showNI())
-            case _ => throw new RuntimeException("NIRecordController: SP and NIR are unmatchable. This is probably a logic error.")
           }
         }
   }
