@@ -75,6 +75,19 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
             classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
             payable = false,
             underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            taxYear = "1999-00",
+            qualifying = false,
+            classOneContributions = 2,
+            classTwoCredits = 5,
+            classThreeCredits = 0,
+            otherCredits = 1,
+            classThreePayable = 111.11,
+            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
+            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
           )
         )
       )
@@ -94,6 +107,59 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         whenReady(service.getSummary(generateNino)) { record =>
           record shouldBe Right(mockNationalInsuranceRecord)
         }
+      }
+
+      "return the tax years in descending order" in {
+
+        val jumbledRecord = mockNationalInsuranceRecord.copy(taxYears = List(
+          NationalInsuranceTaxYear(
+            taxYear = "2014-15",
+            qualifying = false,
+            classOneContributions = 123,
+            classTwoCredits = 1,
+            classThreeCredits = 1,
+            otherCredits = 1,
+            classThreePayable = 456.58,
+            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
+            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            taxYear = "1999-00",
+            qualifying = false,
+            classOneContributions = 2,
+            classTwoCredits = 5,
+            classThreeCredits = 0,
+            otherCredits = 1,
+            classThreePayable = 111.11,
+            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
+            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            taxYear = "2015-16",
+            qualifying = true,
+            classOneContributions = 12345.45,
+            classTwoCredits = 0,
+            classThreeCredits = 0,
+            otherCredits = 0,
+            classThreePayable = 0,
+            classThreePayableBy = None,
+            classThreePayableByPenalty = None,
+            payable = false,
+            underInvestigation = false
+          )
+        ))
+
+        when(service.nationalInsuranceConnector.getNationalInsurance(Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(jumbledRecord))
+
+        whenReady(service.getSummary(generateNino)) { result =>
+          result.right.get.taxYears shouldBe mockNationalInsuranceRecord.taxYears
+        }
+
       }
 
     }
@@ -281,68 +347,70 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         override val nispConnector: NispConnector = mock[NispConnector]
       }
 
-      when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
-        .thenReturn(Future.successful(NIResponse(
-          Some(NIRecord(List(
-            NIRecordTaxYear(
-              2015,
-              qualifying = true,
-              classOneContributions = 12345.60,
-              classTwoCredits = 27,
-              classThreeCredits = 12,
-              otherCredits = 2,
-              classThreePayableBy = None,
-              classThreePayableByPenalty = None,
-              classThreePayable = None,
-              payable = false,
-              underInvestigation = true
-            ),
-            NIRecordTaxYear(
-              1999,
-              qualifying = false,
-              classOneContributions = 52.12,
-              classTwoCredits = 1,
-              classThreeCredits = 1,
-              otherCredits = 1,
-              classThreePayableBy = Some(NpsDate(2019, 4, 5)),
-              classThreePayableByPenalty = Some(NpsDate(2023, 4, 5)),
-              classThreePayable = Some(311.1),
-              payable = true,
-              underInvestigation = false
-            ),
-            NIRecordTaxYear(
-              1981,
-              qualifying = false,
-              classOneContributions = 0,
-              classTwoCredits = 18,
-              classThreeCredits = 0,
-              otherCredits = 20,
-              classThreePayableBy = None,
-              classThreePayableByPenalty = None,
-              classThreePayable = Some(0),
-              payable = false,
-              underInvestigation = true
-            )
+      val niResponse = NIResponse(
+        Some(NIRecord(List(
+          NIRecordTaxYear(
+            2015,
+            qualifying = true,
+            classOneContributions = 12345.60,
+            classTwoCredits = 27,
+            classThreeCredits = 12,
+            otherCredits = 2,
+            classThreePayableBy = None,
+            classThreePayableByPenalty = None,
+            classThreePayable = None,
+            payable = false,
+            underInvestigation = true
+          ),
+          NIRecordTaxYear(
+            1999,
+            qualifying = false,
+            classOneContributions = 52.12,
+            classTwoCredits = 1,
+            classThreeCredits = 1,
+            otherCredits = 1,
+            classThreePayableBy = Some(NpsDate(2019, 4, 5)),
+            classThreePayableByPenalty = Some(NpsDate(2023, 4, 5)),
+            classThreePayable = Some(311.1),
+            payable = true,
+            underInvestigation = false
+          ),
+          NIRecordTaxYear(
+            1981,
+            qualifying = false,
+            classOneContributions = 0,
+            classTwoCredits = 18,
+            classThreeCredits = 0,
+            otherCredits = 20,
+            classThreePayableBy = None,
+            classThreePayableByPenalty = None,
+            classThreePayable = Some(0),
+            payable = false,
+            underInvestigation = true
+          )
 
-          ))),
-          Some(NISummary(
-            noOfQualifyingYears = 33,
-            noOfNonQualifyingYears = 5,
-            yearsToContributeUntilPensionAge = 10,
-            spaYear = 2017,
-            earningsIncludedUpTo = NpsDate(2016, 4, 5),
-            unavailableYear = 2016,
-            pre75QualifyingYears = Some(5),
-            numberOfNonPayableGaps = 3,
-            numberOfPayableGaps = 2,
-            canImproveWithGaps = true,
-            isAbroad = false,
-            recordEnd = None,
-            finalRelevantYear = 2020,
-            homeResponsibilitiesProtection = true
-          )),
-          None
-        )))
+        ))),
+        Some(NISummary(
+          noOfQualifyingYears = 33,
+          noOfNonQualifyingYears = 5,
+          yearsToContributeUntilPensionAge = 10,
+          spaYear = 2017,
+          earningsIncludedUpTo = NpsDate(2016, 4, 5),
+          unavailableYear = 2016,
+          pre75QualifyingYears = Some(5),
+          numberOfNonPayableGaps = 3,
+          numberOfPayableGaps = 2,
+          canImproveWithGaps = true,
+          isAbroad = false,
+          recordEnd = None,
+          finalRelevantYear = 2020,
+          homeResponsibilitiesProtection = true
+        )),
+        None
+      )
+
+      when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+        .thenReturn(Future.successful(niResponse))
 
       val serviceResponse: NationalInsuranceRecord = service.getSummary(generateNino).right.get
 
@@ -517,6 +585,95 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         }
 
       }
+
+      "return all the tax years in descending order" in {
+        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(niResponse.copy(niRecord = Some(
+            NIRecord(List(
+              NIRecordTaxYear(
+                1981,
+                qualifying = false,
+                classOneContributions = 0,
+                classTwoCredits = 18,
+                classThreeCredits = 0,
+                otherCredits = 20,
+                classThreePayableBy = None,
+                classThreePayableByPenalty = None,
+                classThreePayable = Some(0),
+                payable = false,
+                underInvestigation = true
+              ),
+              NIRecordTaxYear(
+                2015,
+                qualifying = true,
+                classOneContributions = 12345.60,
+                classTwoCredits = 27,
+                classThreeCredits = 12,
+                otherCredits = 2,
+                classThreePayableBy = None,
+                classThreePayableByPenalty = None,
+                classThreePayable = None,
+                payable = false,
+                underInvestigation = true
+              ),
+              NIRecordTaxYear(
+                1999,
+                qualifying = false,
+                classOneContributions = 52.12,
+                classTwoCredits = 1,
+                classThreeCredits = 1,
+                otherCredits = 1,
+                classThreePayableBy = Some(NpsDate(2019, 4, 5)),
+                classThreePayableByPenalty = Some(NpsDate(2023, 4, 5)),
+                classThreePayable = Some(311.1),
+                payable = true,
+                underInvestigation = false
+              )
+            ))
+          ))))
+
+        service.getSummary(generateNino).right.get.taxYears shouldBe List(
+          NationalInsuranceTaxYear(
+            "2015-16",
+            qualifying = true,
+            classOneContributions = 12345.60,
+            classTwoCredits = 27,
+            classThreeCredits = 12,
+            otherCredits = 2,
+            classThreePayable = 0,
+            classThreePayableBy = None,
+            classThreePayableByPenalty = None,
+            payable = false,
+            underInvestigation = true
+          ),
+          NationalInsuranceTaxYear(
+            "1999-00",
+            qualifying = false,
+            classOneContributions = 52.12,
+            classTwoCredits = 1,
+            classThreeCredits = 1,
+            otherCredits = 1,
+            classThreePayable = 311.1,
+            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
+            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+            payable = true,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            "1981-82",
+            qualifying = false,
+            classOneContributions = 0,
+            classTwoCredits = 18,
+            classThreeCredits = 0,
+            otherCredits = 20,
+            classThreePayable = 0,
+            classThreePayableBy = None,
+            classThreePayableByPenalty = None,
+            payable = false,
+            underInvestigation = true
+          )
+        )
+      }
     }
 
     "startYearToTaxYear" when {
@@ -549,7 +706,6 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
     }
 
   }
-
 
 
 }

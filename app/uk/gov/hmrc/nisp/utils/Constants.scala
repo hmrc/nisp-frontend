@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.utils
 
 object Constants {
+
   // scalastyle:off magic.number
   val baseUrl = "/check-your-state-pension"
 
@@ -45,4 +46,8 @@ object Constants {
   val iv = "iv"
   val chartWidthMinimum = 31
   val deferralCutOffAge = 53
+
+  val niRecordStartYear = 1975
+  val niRecordMinAge = 16
+
 }

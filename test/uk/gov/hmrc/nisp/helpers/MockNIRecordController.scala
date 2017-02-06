@@ -22,22 +22,24 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.NIRecordController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.services.{MetricsService, CitizenDetailsService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 object MockNIRecordController extends MockNIRecordController {
-  override val nispConnector: NispConnector = MockNispConnector
   override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val sessionCache: SessionCache = MockSessionCache
   override val showFullNI: Boolean = true
   override val currentDate = new LocalDate(2016,9,9)
   override val metricsService: MetricsService = MockMetricsService
+
 }
 
 trait MockNIRecordController extends NIRecordController {
   override protected def authConnector: AuthConnector = MockAuthConnector
+  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
+  override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp
 
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = ""

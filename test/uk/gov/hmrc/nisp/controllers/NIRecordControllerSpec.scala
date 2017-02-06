@@ -151,7 +151,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord (full)" should {
     "return NI record page with details for full years - when showFullNI is true" in {
       val controller = new MockNIRecordController {
-        override val nispConnector: NispConnector = MockNispConnector
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
@@ -169,7 +168,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return NI record page with no details for full years - when showFullNI is false" in {
       val controller = new MockNIRecordController {
-        override val nispConnector: NispConnector = MockNispConnector
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
@@ -188,7 +186,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /account/nirecord (Gaps)" should {
     "return NI record page - gap details should not show shortfall may increase messages - if current date is after 5 April 2019" in {
       val controller = new MockNIRecordController {
-        override val nispConnector: NispConnector = MockNispConnector
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
@@ -204,7 +201,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return NI record page - gap details should show shortfall may increase messages - if current date is before 5 April 2019" in {
       val controller = new MockNIRecordController {
-        override val nispConnector: NispConnector = MockNispConnector
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
@@ -220,7 +216,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return NI record page - gap details should show shortfall may increase messages - if current date is same 5 April 2019" in {
       val controller = new MockNIRecordController {
-        override val nispConnector: NispConnector = MockNispConnector
         override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
@@ -232,6 +227,53 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
       }
       val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should include("shortfall may increase")
+    }
+  }
+
+  "showPre75Years" when {
+    "the date of entry is the sixteenth birthday" should {
+      "return true for 5th April 1975" in {
+        val date = new LocalDate(1975, 4, 5)
+        MockNIRecordController.showPre1975Years(date, date.minusYears(16)) shouldBe true
+      }
+
+      "return false for 6th April 1975" in {
+        val date = new LocalDate(1975, 4, 6)
+        MockNIRecordController.showPre1975Years(date, date.minusYears(16)) shouldBe false
+      }
+    }
+
+    "the date of entry and sixteenth are different" should {
+      "return true for 16th: 5th April 1970, Date of entry: 5th April 1975" in {
+        val dob = new LocalDate(1970, 4, 5).minusYears(16)
+        val entry = new LocalDate(1975, 4, 5)
+        MockNIRecordController.showPre1975Years(entry, dob) shouldBe true
+      }
+
+      "return true for 16th: 5th April 1970, Date of entry: 6th April 1975" in {
+        val dob = new LocalDate(1970, 4, 5).minusYears(16)
+        val entry = new LocalDate(1975, 4, 6)
+        MockNIRecordController.showPre1975Years(entry, dob) shouldBe false
+      }
+
+      "return true for 16th: 5th April 1975, Date of entry: 5th April 1970" in {
+        val dob = new LocalDate(1975, 4, 5).minusYears(16)
+        val entry = new LocalDate(1970, 4, 5)
+        MockNIRecordController.showPre1975Years(entry, dob) shouldBe true
+      }
+
+      "return true for 16th: 6th April 1975, Date of entry: 5th April 1970" in {
+        val dob = new LocalDate(1975, 4, 6).minusYears(16)
+        val entry = new LocalDate(1970, 4, 5)
+        MockNIRecordController.showPre1975Years(entry, dob) shouldBe false
+      }
+
+      "return false for 16th: 10th July 1983, Date of Entry: 16th October 1977" in {
+        val dob = new LocalDate(1983, 7, 10).minusYears(16)
+        val entry = new LocalDate(1977, 10, 16)
+        MockNIRecordController.showPre1975Years(entry, dob) shouldBe false
+      }
+
     }
   }
 

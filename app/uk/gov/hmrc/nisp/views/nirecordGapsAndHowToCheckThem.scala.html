@@ -17,9 +17,8 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.nisp.models.NISummary
 
-@(niSummary: NISummary)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(homeResponsibilitiesProtection: Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @defining(Some(user)) { implicit userOption =>
 @main(browserTitle = Some(Messages("nisp.nirecord.gapsinyourrecord.title")),
@@ -59,7 +58,7 @@
 
 <h2 class="heading-medium">@Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title")</h2>
 <p>@Html(Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc"))</p>
-@if(niSummary.homeResponsibilitiesProtection) {
+@if(homeResponsibilitiesProtection) {
     <div class="panel-indent">
         <p>@Html(Messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp"))</p>
     </div>

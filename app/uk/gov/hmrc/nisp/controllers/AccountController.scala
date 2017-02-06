@@ -158,7 +158,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                 statePensionExclusion.exclusionReasons
               ))
               Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
-            case _ => throw new RuntimeException("AccountController: NIResponse Model is unmatchable. This is probably a logic error.")
+            case _ => throw new RuntimeException("AccountController: SP and NIR are unmatchable. This is probably a logic error.")
           }
         }
       }
