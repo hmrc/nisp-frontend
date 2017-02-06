@@ -263,5 +263,41 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     }
 
   }
+  "Exclusion Married Women" should {
+
+    lazy val sResult = html.excluded_sp(List(Exclusion.MarriedWomenReducedRateElection), Some(60), Some(new LocalDate(2015, 9, 6)), false)
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+
+    "render page with heading  'Your State Pension'" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
+    }
+
+    "render page with text - You will reach your  State Pension age on 6 September 2015" in {
+
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2015, 9, 6)) , null)
+    }
+    "render page with text  We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab)." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(1)" , "nisp.excluded.mwrre.sp")
+    }
+    "render page with text  In the meantime, you can contact the Future Pension Centre (opens in new tab) to get an estimate of your State Pension, based on your current National Insurance record." in {
+
+      assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(2)" , "nisp.excluded.contactFuturePensionCentre")
+    }
+
+    "render page with message -To get a copy of your National Insurence record so far,contact the National Insurence helpline ...." in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p", "nisp.excluded.contactNationalInsuranceHelpline")
+    }
+
+    "render page with text - Help us improve this service" in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h2:nth-child(5)" , "nisp.excluded.mwrre.improve")
+    }
+    "render page with text If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave..." in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(6)" , "nisp.excluded.mwrre.futureResearch")
+    }
+    "render page with link having  text sign out and leave feedback " in {
+      assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(7)" , "nisp.excluded.mwrre.signOut")
+    }
+  }
 
 }
