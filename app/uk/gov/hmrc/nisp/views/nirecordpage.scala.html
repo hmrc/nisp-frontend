@@ -23,7 +23,7 @@
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import org.joda.time.LocalDate
 
-@(niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, tableStart: String, recordHasEnded: Boolean, yearsToContribute: Int, finalRelevantEndYear: Int, authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, tableStart: String, recordHasEnded: Boolean, yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >
@@ -171,16 +171,18 @@
                 }
             }
 
-            <dt>
-                <div class="ni-wrapper">
-                    <div class="ni-years">@Messages("nisp.nirecord.pre75Years")</div>
-                    @if(niRecord.qualifyingYearsPriorTo1975 > 0) {
-                        <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))</div>
-                    } else {
-                        <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYearsZero"))</div>
-                    }
-                </div>
-            </dt>
+            @if(showPre1975Years) {
+                <dt>
+                    <div class="ni-wrapper">
+                        <div class="ni-years">@Messages("nisp.nirecord.pre75Years")</div>
+                        @if(niRecord.qualifyingYearsPriorTo1975 > 0) {
+                            <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))</div>
+                        } else {
+                            <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYearsZero"))</div>
+                        }
+                    </div>
+                </dt>
+            }
         }
     }
 </dl>

@@ -234,12 +234,12 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     "the date of entry is the sixteenth birthday" should {
       "return true for 5th April 1975" in {
         val date = new LocalDate(1975, 4, 5)
-        MockNIRecordController.showPre1975Years(date, date.minusYears(16)) shouldBe true
+        MockNIRecordController.showPre1975Years(date, Some(date.minusYears(16))) shouldBe true
       }
 
       "return false for 6th April 1975" in {
         val date = new LocalDate(1975, 4, 6)
-        MockNIRecordController.showPre1975Years(date, date.minusYears(16)) shouldBe false
+        MockNIRecordController.showPre1975Years(date, Some(date.minusYears(16))) shouldBe false
       }
     }
 
@@ -247,33 +247,45 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
       "return true for 16th: 5th April 1970, Date of entry: 5th April 1975" in {
         val dob = new LocalDate(1970, 4, 5).minusYears(16)
         val entry = new LocalDate(1975, 4, 5)
-        MockNIRecordController.showPre1975Years(entry, dob) shouldBe true
+        MockNIRecordController.showPre1975Years(entry, Some(dob)) shouldBe true
       }
 
       "return true for 16th: 5th April 1970, Date of entry: 6th April 1975" in {
         val dob = new LocalDate(1970, 4, 5).minusYears(16)
         val entry = new LocalDate(1975, 4, 6)
-        MockNIRecordController.showPre1975Years(entry, dob) shouldBe false
+        MockNIRecordController.showPre1975Years(entry, Some(dob)) shouldBe false
       }
 
       "return true for 16th: 5th April 1975, Date of entry: 5th April 1970" in {
         val dob = new LocalDate(1975, 4, 5).minusYears(16)
         val entry = new LocalDate(1970, 4, 5)
-        MockNIRecordController.showPre1975Years(entry, dob) shouldBe true
+        MockNIRecordController.showPre1975Years(entry, Some(dob)) shouldBe true
       }
 
       "return true for 16th: 6th April 1975, Date of entry: 5th April 1970" in {
         val dob = new LocalDate(1975, 4, 6).minusYears(16)
         val entry = new LocalDate(1970, 4, 5)
-        MockNIRecordController.showPre1975Years(entry, dob) shouldBe false
+        MockNIRecordController.showPre1975Years(entry, Some(dob)) shouldBe false
       }
 
       "return false for 16th: 10th July 1983, Date of Entry: 16th October 1977" in {
         val dob = new LocalDate(1983, 7, 10).minusYears(16)
         val entry = new LocalDate(1977, 10, 16)
-        MockNIRecordController.showPre1975Years(entry, dob) shouldBe false
+        MockNIRecordController.showPre1975Years(entry, Some(dob)) shouldBe false
       }
 
+    }
+
+    "the date of birth is unavailable" should {
+      "return true for date of entry 5th April 1975" in {
+        val date = new LocalDate(1975, 4, 5)
+        MockNIRecordController.showPre1975Years(date, None) shouldBe true
+      }
+
+      "return false for date of entry  6th April 1975" in {
+        val date = new LocalDate(1975, 4, 6)
+        MockNIRecordController.showPre1975Years(date, None) shouldBe false
+      }
     }
   }
 

@@ -78,15 +78,19 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
     ))
   }
 
-  private[controllers] def showPre1975Years(dateOfEntry: LocalDate, dateOfBirth: LocalDate): Boolean = {
+  private[controllers] def showPre1975Years(dateOfEntry: LocalDate, dateOfBirth: Option[LocalDate]): Boolean = {
 
     val dateOfEntryDiff = Constants.niRecordStartYear - TaxYear.taxYearFor(dateOfEntry).startYear
 
-    val sixteenthBirthdayTaxYear = TaxYear.taxYearFor(dateOfBirth.plusYears(Constants.niRecordMinAge))
-    val sixteenthBirthdayDiff = Constants.niRecordStartYear - sixteenthBirthdayTaxYear.startYear
+    dateOfBirth match {
+      case None => dateOfEntryDiff > 0
+      case Some(dob) =>
+        val sixteenthBirthdayTaxYear = TaxYear.taxYearFor(dob.plusYears(Constants.niRecordMinAge))
+        val sixteenthBirthdayDiff = Constants.niRecordStartYear - sixteenthBirthdayTaxYear.startYear
 
-    val yearsPre75 = dateOfEntryDiff.min(sixteenthBirthdayDiff)
-    yearsPre75 > 0
+        val yearsPre75 = dateOfEntryDiff.min(sixteenthBirthdayDiff)
+        yearsPre75 > 0
+    }
   }
 
   private def show(gapsOnlyView: Boolean): Action[AnyContent] = AuthorisedByAny.async {
@@ -122,6 +126,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
                   recordHasEnded,
                   yearsToContribute,
                   statePension.finalRelevantEndYear,
+                  showPre1975Years(niRecord.dateOfEntry, user.dateOfBirth),
                   getAuthenticationProvider(user.authContext.user.confidenceLevel),
                   showFullNI,
                   currentDate))
