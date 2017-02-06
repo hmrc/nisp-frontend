@@ -23,7 +23,7 @@
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import org.joda.time.LocalDate
 
-@(niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, tableStart: String, recordHasEnded: Boolean, yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean, yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >
@@ -133,10 +133,10 @@
 <dl class="accordion">
 
     @if(gapsOnlyView) {
-        @if(!niRecord.taxYears.exists(_.taxYear == tableStart)) {
+        @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
             <dt>
                 <div class="ni-wrapper">
-                    <div class="ni-years"> @tableStart </div>
+                    <div class="ni-years"> @tableList.head </div>
                     <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
                 </div>
             </dt>
@@ -148,27 +148,31 @@
         @if(niRecord.taxYears.isEmpty) {
             <dt>
                 <div class="ni-wrapper">
-                    <div class="ni-years"> @tableStart </div>
+                    <div class="ni-years"> @tableList.head </div>
                     <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
                 </div>
             </dt>
         } else {
 
-            @if(!niRecord.taxYears.exists(_.taxYear == tableStart)) {
-                <dt>
-                    <div class="ni-wrapper">
-                        <div class="ni-years"> @tableStart </div>
-                        <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
-                    </div>
-                </dt>
-            }
+            @for(tableYear <- tableList) {
 
-            @for(taxYear <- niRecord.taxYears) {
-                @if(showFullNI) {
-                    @includes.nirecordtaxyear(taxYear, currentDate)
-                } else {
-                    @includes.nirecordtaxyearNoFull(taxYear, currentDate)
+                @niRecord.taxYears.find(p => p.taxYear == tableYear).map { taxYear =>
+
+                    @if(showFullNI) {
+                        @includes.nirecordtaxyear(taxYear, currentDate)
+                    } else {
+                        @includes.nirecordtaxyearNoFull(taxYear, currentDate)
+                    }
+
+                }.getOrElse {
+                    <dt>
+                        <div class="ni-wrapper">
+                            <div class="ni-years"> @tableYear </div>
+                            <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
+                        </div>
+                    </dt>
                 }
+
             }
 
             @if(showPre1975Years) {

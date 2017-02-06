@@ -120,3 +120,7 @@ trait NispConnectionNI {
     }
   }
 }
+
+object NispNationalInsuranceService extends NationalInsuranceService with NispConnectionNI {
+  override val nispConnector: NispConnector = NispConnector
+}

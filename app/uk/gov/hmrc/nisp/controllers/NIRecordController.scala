@@ -28,7 +28,7 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -93,12 +93,23 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
     }
   }
 
+  private[controllers] def generateTableList(tableStart: String, tableEnd: String): Seq[String] = {
+    require(tableStart >= tableEnd)
+    require(tableStart.take(4).forall(_.isDigit))
+    require(tableEnd.take(4).forall(_.isDigit))
+
+    val start = tableStart.take(4).toInt
+    val end  = tableEnd.take(4).toInt
+
+    (start to end by -1) map Formatting.startYearToTaxYear
+  }
+
   private def show(gapsOnlyView: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user =>
       implicit request =>
 
         //TODO multiple unavailable years
-        //TODO Pre 75 years
+        //TODO Take into Account SP Exclusions!!
 
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
         val statePensionResponseF = statePensionService.getSummary(user.nino)
@@ -117,12 +128,13 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
                 sendAuditEvent(user.nino, niRecord, yearsToContribute)
 
                 val recordHasEnded = yearsToContribute < 1
-                val tableStart = if (recordHasEnded) statePension.finalRelevantYear else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
+                val tableStart: String = if (recordHasEnded) statePension.finalRelevantYear else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
+                val tableEnd: String = niRecord.taxYears.last.taxYear
 
                 Ok(nirecordpage(
+                  generateTableList(tableStart, tableEnd),
                   niRecord,
                   gapsOnlyView,
-                  tableStart,
                   recordHasEnded,
                   yearsToContribute,
                   statePension.finalRelevantEndYear,
