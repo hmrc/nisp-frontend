@@ -110,6 +110,7 @@ trait NispConnectionNI {
           qualifyingYearsPriorTo1975 = summary.pre75QualifyingYears.getOrElse(0),
           numberOfGaps = summary.noOfNonQualifyingYears,
           numberOfGapsPayable = summary.numberOfPayableGaps,
+          dateOfEntry = summary.dateOfEntry.localDate,
           homeResponsibilitiesProtection = summary.homeResponsibilitiesProtection,
           earningsIncludedUpTo = summary.earningsIncludedUpTo.localDate,
           taxYears = record.taxYears.sortBy(_.taxYear)(Ordering[Int].reverse) map transformTaxYear

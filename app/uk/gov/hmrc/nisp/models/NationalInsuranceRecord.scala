@@ -24,6 +24,7 @@ case class NationalInsuranceRecord(
                                     qualifyingYearsPriorTo1975: Int,
                                     numberOfGaps: Int,
                                     numberOfGapsPayable: Int,
+                                    dateOfEntry: LocalDate,
                                     homeResponsibilitiesProtection: Boolean,
                                     earningsIncludedUpTo: LocalDate,
                                     taxYears: List[NationalInsuranceTaxYear]
@@ -36,6 +37,7 @@ object NationalInsuranceRecord {
       qualifyingYearsPriorTo1975 <- (json \ "qualifyingYearsPriorTo1975").validate[Int]
       numberOfGaps <- (json \ "numberOfGaps").validate[Int]
       numberOfGapsPayable <- (json \ "numberOfGapsPayable").validate[Int]
+      dateOfEntry <- (json \ "dateOfEntry").validate[LocalDate]
       homeResponsibilitiesProtection <- (json \ "homeResponsibilitiesProtection").validate[Boolean]
       earningsIncludedUpTo <- (json \ "earningsIncludedUpTo").validate[LocalDate]
       taxYears <- (json \ "_embedded" \ "taxYears").validate[List[NationalInsuranceTaxYear]]
@@ -45,6 +47,7 @@ object NationalInsuranceRecord {
         qualifyingYearsPriorTo1975,
         numberOfGaps,
         numberOfGapsPayable,
+        dateOfEntry,
         homeResponsibilitiesProtection,
         earningsIncludedUpTo,
         taxYears

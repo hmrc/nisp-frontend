@@ -47,6 +47,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         qualifyingYearsPriorTo1975 = 0,
         numberOfGaps = 2,
         numberOfGapsPayable = 1,
+        new LocalDate(1973, 7, 7),
         homeResponsibilitiesProtection = false,
         earningsIncludedUpTo = new LocalDate(2016, 4, 5),
         taxYears = List(
@@ -404,7 +405,8 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
           isAbroad = false,
           recordEnd = None,
           finalRelevantYear = 2020,
-          homeResponsibilitiesProtection = true
+          homeResponsibilitiesProtection = true,
+          dateOfEntry = NpsDate(1977, 4, 6)
         )),
         None
       )
@@ -428,6 +430,11 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
       "map numberOfGapsPayable from niSummary.numberOfPayableGaps" in {
         serviceResponse.numberOfGapsPayable shouldBe 2
+      }
+
+
+      "map dateOfEntry from niSummary.dateOfEntry" in {
+        serviceResponse.dateOfEntry shouldBe new LocalDate(1977, 4, 6)
       }
 
       "map homeResponsibilitiesProtection from niSummary.homeResponsibilitiesProtection" in {
