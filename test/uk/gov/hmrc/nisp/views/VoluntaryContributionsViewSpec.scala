@@ -48,21 +48,7 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
 
   lazy val fakeRequest = FakeRequest();
 
-  val controller = new AccountController {
-    override def nispConnector: NispConnector = mock[NispConnector]
 
-    override def statePensionService: StatePensionService = mock[StatePensionService]
-
-    override lazy val customAuditConnector: CustomAuditConnector = ???
-    override lazy val applicationConfig: ApplicationConfig = ???
-    override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-
-    override protected def authConnector: AuthConnector = MockAuthConnector
-
-    override val sessionCache: SessionCache = MockSessionCache
-    override val metricsService: MetricsService = MockMetricsService
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  }
 
   "Voluntary contributions view" should {
 
