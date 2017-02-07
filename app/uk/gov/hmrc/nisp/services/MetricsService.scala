@@ -28,14 +28,16 @@ object MetricsService extends MetricsService {
     APIType.SP -> MetricsRegistry.defaultRegistry.timer("sp-response-timer"),
     APIType.NI -> MetricsRegistry.defaultRegistry.timer("ni-response-timer"),
     APIType.SchemeMembership-> MetricsRegistry.defaultRegistry.timer("scheme-membership-response-timer"),
-    APIType.StatePension -> MetricsRegistry.defaultRegistry.timer("state-pension-response-timer")
+    APIType.StatePension -> MetricsRegistry.defaultRegistry.timer("state-pension-response-timer"),
+    APIType.NationalInsurance -> MetricsRegistry.defaultRegistry.timer("national-insurance-response-timer")
   )
 
   val failedCounters = Map(
     APIType.SP -> MetricsRegistry.defaultRegistry.counter("sp-failed-counter"),
     APIType.NI -> MetricsRegistry.defaultRegistry.counter("ni-failed-counter"),
     APIType.SchemeMembership -> MetricsRegistry.defaultRegistry.counter("scheme-membership-failed-counter"),
-    APIType.StatePension -> MetricsRegistry.defaultRegistry.counter("state-pension-failed-counter")
+    APIType.StatePension -> MetricsRegistry.defaultRegistry.counter("state-pension-failed-counter"),
+    APIType.NationalInsurance -> MetricsRegistry.defaultRegistry.counter("national-insurance-failed-counter")
   )
 
   override val keystoreReadTimer = MetricsRegistry.defaultRegistry.timer("keystore-read-timer")

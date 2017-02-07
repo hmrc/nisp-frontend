@@ -17,9 +17,13 @@
 package uk.gov.hmrc.nisp.connectors
 
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.config.wiring.{NispSessionCache, WSHttp}
+import uk.gov.hmrc.nisp.connectors.StatePensionConnector.baseUrl
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 
 import scala.concurrent.Future
 
@@ -33,4 +37,11 @@ trait NationalInsuranceConnector extends BackendConnector {
     retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead)(headerCarrier, NationalInsuranceRecord.formats)
   }
 
+}
+
+object NationalInsuranceConnector extends NationalInsuranceConnector {
+  override val serviceUrl: String = baseUrl("national-insurance")
+  override def http: HttpGet = WSHttp
+  override def sessionCache: SessionCache = NispSessionCache
+  override val metricsService: MetricsService = MetricsService
 }

@@ -46,16 +46,18 @@ trait NationalInsuranceConnection {
   val nationalInsuranceConnector: NationalInsuranceConnector
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
-    nationalInsuranceConnector.getNationalInsurance(nino) map (Right(_)) recover {
-      case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead) =>
-        Left(Exclusion.Dead)
-      case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeManualCorrespondence) =>
-        Left(Exclusion.ManualCorrespondenceIndicator)
-      case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeIsleOfMan) =>
-        Left(Exclusion.IsleOfMan)
-      case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeMarriedWomen) =>
-        Left(Exclusion.MarriedWomenReducedRateElection)
-    }
+    nationalInsuranceConnector.getNationalInsurance(nino)
+      .map(ni => Right(ni.copy(taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse))))
+      .recover {
+        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead) =>
+          Left(Exclusion.Dead)
+        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeManualCorrespondence) =>
+          Left(Exclusion.ManualCorrespondenceIndicator)
+        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeIsleOfMan) =>
+          Left(Exclusion.IsleOfMan)
+        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeMarriedWomen) =>
+          Left(Exclusion.MarriedWomenReducedRateElection)
+      }
   }
 }
 
@@ -108,12 +110,21 @@ trait NispConnectionNI {
           qualifyingYearsPriorTo1975 = summary.pre75QualifyingYears.getOrElse(0),
           numberOfGaps = summary.noOfNonQualifyingYears,
           numberOfGapsPayable = summary.numberOfPayableGaps,
+          dateOfEntry = summary.dateOfEntry.localDate,
           homeResponsibilitiesProtection = summary.homeResponsibilitiesProtection,
           earningsIncludedUpTo = summary.earningsIncludedUpTo.localDate,
-          taxYears = record.taxYears map transformTaxYear
+          taxYears = record.taxYears.sortBy(_.taxYear)(Ordering[Int].reverse) map transformTaxYear
         ))
       }
       case _ => throw new RuntimeException("NI Response Model is unmatchable. This is probably a logic error.")
     }
   }
+}
+
+object NationalInsuranceService extends NationalInsuranceService with NationalInsuranceConnection {
+  override val nationalInsuranceConnector: NationalInsuranceConnector = NationalInsuranceConnector
+}
+
+object NispNationalInsuranceService extends NationalInsuranceService with NispConnectionNI {
+  override val nispConnector: NispConnector = NispConnector
 }

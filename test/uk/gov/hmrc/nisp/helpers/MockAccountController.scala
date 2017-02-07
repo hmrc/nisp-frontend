@@ -21,7 +21,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.AccountController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.services.{MetricsService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
@@ -36,8 +36,8 @@ trait MockAccountController extends AccountController {
   override val sessionCache: SessionCache = MockSessionCache
   override val metricsService: MetricsService = MockMetricsService
 
-  override def nispConnector: NispConnector = MockNispConnector
   override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp
+  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = ""
     override val reportAProblemNonJSUrl: String = ""
@@ -62,7 +62,7 @@ trait MockAccountController extends AccountController {
     override val breadcrumbPartialUrl: String = ""
     override val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
-    override val copeTable: Boolean = false
     override val useStatePensionAPI: Boolean = true
+    override val useNationalInsuranceAPI: Boolean = true
   }
 }

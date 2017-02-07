@@ -31,7 +31,18 @@ case class NationalInsuranceTaxYear(
                                      classThreePayableByPenalty: Option[LocalDate],
                                      payable: Boolean,
                                      underInvestigation: Boolean
-                                   )
+                                   ) {
+
+  def currentDateAfterCutOff(currentDate: LocalDate): Boolean = {
+    classThreePayableBy match {
+      case Some(classThreeDate) => currentDate.isAfter(classThreeDate)
+      case None => payable
+    }
+  }
+
+}
+
+
 
 object NationalInsuranceTaxYear {
   implicit val formats: Format[NationalInsuranceTaxYear] = Json.format[NationalInsuranceTaxYear]

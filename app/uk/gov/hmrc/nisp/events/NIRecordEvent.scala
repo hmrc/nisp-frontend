@@ -19,13 +19,12 @@ package uk.gov.hmrc.nisp.events
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 object NIRecordEvent {
-  def apply(nino: String, yearsToContribute: Int, qualifyingYears: Int, nonQualifyingYears: Int, fillableGaps: Int, nonFillableGaps: Int, pre75Years: Int,
-            spaYear: Int)(implicit hc: HeaderCarrier): NIRecordEvent =
-    new NIRecordEvent(nino, yearsToContribute, qualifyingYears, nonQualifyingYears, fillableGaps, nonFillableGaps, pre75Years, spaYear)
+  def apply(nino: String, yearsToContribute: Int, qualifyingYears: Int, nonQualifyingYears: Int, fillableGaps: Int, nonFillableGaps: Int, pre75Years: Int)(implicit hc: HeaderCarrier): NIRecordEvent =
+    new NIRecordEvent(nino, yearsToContribute, qualifyingYears, nonQualifyingYears, fillableGaps, nonFillableGaps, pre75Years)
 }
 
 class NIRecordEvent(nino: String, yearsToContribute: Int, qualifyingYears: Int, nonQualifyingYears: Int, fillableGaps: Int, nonFillableGaps: Int,
-                    pre75Years: Int, spaYear: Int)(implicit hc: HeaderCarrier)
+                    pre75Years: Int)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("NIRecord",
     Map(
       "nino" -> nino,
@@ -34,7 +33,6 @@ class NIRecordEvent(nino: String, yearsToContribute: Int, qualifyingYears: Int, 
       "nonQualifyingYears" -> nonQualifyingYears.toString,
       "fillableGaps" -> fillableGaps.toString,
       "nonFillableGaps" -> nonFillableGaps.toString,
-      "pre75Years" -> pre75Years.toString,
-      "spaYear" -> spaYear.toString
+      "pre75Years" -> pre75Years.toString
     )
   )
