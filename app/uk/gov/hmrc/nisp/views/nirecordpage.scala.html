@@ -141,7 +141,7 @@
                 </div>
             </dt>
         }
-        @for(niTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
+        @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying)){
             @if(showFullNI){ @includes.nirecordtaxyear(niTaxYear, currentDate) }else{ @includes.nirecordtaxyearNoFull(niTaxYear, currentDate)}
         }
     } else {
