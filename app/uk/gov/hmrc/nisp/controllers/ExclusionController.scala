@@ -23,7 +23,7 @@ import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, NispStatePensionService, StatePensionService}
+import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
 
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever {
@@ -31,7 +31,8 @@ object ExclusionController extends ExclusionController with AuthenticationConnec
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val statePensionService: StatePensionService =
     if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
-  override val nationalInsuranceService: NationalInsuranceService = ???
+  override val nationalInsuranceService: NationalInsuranceService =
+    if (applicationConfig.useNationalInsuranceAPI) NationalInsuranceService else NispNationalInsuranceService
 }
 
 trait ExclusionController extends NispFrontendController with AuthorisedForNisp {
