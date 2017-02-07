@@ -29,7 +29,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NispStatePensionService, StatePensionService}
+import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
@@ -38,7 +38,6 @@ import uk.gov.hmrc.time.CurrentTaxYear
 
 
 object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
-  override val nispConnector: NispConnector = NispConnector
   override val sessionCache: SessionCache = NispSessionCache
   override val customAuditConnector = CustomAuditConnector
   override val applicationConfig: ApplicationConfig = ApplicationConfig
@@ -46,141 +45,130 @@ object AccountController extends AccountController with AuthenticationConnectors
   override val metricsService: MetricsService = MetricsService
   override val statePensionService: StatePensionService =
     if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
+  override val nationalInsuranceService: NationalInsuranceService =
+    if (applicationConfig.useNationalInsuranceAPI) NationalInsuranceService else NispNationalInsuranceService
 }
 
 trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
-  def nispConnector: NispConnector
 
   def statePensionService: StatePensionService
+  def nationalInsuranceService: NationalInsuranceService
 
   val customAuditConnector: CustomAuditConnector
   val applicationConfig: ApplicationConfig
 
-  def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    isFromPertax.flatMap { isPertax =>
-      val statePensionResponseF = statePensionService.getSummary(user.nino)
-      val schemeMembershipF = nispConnector.connectToGetSchemeMembership(user.nino)
-      for (
-        statePensionResponse <- statePensionResponseF;
-        schemeMembership <- schemeMembershipF
-      ) yield {
+  def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>
+      isFromPertax.flatMap { isPertax =>
 
-        statePensionResponse match {
+        statePensionService.getSummary(user.nino) map {
           case Right(statePension) if statePension.contractedOut => {
-            if (applicationConfig.copeTable) {
-              Ok(account_cope(
-                statePension.amounts.cope.weeklyAmount,
-                isPertax,
-                schemeMembership
-              ))
-            } else {
-              Ok(account_cope_old(
-                statePension.amounts.cope.weeklyAmount,
-                isPertax
-              ))
-            }
+            Ok(account_cope(
+              statePension.amounts.cope.weeklyAmount,
+              isPertax
+            ))
           }
           case _ => Redirect(routes.AccountController.show())
         }
       }
-    }
   }
 
-  def show: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    isFromPertax.flatMap { isPertax =>
+  def show: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>
+      isFromPertax.flatMap { isPertax =>
 
-      val statePensionResponseF = statePensionService.getSummary(user.nino)
-      val niResponseF = nispConnector.connectToGetNIResponse(user.nino)
+        val statePensionResponseF = statePensionService.getSummary(user.nino)
+        val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
 
-      for (
-        statePensionResponse <- statePensionResponseF;
-        niResponse <- niResponseF
-      ) yield {
-        (statePensionResponse, niResponse) match {
-          case (Right(statePension), NIResponse(_, Some(niSummary), None)) =>
-            customAuditConnector.sendEvent(
+        for (
+          statePensionResponse <- statePensionResponseF;
+          nationalInsuranceResponse <- nationalInsuranceResponseF
+        ) yield {
+          (statePensionResponse, nationalInsuranceResponse) match {
+            case (Right(statePension), Right(nationalInsuranceRecord)) =>
+              customAuditConnector.sendEvent(
 
+                AccountAccessEvent(user.nino.nino,
+                  statePension.pensionDate,
+                  statePension.amounts.current.weeklyAmount,
+                  statePension.amounts.forecast.weeklyAmount,
+                  user.dateOfBirth,
+                  user.name,
+                  user.sex,
+                  statePension.contractedOut,
+                  statePension.forecastScenario,
+                  statePension.amounts.cope.weeklyAmount,
+                  user.authProviderOld
+                ))
 
-              AccountAccessEvent(user.nino.nino,
-                statePension.pensionDate,
-                statePension.amounts.current.weeklyAmount,
-                statePension.amounts.forecast.weeklyAmount,
-                user.dateOfBirth,
+              val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
+                statePension.earningsIncludedUpTo,
+                statePension.finalRelevantStartYear
+              )
+
+              if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
+                val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
+                Ok(account_mqp(
+                  statePension,
+                  nationalInsuranceRecord.numberOfGaps,
+                  nationalInsuranceRecord.numberOfGapsPayable,
+                  yearsMissing,
+                  user.livesAbroad,
+                  user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                  isPertax,
+                  yearsToContributeUntilPensionAge
+                )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+              } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
+
+                Ok(account_forecastonly(
+                  statePension,
+                  nationalInsuranceRecord.numberOfGaps,
+                  nationalInsuranceRecord.numberOfGapsPayable,
+                  user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                  user.livesAbroad,
+                  isPertax,
+                  yearsToContributeUntilPensionAge
+                )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+
+              } else {
+                val (currentChart, forecastChart, personalMaximumChart) =
+                  calculateChartWidths(
+                    statePension.amounts.current,
+                    statePension.amounts.forecast,
+                    statePension.amounts.maximum
+                  )
+                Ok(account(
+                  statePension,
+                  nationalInsuranceRecord.numberOfGaps,
+                  nationalInsuranceRecord.numberOfGapsPayable,
+                  currentChart,
+                  forecastChart,
+                  personalMaximumChart,
+                  isPertax,
+                  hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && nationalInsuranceRecord.numberOfGaps > 1,
+                  user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                  user.livesAbroad,
+                  yearsToContributeUntilPensionAge
+                )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+              }
+
+            case (Left(statePensionExclusion), _) =>
+              customAuditConnector.sendEvent(AccountExclusionEvent(
+                user.nino.nino,
                 user.name,
-                user.sex,
-                statePension.contractedOut,
-                statePension.forecastScenario,
-                statePension.amounts.cope.weeklyAmount,
-                user.authProviderOld
+                statePensionExclusion.exclusionReasons
               ))
-
-            val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
-              statePension.earningsIncludedUpTo,
-              statePension.finalRelevantStartYear
-            )
-
-            if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
-              val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
-              Ok(account_mqp(
-                statePension,
-                niSummary.noOfNonQualifyingYears,
-                niSummary.numberOfPayableGaps,
-                yearsMissing,
-                user.livesAbroad,
-                user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
-                isPertax,
-                yearsToContributeUntilPensionAge
-              )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
-            } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
-
-              Ok(account_forecastonly(
-                statePension,
-                niSummary.noOfNonQualifyingYears,
-                niSummary.numberOfPayableGaps,
-                user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
-                user.livesAbroad,
-                isPertax,
-                yearsToContributeUntilPensionAge
-              )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
-
-            } else {
-              val (currentChart, forecastChart, personalMaximumChart) =
-                calculateChartWidths(
-                  statePension.amounts.current,
-                  statePension.amounts.forecast,
-                  statePension.amounts.maximum
-                )
-              Ok(account(
-                statePension,
-                niSummary.noOfNonQualifyingYears,
-                niSummary.numberOfPayableGaps,
-                currentChart,
-                forecastChart,
-                personalMaximumChart,
-                isPertax,
-                hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && niSummary.noOfNonQualifyingYears > 1,
-                user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
-                user.livesAbroad,
-                yearsToContributeUntilPensionAge
-              )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
-            }
-
-          case (Left(statePensionExclusion), _) =>
-            customAuditConnector.sendEvent(AccountExclusionEvent(
-              user.nino.nino,
-              user.name,
-              statePensionExclusion.exclusionReasons
-            ))
-            Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
-          case _ => throw new RuntimeException("AccountController: NIResponse Model is unmatchable. This is probably a logic error.")
+              Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
+            case _ => throw new RuntimeException("AccountController: SP and NIR are unmatchable. This is probably a logic error.")
+          }
         }
       }
-    }
   }
 
-  def pta(): Action[AnyContent] = AuthorisedByAny { implicit user => implicit request =>
-    setFromPertax
-    Redirect(routes.AccountController.show())
+  def pta(): Action[AnyContent] = AuthorisedByAny { implicit user =>
+    implicit request =>
+      setFromPertax
+      Redirect(routes.AccountController.show())
   }
 
   def calculateChartWidths(current: StatePensionAmount, forecast: StatePensionAmount, personalMaximum: StatePensionAmount): (SPChartModel, SPChartModel, SPChartModel) = {

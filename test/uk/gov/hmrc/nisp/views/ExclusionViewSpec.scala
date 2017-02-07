@@ -49,7 +49,7 @@ import uk.gov.hmrc.nisp.controllers._
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
@@ -69,21 +69,6 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
   lazy val fakeRequest = FakeRequest();
 
-  val controller = new AccountController {
-    override def nispConnector: NispConnector = mock[NispConnector]
-
-    override def statePensionService: StatePensionService = mock[StatePensionService]
-
-    override lazy val customAuditConnector: CustomAuditConnector = ???
-    override lazy val applicationConfig: ApplicationConfig = ???
-    override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-
-    override protected def authConnector: AuthConnector = MockAuthConnector
-
-    override val sessionCache: SessionCache = MockSessionCache
-    override val metricsService: MetricsService = MockMetricsService
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  }
 
   "Exclusion Dead" should {
 

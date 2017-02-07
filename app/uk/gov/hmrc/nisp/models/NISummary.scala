@@ -31,7 +31,8 @@ case class NISummary(noOfQualifyingYears: Int,
                      isAbroad: Boolean,
                      recordEnd: Option[Int],
                      finalRelevantYear: Int,
-                     homeResponsibilitiesProtection: Boolean)
+                     homeResponsibilitiesProtection: Boolean,
+                     dateOfEntry: NpsDate)
 
 
 object NISummary {

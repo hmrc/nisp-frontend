@@ -374,7 +374,7 @@ nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check your
 nisp.nirecord.voluntarycontributions.heading = Voluntary contributions
 nisp.nirecord.voluntarycontributions.title.message = Before considering paying voluntary contributions you should:
 
-nisp.nirecord.voluntarycontributions.h2title.1 = 1.  Check if you may get extra pension income because you
+nisp.nirecord.voluntarycontributions.h2title.1 = 1. Check if you may get extra pension income because you
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle1 = inherit or increase it from a partner
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.heading = Your amount may change if you:
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message1 = are widowed, divorced or have dissolved your civil partnership
@@ -382,10 +382,10 @@ nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message2 = paid marrie
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2 = lived or worked overseas
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message = You may be entitled to a State Pension from the country you lived or worked in. Contact the pension service of the country you were in to find out if you are eligible.
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle3 = lived or worked in the Isle of Man
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme, 
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">visit GOV.IM – Retirement Pension (opens in new window)</a>.
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message2 = visit GOV.IM – Retirement Pension (opens in new window)
 
-nisp.nirecord.voluntarycontributions.h2title.2 = 2.  Seek guidance or financial advice
+nisp.nirecord.voluntarycontributions.h2title.2 = 2. Seek guidance or financial advice
 nisp.nirecord.voluntarycontributions.h2title.2.message = Paying voluntary contributions may not be your best option when planning for your retirement.
 nisp.nirecord.voluntarycontributions.h2title.2.help.title = Where you can get guidance and advice
 nisp.nirecord.voluntarycontributions.h2title.2.help.message = You can seek professional financial advice. For free impartial guidance (not on GOV.UK):
@@ -394,9 +394,9 @@ nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = Pension wise (opens 
 nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - advice on pensions for over 50s
 nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = Citizens Advice (opens in new tab)
 
-nisp.nirecord.voluntarycontributions.h2title.3 = 3.  Find out how paying voluntary contributions affects your State Pension
+nisp.nirecord.voluntarycontributions.h2title.3 = 3. Find out how paying voluntary contributions affects your State Pension
 nisp.nirecord.voluntarycontributions.h2title.3.link1 = Contact the Future Pension Centre (opens in new tab)
-nisp.nirecord.voluntarycontributions.h2title.3.message =  to find out more about how filling gaps can affect your pension.
+nisp.nirecord.voluntarycontributions.h2title.3.message = to find out more about how filling gaps can affect your pension.
 
 #***************************
 # Minimum Qualifying Period
@@ -445,11 +445,7 @@ nisp.cope.workplace = The COPE amount is paid as part of your other pension sche
 nisp.cope.table.estimate.title = Your COPE estimate is
 nisp.cope.otherPensionSchemes = The COPE amount is paid as part of your other pension schemes, not by the government.
 
-nisp.cope.table.title1 = When you were contracted out
-nisp.cope.table.youWereContractedOut = You were part of a contracted out pension scheme during these periods.
-
 nisp.main.cope.linkTitle = More about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE amount (opens in new tab)</a>.
-nisp.main.cope.linkTitle.old = Find out more about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE estimate (opens in new tab)</a>.
 #**************************
 #  Not Authorised IV Messages
 #**************************

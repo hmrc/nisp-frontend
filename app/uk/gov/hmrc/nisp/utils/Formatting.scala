@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.models.enums
+package uk.gov.hmrc.nisp.utils
 
-object APIType extends Enumeration {
-  type APIType = Value
+import uk.gov.hmrc.time.TaxYear
 
-  val NI = Value
-  val SP = Value
-  val SchemeMembership = Value
-  val StatePension = Value
-  val NationalInsurance = Value
+object Formatting {
+
+  def startYearToTaxYear(startYear: Int): String = {
+    val endYear = TaxYear(startYear).finishYear
+    s"$startYear-${endYear.toString.substring(Constants.shortYearStartCharacter, Constants.shortYearEndCharacter)}"
+  }
+
 }

@@ -64,8 +64,8 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
       override val breadcrumbPartialUrl: String = ""
       override val showFullNI: Boolean = false
       override val futureProofPersonalMax: Boolean = false
-      override val copeTable: Boolean = false
       override val useStatePensionAPI: Boolean = true
+      override val useNationalInsuranceAPI: Boolean = true
     }
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
 

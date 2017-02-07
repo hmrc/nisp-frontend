@@ -16,14 +16,13 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.views.formatting.Dates
-@import uk.gov.hmrc.nisp.models.{SPSummaryModel, SchemeMembership}
+@import uk.gov.hmrc.nisp.models.SPSummaryModel
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.nisp.models.NpsDate
 
-@(copeEstimate: BigDecimal, isPertaxUrl:Boolean, schemeMembership: List[SchemeMembership])(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -43,28 +42,18 @@
 @defining(Some(user)) { implicit userOption =>
 @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.cope.youWereContractedOut")), sidebarLinks = Some(sidebar)) {
 
-    <p>@Html(Messages("nisp.cope.inThePast"))</p>
+<p>@Html(Messages("nisp.cope.inThePast"))</p>
 
-    <p>@Messages("nisp.cope.why")</p>
-    <ul class="list-bullet">
-        <li>@Messages("nisp.cope.why.bullet1")</li>
-        <li>@Messages("nisp.cope.why.bullet2")</li>
-    </ul>
-    <h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
+<p>@Messages("nisp.cope.why")</p>
+<ul class="list-bullet">
+    <li>@Messages("nisp.cope.why.bullet1")</li>
+    <li>@Messages("nisp.cope.why.bullet2")</li>
+</ul>
+<h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
     <p>@Messages("nisp.cope.definition")</p>
     <p>@Messages("nisp.cope.workplace")</p>
-    <p>@Messages("nisp.cope.table.estimate.title") <span class="heading-small">@NispMoney.pounds(copeEstimate) @Messages("nisp.main.chart.week")</span>.</p>
-
-    <h2 class="heading-medium">@Messages("nisp.cope.table.title1")</h2>
-    <p>@Messages("nisp.cope.table.youWereContractedOut")</p>
-    <table>
-        <thead><tr><th>@Messages("nisp.from")</th><th>@Messages("nisp.to")</th></tr></thead>
-        <tbody>@for(value <- schemeMembership){<tr><td>@value.startDateFormatted</td><td>@value.endDateFormatted</td></tr>}</tbody>
-    </table>
-
+    <p>@Messages("nisp.cope.table.estimate.title")<span class="heading-small">@NispMoney.pounds(copeEstimate) @Messages("nisp.main.chart.week")</span>.</p>
     <p>@Html(Messages("nisp.main.cope.linkTitle"))</p>
-
-    <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
-
+<p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
 }
 }

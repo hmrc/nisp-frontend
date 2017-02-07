@@ -15,8 +15,7 @@
 *@
 
 @import uk.gov.hmrc.play.views.formatting.Dates
-@import uk.gov.hmrc.nisp.models.NISummary
-@import uk.gov.hmrc.nisp.models.NIRecord
+@import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
@@ -24,36 +23,35 @@
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import org.joda.time.LocalDate
 
-@(niRecord: NIRecord, niSummary: NISummary, niGaps: Boolean = false, tableStart: Int, recordEnded: Boolean,
-authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean, yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >
 
     <h2 aria-hidden="true">@Messages("nisp.nirecord.summary.yourrecord")</h2>
 
-    <p aria-hidden="true" class="nisummary-number">@niSummary.noOfQualifyingYears</p>
+    <p aria-hidden="true" class="nisummary-number">@niRecord.qualifyingYears</p>
 
-    @if(niSummary.noOfQualifyingYears != 1) {
+    @if(niRecord.qualifyingYears != 1) {
         <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullContributions")</p> 
     } else {
         <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullContributions.single")</p>
     }
 
-    @if(!recordEnded) {
-        <p aria-hidden="true" class="nisummary-number">@niSummary.yearsToContributeUntilPensionAge</p>
-        @if(niSummary.yearsToContributeUntilPensionAge != 1) {
-            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining", (niSummary.finalRelevantYear+1).toString)</p>
+    @if(!recordHasEnded) {
+        <p aria-hidden="true" class="nisummary-number">@yearsToContribute</p>
+        @if(yearsToContribute != 1) {
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining", finalRelevantEndYear.toString)</p>
         } else {
-            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining.single", (niSummary.finalRelevantYear+1).toString)</p>
+            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining.single", finalRelevantEndYear.toString)</p>
         }
     }
 
 
-    @if(niSummary.noOfNonQualifyingYears > 0) {
-        <p aria-hidden="true" class="nisummary-number">@niSummary.noOfNonQualifyingYears</p>
+    @if(niRecord.numberOfGaps > 0) {
+        <p aria-hidden="true" class="nisummary-number">@niRecord.numberOfGaps</p>
 
-        @if(niSummary.noOfNonQualifyingYears != 1) {
+        @if(niRecord.numberOfGaps != 1) {
             <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps")</p>
         } else {
             <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps.single")</p>
@@ -65,14 +63,14 @@ authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(imp
 }
 
 @pageScripts = {  
-  <script src="@routes.Assets.at("javascript/nirecord.js")" type="text/javascript"></script>
+  <script src="@routes.Assets.versioned("javascript/nirecord.js")" type="text/javascript"></script>
 }
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension10': '@niSummary.noOfQualifyingYears',
-        'dimension12': '@niSummary.numberOfPayableGaps',
-        'dimension13': '@niSummary.yearsToContributeUntilPensionAge',
+        'dimension10': '@niRecord.qualifyingYears',
+        'dimension12': '@niRecord.numberOfGapsPayable',
+        'dimension13': '@yearsToContribute',
         'dimension22': '@authenticationProvider',
         'metric5': 1
     });
@@ -81,7 +79,7 @@ authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(imp
 @defining(Some(user)) { implicit userOption =>
     @main(browserTitle = Some(Messages("nisp.nirecord.title")), userLoggedIn = true,
         pageScripts=Some(pageScripts), sidebarLinks = Some(sidebar),
-        pageTitle = Some(Messages(if(niSummary.isAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
+        pageTitle = Some(Messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
         analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
 <div class="sidebar-mobile">
@@ -89,26 +87,26 @@ authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(imp
     <h2>@Messages("nisp.nirecord.summary.yourrecord.mobile")</h2>
     <p>You have:</p>
     <ul class="list-bullet">
-        <li>@niSummary.noOfQualifyingYears 
-            @if(niSummary.noOfQualifyingYears != 1) {
+        <li>@niRecord.qualifyingYears 
+            @if(niRecord.qualifyingYears != 1) {
             @Messages("nisp.nirecord.summary.fullContributions")
         } else {
             @Messages("nisp.nirecord.summary.fullContributions.single")
         }
         </li>
 
-        @if(!recordEnded) {
-            <li>@niSummary.yearsToContributeUntilPensionAge @if(niSummary.yearsToContributeUntilPensionAge != 1) {
-                    @Messages("nisp.nirecord.summary.yearsRemaining", (niSummary.finalRelevantYear+1).toString)
+        @if(!recordHasEnded) {
+            <li>@yearsToContribute @if(yearsToContribute != 1) {
+                    @Messages("nisp.nirecord.summary.yearsRemaining", finalRelevantEndYear.toString)
                 } else {
-                    @Messages("nisp.nirecord.summary.yearsRemaining.single", (niSummary.finalRelevantYear+1).toString)
+                    @Messages("nisp.nirecord.summary.yearsRemaining.single", finalRelevantEndYear.toString)
                 }
             </li>
         }
 
-        @if(niSummary.noOfNonQualifyingYears > 0) {
-            <li>@niSummary.noOfNonQualifyingYears
-            @if(niSummary.noOfNonQualifyingYears != 1) {
+        @if(niRecord.numberOfGaps > 0) {
+            <li>@niRecord.numberOfGaps
+            @if(niRecord.numberOfGaps != 1) {
                 @Messages("nisp.nirecord.summary.gaps")
             } else {
                 @Messages("nisp.nirecord.summary.gaps.single")
@@ -118,81 +116,88 @@ authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(imp
     </ul>
 </div>
 
-@if(!niGaps){
-    @if(niSummary.numberOfPayableGaps + niSummary.numberOfNonPayableGaps > 0){
+@if(!gapsOnlyView){
+    @if(niRecord.numberOfGaps > 0){
         <p class="lede">@Messages("nisp.nirecord.yournirecordallyears")</p>
     } else {
         <p class="lede">@Messages("nisp.nirecord.youdonothaveanygaps")</p>
     }
-    @if(niSummary.noOfNonQualifyingYears > 0){
-            <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niSummary.noOfNonQualifyingYears)</a></p>
+    @if(niRecord.numberOfGaps > 0){
+            <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps)</a></p>
     }
-}
-
-
-
-@if(niGaps) {
+} else {
     <p class="lede">@Messages("nisp.nirecord.yournirecordgapyears")</p>
     <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
 }
 
 <dl class="accordion">
 
-    @if(niGaps) {
-        @if(!niRecord.taxYears.exists(_.taxYear == tableStart)) {
+    @if(gapsOnlyView) {
+        @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
             <dt>
                 <div class="ni-wrapper">
-                    <div class="ni-years"> @{(tableStart)}-@{(tableStart + 1).toString.substring(2,4)}</div>
+                    <div class="ni-years"> @tableList.head </div>
                     <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
                 </div>
             </dt>
         }
-        @for(niRecordTaxYear <- niRecord.taxYears.reverse.filter(!_.qualifying)){
-            @if(showFullNI){ @includes.nirecordtaxyear(niRecordTaxYear, currentDate) }else{ @includes.nirecordtaxyearNoFull(niRecordTaxYear, currentDate)}
+        @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying)){
+            @if(showFullNI){ @includes.nirecordtaxyear(niTaxYear, currentDate) }else{ @includes.nirecordtaxyearNoFull(niTaxYear, currentDate)}
         }
     } else {
         @if(niRecord.taxYears.isEmpty) {
             <dt>
                 <div class="ni-wrapper">
-                    <div class="ni-years"> @{(tableStart)}-@{(tableStart + 1).toString.substring(2,4)}</div>
+                    <div class="ni-years"> @tableList.head </div>
                     <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
                 </div>
             </dt>
         } else {
 
-            @for(taxYear <- tableStart to niRecord.taxYears.map(p => p.taxYear).min by -1) {
-              @niRecord.taxYears.find(p => p.taxYear == taxYear).map(if(showFullNI) includes.nirecordtaxyear(_, currentDate) 
-              else includes.nirecordtaxyearNoFull(_, currentDate) ).getOrElse {
+            @for(tableYear <- tableList) {
+
+                @niRecord.taxYears.find(p => p.taxYear == tableYear).map { taxYear =>
+
+                    @if(showFullNI) {
+                        @includes.nirecordtaxyear(taxYear, currentDate)
+                    } else {
+                        @includes.nirecordtaxyearNoFull(taxYear, currentDate)
+                    }
+
+                }.getOrElse {
+                    <dt>
+                        <div class="ni-wrapper">
+                            <div class="ni-years"> @tableYear </div>
+                            <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
+                        </div>
+                    </dt>
+                }
+
+            }
+
+            @if(showPre1975Years) {
                 <dt>
                     <div class="ni-wrapper">
-                        <div class="ni-years"> @{(taxYear)}-@{(taxYear+1).toString.substring(2,4)}</div>
-                        <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
+                        <div class="ni-years">@Messages("nisp.nirecord.pre75Years")</div>
+                        @if(niRecord.qualifyingYearsPriorTo1975 > 0) {
+                            <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))</div>
+                        } else {
+                            <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYearsZero"))</div>
+                        }
                     </div>
                 </dt>
-              }
             }
         }
-      @for(pre75Years <- niSummary.pre75QualifyingYears){
-      <dt>
-        <div class="ni-wrapper">
-            <div class="ni-years">@Messages("nisp.nirecord.pre75Years")</div>
-            @if(pre75Years > 0) {
-              <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYears", pre75Years))</div>
-            } else {
-              <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYearsZero"))</div>
-            }
-        </div>
-      </dt>
-      }
     }
 </dl>
 
-@if(niSummary.noOfNonQualifyingYears > 0 && !niGaps){
-<p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niSummary.noOfNonQualifyingYears)</a></p>
+@if(niRecord.numberOfGaps > 0 && !gapsOnlyView){
+    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps)</a></p>
 }
-@if(niGaps) {
-<p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
+@if(gapsOnlyView) {
+    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
 }
+
 <p class="backlink"><a href="@{uk.gov.hmrc.nisp.controllers.routes.AccountController.show().url}">@Messages("nisp.back")</a></p>
 
 }
