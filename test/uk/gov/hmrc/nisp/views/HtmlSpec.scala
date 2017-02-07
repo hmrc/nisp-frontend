@@ -28,6 +28,8 @@ import play.twirl.api.Html
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.nodes
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Document.OutputSettings
+import org.jsoup.safety.Whitelist
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
 
@@ -99,12 +101,6 @@ trait HtmlSpec extends UnitSpec {
     assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
   }
 
-  def assertLinkHasValue(doc: Document, id: String, linkValue: String) = {
-    assert(doc.select(s"#$id").attr("href") === linkValue)
-  }
-
-
-
 
   def assertElementContainsText(doc: Document, cssSelector: String, text: String) = {
     val elements = doc.select(cssSelector)
@@ -113,6 +109,29 @@ trait HtmlSpec extends UnitSpec {
       throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assert(elements.first().html().contains(text), s"\n\nText '$text' was not rendered inside '$cssSelector'.\n")
+  }
+
+  def assertContainsTextBetweenTags(doc: Document, cssSelector: String, expectedMessageKey: String , cssSelectorSecondElement :String) = {
+
+    val elements = doc.select(cssSelector)
+    val secondElement = doc.select(cssSelectorSecondElement);
+
+    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey).toString())
+    val elementText = elements.first().text().replace("\n", "");
+    val secondElementText = secondElement.first().text().replace("\n", "");
+    val mainElementText = elementText.replace(secondElementText, "");
+
+    assert( StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "").toString()) == expectedString)
+
+  }
+
+  def assertLinkHasValue(doc: Document,cssSelector: String, linkValue: String) = {
+    val elements = doc.select(cssSelector)
+    assert(elements.attr("href") === linkValue)
   }
 
 
