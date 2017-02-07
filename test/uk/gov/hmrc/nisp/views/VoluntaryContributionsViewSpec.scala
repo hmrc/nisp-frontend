@@ -169,7 +169,6 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
     }
     "render page with href value of link 'Pension wise'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a", "https://www.pensionwise.gov.uk/")
-
     }
     "render page with href value of link 'Citizen advice'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(3)>a", "https://www.citizensadvice.org.uk/")
