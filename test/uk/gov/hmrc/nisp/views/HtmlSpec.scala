@@ -111,7 +111,7 @@ trait HtmlSpec extends UnitSpec {
     assert(elements.first().html().contains(text), s"\n\nText '$text' was not rendered inside '$cssSelector'.\n")
   }
 
-  def assertContainsTextBetweenTags(doc: Document, cssSelector: String, expectedMessageKey: String , cssSelectorSecondElement :String) = {
+  def assertContainsMessageBetweenTags(doc: Document, cssSelector: String, expectedMessageKey: String , cssSelectorSecondElement :String) = {
 
     val elements = doc.select(cssSelector)
     val secondElement = doc.select(cssSelectorSecondElement);
@@ -121,6 +121,21 @@ trait HtmlSpec extends UnitSpec {
     assertMessageKeyHasValue(expectedMessageKey)
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey).toString())
+    val elementText = elements.first().text().replace("\n", "");
+    val secondElementText = secondElement.first().text().replace("\n", "");
+    val mainElementText = elementText.replace(secondElementText, "");
+
+    assert( StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "").toString()) == expectedString)
+
+  }
+  def assertContainsTextBetweenTags(doc: Document, cssSelector: String, expectedMessageValue: String , cssSelectorSecondElement :String) = {
+
+    val elements = doc.select(cssSelector)
+    val secondElement = doc.select(cssSelectorSecondElement);
+
+    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    val expectedString = expectedMessageValue
     val elementText = elements.first().text().replace("\n", "");
     val secondElementText = secondElement.first().text().replace("\n", "");
     val mainElementText = elementText.replace(secondElementText, "");

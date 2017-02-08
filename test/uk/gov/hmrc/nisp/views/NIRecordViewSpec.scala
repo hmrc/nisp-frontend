@@ -1,0 +1,140 @@
+/*
+ * Copyright 2017 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Copyright 2017 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.nisp.views
+
+import java.util.UUID
+
+import org.joda.time.LocalDate
+import org.scalatest._
+import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{contentAsString, _}
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
+import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
+import uk.gov.hmrc.nisp.views.html.HtmlSpec
+import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.time.DateTimeUtils.now
+
+
+
+
+
+
+class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
+
+
+
+  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+
+  val mockUserNino = TestAccountBuilder.regularNino;
+  val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
+  val mockUsername = "mockuser"
+  val mockUserId = "/auth/oid/" + mockUsername
+  val mockFullUserId = "/auth/oid/mockfulluser"
+
+  lazy val fakeRequest = FakeRequest();
+
+
+
+
+  def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
+    SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+    SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+    SessionKeys.userId -> userId,
+    SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+  )
+
+
+
+
+  "Render Ni Record view with Gaps Only" should {
+
+    lazy val controller = new MockNIRecordController {
+      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+      override val sessionCache: SessionCache = MockSessionCache
+      override val showFullNI = true
+      override val currentDate = new LocalDate(2016, 9, 9)
+
+      override protected def authConnector: AuthConnector = MockAuthConnector
+
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override val metricsService: MetricsService = MockMetricsService
+    }
+
+    lazy val result = controller.showGaps(authenticatedFakeRequest(mockUserId))
+
+    lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+
+    "render page with Gaps  heading  Your National Insurance record " in {
+        assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.heading")
+      }
+    "render page with text 'Years which are not full'" in {
+      assertEqualsMessage(htmlAccountDoc, "p.lede", "nisp.nirecord.yournirecordgapyears")
+    }
+    "render page with link 'View all years'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)>a", "nisp.nirecord.showfull")
+    }
+
+    "render page with link href 'View all years'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(4)>a", "/check-your-state-pension/account/nirecord")
+    }
+
+    "render page with text  'year is not full'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-notfull", "nisp.nirecord.gap")
+    }
+    "render page with link 'View details'" in {
+
+      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a", "View  details" ,"article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a>span")
+    }
+
+    "render page with text  'You did not make any contributions this year '" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header", "nisp.nirecord.youdidnotmakeanycontrib")
+    }
+
+    "render page with link 'Find out more about'" in {
+      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "Find out more about ." ,"article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
+    }
+
+  }
+
+}

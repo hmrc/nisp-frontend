@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /*
  * Copyright 2017 HM Revenue & Customs
@@ -110,7 +125,7 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
       assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2")
     }
     "render page with link  'Pension wise (opens in new tab)'' " in {
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body >details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message","details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message","details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a")
     }
     "render page with text  'Citizens Advice (opens in new tab)'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(3)>a", "nisp.nirecord.voluntarycontributions.h2title.2.help.link3")
@@ -119,7 +134,7 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
       assertEqualsMessage(htmlAccountDoc, "article.content__body > h2.heading-medium:nth-child(10)", "nisp.nirecord.voluntarycontributions.h2title.3")
     }
     "render page with text  'to find out more about how filling gaps can affect your pension.' " in {
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body >p:nth-child(11)", "nisp.nirecord.voluntarycontributions.h2title.3.message","article.content__body >p:nth-child(11)>a")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >p:nth-child(11)", "nisp.nirecord.voluntarycontributions.h2title.3.message","article.content__body >p:nth-child(11)>a")
     }
 
     "render page with link  'to find out more about how filling gaps can affect your pension.' " in {
