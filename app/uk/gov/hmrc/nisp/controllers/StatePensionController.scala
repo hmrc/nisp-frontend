@@ -37,7 +37,7 @@ import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.time.CurrentTaxYear
 
 
-object AccountController extends AccountController with AuthenticationConnectors with PartialRetriever {
+object StatePensionController extends StatePensionController with AuthenticationConnectors with PartialRetriever {
   override val sessionCache: SessionCache = NispSessionCache
   override val customAuditConnector = CustomAuditConnector
   override val applicationConfig: ApplicationConfig = ApplicationConfig
@@ -49,7 +49,7 @@ object AccountController extends AccountController with AuthenticationConnectors
     if (applicationConfig.useNationalInsuranceAPI) NationalInsuranceService else NispNationalInsuranceService
 }
 
-trait AccountController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
+trait StatePensionController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
 
   def statePensionService: StatePensionService
   def nationalInsuranceService: NationalInsuranceService
@@ -63,12 +63,12 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
         statePensionService.getSummary(user.nino) map {
           case Right(statePension) if statePension.contractedOut => {
-            Ok(account_cope(
+            Ok(statepension_cope(
               statePension.amounts.cope.weeklyAmount,
               isPertax
             ))
           }
-          case _ => Redirect(routes.AccountController.show())
+          case _ => Redirect(routes.StatePensionController.show())
         }
       }
   }
@@ -108,7 +108,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
 
               if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
                 val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
-                Ok(account_mqp(
+                Ok(statepension_mqp(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
@@ -120,7 +120,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
               } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
 
-                Ok(account_forecastonly(
+                Ok(statepension_forecastonly(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
@@ -137,7 +137,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                     statePension.amounts.forecast,
                     statePension.amounts.maximum
                   )
-                Ok(account(
+                Ok(statepension(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
@@ -159,7 +159,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
                 statePensionExclusion.exclusionReasons
               ))
               Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
-            case _ => throw new RuntimeException("AccountController: SP and NIR are unmatchable. This is probably a logic error.")
+            case _ => throw new RuntimeException("StatePensionController: SP and NIR are unmatchable. This is probably a logic error.")
           }
         }
       }
@@ -168,7 +168,7 @@ trait AccountController extends NispFrontendController with AuthorisedForNisp wi
   def pta(): Action[AnyContent] = AuthorisedByAny { implicit user =>
     implicit request =>
       setFromPertax
-      Redirect(routes.AccountController.show())
+      Redirect(routes.StatePensionController.show())
   }
 
   def calculateChartWidths(current: StatePensionAmount, forecast: StatePensionAmount, personalMaximum: StatePensionAmount): (SPChartModel, SPChartModel, SPChartModel) = {

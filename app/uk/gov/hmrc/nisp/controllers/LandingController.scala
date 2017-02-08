@@ -51,7 +51,7 @@ trait LandingController extends NispFrontendController with Actions with Authori
   )
 
   def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
-    Redirect(routes.AccountController.show())
+    Redirect(routes.StatePensionController.show())
   }
 
   def showNotAuthorised(journeyId: Option[String]) : Action[AnyContent] = UnauthorisedAction.async {implicit request =>

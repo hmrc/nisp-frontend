@@ -37,13 +37,13 @@ trait Breadcrumb {
 
   private def buildBreadCrumb(request: Request[_]): List[(String, String)] = {
     val links = Map(
-      "account" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.pension"), "UTF-8"), routes.AccountController.show().url)),
+      "account" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.pension"), "UTF-8"), routes.StatePensionController.show().url)),
       "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showFull().url)),
       "voluntarycontribs" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.voluntaryContrib"), "UTF-8"), routes.NIRecordController.showVoluntaryContributions().url)),
       "gapsandhowtocheck" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord.gapsandhowtocheck"), "UTF-8"), routes.NIRecordController.showGapsAndHowToCheckThem().url)),
       "exclusion" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.excluded"), "UTF-8"), routes.ExclusionController.showSP().url)),
       "exclusionni" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.excluded"), "UTF-8"), routes.ExclusionController.showNI().url)),
-      "cope" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.cope"), "UTF-8"), routes.AccountController.showCope().url))
+      "cope" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.cope"), "UTF-8"), routes.StatePensionController.showCope().url))
     )
 
     val items: List[Option[(String, String)]] = request.path.split("/").filter(!_.isEmpty).map(links.get).toList

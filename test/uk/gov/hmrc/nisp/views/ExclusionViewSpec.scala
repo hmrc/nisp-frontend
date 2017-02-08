@@ -69,7 +69,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
   lazy val fakeRequest = FakeRequest();
 
-  val controller = new AccountController {
+  val controller = new StatePensionController {
 
     override val statePensionService: StatePensionService = mock[StatePensionService]
     override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
