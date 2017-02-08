@@ -151,7 +151,40 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)","nisp.nirecord.gap.findoutmore" ,"/check-your-state-pension/account/nirecord/voluntarycontribs" ,null,null)
     }
+    "render page with text  ' year is not full'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(10)>div>div.ni-notfull", "nisp.nirecord.gap")
+    }
 
+    "render page with text  'You did not make any contributions this year for toolate to pay '" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p.contributions-header", "nisp.nirecord.youdidnotmakeanycontrib")
+    }
+
+    "render page with text 'Find out more about for toolate to pay'" in {
+      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)", "Find out more about ." ,"article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
+    }
+
+    "render page with link 'gaps in your record and how to check them for toolate to pay'" in {
+      assertEqualsValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)>a", "gaps in your record and how to check them")
+    }
+    "render page with link href 'gaps in your record and how to check them for toolate to pay'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)>a", "/check-your-state-pension/account/nirecord/gapsandhowtocheck")
+    }
+
+    "render page with text  'It’s too late to pay for this year. You can usually only pay for the last 6 years.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p.panel-indent:nth-child(3)", "nisp.nirecord.gap.latePaymentMessage")
+    }
+    "render page with link  'view all years'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p>a", "nisp.nirecord.showfull")
+    }
+    "render page with href link  'view all years'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p>a", "/check-your-state-pension/account/nirecord")
+    }
+    "render page with link  'back'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
+    }
+    "render page with href link  'back'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+    }
   }
 
 
