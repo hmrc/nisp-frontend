@@ -30,6 +30,7 @@ import org.jsoup.nodes
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Document.OutputSettings
 import org.jsoup.safety.Whitelist
+import org.jsoup.select.Elements
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
 
@@ -80,16 +81,16 @@ trait HtmlSpec extends UnitSpec {
     assert(expectedMessageKey != Html(Messages(expectedMessageKey)).toString(), s"$expectedMessageKey has no messages file value setup")
   }
 
-  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String ,messageArgs2: String) = {
+  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String ,messageArgs2: String , messageArgs3 :String) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs1, messageArgs2).toString())
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs1, messageArgs2, messageArgs3).toString())
 
-    assert(elements.first().html().replace("\n", "") == expectedString)
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
 
   }
 

@@ -131,10 +131,28 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header", "nisp.nirecord.youdidnotmakeanycontrib")
     }
 
-    "render page with link 'Find out more about'" in {
+    "render page with text 'Find out more about'" in {
       assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "Find out more about ." ,"article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
     }
 
+    "render page with link 'gaps in your record and how to check them'" in {
+      assertEqualsValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a", "gaps in your record and how to check them")
+    }
+    "render page with link href 'gaps in your record and how to check them'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a", "/check-your-state-pension/account/nirecord/gapsandhowtocheck")
+    }
+
+    "render page with text  'You can make up the shortfall'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
+    }
+    "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib" , " &pound;704.60","5 April 2023" ,"5 April 2019" )
+    }
+    "render page with text  'Find out more about...'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)","nisp.nirecord.gap.findoutmore" ,"/check-your-state-pension/account/nirecord/voluntarycontribs" ,null,null)
+    }
+
   }
+
 
 }
