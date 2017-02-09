@@ -104,7 +104,29 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
-
+    /*Check side border :summary */
+    "render page with heading  Summary" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>h2", "nisp.nirecord.summary.yourrecord")
+    }
+    "render page with number of qualifying yeras - 28" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(2)", "28")
+    }
+    "render page with text 'years of full contributions'" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(3)", "nisp.nirecord.summary.fullContributions")
+    }
+    "render page with 4 years to contribute before 5 April 2018 '" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(4)", "4")
+    }
+    "render page with text  'years to contribute before 5 April 2017'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining" , "2018" ,null ,null)
+    }
+    "render page with 10 years - when you did not contribute enough" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(6)", "10")
+    }
+    "render page with text 'when you did not contribute enough'" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(7)", "nisp.nirecord.summary.gaps")
+    }
+   /*Ends here*/
     "render page with Gaps  heading  Your National Insurance record " in {
         assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.heading")
       }
@@ -185,6 +207,8 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with href link  'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
     }
+
+
   }
 
 
