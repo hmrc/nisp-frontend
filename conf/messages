@@ -191,7 +191,7 @@ nisp.excluded.spa = If you have not already started <a href="https://www.gov.uk/
 nisp.excluded.spa.nirecord = You can <a href="https://www.gov.uk/check-national-insurance-record" rel="external" data-journey-click="checkmystatepension:external:checkyournationalinsurancerecord" target="_blank">check your National Insurance record (opens in new tab)</a>.
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
-nisp.excluded.haveReached = You reached State Pension age on {0} when you were {1}
+nisp.excluded.haveReached = You reached State Pension age on {0}
 nisp.excluded.willReach = You&rsquo;ll reach State Pension age on <span class="nowrap">{0}</span>.
 
 nisp.excluded.helpUs.title = Help us improve this service
