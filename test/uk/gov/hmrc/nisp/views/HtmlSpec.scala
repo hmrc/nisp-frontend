@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.views.html
 
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element, Entities}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nisp.helpers._
@@ -26,11 +25,8 @@ import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 import uk.gov.hmrc.play.test.UnitSpec
 import play.twirl.api.Html
 import org.apache.commons.lang3.StringEscapeUtils
-import org.jsoup.nodes
+
 import org.jsoup.nodes.Document
-import org.jsoup.nodes.Document.OutputSettings
-import org.jsoup.safety.Whitelist
-import org.jsoup.select.Elements
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
 
@@ -54,7 +50,6 @@ trait HtmlSpec extends UnitSpec {
   )
 
   def asDocument(html: String): Document = Jsoup.parse(html)
-
 
 
   def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
@@ -81,7 +76,7 @@ trait HtmlSpec extends UnitSpec {
     assert(expectedMessageKey != Html(Messages(expectedMessageKey)).toString(), s"$expectedMessageKey has no messages file value setup")
   }
 
-  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String ,messageArgs2: String , messageArgs3 :String) = {
+  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String, messageArgs2: String, messageArgs3: String) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
@@ -112,7 +107,7 @@ trait HtmlSpec extends UnitSpec {
     assert(elements.first().html().contains(text), s"\n\nText '$text' was not rendered inside '$cssSelector'.\n")
   }
 
-  def assertContainsMessageBetweenTags(doc: Document, cssSelector: String, expectedMessageKey: String , cssSelectorSecondElement :String) = {
+  def assertContainsMessageBetweenTags(doc: Document, cssSelector: String, expectedMessageKey: String, cssSelectorSecondElement: String) = {
 
     val elements = doc.select(cssSelector)
     val secondElement = doc.select(cssSelectorSecondElement);
@@ -126,10 +121,11 @@ trait HtmlSpec extends UnitSpec {
     val secondElementText = secondElement.first().text().replace("\n", "");
     val mainElementText = elementText.replace(secondElementText, "");
 
-    assert( StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "").toString()) == expectedString)
+    assert(StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "").toString()) == expectedString)
 
   }
-  def assertContainsTextBetweenTags(doc: Document, cssSelector: String, expectedMessageValue: String , cssSelectorSecondElement :String) = {
+
+  def assertContainsTextBetweenTags(doc: Document, cssSelector: String, expectedMessageValue: String, cssSelectorSecondElement: String) = {
 
     val elements = doc.select(cssSelector)
     val secondElement = doc.select(cssSelectorSecondElement);
@@ -141,22 +137,22 @@ trait HtmlSpec extends UnitSpec {
     val secondElementText = secondElement.first().text().replace("\n", "");
     val mainElementText = elementText.replace(secondElementText, "");
 
-    assert( StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "").toString()) == expectedString)
+    assert(StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "").toString()) == expectedString)
 
   }
 
-  def assertLinkHasValue(doc: Document,cssSelector: String, linkValue: String) = {
+  def assertLinkHasValue(doc: Document, cssSelector: String, linkValue: String) = {
     val elements = doc.select(cssSelector)
     assert(elements.attr("href") === linkValue)
   }
 
-  def assertContainsChildWithMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String ,messageArgs2: String , messageArgs3 :String) = {
+  def assertContainsChildWithMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String, messageArgs2: String, messageArgs3: String) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assertMessageKeyHasValue(expectedMessageKey)
-    var sMessage = Messages(expectedMessageKey)+" "+ Messages(messageArgs1)+" "+ Messages(messageArgs2) +" "+ Messages(messageArgs3);
+    var sMessage = Messages(expectedMessageKey) + " " + Messages(messageArgs1) + " " + Messages(messageArgs2) + " " + Messages(messageArgs3);
 
     val expectedString = StringEscapeUtils.unescapeHtml4(sMessage.toString());
     assert(StringEscapeUtils.unescapeHtml4(elements.first().text().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
@@ -166,31 +162,35 @@ trait HtmlSpec extends UnitSpec {
   def assertRenderedById(doc: Document, id: String) = {
     assert(doc.getElementById(id) != null, "\n\nElement " + id + " was not rendered on the page.\n")
   }
+
   def assertElementHasValue(doc: Document, id: String, value: String) = {
     assertRenderedById(doc, id)
 
     assert(doc.getElementById(id).attr("value") == value, s"\n\nElement $id has incorrect value. Expected '$value', found '${doc.getElementById(id).attr("value")}'.")
   }
+
   def assertElementNotContainsText(doc: Document, cssSelector: String, text: String) = {
     val elements = doc.select(cssSelector)
 
-    if(elements.isEmpty)
+    if (elements.isEmpty)
       throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assert(!elements.first().html().contains(text), s"\n\nText '$text' was rendered inside '$cssSelector'.\n")
   }
+
   def assertHasClass(doc: Document, cssSelector: String, className: String) = {
     val elements = doc.select(cssSelector)
 
-    if(elements.isEmpty)
+    if (elements.isEmpty)
       throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assert(elements.first().hasClass(className), s"\n\nElement '$cssSelector' doesn't have '$className' class.\n")
   }
+
   def assertDoesNotHaveClass(doc: Document, cssSelector: String, className: String) = {
     val elements = doc.select(cssSelector)
 
-    if(elements.isEmpty)
+    if (elements.isEmpty)
       throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assert(!elements.first().hasClass(className), s"\n\nElement '$cssSelector' has '$className' class.\n")

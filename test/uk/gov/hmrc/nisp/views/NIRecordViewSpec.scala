@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2017 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
@@ -43,7 +27,6 @@ import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
@@ -54,24 +37,18 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
 
 
-
-
-
-
 class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
-
 
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
   val mockUserNino = TestAccountBuilder.regularNino;
-  val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
+  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
   val mockFullUserId = "/auth/oid/mockfulluser"
 
   lazy val fakeRequest = FakeRequest();
-
 
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
@@ -115,7 +92,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(4)", "4")
     }
     "render page with text  'years to contribute before 5 April 2017'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining" , "2018" ,null ,null)
+      assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining", "2018", null, null)
     }
     "render page with 10 years - when you did not contribute enough" in {
       assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(6)", "10")
@@ -146,7 +123,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
     "render page with link 'View details'" in {
 
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a", "View  details" ,"article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a>span")
+      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a", "View  details", "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a>span")
     }
 
     "render page with text  'You did not make any contributions this year '" in {
@@ -154,7 +131,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
     "render page with text 'Find out more about'" in {
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "Find out more about ." ,"article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
+      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "Find out more about .", "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
     }
 
     "render page with link 'gaps in your record and how to check them'" in {
@@ -168,10 +145,10 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib" , " &pound;704.60","5 April 2023" ,"5 April 2019" )
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", "5 April 2023", "5 April 2019")
     }
     "render page with text  'Find out more about...'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)","nisp.nirecord.gap.findoutmore" ,"/check-your-state-pension/account/nirecord/voluntarycontribs" ,null,null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs", null, null)
     }
     "render page with text  ' FUll years'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(10)>div>div.ni-notfull", "nisp.nirecord.fullyear")
@@ -182,7 +159,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
     "render page with text 'Paid employment £ 4,259.60'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment" ," £4,259.60" ,null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £4,259.60", null, null)
     }
 
     /*check for medical credit year*/
@@ -196,7 +173,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
     "render page with text 'National insurence credits 52 weeks'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(51)>div.contributions-wrapper>p:nth-child(2)", "nisp.nirecord.gap.whenyouareclaiming.plural" ,"52" , null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(51)>div.contributions-wrapper>p:nth-child(2)", "nisp.nirecord.gap.whenyouareclaiming.plural", "52", null, null)
     }
     "render page with text 'These may have been added to your record if you were ill/disabled...'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(51)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.whenyouareclaiming.info.plural")
@@ -250,7 +227,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(4)", "4")
     }
     "render page with text  'years to contribute before 5 April 2017'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining" , "2018" ,null ,null)
+      assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining", "2018", null, null)
     }
     "render page with 10 years - when you did not contribute enough" in {
       assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(6)", "10")
@@ -258,10 +235,10 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with text 'when you did not contribute enough'" in {
       assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(7)", "nisp.nirecord.summary.gaps")
     }
-   /*Ends here*/
+    /*Ends here*/
     "render page with Gaps  heading  Your National Insurance record " in {
-        assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.heading")
-      }
+      assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.heading")
+    }
     "render page with text 'Years which are not full'" in {
       assertEqualsMessage(htmlAccountDoc, "p.lede", "nisp.nirecord.yournirecordgapyears")
     }
@@ -281,7 +258,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
     "render page with link 'View details'" in {
 
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a", "View  details" ,"article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a>span")
+      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a", "View  details", "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a>span")
     }
 
     "render page with text  'You did not make any contributions this year '" in {
@@ -289,7 +266,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
     "render page with text 'Find out more about'" in {
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "Find out more about ." ,"article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
+      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "Find out more about .", "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
     }
 
     "render page with link 'gaps in your record and how to check them'" in {
@@ -303,10 +280,10 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib" , " &pound;704.60","5 April 2023" ,"5 April 2019" )
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", "5 April 2023", "5 April 2019")
     }
     "render page with text  'Find out more about...'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)","nisp.nirecord.gap.findoutmore" ,"/check-your-state-pension/account/nirecord/voluntarycontribs" ,null,null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs", null, null)
     }
     "render page with text  ' year is not full'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(10)>div>div.ni-notfull", "nisp.nirecord.gap")
@@ -317,7 +294,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
     "render page with text 'Find out more about for toolate to pay'" in {
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)", "Find out more about ." ,"article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
+      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)", "Find out more about .", "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
     }
 
     "render page with link 'gaps in your record and how to check them for toolate to pay'" in {
@@ -403,16 +380,16 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1")
     }
     "render page with text 'Individuals Caseworker National Insurance contributions and Employers Office HM Revenue and Customs BX9 1AN:'" in {
-      assertContainsChildWithMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1" , "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2" ,"nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3" ,"nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4" )
+      assertContainsChildWithMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4")
     }
     "render page with text 'National Insurance credits'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title" )
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title")
     }
     "render page with text 'If you were claiming benefits because you were unable to work, unemployed or caring for someone full time...'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc" )
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc")
     }
     "render page with text 'Home Responsibilities Protection (HRP) is only available for'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(16)>p", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp" ,null,null,null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(16)>p", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp", null, null, null)
     }
     "render page with link 'Home Responsibilities Protection (HRP) is only available foMore on National Insurance credits (opens in new tab)r'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(17)>a", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")
@@ -498,13 +475,13 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1")
     }
     "render page with text 'Individuals Caseworker National Insurance contributions and Employers Office HM Revenue and Customs BX9 1AN:'" in {
-      assertContainsChildWithMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1" , "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2" ,"nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3" ,"nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4" )
+      assertContainsChildWithMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4")
     }
     "render page with text 'National Insurance credits'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title" )
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title")
     }
     "render page with text 'If you were claiming benefits because you were unable to work, unemployed or caring for someone full time...'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc" )
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc")
     }
     "render page with link 'More on National Insurance credits (opens in new tab)'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)>a", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")
