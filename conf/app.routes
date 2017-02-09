@@ -7,11 +7,11 @@ GET         /                                      uk.gov.hmrc.nisp.controllers.
 GET         /signin/verify                         uk.gov.hmrc.nisp.controllers.LandingController.verifySignIn
 GET         /not-authorised                        uk.gov.hmrc.nisp.controllers.LandingController.showNotAuthorised(journeyId: Option[String])
 
-GET         /account                               uk.gov.hmrc.nisp.controllers.AccountController.show
-GET         /account/pta                           uk.gov.hmrc.nisp.controllers.AccountController.pta
-GET         /account/cope                          uk.gov.hmrc.nisp.controllers.AccountController.showCope
-GET         /signout                               uk.gov.hmrc.nisp.controllers.AccountController.signOut
-GET         /timeout                               uk.gov.hmrc.nisp.controllers.AccountController.timeout
+GET         /account                               uk.gov.hmrc.nisp.controllers.StatePensionController.show
+GET         /account/pta                           uk.gov.hmrc.nisp.controllers.StatePensionController.pta
+GET         /account/cope                          uk.gov.hmrc.nisp.controllers.StatePensionController.showCope
+GET         /signout                               uk.gov.hmrc.nisp.controllers.StatePensionController.signOut
+GET         /timeout                               uk.gov.hmrc.nisp.controllers.StatePensionController.timeout
 
 GET         /exclusion                             uk.gov.hmrc.nisp.controllers.ExclusionController.showSP
 GET         /exclusionni                           uk.gov.hmrc.nisp.controllers.ExclusionController.showNI

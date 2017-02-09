@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 object GovernmentGatewayProvider extends GovernmentGateway {
   override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] =
-    Future.successful(Redirect(routes.AccountController.timeout().url))
+    Future.successful(Redirect(routes.StatePensionController.timeout().url))
 
   override val additionalLoginParameters: Map[String, Seq[String]] = Map("accountType" -> Seq("individual"))
   override val continueURL: String = ApplicationConfig.postSignInRedirectUrl

@@ -19,18 +19,18 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
-import uk.gov.hmrc.nisp.controllers.AccountController
+import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-object MockAccountController extends MockAccountController {
+object MockStatePensionController extends MockStatePensionController {
   override val citizenDetailsService = MockCitizenDetailsService
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 }
 
-trait MockAccountController extends AccountController {
+trait MockStatePensionController extends StatePensionController {
   override protected implicit def authConnector: AuthConnector = MockAuthConnector
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val sessionCache: SessionCache = MockSessionCache
