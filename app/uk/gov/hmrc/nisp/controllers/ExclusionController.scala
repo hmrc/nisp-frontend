@@ -60,7 +60,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
           }
         case _ =>
           Logger.warn("User accessed /exclusion as non-excluded user")
-          Redirect(routes.AccountController.show())
+          Redirect(routes.StatePensionController.show())
       }
     }
   }

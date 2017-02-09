@@ -69,7 +69,6 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
   lazy val fakeRequest = FakeRequest();
 
-
   "Exclusion Dead" should {
 
     lazy val sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65))
