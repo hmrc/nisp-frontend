@@ -150,5 +150,17 @@ trait HtmlSpec extends UnitSpec {
     assert(elements.attr("href") === linkValue)
   }
 
+  def assertContainsChildWithMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String ,messageArgs2: String , messageArgs3 :String) = {
+    val elements = doc.select(cssSelector)
+
+    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+    var sMessage = Messages(expectedMessageKey)+" "+ Messages(messageArgs1)+" "+ Messages(messageArgs2) +" "+ Messages(messageArgs3);
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(sMessage.toString());
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().text().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
+
+  }
 
 }

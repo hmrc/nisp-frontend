@@ -201,8 +201,6 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with text 'These may have been added to your record if you were ill/disabled...'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(51)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.whenyouareclaiming.info.plural")
     }
-
-
     /*ends here*/
 
     "render page with link  'view gaps only'" in {
@@ -218,11 +216,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
     }
 
-
   }
-
-
-
   "Render Ni Record view Gaps Only" should {
 
     lazy val controller = new MockNIRecordController {
@@ -351,9 +345,179 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
 
   }
+  "Render Ni Record view With HRP Message" should {
 
+    lazy val result = html.nirecordGapsAndHowToCheckThem(true);
 
+    lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+    "render page with heading 'Gaps in your record and how to check them'" in {
+      assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.gapsinyourrecord.heading")
+    }
+    "render page with text 'In most cases, you will have a gap in your record as you did not contribute enough National Insurance.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.nirecord.gapsinyourrecord.title.message")
+    }
+    "render page with text 'This could be because you were:.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.nirecord.gapsinyourrecord.listheader")
+    }
+    "render page with text 'in paid employment and had low earnings'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(1)", "nisp.nirecord.gapsinyourrecord.line1")
+    }
+    "render page with text 'unemployed and not claiming benefit'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(2)", "nisp.nirecord.gapsinyourrecord.line2")
+    }
+    "render page with text 'self-employed but did not pay contributions because of small profits'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(3)", "nisp.nirecord.gapsinyourrecord.line3")
+    }
+    "render page with text 'living abroad'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(4)", "nisp.nirecord.gapsinyourrecord.line4")
+    }
+    "render page with text 'living or working in the Isle of Man'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(5)", "nisp.nirecord.gapsinyourrecord.line5")
+    }
+    "render page with text 'How to check your record'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(5)", "nisp.nirecord.gapsinyourrecord.howtocheckrecord")
+    }
+    "render page with text 'Paid employment'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h3:nth-child(6)", "nisp.nirecord.gapsinyourrecord.paidemployment.title")
+    }
+    "render page with text 'Check the contributions you made against P60s from your employers.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.nirecord.gapsinyourrecord.paidemployment.desc")
+    }
+    "render page with text 'If you do not have P60s'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>details:nth-child(8)>summary>span", "nisp.nirecord.gapsinyourrecord.donothavep60.title")
+    }
+    "render page with text 'You can get a replacement P60 from your employer. Alternatively, you can find your National Insurance contributions on your payslips.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>details:nth-child(8)>div.panel-indent>p", "nisp.nirecord.gapsinyourrecord.donothavep60.desc")
+    }
+    "render page with text 'Self-employment and voluntary contributions.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h3:nth-child(9)", "nisp.nirecord.gapsinyourrecord.selfemployment.title")
+    }
+    "render page with text 'Check the contributions you made against your personal accounts. For instance if you made payments by cheque or through your bank.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.nirecord.gapsinyourrecord.selfemployment.desc")
+    }
+    "render page with text 'If you have evidence that your record is wrong'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(11)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.title")
+    }
+    "render page with text 'You may be able to correct your record. Send copies of the necessary evidence with a covering letter to:'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1")
+    }
+    "render page with text 'Individuals Caseworker National Insurance contributions and Employers Office HM Revenue and Customs BX9 1AN:'" in {
+      assertContainsChildWithMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1" , "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2" ,"nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3" ,"nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4" )
+    }
+    "render page with text 'National Insurance credits'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title" )
+    }
+    "render page with text 'If you were claiming benefits because you were unable to work, unemployed or caring for someone full time...'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc" )
+    }
+    "render page with text 'Home Responsibilities Protection (HRP) is only available for'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(16)>p", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp" ,null,null,null)
+    }
+    "render page with link 'Home Responsibilities Protection (HRP) is only available foMore on National Insurance credits (opens in new tab)r'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(17)>a", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")
+    }
+    "render page with href link More on National Insurance credits (opens in new tab) " in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(17)>a", "https://www.gov.uk/national-insurance-credits/eligibility")
+    }
+    "render page with  link back " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(18)>a", "nisp.back")
+    }
+    "render page with href link back " in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>div:nth-child(18)>a", "/check-your-state-pension/account/nirecord/gaps")
+    }
+  }
+  "Render Ni Record without With HRP Message" should {
 
+    /*  lazy val controller = new MockNIRecordController {
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+        override val sessionCache: SessionCache = MockSessionCache
+        override val showFullNI = true
+        override val currentDate = new LocalDate(2016, 9, 9)
+
+        override protected def authConnector: AuthConnector = MockAuthConnector
+
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override val metricsService: MetricsService = MockMetricsService
+      }*/
+
+    lazy val result = html.nirecordGapsAndHowToCheckThem(false);
+
+    lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+    "render page with heading 'Gaps in your record and how to check them'" in {
+      assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.gapsinyourrecord.heading")
+    }
+    "render page with text 'In most cases, you will have a gap in your record as you did not contribute enough National Insurance.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.nirecord.gapsinyourrecord.title.message")
+    }
+    "render page with text 'This could be because you were:.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.nirecord.gapsinyourrecord.listheader")
+    }
+    "render page with text 'in paid employment and had low earnings'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(1)", "nisp.nirecord.gapsinyourrecord.line1")
+    }
+    "render page with text 'unemployed and not claiming benefit'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(2)", "nisp.nirecord.gapsinyourrecord.line2")
+    }
+    "render page with text 'self-employed but did not pay contributions because of small profits'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(3)", "nisp.nirecord.gapsinyourrecord.line3")
+    }
+    "render page with text 'living abroad'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(4)", "nisp.nirecord.gapsinyourrecord.line4")
+    }
+    "render page with text 'living or working in the Isle of Man'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul.list-bullet:nth-child(4)>li:nth-child(5)", "nisp.nirecord.gapsinyourrecord.line5")
+    }
+    "render page with text 'How to check your record'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(5)", "nisp.nirecord.gapsinyourrecord.howtocheckrecord")
+    }
+    "render page with text 'Paid employment'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h3:nth-child(6)", "nisp.nirecord.gapsinyourrecord.paidemployment.title")
+    }
+    "render page with text 'Check the contributions you made against P60s from your employers.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.nirecord.gapsinyourrecord.paidemployment.desc")
+    }
+    "render page with text 'If you do not have P60s'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>details:nth-child(8)>summary>span", "nisp.nirecord.gapsinyourrecord.donothavep60.title")
+    }
+    "render page with text 'You can get a replacement P60 from your employer. Alternatively, you can find your National Insurance contributions on your payslips.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>details:nth-child(8)>div.panel-indent>p", "nisp.nirecord.gapsinyourrecord.donothavep60.desc")
+    }
+    "render page with text 'Self-employment and voluntary contributions.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h3:nth-child(9)", "nisp.nirecord.gapsinyourrecord.selfemployment.title")
+    }
+    "render page with text 'Check the contributions you made against your personal accounts. For instance if you made payments by cheque or through your bank.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.nirecord.gapsinyourrecord.selfemployment.desc")
+    }
+    "render page with text 'If you have evidence that your record is wrong'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(11)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.title")
+    }
+    "render page with text 'You may be able to correct your record. Send copies of the necessary evidence with a covering letter to:'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1")
+    }
+    "render page with text 'Individuals Caseworker National Insurance contributions and Employers Office HM Revenue and Customs BX9 1AN:'" in {
+      assertContainsChildWithMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1" , "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2" ,"nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3" ,"nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4" )
+    }
+    "render page with text 'National Insurance credits'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title" )
+    }
+    "render page with text 'If you were claiming benefits because you were unable to work, unemployed or caring for someone full time...'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc" )
+    }
+    "render page with link 'More on National Insurance credits (opens in new tab)'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)>a", "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")
+    }
+    "render page with href link More on National Insurance credits (opens in new tab) " in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(16)>a", "https://www.gov.uk/national-insurance-credits/eligibility")
+    }
+    "render page with  link back " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(17)>a", "nisp.back")
+    }
+    "render page with href link back " in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>div:nth-child(17)>a", "/check-your-state-pension/account/nirecord/gaps")
+    }
+  }
 
 }
