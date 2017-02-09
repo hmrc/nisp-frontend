@@ -20,14 +20,14 @@ import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 object AccountExclusionEvent {
-  def apply(nino: String, name: Option[String], spExclusions: List[Exclusion])(implicit hc: HeaderCarrier): AccountExclusionEvent =
-    new AccountExclusionEvent(nino,name.getOrElse("N/A"), spExclusions)
+  def apply(nino: String, name: Option[String], spExclusion: Exclusion)(implicit hc: HeaderCarrier): AccountExclusionEvent =
+    new AccountExclusionEvent(nino,name.getOrElse("N/A"), spExclusion)
 }
-class AccountExclusionEvent(nino: String, name: String, spExclusions: List[Exclusion])(implicit hc: HeaderCarrier)
+class AccountExclusionEvent(nino: String, name: String, spExclusion: Exclusion)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("Exclusion",
   Map(
     "nino" -> nino,
-    "ExclusionReasons" -> spExclusions.map(_.toString).mkString(","),
+    "ExclusionReasons" -> spExclusion.toString,
     "Name" -> name
   )
 )

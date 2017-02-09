@@ -73,13 +73,13 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
 
     "transform the Dead 403 into a Left(StatePensionExclusion(Dead))" in {
       whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAll)) { exclusion =>
-        exclusion shouldBe Left(StatePensionExclusion(List(Exclusion.Dead)))
+        exclusion shouldBe Left(StatePensionExclusionFiltered(Exclusion.Dead))
       }
     }
 
     "transform the MCI 403 into a Left(StatePensionExclusion(MCI))" in {
       whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAllButDead)) { exclusion =>
-        exclusion shouldBe Left(StatePensionExclusion(List(Exclusion.ManualCorrespondenceIndicator)))
+        exclusion shouldBe Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
       }
     }
 
@@ -99,16 +99,10 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
       }
     }
 
-    "return the connector response for all the exclusions except MCI and Dead" in {
+    "return the connector response with IsleOfMan exclusion for all the exclusions except MCI and Dead" in {
       whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAllButDeadMCI)) { statePension =>
-        statePension shouldBe Left(StatePensionExclusion(
-          List(
-            Exclusion.PostStatePensionAge,
-            Exclusion.AmountDissonance,
-            Exclusion.MarriedWomenReducedRateElection,
-            Exclusion.IsleOfMan,
-            Exclusion.Abroad
-          ),
+        statePension shouldBe Left(StatePensionExclusionFiltered(
+          Exclusion.PostStatePensionAge,
           pensionAge = Some(65),
           pensionDate = Some(new LocalDate(2017, 7, 18))
         ))

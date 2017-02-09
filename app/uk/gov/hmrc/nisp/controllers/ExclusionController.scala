@@ -51,12 +51,12 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
     ) yield {
       statePension match {
         case Left(exclusion) =>
-          if (exclusion.exclusionReasons.contains(Exclusion.Dead))
-            Ok(excluded_dead(exclusion.exclusionReasons, exclusion.pensionAge))
-          else if (exclusion.exclusionReasons.contains(Exclusion.ManualCorrespondenceIndicator))
-            Ok(excluded_mci(exclusion.exclusionReasons, exclusion.pensionAge))
+          if (exclusion.exclusion == Exclusion.Dead)
+            Ok(excluded_dead(List(Exclusion.Dead), exclusion.pensionAge))
+          else if (exclusion.exclusion == Exclusion.ManualCorrespondenceIndicator)
+            Ok(excluded_mci(List(Exclusion.ManualCorrespondenceIndicator), exclusion.pensionAge))
           else {
-            Ok(excluded_sp(exclusion.exclusionReasons, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight))
+            Ok(excluded_sp(exclusion.exclusion, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight))
           }
         case _ =>
           Logger.warn("User accessed /exclusion as non-excluded user")

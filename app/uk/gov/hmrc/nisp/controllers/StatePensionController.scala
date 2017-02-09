@@ -156,7 +156,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
               customAuditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
-                statePensionExclusion.exclusionReasons
+                statePensionExclusion.exclusion
               ))
               Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
             case _ => throw new RuntimeException("StatePensionController: SP and NIR are unmatchable. This is probably a logic error.")
