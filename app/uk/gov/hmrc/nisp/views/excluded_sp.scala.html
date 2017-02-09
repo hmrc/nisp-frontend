@@ -50,7 +50,7 @@ canSeeNIRecord: Boolean
            date <- statePensionAgeDate
         ) {
             @if(exclusionReasons.contains(PostStatePensionAge)) {
-                <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(date), age) </h2>
+                <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(date)) </h2>
             } else {
                 <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", Dates.formatDate(date))) </h2>
             }
@@ -105,7 +105,7 @@ canSeeNIRecord: Boolean
         @if(exclusionReasons.contains(MarriedWomenReducedRateElection)) {
             <h2 class="heading-medium">@Messages("nisp.excluded.mwrre.improve")</h2>
             <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
-            <a href="@routes.AccountController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>
+            <a href="@routes.StatePensionController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>
         }
     }
 }

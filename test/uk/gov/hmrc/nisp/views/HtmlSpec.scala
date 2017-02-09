@@ -163,4 +163,38 @@ trait HtmlSpec extends UnitSpec {
 
   }
 
+  def assertRenderedById(doc: Document, id: String) = {
+    assert(doc.getElementById(id) != null, "\n\nElement " + id + " was not rendered on the page.\n")
+  }
+  def assertElementHasValue(doc: Document, id: String, value: String) = {
+    assertRenderedById(doc, id)
+
+    assert(doc.getElementById(id).attr("value") == value, s"\n\nElement $id has incorrect value. Expected '$value', found '${doc.getElementById(id).attr("value")}'.")
+  }
+  def assertElementNotContainsText(doc: Document, cssSelector: String, text: String) = {
+    val elements = doc.select(cssSelector)
+
+    if(elements.isEmpty)
+      throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assert(!elements.first().html().contains(text), s"\n\nText '$text' was rendered inside '$cssSelector'.\n")
+  }
+  def assertHasClass(doc: Document, cssSelector: String, className: String) = {
+    val elements = doc.select(cssSelector)
+
+    if(elements.isEmpty)
+      throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assert(elements.first().hasClass(className), s"\n\nElement '$cssSelector' doesn't have '$className' class.\n")
+  }
+  def assertDoesNotHaveClass(doc: Document, cssSelector: String, className: String) = {
+    val elements = doc.select(cssSelector)
+
+    if(elements.isEmpty)
+      throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assert(!elements.first().hasClass(className), s"\n\nElement '$cssSelector' has '$className' class.\n")
+  }
+
+
 }
