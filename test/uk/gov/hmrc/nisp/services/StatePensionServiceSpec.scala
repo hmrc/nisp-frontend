@@ -99,7 +99,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
       }
     }
 
-    "return the connector response with IsleOfMan exclusion for all the exclusions except MCI and Dead" in {
+    "return the connector response with PostStatePensionAge exclusion for all the exclusions except MCI and Dead" in {
       whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAllButDeadMCI)) { statePension =>
         statePension shouldBe Left(StatePensionExclusionFiltered(
           Exclusion.PostStatePensionAge,
