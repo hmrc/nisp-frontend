@@ -89,7 +89,7 @@ trait HtmlSpec extends UnitSpec {
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs1, messageArgs2).toString())
 
-    assert(elements.first().html().replace("\n", "") == expectedString)
+    assert(StringEscapeUtils.unescapeHtml4((elements.first().html()).toString().replace("\n", "")) == expectedString)
 
   }
 
