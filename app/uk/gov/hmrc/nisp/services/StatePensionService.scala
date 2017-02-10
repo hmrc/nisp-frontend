@@ -22,6 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.connectors.{NispConnector, StatePensionConnector}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.enums.Exclusion._
 import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 
 import scala.concurrent.Future
@@ -30,17 +31,37 @@ import uk.gov.hmrc.time.CurrentTaxYear
 
 
 trait StatePensionService extends CurrentTaxYear {
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]]
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFiltered, StatePension]]
 
   def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int = {
     finalRelevantYearStart - taxYearFor(earningsIncludedUpTo).startYear
   }
+
+  private[services] def filterExclusions(exclusions: List[Exclusion]): Exclusion = {
+    if (exclusions.contains(Exclusion.Dead)) {
+      Exclusion.Dead
+    } else if (exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
+      Exclusion.ManualCorrespondenceIndicator
+    } else if (exclusions.contains(Exclusion.PostStatePensionAge)) {
+      Exclusion.PostStatePensionAge
+    } else if (exclusions.contains(Exclusion.AmountDissonance)) {
+      Exclusion.AmountDissonance
+    } else if (exclusions.contains(Exclusion.IsleOfMan)) {
+      Exclusion.IsleOfMan
+    } else if (exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
+      Exclusion.MarriedWomenReducedRateElection
+    } else if (exclusions.contains(Exclusion.Abroad)) {
+      Exclusion.Abroad
+    } else {
+      throw new RuntimeException(s"Un-accounted for exclusion in NispConnectionNI: $exclusions")
+    }
+  }
 }
 
-trait NispConnectionSP {
+trait NispConnectionSP extends StatePensionService {
   val nisp: NispConnector
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]] = {
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFiltered, StatePension]] = {
     nisp.connectToGetSPResponse(nino) map {
       case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) => Right(StatePension(
         earningsIncludedUpTo = spSummary.lastProcessedDate.localDate,
@@ -78,8 +99,8 @@ trait NispConnectionSP {
       ))
 
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), _) =>
-        Left(StatePensionExclusion(
-          exclusionReasons = spExclusions.exclusions,
+        Left(StatePensionExclusionFiltered(
+          exclusion = filterExclusions(spExclusions.exclusions),
           pensionAge = Some(spSummary.statePensionAge.age),
           pensionDate = Some(spSummary.statePensionAge.date.localDate)
         ))
@@ -87,6 +108,7 @@ trait NispConnectionSP {
       case _ => throw new RuntimeException("SP Response Model is unmatchable. This is probably a logic error.")
     }
   }
+
 }
 
 object NispStatePensionService extends StatePensionService with NispConnectionSP {
@@ -94,18 +116,28 @@ object NispStatePensionService extends StatePensionService with NispConnectionSP
   override def now: () => DateTime = () => DateTime.now(ukTime)
 }
 
-trait StatePensionConnection {
+trait StatePensionConnection extends StatePensionService {
   val statePensionConnector: StatePensionConnector
 
   final val exclusionCodeDead = "EXCLUSION_DEAD"
   final val exclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]] = {
-    statePensionConnector.getStatePension(nino) recover {
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFiltered, StatePension]] = {
+    statePensionConnector.getStatePension(nino)
+      .map {
+        case Right(statePension) => Right(statePension)
+
+        case Left(spExclusion) => Left(StatePensionExclusionFiltered(
+            filterExclusions(spExclusion.exclusionReasons),
+            spExclusion.pensionAge,
+            spExclusion.pensionDate
+          ))
+      }
+      .recover {
       case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeDead) =>
-        Left(StatePensionExclusion(List(Exclusion.Dead)))
+        Left(StatePensionExclusionFiltered(Exclusion.Dead))
       case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeManualCorrespondence) =>
-        Left(StatePensionExclusion(List(Exclusion.ManualCorrespondenceIndicator)))
+        Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
     }
   }
 }

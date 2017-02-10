@@ -21,12 +21,12 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import exclusions.viewExclusions
 
-@(exclusionReasons: List[Exclusion], statePensionAge: Option[Int])(implicit request: Request[_], user: NispUser,
+@(exclusion: Exclusion, statePensionAge: Option[Int])(implicit request: Request[_], user: NispUser,
   partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension20': '@exclusionReasons.map(_.toString).mkString(" ") ',
+        'dimension20': '@exclusion.toString',
         @Html(statePensionAge.map(age => s"'dimension15': '$age',").getOrElse(""))
         'dimension38': '@user.authProvider',
         @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
