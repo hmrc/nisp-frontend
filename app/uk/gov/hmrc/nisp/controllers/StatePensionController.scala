@@ -34,6 +34,7 @@ import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.time.CurrentTaxYear
 
 
@@ -52,6 +53,7 @@ object StatePensionController extends StatePensionController with Authentication
 trait StatePensionController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
 
   def statePensionService: StatePensionService
+
   def nationalInsuranceService: NationalInsuranceService
 
   val customAuditConnector: CustomAuditConnector
@@ -73,6 +75,23 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
       }
   }
 
+
+  private def sendAuditEvent(statePension: StatePension, user: NispUser)(implicit hc: HeaderCarrier) = {
+    customAuditConnector.sendEvent(AccountAccessEvent(
+      user.nino.nino,
+      statePension.pensionDate,
+      statePension.amounts.current.weeklyAmount,
+      statePension.amounts.forecast.weeklyAmount,
+      user.dateOfBirth,
+      user.name,
+      user.sex,
+      statePension.contractedOut,
+      statePension.forecastScenario,
+      statePension.amounts.cope.weeklyAmount,
+      user.authProviderOld
+    ))
+  }
+
   def show: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
     implicit request =>
       isFromPertax.flatMap { isPertax =>
@@ -86,20 +105,8 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
         ) yield {
           (statePensionResponse, nationalInsuranceResponse) match {
             case (Right(statePension), Right(nationalInsuranceRecord)) =>
-              customAuditConnector.sendEvent(
 
-                AccountAccessEvent(user.nino.nino,
-                  statePension.pensionDate,
-                  statePension.amounts.current.weeklyAmount,
-                  statePension.amounts.forecast.weeklyAmount,
-                  user.dateOfBirth,
-                  user.name,
-                  user.sex,
-                  statePension.contractedOut,
-                  statePension.forecastScenario,
-                  statePension.amounts.cope.weeklyAmount,
-                  user.authProviderOld
-                ))
+              sendAuditEvent(statePension, user)
 
               val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
                 statePension.earningsIncludedUpTo,

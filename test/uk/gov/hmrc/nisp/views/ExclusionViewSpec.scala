@@ -68,7 +68,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
   "Exclusion Dead" should {
 
-    lazy val sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65))
+    lazy val sResult = html.excluded_dead(Exclusion.Dead , Some(65))
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render page with heading  You are unable to use this service " in {

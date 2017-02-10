@@ -52,9 +52,9 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
       statePension match {
         case Left(exclusion) =>
           if (exclusion.exclusion == Exclusion.Dead)
-            Ok(excluded_dead(List(Exclusion.Dead), exclusion.pensionAge))
+            Ok(excluded_dead(Exclusion.Dead, exclusion.pensionAge))
           else if (exclusion.exclusion == Exclusion.ManualCorrespondenceIndicator)
-            Ok(excluded_mci(List(Exclusion.ManualCorrespondenceIndicator), exclusion.pensionAge))
+            Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, exclusion.pensionAge))
           else {
             Ok(excluded_sp(exclusion.exclusion, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight))
           }
@@ -69,10 +69,10 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
      nationalInsuranceService.getSummary(user.nino).map {
         case Left(exclusion) =>
           if(exclusion == Exclusion.Dead) {
-            Ok(excluded_dead(List(Exclusion.Dead), None))
+            Ok(excluded_dead(Exclusion.Dead, None))
           }
           else if(exclusion == Exclusion.ManualCorrespondenceIndicator) {
-            Ok(excluded_mci(List(Exclusion.ManualCorrespondenceIndicator), None))
+            Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, None))
           } else {
             Ok(excluded_ni(exclusion))
           }
