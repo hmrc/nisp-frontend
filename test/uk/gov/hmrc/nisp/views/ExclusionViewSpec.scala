@@ -14,25 +14,7 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2017 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package uk.gov.hmrc.nisp.views
-
-
 
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
@@ -56,7 +38,6 @@ import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.play.views.formatting.Dates
 
-
 class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
 
 
@@ -71,7 +52,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
   "Exclusion Dead" should {
 
-    lazy val sResult = html.excluded_dead(List(Exclusion.Dead) , Some(65))
+    lazy val sResult = html.excluded_dead(Exclusion.Dead , Some(65))
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render page with heading  You are unable to use this service " in {
@@ -88,6 +69,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     }
 
   }
+
 
   "Exclusion Isle of Man : Can't see NI Record" should {
 
@@ -124,6 +106,9 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
   "Exclusion Manual Correspondence Indicator(MCI)" should {
 
     lazy val sResult = html.excluded_mci(List(Exclusion.ManualCorrespondenceIndicator), Some(40)) ;
+
+    lazy val sResult = html.excluded_sp(Exclusion.IsleOfMan, Some(65), Some(new LocalDate(2028, 10, 28)), true) ;
+
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult));
 
     "render page with heading  'There is a problem logging you in'" in {
@@ -260,6 +245,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
       assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2015, 9, 6)) , null)
     }
+
     "render page with text  We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab)." in {
 
       assertEqualsMessage(htmlAccountDoc ,"div.panel-indent>p:nth-child(1)" , "nisp.excluded.mwrre.sp")
@@ -282,6 +268,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     "render page with link having  text sign out and leave feedback " in {
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(7)" , "nisp.excluded.mwrre.signOut")
     }
+
   }
 
   "Exclusion Overseas or Abroad" should {
