@@ -85,9 +85,9 @@
 <div class="sidebar-mobile">
       
     <h2>@Messages("nisp.nirecord.summary.yourrecord.mobile")</h2>
-    <p>You have:</p>
+    <p>@Messages("nisp.nirecord.summary.youhave")</p>
     <ul class="list-bullet">
-        <li>@niRecord.qualifyingYears 
+        <li>@niRecord.qualifyingYears
             @if(niRecord.qualifyingYears != 1) {
             @Messages("nisp.nirecord.summary.fullContributions")
         } else {

@@ -18,23 +18,31 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 
+import builders.NationalInsuranceTaxYearBuilder
 import org.joda.time.LocalDate
+import org.mockito.Matchers
+import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
+import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePension, StatePensionExclusion}
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.http.{HttpResponse, SessionKeys, Upstream4xxResponse}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
+
+import scala.concurrent.Future
 
 
 class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
@@ -72,7 +80,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
+
     }
+
 
     lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
 
@@ -495,6 +505,93 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with href link back " in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>div:nth-child(17)>a", "/check-your-state-pension/account/nirecord/gaps")
     }
+  }
+
+  "Render Ni Record without gap and has pre75years" should {
+    lazy val controller = new MockNIRecordController {
+      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+      override val sessionCache: SessionCache = MockSessionCache
+      override val showFullNI = true
+      override val currentDate = new LocalDate(2016, 9, 9)
+
+      override protected def authConnector: AuthConnector = MockAuthConnector
+
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override val metricsService: MetricsService = MockMetricsService
+
+      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+      override val statePensionService: StatePensionService = mock[StatePensionService]
+    }
+
+    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        qualifyingYears = 1,
+        qualifyingYearsPriorTo1975 = 5,
+        numberOfGaps = 0,
+        numberOfGapsPayable = 0,
+        new LocalDate(1954, 3, 6),
+        false,
+        new LocalDate(2016, 4, 5),
+        List(
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true)
+
+        )
+      )
+      )))
+
+    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Left(StatePensionExclusion(
+        List(Exclusion.AmountDissonance),
+        Some(66),
+        Some(new LocalDate(2020, 3, 6))
+      )
+      )))
+
+
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
+
+    lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+    /*Check side border :summary */
+    "render page with heading  Main page Summary" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>h2", "nisp.nirecord.summary.yourrecord")
+    }
+    "render page with text  you have" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>p", "nisp.nirecord.summary.youhave")
+    }
+    "render page with text  1 year of full contributions" in {
+       val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.fullContributions.single")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
+    }
+
+    "render page with heading  Summary" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>h2", "nisp.nirecord.summary.yourrecord")
+    }
+    "render page with number of qualifying yeras" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(2)", "1")
+    }
+    "render page with text 'years of full contributions'" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(3)", "nisp.nirecord.summary.fullContributions.single")
+    }
+    "render page with text 'you do not have any gaps in your record.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.nirecord.youdonothaveanygaps")
+    }
+    "render page with text 'pre75 years'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl.accordion>dt:nth-child(10)>div>div.ni-years", "nisp.nirecord.pre75Years")
+    }
+    "render page with text 'you have 5 pre qualifying pre 75 years'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl.accordion>dt:nth-child(10)>div>div.ni-full", "nisp.nirecord.pre75QualifyingYears", "5", null, null)
+    }
+    "render page with link  'back'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
+    }
+    "render page with href link  'back'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+    }
+
   }
 
 }
