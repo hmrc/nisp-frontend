@@ -60,7 +60,7 @@ trait HtmlSpec extends UnitSpec {
     assertMessageKeyHasValue(expectedMessageKey)
 
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
-    assert(elements.first().html().replace("\n", "") == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
   def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
@@ -85,7 +85,7 @@ trait HtmlSpec extends UnitSpec {
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs1, messageArgs2, messageArgs3).toString())
 
-    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")).toString() == expectedString)
 
   }
 

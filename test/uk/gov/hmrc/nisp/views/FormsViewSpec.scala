@@ -93,7 +93,7 @@ class FormsViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Before
     }
     "render page with text  'to use the service again you’ll need to sign in.' " in {
 
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)" ,"nisp.useagain" , "/check-your-state-pension" ,null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)" ,"nisp.useagain" , "/check-your-state-pension" ,null ,null )
     }
     "render page with text  'Give us feedback to help us improve this service. It will take no more than 2 minutes.' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)" ,"nisp.questionnaire.please")
