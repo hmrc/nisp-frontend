@@ -55,7 +55,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
   val mockFullUserId = "/auth/oid/mockfulluser"
-  val mockAbroadUserId =  "/auth/oid/mockabroad"
+  val mockAbroadUserId = "/auth/oid/mockabroad"
 
   lazy val fakeRequest = FakeRequest();
 
@@ -150,7 +150,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with text  'You can make up the shortfall'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
-    "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
+    "render page with text  'Pay a voluntary contribution of £530 by 5 April 2023. This shortfall may increase after 5 April 2019.'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", "5 April 2023", "5 April 2019")
     }
     "render page with text  'Find out more about...'" in {
@@ -256,7 +256,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with link href 'View all years'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(4)>a", "/check-your-state-pension/account/nirecord")
     }
-    "render page with text  'your record for this year is not available'" in {
+    "render page with text  'your record for this year is not available yet'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(1)>div.ni-wrapper>div.inactive", "nisp.nirecord.unavailableyear")
     }
 
@@ -531,9 +531,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
         false,
         new LocalDate(2016, 4, 5),
         List(
-          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true,underInvestigation= false),
-          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false,underInvestigation= false),
-          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true,underInvestigation= false)
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true, underInvestigation = false)
 
         )
       )
@@ -560,7 +560,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>p", "nisp.nirecord.summary.youhave")
     }
     "render page with text  1 year of full contributions" in {
-       val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.fullContributions.single")
+      val contributionMessage = "1 " + Messages("nisp.nirecord.summary.fullContributions.single")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
     }
 
@@ -579,7 +579,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with text 'pre75 years'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl.accordion>dt:nth-child(10)>div>div.ni-years", "nisp.nirecord.pre75Years")
     }
-    "render page with text 'you have 5 pre qualifying pre 75 years'" in {
+    "render page with text 'you have 5  qualifying years pre 1975'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl.accordion>dt:nth-child(10)>div>div.ni-full", "nisp.nirecord.pre75QualifyingYears", "5", null, null)
     }
     "render page with link  'back'" in {
@@ -608,7 +608,6 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       override val statePensionService: StatePensionService = mock[StatePensionService]
 
 
-
     }
 
     when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
@@ -621,22 +620,21 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
         false,
         new LocalDate(2015, 4, 5),
         List(
-          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true,underInvestigation= false),
-          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false,underInvestigation= false),
-          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true,underInvestigation= false)
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true, underInvestigation = false)
         )
       )
       )))
 
 
-    when(controller.statePensionService. getSummary(Matchers.any())(Matchers.any()))
+    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusion(
         List(Exclusion.AmountDissonance),
         Some(66),
         Some(new LocalDate(2020, 3, 6))
       )
       )))
-
 
 
     lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
@@ -651,11 +649,11 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>p", "nisp.nirecord.summary.youhave")
     }
     "render page with text  1 year of full contributions" in {
-      val  contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
+      val contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
     }
     "render page with text 2 years when you did not contribute enough " in {
-      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
+      val contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(2)", contributionMessage)
     }
 
@@ -708,7 +706,6 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       override val statePensionService: StatePensionService = mock[StatePensionService]
 
 
-
     }
 
     when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
@@ -722,9 +719,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
         new LocalDate(2017, 4, 5),
         List(
 
-          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true,underInvestigation= true),
-          NationalInsuranceTaxYearBuilder("2014-15", qualifying = true,underInvestigation= false),
-          NationalInsuranceTaxYearBuilder("2013-14", qualifying = true,  underInvestigation= false) /*payable = true*/
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = true, underInvestigation = false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
         )
       )
       )))
@@ -732,14 +729,13 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     when(controller.statePensionService.yearsToContributeUntilPensionAge(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(1))
 
-    when(controller.statePensionService. getSummary(Matchers.any())(Matchers.any()))
+    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusion(
         List(Exclusion.AmountDissonance),
         Some(66),
         Some(new LocalDate(2018, 3, 6))
       )
       )))
-
 
 
     lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
@@ -754,15 +750,15 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>p", "nisp.nirecord.summary.youhave")
     }
     "render page with text  2 years of full contributions" in {
-      val  contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
+      val contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
     }
     "render page with text  1 year to contribute before 5 April 2017" in {
-      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.yearsRemaining.single" ,"2017")
+      val contributionMessage = "1 " + Messages("nisp.nirecord.summary.yearsRemaining.single", "2017")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(2)", contributionMessage)
     }
     "render page with text  1 year year when you did not contribute enough" in {
-      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
+      val contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(3)", contributionMessage)
     }
 
@@ -843,7 +839,6 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       override val statePensionService: StatePensionService = mock[StatePensionService]
 
 
-
     }
 
     when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
@@ -857,9 +852,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
         new LocalDate(2017, 4, 5),
         List(
 
-          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true,underInvestigation= true),
-          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false,underInvestigation= false),
-          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false,  underInvestigation= false) /*payable = true*/
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, underInvestigation = false) /*payable = true*/
         )
       )
       )))
@@ -867,7 +862,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     when(controller.statePensionService.yearsToContributeUntilPensionAge(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(1))
 
-    when(controller.statePensionService. getSummary(Matchers.any())(Matchers.any()))
+    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusion(
         List(Exclusion.AmountDissonance),
         Some(66),
@@ -876,12 +871,11 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )))
 
 
-
     lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
-    "render page with heading you UK National Insurence Record " in {
+    "render page with heading your UK National Insurance Record " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.nirecord.heading.uk")
     }
 
@@ -893,15 +887,15 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>p", "nisp.nirecord.summary.youhave")
     }
     "render page with text  2 years of full contributions" in {
-      val  contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
+      val contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
     }
     "render page with text  1 year to contribute before 5 April 2017" in {
-      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.yearsRemaining.single" ,"2017")
+      val contributionMessage = "1 " + Messages("nisp.nirecord.summary.yearsRemaining.single", "2017")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(2)", contributionMessage)
     }
     "render page with text  1 year year when you did not contribute enough" in {
-      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
+      val contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(3)", contributionMessage)
     }
 
@@ -940,8 +934,5 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(8)", "nisp.nirecord.gap.whenyouareclaiming.info.singular")
     }
 
-
   }
-
-
 }
