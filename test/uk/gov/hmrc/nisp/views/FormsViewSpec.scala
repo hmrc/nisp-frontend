@@ -98,9 +98,76 @@ class FormsViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Before
     "render page with text  'Give us feedback to help us improve this service. It will take no more than 2 minutes.' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)" ,"nisp.questionnaire.please")
     }
+
+    /*Side bar of feedback form*/
+    "render page with  ext ''what can you do next. " in {
+      assertEqualsMessage(htmlAccountDoc ,"aside>h2:nth-child(1)" , "nisp.questionnaire.sidebar.whatcanyoudonext")
+    }
+    "render page with link 'Pension Wise - understanding your pension options'  " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc ,"aside>nav>ul>li:nth-child(1)>a" , "nisp.questionnaire.sidebar.understandingyouroption" ,"aside>nav>ul>li:nth-child(1)>a>span")
+    }
+    "render page with href link 'Pension Wise - understanding your pension options'  " in {
+      assertLinkHasValue(htmlAccountDoc ,"aside>nav>ul>li:nth-child(1)>a" , "https://pensionwise.gov.uk")
+    }
+    "render page with  link 'Planning your retirement income'  " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc ,"aside>nav>ul>li:nth-child(2)>a" , "nisp.questionnaire.sidebar.planningyourretirementincome" ,"aside>nav>ul>li:nth-child(2)>a>span")
+    }
+    "render page with href link 'Planning your retirement income'" in {
+      assertLinkHasValue(htmlAccountDoc ,"aside>nav>ul>li:nth-child(2)>a" , "https://gov.uk/plan-retirement-income")
+    }
+    "render page with  link 'Defer your state pension '  " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc ,"aside>nav>ul>li:nth-child(3)>a" , "nisp.questionnaire.sidebar.deferyourstatepension" ,"aside>nav>ul>li:nth-child(3)>a>span")
+    }
+    "render page with href link 'Defer your state pension'" in {
+      assertLinkHasValue(htmlAccountDoc ,"aside>nav>ul>li:nth-child(3)>a" , "http://gov.uk/deferring-state-pension")
+    }
+    "render page with  link 'Contact the pension service'  " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc ,"aside>nav>ul>li:nth-child(4)>a" , "nisp.questionnaire.sidebar.contactpensionservice" ,"aside>nav>ul>li:nth-child(4)>a>span")
+    }
+    "render page with href link 'Contact the pension service'" in {
+      assertLinkHasValue(htmlAccountDoc ,"aside>nav>ul>li:nth-child(4)>a" , "https://gov.uk/contact-pension-service")
+    }
+    "render page with  link 'More on State service'  " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc ,"aside>nav>ul>li:nth-child(5)>a" , "nisp.questionnaire.sidebar.moreonpensionservice" ,"aside>nav>ul>li:nth-child(5)>a>span")
+    }
+    "render page with href link 'More on State service'" in {
+      assertLinkHasValue(htmlAccountDoc ,"aside>nav>ul>li:nth-child(5)>a" , "http://gov.uk/browse/working/state-pension")
+    }
+    /*Ends here */
+
+    /*Main form starts here*/
+
+    "render page with text  'How easy was it to use Check your State Pension?' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>legend:nth-child(1)" ,"nisp.questionnaire.easytouse.question")
+    }
+    "render page with text  'When you used this service, did you:' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>legend:nth-child(1)" ,"nisp.questionnaire.useitbyyourself.question")
+    }
+    "render page with text  'How likely would you be to use this service again?' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>legend:nth-child(1)" ,"nisp.questionnaire.likelytouse.question")
+    }
+    "render page with text  'overall, how did you feel about the service you received today?' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>legend:nth-child(1)" ,"nisp.questionnaire.satisfied.question")
+    }
+    "render page with text  'After using Check your State Pension, do you feel you have:' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>legend:nth-child(1)" ,"nisp.questionnaire.understanding.question")
+    }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next:' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>legend:nth-child(1)" ,"nisp.questionnaire.whatwillyoudonext.question")
+    }
+    "render page with text  'Please do not include any personal or financial information, for example your National Insurance or credit card number.' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>label>small" ,"nisp.textentry.warning")
+    }
+    "render page with text  'Would you like to take part in any future research to help us improve the service?' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(11)>legend:nth-child(1)", "nisp.questionnaire.research.question")
+    }
+    "render page with text  'Please leave your email address so we can cotact you' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>label:nth-child(12)>span", "nisp.questionnaire.email")
+    }
+    /*Ends here*/
+
     "render page with help text 'Get help with this page.' " in {
       assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , "Get help with this page.")
     }
-
   }
 }
