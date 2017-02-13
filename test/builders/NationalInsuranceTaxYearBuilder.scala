@@ -21,7 +21,7 @@ import uk.gov.hmrc.nisp.models.NationalInsuranceTaxYear
 
 
 object NationalInsuranceTaxYearBuilder {
-  def apply(taxYear: String, qualifying: Boolean = true, payable: Boolean = false): NationalInsuranceTaxYear = {
+  def apply(taxYear: String, qualifying: Boolean = true, payable: Boolean = false ,underInvestigation :Boolean): NationalInsuranceTaxYear = {
     if(qualifying) {
       NationalInsuranceTaxYear(
         taxYear,
@@ -34,21 +34,21 @@ object NationalInsuranceTaxYearBuilder {
         None,
         None,
         false,
-        false
+        underInvestigation = underInvestigation
       )
     } else {
       NationalInsuranceTaxYear(
         taxYear,
         false,
-        classOneContributions = 10,
+        classOneContributions = 1,
         classTwoCredits = 1,
-        classThreeCredits = 2,
-        otherCredits = 3,
+        classThreeCredits = 1,
+        otherCredits = 1,
         classThreePayable = 755.56,
         classThreePayableBy = Some( new LocalDate(2019, 4, 5)),
         classThreePayableByPenalty = Some( new LocalDate(2023, 4, 5)),
         payable = payable,
-        underInvestigation = false
+        underInvestigation = underInvestigation
       )
     }
   }

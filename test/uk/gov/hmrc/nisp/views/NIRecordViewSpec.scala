@@ -55,6 +55,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
   val mockFullUserId = "/auth/oid/mockfulluser"
+  val mockAbroadUserId =  "/auth/oid/mockabroad"
 
   lazy val fakeRequest = FakeRequest();
 
@@ -104,12 +105,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with text  'years to contribute before 5 April 2017'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining", "2018", null, null)
     }
-    "render page with 10 years - when you did not contribute enough" in {
-      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(6)", "10")
-    }
-    "render page with text 'when you did not contribute enough'" in {
-      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(7)", "nisp.nirecord.summary.gaps")
-    }
+
     /*Ends here*/
     "render page with Gaps  heading  Your National Insurance record " in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.heading")
@@ -249,6 +245,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with Gaps  heading  Your National Insurance record " in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.heading")
     }
+
     "render page with text 'Years which are not full'" in {
       assertEqualsMessage(htmlAccountDoc, "p.lede", "nisp.nirecord.yournirecordgapyears")
     }
@@ -534,9 +531,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
         false,
         new LocalDate(2016, 4, 5),
         List(
-          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true),
-          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false),
-          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true)
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true,underInvestigation= false),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false,underInvestigation= false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true,underInvestigation= false)
 
         )
       )
@@ -593,5 +590,358 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
   }
+
+  "Render Ni Record without gap and has gaps pre75years" should {
+    lazy val controller = new MockNIRecordController {
+      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+      override val sessionCache: SessionCache = MockSessionCache
+      override val showFullNI = true
+      override val currentDate = new LocalDate(2016, 9, 9)
+
+      override protected def authConnector: AuthConnector = MockAuthConnector
+
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override val metricsService: MetricsService = MockMetricsService
+
+      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+      override val statePensionService: StatePensionService = mock[StatePensionService]
+
+
+
+    }
+
+    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        qualifyingYears = 2,
+        qualifyingYearsPriorTo1975 = 0,
+        numberOfGaps = 1,
+        numberOfGapsPayable = 1,
+        new LocalDate(1954, 3, 6),
+        false,
+        new LocalDate(2015, 4, 5),
+        List(
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true,underInvestigation= false),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false,underInvestigation= false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true,underInvestigation= false)
+        )
+      )
+      )))
+
+
+    when(controller.statePensionService. getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Left(StatePensionExclusion(
+        List(Exclusion.AmountDissonance),
+        Some(66),
+        Some(new LocalDate(2020, 3, 6))
+      )
+      )))
+
+
+
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
+
+    lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+    /*Check side border :summary */
+    "render page with heading  Main page Summary" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>h2", "nisp.nirecord.summary.yourrecord")
+    }
+    "render page with text  you have" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>p", "nisp.nirecord.summary.youhave")
+    }
+    "render page with text  1 year of full contributions" in {
+      val  contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
+    }
+    "render page with text 2 years when you did not contribute enough " in {
+      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(2)", contributionMessage)
+    }
+
+    "render page with heading  Summary" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>h2", "nisp.nirecord.summary.yourrecord")
+    }
+    "render page with number of qualifying yeras" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(2)", "2")
+    }
+    "render page with text 'years of full contributions'" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(3)", "nisp.nirecord.summary.fullContributions")
+    }
+
+    "render page with text '1 year you did not contribute'" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(4)", "1")
+    }
+    "render page with text 'year when you did not contribute enough.'" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.gaps.single")
+    }
+
+    "render page with text 'pre75 years'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl.accordion>dt:nth-child(10)>div>div.ni-years", "nisp.nirecord.pre75Years")
+    }
+    "render page with text 'Our records show you do not have any full years up to 5 April 1975'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl.accordion>dt:nth-child(10)>div>div.ni-full", "nisp.nirecord.pre75QualifyingYearsZero")
+    }
+    "render page with link  'back'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
+    }
+    "render page with href link 'back'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+    }
+
+  }
+
+  "Render Ni Record without gap and has gaps pre75years with Years to contribute " should {
+    lazy val controller = new MockNIRecordController {
+      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+      override val sessionCache: SessionCache = MockSessionCache
+      override val showFullNI = true
+      override val currentDate = new LocalDate(2016, 9, 9)
+
+      override protected def authConnector: AuthConnector = MockAuthConnector
+
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override val metricsService: MetricsService = MockMetricsService
+
+      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+      override val statePensionService: StatePensionService = mock[StatePensionService]
+
+
+
+    }
+
+    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        qualifyingYears = 2,
+        qualifyingYearsPriorTo1975 = 0,
+        numberOfGaps = 1,
+        numberOfGapsPayable = 1,
+        new LocalDate(1954, 3, 6),
+        false,
+        new LocalDate(2017, 4, 5),
+        List(
+
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true,underInvestigation= true),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = true,underInvestigation= false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = true,  underInvestigation= false) /*payable = true*/
+        )
+      )
+      )))
+
+    when(controller.statePensionService.yearsToContributeUntilPensionAge(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(1))
+
+    when(controller.statePensionService. getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Left(StatePensionExclusion(
+        List(Exclusion.AmountDissonance),
+        Some(66),
+        Some(new LocalDate(2018, 3, 6))
+      )
+      )))
+
+
+
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
+
+    lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+    /*Check side border :summary */
+    "render page with heading  Main page Summary" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>h2", "nisp.nirecord.summary.yourrecord")
+    }
+    "render page with text  you have" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>p", "nisp.nirecord.summary.youhave")
+    }
+    "render page with text  2 years of full contributions" in {
+      val  contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
+    }
+    "render page with text  1 year to contribute before 5 April 2017" in {
+      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.yearsRemaining.single" ,"2017")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(2)", contributionMessage)
+    }
+    "render page with text  1 year year when you did not contribute enough" in {
+      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(3)", contributionMessage)
+    }
+
+    "render page with 1 year to contribute before 5 April 2017 '" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(4)", "1")
+    }
+    "render page with text  'year to contribute before 5 April 2017'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining.single", "2017", null, null)
+    }
+    "render page with 1 year year when you did not contribute enough '" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(6)", "1")
+    }
+    "render page with text  'year when you did not contribute enough'" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(7)", "nisp.nirecord.summary.gaps.single")
+    }
+    /* Under investigation*/
+
+    "render page with text  'full year for under investigation'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(3)>div>div.ni-notfull", "nisp.nirecord.fullyear")
+    }
+
+    "render page with text 'we are checking this year to see if it counts towards your pension. We will update your records '" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(4)>div.contributions-wrapper>p:nth-child(1)", "nisp.nirecord.gap.underInvestigation")
+    }
+
+    /*Ends here*/
+
+
+    "render page with text  'full year'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(5)>div>div.ni-notfull", "nisp.nirecord.fullyear")
+    }
+
+    "render page with text 'you have contributions from '" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(1)", "nisp.nirecord.yourcontributionfrom")
+    }
+
+    "render page with text 'paid employment : £12,345.67'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £12,345.67", null, null)
+    }
+    "render page with text 'self- employment : 10 weeks'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.selfemployed.plural", "10", null, null)
+    }
+    "render page with text 'Voluntary: : 8 weeks'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.voluntary.plural", "8", null, null)
+    }
+
+    "render page with text 'National Insurance credits: : 12 weeks'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(7)", "nisp.nirecord.gap.whenyouareclaiming.plural", "12", null, null)
+    }
+    "render page with text 'These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(8)", "nisp.nirecord.gap.whenyouareclaiming.info.plural")
+
+    }
+    "render page with link  'back'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
+    }
+    "render page with href link 'back'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+    }
+
+  }
+
+
+  "Render Ni Record with Single weeks in self ,contribution and paid -and a abroad User" should {
+    lazy val controller = new MockNIRecordController {
+      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+      override val sessionCache: SessionCache = MockSessionCache
+      override val showFullNI = true
+      override val currentDate = new LocalDate(2016, 9, 9)
+
+      override protected def authConnector: AuthConnector = MockAuthConnector
+
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override val metricsService: MetricsService = MockMetricsService
+
+      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+      override val statePensionService: StatePensionService = mock[StatePensionService]
+
+
+
+    }
+
+    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        qualifyingYears = 2,
+        qualifyingYearsPriorTo1975 = 0,
+        numberOfGaps = 1,
+        numberOfGapsPayable = 1,
+        new LocalDate(1954, 3, 6),
+        false,
+        new LocalDate(2017, 4, 5),
+        List(
+
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true,underInvestigation= true),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false,underInvestigation= false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = false,  underInvestigation= false) /*payable = true*/
+        )
+      )
+      )))
+
+    when(controller.statePensionService.yearsToContributeUntilPensionAge(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(1))
+
+    when(controller.statePensionService. getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Left(StatePensionExclusion(
+        List(Exclusion.AmountDissonance),
+        Some(66),
+        Some(new LocalDate(2018, 3, 6))
+      )
+      )))
+
+
+
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId))
+
+    lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+    "render page with heading you UK National Insurence Record " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.nirecord.heading.uk")
+    }
+
+    /*Check side border :summary */
+    "render page with heading  Main page Summary" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>h2", "nisp.nirecord.summary.yourrecord")
+    }
+    "render page with text  you have" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-mobile>p", "nisp.nirecord.summary.youhave")
+    }
+    "render page with text  2 years of full contributions" in {
+      val  contributionMessage = "2 " + Messages("nisp.nirecord.summary.fullContributions")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
+    }
+    "render page with text  1 year to contribute before 5 April 2017" in {
+      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.yearsRemaining.single" ,"2017")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(2)", contributionMessage)
+    }
+    "render page with text  1 year year when you did not contribute enough" in {
+      val  contributionMessage = "1 " + Messages("nisp.nirecord.summary.gaps.single")
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(3)", contributionMessage)
+    }
+
+    "render page with 1 year to contribute before 5 April 2017 '" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(4)", "1")
+    }
+    "render page with text  'year to contribute before 5 April 2017'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining.single", "2017", null, null)
+    }
+    "render page with 1 year year when you did not contribute enough '" in {
+      assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(6)", "1")
+    }
+    "render page with text  'year when you did not contribute enough'" in {
+      assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(7)", "nisp.nirecord.summary.gaps.single")
+    }
+
+    "render page with text  'year full year'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(5)>div>div.ni-notfull", "nisp.nirecord.gap")
+    }
+
+    "render page with text 'you have contributions from '" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(1)", "nisp.nirecord.yourcontributionfrom")
+    }
+
+    "render page with text 'self- employment : 1 week'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.selfemployed.singular", "1", null, null)
+    }
+    "render page with text 'Voluntary: : 1 week'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.voluntary.singular", "1", null, null)
+    }
+
+    "render page with text 'National Insurance credits: : 1 week'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(7)", "nisp.nirecord.gap.whenyouareclaiming.singular", "1", null, null)
+    }
+    "render page with text 'These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(8)", "nisp.nirecord.gap.whenyouareclaiming.info.singular")
+    }
+
+
+  }
+
 
 }
