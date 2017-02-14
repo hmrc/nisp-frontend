@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePension, StatePensionExclusion}
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePension, StatePensionExclusion, StatePensionExclusionFiltered}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
@@ -540,8 +540,8 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )))
 
     when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Left(StatePensionExclusion(
-        List(Exclusion.AmountDissonance),
+      .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
+        Exclusion.AmountDissonance,
         Some(66),
         Some(new LocalDate(2020, 3, 6))
       )
@@ -629,8 +629,8 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
 
     when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Left(StatePensionExclusion(
-        List(Exclusion.AmountDissonance),
+      .thenReturn(Future.successful(Left(StatePensionExclusionFiltered (
+        Exclusion.AmountDissonance,
         Some(66),
         Some(new LocalDate(2020, 3, 6))
       )
@@ -730,8 +730,8 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       .thenReturn(Future.successful(1))
 
     when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Left(StatePensionExclusion(
-        List(Exclusion.AmountDissonance),
+      .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
+        Exclusion.AmountDissonance,
         Some(66),
         Some(new LocalDate(2018, 3, 6))
       )
@@ -863,8 +863,8 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       .thenReturn(Future.successful(1))
 
     when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Left(StatePensionExclusion(
-        List(Exclusion.AmountDissonance),
+      .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
+        Exclusion.AmountDissonance,
         Some(66),
         Some(new LocalDate(2018, 3, 6))
       )

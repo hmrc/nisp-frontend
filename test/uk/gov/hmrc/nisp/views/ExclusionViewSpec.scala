@@ -15,12 +15,11 @@
  */
 
 package uk.gov.hmrc.nisp.views
-
-
 import org.joda.time.LocalDate
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.SessionCache
@@ -34,7 +33,7 @@ import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
-
+import uk.gov.hmrc.play.views.formatting.Dates
 
 class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
 
@@ -66,7 +65,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
   "Exclusion Dead" should {
 
-    lazy val sResult = html.excluded_dead(List(Exclusion.Dead), Some(65))
+    lazy val sResult = html.excluded_dead(Exclusion.Dead , Some(65))
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render page with heading  You are unable to use this service " in {
@@ -85,25 +84,28 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
   }
   "Exclusion Isle of Man" should {
 
-    lazy val sResult = html.excluded_sp(List(Exclusion.IsleOfMan), Some(65), Some(new LocalDate(2028, 10, 28)), true);
+
+    lazy val sResult = html.excluded_sp(Exclusion.IsleOfMan, Some(65), Some(new LocalDate(2028, 10, 28)), true) ;
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult));
 
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
 
     }
-    /*"render page with heading  'You’ll reach State Pension age on' " in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "(nisp.excluded.willReach, @{Dates.formatDate(new LocalDate(2028, 10, 28))})")
+     "render page with heading  'You’ll reach State Pension age on' " in {
+       val sDate = Dates.formatDate(new LocalDate(2028, 10, 28)).toString();
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "nisp.excluded.willReach", sDate, null,null)
 
-    }*/
+    }
 
     /* "render page with text  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
-       assertElementContainsText(htmlAccountDoc ,"article.content__body>p" , Messages("nisp.excluded.isleOfMan.sp.line1"))
-     }
+       assertEqualsMessage(htmlAccountDoc ,"article.content__body>p" , "nisp.excluded.isleOfMan.sp.line1")
+     }*/
 
      "render page with help text 'Get help with this page.' " in {
-       assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , Messages("nisp.excluded.isleOfMan.sp.line2"))
-     }*/
+       assertEqualsValue(htmlAccountDoc ,"div.report-error>a#get-help-action" ,"Get help with this page.")
+     }
+
 
   }
 

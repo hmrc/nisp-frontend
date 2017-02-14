@@ -152,7 +152,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
               customAuditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
-                List(exclusion)
+                exclusion
               ))
               Redirect(routes.ExclusionController.showNI())
           }
