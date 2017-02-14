@@ -25,7 +25,6 @@ import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 import uk.gov.hmrc.play.test.UnitSpec
 import play.twirl.api.Html
 import org.apache.commons.lang3.StringEscapeUtils
-
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
@@ -189,6 +188,17 @@ trait HtmlSpec extends UnitSpec {
       throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assert(!elements.first().hasClass(className), s"\n\nElement '$cssSelector' has '$className' class.\n")
+  }
+  def assertElemetsOwnMessage(doc: Document, cssSelector: String, messageKey: String) = {
+    val elements = doc.select(cssSelector)
+
+    if (elements.isEmpty)
+      throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(messageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(messageKey).toString());
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
   }
 
 

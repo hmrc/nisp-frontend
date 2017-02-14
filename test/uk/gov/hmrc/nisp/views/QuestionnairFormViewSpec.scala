@@ -153,6 +153,9 @@ class QuesionnairFormViewSpec extends UnitSpec with MockitoSugar with HtmlSpec w
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next:' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>legend:nth-child(1)" ,"nisp.questionnaire.whatwillyoudonext.question")
     }
+    "render page with text  'How could we improve the service?' " in {
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>label" ,"nisp.questionnaire.improve.question")
+    }
     "render page with text  'Please do not include any personal or financial information, for example your National Insurance or credit card number.' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>label>small" ,"nisp.textentry.warning")
     }
@@ -182,7 +185,7 @@ class QuesionnairFormViewSpec extends UnitSpec with MockitoSugar with HtmlSpec w
     "render page with text  'When you used this service, did you: - use it with someone' " in {
       assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(3)" ,"nisp.questionnaire.useitbyyourself.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(3)>input")
     }
-    "render page with text  'When you used this service, did you: - have swome one to use it for you' " in {
+    "render page with text  'When you used this service, did you: - have someone one to use it for you' " in {
       assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(4)" ,"nisp.questionnaire.useitbyyourself.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(4)>input")
     }
 
