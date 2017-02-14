@@ -24,7 +24,7 @@
 @import org.joda.time.LocalDate
 
 @(
-exclusionReasons: List[Exclusion],
+exclusion: Exclusion,
 statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
 canSeeNIRecord: Boolean
@@ -32,7 +32,7 @@ canSeeNIRecord: Boolean
 
 @analyticsAdditionalJs = {
     ga('set', {
-        'dimension20': '@exclusionReasons.map(_.toString).mkString(" ") ',
+        'dimension20': '@exclusion.toString',
         @Html(statePensionAge.map(age => s"'dimension15': '$age',").getOrElse(""))
         'dimension38': '@user.authProvider',
         @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
@@ -49,26 +49,26 @@ canSeeNIRecord: Boolean
            age <- statePensionAge;
            date <- statePensionAgeDate
         ) {
-            @if(exclusionReasons.contains(PostStatePensionAge)) {
+            @if(exclusion.equals(PostStatePensionAge)) {
                 <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(date)) </h2>
             } else {
                 <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", Dates.formatDate(date))) </h2>
             }
         }
         <div class="panel-indent">
-            @if(exclusionReasons.contains(PostStatePensionAge)) {
+            @if(exclusion.equals(PostStatePensionAge)) {
                     @exclusions.sp.postStatePensionAge()
             } else {
-                    @if(exclusionReasons.contains(AmountDissonance)) {
+                    @if(exclusion.equals(AmountDissonance)) {
                         @exclusions.sp.amountDissonance()
                     } else {
-                        @if(exclusionReasons.contains(IsleOfMan)) {
+                        @if(exclusion.equals(IsleOfMan)) {
                             @exclusions.sp.isleOfMan()
                         } else {
-                            @if(exclusionReasons.contains(MarriedWomenReducedRateElection)) {
+                            @if(exclusion.equals(MarriedWomenReducedRateElection)) {
                                 @exclusions.sp.mwrre()
                             } else {
-                                @if(exclusionReasons.contains(Abroad)) {
+                                @if(exclusion.equals(Abroad)) {
                                     @exclusions.sp.overseas()
                                 }
                             }
@@ -79,7 +79,7 @@ canSeeNIRecord: Boolean
             }
         </div>
         @if(canSeeNIRecord) {
-            @if(exclusionReasons.contains(Abroad)) {
+            @if(exclusion.equals(Abroad)) {
 
                 <p>@Messages("nisp.excluded.niRecordIntroUK")</p>
                 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecordUK")</a>
@@ -91,7 +91,7 @@ canSeeNIRecord: Boolean
 
             }
         } else {
-            @if(exclusionReasons.contains(IsleOfMan)) {
+            @if(exclusion.equals(IsleOfMan)) {
             
                 <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelplineIom"))</p> 
             
@@ -102,7 +102,7 @@ canSeeNIRecord: Boolean
             }
         }
 
-        @if(exclusionReasons.contains(MarriedWomenReducedRateElection)) {
+        @if(exclusion.equals(MarriedWomenReducedRateElection)) {
             <h2 class="heading-medium">@Messages("nisp.excluded.mwrre.improve")</h2>
             <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
             <a href="@routes.StatePensionController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>

@@ -51,7 +51,6 @@ trait HtmlSpec extends UnitSpec {
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
-
   def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
     val elements = doc.select(cssSelector)
 
@@ -91,10 +90,6 @@ trait HtmlSpec extends UnitSpec {
 
   def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {
     assert(!doc.select(cssSelector).isEmpty, "Element " + cssSelector + " was not rendered on the page.")
-  }
-
-  def assertNotRenderedByCssSelector(doc: Document, cssSelector: String) = {
-    assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
   }
 
 
