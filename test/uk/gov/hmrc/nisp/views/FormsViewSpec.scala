@@ -230,6 +230,33 @@ class FormsViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Before
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - speak to financial advisor' " in {
       assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(2)" ,"nisp.questionnaire.whatwillyoudonext.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(2)>input")
     }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to DWP/HMRC' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(3)" ,"nisp.questionnaire.whatwillyoudonext.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(3)>input")
+    }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to your employer' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(4)" ,"nisp.questionnaire.whatwillyoudonext.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(4)>input")
+    }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to friends and family' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(5)" ,"nisp.questionnaire.whatwillyoudonext.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(5)>input")
+    }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Look into my other pensions/savings/other assets' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(6)" ,"nisp.questionnaire.whatwillyoudonext.4", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(6)>input")
+    }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Get more pensions information online' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(7)" ,"nisp.questionnaire.whatwillyoudonext.5", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(7)>input")
+    }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Pay gaps in my National Insurance record' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(8)" ,"nisp.questionnaire.whatwillyoudonext.6", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(8)>input")
+    }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Nothing' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(9)" ,"nisp.questionnaire.whatwillyoudonext.7", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(9)>input")
+    }
+    "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Other' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(10)" ,"nisp.questionnaire.whatwillyoudonext.8", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(10)>input")
+    }
+    "render page with text  'How could we improve the service? limit characters' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>span" ,"nisp.textentry.charlimit")
+    }
 
     /*Ends here*/
 
