@@ -28,8 +28,6 @@ import play.twirl.api.Html
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.nodes
 import org.jsoup.nodes.Document
-import org.jsoup.nodes.Document.OutputSettings
-import org.jsoup.safety.Whitelist
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
 
@@ -53,8 +51,6 @@ trait HtmlSpec extends UnitSpec {
   )
 
   def asDocument(html: String): Document = Jsoup.parse(html)
-
-
 
   def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
     val elements = doc.select(cssSelector)
@@ -95,10 +91,6 @@ trait HtmlSpec extends UnitSpec {
 
   def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {
     assert(!doc.select(cssSelector).isEmpty, "Element " + cssSelector + " was not rendered on the page.")
-  }
-
-  def assertNotRenderedByCssSelector(doc: Document, cssSelector: String) = {
-    assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
   }
 
 
