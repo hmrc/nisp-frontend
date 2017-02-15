@@ -67,7 +67,7 @@ trait HtmlSpec extends UnitSpec {
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
-    assert(elements.first().html().replace("\n", "") == expectedValue)
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedValue)
   }
 
   def assertMessageKeyHasValue(expectedMessageKey: String): Unit = {
