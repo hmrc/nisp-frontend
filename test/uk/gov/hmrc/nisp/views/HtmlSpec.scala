@@ -67,7 +67,7 @@ trait HtmlSpec extends UnitSpec {
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
-    assert(elements.first().html().replace("\n", "") == expectedValue)
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")).toString() == expectedValue)
   }
 
   def assertMessageKeyHasValue(expectedMessageKey: String): Unit = {
@@ -188,7 +188,7 @@ trait HtmlSpec extends UnitSpec {
     assert(!elements.first().hasClass(className), s"\n\nElement '$cssSelector' has '$className' class.\n")
   }
 
-  def assertElemetsOwnMessage(doc: Document, cssSelector: String, messageKey: String) = {
+  def assertElemetsOwnMessage(doc: Document, cssSelector: String, messageKey: String ,stringValue: String) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty)
@@ -196,7 +196,7 @@ trait HtmlSpec extends UnitSpec {
 
     assertMessageKeyHasValue(messageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(messageKey).toString());
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(messageKey).toString() + stringValue);
     assert(StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
   }
 
