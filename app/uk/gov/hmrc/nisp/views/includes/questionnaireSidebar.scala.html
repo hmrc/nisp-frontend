@@ -16,33 +16,33 @@
 
 @()
 @import uk.gov.hmrc.urls.Link
-    <h2 id="whatyoucandonext">What you can do next</h2>
+    <h2 id="whatyoucandonext">@Messages("nisp.questionnaire.sidebar.whatcanyoudonext")</h2>
     <nav class="service-info__navigation" role="navigation" aria-labelledby="whatyoucandonext">
         <ul class="sidebar__list">
             <li class="sidebar__list-item">
                 @Link.toExternalPage(url = "https://pensionwise.gov.uk",
-                                    value = Some("Pension Wise - understanding your pension options"),
+                                    value = Some(Messages("nisp.questionnaire.sidebar.understandingyouroption")),
                                     dataAttributes = Some(Map("journey-click" -> "checkmystatepension:external:pensionwise"))).toHtml
 
             </li>
             <li class="sidebar__list-item">
                 @Link.toExternalPage(url = "https://gov.uk/plan-retirement-income",
-                                    value = Some("Planning your retirement income"),
+                                    value = Some(Messages("nisp.questionnaire.sidebar.planningyourretirementincome")),
                                     dataAttributes = Some(Map("journey-click" -> "checkmystatepension:external:planretirementincome"))).toHtml
             </li>
             <li class="sidebar__list-item">
                 @Link.toExternalPage(url = "http://gov.uk/deferring-state-pension",
-                                    value = Some("Defer your State Pension"),
+                                    value = Some(Messages("nisp.questionnaire.sidebar.deferyourstatepension")),
                                     dataAttributes = Some(Map("journey-click" -> "checkmystatepension:external:deferstatepension"))).toHtml
             </li>
             <li class="sidebar__list-item">
                 @Link.toExternalPage(url = "https://gov.uk/contact-pension-service",
-                                    value = Some("Contact the Pension Service"),
+                                    value = Some(Messages("nisp.questionnaire.sidebar.contactpensionservice")),
                                     dataAttributes = Some(Map("journey-click" -> "checkmystatepension:external:contactpensionservice"))).toHtml
             </li>
             <li class="sidebar__list-item">
                 @Link.toExternalPage(url = "http://gov.uk/browse/working/state-pension",
-                                    value = Some("More on State Pensions"),
+                                    value = Some(Messages("nisp.questionnaire.sidebar.moreonpensionservice")),
                                     dataAttributes = Some(Map("journey-click" -> "checkmystatepension:external:more"))).toHtml
             </li>
         </ul>

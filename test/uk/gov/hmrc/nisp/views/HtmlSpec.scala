@@ -25,7 +25,6 @@ import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 import uk.gov.hmrc.play.test.UnitSpec
 import play.twirl.api.Html
 import org.apache.commons.lang3.StringEscapeUtils
-
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
@@ -51,7 +50,6 @@ trait HtmlSpec extends UnitSpec {
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
-
   def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
     val elements = doc.select(cssSelector)
 
@@ -60,7 +58,7 @@ trait HtmlSpec extends UnitSpec {
     assertMessageKeyHasValue(expectedMessageKey)
 
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
-    assert(elements.first().html().replace("\n", "") == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
   def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
@@ -84,17 +82,11 @@ trait HtmlSpec extends UnitSpec {
     assertMessageKeyHasValue(expectedMessageKey)
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs1, messageArgs2, messageArgs3).toString())
-
-    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
-
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")).toString() == expectedString)
   }
 
   def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {
     assert(!doc.select(cssSelector).isEmpty, "Element " + cssSelector + " was not rendered on the page.")
-  }
-
-  def assertNotRenderedByCssSelector(doc: Document, cssSelector: String) = {
-    assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
   }
 
 
@@ -196,5 +188,16 @@ trait HtmlSpec extends UnitSpec {
     assert(!elements.first().hasClass(className), s"\n\nElement '$cssSelector' has '$className' class.\n")
   }
 
+  def assertElemetsOwnMessage(doc: Document, cssSelector: String, messageKey: String) = {
+    val elements = doc.select(cssSelector)
+
+    if (elements.isEmpty)
+      throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(messageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(messageKey).toString());
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
+  }
 
 }
