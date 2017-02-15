@@ -21,18 +21,9 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispConnector
-import uk.gov.hmrc.nisp.controllers._
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
-
 
 
 class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
@@ -41,7 +32,7 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
   val mockUserNino = TestAccountBuilder.regularNino;
-  val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
+  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
 

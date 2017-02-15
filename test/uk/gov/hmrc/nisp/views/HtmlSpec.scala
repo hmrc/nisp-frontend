@@ -82,9 +82,7 @@ trait HtmlSpec extends UnitSpec {
     assertMessageKeyHasValue(expectedMessageKey)
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs1, messageArgs2, messageArgs3).toString())
-
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")).toString() == expectedString)
-
   }
 
   def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {
@@ -189,6 +187,7 @@ trait HtmlSpec extends UnitSpec {
 
     assert(!elements.first().hasClass(className), s"\n\nElement '$cssSelector' has '$className' class.\n")
   }
+
   def assertElemetsOwnMessage(doc: Document, cssSelector: String, messageKey: String) = {
     val elements = doc.select(cssSelector)
 
@@ -200,6 +199,5 @@ trait HtmlSpec extends UnitSpec {
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(messageKey).toString());
     assert(StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
   }
-
 
 }
