@@ -15,26 +15,15 @@
  */
 
 package uk.gov.hmrc.nisp.views
-
 import org.joda.time.LocalDate
-import play.api.i18n.Messages
-import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispConnector
-import uk.gov.hmrc.nisp.controllers._
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.play.views.formatting.Dates
 
@@ -44,7 +33,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
   val mockUserNino = TestAccountBuilder.regularNino;
-  val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
+  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
 
@@ -57,15 +46,15 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
     "render page with heading  You are unable to use this service " in {
 
-      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.excluded.title")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.excluded.title")
     }
     "render page with message  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
 
-      assertEqualsMessage(htmlAccountDoc ,"article.content__body>p" , "nisp.excluded.dead")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p", "nisp.excluded.dead")
     }
     "render page with help message 'Get help with this page.' " in {
 
-      assertElementContainsText(htmlAccountDoc ,"div.report-error>a#get-help-action" , "Get help with this page.")
+      assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Get help with this page.")
     }
 
   }
@@ -81,7 +70,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
     }
     "render page with heading  'You’ll reach State Pension age on 6 sep 2019' " in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2019, 9, 6)) , null)
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2019, 9, 6)) , null,null)
 
     }
 
@@ -179,7 +168,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
     "render page with heading  You reached State Pension age on 6 September 2015 when you were 70 " in {
 
-      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.haveReached" , Dates.formatDate(new LocalDate(2015, 9, 6)), (70).toString)
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.haveReached" , Dates.formatDate(new LocalDate(2015, 9, 6)), (70).toString ,null)
     }
     "render page with message  'if you have not already started claiming your state pension you can putoff...' " in {
 
@@ -208,7 +197,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
 
     "render page with text  You will reach your  State Pension age on 6 September 2015" in {
 
-      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2015, 9, 6)) , null)
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2015, 9, 6)) , null , null)
     }
     "render page with text  We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this." in {
 
@@ -234,12 +223,17 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render page with heading  'Your State Pension'" in {
-      assertEqualsMessage(htmlAccountDoc ,"article.content__body>h1" , "nisp.main.h1.title")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
+    }
+     "render page with heading  'You’ll reach State Pension age on' " in {
+       val sDate = Dates.formatDate(new LocalDate(2015, 9, 6)).toString();
+       assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>h2.heading-medium" , "nisp.excluded.willReach", sDate, null,null)
+
     }
 
     "render page with text - You will reach your  State Pension age on 6 September 2015" in {
 
-      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2015, 9, 6)) , null)
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2015, 9, 6)) , null , null)
     }
 
     "render page with text  We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab)." in {
@@ -264,7 +258,9 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     "render page with link having  text sign out and leave feedback " in {
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(7)" , "nisp.excluded.mwrre.signOut")
     }
-
+     "render page with help text 'Get help with this page.' " in {
+       assertEqualsValue(htmlAccountDoc ,"div.report-error>a#get-help-action" ,"Get help with this page.")
+     }
   }
 
   "Exclusion Overseas or Abroad" should {
@@ -277,7 +273,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
     }
 
     "render page with text - You will reach your  State Pension age on 6 September 2015" in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2017, 9, 6)) , null)
+      assertContainsDynamicMessage(htmlAccountDoc ,"h2.heading-medium" , "nisp.excluded.willReach" , Dates.formatDate(new LocalDate(2017, 9, 6)) , null,null)
     }
 
     "render page with text  We’re unable to calculate your State Pension forecast as you have lived or worked abroad." in {
