@@ -255,6 +255,13 @@ nisp.questionnaire.email = Please leave your email address so we can contact you
 
 nisp.questionnaire.improve.question = How could we improve the service?
 
+
+nisp.questionnaire.sidebar.whatcanyoudonext = What you can do next
+nisp.questionnaire.sidebar.understandingyouroption = Pension Wise - understanding your pension options
+nisp.questionnaire.sidebar.planningyourretirementincome = Planning your retirement income
+nisp.questionnaire.sidebar.deferyourstatepension = Defer your State Pension
+nisp.questionnaire.sidebar.contactpensionservice = Contact the Pension Service
+nisp.questionnaire.sidebar.moreonpensionservice = More on State Pensions
 #*******************
 # Thank you Messages
 #*******************
