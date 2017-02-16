@@ -22,7 +22,8 @@ import uk.gov.hmrc.nisp.utils.Breadcrumb
 object MockBreadcrumb extends Breadcrumb {
   override lazy val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val ggSignInUrl: String = ""
-    override val citizenAuthHost: String = ""
+    override val verifySignIn: String = ""
+    override val verifySignInContinue: Boolean = false
     override val twoFactorUrl: String = ""
     override val assetsPrefix: String = ""
     override val reportAProblemNonJSUrl: String = ""

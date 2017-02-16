@@ -42,7 +42,8 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override val applicationConfig: ApplicationConfig = new ApplicationConfig {
       override val ggSignInUrl: String = ""
-      override val citizenAuthHost: String = ""
+      override val verifySignIn: String = ""
+      override val verifySignInContinue: Boolean = false
       override val twoFactorUrl: String = ""
       override val assetsPrefix: String = ""
       override val reportAProblemNonJSUrl: String = ""
@@ -112,7 +113,7 @@ class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /signin/verify" should {
     "redirect to verify" in {
       val result = testLandingController().verifySignIn(fakeRequest)
-      redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
+      redirectLocation(result) shouldBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
     }
 
     "redirect to account page when signed in" in {

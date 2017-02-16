@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nisp.auth
 
+import java.net.URLEncoder
+
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -34,5 +36,15 @@ object VerifyProvider extends Verify {
     ))
   }
 
-  override def login: String = ApplicationConfig.verifySignIn
+  override def login: String =  {
+
+    var url = ApplicationConfig.verifySignIn
+
+    if(ApplicationConfig.verifySignInContinue) {
+      url += s"?continue=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}"
+    }
+
+    url
+
+  }
 }

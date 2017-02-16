@@ -39,10 +39,10 @@ trait ApplicationConfig {
   val showGovUkDonePage: Boolean
   val govUkFinishedPageUrl: String
   val identityVerification: Boolean
-  val citizenAuthHost: String
   val postSignInRedirectUrl: String
   val notAuthorisedRedirectUrl: String
-  val verifySignIn = s"$citizenAuthHost/ida/login"
+  val verifySignIn: String
+  val verifySignInContinue: Boolean
   val ivUpliftUrl: String
   val twoFactorUrl: String
   val ggSignInUrl: String
@@ -76,7 +76,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val govUkFinishedPageUrl: String = loadConfig("govuk-done-page.url")
   override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
 
-  override lazy val citizenAuthHost = configuration.getString("citizen-auth.host").getOrElse("")
+  override lazy val verifySignIn: String = configuration.getString("verify-sign-in.url").getOrElse("")
+  override lazy val verifySignInContinue: Boolean = configuration.getBoolean("verify-sign-in.submit-continue-url").getOrElse(false)
   override lazy val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse("")
   override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
