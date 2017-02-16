@@ -199,5 +199,15 @@ trait HtmlSpec extends UnitSpec {
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(messageKey).toString());
     assert(StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
   }
+  def assertElemetsOwnText(doc: Document, cssSelector: String, expectedText: String) = {
+    val elements = doc.select(cssSelector)
+
+    if (elements.isEmpty)
+      throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(expectedText);
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
+  }
 
 }
