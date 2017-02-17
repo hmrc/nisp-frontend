@@ -50,7 +50,8 @@ trait MockStatePensionController extends StatePensionController {
     override val reportAProblemPartialUrl: String = ""
     override val showGovUkDonePage: Boolean = true
     override val govUkFinishedPageUrl: String = "govukdone"
-    override val citizenAuthHost: String = ""
+    override val verifySignIn: String = ""
+    override val verifySignInContinue: Boolean = false
     override val postSignInRedirectUrl: String = ""
     override val notAuthorisedRedirectUrl: String = ""
     override val identityVerification: Boolean = true
