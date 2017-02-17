@@ -1,23 +1,16 @@
+#***********
 # General
-#********
+#***********
 
 nisp.back = Back
-nisp.yes = Yes
-nisp.no = No
 nisp.submit = Send
-nisp.weeks = weeks
 nisp.year = year
 nisp.years = years
-nisp.it = it
-nisp.them = them
 nisp.is = is
-nisp.are = are
-nisp.goback = Go back
 nisp.textentry.warning =  Please do not include any personal or financial information, for example your National Insurance or credit card number.
 nisp.textentry.charlimit =  Limit is 1,200 characters.
 nisp.useagain = To use the service again you&rsquo;ll need to <a href="{0}">sign in</a>.
 nisp.verify = verify
-nisp.iv = iv
 nisp.gov-uk = GOV.UK
 nisp.gov-uk-verify = GOV.UK Verify
 nisp.breadcrumb.account = Account home
@@ -27,12 +20,10 @@ nisp.breadcrumb.nirecord.voluntaryContrib = Voluntary contributions
 nisp.breadcrumb.nirecord.gapsandhowtocheck = Gaps in your record and how to check them
 nisp.breadcrumb.excluded = Excluded
 nisp.breadcrumb.cope = Cope Page
-nisp.from = From
-nisp.to = To
 
-#**************************
-#  Landing Page Messages
-#**************************
+#*************************
+# Landing page messages
+#*************************
 
 nisp.title = Check your State Pension
 nisp.continue = Continue
@@ -40,8 +31,6 @@ nisp.landing.title = Check your State Pension
 nisp.landing.signin.heading = You need to confirm your identity
 nisp.landing.signin.gg = You can sign in using the Government Gateway. You may need to answer a few questions – they&rsquo;ll be based on things HMRC already know about you. You can then access other HMRC services securely.
 nisp.landing.signin.verify = You can also <a href="{0}" data-journey-click="checkmystatepension:landing:verifylink">sign in using GOV.UK Verify</a>. If you have not used GOV.UK Verify before, it will take you about 15 minutes to get set up. You can access other government services securely wherever you see the GOV.UK Verify logo.
-nisp.landing.sidebar.heading = Elsewhere on GOV.UK
-nisp.landing.sidebar.link1 = <a href="https://www.gov.uk/plan-retirement-income/overview" rel="external" data-journey-click="checkmystatepension:external:landingsidebarlink">Plan your retirement income</a>
 nisp.landing.estimateprovided = Your State Pension forecast is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
 nisp.landing.eligibility.heading = You can use this service if you&rsquo;re
 nisp.landing.eligibility1 = a man born after 5 April 1951
@@ -49,56 +38,35 @@ nisp.landing.eligibility2 = a woman born after 5 April 1953
 nisp.landing.noteligible.heading = If you were born before these dates
 nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pension-centre" rel="external" data-journey-click="checkmystatepension:external:landingfuturepensioncentre">Future Pension Centre</a> to get a statement of your current pension by post.
 
-#**************************
-#  Main Page Messages
-#**************************
+#**********************
+# Main page messages
+#**********************
 
 nisp.main.title = Summary: Check your State Pension
 nisp.main.h1.title = Your State Pension
 nisp.main.caveats = Your forecast
-nisp.main.forecast = Forecast
-nisp.main.howtoincreaseit = How to improve it
-nisp.main.cope = What affects it
-nisp.main.currentvalue = Current Value
-nisp.main.today = Today, the amount of your State Pension is
 nisp.main.continueContribute = You need to continue to contribute National Insurance to reach your forecast
-nisp.main.forecastonly.h2.title = Your forecast is the most you can get
 nisp.main.mostYouCanGet = is the most you can get
 nisp.main.cantImprove = You cannot improve your forecast any more.
 nisp.main.week = a week
 nisp.main.month = a month
 nisp.main.year = a year
-nisp.main.equivalent = This is equal to:
 nisp.main.notAGuarantee = is not a guarantee and is based on the current law
 nisp.main.isBased = is based on your National Insurance record up to <span class="nowrap">{0}</span>
 nisp.main.inflation = does not include any increase due to inflation
-
 nisp.main.psod = does not include the pension sharing order you have in effect
-nisp.main.whenYoullBe = when you&rsquo;ll be
 nisp.main.after = After State Pension age, <span class="nowrap">{0}</span>, you no longer pay National Insurance contributions.
-
-nisp.main.reach = You&rsquo;ll reach State Pension age when you are
 nisp.main.basedOn = You can get your State Pension on
 
 nisp.main.puttingOff = Putting off claiming
 nisp.main.puttingOff.line1 = When you are {0}, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.
 nisp.main.puttingOff.linkTitle = More on putting off claiming (opens in new tab)
 
-nisp.main.context.default = If you continue to make National Insurance contributions, your State Pension may improve before you retire.
-
-nisp.main.forecasttablerow1 = Amount based on your record up to {0}
-nisp.main.forecasttablerow2 = Amount if you continue to add until {0}
-
-nisp.main.weekly = Weekly
-nisp.main.monthly = Monthly
-nisp.main.yearly = Yearly
-
 nisp.main.showyourrecord = View your National Insurance record
 nisp.main.showyourrecordUK = View your UK National Insurance record
 
 nisp.main.chart.lastprocessed.title = Estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
 nisp.main.chart.spa.title = Forecast if you contribute until <span class="nowrap">5 April {0}</span>
-nisp.main.chart.whichis = which is
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
 nisp.main.chart.year = a year
@@ -108,31 +76,23 @@ nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in
 
 nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">As you are living or working overseas (opens in new tab)</a>, you may be entitled to a State Pension from the country you are living or working in.
 
-#**************************
-# Scenario Messages
-#**************************
-
-nisp.main.context.improve.heading = How to improve your State Pension
-
-nisp.main.context.improve.list.payable.singular = You have 1 year on your record that does not count towards your pension.
-nisp.main.context.improve.list.payable.plural = You have {0} years on your record that do not count towards your pension.
-
-nisp.main.context.improve.nogaps = When you reach State Pension age in {0}, you no longer pay National Insurance contributions.
+#*********************
+# Scenario messages
+#*********************
 
 nisp.main.context.improve.para1.plural = You have years on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
 nisp.main.context.improve.para1.singular = You have a year on your record where you did not contribute enough National Insurance and you can make up the shortfall. This will make these years count towards your pension and may improve your forecast.
-nisp.main.context.improve.para2 = Once you have reached the full rate of £{0}, you cannot improve the amount any further. You&rsquo;ll still need to pay contributions as these fund other state benefits and the NHS.
 
 nisp.main.context.willReach = You cannot improve your forecast any further, unless you choose to put off claiming.
 nisp.main.context.reachMax.needToPay = If you&rsquo;re working you may still need to pay National Insurance contributions until {0} as they fund other state benefits and the NHS.
 nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach {0}, you still need to pay National Insurance until {1} as it funds other state benefits and the NHS.
+
 nisp.main.context.fillGaps.improve.title = You can improve your forecast
 nisp.main.context.fillGaps.viewGaps = View gaps in your record
 nisp.main.context.fillGaps.viewGapsAndCost = Gaps in your record and the cost of filling them
 nisp.main.context.fillgaps.para1.plural = You have years on your National Insurance record where you did not contribute enough.
 nisp.main.context.fillgaps.para1.singular = You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.
 nisp.main.context.fillgaps.bullet1 = filling years can improve your forecast
-nisp.main.context.fillgaps.bullet2.onlyone = you only need to fill this year to get the most you can
 nisp.main.context.fillgaps.bullet2.singular = you only need to fill 1 year to get the most you can
 nisp.main.context.fillgaps.bullet2.plural = you only need to fill {0} years to get the most you can
 nisp.main.context.fillgaps.chart.onlyone = The most you can get by filling this year in your record is
@@ -141,21 +101,18 @@ nisp.main.context.fillgaps.chart.plural = The most you can get by filling any {0
 nisp.main.context.fillgaps.futureproof.para = You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.
 nisp.main.context.fillgaps.futureproof.chart = The most you can get is
 
-
-#**************************
-# Exclusion Messages
-#**************************
+#**********************
+# Exclusion messages
+#**********************
 
 nisp.excluded.mci.title = There is a problem logging you in
 nisp.excluded.mci.info = We need to speak to you before you can log in to the service.
-
 nisp.excluded.mci.howToFix = How to fix this
 nisp.excluded.mci.howToFix.message1 = Telephone 0300 200 3300
 nisp.excluded.mci.howToFix.message2 = Say &lsquo;I can&rsquo;t log in&rsquo;
 nisp.excluded.mci.howToFix.message3 = Say &lsquo;Yes&rsquo; when asked if you are having problems logging in
 nisp.excluded.mci.howToFix.message4 = You will hear a recorded message advising you to call another number - <strong>do not hang up and redial</strong>. Stay on the line and an adviser will help you.
 nisp.excluded.mci.howToFix.message5 = Tell the adviser this is an &lsquo;MCI issue&rsquo;
-
 nisp.excluded.mci.howToContact = Other ways to contact us
 nisp.excluded.mci.howToContact.textphone = Textphone: 0300 200 3319
 nisp.excluded.mci.howToContact.outsideUK = Outside UK: +44 135 535 9022
@@ -188,18 +145,15 @@ nisp.excluded.mwrre.signOut = Sign out and leave feedback
 nisp.excluded.overseas = We&rsquo;re unable to calculate your UK State Pension forecast as you&rsquo;ve lived or worked abroad.
 
 nisp.excluded.spa = If you have not already started <a href="https://www.gov.uk/claim-state-pension-online" rel="external" data-journey-click="checkmystatepension:external:claimstatepension">claiming your State Pension</a>, you can <a href="https://www.gov.uk/deferring-state-pension" rel="external" data-journey-click="checkmystatepension:external:deferstatepension" target="_blank">put off claiming your State Pension (opens in new tab)</a> and this may mean you get extra State Pension when you do want to claim it.
-nisp.excluded.spa.nirecord = You can <a href="https://www.gov.uk/check-national-insurance-record" rel="external" data-journey-click="checkmystatepension:external:checkyournationalinsurancerecord" target="_blank">check your National Insurance record (opens in new tab)</a>.
+
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
 nisp.excluded.haveReached = You reached State Pension age on {0}
 nisp.excluded.willReach = You&rsquo;ll reach State Pension age on <span class="nowrap">{0}</span>.
 nisp.nirecord.summary.youhave = You have:
 
-nisp.excluded.helpUs.title = Help us improve this service
-nisp.excluded.helpUs.text = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
-
 #**************************
-# Questionnaire Messages
+# Questionnaire messages
 #**************************
 
 nisp.questionnaire.title =  You’ve signed out of your account: Check your State Pension
@@ -236,7 +190,6 @@ nisp.questionnaire.understanding.0 = A better understanding of your State Pensio
 nisp.questionnaire.understanding.1 = Less understanding of your State Pension situation
 nisp.questionnaire.understanding.2 = No change in the understanding of your State Pension situation
 
-
 nisp.questionnaire.whatwillyoudonext.question = After using Check your State Pension, which of the following are you most likely to do next:
 nisp.questionnaire.whatwillyoudonext.0 = Speak to a financial advisor or a free advice service, such as Citizens Advice Bureau or Age UK
 nisp.questionnaire.whatwillyoudonext.1 = Speak to DWP/HMRC
@@ -256,32 +209,32 @@ nisp.questionnaire.email = Please leave your email address so we can contact you
 
 nisp.questionnaire.improve.question = How could we improve the service?
 
-
 nisp.questionnaire.sidebar.whatcanyoudonext = What you can do next
 nisp.questionnaire.sidebar.understandingyouroption = Pension Wise - understanding your pension options
 nisp.questionnaire.sidebar.planningyourretirementincome = Planning your retirement income
 nisp.questionnaire.sidebar.deferyourstatepension = Defer your State Pension
 nisp.questionnaire.sidebar.contactpensionservice = Contact the Pension Service
 nisp.questionnaire.sidebar.moreonpensionservice = More on State Pensions
-#*******************
-# Thank you Messages
-#*******************
+
+#**********************
+# Thank you messages
+#**********************
 
 nisp.thankyou.title = Thank you
 nisp.thankyou.received = We&rsquo;ve received your feedback.
 nisp.finishpage.title = We’ve received your feedback: Check your State Pension
 
-#****************
-# Session Timeout
-#****************
+#*******************
+# Session timeout
+#*******************
 
 nisp.timeout.title = You’ve been signed out: Check your State Pension
 nisp.timeout.heading = You’ve been signed out
 nisp.timeout.body = For your security we signed you out because you did not use the service for 15 minutes or more.
 
-#***************
-# NI Record Page
-#***************
+#******************
+# NI record page
+#******************
 
 nisp.nirecord.title = Your National Insurance record: Check your State Pension
 nisp.nirecord.heading = Your National Insurance record
@@ -289,21 +242,10 @@ nisp.nirecord.heading.uk = Your UK National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.
 nisp.nirecord.yournirecordallyears = All years.
 nisp.nirecord.youdonothaveanygaps = You do not have any gaps in your record.
-nisp.nirecord.payablevoluntarycontribs = You have {0} {1} where you can pay voluntary contributions to make {2} count towards your pension.
-nisp.nirecord.nonpayablevoluntarycontribs = You also have {0} {1} where you did not pay enough National Insurance that {2} too late to pay.
-nisp.nirecord.onlynonpayablevoluntarycontribs = You have {0} {1} where you did not pay enough National Insurance that {2} too late to pay.
-nisp.nirecord.payablevoluntarycontribsmax =  You have {0} {1} where you can pay voluntary contributions, although you cannot improve your forecast any further.
-nisp.nirecord.typesofcontrib = What are the types of contributions?
-nisp.nirecord.typesofcontrib.summary = For years where you did not contribute enough National Insurance you can view your total contributions from:
-nisp.nirecord.typesofcontrib.bullet1 = Paid employment (check the amount against P60s from your employers)
-nisp.nirecord.typesofcontrib.bullet2 = Self-employment (check by reviewing your personal accounts)
-nisp.nirecord.typesofcontrib.bullet3 = National Insurance credits (you may have been entitled to these if you did not earn to enough to pay contributions, were ill/disabled, unemployed or caring for someone full-time)
-nisp.nirecord.typesofcontrib.bullet4 = Voluntary contributions (you may have paid these to fill a gap in your record)
 nisp.nirecord.showgaps = View gaps only
 nisp.nirecord.showfull = View all years
-nisp.nirecord.fullrecord = Full record
-nisp.nirecord.yearsnotfull = {0} years are not full, filling them may improve your State Pension.
 nisp.nirecord.fullyear = Full year
+
 nisp.nirecord.gap = Year is not full
 nisp.nirecord.gap.paidemployment = Paid employment: <strong>{0}</strong>
 nisp.nirecord.gap.selfemployed.singular = Self-employment: <strong>1 week</strong>
@@ -314,17 +256,20 @@ nisp.nirecord.gap.whenyouareclaiming.singular = National Insurance credits: <str
 nisp.nirecord.gap.whenyouareclaiming.plural= National Insurance credits: <strong>{0} weeks</strong>
 nisp.nirecord.gap.whenyouareclaiming.info.singular = This week may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.
 nisp.nirecord.gap.whenyouareclaiming.info.plural = These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.
+
 nisp.nirecord.unavailableyear = Your record for this year is not available yet
 nisp.nirecord.yourcontributionfrom = You have contributions from
+
 nisp.nirecord.gap.findoutmoreabout = Find out more about <a href="{0}">gaps in your record and how to check them</a>.
 nisp.nirecord.gap.youcanmakeupshortfall = You can make up the shortfall
 nisp.nirecord.gap.payvoluntarycontrib = Pay a voluntary contribution of <strong>{0}</strong> by <strong>{1}</strong>. This shortfall may increase after <strong>{2}</strong>.
 nisp.nirecord.gap.payvoluntarycontribaftercutoff = Pay a voluntary contribution of <strong>{0}</strong> by <strong>{1}</strong>.
-nisp.nirecord.gap.payselfemployedcontrib = You can make this year full.</br>Pay your self-employed contributions.
 nisp.nirecord.gap.findoutmore = Find out more about <a href="{0}">voluntary contributions</a>.
 nisp.nirecord.gap.latePaymentMessage = It&rsquo;s too late to pay for this year. You can usually only pay for the last 6 years.
 nisp.nirecord.gap.underInvestigation = We are checking this year to see if it counts towards your pension. We&rsquo;ll update your record when this is finished, you do not need to do anything.
+
 nisp.nirecord.youdidnotmakeanycontrib = You did not make any contributions this year
+
 nisp.nirecord.summary.yourrecord = Summary
 nisp.nirecord.summary.yourrecord.mobile = Summary
 nisp.nirecord.summary.fullContributions = years of full contributions
@@ -333,18 +278,19 @@ nisp.nirecord.summary.gaps = years when you did not contribute enough
 nisp.nirecord.summary.gaps.single = year when you did not contribute enough
 nisp.nirecord.summary.yearsRemaining = years to contribute before 5 April {0}
 nisp.nirecord.summary.yearsRemaining.single = year to contribute before 5 April {0}
+
 nisp.nirecord.pre75Years = Up to 1975
 nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
 nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
+
 nisp.nirecord.helpline.getHelp = Get help
 nisp.nirecord.helpline.number = Helpline 0345 608 0126
 nisp.nirecord.helpline.openTimes = Monday to Friday: 8am to 6pm
 nisp.nirecord.helpline.callsCost = Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.
 
-
-#**************************
-# Gaps In Your Record Page
-#**************************
+#****************************
+# Gaps in your record page
+#****************************
 
 nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them: Check your State Pension
 nisp.nirecord.gapsinyourrecord.heading = Gaps in your record and how to check them
@@ -374,9 +320,9 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc = If you were claim
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp = Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010.
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = More on National Insurance credits (opens in new tab)
 
-#****************************
-# Voluntary Contribution page
-#****************************
+#*******************************
+# Voluntary contribution page
+#*******************************
 
 nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check your State Pension
 nisp.nirecord.voluntarycontributions.heading = Voluntary contributions
@@ -391,7 +337,6 @@ nisp.nirecord.voluntarycontributions.h2title.1.linktitle2 = lived or worked over
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message = You may be entitled to a State Pension from the country you lived or worked in. Contact the pension service of the country you were in to find out if you are eligible.
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle3 = lived or worked in the Isle of Man
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">visit GOV.IM – Retirement Pension (opens in new window)</a>.
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message2 = visit GOV.IM – Retirement Pension (opens in new window)
 
 nisp.nirecord.voluntarycontributions.h2title.2 = 2. Seek guidance or financial advice
 nisp.nirecord.voluntarycontributions.h2title.2.message = Paying voluntary contributions may not be your best option when planning for your retirement.
@@ -406,25 +351,23 @@ nisp.nirecord.voluntarycontributions.h2title.3 = 3. Find out how paying voluntar
 nisp.nirecord.voluntarycontributions.h2title.3.link1 = Contact the Future Pension Centre (opens in new tab)
 nisp.nirecord.voluntarycontributions.h2title.3.message = to find out more about how filling gaps can affect your pension.
 
-#***************************
-# Minimum Qualifying Period
-#***************************
+#*****************************
+# Minimum qualifying period
+#*****************************
 
 nisp.main.description.mqp = You&rsquo;ll reach State Pension age on
 nisp.mqp.notPossible = By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.
 nisp.mqp.possible = By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.
 nisp.mqp.doNext = What you can do next
 nisp.mqp.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">If you have lived or worked overseas (opens in new tab)</a>, your time abroad may help you make up the 10 years you need to get any State Pension.
-
 nisp.mqp.years.dontCount.single = You also have a year on your record which does not count towards your pension because you did not contribute enough National Insurance.
 nisp.mqp.years.dontCount.plural = You also have {0} on your record which do not count towards your pension because you did not contribute enough National Insurance.
 nisp.mqp.years.dontCount.zero = You do not have any years on your record that do not count towards your pension.
 
-
-nisp.mqp.filling.never = Filling these are not enough to get any State Pension.
 nisp.mqp.filling.never.single = Filling this is not enough to get any State Pension.
 nisp.mqp.filling.may.single = Filling one year may get you some State Pension.
 nisp.mqp.filling.may.plural = Filling some of these years may get you some State Pension.
+
 nisp.mqp.afterSpa = After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.whatElse = What else you can do
 nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
@@ -434,9 +377,9 @@ nisp.mqp.howManyToContribute = assumes that you&rsquo;ll contribute another {0}
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
 
-#**************************
-#  Cope Page Messages
-#**************************
+#*****************
+# COPE messages
+#*****************
 
 nisp.cope.title1 = How contracting out affects your pension income
 nisp.cope.likeMostPeople = Like most people, you were contracted out of part of the State Pension.
@@ -451,12 +394,12 @@ nisp.cope.definition = Your workplace or personal pension scheme should include 
 nisp.cope.title2 = Contracted Out Pension Equivalent (COPE)
 nisp.cope.workplace = The COPE amount is paid as part of your other pension schemes, not by the government. The total amount of pension paid by your workplace or personal pension scheme will depend on the scheme and on any investment choices.
 nisp.cope.table.estimate.title = Your COPE estimate is
-nisp.cope.otherPensionSchemes = The COPE amount is paid as part of your other pension schemes, not by the government.
 
 nisp.main.cope.linkTitle = More about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE amount (opens in new tab)</a>.
-#**************************
-#  Not Authorised IV Messages
-#**************************
+
+#******************************
+# Not authorised IV messages
+#******************************
 
 nisp.iv.failure.otherways.heading = Other ways to get a statement
 nisp.iv.failure.otherways.text = If you cannot use the online service contact the <a href="https://www.gov.uk/future-pension-centre" rel="external">Future Pension centre</a>.
@@ -478,9 +421,9 @@ nisp.iv.failure.timeout.message = Your session has ended because you have not do
 nisp.iv.failure.timeout.data = We&rsquo;ve deleted all the details you&rsquo;ve entered to protect your data.
 nisp.iv.failure.timeout.button = Start again
 
-#**********************
-# Terms and Conditions
-#**********************
+#************************
+# Terms and conditions
+#************************
 
 nisp.tandcs.title = Terms and conditions
 nisp.tandcs.heading = Before using Check your State Pension, please read this page carefully
@@ -498,10 +441,8 @@ nisp.tandcs.law = The terms and conditions are governed by English law. Any disp
 nisp.tandcs.operated = The service is operated by the Department for Work and Pensions (DWP) and our main offices are at Caxton House, Tothill Street, London, SW1H 9NA.
 nisp.tandcs.thanks = Thank you for visiting the site.
 
-#***********************
-# Error Messages
-#***********************
+#******************
+# Error messages
+#******************
 
 nisp.validation.summary.heading = Error summary
-nisp.validation.summary.error.max = Maximum length is 1,200
-error.email = Enter a valid email address
