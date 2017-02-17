@@ -183,9 +183,7 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
     "render page with text  ' is not a guarantee and is based on the current law '" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
     }
-    /*"render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016", null, null)
-    }*/
+
     "render page with text  ' does not include any increase due to inflation '" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.inflation")
     }
@@ -700,8 +698,8 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 11,
         qualifyingYearsPriorTo1975 = 0,
-        numberOfGaps = 2,
-        numberOfGapsPayable = 2,
+        numberOfGaps = 0,
+        numberOfGapsPayable = 0,
         new LocalDate(1989, 3, 6),
         false,
         new LocalDate(2017, 4, 5),
@@ -776,7 +774,6 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
       assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(8)", "/check-your-state-pension/account/nirecord")
     }
 
-
     /*overseas message*/
     "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
       "State Pension from the country you are living or working in.'" in {
@@ -801,5 +798,181 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
     }
 
   }
+
+
+  "Render State Pension view with NON-MQP :  Continue Working || More than 10 years || No Gapss || Full Rate & Personal Max" should {
+
+    lazy val controller = new MockStatePensionController {
+      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+        override val assetsPrefix: String = ""
+        override val reportAProblemNonJSUrl: String = ""
+        override val ssoUrl: Option[String] = None
+        override val betaFeedbackUnauthenticatedUrl: String = ""
+        override val contactFrontendPartialBaseUrl: String = ""
+        override val govUkFinishedPageUrl: String = "govukdone"
+        override val showGovUkDonePage: Boolean = false
+        override val analyticsHost: String = ""
+        override val analyticsToken: Option[String] = None
+        override val betaFeedbackUrl: String = ""
+        override val reportAProblemPartialUrl: String = ""
+        override val citizenAuthHost: String = ""
+        override val postSignInRedirectUrl: String = ""
+        override val notAuthorisedRedirectUrl: String = ""
+        override val identityVerification: Boolean = false
+        override val ivUpliftUrl: String = "ivuplift"
+        override val ggSignInUrl: String = "ggsignin"
+        override val twoFactorUrl: String = "twofactor"
+        override val pertaxFrontendUrl: String = ""
+        override val contactFormServiceIdentifier: String = ""
+        override val breadcrumbPartialUrl: String = ""
+        override val showFullNI: Boolean = false
+        override val futureProofPersonalMax: Boolean = false
+        override val useStatePensionAPI: Boolean = true
+        override val useNationalInsuranceAPI: Boolean = true
+      }
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override val statePensionService: StatePensionService = mock[StatePensionService]
+      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+    }
+
+    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Right(StatePension(
+        new LocalDate(2016, 4, 5),
+        amounts = StatePensionAmounts(
+          protectedPayment = false,
+          StatePensionAmountRegular(118.65, 590.10, 7081.15),
+          StatePensionAmountForecast(0, 150.65, 676.80, 8121.59),
+          StatePensionAmountMaximum(0, 0, 150.65, 590.10, 7081.15),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        pensionAge = 67,
+        new LocalDate(2022, 6, 7),
+        "2021-22",
+        11,
+        pensionSharingOrder = false,
+        currentFullWeeklyPensionAmount = 151.65
+      )
+      )))
+
+    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        qualifyingYears = 11,
+        qualifyingYearsPriorTo1975 = 0,
+        numberOfGaps = 0,
+        numberOfGapsPayable = 0,
+        new LocalDate(1989, 3, 6),
+        false,
+        new LocalDate(2017, 4, 5),
+        List(
+
+          NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+          NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+          NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+        )
+      )
+      )))
+
+    lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+
+
+    lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+    "render page with heading  'Your State Pension' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
+    }
+
+    "render page with text  'You can get your State Pension on' " in {
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
+    }
+    "render page with text  '7 june 2022' " in {
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", "7 June 2022.")
+    }
+    "render page with text  'Your forecast is' " in {
+      val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(2)", sMessage)
+    }
+
+    "render page with text  '£150.65  a week" in {
+      val sWeek = "£150.65 " + Messages("nisp.main.week")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)>em", sWeek)
+    }
+    "render page with text  ' £676.80 a month, £8,121.59 a year '" in {
+      val sForecastAmount = "£676.80 " + Messages("nisp.main.month") + ", £8,121.59 " + Messages("nisp.main.year")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(3)", sForecastAmount)
+    }
+    "render page with text  ' Your forcaste '" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.main.caveats")
+    }
+    "render page with text  ' is not a guarantee and is based on the current law '" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
+    }
+    "render page with text  ' does not include any increase due to inflation '" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.inflation")
+    }
+
+    "render page with Heading  'You need to continue to contribute National Insurance to reach your forecast'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(5)", "nisp.main.continueContribute")
+    }
+    "render page with text  'Estimate based on your National Insurance record up to '" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(6)>span", "nisp.main.chart.lastprocessed.title" , "2016" ,null,null)
+    }
+
+    "render page with text  ' £118.65 a week '" in {
+      val sMessage = "£118.65 " + Messages("nisp.main.chart.week")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>ul>li>span>span",sMessage)
+    }
+    "render page with text  'Forecast if you contribute until 5 April 2022'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(7)>span", "nisp.main.chart.spa.title" , "2022" ,null,null)
+    }
+
+    "render page with text  '  £150.65 a week '" in {
+      val sMessage = "£150.65 " + Messages("nisp.main.chart.week")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>ul>li>span>span",sMessage)
+    }
+
+    "render page with text  '£150.65 is the most you can get'" in {
+      val sMessage  ="£150.65 " + Messages("nisp.main.mostYouCanGet")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>h2:nth-child(8)",sMessage)
+    }
+
+    "render page with text  'After State Pension age, 7 June 2022 you no longer pay National Insurance contributions.'" in {
+      val sMessage = Messages( "nisp.mqp.afterSpa", "7 June 2022,")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>p:nth-child(9)",sMessage)
+    }
+    "render page with link  'View your National Insurence Record'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(10)", "nisp.main.showyourrecord")
+    }
+    "render page with href link  'View your National Insurence Record'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(10)", "/check-your-state-pension/account/nirecord")
+    }
+
+
+    /*overseas message*/
+    "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+      "State Pension from the country you are living or working in.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
+    }
+    /*Ends*/
+
+    "render page with heading  'Putting of claiming'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.main.puttingOff")
+    }
+
+    "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
+      "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "67", null, null)
+    }
+
+    "render page with link 'More on putting off claiming (opens in new tab)'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(14)", "nisp.main.puttingOff.linkTitle")
+    }
+    "render page with href link 'More on putting off claiming (opens in new tab)'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(14)", "https://www.gov.uk/deferring-state-pension")
+    }
+
+  }
+
+
 
 }
