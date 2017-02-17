@@ -20,8 +20,8 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.utils.Constants
 
-@()
+@()(implicit lang: Lang )
 
     <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
-    <p>@Messages("nisp.main.context.improve.para1.plural")</p>
+    <p>@Html(Messages("nisp.main.context.improve.para1.plural"))</p>
     <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGaps")</a>

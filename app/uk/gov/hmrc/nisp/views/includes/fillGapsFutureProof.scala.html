@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.utils.Constants
 
-@(statePension: StatePension, personalMaximumChart: SPChartModel)
+@(statePension: StatePension, personalMaximumChart: SPChartModel)(implicit lang: Lang )
 
 <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
 
@@ -28,4 +28,4 @@
 
 @spChart(Html(Messages("nisp.main.context.fillgaps.futureproof.chart", statePension.amounts.maximum.gapsToFill)), personalMaximumChart)
 
-<a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGapsAndCost")</a>
+<a href='@routes.NIRecordController.showGaps.url'>@Html(Messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>

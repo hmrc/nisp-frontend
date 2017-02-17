@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(exclusion: Exclusion)(implicit request: Request[_], user: NispUser,
+@(exclusion: Exclusion)(implicit lang: Lang, request: Request[_], user: NispUser,
 partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {

@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.formatting.Time
-@import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.models.enums.MQPScenario._
 @import uk.gov.hmrc.nisp.controllers.routes
@@ -24,6 +23,8 @@
 @import play.api.Logger
 @import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.language.LanguageUtils.Dates
+
 
 @(
   statePension: StatePension,
@@ -34,7 +35,7 @@
   customerAge: Option[Int],
   isPertaxUrl: Boolean,
   yearsToContributeUntilPensionAge: Int
-)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+)(implicit lang: Lang, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -113,7 +114,7 @@
             @statePension.mqpScenario.map { mqp =>
                 @if(mqp == CanGetWithGaps) {
                     @if(numberOfPayableGaps > 1) {
-                        @Messages("nisp.mqp.filling.may.plural")
+                        @Html(Messages("nisp.mqp.filling.may.plural"))
                     } else {
                         @Messages("nisp.mqp.filling.may.single")
                     }
@@ -133,7 +134,7 @@
     <p>
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
-                <a href='@routes.NIRecordController.showGaps.url'>@Messages("nisp.main.context.fillGaps.viewGapsAndCost")</a>
+                <a href='@routes.NIRecordController.showGaps.url'>@Html(Messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
             }
             @if(mqp == CantGet) {
                 <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
@@ -149,6 +150,6 @@
     <p>@Html(Messages("nisp.mqp.pensionCredit"))</p>
     <p>@Html(Messages("nisp.mqp.moneyAdvice"))</p>
 
-    @if(isPertaxUrl) {<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
+    @if(isPertaxUrl) {<div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>}
 }
 }

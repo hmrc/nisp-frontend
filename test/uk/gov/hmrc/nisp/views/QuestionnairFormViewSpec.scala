@@ -42,7 +42,7 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers._
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
-import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
 import uk.gov.hmrc.nisp.models.forms.QuestionnaireForm
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
@@ -60,6 +60,7 @@ class QuesionnairFormViewSpec extends UnitSpec with MockitoSugar with HtmlSpec w
   val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
+  implicit override val lang =  LanguageToggle.getLanguageCode
 
   lazy val fakeRequest = FakeRequest();
 

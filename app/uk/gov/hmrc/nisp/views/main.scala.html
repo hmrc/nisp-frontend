@@ -22,6 +22,9 @@
 @import uk.gov.hmrc.play.frontend.auth.AuthContext
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.nisp.utils.Breadcrumb
+@import play.twirl.api.Html
+@import play.api.i18n._
+@import uk.gov.hmrc.nisp.controllers.CustomLanguageController
 
 @(browserTitle: Option[String] = Some(Messages("nisp.title")),
     pageTitle: Option[String] = None,
@@ -38,21 +41,20 @@
     analyticsAdditionalJs: Option[Html] = None,
     articleEnabled: Boolean = true,
     loginDetailsHeader: Option[Html] = None,
-    contentHeaderExtra: Option[Html] = None,
-    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
+    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit lang: Lang, request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
 
 @linkElement = {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/nisp.css")'/>
 }
 
 @links = {
-  <li><a href="@Constants.logoutUrl" role="button">Sign out</a></li>
+  <li><a href="@Constants.logoutUrl" role="button">@Messages("nisp.Signout")</a></li>
 }
 
 @contentWithTitle =  {
 
     @pageTitle.map { title =>
-        <h1 class="heading-large top-title-heading heading-bottom-margin"> @title </h1>
+        <h1 class="heading-large top-title-heading heading-bottom-margin"> @Html(title) </h1>
     }
     @mainContent
 }
@@ -78,10 +80,11 @@
 @betaBanner = {@if(showBetaBanner) {@layouts.betaBanner(userLoggedIn, applicationConfig.betaFeedbackUrl,applicationConfig.betaFeedbackUnauthenticatedUrl, true)}}
 
 @serviceInfoHtml = {
-    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user)))
+    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user , lang)))
         .getOrElse(serviceInfo(betaBanner, false, None)
         )
     }
+
 }
 
 @getHelpForm = {
@@ -109,7 +112,10 @@
 
 @contentHeader = {
     @loginDetailsHeader
-    @contentHeaderExtra
+
+    @if(applicationConfig.isWelshEnabled){
+        @language_selection(CustomLanguageController.languageMap, CustomLanguageController.langToCall, Some("align-right"))
+    }
 }
 
 @mainContentHeader = {

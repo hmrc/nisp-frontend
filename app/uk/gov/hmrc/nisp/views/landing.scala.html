@@ -18,11 +18,11 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
+@()( implicit lang: Lang, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @main(pageTitle = Some(Messages("nisp.landing.title"))) {
 
-  <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+  <div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>
   
   
   <p class="heading-medium">@Html(Messages("nisp.landing.eligibility.heading"))</p>

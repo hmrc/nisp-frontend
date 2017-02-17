@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 
+import org.apache.commons.lang3.StringEscapeUtils
 import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers
@@ -42,8 +43,9 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.views.formatting.Dates
 import uk.gov.hmrc.time.DateTimeUtils.now
+import org.joda.time.LocalDate
+import uk.gov.hmrc.play.language.LanguageUtils.Dates
 
 import scala.concurrent.Future
 
@@ -73,6 +75,9 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
   lazy val fakeRequest = FakeRequest()
+  implicit override val lang =  LanguageToggle.getLanguageCode
+  implicit val lanCookie =  LanguageToggle.getLanguageCookie
+
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
@@ -89,7 +94,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
     }
 
-   lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdContractedOut))
+   lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdContractedOut).withCookies(lanCookie))
    lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     "render page with heading  'Your State Pension' " in {
@@ -100,7 +105,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
       assertElemetsOwnMessage(htmlAccountDoc ,"article.content__body>div:nth-child(2)>p" , "nisp.main.basedOn")
     }
     "render page with text  '18 july 2012' " in {
-      assertEqualsValue(htmlAccountDoc ,"article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)" , "18 July 2021.")
+      assertEqualsValue(htmlAccountDoc ,"article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)" , Dates.formatDate(new LocalDate(2021, 7, 18)) +".")
     }
     "render page with text  'Your forecast is' " in {
       val sMessage  = Messages("nisp.main.caveats") + " "+ Messages("nisp.is")
@@ -135,7 +140,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
       assertEqualsValue(htmlAccountDoc ,"article.content__body>div:nth-child(6)>ul:nth-child(2)>li:nth-child(1)>span>span" , sWeek)
     }
     "render page with Heading  ' £155.55 is the most you can get'" in {
-      val sMaxCanGet  = "£155.55 " + Messages("nisp.main.mostYouCanGet")
+      val sMaxCanGet  = "£155.55 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
       assertEqualsValue(htmlAccountDoc ,"article.content__body>h2:nth-child(8)" ,sMaxCanGet)
     }
     "render page with text  'You cannot improve your forecast any further, unless you choose to put off claiming.'" in {
@@ -143,7 +148,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
     }
     "render page with text  'If you’re working you may still need to pay National Insurance contributions until 18 " +
       "July 2021 as they fund other state benefits and the NHS.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>p:nth-child(10)" ,"nisp.main.context.reachMax.needToPay" , "18 July 2021")
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>p:nth-child(10)" ,"nisp.main.context.reachMax.needToPay" , Dates.formatDate(new LocalDate(2021, 7, 18)))
     }
     "render page with link  'View your National Insurence Record'" in {
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(11)" ,"nisp.main.showyourrecord")

@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 
+import org.apache.commons.lang3.StringEscapeUtils
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
@@ -40,6 +41,7 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.play.language.LanguageUtils.Dates
 
 import scala.concurrent.Future
 
@@ -66,6 +68,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
+  implicit override val lang =  LanguageToggle.getLanguageCode
+  implicit val lanCookie =  LanguageToggle.getLanguageCookie
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -128,7 +132,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           )
           )))
 
-        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
         //val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
 
@@ -142,7 +146,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
         }
         "render page with text  '7 june 2020' " in {
-          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", "7 June 2020.")
+          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
         }
         "render page with text  'Your forecast is' " in {
           val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -164,7 +168,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
         }
         "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
         }
         "render page with text  ' does not include any increase due to inflation '" in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.main.inflation")
@@ -178,7 +182,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)", "nisp.main.cantImprove")
         }
         "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.reachMax.needToPay", "7 June 2020")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2020, 6, 7)))
         }
         "render page with link  'View your National Insurence Record'" in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(8)", "nisp.main.showyourrecord")
@@ -271,7 +275,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
 
@@ -286,7 +290,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", "7 June 2020.")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -308,7 +312,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
@@ -417,7 +421,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
 
@@ -431,7 +435,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", "7 June 2020.")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -453,7 +457,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased",Dates.formatDate(new LocalDate(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
@@ -467,7 +471,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           }
 
           "render page with Heading  '£155.65 is the most you can get'" in {
-            val sMessgae = "£155.65 " + Messages("nisp.main.mostYouCanGet")
+            val sMessgae = "£155.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
             assertEqualsValue(htmlAccountDoc, "article.content__body>h3:nth-child(6)", sMessgae)
           }
 
@@ -475,7 +479,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(9)", "nisp.main.showyourrecord")
@@ -549,7 +553,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
 
@@ -565,7 +569,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", "7 June 2020.")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -587,7 +591,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
@@ -609,7 +613,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(9)", "nisp.main.showyourrecord")
@@ -680,7 +684,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
 
@@ -695,7 +699,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", "7 June 2020.")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -717,7 +721,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
@@ -740,7 +744,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(9)", "nisp.main.showyourrecord")
@@ -816,7 +820,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
 
@@ -832,7 +836,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
-            val sMessage = "4 May 2017.";
+            val sMessage =Dates.formatDate(new LocalDate(2017, 5, 4))+ ".";
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
@@ -861,7 +865,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           }
 
           "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(new LocalDate(2017, 5, 4)))
           }
 
           "render page with link 'What else you can do'" in {
@@ -923,7 +927,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
 
@@ -938,7 +942,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
-            val sMessage = "4 May 2018.";
+            val sMessage = Dates.formatDate(new LocalDate(2018, 5, 4))+".";
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
@@ -969,8 +973,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           }
 
           "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2018")
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2018")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(new LocalDate(2018, 5, 4)))
           }
 
           "render page with link 'What else you can do'" in {

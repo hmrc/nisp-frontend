@@ -25,7 +25,9 @@ import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
-import play.api.i18n.Messages
+import play.api.{Logger, Play}
+import play.api.i18n.{Lang, Messages}
+import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.http.cache.client.SessionCache
@@ -37,10 +39,15 @@ import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, Nationa
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.{HttpResponse, SessionKeys, Upstream4xxResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse, SessionKeys, Upstream4xxResponse}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.play.language.LanguageController
+import uk.gov.hmrc.play.language.LanguageUtils._
+import play.api.test.Helpers._
+import play.api.test.FakeRequest
+import uk.gov.hmrc.nisp.controllers.CustomLanguageController
 
 import scala.concurrent.Future
 
@@ -58,6 +65,8 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
   val mockAbroadUserId = "/auth/oid/mockabroad"
 
   lazy val fakeRequest = FakeRequest();
+  implicit override val lang =  LanguageToggle.getLanguageCode
+  implicit val lanCookie =  LanguageToggle.getLanguageCookie
 
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
@@ -66,6 +75,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     SessionKeys.userId -> userId,
     SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
   )
+
 
 
   "Render Ni Record to view all the years" should {
@@ -85,7 +95,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
+
+
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -129,20 +141,17 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
     "render page with link 'View details'" in {
 
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a", "View  details", "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a>span")
+      assertContainsNextedValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a.view-details", "nisp.nirecord.gap.viewdetails", "2013-14")
     }
 
     "render page with text  'You did not make any contributions this year '" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header", "nisp.nirecord.youdidnotmakeanycontrib")
     }
 
-    "render page with text 'Find out more about'" in {
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "Find out more about .", "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
+    "render page with text 'Find out more about gaps in your account'" in {
+      assertContainsNextedValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "nisp.nirecord.gap.findoutmoreabout", "/check-your-state-pension/account/nirecord/gapsandhowtocheck")
     }
 
-    "render page with link 'gaps in your record and how to check them'" in {
-      assertEqualsValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a", "gaps in your record and how to check them")
-    }
     "render page with link href 'gaps in your record and how to check them'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a", "/check-your-state-pension/account/nirecord/gapsandhowtocheck")
     }
@@ -151,7 +160,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of £530 by 5 April 2023. This shortfall may increase after 5 April 2019.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", "5 April 2023", "5 April 2019")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -215,7 +224,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       override val metricsService: MetricsService = MockMetricsService
     }
 
-    lazy val result = controller.showGaps(authenticatedFakeRequest(mockUserId))
+    lazy val result = controller.showGaps(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -264,30 +273,22 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-notfull", "nisp.nirecord.gap")
     }
     "render page with link 'View details'" in {
-
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a", "View  details", "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a>span")
+      assertContainsNextedValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(2)>div>div.ni-action>a.view-details", "nisp.nirecord.gap.viewdetails", "2013-14")
     }
 
     "render page with text  'You did not make any contributions this year '" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header", "nisp.nirecord.youdidnotmakeanycontrib")
     }
 
-    "render page with text 'Find out more about'" in {
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "Find out more about .", "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
-    }
-
-    "render page with link 'gaps in your record and how to check them'" in {
-      assertEqualsValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a", "gaps in your record and how to check them")
-    }
-    "render page with link href 'gaps in your record and how to check them'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a", "/check-your-state-pension/account/nirecord/gapsandhowtocheck")
+    "render page with text 'Find out more about gaps in your account'" in {
+      assertContainsNextedValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)", "nisp.nirecord.gap.findoutmoreabout", "/check-your-state-pension/account/nirecord/gapsandhowtocheck")
     }
 
     "render page with text  'You can make up the shortfall'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", "5 April 2023", "5 April 2019")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -301,14 +302,8 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
     "render page with text 'Find out more about for toolate to pay'" in {
-      assertContainsTextBetweenTags(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)", "Find out more about .", "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)>a")
-    }
-
-    "render page with link 'gaps in your record and how to check them for toolate to pay'" in {
-      assertEqualsValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)>a", "gaps in your record and how to check them")
-    }
-    "render page with link href 'gaps in your record and how to check them for toolate to pay'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)>a", "/check-your-state-pension/account/nirecord/gapsandhowtocheck")
+      assertContainsNextedValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)", "nisp.nirecord.gap.findoutmoreabout", "/check-your-state-pension/account/nirecord/gapsandhowtocheck")
+      //assertContainsNextedValue(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child()>div>div.ni-action>a.view-details", "nisp.nirecord.gap.viewdetails", "2013-14")
     }
 
     "render page with text  'It’s too late to pay for this year. You can usually only pay for the last 6 years.'" in {
@@ -413,18 +408,6 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
   }
   "Render Ni Record without With HRP Message" should {
 
-    /*  lazy val controller = new MockNIRecordController {
-        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-        override val sessionCache: SessionCache = MockSessionCache
-        override val showFullNI = true
-        override val currentDate = new LocalDate(2016, 9, 9)
-
-        override protected def authConnector: AuthConnector = MockAuthConnector
-
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-        override val metricsService: MetricsService = MockMetricsService
-      }*/
 
     lazy val result = html.nirecordGapsAndHowToCheckThem(false);
 
@@ -548,7 +531,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )))
 
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -637,7 +620,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )))
 
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -738,7 +721,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )))
 
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -871,7 +854,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )))
 
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId).withCookies(lanCookie))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 

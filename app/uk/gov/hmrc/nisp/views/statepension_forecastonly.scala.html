@@ -15,7 +15,7 @@
 *@
 
 @import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.play.views.formatting.Dates
+@import uk.gov.hmrc.play.language.LanguageUtils.Dates
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
@@ -23,7 +23,7 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Option[Int], isAbroad: Boolean, isPertaxUrl:Boolean,
-yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+yearsToContributeUntilPensionAge: Int)(implicit lang: Lang, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -72,15 +72,15 @@ yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispU
     </div>
     <p>@Messages("nisp.main.caveats")</p>
     <ul class="list-bullet">
-        <li>@Messages("nisp.main.notAGuarantee")</li>
+        <li>@Html(Messages("nisp.main.notAGuarantee"))</li>
         <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
-        <li>@Messages("nisp.main.inflation")</li>
-        @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
+        <li>@Html(Messages("nisp.main.inflation"))</li>
+        @if(statePension.pensionSharingOrder) {<li>@Html(Messages("nisp.main.psod"))</li>}
     </ul>
-    <h2 class="heading-medium">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.mostYouCanGet")</h2>
-    <p>@Messages("nisp.main.cantImprove")</p>
+    <h2 class="heading-medium">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(Messages("nisp.main.mostYouCanGet"))</h2>
+    <p>@Html(Messages("nisp.main.cantImprove"))</p>
     <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (Dates.formatDate(statePension.pensionDate)).toString()))</p>
-    <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+    <a href='@routes.NIRecordController.showFull.url'>@Html(Messages("nisp.main.showyourrecord"))</a>
 
     @if(isAbroad) {
         @includes.abroad()
@@ -96,7 +96,7 @@ yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispU
         }
     }
 
-    @if(isPertaxUrl){<div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>}
+    @if(isPertaxUrl){<div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>}
 
   }
 }

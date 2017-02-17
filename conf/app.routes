@@ -31,3 +31,9 @@ POST        /feedback                              uk.gov.hmrc.nisp.controllers.
 GET         /feedback/thankyou                     uk.gov.hmrc.nisp.controllers.FeedbackController.showThankYou
 
 GET         /terms-and-conditions                  uk.gov.hmrc.nisp.controllers.TermsConditionsController.show
+
+
+
+#Welsh Translation
+GET     /language/:lang                            uk.gov.hmrc.nisp.controllers.CustomLanguageController.switchToLanguage(lang: String)
+

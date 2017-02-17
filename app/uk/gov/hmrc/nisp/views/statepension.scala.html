@@ -16,12 +16,13 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.play.language.LanguageUtils.Dates
+
 
 
 @(
@@ -36,7 +37,7 @@
     customerAge: Option[Int],
     isAbroad: Boolean,
     yearsToContributeUntilPensionAge: Int
-)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+)(implicit lang: Lang, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -91,11 +92,11 @@
 
         <p>@Messages("nisp.main.caveats")</p>
         <ul class="list-bullet">
-            <li>@Messages("nisp.main.notAGuarantee")</li>
+            <li>@Html(Messages("nisp.main.notAGuarantee"))</li>
             <li>@Html(Messages("nisp.main.isBased", Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
             <li>@Html(Messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)))</li>
-            <li>@Messages("nisp.main.inflation")</li>
-            @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
+            <li>@Html(Messages("nisp.main.inflation"))</li>
+            @if(statePension.pensionSharingOrder) {<li>@Html(Messages("nisp.main.psod"))</li>}
         </ul>
         @if(statePension.numberOfQualifyingYears > 0) {
             <p>@Messages("nisp.mqp.youCurrentlyHave", Time.years(statePension.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
@@ -131,13 +132,13 @@
         }
 
         @if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
-            <p>@Messages("nisp.main.caveats")</p>
+            <p>@Html(Messages("nisp.main.caveats"))</p>
             <ul class="list-bullet">
-                <li>@Messages("nisp.main.notAGuarantee")</li>
-                <li>@Messages("nisp.main.inflation")</li>
-                @if(statePension.pensionSharingOrder) {<li>@Messages("nisp.main.psod")</li>}
+                <li>@Html(Messages("nisp.main.notAGuarantee"))</li>
+                <li>@Html(Messages("nisp.main.inflation"))</li>
+                @if(statePension.pensionSharingOrder) {<li>@Html(Messages("nisp.main.psod"))</li>}
             </ul>
-            <h2 class="heading-medium">@Messages("nisp.main.continueContribute")</h2>
+            <h2 class="heading-medium">@Html(Messages("nisp.main.continueContribute"))</h2>
 
             @includes.spChart(Html(Messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
             @if(statePension.amounts.protectedPayment) {
@@ -170,7 +171,7 @@
     }
 
     @if(isPertaxUrl) {
-        <div class="panel-indent">@Messages("nisp.landing.estimateprovided")</div>
+        <div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>
     }
   }
 }

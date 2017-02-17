@@ -54,6 +54,7 @@ object MockExclusionController extends ExclusionController {
     override val futureProofPersonalMax: Boolean = false
     override val useStatePensionAPI: Boolean = true
     override val useNationalInsuranceAPI: Boolean = true
+    override val isWelshEnabled = false
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp

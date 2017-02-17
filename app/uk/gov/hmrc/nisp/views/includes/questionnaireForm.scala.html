@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(form: Form[_], postRoute: play.api.mvc.Call)(implicit request: Request[_])
+@(form: Form[_], postRoute: play.api.mvc.Call)(implicit lang: Lang, request: Request[_])
 
 @import uk.gov.hmrc.play.views.html.helpers
 @import uk.gov.hmrc.nisp.views.html.includes
@@ -32,7 +32,7 @@
             ("2", Messages("nisp.questionnaire.easytouse.2")),
             ("3", Messages("nisp.questionnaire.easytouse.3"))
         ),
-        '_legend -> Messages("nisp.questionnaire.easytouse.question"),
+        '_legend -> Html(Messages("nisp.questionnaire.easytouse.question")),
         '_legendClass -> "heading-small",
         '_labelAfter -> true,
         '_labelClass -> "block-label"
@@ -44,7 +44,7 @@
             ("1", Messages("nisp.questionnaire.useitbyyourself.1")),
             ("2", Messages("nisp.questionnaire.useitbyyourself.2"))
         ),
-        '_legend -> Messages("nisp.questionnaire.useitbyyourself.question"),
+        '_legend -> Html(Messages("nisp.questionnaire.useitbyyourself.question")),
         '_legendClass -> "heading-small",
         '_labelAfter -> true,
         '_labelClass -> "block-label"
@@ -57,7 +57,7 @@
             ("2", Messages("nisp.questionnaire.likely.2")),
             ("3", Messages("nisp.questionnaire.likely.3"))
         ),
-        '_legend -> Messages("nisp.questionnaire.likelytouse.question"),
+        '_legend -> Html(Messages("nisp.questionnaire.likelytouse.question")),
         '_legendClass -> "heading-small",
         '_labelAfter -> true,
         '_labelClass -> "block-label"
@@ -102,7 +102,7 @@
             ("7", Messages("nisp.questionnaire.whatwillyoudonext.7")),
             ("8", Messages("nisp.questionnaire.whatwillyoudonext.8"))
         ),
-        '_legend -> Messages("nisp.questionnaire.whatwillyoudonext.question"),
+        '_legend -> Html(Messages("nisp.questionnaire.whatwillyoudonext.question")),
         '_legendClass -> "heading-small",
         '_labelAfter -> true,
         '_labelClass -> "block-label"
@@ -121,13 +121,13 @@
             @form.errors("improve").map{ error =>
               <span class="error-notification">@Messages(error.message, error.args: _*)</span>
             }
-            @Messages("nisp.questionnaire.improve.question")
+            @Html(Messages("nisp.questionnaire.improve.question"))
             <div data-char-counter>
                 <textarea class="full-width" name="improve" id="improve" maxLength="1200" data-char-field>@form.data.get("improve")</textarea>
             </div>
             <small>@Messages("nisp.textentry.warning")</small>
         </label>
-        <span class="font-xsmall">@Messages("nisp.textentry.charlimit")</span>
+        <span class="font-xsmall">@Html(Messages("nisp.textentry.charlimit"))</span>
     </fieldset>
 
 
@@ -136,7 +136,7 @@
             ("0", Messages("nisp.questionnaire.research.0")),
             ("1", Messages("nisp.questionnaire.research.1"))
         ),
-        '_legend -> Messages("nisp.questionnaire.research.question"),
+        '_legend -> Html(Messages("nisp.questionnaire.research.question")),
         '_legendClass -> "heading-small research",
         '_labelAfter -> true,
         '_labelClass -> "block-label",
@@ -144,7 +144,7 @@
 
     @input(
         form("email"),
-        '_label -> Messages("nisp.questionnaire.email"),
+        '_label -> Html(Messages("nisp.questionnaire.email")),
         '_inputClass -> "block-label form-control",
         '_labelClass -> "heading-small email panel-indent",
         '_maxlength -> 255)

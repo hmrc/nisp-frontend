@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
+@()(implicit lang: Lang, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @main(browserTitle = Some(Messages("nisp.finishpage.title")), sidebarLinks = Some(includes.questionnaireSidebar())) {
 <h1 class="heading-large">@Messages("nisp.thankyou.title")</h1>

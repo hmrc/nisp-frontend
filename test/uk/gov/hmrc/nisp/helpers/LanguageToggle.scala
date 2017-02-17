@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.views.formatting
+package uk.gov.hmrc.nisp.helpers
 
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Lang
+import play.api.mvc.Cookie
 
-object Time {
-    def years(numberOfYears: Int)(implicit lang: Lang): String = {
-        val suffix = if (math.abs(numberOfYears) == 1) Messages("nisp.year") else Messages("nisp.years")
-        s"$numberOfYears $suffix"
-    }
+object LanguageToggle {
+  val welshUnitTest = false
+
+  def getLanguageCode: Lang = {
+    if (welshUnitTest) Lang("cy")
+    else Lang("en")
+  }
+
+  def getLanguageCookie: Cookie = {
+    val language = if (welshUnitTest) "cy-GB" else "en-GB"
+    Cookie("PLAY_LANG", language, None, "/", None, false, true)
+  }
 }

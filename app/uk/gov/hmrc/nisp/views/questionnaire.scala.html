@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(form: Form[_])(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
+@(form: Form[_])(implicit lang: Lang, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @main(browserTitle = Some(Messages("nisp.questionnaire.title")), sidebarLinks = Some(includes.questionnaireSidebar()),
          pageTitle = Some(Messages("nisp.questionnaire.header"))) {

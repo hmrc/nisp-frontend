@@ -16,7 +16,7 @@
 
 @(displayName: String,
   previouslyLoggedInAt: scala.Option[org.joda.time.DateTime],
-  showLastLogInTime: Boolean = true)
+  showLastLogInTime: Boolean = true)(implicit lang: Lang )
 
 @import uk.gov.hmrc.play.views.formatting.Dates._
 

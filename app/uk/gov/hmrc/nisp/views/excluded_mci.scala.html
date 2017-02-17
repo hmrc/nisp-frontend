@@ -22,7 +22,7 @@
 @import uk.gov.hmrc.nisp.models.enums.Exclusion._
 
 @(exclusion: Exclusion,
-statePensionAge: Option[Int])(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+statePensionAge: Option[Int])(implicit lang: Lang, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -40,9 +40,9 @@ statePensionAge: Option[Int])(implicit request: Request[_], user: NispUser, part
                 analyticsAdditionalJs = Some(analyticsAdditionalJs),
                 hideBreadcrumb = true) {
 
-        <h1 class="heading-large">@Messages("nisp.excluded.mci.title")</h1>
-        <p class="lede">@Messages("nisp.excluded.mci.info")</p>
-        <h2 class="heading-medium">@Messages("nisp.excluded.mci.howToFix")</h2>
+        <h1 class="heading-large">@Html(Messages("nisp.excluded.mci.title"))</h1>
+        <p class="lede">@Html(Messages("nisp.excluded.mci.info"))</p>
+        <h2 class="heading-medium">@Html(Messages("nisp.excluded.mci.howToFix"))</h2>
         <ol class="list-number">
             <li>@Messages("nisp.excluded.mci.howToFix.message1")</li>
             <li>@Html(Messages("nisp.excluded.mci.howToFix.message2"))</li>
@@ -52,13 +52,13 @@ statePensionAge: Option[Int])(implicit request: Request[_], user: NispUser, part
         </ol>
         <h2 class="heading-medium">@Messages("nisp.excluded.mci.howToContact")</h2>
         <ul class="list-bullet">
-            <li>@Messages("nisp.excluded.mci.howToContact.textphone")</li>
-            <li>@Messages("nisp.excluded.mci.howToContact.outsideUK")</li>
+            <li>@Html(Messages("nisp.excluded.mci.howToContact.textphone"))</li>
+            <li>@Html(Messages("nisp.excluded.mci.howToContact.outsideUK"))</li>
         </ul>
 
-        <p>@Messages("nisp.excluded.mci.howToContact.message1")</p>
-        <p>@Messages("nisp.excluded.mci.howToContact.message2")</p>
-        <p>@Messages("nisp.excluded.mci.howToContact.message3")</p>
+        <p>@Html(Messages("nisp.excluded.mci.howToContact.message1"))</p>
+        <p>@Html(Messages("nisp.excluded.mci.howToContact.message2"))</p>
+        <p>@Html(Messages("nisp.excluded.mci.howToContact.message3"))</p>
         <p>@Html(Messages("nisp.excluded.mci.howToContact.link"))</p>
     }
 

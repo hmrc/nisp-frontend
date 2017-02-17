@@ -23,7 +23,7 @@
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import org.joda.time.LocalDate
 
-@(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean, yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
+@(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean, yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String, showFullNI: Boolean, currentDate: LocalDate)(implicit lang: Lang, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @sidebar = {
 <div class="sidebar-border" >
@@ -123,11 +123,11 @@
         <p class="lede">@Messages("nisp.nirecord.youdonothaveanygaps")</p>
     }
     @if(niRecord.numberOfGaps > 0){
-            <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps)</a></p>
+            <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showGaps.url">@Html(Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps))</a></p>
     }
 } else {
     <p class="lede">@Messages("nisp.nirecord.yournirecordgapyears")</p>
-    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
+    <p><a href="@uk.gov.hmrc.nisp.controllers.routes.NIRecordController.showFull.url">@Html(Messages("nisp.nirecord.showfull"))</a></p>
 }
 
 <dl class="accordion">

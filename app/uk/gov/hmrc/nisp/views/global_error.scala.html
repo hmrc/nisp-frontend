@@ -21,7 +21,7 @@
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig = ApplicationConfig)
+@(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig = ApplicationConfig)(implicit lang: Lang)
 
 @mainContent = {
 <h1 class="heading-large">@heading</h1>

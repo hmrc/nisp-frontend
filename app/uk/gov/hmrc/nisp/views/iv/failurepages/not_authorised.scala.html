@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(showFirstParagraph: Boolean = true)(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
+@(showFirstParagraph: Boolean = true)(implicit lang: Lang, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('send', 'pageview', '/check-your-state-pension/unauthorised-confirm-identity');
