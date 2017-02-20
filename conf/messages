@@ -11,6 +11,7 @@ nisp.goback = Go back
 nisp.textentry.warning =  Please do not include any personal or financial information, for example your National Insurance or credit card number.
 nisp.textentry.charlimit =  Limit is 1,200 characters.
 nisp.useagain = To use the service again you&rsquo;ll need to <a href="{0}">sign in</a>.
+nisp.signOut = Sign out
 nisp.verify = verify
 nisp.gov-uk = GOV.UK
 nisp.gov-uk-verify = GOV.UK Verify
