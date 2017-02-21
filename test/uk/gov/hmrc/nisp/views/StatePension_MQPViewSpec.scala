@@ -257,7 +257,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
       }
 
-
       "The scenario is continue working" when {
 
         "State Pension page with MQP : Continue Working || Fill Gaps || Full Rate" should {
@@ -935,285 +934,292 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
         }
       }
 
+      "The scenario is No years to contribute" when{
 
-      "State Pension page with MQP : No years to contrib || Less than 10 years || No Gaps || Cant get pension" should {
+        "State Pension page with MQP :  No Gaps || Cant get pension" should {
 
-        lazy val controller = new MockStatePensionController {
-          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = false
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val citizenAuthHost: String = ""
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val twoFactorUrl: String = "twofactor"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
+          lazy val controller = new MockStatePensionController {
+            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+            override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+              override val assetsPrefix: String = ""
+              override val reportAProblemNonJSUrl: String = ""
+              override val ssoUrl: Option[String] = None
+              override val betaFeedbackUnauthenticatedUrl: String = ""
+              override val contactFrontendPartialBaseUrl: String = ""
+              override val govUkFinishedPageUrl: String = "govukdone"
+              override val showGovUkDonePage: Boolean = false
+              override val analyticsHost: String = ""
+              override val analyticsToken: Option[String] = None
+              override val betaFeedbackUrl: String = ""
+              override val reportAProblemPartialUrl: String = ""
+              override val citizenAuthHost: String = ""
+              override val postSignInRedirectUrl: String = ""
+              override val notAuthorisedRedirectUrl: String = ""
+              override val identityVerification: Boolean = false
+              override val ivUpliftUrl: String = "ivuplift"
+              override val ggSignInUrl: String = "ggsignin"
+              override val twoFactorUrl: String = "twofactor"
+              override val pertaxFrontendUrl: String = ""
+              override val contactFormServiceIdentifier: String = ""
+              override val breadcrumbPartialUrl: String = ""
+              override val showFullNI: Boolean = false
+              override val futureProofPersonalMax: Boolean = false
+              override val useStatePensionAPI: Boolean = true
+              override val useNationalInsuranceAPI: Boolean = true
+            }
+            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+            override val statePensionService: StatePensionService = mock[StatePensionService]
+            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
           }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-          override val statePensionService: StatePensionService = mock[StatePensionService]
-          override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-        }
 
-        when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
-          .thenReturn(Future.successful(Right(StatePension(
-            new LocalDate(2016, 4, 5),
-            amounts = StatePensionAmounts(
-              protectedPayment = false,
-              StatePensionAmountRegular(0, 0, 0),
-              StatePensionAmountForecast(0, 0, 0, 0),
-              StatePensionAmountMaximum(0, 0, 0, 0, 0),
-              StatePensionAmountRegular(0, 0, 0)
-            ),
-            pensionAge = 67,
-            new LocalDate(2017, 5, 4),
-            "2016-17",
-            4,
-            pensionSharingOrder = false,
-            currentFullWeeklyPensionAmount = 155.65
-          )
-          )))
-
-        when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
-          .thenReturn(Future.successful(Right(NationalInsuranceRecord(
-            qualifyingYears = 4,
-            qualifyingYearsPriorTo1975 = 0,
-            numberOfGaps = 0,
-            numberOfGapsPayable = 0,
-            new LocalDate(1954, 3, 6),
-            false,
-            new LocalDate(2017, 4, 5),
-            List(
-
-              NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-              NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-              NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+          when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+            .thenReturn(Future.successful(Right(StatePension(
+              new LocalDate(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(0, 0, 0),
+                StatePensionAmountForecast(0, 0, 0, 0),
+                StatePensionAmountMaximum(0, 0, 0, 0, 0),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              new LocalDate(2017, 5, 4),
+              "2016-17",
+              4,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65
             )
-          )
-          )))
+            )))
 
-        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              qualifyingYears = 4,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 0,
+              numberOfGapsPayable = 0,
+              new LocalDate(1954, 3, 6),
+              false,
+              new LocalDate(2017, 4, 5),
+              List(
 
-        val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              )
+            )
+            )))
 
-        lazy val htmlAccountDoc = asDocument(contentAsString(result))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
 
-        "render page with heading  'Your State Pension' " in {
+          val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
 
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
+          lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+          "render page with heading  'Your State Pension' " in {
+
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
+          }
+
+          "render page with text  'You’ll reach State Pension age on ' " in {
+            val sMessage = "You’ll reach State Pension age on";
+            assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
+          }
+          "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
+            val sMessage = "4 May 2017.";
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
+          }
+
+          "render page with text  'By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.' " in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.notPossible")
+          }
+
+          "render page with text  'What you can do next" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
+          }
+
+          /*overseas message*/
+          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+            "State Pension from the country you are living or working in.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)", "nisp.main.overseas")
+          }
+          /*Ends*/
+          "render page with text ' You do not have any years on your record that do not count towards your pension. '" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.mqp.years.dontCount.zero")
+          }
+          "render page with link  'View your National Insurence Record'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "nisp.main.showyourrecord")
+          }
+          "render page with href link  'View your National Insurence Record'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord")
+          }
+
+          "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2017", null, null)
+          }
+
+          "render page with link 'What else you can do'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(8)", "nisp.mqp.whatElse")
+          }
+          "render page with link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.mqp.pensionCredit")
+          }
+          "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(9)>a", "https://www.gov.uk/pension-credit/overview")
+          }
+          "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.mqp.moneyAdvice")
+          }
+          "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", "https://www.moneyadviceservice.org.uk/en")
+          }
+
         }
 
-        "render page with text  'You’ll reach State Pension age on ' " in {
-          val sMessage = "You’ll reach State Pension age on";
-          assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
-        }
-        "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
-          val sMessage = "4 May 2017.";
-          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
-        }
+        "State Pension page with MQP :  has fillable Gaps || Personal Max" should {
 
-        "render page with text  'By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.' " in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.notPossible")
-        }
+          lazy val controller = new MockStatePensionController {
+            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+            override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+              override val assetsPrefix: String = ""
+              override val reportAProblemNonJSUrl: String = ""
+              override val ssoUrl: Option[String] = None
+              override val betaFeedbackUnauthenticatedUrl: String = ""
+              override val contactFrontendPartialBaseUrl: String = ""
+              override val govUkFinishedPageUrl: String = "govukdone"
+              override val showGovUkDonePage: Boolean = false
+              override val analyticsHost: String = ""
+              override val analyticsToken: Option[String] = None
+              override val betaFeedbackUrl: String = ""
+              override val reportAProblemPartialUrl: String = ""
+              override val citizenAuthHost: String = ""
+              override val postSignInRedirectUrl: String = ""
+              override val notAuthorisedRedirectUrl: String = ""
+              override val identityVerification: Boolean = false
+              override val ivUpliftUrl: String = "ivuplift"
+              override val ggSignInUrl: String = "ggsignin"
+              override val twoFactorUrl: String = "twofactor"
+              override val pertaxFrontendUrl: String = ""
+              override val contactFormServiceIdentifier: String = ""
+              override val breadcrumbPartialUrl: String = ""
+              override val showFullNI: Boolean = false
+              override val futureProofPersonalMax: Boolean = false
+              override val useStatePensionAPI: Boolean = true
+              override val useNationalInsuranceAPI: Boolean = true
+            }
+            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+            override val statePensionService: StatePensionService = mock[StatePensionService]
+            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+          }
 
-        "render page with text  'What you can do next" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
-        }
+          when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+            .thenReturn(Future.successful(Right(StatePension(
+              new LocalDate(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(0, 0, 0),
+                StatePensionAmountForecast(0, 0, 0, 0),
+                StatePensionAmountMaximum(2, 2, 12, 0, 0),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              new LocalDate(2018, 5, 4),
+              "2017-18",
+              4,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65
+            )
+            )))
 
-        /*overseas message*/
-        "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-          "State Pension from the country you are living or working in.'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)", "nisp.main.overseas")
-        }
-        /*Ends*/
-        "render page with text ' You do not have any years on your record that do not count towards your pension. '" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.mqp.years.dontCount.zero")
-        }
-        "render page with link  'View your National Insurence Record'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "nisp.main.showyourrecord")
-        }
-        "render page with href link  'View your National Insurence Record'" in {
-          assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord")
-        }
+          when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              qualifyingYears = 4,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 2,
+              numberOfGapsPayable = 2,
+              new LocalDate(1954, 3, 6),
+              false,
+              new LocalDate(2017, 4, 5),
+              List(
 
-        "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2017", null, null)
-        }
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              )
+            )
+            )))
 
-        "render page with link 'What else you can do'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(8)", "nisp.mqp.whatElse")
-        }
-        "render page with link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low.'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.mqp.pensionCredit")
-        }
-        "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
-          assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(9)>a", "https://www.gov.uk/pension-credit/overview")
-        }
-        "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.mqp.moneyAdvice")
-        }
-        "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
-          assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", "https://www.moneyadviceservice.org.uk/en")
-        }
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
 
+          val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
+
+          lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+          "render page with heading  'Your State Pension' " in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
+          }
+
+          "render page with text  'You’ll reach State Pension age on ' " in {
+            val sMessage = "You’ll reach State Pension age on";
+            assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
+          }
+          "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
+            val sMessage = "4 May 2018.";
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
+          }
+
+          "render page with text  'By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.' " in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.possible")
+          }
+
+          "render page with text  'What you can do next" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
+          }
+
+          /*overseas message*/
+          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+            "State Pension from the country you are living or working in.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)", "nisp.main.overseas")
+          }
+          /*Ends*/
+          "render page with text '  You also have 2 years on your record which do not count towards your pension because you did not contribute enough National Insurance." +
+            " Filling some of these years may get you some State Pension.  '" in {
+            val sMessage = Messages("nisp.mqp.years.dontCount.plural", Time.years(2).toString()) + " " + Messages("nisp.mqp.filling.may.plural")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>p:nth-child(5)", sMessage)
+          }
+          "render page with link  'Gaps in your record and the cost of filling them'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "nisp.main.context.fillGaps.viewGapsAndCost")
+          }
+          "render page with href link  'View your National Insurence Record'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord/gaps")
+          }
+
+          "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2018", null, null)
+          }
+
+          "render page with link 'What else you can do'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(8)", "nisp.mqp.whatElse")
+          }
+          "render page with link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.mqp.pensionCredit")
+          }
+          "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(9)>a", "https://www.gov.uk/pension-credit/overview")
+          }
+          "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.mqp.moneyAdvice")
+          }
+          "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", "https://www.moneyadviceservice.org.uk/en")
+          }
+        }
       }
 
-      "State Pension page with MQP : No years to contrib  || has fillable Gaps || Personal Max" should {
-
-        lazy val controller = new MockStatePensionController {
-          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = false
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val citizenAuthHost: String = ""
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val twoFactorUrl: String = "twofactor"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-          override val statePensionService: StatePensionService = mock[StatePensionService]
-          override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-        }
-
-        when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
-          .thenReturn(Future.successful(Right(StatePension(
-            new LocalDate(2016, 4, 5),
-            amounts = StatePensionAmounts(
-              protectedPayment = false,
-              StatePensionAmountRegular(0, 0, 0),
-              StatePensionAmountForecast(0, 0, 0, 0),
-              StatePensionAmountMaximum(2, 2, 12, 0, 0),
-              StatePensionAmountRegular(0, 0, 0)
-            ),
-            pensionAge = 67,
-            new LocalDate(2018, 5, 4),
-            "2017-18",
-            4,
-            pensionSharingOrder = false,
-            currentFullWeeklyPensionAmount = 155.65
-          )
-          )))
-
-        when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
-          .thenReturn(Future.successful(Right(NationalInsuranceRecord(
-            qualifyingYears = 4,
-            qualifyingYearsPriorTo1975 = 0,
-            numberOfGaps = 2,
-            numberOfGapsPayable = 2,
-            new LocalDate(1954, 3, 6),
-            false,
-            new LocalDate(2017, 4, 5),
-            List(
-
-              NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-              NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-              NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-            )
-          )
-          )))
-
-        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
-
-        val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
-
-        lazy val htmlAccountDoc = asDocument(contentAsString(result))
-
-        "render page with heading  'Your State Pension' " in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
-        }
-
-        "render page with text  'You’ll reach State Pension age on ' " in {
-          val sMessage = "You’ll reach State Pension age on";
-          assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
-        }
-        "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
-          val sMessage = "4 May 2018.";
-          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
-        }
-
-        "render page with text  'By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.' " in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.possible")
-        }
-
-        "render page with text  'What you can do next" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
-        }
-
-        /*overseas message*/
-        "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-          "State Pension from the country you are living or working in.'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)", "nisp.main.overseas")
-        }
-        /*Ends*/
-        "render page with text '  You also have 2 years on your record which do not count towards your pension because you did not contribute enough National Insurance." +
-          " Filling some of these years may get you some State Pension.  '" in {
-          val sMessage = Messages("nisp.mqp.years.dontCount.plural", Time.years(2).toString()) + " " + Messages("nisp.mqp.filling.may.plural")
-          assertEqualsValue(htmlAccountDoc, "article.content__body>p:nth-child(5)", sMessage)
-        }
-        "render page with link  'Gaps in your record and the cost of filling them'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "nisp.main.context.fillGaps.viewGapsAndCost")
-        }
-        "render page with href link  'View your National Insurence Record'" in {
-          assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord/gaps")
-        }
-
-        "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2018", null, null)
-        }
-
-        "render page with link 'What else you can do'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(8)", "nisp.mqp.whatElse")
-        }
-        "render page with link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low.'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.mqp.pensionCredit")
-        }
-        "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
-          assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(9)>a", "https://www.gov.uk/pension-credit/overview")
-        }
-        "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.mqp.moneyAdvice")
-        }
-        "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
-          assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", "https://www.moneyadviceservice.org.uk/en")
-        }
-      }
     }
+
+
+
+
 
   }
 }
