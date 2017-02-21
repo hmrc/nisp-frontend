@@ -99,7 +99,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             override val analyticsToken: Option[String] = None
             override val betaFeedbackUrl: String = ""
             override val reportAProblemPartialUrl: String = ""
-            override val citizenAuthHost: String = ""
             override val postSignInRedirectUrl: String = ""
             override val notAuthorisedRedirectUrl: String = ""
             override val identityVerification: Boolean = false
@@ -113,6 +112,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             override val futureProofPersonalMax: Boolean = false
             override val useStatePensionAPI: Boolean = true
             override val useNationalInsuranceAPI: Boolean = true
+            override val verifySignIn: String = ""
+            override val verifySignInContinue: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
           override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -275,7 +276,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val analyticsToken: Option[String] = None
               override val betaFeedbackUrl: String = ""
               override val reportAProblemPartialUrl: String = ""
-              override val citizenAuthHost: String = ""
               override val postSignInRedirectUrl: String = ""
               override val notAuthorisedRedirectUrl: String = ""
               override val identityVerification: Boolean = false
@@ -289,6 +289,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val futureProofPersonalMax: Boolean = false
               override val useStatePensionAPI: Boolean = true
               override val useNationalInsuranceAPI: Boolean = true
+              override val verifySignIn: String = ""
+              override val verifySignInContinue: Boolean = false
             }
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -454,7 +456,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val analyticsToken: Option[String] = None
               override val betaFeedbackUrl: String = ""
               override val reportAProblemPartialUrl: String = ""
-              override val citizenAuthHost: String = ""
               override val postSignInRedirectUrl: String = ""
               override val notAuthorisedRedirectUrl: String = ""
               override val identityVerification: Boolean = false
@@ -468,6 +469,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val futureProofPersonalMax: Boolean = false
               override val useStatePensionAPI: Boolean = true
               override val useNationalInsuranceAPI: Boolean = true
+              override val verifySignIn: String = ""
+              override val verifySignInContinue: Boolean = false
             }
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -619,7 +622,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val analyticsToken: Option[String] = None
               override val betaFeedbackUrl: String = ""
               override val reportAProblemPartialUrl: String = ""
-              override val citizenAuthHost: String = ""
               override val postSignInRedirectUrl: String = ""
               override val notAuthorisedRedirectUrl: String = ""
               override val identityVerification: Boolean = false
@@ -633,6 +635,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val futureProofPersonalMax: Boolean = false
               override val useStatePensionAPI: Boolean = true
               override val useNationalInsuranceAPI: Boolean = true
+              override val verifySignIn: String = ""
+              override val verifySignInContinue: Boolean = false
             }
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -784,7 +788,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val analyticsToken: Option[String] = None
               override val betaFeedbackUrl: String = ""
               override val reportAProblemPartialUrl: String = ""
-              override val citizenAuthHost: String = ""
               override val postSignInRedirectUrl: String = ""
               override val notAuthorisedRedirectUrl: String = ""
               override val identityVerification: Boolean = false
@@ -798,6 +801,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val futureProofPersonalMax: Boolean = false
               override val useStatePensionAPI: Boolean = true
               override val useNationalInsuranceAPI: Boolean = true
+              override val verifySignIn: String = ""
+              override val verifySignInContinue: Boolean = false
             }
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -952,7 +957,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val analyticsToken: Option[String] = None
               override val betaFeedbackUrl: String = ""
               override val reportAProblemPartialUrl: String = ""
-              override val citizenAuthHost: String = ""
               override val postSignInRedirectUrl: String = ""
               override val notAuthorisedRedirectUrl: String = ""
               override val identityVerification: Boolean = false
@@ -966,6 +970,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val futureProofPersonalMax: Boolean = false
               override val useStatePensionAPI: Boolean = true
               override val useNationalInsuranceAPI: Boolean = true
+              override val verifySignIn: String = ""
+              override val verifySignInContinue: Boolean = false
             }
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -1091,7 +1097,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val analyticsToken: Option[String] = None
               override val betaFeedbackUrl: String = ""
               override val reportAProblemPartialUrl: String = ""
-              override val citizenAuthHost: String = ""
               override val postSignInRedirectUrl: String = ""
               override val notAuthorisedRedirectUrl: String = ""
               override val identityVerification: Boolean = false
@@ -1105,6 +1110,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               override val futureProofPersonalMax: Boolean = false
               override val useStatePensionAPI: Boolean = true
               override val useNationalInsuranceAPI: Boolean = true
+              override val verifySignIn: String = ""
+              override val verifySignInContinue: Boolean = false
             }
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]

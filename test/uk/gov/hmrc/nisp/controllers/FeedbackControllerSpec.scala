@@ -52,7 +52,8 @@ class FeedbackControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSu
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override val applicationConfig: ApplicationConfig = new ApplicationConfig {
       override val ggSignInUrl: String = ""
-      override val citizenAuthHost: String = ""
+      override val verifySignIn: String = ""
+      override val verifySignInContinue: Boolean = false
       override val twoFactorUrl: String = ""
       override val assetsPrefix: String = ""
       override val reportAProblemNonJSUrl: String = ""

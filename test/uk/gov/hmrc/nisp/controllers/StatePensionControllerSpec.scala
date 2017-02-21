@@ -51,17 +51,18 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
   val mockUserIdContractedOut = "/auth/oid/mockcontractedout"
   val mockUserIdBlank = "/auth/oid/mockblank"
   val mockUserIdMQP = "/auth/oid/mockmqp"
-  val mockUserIdForecastOnly =  "/auth/oid/mockforecastonly"
-  val mockUserIdWeak =  "/auth/oid/mockweak"
+  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
+  val mockUserIdWeak = "/auth/oid/mockweak"
   val mockUserIdAbroad = "/auth/oid/mockabroad"
   val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
   val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
 
-  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
+  val ggSignInUrl = "http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
   lazy val fakeRequest = FakeRequest()
+
   private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
@@ -75,7 +76,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
   }
 
-  "Account controller" should {
+  "State Pension controller" should {
     "GET /statepension" should {
       "return 303 when no session" in {
         val result = MockStatePensionController.show().apply(fakeRequest)
@@ -93,6 +94,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       }
 
       "redirect to Verify with IV disabled" in {
+
         val controller = new MockStatePensionController {
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {
@@ -107,7 +109,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             override val analyticsToken: Option[String] = None
             override val betaFeedbackUrl: String = ""
             override val reportAProblemPartialUrl: String = ""
-            override val citizenAuthHost: String = ""
+            override val verifySignIn: String = ""
+            override val verifySignInContinue: Boolean = false
             override val postSignInRedirectUrl: String = ""
             override val notAuthorisedRedirectUrl: String = ""
             override val identityVerification: Boolean = false
@@ -124,8 +127,9 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
+
         val result = controller.show(fakeRequest)
-        redirectLocation(result) shouldBe Some("http://localhost:9029/ida/login")
+        redirectLocation(result) shouldBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
       }
 
       "redirect to the GG Login, for session ID NOSESSION" in {
@@ -137,7 +141,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
       "return 200, create an authenticated session" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest())
-        contentAsString(result) should include ("Sign out")
+        contentAsString(result) should include("Sign out")
       }
 
       "return timeout error for last request -14 minutes, 59 seconds" in {
@@ -173,35 +177,35 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       }
 
       "return error for blank user" in {
-       intercept[RuntimeException] {
+        intercept[RuntimeException] {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBlank))
           status(result) shouldBe Status.INTERNAL_SERVER_ERROR
         }
       }
       "return content about COPE for contracted out (B) user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdContractedOut))
-        contentAsString(result) should include ("How contracting out affects your pension income")
+        contentAsString(result) should include("How contracting out affects your pension income")
       }
 
       "return COPE page for contracted out (B) user" in {
         val result = MockStatePensionController.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
-        contentAsString(result) should include ("You were contracted out")
+        contentAsString(result) should include("You were contracted out")
       }
-      
+
       "return abroad message for abroad user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdAbroad))
-        contentAsString(result) should include ("As you are living or working overseas")
+        contentAsString(result) should include("As you are living or working overseas")
       }
 
       "return abroad message for forecast only user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
-        contentAsString(result) should include ("As you are living or working overseas")
+        contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "£80.38"
       }
 
       "return abroad message for an mqp user instead of standard mqp overseas message" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
-        contentAsString(result) should include ("As you are living or working overseas")
+        contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "If you have lived or worked overseas"
       }
 
@@ -211,7 +215,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       }
       "return page with MQP messaging for MQP user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMQP))
-        contentAsString(result) should include ("10 years needed on your National Insurance record to get any State Pension")
+        contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
 
       "redirect to 2FA when authentication is not strong" in {
@@ -318,7 +322,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             override val analyticsToken: Option[String] = None
             override val betaFeedbackUrl: String = ""
             override val reportAProblemPartialUrl: String = ""
-            override val citizenAuthHost: String = ""
+            override val verifySignIn: String = ""
+            override val verifySignInContinue: Boolean = false
             override val postSignInRedirectUrl: String = ""
             override val notAuthorisedRedirectUrl: String = ""
             override val identityVerification: Boolean = false
@@ -355,7 +360,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             override val analyticsToken: Option[String] = None
             override val betaFeedbackUrl: String = ""
             override val reportAProblemPartialUrl: String = ""
-            override val citizenAuthHost: String = ""
+            override val verifySignIn: String = ""
+            override val verifySignInContinue: Boolean = false
             override val postSignInRedirectUrl: String = ""
             override val notAuthorisedRedirectUrl: String = ""
             override val identityVerification: Boolean = false
@@ -427,15 +433,15 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       "the future config is set to off" should {
         "show year information when there is multiple years" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
-          contentAsString(result) should include ("You have years on your National Insurance record where you did not contribute enough.")
-          contentAsString(result) should include ("filling years can improve your forecast")
-          contentAsString(result) should include ("you only need to fill 7 years to get the most you can")
-          contentAsString(result) should include ("The most you can get by filling any 7 years in your record is")
+          contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
+          contentAsString(result) should include("filling years can improve your forecast")
+          contentAsString(result) should include("you only need to fill 7 years to get the most you can")
+          contentAsString(result) should include("The most you can get by filling any 7 years in your record is")
         }
         "show specific text when is only one payable gap" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
-          contentAsString(result) should include ("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
-          contentAsString(result) should include ("The most you can get by filling this year in your record is")
+          contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
+          contentAsString(result) should include("The most you can get by filling this year in your record is")
         }
       }
 
@@ -454,7 +460,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             override val analyticsToken: Option[String] = None
             override val betaFeedbackUrl: String = ""
             override val reportAProblemPartialUrl: String = ""
-            override val citizenAuthHost: String = ""
+            override val verifySignIn: String = ""
+            override val verifySignInContinue: Boolean = false
             override val postSignInRedirectUrl: String = ""
             override val notAuthorisedRedirectUrl: String = ""
             override val identityVerification: Boolean = false
@@ -473,13 +480,13 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
         }
         "show less text when there are multiple years" in {
           val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
-          contentAsString(result) should include ("You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.")
-          contentAsString(result) should include ("The most you can get is")
+          contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.")
+          contentAsString(result) should include("The most you can get is")
         }
         "show ordinary text when is only one payable gap" in {
           val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
-          contentAsString(result) should include ("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
-          contentAsString(result) should include ("The most you can get by filling this year in your record is")
+          contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
+          contentAsString(result) should include("The most you can get by filling this year in your record is")
         }
       }
     }
