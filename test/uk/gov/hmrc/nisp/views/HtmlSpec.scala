@@ -188,7 +188,7 @@ trait HtmlSpec extends UnitSpec {
     assert(!elements.first().hasClass(className), s"\n\nElement '$cssSelector' has '$className' class.\n")
   }
 
-  def assertElemetsOwnMessage(doc: Document, cssSelector: String, messageKey: String ,stringValue: String) = {
+  def assertElemetsOwnMessage(doc: Document, cssSelector: String, messageKey: String ,stringValue: String ="") = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty)

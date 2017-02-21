@@ -154,7 +154,7 @@ class QuesionnairFormViewSpec extends UnitSpec with MockitoSugar with HtmlSpec w
       assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>legend:nth-child(1)" ,"nisp.questionnaire.whatwillyoudonext.question")
     }
     "render page with text  'How could we improve the service?' " in {
-      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>label" ,"nisp.questionnaire.improve.question" ,"")
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>label" ,"nisp.questionnaire.improve.question")
     }
     "render page with text  'Please do not include any personal or financial information, for example your National Insurance or credit card number.' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>label>small" ,"nisp.textentry.warning")

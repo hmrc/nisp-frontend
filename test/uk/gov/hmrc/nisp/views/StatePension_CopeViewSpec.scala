@@ -123,7 +123,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
     }
 
     "render page with text  'You can get your State Pension on' " in {
-      assertElemetsOwnMessage(htmlAccountDoc ,"article.content__body>div:nth-child(2)>p" , "nisp.main.basedOn" , "")
+      assertElemetsOwnMessage(htmlAccountDoc ,"article.content__body>div:nth-child(2)>p" , "nisp.main.basedOn")
     }
     "render page with text  '18 july 2012' " in {
       assertEqualsValue(htmlAccountDoc ,"article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)" , "18 July 2021.")
