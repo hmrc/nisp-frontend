@@ -97,7 +97,8 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
         override val analyticsToken: Option[String] = None
         override val betaFeedbackUrl: String = ""
         override val reportAProblemPartialUrl: String = ""
-        override val citizenAuthHost: String = ""
+        override val verifySignIn: String = ""
+        override val verifySignInContinue: Boolean = false
         override val postSignInRedirectUrl: String = ""
         override val notAuthorisedRedirectUrl: String = ""
         override val identityVerification: Boolean = false
