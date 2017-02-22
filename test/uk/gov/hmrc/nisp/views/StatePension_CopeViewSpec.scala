@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 
-import builders.NationalInsuranceTaxYearBuilder
+import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers
 import org.mockito.Mockito.when
@@ -85,34 +85,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
 
     lazy val controller = new MockStatePensionController {
       override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-      override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-        override val assetsPrefix: String = ""
-        override val reportAProblemNonJSUrl: String = ""
-        override val ssoUrl: Option[String] = None
-        override val betaFeedbackUnauthenticatedUrl: String = ""
-        override val contactFrontendPartialBaseUrl: String = ""
-        override val govUkFinishedPageUrl: String = "govukdone"
-        override val showGovUkDonePage: Boolean = false
-        override val analyticsHost: String = ""
-        override val analyticsToken: Option[String] = None
-        override val betaFeedbackUrl: String = ""
-        override val reportAProblemPartialUrl: String = ""
-        override val verifySignIn: String = ""
-        override val verifySignInContinue: Boolean = false
-        override val postSignInRedirectUrl: String = ""
-        override val notAuthorisedRedirectUrl: String = ""
-        override val identityVerification: Boolean = false
-        override val ivUpliftUrl: String = "ivuplift"
-        override val ggSignInUrl: String = "ggsignin"
-        override val twoFactorUrl: String = "twofactor"
-        override val pertaxFrontendUrl: String = ""
-        override val contactFormServiceIdentifier: String = ""
-        override val breadcrumbPartialUrl: String = ""
-        override val showFullNI: Boolean = false
-        override val futureProofPersonalMax: Boolean = false
-        override val useStatePensionAPI: Boolean = true
-        override val useNationalInsuranceAPI: Boolean = true
-      }
+      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
     }
 
@@ -155,7 +128,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>h2:nth-child(5)" , "nisp.main.continueContribute")
     }
     "render page with Heading  'Estimate based on your National Insurance record up to 5 April 2014'" in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>div:nth-child(6)>span:nth-child(1)" , "nisp.main.chart.lastprocessed.title" , "2014" ,null ,null)
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>div:nth-child(6)>span:nth-child(1)" , "nisp.main.chart.lastprocessed.title" , "2014")
     }
     "render page with Heading  '£46.38 a week'" in {
       val sWeek  = "£46.38 " + Messages("nisp.main.week")
@@ -170,7 +143,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
     }
     "render page with text  'If you’re working you may still need to pay National Insurance contributions until 18 " +
       "July 2021 as they fund other state benefits and the NHS.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>p:nth-child(10)" ,"nisp.main.context.reachMax.needToPay" , "18 July 2021" ,null ,null)
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>p:nth-child(10)" ,"nisp.main.context.reachMax.needToPay" , "18 July 2021")
     }
     "render page with link  'View your National Insurence Record'" in {
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>a:nth-child(11)" ,"nisp.main.showyourrecord")
@@ -187,7 +160,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
       assertEqualsMessage(htmlAccountDoc ,"article.content__body>p:nth-child(13)" ,"nisp.cope.likeMostPeople")
     }
     "render page with text  'More about how contracting out has affected your pension income'" in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>p:nth-child(14)" ,"nisp.cope.moreAbout" , "/check-your-state-pension/account/cope" ,null ,null)
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>p:nth-child(14)" ,"nisp.cope.moreAbout" , "/check-your-state-pension/account/cope")
     }
     /*Ends*/
 
@@ -197,7 +170,7 @@ class StatePension_CopeViewSpec extends UnitSpec with MockitoSugar with HtmlSpec
 
     "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
       "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>p:nth-child(16)" ,"nisp.main.puttingOff.line1","67" ,null ,null)
+      assertContainsDynamicMessage(htmlAccountDoc ,"article.content__body>p:nth-child(16)" ,"nisp.main.puttingOff.line1","67")
     }
 
     "render page with link 'More on putting off claiming (opens in new tab)'" in {

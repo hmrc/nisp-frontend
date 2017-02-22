@@ -371,7 +371,7 @@ nisp.mqp.filling.may.plural = Filling some of these years may get you some State
 
 nisp.mqp.afterSpa = After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.whatElse = What else you can do
-nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
+nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
 nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
 
 nisp.mqp.howManyToContribute = assumes that you&rsquo;ll contribute another {0}
