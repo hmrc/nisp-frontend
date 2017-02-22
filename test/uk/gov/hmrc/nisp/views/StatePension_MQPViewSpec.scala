@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 
-import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
@@ -28,20 +27,19 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import play.twirl.api.Html
+import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.views.formatting.Time
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.views.formatting.Dates
 import uk.gov.hmrc.time.DateTimeUtils.now
-import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.nisp.views.formatting.Time
 
 import scala.concurrent.Future
 
@@ -76,7 +74,15 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
     SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
   )
 
-
+  def createStatePensionController = {
+    new MockStatePensionController {
+      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override val statePensionService: StatePensionService = mock[StatePensionService]
+      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+    }
+  }
 
   "The State Pension page" when {
 
@@ -84,14 +90,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
       "State Pension page with forecast only" should {
 
-        lazy val controller = new MockStatePensionController {
-          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-          override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-          override val statePensionService: StatePensionService = mock[StatePensionService]
-          override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-        }
-
+        lazy val controller = createStatePensionController
         when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
           .thenReturn(Future.successful(Right(StatePension(
             new LocalDate(2016, 4, 5),
@@ -234,14 +233,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
         "State Pension page with MQP : Continue Working || Fill Gaps || Full Rate" should {
 
-          lazy val controller = new MockStatePensionController {
-            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-            override val statePensionService: StatePensionService = mock[StatePensionService]
-            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-          }
-
+          lazy val controller = createStatePensionController
           when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
@@ -387,14 +379,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
         "State Pension page with MQP : Continue Working || no gaps || Full Rate" should {
 
-          lazy val controller = new MockStatePensionController {
-            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-            override val statePensionService: StatePensionService = mock[StatePensionService]
-            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-          }
-
+          lazy val controller = createStatePensionController
           when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
@@ -526,14 +511,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
         "State Pension page with MQP : Continue Working || 0 Qualify Years || has fillable Gaps ||  Personal Max" should {
 
-          lazy val controller = new MockStatePensionController {
-            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-            override val statePensionService: StatePensionService = mock[StatePensionService]
-            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-          }
-
+          lazy val controller = createStatePensionController
           when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
@@ -665,14 +643,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
         "State Pension page with MQP : Continue Working || 9 Qualify Years || cant fill gaps ||  Personal Max" should {
 
-          lazy val controller = new MockStatePensionController {
-            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-            override val statePensionService: StatePensionService = mock[StatePensionService]
-            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-          }
-
+          lazy val controller = createStatePensionController
           when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
@@ -702,7 +673,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
               false,
               new LocalDate(2017, 4, 5),
               List(
-
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
@@ -807,13 +777,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
         "State Pension page with MQP :  No Gaps || Cant get pension" should {
 
-          lazy val controller = new MockStatePensionController {
-            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-            override val statePensionService: StatePensionService = mock[StatePensionService]
-            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-          }
+          lazy val controller = createStatePensionController
 
           when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
@@ -920,13 +884,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
         "State Pension page with MQP :  has fillable Gaps || Personal Max" should {
 
-          lazy val controller = new MockStatePensionController {
-            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-            override val statePensionService: StatePensionService = mock[StatePensionService]
-            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-          }
+          lazy val controller = createStatePensionController
 
           when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
             .thenReturn(Future.successful(Right(StatePension(

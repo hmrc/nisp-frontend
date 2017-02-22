@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 
-import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
@@ -28,15 +27,14 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
+import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.nisp.views.formatting.Time
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
@@ -506,9 +504,7 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
           "render page with text  ' is not a guarantee and is based on the current law '" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
-//          "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-//            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
-//          }
+
           "render page with text  ' does not include any increase due to inflation '" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.inflation")
           }
@@ -737,14 +733,7 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
 
         "State Pension view with NON-MQP :  No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
 
-          lazy val controller = new MockStatePensionController {
-            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-            override val statePensionService: StatePensionService = mock[StatePensionService]
-            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-          }
-
+          lazy val controller = createStatePensionController
           when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
@@ -886,13 +875,7 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
 
       "State Pension view with NON-MQP :  Reached || No Gapss || Full Rate and Personal Max" should {
 
-        lazy val controller = new MockStatePensionController {
-          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-          override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-          override val statePensionService: StatePensionService = mock[StatePensionService]
-          override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-        }
+        lazy val controller = createStatePensionController
 
         when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
           .thenReturn(Future.successful(Right(StatePension(
