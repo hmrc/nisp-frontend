@@ -1,5 +1,5 @@
 [Check your State Pension] Frontend
-====================================================================
+==================================================================
 
 [![Build Status](https://travis-ci.org/hmrc/nisp-frontend.svg?branch=master)](https://travis-ci.org/hmrc/nisp-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/nisp-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/nisp-frontend/_latestVersion)
 
