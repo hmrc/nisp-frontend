@@ -41,7 +41,7 @@ import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
 
-class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
+class StatePensionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
 
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -586,14 +586,7 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
 
         "State Pension view with NON-MQP :  No Gapss || Full Rate & Personal Max" should {
 
-          lazy val controller = new MockStatePensionController {
-            override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-            override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-            override val statePensionService: StatePensionService = mock[StatePensionService]
-            override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-          }
-
+          lazy val controller = createStatePensionController
           when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
@@ -632,8 +625,6 @@ class StatePension_Non_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlS
             )))
 
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
-
-
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
