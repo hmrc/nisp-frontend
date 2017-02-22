@@ -18,8 +18,8 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 
-import builders.NationalInsuranceTaxYearBuilder
-import org.joda.time.{LocalDate}
+import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
+import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest._
@@ -29,7 +29,6 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import play.twirl.api.Html
-
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
@@ -87,34 +86,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
         lazy val controller = new MockStatePensionController {
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = false
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val twoFactorUrl: String = "twofactor"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-          }
+          override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
           override val statePensionService: StatePensionService = mock[StatePensionService]
           override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -193,7 +165,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
         }
         "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016", null, null)
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
         }
         "render page with text  ' does not include any increase due to inflation '" in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.main.inflation")
@@ -207,7 +179,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)", "nisp.main.cantImprove")
         }
         "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.reachMax.needToPay", "7 June 2020", null, null)
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.reachMax.needToPay", "7 June 2020")
         }
         "render page with link  'View your National Insurence Record'" in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(8)", "nisp.main.showyourrecord")
@@ -229,7 +201,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
         "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
           "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", "67", null, null)
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", "67")
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -264,34 +236,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val controller = new MockStatePensionController {
             override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-              override val assetsPrefix: String = ""
-              override val reportAProblemNonJSUrl: String = ""
-              override val ssoUrl: Option[String] = None
-              override val betaFeedbackUnauthenticatedUrl: String = ""
-              override val contactFrontendPartialBaseUrl: String = ""
-              override val govUkFinishedPageUrl: String = "govukdone"
-              override val showGovUkDonePage: Boolean = false
-              override val analyticsHost: String = ""
-              override val analyticsToken: Option[String] = None
-              override val betaFeedbackUrl: String = ""
-              override val reportAProblemPartialUrl: String = ""
-              override val postSignInRedirectUrl: String = ""
-              override val notAuthorisedRedirectUrl: String = ""
-              override val identityVerification: Boolean = false
-              override val ivUpliftUrl: String = "ivuplift"
-              override val ggSignInUrl: String = "ggsignin"
-              override val twoFactorUrl: String = "twofactor"
-              override val pertaxFrontendUrl: String = ""
-              override val contactFormServiceIdentifier: String = ""
-              override val breadcrumbPartialUrl: String = ""
-              override val showFullNI: Boolean = false
-              override val futureProofPersonalMax: Boolean = false
-              override val useStatePensionAPI: Boolean = true
-              override val useNationalInsuranceAPI: Boolean = true
-              override val verifySignIn: String = ""
-              override val verifySignInContinue: Boolean = false
-            }
+            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
             override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -371,10 +316,10 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4), null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
@@ -411,7 +356,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
             "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", "67", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", "67")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -444,34 +389,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val controller = new MockStatePensionController {
             override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-              override val assetsPrefix: String = ""
-              override val reportAProblemNonJSUrl: String = ""
-              override val ssoUrl: Option[String] = None
-              override val betaFeedbackUnauthenticatedUrl: String = ""
-              override val contactFrontendPartialBaseUrl: String = ""
-              override val govUkFinishedPageUrl: String = "govukdone"
-              override val showGovUkDonePage: Boolean = false
-              override val analyticsHost: String = ""
-              override val analyticsToken: Option[String] = None
-              override val betaFeedbackUrl: String = ""
-              override val reportAProblemPartialUrl: String = ""
-              override val postSignInRedirectUrl: String = ""
-              override val notAuthorisedRedirectUrl: String = ""
-              override val identityVerification: Boolean = false
-              override val ivUpliftUrl: String = "ivuplift"
-              override val ggSignInUrl: String = "ggsignin"
-              override val twoFactorUrl: String = "twofactor"
-              override val pertaxFrontendUrl: String = ""
-              override val contactFormServiceIdentifier: String = ""
-              override val breadcrumbPartialUrl: String = ""
-              override val showFullNI: Boolean = false
-              override val futureProofPersonalMax: Boolean = false
-              override val useStatePensionAPI: Boolean = true
-              override val useNationalInsuranceAPI: Boolean = true
-              override val verifySignIn: String = ""
-              override val verifySignInContinue: Boolean = false
-            }
+            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
             override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -550,10 +468,10 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4), null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
@@ -572,7 +490,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020")
           }
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(9)", "nisp.main.showyourrecord")
@@ -593,7 +511,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
             "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "67", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "67")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -610,34 +528,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val controller = new MockStatePensionController {
             override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-              override val assetsPrefix: String = ""
-              override val reportAProblemNonJSUrl: String = ""
-              override val ssoUrl: Option[String] = None
-              override val betaFeedbackUnauthenticatedUrl: String = ""
-              override val contactFrontendPartialBaseUrl: String = ""
-              override val govUkFinishedPageUrl: String = "govukdone"
-              override val showGovUkDonePage: Boolean = false
-              override val analyticsHost: String = ""
-              override val analyticsToken: Option[String] = None
-              override val betaFeedbackUrl: String = ""
-              override val reportAProblemPartialUrl: String = ""
-              override val postSignInRedirectUrl: String = ""
-              override val notAuthorisedRedirectUrl: String = ""
-              override val identityVerification: Boolean = false
-              override val ivUpliftUrl: String = "ivuplift"
-              override val ggSignInUrl: String = "ggsignin"
-              override val twoFactorUrl: String = "twofactor"
-              override val pertaxFrontendUrl: String = ""
-              override val contactFormServiceIdentifier: String = ""
-              override val breadcrumbPartialUrl: String = ""
-              override val showFullNI: Boolean = false
-              override val futureProofPersonalMax: Boolean = false
-              override val useStatePensionAPI: Boolean = true
-              override val useNationalInsuranceAPI: Boolean = true
-              override val verifySignIn: String = ""
-              override val verifySignInContinue: Boolean = false
-            }
+            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
             override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -718,17 +609,17 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4), null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(4)", "nisp.main.inflation")
           }
           "render page with text  'You do not have any years on your record and you need at least 10 years to get any State Pension. '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP.toString(), null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP.toString())
           }
 
           "render page with Heading  '£155.65 is the most you can get'" in {
@@ -740,7 +631,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020")
           }
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(9)", "nisp.main.showyourrecord")
@@ -761,7 +652,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
             "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "67", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "67")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -776,34 +667,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val controller = new MockStatePensionController {
             override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-              override val assetsPrefix: String = ""
-              override val reportAProblemNonJSUrl: String = ""
-              override val ssoUrl: Option[String] = None
-              override val betaFeedbackUnauthenticatedUrl: String = ""
-              override val contactFrontendPartialBaseUrl: String = ""
-              override val govUkFinishedPageUrl: String = "govukdone"
-              override val showGovUkDonePage: Boolean = false
-              override val analyticsHost: String = ""
-              override val analyticsToken: Option[String] = None
-              override val betaFeedbackUrl: String = ""
-              override val reportAProblemPartialUrl: String = ""
-              override val postSignInRedirectUrl: String = ""
-              override val notAuthorisedRedirectUrl: String = ""
-              override val identityVerification: Boolean = false
-              override val ivUpliftUrl: String = "ivuplift"
-              override val ggSignInUrl: String = "ggsignin"
-              override val twoFactorUrl: String = "twofactor"
-              override val pertaxFrontendUrl: String = ""
-              override val contactFormServiceIdentifier: String = ""
-              override val breadcrumbPartialUrl: String = ""
-              override val showFullNI: Boolean = false
-              override val futureProofPersonalMax: Boolean = false
-              override val useStatePensionAPI: Boolean = true
-              override val useNationalInsuranceAPI: Boolean = true
-              override val verifySignIn: String = ""
-              override val verifySignInContinue: Boolean = false
-            }
+            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
             override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -883,10 +747,10 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", "5 April 2016")
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4), null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
@@ -906,7 +770,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.context.reachMax.needToPay", "7 June 2020")
           }
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(9)", "nisp.main.showyourrecord")
@@ -927,7 +791,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
             "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "67", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "67")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -945,34 +809,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val controller = new MockStatePensionController {
             override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-              override val assetsPrefix: String = ""
-              override val reportAProblemNonJSUrl: String = ""
-              override val ssoUrl: Option[String] = None
-              override val betaFeedbackUnauthenticatedUrl: String = ""
-              override val contactFrontendPartialBaseUrl: String = ""
-              override val govUkFinishedPageUrl: String = "govukdone"
-              override val showGovUkDonePage: Boolean = false
-              override val analyticsHost: String = ""
-              override val analyticsToken: Option[String] = None
-              override val betaFeedbackUrl: String = ""
-              override val reportAProblemPartialUrl: String = ""
-              override val postSignInRedirectUrl: String = ""
-              override val notAuthorisedRedirectUrl: String = ""
-              override val identityVerification: Boolean = false
-              override val ivUpliftUrl: String = "ivuplift"
-              override val ggSignInUrl: String = "ggsignin"
-              override val twoFactorUrl: String = "twofactor"
-              override val pertaxFrontendUrl: String = ""
-              override val contactFormServiceIdentifier: String = ""
-              override val breadcrumbPartialUrl: String = ""
-              override val showFullNI: Boolean = false
-              override val futureProofPersonalMax: Boolean = false
-              override val useStatePensionAPI: Boolean = true
-              override val useNationalInsuranceAPI: Boolean = true
-              override val verifySignIn: String = ""
-              override val verifySignInContinue: Boolean = false
-            }
+            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
             override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -1060,7 +897,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           }
 
           "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2017", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2017")
           }
 
           "render page with link 'What else you can do'" in {
@@ -1085,34 +922,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val controller = new MockStatePensionController {
             override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-            override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-              override val assetsPrefix: String = ""
-              override val reportAProblemNonJSUrl: String = ""
-              override val ssoUrl: Option[String] = None
-              override val betaFeedbackUnauthenticatedUrl: String = ""
-              override val contactFrontendPartialBaseUrl: String = ""
-              override val govUkFinishedPageUrl: String = "govukdone"
-              override val showGovUkDonePage: Boolean = false
-              override val analyticsHost: String = ""
-              override val analyticsToken: Option[String] = None
-              override val betaFeedbackUrl: String = ""
-              override val reportAProblemPartialUrl: String = ""
-              override val postSignInRedirectUrl: String = ""
-              override val notAuthorisedRedirectUrl: String = ""
-              override val identityVerification: Boolean = false
-              override val ivUpliftUrl: String = "ivuplift"
-              override val ggSignInUrl: String = "ggsignin"
-              override val twoFactorUrl: String = "twofactor"
-              override val pertaxFrontendUrl: String = ""
-              override val contactFormServiceIdentifier: String = ""
-              override val breadcrumbPartialUrl: String = ""
-              override val showFullNI: Boolean = false
-              override val futureProofPersonalMax: Boolean = false
-              override val useStatePensionAPI: Boolean = true
-              override val useNationalInsuranceAPI: Boolean = true
-              override val verifySignIn: String = ""
-              override val verifySignInContinue: Boolean = false
-            }
+            override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
             override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
             override val statePensionService: StatePensionService = mock[StatePensionService]
             override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -1201,7 +1011,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           }
 
           "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2018", null, null)
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2018")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", "4 May 2018")
           }
 
           "render page with link 'What else you can do'" in {

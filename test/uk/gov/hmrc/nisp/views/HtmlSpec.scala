@@ -77,15 +77,15 @@ trait HtmlSpec extends UnitSpec {
     assert(expectedMessageKey != Html(Messages(expectedMessageKey)).toString(), s"$expectedMessageKey has no messages file value setup")
   }
 
-  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageArgs1: String, messageArgs2: String, messageArgs3: String) = {
+  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: String*) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, messageArgs1, messageArgs2, messageArgs3).toString())
-    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")).toString() == expectedString)
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
   }
 
   def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {
