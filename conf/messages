@@ -304,6 +304,7 @@ nisp.nirecord.gapsinyourrecord.line3 = self-employed but did not pay contributio
 nisp.nirecord.gapsinyourrecord.line4 = living abroad
 nisp.nirecord.gapsinyourrecord.line5 = living or working in the Isle of Man
 nisp.nirecord.gap.viewdetails = View <span class="visuallyhidden">{0} </span>details
+nisp.nirecord.gap.hidedetails = Hide <span class="visuallyhidden">{0} </span>details
 nisp.nirecord.gapsinyourrecord.howtocheckrecord= How to check your record
 nisp.nirecord.gapsinyourrecord.paidemployment.title = Paid employment
 nisp.nirecord.gapsinyourrecord.paidemployment.desc = Check the contributions you made against P60s from your employers.
@@ -448,4 +449,14 @@ nisp.tandcs.thanks = Thank you for visiting the site.
 #******************
 
 nisp.validation.summary.heading = Error summary
+nisp.validation.summary.error.max = Maximum length is 1,200
 error.email = Enter a valid email address
+
+#***********************
+# Welsh language Support
+#***********************
+
+language.to = to
+language.day.singular = day
+language.day.plural = days
+

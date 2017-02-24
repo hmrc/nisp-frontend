@@ -67,7 +67,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
     "uk.gov.hmrc" %% "domain" % "3.2.0",
     "uk.gov.hmrc" %% "secure" % "7.0.0",
-    "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0"
+    "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0",
+    "uk.gov.hmrc" %% "play-language" % "2.2.0"
   )
 
 

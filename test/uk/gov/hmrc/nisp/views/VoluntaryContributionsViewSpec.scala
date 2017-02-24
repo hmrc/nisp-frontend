@@ -21,7 +21,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -37,6 +37,7 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
   val mockUserId = "/auth/oid/" + mockUsername
 
   lazy val fakeRequest = FakeRequest();
+  implicit override val lang =  LanguageToggle.getLanguageCode
 
 
 
@@ -119,11 +120,10 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
       assertEqualsMessage(htmlAccountDoc, "article.content__body > div.backlink:nth-child(12)>a", "nisp.back")
     }
 
-
     "render page with href value of link 'GOV.IM – Retirement Pension (opens in new window)'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(6)>div.panel-indent>p>a", "https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/")
-
     }
+
     "render page with href value of link 'Money advice service'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(1)>a", "https://www.moneyadviceservice.org.uk/en")
 

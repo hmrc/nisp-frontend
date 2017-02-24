@@ -33,6 +33,9 @@ trait HtmlSpec extends UnitSpec {
 
   implicit val request = FakeRequest()
 
+  implicit val lang =  LanguageToggle.getLanguageCode
+
+
   implicit val authContext = {
     val user = LoggedInUser("", None, None, None, CredentialStrength.None, ConfidenceLevel.L500)
     val principal = Principal(None, accounts = Accounts(paye = Some(PayeAccount("", TestAccountBuilder.regularNino))))
@@ -61,7 +64,7 @@ trait HtmlSpec extends UnitSpec {
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
-  def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
+  def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String ) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
@@ -211,6 +214,20 @@ trait HtmlSpec extends UnitSpec {
 
     val expectedString = StringEscapeUtils.unescapeHtml4(expectedText);
     assert(StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
+  }
+
+  def assertContainsNextedValue(doc: Document, cssSelector: String, expectedMessageKey: String, secondMessageValue: String) = {
+
+    val elements = doc.select(cssSelector)
+    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey ,secondMessageValue).toString())
+    val elementText = elements.first().html().replace("\n", "");
+
+    assert(StringEscapeUtils.unescapeHtml4(elementText.replace("\u00a0", "").toString()) == expectedString)
+
   }
 
 }

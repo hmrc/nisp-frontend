@@ -52,6 +52,7 @@ trait ApplicationConfig {
   val futureProofPersonalMax: Boolean
   val useStatePensionAPI: Boolean
   val useNationalInsuranceAPI: Boolean
+  val isWelshEnabled: Boolean
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -91,4 +92,5 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val futureProofPersonalMax: Boolean = configuration.getBoolean("microservice.services.features.future-proof.personalMax").getOrElse(false)
   override val useStatePensionAPI: Boolean = configuration.getBoolean("microservice.services.features.useStatePensionAPI").getOrElse(true)
   override val useNationalInsuranceAPI: Boolean = configuration.getBoolean("microservice.services.features.useNationalInsuranceAPI").getOrElse(true)
+  override val isWelshEnabled = configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
 }

@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@()(implicit request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
+@()(implicit lang: Lang, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @main(browserTitle = Some(Messages("nisp.tandcs.title")),
 sidebarLinks = None) {
@@ -25,15 +25,15 @@ sidebarLinks = None) {
 <h1 class="heading-large top-title-heading">@Messages("nisp.tandcs.title")</h1>
 <h2 class="heading-medium">@Messages("nisp.tandcs.heading")</h2>
 <p>@Html(Messages("nisp.tandcs.use"))</p>
-<p>@Messages("nisp.tandcs.information")</p>
-<p>@Messages("nisp.tandcs.service")</p>
-<p>@Messages("nisp.tandcs.rely")</p>
+<p>@Html(Messages("nisp.tandcs.information"))</p>
+<p>@Html(Messages("nisp.tandcs.service"))</p>
+<p>@Html(Messages("nisp.tandcs.rely"))</p>
 <p>@Html(Messages("nisp.tandcs.responsibility"))</p>
-<p>@Messages("nisp.tandcs.licence") <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/" target="_blank" rel="external" data-journey-click="checkmystatepension:external:crowncopyright">@Messages("nisp.tandcs.crownCopyright")</a>.</p>
-<p>@Messages("nisp.tandcs.liability")</p>
+<p>@Html(Messages("nisp.tandcs.licence")) <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/" target="_blank" rel="external" data-journey-click="checkmystatepension:external:crowncopyright">@Messages("nisp.tandcs.crownCopyright")</a>.</p>
+<p>@Html(Messages("nisp.tandcs.liability"))</p>
 <p>@Html(Messages("nisp.tandcs.links"))</p>
-<p>@Messages("nisp.tandcs.law")</p>
-<p>@Messages("nisp.tandcs.operated")</p>
-<p>@Messages("nisp.tandcs.thanks")</p>
+<p>@Html(Messages("nisp.tandcs.law"))</p>
+<p>@Html(Messages("nisp.tandcs.operated"))</p>
+<p>@Html(Messages("nisp.tandcs.thanks"))</p>
 
 }

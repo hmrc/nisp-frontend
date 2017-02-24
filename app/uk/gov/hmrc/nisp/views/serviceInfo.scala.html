@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(betaBanner: Html, includeGridWrapper: Boolean, serviceInfoContent: Option[Html])(implicit request: Request[_])
+@(betaBanner: Html, includeGridWrapper: Boolean, serviceInfoContent: Option[Html])(implicit lang: Lang, request: Request[_])
 
 <div class="service-info @if( includeGridWrapper ){ grid-wrapper}">
     @betaBanner    

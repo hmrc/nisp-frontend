@@ -19,13 +19,15 @@ import org.joda.time.LocalDate
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
+import play.api.i18n.Lang
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.views.formatting.Dates
+import uk.gov.hmrc.play.language.LanguageUtils.Dates
 
 class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
 
@@ -36,7 +38,7 @@ class ExclusionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Be
   val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
-
+  implicit override val lang =  LanguageToggle.getLanguageCode
   lazy val fakeRequest = FakeRequest();
 
   "Exclusion Dead" should {

@@ -21,7 +21,7 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import exclusions.viewExclusions
 
-@(exclusion: Exclusion, statePensionAge: Option[Int])(implicit request: Request[_], user: NispUser,
+@(exclusion: Exclusion, statePensionAge: Option[Int])(implicit lang: Lang, request: Request[_], user: NispUser,
   partialRetriever: CachedStaticHtmlPartialRetriever)
 
 @analyticsAdditionalJs = {
