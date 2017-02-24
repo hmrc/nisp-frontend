@@ -11,7 +11,7 @@ nisp.goback = Ewch yn ôl
 nisp.textentry.warning =  Peidiwch â chynnwys unrhyw wybodaeth bersonol neu ariannol, er enghraifft eich rhif Yswiriant Gwladol neu gerdyn credyd.
 nisp.textentry.charlimit =  Y terfyn yw 1,200 nod.
 nisp.useagain = I ddefnyddio&rsquo;r gwasanaeth eto bydd angen i chi <a href="{0}">fewngofnodi</a>.
-nisp.Signout = allgofnodi
+nisp.signOut = allgofnodi
 nisp.verify = dilysu
 nisp.gov-uk = GOV.UK
 nisp.gov-uk-verify = GOV.UK Verify
