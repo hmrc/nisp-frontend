@@ -832,11 +832,11 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           }
 
           "render page with text  'You’ll reach State Pension age on ' " in {
-            val sMessage = "You’ll reach State Pension age on";
+            val sMessage = Messages("nisp.main.description.mqp")
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
-            val sMessage =Dates.formatDate(new LocalDate(2017, 5, 4))+ ".";
+            val sMessage =Dates.formatDate(new LocalDate(2017, 5, 4))+ "."
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
@@ -938,11 +938,11 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           }
 
           "render page with text  'You’ll reach State Pension age on ' " in {
-            val sMessage = "You’ll reach State Pension age on";
+            val sMessage = Messages("nisp.main.description.mqp")
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
-            val sMessage = Dates.formatDate(new LocalDate(2018, 5, 4))+".";
+            val sMessage = Dates.formatDate(new LocalDate(2018, 5, 4))+"."
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
