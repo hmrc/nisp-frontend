@@ -345,8 +345,7 @@ nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message2 = wedi talu c
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2 = wedi byw neu weithio dramor
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message = Efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o&rsquo;r wlad rydych wedi byw neu weithio ynddi. Cysylltwch â gwasanaeth pensiwn y wlad roeddech ynddi i ddarganfod os ydych yn gymwys.
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle3 = wedi byw neu weithio yn Ynys Manaw
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol,
-
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)</a>.
 nisp.nirecord.voluntarycontributions.h2title.2 = 2. Chwiliwch am arweiniad neu gyngor ariannol
 nisp.nirecord.voluntarycontributions.h2title.2.message = Efallai nad talu cyfraniadau gwirfoddol fydd eich opsiwn gorau wrth gynllunio am eich ymddeoliad.
 nisp.nirecord.voluntarycontributions.h2title.2.help.title = Ble allwch chi gael arweiniad neu gyngor
