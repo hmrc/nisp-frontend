@@ -33,15 +33,16 @@ case class Citizen(nino: Nino, firstName: Option[String] = None, lastName: Optio
 
 object Citizen {
 
-  val dateReads = Reads[LocalDate]( value => value.validate[Long].map(new LocalDate(_)))
-  val dateWrites = Writes[LocalDate](date => Json.toJson(date.toDateTimeAtStartOfDay.getMillis))
-  val dateFormats: Format[LocalDate] = Format(dateReads, dateWrites)
+  implicit val dateReads: Reads[LocalDate] = Reads[LocalDate] {
+    case value: JsNumber => value.validate[Long].map(new LocalDate(_))
+    case value => value.validate[String].map(LocalDate.parse)
+  }
 
   implicit val formats: Format[Citizen] = (
       (__ \ "nino").format[Nino] and
       (__ \ "firstName").format[Option[String]] and
       (__ \ "lastName").format[Option[String]] and
       (__ \ "sex").format[Option[String]] and
-      (__ \ "dateOfBirth").format[LocalDate](dateFormats)
+      (__ \ "dateOfBirth").format[LocalDate]
     ) (Citizen.apply, unlift(Citizen.unapply))
 }
