@@ -689,8 +689,7 @@ class StatePensionViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with
             assertEqualsValue(htmlAccountDoc, "article.content__body>h2:nth-child(8)", sMessage)
           }
          "render page with text  'After State Pension age, 7 June 2022 you no longer pay National Insurance contributions.'" in {
-            val sMessage = Messages("nisp.mqp.afterSpa", Dates.formatDate(new LocalDate(2022, 6, 7))+",")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>p:nth-child(9)", sMessage)
+           assertContainsNextedValue(htmlAccountDoc, "article.content__body>p:nth-child(9)","nisp.main.after", Dates.formatDate(new LocalDate(2022, 6, 7)))
           }
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(10)", "nisp.main.showyourrecord")

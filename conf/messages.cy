@@ -123,7 +123,7 @@ nisp.excluded.mci.howToContact.outsideUK = Y tu allan i&rsquo;r DU: +44 135 535 
 nisp.excluded.mci.howToContact.message1 = Mae&rsquo;r llinellau ffôn ar agor o 8am i 8pm dydd Llun i ddydd Gwener ac o 8am i 4pm ar ddydd Sadwrn.
 nisp.excluded.mci.howToContact.message2 = Wedi cau ar ddydd Sul a gwyliau banc.
 nisp.excluded.mci.howToContact.message3 = Mae&rsquo;r llinellau ffôn yn llai prysur cyn 10am dydd Llun i ddydd Gwener.
-nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/call-charges" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)</a></p>
+nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/call-charges" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)</a>
 
 nisp.excluded.title = Rydych yn methu defnyddio&rsquo;r gwasanaeth
 
@@ -151,8 +151,8 @@ nisp.excluded.overseas = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwria
 nisp.excluded.spa = Os nad ydych eisoes wedi dechrau <a href="https://www.gov.uk/claim-state-pension-online" rel="external" data-journey-click="checkmystatepension:external:claimstatepension">hawlio eich Pensiwn y Wladwriaeth</a>, gallwch <a href="https://www.gov.uk/deferring-state-pension" rel="external" data-journey-click="checkmystatepension:external:deferstatepension" target="_blank">oedi gwneud cais am eich Pensiwn y Wladwriaeth (agor mewn tab newydd)</a> a gallai hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan rydych eisiau gwneud cais amdano.
 nisp.excluded.niRecordIntro = Gweld cofnod o&rsquo;r cyfraniadau Yswiriant Gwladol sy&rsquo;n cyfri tuag at eich Pensiwn y Wladwriaeth ac edrych am unrhyw fylchau.
 nisp.excluded.niRecordIntroUK = Gweld cofnod o&rsquo;r cyfraniadau Yswiriant Gwladol y DU sy&rsquo;n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
-nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar {0} pan oeddech yn {1}
-nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span> pan fyddwch yn {1}.
+nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar {0} pan oeddech yn
+nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span> pan fyddwch yn.
 
 #**************************
 # Questionnaire messages
@@ -345,8 +345,7 @@ nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message2 = wedi talu c
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2 = wedi byw neu weithio dramor
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message = Efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o&rsquo;r wlad rydych wedi byw neu weithio ynddi. Cysylltwch â gwasanaeth pensiwn y wlad roeddech ynddi i ddarganfod os ydych yn gymwys.
 nisp.nirecord.voluntarycontributions.h2title.1.linktitle3 = wedi byw neu weithio yn Ynys Manaw
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol,
-
+nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)</a>.
 nisp.nirecord.voluntarycontributions.h2title.2 = 2. Chwiliwch am arweiniad neu gyngor ariannol
 nisp.nirecord.voluntarycontributions.h2title.2.message = Efallai nad talu cyfraniadau gwirfoddol fydd eich opsiwn gorau wrth gynllunio am eich ymddeoliad.
 nisp.nirecord.voluntarycontributions.h2title.2.help.title = Ble allwch chi gael arweiniad neu gyngor
@@ -379,7 +378,7 @@ nisp.mqp.filling.may.single = Efallai bydd llenwi un flwyddyn yn rhoi ychydig o 
 nisp.mqp.filling.may.plural = Efallai bydd llenwi rhai o’r blynyddoedd hyn yn rhoi ychydig o Bensiwn y Wladwriaeth i chi.
 nisp.mqp.afterSpa = Ar ôl oedran Pensiwn y Wladwriaeth, {0} ni fyddwch bellach yn talu cyfraniadau Yswiriant Gwladol.
 nisp.mqp.whatElse = Beth arall allwch chi ei wneud
-nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael <a href="https://www.gov.uk/pension-credit/overview"  rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Credyd Pensiwn (agor mewn tab newydd)</a> os yw eich incwm mewn ymddeoliad yn isel.
+nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael <a href="https://www.gov.uk/pension-credit/overview" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Credyd Pensiwn (agor mewn tab newydd)</a> os yw eich incwm mewn ymddeoliad yn isel.
 nisp.mqp.moneyAdvice = Cysylltwch â&rsquo;r <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)</a> am gyngor di-duedd ac am ddim.
 
 nisp.mqp.howManyToContribute = yn cymryd eich bod yn cyfrannu {0} arall
