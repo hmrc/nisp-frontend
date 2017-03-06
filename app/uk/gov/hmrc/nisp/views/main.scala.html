@@ -114,7 +114,7 @@
     @loginDetailsHeader
 
     @if(applicationConfig.isWelshEnabled){
-        @language_selection(CustomLanguageController.languageMap, CustomLanguageController.langToCall, Some("align-right"))
+        @includes.language_selection(CustomLanguageController.languageMap, CustomLanguageController.langToCall, Some("align-right"),Some("checkmystatepension"))
     }
 }
 
