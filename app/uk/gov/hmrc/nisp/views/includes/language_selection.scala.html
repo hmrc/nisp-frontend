@@ -10,7 +10,7 @@
                     id      = Some(s"$key-switch"),
                     url     = s"${langToCall(key)}",
                     value   = Some(key.capitalize),
-                    dataAttributes = Some(Map("journey-click" -> s"${appName.fold("")(a=>a)}:language: ${value.code}"))
+                    dataAttributes = appName.map(name => Map("journey-click" -> s"$name:language: ${value.code}"))
                 ).toHtml
             } else {
                @key.capitalize
