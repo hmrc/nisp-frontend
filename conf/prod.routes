@@ -1,7 +1,7 @@
 # Add all the application routes to the app.routes file
-->         /check-your-state-pension  app.Routes
-GET        /checkmystatepension       uk.gov.hmrc.nisp.controllers.redirect.RedirectController.redirectToHome(path="")
-GET        /checkmystatepension/*path uk.gov.hmrc.nisp.controllers.redirect.RedirectController.redirectToHome(path)
-->         /template                  template.Routes
-->         /                          health.Routes
-GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
+->         /check-your-state-pension    app.Routes
+GET        /checkmystatepension         uk.gov.hmrc.nisp.controllers.redirect.RedirectController.redirectToHome(path="")
+GET        /checkmystatepension/*path   uk.gov.hmrc.nisp.controllers.redirect.RedirectController.redirectToHome(path)
+->         /template                    template.Routes
+->         /                            health.Routes
+GET        /admin/metrics               @com.kenshoo.play.metrics.MetricsController.metrics

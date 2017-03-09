@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.i18n.{Lang, Messages}
 
 object Time {
-    def years(numberOfYears: Int)(implicit lang: Lang): String = {
-        val suffix = if (math.abs(numberOfYears) == 1) Messages("nisp.year") else Messages("nisp.years")
-        s"$numberOfYears $suffix"
-    }
+  def years(numberOfYears: Int)(implicit lang: Lang): String = {
+    val suffix = if (math.abs(numberOfYears) == 1) Messages("nisp.year") else Messages("nisp.years")
+    s"$numberOfYears $suffix"
+  }
 }

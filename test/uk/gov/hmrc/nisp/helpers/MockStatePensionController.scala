@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.helpers
 
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
@@ -31,7 +30,8 @@ object MockStatePensionController extends MockStatePensionController {
 }
 
 trait MockStatePensionController extends StatePensionController {
-  override protected implicit def authConnector: AuthConnector = MockAuthConnector
+  override implicit def authConnector: AuthConnector = MockAuthConnector
+
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val sessionCache: SessionCache = MockSessionCache
   override val metricsService: MetricsService = MockMetricsService

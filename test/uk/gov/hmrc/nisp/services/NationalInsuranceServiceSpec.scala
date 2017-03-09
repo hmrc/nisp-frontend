@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.services
 
 import org.joda.time.LocalDate
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
@@ -30,7 +30,6 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 import scala.util.Random
-
 
 class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
@@ -96,7 +95,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
       val service = new NationalInsuranceService with NationalInsuranceConnection {
         override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
       }
-      when(service.nationalInsuranceConnector.getNationalInsurance(Matchers.any())(Matchers.any()))
+      when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful(mockNationalInsuranceRecord))
 
       "return a Right(NationalInsuranceRecord)" in {
@@ -154,7 +153,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
           )
         ))
 
-        when(service.nationalInsuranceConnector.getNationalInsurance(Matchers.any())(Matchers.any()))
+        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(jumbledRecord))
 
         whenReady(service.getSummary(generateNino)) { result =>
@@ -170,7 +169,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         val service = new NationalInsuranceService with NationalInsuranceConnection {
           override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
         }
-        when(service.nationalInsuranceConnector.getNationalInsurance(Matchers.any())(Matchers.any()))
+        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
             message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
             upstreamResponseCode = 403,
@@ -188,7 +187,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         val service = new NationalInsuranceService with NationalInsuranceConnection {
           override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
         }
-        when(service.nationalInsuranceConnector.getNationalInsurance(Matchers.any())(Matchers.any()))
+        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
             message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
             upstreamResponseCode = 403,
@@ -206,7 +205,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         val service = new NationalInsuranceService with NationalInsuranceConnection {
           override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
         }
-        when(service.nationalInsuranceConnector.getNationalInsurance(Matchers.any())(Matchers.any()))
+        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
             message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
             upstreamResponseCode = 403,
@@ -224,7 +223,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         val service = new NationalInsuranceService with NationalInsuranceConnection {
           override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
         }
-        when(service.nationalInsuranceConnector.getNationalInsurance(Matchers.any())(Matchers.any()))
+        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
             message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
             upstreamResponseCode = 403,
@@ -247,7 +246,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
           override val nispConnector: NispConnector = mock[NispConnector]
         }
 
-        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+        when(service.nispConnector.connectToGetNIResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(NIResponse(
             None,
             None,
@@ -274,7 +273,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
           override val nispConnector: NispConnector = mock[NispConnector]
         }
 
-        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+        when(service.nispConnector.connectToGetNIResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(NIResponse(
             None,
             None,
@@ -300,7 +299,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
           override val nispConnector: NispConnector = mock[NispConnector]
         }
 
-        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+        when(service.nispConnector.connectToGetNIResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(NIResponse(
             None,
             None,
@@ -325,7 +324,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
           override val nispConnector: NispConnector = mock[NispConnector]
         }
 
-        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+        when(service.nispConnector.connectToGetNIResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(NIResponse(
             None,
             None,
@@ -411,7 +410,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         None
       )
 
-      when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+      when(service.nispConnector.connectToGetNIResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful(niResponse))
 
       val serviceResponse: NationalInsuranceRecord = service.getSummary(generateNino).right.get
@@ -590,11 +589,10 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         "be under investigation" in {
           serviceResponse.taxYears(2).underInvestigation shouldBe true
         }
-
       }
 
       "return all the tax years in descending order" in {
-        when(service.nispConnector.connectToGetNIResponse(Matchers.any())(Matchers.any()))
+        when(service.nispConnector.connectToGetNIResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(niResponse.copy(niRecord = Some(
             NIRecord(List(
               NIRecordTaxYear(

@@ -16,14 +16,12 @@
 
 package uk.gov.hmrc.nisp.controllers.pertax
 
-import play.api.mvc.{AnyContent, Request}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.Constants._
-import play.api.http.HeaderNames.REFERER
 import uk.gov.hmrc.play.http.HeaderCarrier
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait PertaxHelper {
@@ -46,7 +44,7 @@ trait PertaxHelper {
     val keystoreTimerContext = metricsService.keystoreReadTimer.time()
     sessionCache.fetchAndGetEntry[Boolean](PERTAX).map { keystoreResult =>
       keystoreTimerContext.stop()
-      keystoreResult match  {
+      keystoreResult match {
         case Some(isPertax) => metricsService.keystoreHitCounter.inc(); isPertax
         case None =>
           metricsService.keystoreMissCounter.inc()

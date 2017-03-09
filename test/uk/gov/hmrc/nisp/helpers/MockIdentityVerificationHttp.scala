@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
-import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
-import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.play.http.{HttpResponse, HttpGet}
+import play.api.libs.json.Json
+import uk.gov.hmrc.play.http.{HttpGet, HttpResponse}
 
 import scala.concurrent.Future
 import scala.io.Source
@@ -29,7 +29,7 @@ import scala.io.Source
 object MockIdentityVerificationHttp extends MockitoSugar {
   val mockHttp = mock[HttpGet]
 
-  val possibleJournies = Map (
+  val possibleJournies = Map(
     "success-journey-id" -> "test/resources/identity-verification/success.json",
     "incomplete-journey-id" -> "test/resources/identity-verification/incomplete.json",
     "failed-matching-journey-id" -> "test/resources/identity-verification/failed-matching.json",
@@ -46,7 +46,7 @@ object MockIdentityVerificationHttp extends MockitoSugar {
 
   def mockJourneyId(journeyId: String): Unit = {
     val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-    when(mockHttp.GET[HttpResponse](Matchers.contains(journeyId))(Matchers.any(), Matchers.any())).
+    when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any())).
       thenReturn(Future.successful(HttpResponse(Status.OK, responseJson = Some(Json.parse(fileContents)))))
   }
 

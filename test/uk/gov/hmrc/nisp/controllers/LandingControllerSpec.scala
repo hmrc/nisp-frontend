@@ -18,165 +18,146 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
-import org.scalatestplus.play.OneAppPerSuite
+import org.mockito.Mockito
+import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import play.api.Play.current
 import play.api.http._
-import play.api.i18n.Messages
-import play.api.test.FakeRequest
+import play.api.i18n.Messages.Implicits._
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.nisp.helpers.{MockAuthConnector, MockCachedStaticHtmlPartialRetriever, MockCitizenDetailsService, MockIdentityVerificationConnector}
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
 
-class LandingControllerSpec extends UnitSpec with OneAppPerSuite {
+class LandingControllerSpec extends PlaySpec with MockitoSugar with FakePlayApplication {
 
-  val fakeRequest = FakeRequest("GET", "/")
+  private implicit val fakeRequest = FakeRequest("GET", "/")
 
-  def testLandingController(identityVerificationEnabled: Boolean = true): LandingController = new LandingController {
+  private val mockApplicationConfig = mock[ApplicationConfig]
+
+  private implicit val retriever = MockCachedStaticHtmlPartialRetriever
+
+  object Sut extends LandingController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-    override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-      override val ggSignInUrl: String = ""
-      override val verifySignIn: String = ""
-      override val verifySignInContinue: Boolean = false
-      override val twoFactorUrl: String = ""
-      override val assetsPrefix: String = ""
-      override val reportAProblemNonJSUrl: String = ""
-      override val ssoUrl: Option[String] = None
-      override val identityVerification: Boolean = identityVerificationEnabled
-      override val betaFeedbackUnauthenticatedUrl: String = ""
-      override val notAuthorisedRedirectUrl: String = ""
-      override val contactFrontendPartialBaseUrl: String = ""
-      override val govUkFinishedPageUrl: String = ""
-      override val showGovUkDonePage: Boolean = true
-      override val analyticsHost: String = ""
-      override val betaFeedbackUrl: String = ""
-      override val analyticsToken: Option[String] = None
-      override val reportAProblemPartialUrl: String = ""
-      override val postSignInRedirectUrl: String = ""
-      override val ivUpliftUrl: String = ""
-      override val pertaxFrontendUrl: String = ""
-      override val contactFormServiceIdentifier: String = ""
-      override val breadcrumbPartialUrl: String = ""
-      override val showFullNI: Boolean = false
-      override val futureProofPersonalMax: Boolean = false
-      override val useStatePensionAPI: Boolean = true
-      override val useNationalInsuranceAPI: Boolean = true
-      override val isWelshEnabled = false
-    }
+
+    override val applicationConfig = mockApplicationConfig
+
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
 
     override protected def authConnector: AuthConnector = MockAuthConnector
 
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
   }
 
   "GET /" should {
     "return 200" in {
-      val result = testLandingController().show(fakeRequest)
-      status(result) shouldBe Status.OK
+      val result = Sut.show(fakeRequest)
+      status(result) mustBe Status.OK
     }
 
     "return HTML" in {
-      val result = testLandingController().show(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      val result = Sut.show(fakeRequest)
+      Helpers.contentType(result) mustBe Some("text/html")
+      charset(result) mustBe Some("utf-8")
     }
 
     "load the landing page" in {
-      val result = testLandingController().show(fakeRequest)
-      val headingText = Messages("nisp.landing.estimateprovided")
-      contentAsString(result) should include (headingText)
+      val result = Sut.show(fakeRequest)
+      contentAsString(result) must include("Your State Pension forecast is provided for your information only and the " +
+        "service does not offer financial advice. When planning for your retirement, you should seek professional advice.")
     }
 
     "have a start button" in {
-      val result = testLandingController().show(fakeRequest)
-      val buttonText = Messages("nisp.continue")
-      contentAsString(result) should include (s"$buttonText</a>")
+      val result = Sut.show(fakeRequest)
+      contentAsString(result) must include("Continue")
     }
 
     "return IVLanding page" in {
-      val result = testLandingController().show(fakeRequest)
-      contentAsString(result) should include ("You need to confirm your identity")
+      val result = Sut.show(fakeRequest)
+      contentAsString(result) mustBe contentAsString(landing())
     }
 
-    "return non-IV landing page when switched off" in {
-      val result = testLandingController(identityVerificationEnabled = false).show(fakeRequest)
-      contentAsString(result) should include ("You can use this service if you&rsquo;re")
+    "return non-IV landing page when switched on" in {
+      Mockito.when(mockApplicationConfig.identityVerification).thenReturn(true)
+      val result = Sut.show(fakeRequest)
+      contentAsString(result) mustBe contentAsString(identity_verification_landing())
     }
   }
 
-  "GET /signin/verify" should {
+  "GET /signin/verify" must {
     "redirect to verify" in {
-      val result = testLandingController().verifySignIn(fakeRequest)
-      redirectLocation(result) shouldBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
+      val result = Sut.verifySignIn(fakeRequest)
+      redirectLocation(result) mustBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
     }
 
     "redirect to account page when signed in" in {
-      val result = testLandingController().verifySignIn(FakeRequest().withSession(
+      val result = Sut.verifySignIn(FakeRequest().withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
         SessionKeys.userId -> "/auth/oid/mockuser"
       ))
-      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
+      redirectLocation(result) mustBe Some("/check-your-state-pension/account")
     }
   }
 
-  "GET /not-authorised" should {
+  "GET /not-authorised" must {
     "show not authorised page" in {
-      val result = testLandingController().showNotAuthorised(None)(fakeRequest)
-      contentAsString(result) should include ("We were unable to confirm your identity")
+      val result = Sut.showNotAuthorised(None)(fakeRequest)
+      contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for FailedMatching journey" in {
-      val result = testLandingController().showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("We were unable to confirm your identity")
+      val result = Sut.showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
+      contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for InsufficientEvidence journey" in {
-      val result = testLandingController().showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("We were unable to confirm your identity")
+      val result = Sut.showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
+      contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for Incomplete journey" in {
-      val result = testLandingController().showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("We were unable to confirm your identity")
+      val result = Sut.showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
+      contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for PreconditionFailed journey" in {
-      val result = testLandingController().showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("We were unable to confirm your identity")
+      val result = Sut.showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
+      contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for UserAborted journey" in {
-      val result = testLandingController().showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("We were unable to confirm your identity")
+      val result = Sut.showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
+      contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show technical_issue template for TechnicalIssue journey" in {
-      val result = testLandingController().showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("This online service is experiencing technical difficulties.")
+      val result = Sut.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+      contentAsString(result) must include("This online service is experiencing technical difficulties.")
     }
 
     "show locked_out template for LockedOut journey" in {
-      val result = testLandingController().showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("You have reached the maximum number of attempts to confirm your identity.")
+      val result = Sut.showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
+      contentAsString(result) must include("You have reached the maximum number of attempts to confirm your identity.")
     }
 
     "show timeout template for Timeout journey" in {
-      val result = testLandingController().showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("Your session has ended because you have not done anything for 15 minutes.")
+      val result = Sut.showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
+      contentAsString(result) must include("Your session has ended because you have not done anything for 15 minutes.")
     }
 
     "show 2FA failure page when no journey ID specified" in {
-      val result = testLandingController().showNotAuthorised(None)(fakeRequest)
-      contentAsString(result) should include ("We were unable to confirm your identity")
-      contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
+      val result = Sut.showNotAuthorised(None)(fakeRequest)
+      contentAsString(result) must include("We were unable to confirm your identity")
+      contentAsString(result) must not include "If you cannot confirm your identity and you have a query you can"
     }
   }
 }

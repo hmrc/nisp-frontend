@@ -16,46 +16,41 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.util.UUID
-
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http._
-import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.time.DateTimeUtils._
 
-class TermsConditionsControllerSpec extends UnitSpec with OneAppPerSuite {
+class TermsConditionsControllerSpec extends PlaySpec with OneAppPerSuite {
 
   val fakeRequest = FakeRequest("GET", "/")
 
   val MockTermsConditionsController = new TermsConditionsController {
-        override protected def authConnector: AuthConnector = MockAuthConnector
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+    override protected def authConnector: AuthConnector = MockAuthConnector
+
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   }
 
   "GET /" should {
     "return 200" in {
       val result = MockTermsConditionsController.show(fakeRequest)
-      status(result) shouldBe Status.OK
+      status(result) mustBe Status.OK
     }
 
     "return HTML" in {
       val result = MockTermsConditionsController.show(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      contentType(result) mustBe Some("text/html")
+      charset(result) mustBe Some("utf-8")
     }
 
     "load the T&Cs page" in {
       val result = MockTermsConditionsController.show(fakeRequest)
-      val headingText = Messages("nisp.tandcs.information")
-      contentAsString(result) should include (headingText)
+      contentAsString(result) must include("The information given is based on details from your account at the time you " +
+        "use the service and, while we will make every effort to keep this service up to date, we do not guarantee that " +
+        "it will be or that it is error and omission free.")
     }
   }
 }

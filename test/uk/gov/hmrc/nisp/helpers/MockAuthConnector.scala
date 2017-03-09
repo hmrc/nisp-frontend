@@ -19,15 +19,15 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L500
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{CredentialStrength, Accounts, Authority, PayeAccount}
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, Authority, CredentialStrength, PayeAccount}
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, UserId}
-import uk.gov.hmrc.play.frontend.auth._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object MockAuthConnector extends AuthConnector {
   override val serviceUrl: String = ""
+
   override def http: HttpGet = ???
 
   val mockUserId = userID("mockuser")
@@ -58,7 +58,8 @@ object MockAuthConnector extends AuthConnector {
   )
 
   private def payeAuthority(id: String, nino: Nino): Option[Authority] =
-    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", nino))), None, None, testCredentialStrength(nino), L500, None, None))
+    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", nino))), None, None,
+      testCredentialStrength(nino), L500, None, None, None, "test oid"))
 
   private def testCredentialStrength(nino: Nino): CredentialStrength =
     if (nino == TestAccountBuilder.weakNino) CredentialStrength.Weak else CredentialStrength.Strong

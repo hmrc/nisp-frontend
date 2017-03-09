@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.auth.{NispAuthProvider, NispCompositePageVisibilityPredicate, VerifyProvider}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.exceptions.EmptyPayeException
-import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
+import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.auth._
@@ -44,7 +44,7 @@ trait AuthorisedForNisp extends Actions {
 
   class AuthorisedBy(regime: TaxRegime) {
     val authedBy: AuthenticatedBy = {
-      if(applicationConfig.identityVerification) {
+      if (applicationConfig.identityVerification) {
         AuthorisedFor(regime, NispCompositePageVisibilityPredicate)
       } else {
         AuthorisedFor(NispVerifyRegime, VerifyConfidence)
@@ -52,8 +52,9 @@ trait AuthorisedForNisp extends Actions {
     }
 
     def async(action: AsyncUserRequest): Action[AnyContent] = {
-        authedBy.async {
-          authContext: AuthContext => implicit request =>
+      authedBy.async {
+        authContext: AuthContext =>
+          implicit request =>
             retrievePerson(authContext) flatMap { citizen =>
               action(NispUser(
                 authContext = authContext,
@@ -64,13 +65,14 @@ trait AuthorisedForNisp extends Actions {
                 address = citizen.flatMap(_.address)
               ))(request)
             }
-        }
       }
+    }
 
     def apply(action: UserRequest): Action[AnyContent] = async(user => request => Future.successful(action(user)(request)))
   }
 
   object AuthorisedByAny extends AuthorisedBy(NispAnyRegime)
+
   object AuthorisedByVerify extends AuthorisedBy(NispVerifyRegime)
 
   def retrievePerson(authContext: AuthContext)(implicit request: Request[AnyContent]): Future[Option[CitizenDetailsResponse]] =
@@ -85,15 +87,17 @@ trait AuthorisedForNisp extends Actions {
 
   trait NispRegime extends TaxRegime {
     override def isAuthorised(accounts: Accounts): Boolean = true
+
     override def authenticationType: AuthenticationProvider = NispAuthProvider
   }
 
   object NispAnyRegime extends NispRegime
+
   object NispVerifyRegime extends NispRegime {
     override def authenticationType: AuthenticationProvider = VerifyProvider
   }
 
   def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = {
-    if(confidenceLevel.level == 500) Constants.verify else Constants.iv
+    if (confidenceLevel.level == 500) Constants.verify else Constants.iv
   }
 }

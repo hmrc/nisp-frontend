@@ -16,19 +16,19 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
-import play.twirl.api.Html
+import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.play.test.UnitSpec
 
-class NispMoneySpec extends UnitSpec {
+class NispMoneySpec extends UnitSpec with FakePlayApplication {
   "pounds" should {
     "return HTML with £100 for value 100" in {
-      NispMoney.pounds(100).toString().endsWith("&pound;100") shouldBe true
+      NispMoney.pounds(100).toString().endsWith("&pound;100\n") shouldBe true
     }
     "return HTML with £100.12 for value 100.12" in {
-      NispMoney.pounds(100.12).toString().endsWith("&pound;100.12") shouldBe true
+      NispMoney.pounds(100.12).toString().endsWith("&pound;100.12\n") shouldBe true
     }
     "return HTML with £100.10 for value 100.1" in {
-      NispMoney.pounds(100.1).toString().endsWith("&pound;100.10") shouldBe true
+      NispMoney.pounds(100.1).toString().endsWith("&pound;100.10\n") shouldBe true
     }
   }
 }

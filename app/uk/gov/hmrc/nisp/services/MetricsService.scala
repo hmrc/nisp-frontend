@@ -16,44 +16,44 @@
 
 package uk.gov.hmrc.nisp.services
 
-import com.codahale.metrics.{Counter, Timer}
 import com.codahale.metrics.Timer.Context
-import com.kenshoo.play.metrics.MetricsRegistry
+import com.codahale.metrics.{Counter, Timer}
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.enums.APIType.APIType
+import uk.gov.hmrc.play.graphite.MicroserviceMetrics
 
-object MetricsService extends MetricsService {
+object MetricsService extends MetricsService with MicroserviceMetrics {
 
   val timers = Map(
-    APIType.SP -> MetricsRegistry.defaultRegistry.timer("sp-response-timer"),
-    APIType.NI -> MetricsRegistry.defaultRegistry.timer("ni-response-timer"),
-    APIType.SchemeMembership-> MetricsRegistry.defaultRegistry.timer("scheme-membership-response-timer"),
-    APIType.StatePension -> MetricsRegistry.defaultRegistry.timer("state-pension-response-timer"),
-    APIType.NationalInsurance -> MetricsRegistry.defaultRegistry.timer("national-insurance-response-timer")
+    APIType.SP -> metrics.defaultRegistry.timer("sp-response-timer"),
+    APIType.NI -> metrics.defaultRegistry.timer("ni-response-timer"),
+    APIType.SchemeMembership -> metrics.defaultRegistry.timer("scheme-membership-response-timer"),
+    APIType.StatePension -> metrics.defaultRegistry.timer("state-pension-response-timer"),
+    APIType.NationalInsurance -> metrics.defaultRegistry.timer("national-insurance-response-timer")
   )
 
   val failedCounters = Map(
-    APIType.SP -> MetricsRegistry.defaultRegistry.counter("sp-failed-counter"),
-    APIType.NI -> MetricsRegistry.defaultRegistry.counter("ni-failed-counter"),
-    APIType.SchemeMembership -> MetricsRegistry.defaultRegistry.counter("scheme-membership-failed-counter"),
-    APIType.StatePension -> MetricsRegistry.defaultRegistry.counter("state-pension-failed-counter"),
-    APIType.NationalInsurance -> MetricsRegistry.defaultRegistry.counter("national-insurance-failed-counter")
+    APIType.SP -> metrics.defaultRegistry.counter("sp-failed-counter"),
+    APIType.NI -> metrics.defaultRegistry.counter("ni-failed-counter"),
+    APIType.SchemeMembership -> metrics.defaultRegistry.counter("scheme-membership-failed-counter"),
+    APIType.StatePension -> metrics.defaultRegistry.counter("state-pension-failed-counter"),
+    APIType.NationalInsurance -> metrics.defaultRegistry.counter("national-insurance-failed-counter")
   )
 
-  override val keystoreReadTimer = MetricsRegistry.defaultRegistry.timer("keystore-read-timer")
-  override val keystoreWriteTimer = MetricsRegistry.defaultRegistry.timer("keystore-write-timer")
+  override val keystoreReadTimer = metrics.defaultRegistry.timer("keystore-read-timer")
+  override val keystoreWriteTimer = metrics.defaultRegistry.timer("keystore-write-timer")
 
-  override val keystoreReadFailed = MetricsRegistry.defaultRegistry.counter("keystore-read-failed-counter")
-  override val keystoreWriteFailed = MetricsRegistry.defaultRegistry.counter("keystore-write-failed-counter")
+  override val keystoreReadFailed = metrics.defaultRegistry.counter("keystore-read-failed-counter")
+  override val keystoreWriteFailed = metrics.defaultRegistry.counter("keystore-write-failed-counter")
 
-  override val keystoreHitCounter = MetricsRegistry.defaultRegistry.counter("keystore-hit-counter")
-  override val keystoreMissCounter = MetricsRegistry.defaultRegistry.counter("keystore-miss-counter")
+  override val keystoreHitCounter = metrics.defaultRegistry.counter("keystore-hit-counter")
+  override val keystoreMissCounter = metrics.defaultRegistry.counter("keystore-miss-counter")
 
-  override val identityVerificationTimer = MetricsRegistry.defaultRegistry.timer("identity-verification-timer")
-  override val identityVerificationFailedCounter = MetricsRegistry.defaultRegistry.counter("identity-verification-failed-counter")
+  override val identityVerificationTimer = metrics.defaultRegistry.timer("identity-verification-timer")
+  override val identityVerificationFailedCounter = metrics.defaultRegistry.counter("identity-verification-failed-counter")
 
-  override val citizenDetailsTimer = MetricsRegistry.defaultRegistry.timer("citizen-details-timer")
-  override val citizenDetailsFailedCounter = MetricsRegistry.defaultRegistry.counter("citizen-details-failed-counter")
+  override val citizenDetailsTimer = metrics.defaultRegistry.timer("citizen-details-timer")
+  override val citizenDetailsFailedCounter = metrics.defaultRegistry.counter("citizen-details-failed-counter")
 
   override def startTimer(api: APIType): Context = timers(api).time()
 
@@ -61,7 +61,8 @@ object MetricsService extends MetricsService {
 }
 
 trait MetricsService {
-  def startTimer(api:APIType): Timer.Context
+  def startTimer(api: APIType): Timer.Context
+
   def incrementFailedCounter(api: APIType): Unit
 
   val keystoreReadTimer: Timer

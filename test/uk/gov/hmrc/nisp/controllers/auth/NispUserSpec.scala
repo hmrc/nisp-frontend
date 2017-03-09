@@ -23,7 +23,8 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class NispUserSpec extends UnitSpec {
 
-  private val fakeAuthContext = new AuthContext(LoggedInUser("", None, None, None, CredentialStrength.Strong, ConfidenceLevel.L0), Principal(None, Accounts()), None, None, None)
+  private val fakeAuthContext = new AuthContext(LoggedInUser("", None, None, None, CredentialStrength.Strong,
+    ConfidenceLevel.L0, "test oid"), Principal(None, Accounts()), None, None, None, None)
 
   def createNispUser(address: Option[Address] = None) = {
     NispUser(fakeAuthContext, None, "", None, None, address)
@@ -38,5 +39,4 @@ class NispUserSpec extends UnitSpec {
       createNispUser(address = Some(Address(None))).livesAbroad shouldBe false
     }
   }
-
 }

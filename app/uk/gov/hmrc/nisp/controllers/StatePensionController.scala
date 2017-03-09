@@ -21,7 +21,6 @@ import play.api.mvc.{Action, AnyContent, Request, Session}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
-import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.auth.{AuthorisedForNisp, NispUser}
 import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
@@ -35,10 +34,9 @@ import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.time.CurrentTaxYear
 
+object StatePensionController extends StatePensionController {
 
-object StatePensionController extends StatePensionController with AuthenticationConnectors with PartialRetriever {
   override val sessionCache: SessionCache = NispSessionCache
   override val customAuditConnector = CustomAuditConnector
   override val applicationConfig: ApplicationConfig = ApplicationConfig
@@ -50,7 +48,10 @@ object StatePensionController extends StatePensionController with Authentication
     if (applicationConfig.useNationalInsuranceAPI) NationalInsuranceService else NispNationalInsuranceService
 }
 
-trait StatePensionController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with CurrentTaxYear {
+trait StatePensionController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with AuthenticationConnectors with PartialRetriever {
+
+  import play.api.Play.current
+  import play.api.i18n.Messages.Implicits._
 
   def statePensionService: StatePensionService
 
@@ -74,7 +75,6 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
         }
       }
   }
-
 
   private def sendAuditEvent(statePension: StatePension, user: NispUser)(implicit hc: HeaderCarrier) = {
     customAuditConnector.sendEvent(AccountAccessEvent(
@@ -225,7 +225,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
     }
   }
 
-  def timeout: Action[AnyContent] = UnauthorisedAction { implicit request =>
+  def timeout = UnauthorisedAction { implicit request =>
     Ok(sessionTimeout())
   }
 }

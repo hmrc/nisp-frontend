@@ -21,9 +21,7 @@ import java.net.URLEncoder
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.play.frontend.auth.Verify
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
@@ -36,11 +34,11 @@ object VerifyProvider extends Verify {
     ))
   }
 
-  override def login: String =  {
+  override def login: String = {
 
     var url = ApplicationConfig.verifySignIn
 
-    if(ApplicationConfig.verifySignInContinue) {
+    if (ApplicationConfig.verifySignInContinue) {
       url += s"?continue=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}"
     }
 

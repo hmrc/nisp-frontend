@@ -17,18 +17,19 @@
 package uk.gov.hmrc.nisp.controllers
 
 import play.api.Logger
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
-
 
 import scala.concurrent.Future
 
@@ -43,18 +44,19 @@ trait LandingController extends NispFrontendController with Actions with Authori
 
   def show: Action[AnyContent] = UnauthorisedAction(
     implicit request =>
-      if(applicationConfig.identityVerification) {
+      if (applicationConfig.identityVerification) {
         Ok(identity_verification_landing()).withNewSession
       } else {
         Ok(landing()).withNewSession
       }
   )
 
-  def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user => implicit request =>
-    Redirect(routes.StatePensionController.show())
+  def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user =>
+    implicit request =>
+      Redirect(routes.StatePensionController.show())
   }
 
-  def showNotAuthorised(journeyId: Option[String]) : Action[AnyContent] = UnauthorisedAction.async {implicit request =>
+  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
     val result = journeyId map { id =>
 
       import IdentityVerificationSuccessResponse._

@@ -23,7 +23,10 @@ import uk.gov.hmrc.play.http.HttpGet
 
 object MockStatePensionConnector extends StatePensionConnector {
   override def http: HttpGet = MockNispHttp.mockHttp
+
   override def sessionCache: SessionCache = MockSessionCache
+
   override def serviceUrl: String = ""
+
   override val metricsService: MetricsService = MockMetricsService
 }

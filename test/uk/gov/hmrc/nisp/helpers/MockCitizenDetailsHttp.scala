@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
+
 import scala.concurrent.Future
 
 object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
@@ -50,7 +51,7 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
   )
 
   def createMockedURL(nino: Nino, response: Future[HttpResponse]): Unit =
-    when(mockHttp.GET[HttpResponse](Matchers.endsWith(s"citizen-details/$nino/designatory-details"))(Matchers.any(), Matchers.any())).thenReturn(response)
+    when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"citizen-details/$nino/designatory-details"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(response)
 
   private def setupCitizenDetailsMocking(nino: Nino) =
     createMockedURL(nino, TestAccountBuilder.jsonResponse(nino, "citizen-details"))

@@ -1,4 +1,5 @@
 @import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 @import uk.gov.hmrc.urls.Link
 
 @(langMap  : Map[String, Lang], langToCall : (String => Call), customClass: Option[String] = None, appName: Option[String] = None)(implicit lang: Lang)

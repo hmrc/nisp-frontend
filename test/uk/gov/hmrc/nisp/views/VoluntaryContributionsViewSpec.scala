@@ -18,16 +18,15 @@ package uk.gov.hmrc.nisp.views
 
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.PlaySpec
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
-import uk.gov.hmrc.nisp.views.html.HtmlSpec
-import uk.gov.hmrc.play.test.UnitSpec
 
-
-class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
-
+class VoluntaryContributionsViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
@@ -37,17 +36,13 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
   val mockUserId = "/auth/oid/" + mockUsername
 
   lazy val fakeRequest = FakeRequest();
-  implicit override val lang =  LanguageToggle.getLanguageCode
-
-
+  implicit override val lang = LanguageToggle.getLanguageCode
 
   "Voluntary contributions view" should {
-
     lazy val sResult = html.nirecordVoluntaryContributions()
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render page with heading  Voluntary contributions " in {
-
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.voluntarycontributions.heading")
     }
     "render page with text  Before considering paying voluntary contributions you should" in {
@@ -101,7 +96,7 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
       assertElemetsOwnMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")
     }
     "render page with link  'Pension wise (opens in new tab)'' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message","details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message", "details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a")
     }
     "render page with text  'Citizens Advice (opens in new tab)'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link3")
@@ -110,7 +105,7 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
       assertEqualsMessage(htmlAccountDoc, "article.content__body > h2.heading-medium:nth-child(10)", "nisp.nirecord.voluntarycontributions.h2title.3")
     }
     "render page with text  'to find out more about how filling gaps can affect your pension.' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >p:nth-child(11)", "nisp.nirecord.voluntarycontributions.h2title.3.message","article.content__body >p:nth-child(11)>a")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >p:nth-child(11)", "nisp.nirecord.voluntarycontributions.h2title.3.message", "article.content__body >p:nth-child(11)>a")
     }
 
     "render page with link  'to find out more about how filling gaps can affect your pension.' " in {

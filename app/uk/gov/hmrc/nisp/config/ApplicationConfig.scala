@@ -16,12 +16,7 @@
 
 package uk.gov.hmrc.nisp.config
 
-import java.net.URLEncoder
 import play.api.Play._
-import play.api.i18n.Messages
-import play.api.mvc.Request
-import uk.gov.hmrc.nisp.controllers.auth.NispUser
-import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.config.ServicesConfig
 

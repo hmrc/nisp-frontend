@@ -16,17 +16,14 @@
 
 package uk.gov.hmrc.nisp.auth
 
-import java.net.{URLEncoder, URI}
+import java.net.{URI, URLEncoder}
 
-import uk.gov.hmrc.nisp.controllers.routes
-
-import play.api.mvc.Request
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
-import uk.gov.hmrc.play.frontend.auth.{UpliftingIdentityConfidencePredicate, PageVisibilityPredicate, CompositePageVisibilityPredicate}
+import uk.gov.hmrc.play.frontend.auth.{CompositePageVisibilityPredicate, PageVisibilityPredicate, UpliftingIdentityConfidencePredicate}
 
 object NispCompositePageVisibilityPredicate extends CompositePageVisibilityPredicate {
-  override def children: Seq[PageVisibilityPredicate] = Seq (
+  override def children: Seq[PageVisibilityPredicate] = Seq(
     new NispStrongCredentialPredicate(twoFactorURI),
     new UpliftingIdentityConfidencePredicate(L200, ivUpliftURI)
   )

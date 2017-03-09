@@ -18,56 +18,41 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 
-import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import org.joda.time.LocalDate
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.{Logger, Play}
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.Cookie
+import org.scalatestplus.play.PlaySpec
+import play.api.Play.current
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
+import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePension, StatePensionExclusion, StatePensionExclusionFiltered}
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusionFiltered}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse, SessionKeys, Upstream4xxResponse}
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.time.DateTimeUtils.now
-import uk.gov.hmrc.play.language.LanguageController
+import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils._
-import play.api.test.Helpers._
-import play.api.test.FakeRequest
-import uk.gov.hmrc.nisp.controllers.CustomLanguageController
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
 
-
-class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
-
+class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
-  val mockUserNino = TestAccountBuilder.regularNino;
-  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
-  val mockFullUserId = "/auth/oid/mockfulluser"
   val mockAbroadUserId = "/auth/oid/mockabroad"
-
-  lazy val fakeRequest = FakeRequest();
-  implicit override val lang =  LanguageToggle.getLanguageCode
-  implicit val lanCookie =  LanguageToggle.getLanguageCookie
-
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -76,10 +61,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
   )
 
-
-
   "Render Ni Record to view all the years" should {
-
     lazy val controller = new MockNIRecordController {
       override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
       override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
@@ -91,13 +73,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
-
     }
 
-
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
-
-
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -160,7 +138,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of £530 by 5 April 2023. This shortfall may increase after 5 April 2019.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60 ", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -174,7 +152,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
     "render page with text 'Paid employment £ 4,259.60'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £4,259.60")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £4,259.60 ")
     }
 
     /*check for medical credit year*/
@@ -224,7 +202,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       override val metricsService: MetricsService = MockMetricsService
     }
 
-    lazy val result = controller.showGaps(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
+    lazy val result = controller.showGaps(authenticatedFakeRequest(mockUserId))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -288,7 +266,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60 ", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -504,7 +482,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       override val statePensionService: StatePensionService = mock[StatePensionService]
     }
 
-    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+    when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 1,
         qualifyingYearsPriorTo1975 = 5,
@@ -522,7 +500,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+    when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
         Exclusion.AmountDissonance,
         Some(66),
@@ -531,7 +509,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )))
 
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -589,11 +567,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
-
-
     }
 
-    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+    when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 2,
         qualifyingYearsPriorTo1975 = 0,
@@ -610,17 +586,15 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-
-    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Left(StatePensionExclusionFiltered (
+    when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
         Exclusion.AmountDissonance,
         Some(66),
         Some(new LocalDate(2020, 3, 6))
       )
       )))
 
-
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -669,7 +643,6 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     "render page with href link 'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
     }
-
   }
 
   "Render Ni Record without gap and has gaps pre75years with Years to contribute " should {
@@ -687,11 +660,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
-
-
     }
 
-    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+    when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 2,
         qualifyingYearsPriorTo1975 = 0,
@@ -709,10 +680,10 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-    when(controller.statePensionService.yearsToContributeUntilPensionAge(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(1))
+    when(controller.statePensionService.yearsToContributeUntilPensionAge(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      .thenReturn(1)
 
-    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+    when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
         Exclusion.AmountDissonance,
         Some(66),
@@ -720,8 +691,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -769,7 +739,6 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
     /*Ends here*/
 
-
     "render page with text  'full year'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dt:nth-child(5)>div>div.ni-notfull", "nisp.nirecord.fullyear")
     }
@@ -779,7 +748,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
     }
 
     "render page with text 'paid employment : £12,345.67'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £12,345.67")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £12,345.67 ")
     }
     "render page with text 'self- employment : 10 weeks'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.selfemployed.plural", "10")
@@ -804,7 +773,6 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
   }
 
-
   "Render Ni Record with Single weeks in self ,contribution and paid -and a abroad User" should {
     lazy val controller = new MockNIRecordController {
       override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
@@ -820,11 +788,9 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
 
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
-
-
     }
 
-    when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+    when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 2,
         qualifyingYearsPriorTo1975 = 0,
@@ -842,10 +808,10 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-    when(controller.statePensionService.yearsToContributeUntilPensionAge(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(1))
+    when(controller.statePensionService.yearsToContributeUntilPensionAge(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      .thenReturn(1)
 
-    when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+    when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
         Exclusion.AmountDissonance,
         Some(66),
@@ -853,8 +819,7 @@ class NIRecordViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId).withCookies(lanCookie))
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId))
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
