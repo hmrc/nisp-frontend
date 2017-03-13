@@ -10,12 +10,12 @@ object FrontendBuild extends Build with MicroService {
 private object AppDependencies {
 
   private val playHealthVersion = "2.0.0"
-  private val frontendBootstrapVersion = "7.10.0"
+  private val frontendBootstrapVersion = "7.14.0"
   private val govukTemplateVersion = "5.0.0"
-  private val playUiVersion = "5.2.0"
-  private val playAuthorisedFrontendVersion = "6.2.0"
+  private val playUiVersion = "7.0.1"
+  private val playAuthorisedFrontendVersion = "6.3.0"
   private val playLanguageVersion = "3.0.0"
-  private val httpCachingClientVersion = "6.1.0"
+  private val httpCachingClientVersion = "6.2.0"
   private val cspClientVersion = "1.0.0"
 
   val compile = Seq(
@@ -37,7 +37,7 @@ private object AppDependencies {
   }
 
   object Test {
-    private val hmrcTestVersion = "2.2.0"
+    private val hmrcTestVersion = "2.3.0"
     private val pegdownVersion = "1.6.0"
     private val jsoupVersion = "1.10.2"
     private val scalaTestPlusVersion = "1.5.1"
