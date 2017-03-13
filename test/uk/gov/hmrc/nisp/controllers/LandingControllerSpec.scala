@@ -45,7 +45,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with FakePlayAppl
 
   private implicit val retriever = MockCachedStaticHtmlPartialRetriever
 
-  object Sut extends LandingController {
+  object testLandingController extends LandingController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
 
     override val applicationConfig = mockApplicationConfig
@@ -59,47 +59,47 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with FakePlayAppl
 
   "GET /" should {
     "return 200" in {
-      val result = Sut.show(fakeRequest)
+      val result = testLandingController.show(fakeRequest)
       status(result) mustBe Status.OK
     }
 
     "return HTML" in {
-      val result = Sut.show(fakeRequest)
+      val result = testLandingController.show(fakeRequest)
       Helpers.contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
     }
 
     "load the landing page" in {
-      val result = Sut.show(fakeRequest)
+      val result = testLandingController.show(fakeRequest)
       contentAsString(result) must include("Your State Pension forecast is provided for your information only and the " +
         "service does not offer financial advice. When planning for your retirement, you should seek professional advice.")
     }
 
     "have a start button" in {
-      val result = Sut.show(fakeRequest)
+      val result = testLandingController.show(fakeRequest)
       contentAsString(result) must include("Continue")
     }
 
     "return IVLanding page" in {
-      val result = Sut.show(fakeRequest)
+      val result = testLandingController.show(fakeRequest)
       contentAsString(result) mustBe contentAsString(landing())
     }
 
     "return non-IV landing page when switched on" in {
       Mockito.when(mockApplicationConfig.identityVerification).thenReturn(true)
-      val result = Sut.show(fakeRequest)
+      val result = testLandingController.show(fakeRequest)
       contentAsString(result) mustBe contentAsString(identity_verification_landing())
     }
   }
 
   "GET /signin/verify" must {
     "redirect to verify" in {
-      val result = Sut.verifySignIn(fakeRequest)
+      val result = testLandingController.verifySignIn(fakeRequest)
       redirectLocation(result) mustBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
     }
 
     "redirect to account page when signed in" in {
-      val result = Sut.verifySignIn(FakeRequest().withSession(
+      val result = testLandingController.verifySignIn(FakeRequest().withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
         SessionKeys.userId -> "/auth/oid/mockuser"
@@ -110,52 +110,52 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with FakePlayAppl
 
   "GET /not-authorised" must {
     "show not authorised page" in {
-      val result = Sut.showNotAuthorised(None)(fakeRequest)
+      val result = testLandingController.showNotAuthorised(None)(fakeRequest)
       contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for FailedMatching journey" in {
-      val result = Sut.showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
+      val result = testLandingController.showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
       contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for InsufficientEvidence journey" in {
-      val result = Sut.showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
+      val result = testLandingController.showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
       contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for Incomplete journey" in {
-      val result = Sut.showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
+      val result = testLandingController.showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
       contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for PreconditionFailed journey" in {
-      val result = Sut.showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
+      val result = testLandingController.showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
       contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show generic not_authorised template for UserAborted journey" in {
-      val result = Sut.showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
+      val result = testLandingController.showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
       contentAsString(result) must include("We were unable to confirm your identity")
     }
 
     "show technical_issue template for TechnicalIssue journey" in {
-      val result = Sut.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+      val result = testLandingController.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
       contentAsString(result) must include("This online service is experiencing technical difficulties.")
     }
 
     "show locked_out template for LockedOut journey" in {
-      val result = Sut.showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
+      val result = testLandingController.showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
       contentAsString(result) must include("You have reached the maximum number of attempts to confirm your identity.")
     }
 
     "show timeout template for Timeout journey" in {
-      val result = Sut.showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
+      val result = testLandingController.showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
       contentAsString(result) must include("Your session has ended because you have not done anything for 15 minutes.")
     }
 
     "show 2FA failure page when no journey ID specified" in {
-      val result = Sut.showNotAuthorised(None)(fakeRequest)
+      val result = testLandingController.showNotAuthorised(None)(fakeRequest)
       contentAsString(result) must include("We were unable to confirm your identity")
       contentAsString(result) must not include "If you cannot confirm your identity and you have a query you can"
     }
