@@ -292,7 +292,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
         "dimension40 should be the customer age" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension40': '62'" shouldBe true
+          contentAsString(result) contains "'dimension40': '63'" shouldBe true
         }
 
         "dimension41 should be the sex" in {
