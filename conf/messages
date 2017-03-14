@@ -151,7 +151,7 @@ nisp.excluded.spa = If you have not already started <a href="https://www.gov.uk/
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
 nisp.excluded.haveReached = You reached State Pension age on {0}
-nisp.excluded.willReach = You&rsquo;ll reach State Pension age on <span class="nowrap">{0}</span>.
+nisp.excluded.willReach = You&rsquo;ll reach State Pension age on <span class="nowrap">{0}</span>
 nisp.nirecord.summary.youhave = You have:
 
 #**************************
