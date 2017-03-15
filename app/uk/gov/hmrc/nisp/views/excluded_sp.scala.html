@@ -51,7 +51,7 @@ canSeeNIRecord: Boolean
            date <- statePensionAgeDate
         ) {
             @if(exclusion.equals(PostStatePensionAge)) {
-                <h2 class="heading-medium"> @Messages("nisp.excluded.haveReached", Dates.formatDate(date)) </h2>
+                <h2 class="heading-medium"> @Html(Messages("nisp.excluded.haveReached", Dates.formatDate(date))) </h2>
             } else {
                 <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", Dates.formatDate(date))) </h2>
             }

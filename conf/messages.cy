@@ -5,14 +5,14 @@
 nisp.back = Yn ôl
 nisp.submit = Anfon
 nisp.year = blwyddyn
-nisp.years = blynyddoedd
-nisp.is = is
+nisp.years = o flynyddoedd
+nisp.is = yw
 nisp.goback = Ewch yn ôl
 nisp.textentry.warning =  Peidiwch â chynnwys unrhyw wybodaeth bersonol neu ariannol, er enghraifft eich rhif Yswiriant Gwladol neu gerdyn credyd.
 nisp.textentry.charlimit =  Y terfyn yw 1,200 nod.
 nisp.useagain = I ddefnyddio&rsquo;r gwasanaeth eto bydd angen i chi <a href="{0}">fewngofnodi</a>.
 nisp.signOut = allgofnodi
-nisp.verify = dilysu
+nisp.verify = Verify
 nisp.gov-uk = GOV.UK
 nisp.gov-uk-verify = GOV.UK Verify
 nisp.breadcrumb.account = Hafan y cyfrif
@@ -32,7 +32,7 @@ nisp.continue = Parhau
 nisp.landing.title = Gwirio eich Pensiwn y Wladwriaeth
 nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych chi
 nisp.landing.signin.gg = Gallwch fewngofnodi drwy ddefnyddio Porth y Llywodraeth. Efallai y bydd angen i chi ateb ychydig o gwestiynau – byddant yn seiliedig ar bethau mae CThEM eisoes yn ei wybod amdanoch. Yna gallwch gael mynediad i wasanaethau eraill CThEM yn ddiogel.
-nisp.landing.signin.verify = Gallwch hefyd <a href="{0}" data-journey-click="checkmystatepension:landing:verifylink">fewngofnodi drwy ddefnyddio GOV.UK Verify</a>. Os nad ydych wedi defnyddio GOV.UK Verify o&rsquo;r blaen, bydd y broses yn cymryd tua 10 munud. Gallwch gael mynediad i wasanaethau eraill y llywodraeth yn ddiogel ble bynnag rydych yn gweld logo GOV.UK Verify.
+nisp.landing.signin.verify = Gallwch hefyd <a href="{0}" data-journey-click="checkmystatepension:landing:verifylink">fewngofnodi drwy ddefnyddio GOV.UK Verify</a>. Os nad ydych wedi defnyddio GOV.UK Verify o&rsquo;r blaen, bydd y broses yn cymryd tua 15 munud. Gallwch gael mynediad i wasanaethau eraill y llywodraeth yn ddiogel ble bynnag rydych yn gweld logo GOV.UK Verify.
 nisp.landing.estimateprovided = Darperir eich rhagolwg Pensiwn y Wladwriaeth er gwybodaeth yn unig ac nid yw&rsquo;r gwasanaeth yn cynnig cyngor ariannol. Pan yn cynllunio am eich ymddeoliad, dylech chwilio am gyngor proffesiynol.
 nisp.landing.eligibility.heading = Gallwch ddefnyddio&rsquo;r gwasanaeth hwn os ydych yn
 nisp.landing.eligibility1 = dyn a aned ar ôl 5 Ebrill 1951
@@ -55,7 +55,7 @@ nisp.main.month = y mis
 nisp.main.year = y flwyddyn
 nisp.main.notAGuarantee = nid yw&rsquo;n cael ei warantu ac mae&rsquo;n seiliedig ar y gyfraith bresennol
 nisp.main.isBased = yn seiliedig ar eich cofnod Yswiriant Gwladol hyd at <span class="nowrap">{0}</span>
-nisp.main.inflation = nid yw&rsquo;n cynnwys unrhyw godiad o ganlyniad i chwyddiant
+nisp.main.inflation = nid yw&rsquo;n cynnwys unrhyw gynnydd o ganlyniad i chwyddiant
 nisp.main.psod = nid yw&rsquo;n cynnwys y gorchymun rhannu pensiwn sydd gennych yn weithredol
 nisp.main.after = Ar ôl oedran Pensiwn y Wladwriaeth, <span class="nowrap">{0}</span>, nid oes yn rhaid i chi dalu cyfraniadau Yswiriant Gwladol.
 nisp.main.basedOn = Gallwch gael eich Pensiwn y Wladwriaeth ar
@@ -86,8 +86,8 @@ nisp.main.context.improve.para1.plural = Mae gennych flynyddoedd ar eich cofnod 
 nisp.main.context.improve.para1.singular = Mae gennych flwyddyn ar eich cofnod ble na wnaethoch gyfrannu digon o Yswiriant Gwladol a gallwch wneud y diffyg i fyny. Bydd hyn yn gwneud i&rsquo;r blynyddoedd hyn gyfrif tuag at eich pensiwn a gallai wella eich rhagolwg.
 
 nisp.main.context.willReach = Ni allwch wella eich rhagolwg ymhellach, oni bai eich bod yn dewis oedi gwneud cais.
-nisp.main.context.reachMax.needToPay = Os ydych yn gweithio, efallai bydd yn rhaid i chi barhau i dalu cyfraniadau Yswiriant Gwladol tan {0} oherwydd maent yn ariannu budd-daliadau eraill y wladwriaeth ar GIG.
-nisp.main.context.continueWorkingMax.stillNeedToPay = Pan fyddwch yn cyrraedd {0}, byddwch dal angen talu Yswiriant Gwladol tan {1} oherwydd mae&rsquo;n ariannu budd-daliadau eraill y wladwriaeth ar GIG.
+nisp.main.context.reachMax.needToPay = Os ydych yn gweithio, efallai bydd yn rhaid i chi barhau i dalu cyfraniadau Yswiriant Gwladol tan {0} oherwydd maent yn ariannu budd-daliadau eraill y wladwriaeth a&rsquo;r GIG.
+nisp.main.context.continueWorkingMax.stillNeedToPay = Pan fyddwch yn cyrraedd {0}, byddwch dal angen talu Yswiriant Gwladol tan {1} oherwydd mae&rsquo;n ariannu budd-daliadau eraill y wladwriaeth a&rsquo;r GIG.
 
 nisp.main.context.fillGaps.improve.title = Gallwch wella eich rhagolwg
 nisp.main.context.fillGaps.viewGaps = Edrych ar fylchau yn eich cofnod
@@ -134,7 +134,7 @@ nisp.excluded.contactFuturePensionCentre = Yn y cyfamser, gallwch <a href="https
 nisp.excluded.contactNationalInsuranceHelpline = I gael copi o&rsquo;ch cofnod Yswiriant Gwladol hyd yn hyn, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)</a>.
 nisp.excluded.contactNationalInsuranceHelplineIom = I gael copi o&rsquo;ch cofnod Yswiriant Gwladol y DU hyd yn hyn, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)</a>.
 
-nisp.excluded.dead = Cysylltwch â llinell gymorth Yswiriant Gwladol CThEM ar 0300 200 3500.
+nisp.excluded.dead = Cysylltwch â llinell gymorth Yswiriant Gwladol CThEM ar 0300 200 1900.
 
 nisp.excluded.isleOfMan.sp.line1 = Rydym yn methu cyfrifo eich Pensiwn y Wladwriaeth, oherwydd bod Llywodraeth Ynys Manaw ar hyn o bryd yn ymgymryd ag adolygiad o&rsquo;i gynllun Pensiwn Ymddeol. Ni fydd yn mabwysiadu&rsquo;r diwygiadau newydd i Bensiwn y Wladwriaeth.
 nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (agor mewn tab newydd)</a>.
@@ -151,8 +151,8 @@ nisp.excluded.overseas = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwria
 nisp.excluded.spa = Os nad ydych eisoes wedi dechrau <a href="https://www.gov.uk/claim-state-pension-online" rel="external" data-journey-click="checkmystatepension:external:claimstatepension">hawlio eich Pensiwn y Wladwriaeth</a>, gallwch <a href="https://www.gov.uk/deferring-state-pension" rel="external" data-journey-click="checkmystatepension:external:deferstatepension" target="_blank">oedi gwneud cais am eich Pensiwn y Wladwriaeth (agor mewn tab newydd)</a> a gallai hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan rydych eisiau gwneud cais amdano.
 nisp.excluded.niRecordIntro = Gweld cofnod o&rsquo;r cyfraniadau Yswiriant Gwladol sy&rsquo;n cyfri tuag at eich Pensiwn y Wladwriaeth ac edrych am unrhyw fylchau.
 nisp.excluded.niRecordIntroUK = Gweld cofnod o&rsquo;r cyfraniadau Yswiriant Gwladol y DU sy&rsquo;n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
-nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar {0} pan oeddech yn
-nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span> pan fyddwch yn.
+nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
+nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 
 #**************************
 # Questionnaire messages
@@ -172,7 +172,7 @@ nisp.questionnaire.easytouse.3 = Anodd iawn
 nisp.questionnaire.useitbyyourself.question = Pan wnaethoch chi ddefnyddio&rsquo;r gwasanaeth hwn, a wnaethoch chi:
 nisp.questionnaire.useitbyyourself.0 = Ei ddefnyddio eich hunan
 nisp.questionnaire.useitbyyourself.1 = Ei ddefnyddio gyda rhywun
-nisp.questionnaire.useitbyyourself.2 = Cael rhywun iw ddefnyddio ar eich rhan
+nisp.questionnaire.useitbyyourself.2 = Cael rhywun i’w ddefnyddio ar eich rhan
 
 nisp.questionnaire.likelytouse.question = Pa mor debygol fyddwch chi o ddefnyddio&rsquo;r gwasanaeth hwn eto?
 nisp.questionnaire.likely.0 = Tebygol iawn
@@ -189,14 +189,14 @@ nisp.questionnaire.satisfied.4 = Anfodlon iawn
 
 nisp.questionnaire.understanding.question = Wedi defnyddio Gwirio eich Pensiwn y Wladwriaeth, ydych chi’n teimlo bod gennych:
 nisp.questionnaire.understanding.0 = Gwell dealltwriaeth o’ch sefyllfa Pensiwn y Wladwriaeth
-nisp.questionnaire.understanding.1 = Llai o dealltwriaeth o’ch sefyllfa Pensiwn y Wladwriaeth
+nisp.questionnaire.understanding.1 = Llai o ddealltwriaeth o’ch sefyllfa Pensiwn y Wladwriaeth
 nisp.questionnaire.understanding.2 = Dim newid yn eich dealltwriaeth o’ch sefyllfa Pensiwn y Wladwriaeth
 
 
 nisp.questionnaire.whatwillyoudonext.question = Wedi defnyddio Gwirio eich Pensiwn y Wladwriaeth, pa un o&rsquo;r canlynol ydych chi&rsquo;n fwyaf tebygol o&rsquo;i wneud nesaf:
 nisp.questionnaire.whatwillyoudonext.0 = Siarad ag ymgynghorydd ariannol neu wasanaeth cynghori am ddim, fel Cyngor ar Bopeth neu Age UK
 nisp.questionnaire.whatwillyoudonext.1 = Siarad â DWP/CThEM
-nisp.questionnaire.whatwillyoudonext.2 = Siarad â''ch cyflogwr
+nisp.questionnaire.whatwillyoudonext.2 = Siarad â’ch cyflogwr
 nisp.questionnaire.whatwillyoudonext.3 = Siarad â ffrindiau neu deulu
 nisp.questionnaire.whatwillyoudonext.4 = Edrych i mewn i’m pensiynau/cynilion eraill/asedau eraill
 nisp.questionnaire.whatwillyoudonext.5 = Cael mwy o wybodaeth am bensiynau ar-lein
@@ -293,8 +293,8 @@ nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gen
 
 nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0345 608 0126
-nisp.nirecord.helpline.openTimes = dydd Llun i ddydd Gwener: 8am to 6pm
-nisp.nirecord.helpline.callsCost = Mae galwadau yn costio hyd at 12c y funud o limellau daear. Gallai galwadau o ffonau symudol gostio mwy.
+nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am to 6pm
+nisp.nirecord.helpline.callsCost = Mae galwadau yn costio hyd at 12c y funud o linellau daear. Gallai galwadau o ffonau symudol gostio mwy.
 
 #****************************
 # Gaps in your record page
@@ -309,7 +309,7 @@ nisp.nirecord.gapsinyourrecord.line2 = yn ddi-waith a ddim yn hawlio budd-dal
 nisp.nirecord.gapsinyourrecord.line3 = yn hunangyflogedig ond ddim yn talu cyfraniadau oherwydd elw bychan
 nisp.nirecord.gapsinyourrecord.line4 = yn byw dramor
 nisp.nirecord.gapsinyourrecord.line5 = yn byw neu weithio yn Ynys Manaw
-nisp.nirecord.gap.viewdetails = Edrychwch ar <span class="visuallyhidden">{0} </span>o fanylion
+nisp.nirecord.gap.viewdetails = Edrychwch ar <span class="visuallyhidden">{0} </span>fanylion
 nisp.nirecord.gap.hidedetails = Cuddio <span class="visuallyhidden">{0} </span>manylion
 nisp.nirecord.gapsinyourrecord.howtocheckrecord= Sut i wirio eich cofnod
 nisp.nirecord.gapsinyourrecord.paidemployment.title = Gwaith â thâl
@@ -319,7 +319,7 @@ nisp.nirecord.gapsinyourrecord.donothavep60.desc = Gallwch gael P60 yn ei le gan
 nisp.nirecord.gapsinyourrecord.selfemployment.title = Cyfraniadau hunangyflogaeth a gwirfoddol
 nisp.nirecord.gapsinyourrecord.selfemployment.desc = Gwiriwch y cyfraniadau rydych wedi&rsquo;u gwneud yn erbyn eich cyfrifon personol. Er enghraifft os gwnaethoch daliadau drwy siec neu drwy eich banc.
 nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.title = Os oes gennych dystiolaeth bod eich cofnod yn anghywir
-nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1 = Efallai y byddwch yn gallu cywiro eich cofnod. Anfonnwch gopiau o&rsquo;r dystiolaeth angenrheidiol gyda llythyr eglurhaol i:
+nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1 = Efallai y byddwch yn gallu cywiro eich cofnod. Anfonwch gopiau o&rsquo;r dystiolaeth angenrheidiol gyda llythyr eglurhaol i:
 nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1 = Individuals Caseworker
 nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2 = National Insurance contributions and Employers Office
 nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3 = HM Revenue and Customs
@@ -363,14 +363,14 @@ nisp.nirecord.voluntarycontributions.h2title.3.message =  i ddarganfod mwy am su
 # Minimum qualifying period
 #*****************************
 
-nisp.main.description.mqp = Byddwch yn cyrraedd eich oedran Pensiwn y Wladwriaeth ar
+nisp.main.description.mqp = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar
 nisp.mqp.notPossible = Erbyn yr amser hyn, ni fyddwch yn gallu cael y 10 mlynedd sydd ei angen ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.possible = Erbyn yr amser hyn, ni fydd gennych y 10 mlynedd sydd ei angen ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.doNext = Beth allwch chi ei wneud nesaf
 nisp.mqp.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">Os ydych wedi byw neu weithio dramor (agor mewn tab newydd)</a>, efallai bydd eich amser dramor yn helpu i wneud i fyny&rsquo;r 10 mlynedd rydych ei angen i gael unrhyw Bensiwn y Wladwriaeth.
 
 nisp.mqp.years.dontCount.single = Hefyd mae gennych flwyddyn ar eich cofnod sydd ddim yn cyfri tuag at eich pensiwn oherwydd na wnaethoch gyfrannu digon o Yswiriant Gwladol.
-nisp.mqp.years.dontCount.plural = Hefyd mae gennych {0} o flynyddoedd ar eich cofnod sydd ddim yn cyfri tuag at eich pensiwn oherwydd na wnaethoch gyfrannu digon o Yswiriant Gwladol.
+nisp.mqp.years.dontCount.plural = Hefyd mae gennych {0} ar eich cofnod sydd ddim yn cyfri tuag at eich pensiwn oherwydd na wnaethoch gyfrannu digon o Yswiriant Gwladol.
 nisp.mqp.years.dontCount.zero = Nid oes gennych unrhyw flynyddoedd ar eich cofnod sydd ddim yn cyfri tuag at eich pensiwn.
 
 nisp.mqp.filling.never.single = Ni fydd llenwi hwn yn ddigon i gael unrhyw Bensiwn y Wladwriaeth.
@@ -378,8 +378,8 @@ nisp.mqp.filling.may.single = Efallai bydd llenwi un flwyddyn yn rhoi ychydig o 
 nisp.mqp.filling.may.plural = Efallai bydd llenwi rhai o’r blynyddoedd hyn yn rhoi ychydig o Bensiwn y Wladwriaeth i chi.
 nisp.mqp.afterSpa = Ar ôl oedran Pensiwn y Wladwriaeth, {0} ni fyddwch bellach yn talu cyfraniadau Yswiriant Gwladol.
 nisp.mqp.whatElse = Beth arall allwch chi ei wneud
-nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael <a href="https://www.gov.uk/pension-credit/overview" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Credyd Pensiwn (agor mewn tab newydd)</a> os yw eich incwm mewn ymddeoliad yn isel.
-nisp.mqp.moneyAdvice = Cysylltwch â&rsquo;r <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)</a> am gyngor di-duedd ac am ddim.
+nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael <a href="https://www.gov.uk/credyd-pensiwn" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Credyd Pensiwn (agor mewn tab newydd)</a> os yw eich incwm mewn ymddeoliad yn isel.
+nisp.mqp.moneyAdvice = Cysylltwch â&rsquo;r <a href="https://www.moneyadviceservice.org.uk/cy" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)</a> am gyngor di-duedd ac am ddim.
 
 nisp.mqp.howManyToContribute = yn cymryd eich bod yn cyfrannu {0} arall
 nisp.mqp.youCurrentlyHaveZero = Nid oes gennych unrhyw flynyddoedd ar eich cofnod ac rydych angen o leiaf {0} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
@@ -396,8 +396,8 @@ nisp.cope.youWereContractedOut = Roeddech wedi eithrio allan
 nisp.cope.inThePast = Yn y gorffennol rydych wedi bod yn ran o un neu fwy o gynlluniau pensiwn wedi&rsquo;i eithrio allan, fel cynlluniau pensiwn gwaith neu bersonol.
 nisp.cope.why = Pan oeddech chi wedi eithrio allan:
 nisp.cope.why.bullet1 = roeddech chi a&rsquo;ch cyflogwyr yn talu cyfradd is o gyfraniadau Yswiriant Gwladol; neu
-nisp.cope.why.bullet2 = roedd rhywfaint o&rsquo;ch cyfraniadau Yswiriant Gwladol yn cael eu talu i&rsquo;ch cynlluniau pensiwn preivate yn lle hynny
-nisp.cope.definition = Dylai eich cynllun pensiwn gwaith neu bersonol gynnwys swm o bensiwn a fydd, yn y mwyafrif o achosion, yn gyfartal i&rsquo;r Pensiwn y Wladwriaeth ychwanegol a fyddai wedi cael ei dalu. Rydym yn galw&rsquo;r swm yma yn eich Pensiwn Cyfwerth Wedi’i Eithrio (COPE). Mae eich amcangyfrif COPE yn cael ei ddangos isod.
+nisp.cope.why.bullet2 = roedd rhywfaint o&rsquo;ch cyfraniadau Yswiriant Gwladol yn cael eu talu i&rsquo;ch cynlluniau pensiwn preifat yn lle hynny
+nisp.cope.definition = Dylai eich cynllun pensiwn gwaith neu bersonol gynnwys swm o bensiwn a fydd, yn y mwyafrif o achosion, yn gyfartal i&rsquo;r Pensiwn y Wladwriaeth ychwanegol a fyddai wedi cael ei dalu. Rydym yn galw&rsquo;r swm yma yn eich Pensiwn Cyfwerth Wedi&rsquo;i Eithrio (COPE). Mae eich amcangyfrif COPE yn cael ei ddangos isod.
 
 nisp.cope.title2 = Pensiwn Cyfwerth Wedi’i Eithrio (COPE)
 nisp.cope.workplace = Mae&rsquo;r swm o COPE yn cael ei dalu fel rhan o&rsquo;ch cynlluniau pensiwn eraill, ddim gan y llywodraeth. Bydd cyfanswm y pensiwn a delir gan eich cynllun pensiwn gwaith neu bersonol yn dibynnu ar y cynllun ac ar unrhyw ddewisiadau buddsoddi.
