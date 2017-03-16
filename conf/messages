@@ -345,10 +345,10 @@ nisp.nirecord.voluntarycontributions.h2title.2 = 2. Seek guidance or financial a
 nisp.nirecord.voluntarycontributions.h2title.2.message = Paying voluntary contributions may not be your best option when planning for your retirement.
 nisp.nirecord.voluntarycontributions.h2title.2.help.title = Where you can get guidance and advice
 nisp.nirecord.voluntarycontributions.h2title.2.help.message = You can seek professional financial advice. For free impartial guidance (not on GOV.UK):
-nisp.nirecord.voluntarycontributions.h2title.2.help.link1 = Money Advice Service (opens in new tab)
-nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = Pension wise (opens in new tab)
+nisp.nirecord.voluntarycontributions.h2title.2.help.link1 = <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a>
+nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = <a href="https://www.pensionwise.gov.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">Pension wise (opens in new tab)</a>
 nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - advice on pensions for over 50s
-nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = Citizens Advice (opens in new tab)
+nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = <a href="https://www.citizensadvice.org.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">Citizens Advice (opens in new tab)</a>
 
 nisp.nirecord.voluntarycontributions.h2title.3 = 3. Find out how paying voluntary contributions affects your State Pension
 nisp.nirecord.voluntarycontributions.h2title.3.link1 = Contact the Future Pension Centre (opens in new tab)
