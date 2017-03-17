@@ -43,7 +43,7 @@ class LanguageSelectionSpec  extends PlaySpec  with OneAppPerSuite  {
     "give a link to switch to Welsh when current language is English" in {
 
       val doc = html.includes.language_selection(languageMap, langToUrl(_), None, None, messagesEnglish)
-     /* contentAsString(doc) must include(messages("id=\"cymraeg-switch\""))*/
+      contentAsString(doc) must include("id=\"cymraeg-switch\"")
       contentAsString(doc) must include("/language/cymraeg")
     }
 
@@ -55,13 +55,13 @@ class LanguageSelectionSpec  extends PlaySpec  with OneAppPerSuite  {
 
     "give a link to switch to English when current language is Welsh" in {
       val doc = html.includes.language_selection(languageMap, langToUrl(_), None, None, messagesWelsh)
-     /* contentAsString(doc) must include(messages("id=\"english-switch\""))*/
+      contentAsString(doc) must include("id=\"english-switch\"")
       contentAsString(doc) must include("/language/english")
     }
 
     "show correct current language message when current language is Welsh" in {
       val doc = html.includes.language_selection(languageMap, langToUrl(_), None, None, messagesWelsh)
-      /*contentAsString(doc) must include(messages("Cymraeg"))*/
+      contentAsString(doc) must include("Cymraeg")
       contentAsString(doc) must not include ">Cymraeg<"
     }
 

@@ -22,23 +22,24 @@ import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.play.test.UnitSpec
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 
-class TimeSpec @Inject()(val messagesApi: MessagesApi) extends UnitSpec with OneAppPerSuite  with I18nSupport {
-  implicit val message = Messages
+class TimeSpec extends UnitSpec with OneAppPerSuite {
+  val messagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messages = new Messages(new Lang("en"), messagesApi)
 
   "years" should {
     "return 1 year when there is 1 year"  in {
-      Time.years(1) shouldBe "1 year"
+      Time.years(1)(messages) shouldBe "1 year"
     }
     "return 5 years when there is 5 years" in {
-      Time.years(5) shouldBe "5 years"
+      Time.years(5)(messages) shouldBe "5 years"
     }
     "return 0 years when there is 0 years" in {
-      Time.years(0) shouldBe "0 years"
+      Time.years(0)(messages) shouldBe "0 years"
     }
     "return -1 year when there is -1 year" in {
-      Time.years(-1) shouldBe "-1 year"
+      Time.years(-1)(messages) shouldBe "-1 year"
     }
 
   }
