@@ -16,11 +16,16 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.test.FakeApplication
-import uk.gov.hmrc.play.test.UnitSpec
+import javax.inject.Inject
 
-class TimeSpec extends UnitSpec with OneAppPerSuite {
+import org.scalatestplus.play.OneAppPerSuite
+import uk.gov.hmrc.play.test.UnitSpec
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+
+class TimeSpec @Inject()(val messagesApi: MessagesApi) extends UnitSpec with OneAppPerSuite  with I18nSupport {
+  implicit val message = Messages
 
   "years" should {
     "return 1 year when there is 1 year"  in {

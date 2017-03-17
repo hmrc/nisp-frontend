@@ -51,5 +51,5 @@ class CustomLanguageController @Inject()(implicit val messagesApi: MessagesApi) 
 
   /** Returns a mapping between strings and the corresponding Lang object. **/
   override def languageMap: Map[String, Lang] = Map("english" -> englishLang,
-    "cymraeg" -> Lang("cy-GB"))
+    "cymraeg" -> Lang("cy"))
 }

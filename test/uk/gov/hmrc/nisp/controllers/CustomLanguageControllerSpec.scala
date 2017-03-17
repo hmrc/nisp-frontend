@@ -36,7 +36,7 @@ class CustomLanguageControllerSpec extends PlaySpec with PlayRunners {
       val build = new GuiceApplicationBuilder().configure(Map("microservice.services.features.welsh-translation" -> false)).build()
       running(build) {
         val sut = build.injector.instanceOf[CustomLanguageController]
-        val res = sut.switchToLanguage("cymraeg")(FakeRequest())
+        val res = sut.switchToLanguage("welsh")(FakeRequest())
         cookies(res).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value must be(EnglishLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")

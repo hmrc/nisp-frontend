@@ -20,9 +20,9 @@ import java.util.UUID
 
 import org.mockito.Mockito
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http._
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.i18n.Messages.Implicits._
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -36,19 +36,24 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils._
+import javax.inject.Inject
 
-class LandingControllerSpec extends PlaySpec with MockitoSugar with FakePlayApplication {
+class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   private implicit val fakeRequest = FakeRequest("GET", "/")
+  private implicit val lang = Lang("en")
 
-  private val mockApplicationConfig = mock[ApplicationConfig]
+
+  //private val mockApplicationConfig = mock[ApplicationConfig]
 
   private implicit val retriever = MockCachedStaticHtmlPartialRetriever
 
-  object testLandingController extends LandingController {
+  val testLandingController = new LandingController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
 
-    override val applicationConfig = mockApplicationConfig
+    override val applicationConfig: ApplicationConfig = mock[ApplicationConfig]
+
+
 
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
 
@@ -81,14 +86,19 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with FakePlayAppl
     }
 
     "return IVLanding page" in {
+      Mockito.when(testLandingController.applicationConfig.isWelshEnabled).thenReturn(false)
       val result = testLandingController.show(fakeRequest)
-      contentAsString(result) mustBe contentAsString(landing())
+      val messagesApi = app.injector.instanceOf[MessagesApi]
+      val messages = new Messages(new Lang("en"), messagesApi)
+      contentAsString(result) must include(contentAsString(landing()))
     }
 
     "return non-IV landing page when switched on" in {
-      Mockito.when(mockApplicationConfig.identityVerification).thenReturn(true)
+
+      Mockito.when(testLandingController.applicationConfig.isWelshEnabled).thenReturn(false)
+      Mockito.when(testLandingController.applicationConfig.identityVerification).thenReturn(true)
       val result = testLandingController.show(fakeRequest)
-      contentAsString(result) mustBe contentAsString(identity_verification_landing())
+      contentAsString(result) must include(contentAsString(identity_verification_landing()))
     }
   }
 

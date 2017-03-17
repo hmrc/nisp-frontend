@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_dead
-import uk.gov.hmrc.play.language.LanguageUtils.Dates
+import uk.gov.hmrc.nisp.utils.LanguageUtils.Dates
 
 class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with FakePlayApplication {
 
