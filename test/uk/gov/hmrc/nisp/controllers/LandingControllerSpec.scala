@@ -26,7 +26,6 @@ import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.i18n.Messages.Implicits._
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
 import uk.gov.hmrc.nisp.helpers.{MockAuthConnector, MockCachedStaticHtmlPartialRetriever, MockCitizenDetailsService, MockIdentityVerificationConnector}
@@ -36,16 +35,11 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils._
-import javax.inject.Inject
 
 class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   private implicit val fakeRequest = FakeRequest("GET", "/")
   private implicit val lang = Lang("en")
-
-
-  //private val mockApplicationConfig = mock[ApplicationConfig]
-
   private implicit val retriever = MockCachedStaticHtmlPartialRetriever
 
   val testLandingController = new LandingController {
