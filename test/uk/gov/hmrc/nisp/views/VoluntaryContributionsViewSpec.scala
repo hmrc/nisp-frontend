@@ -95,16 +95,16 @@ class VoluntaryContributionsViewSpec extends UnitSpec with MockitoSugar with Htm
       assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>p", "nisp.nirecord.voluntarycontributions.h2title.2.help.message")
     }
     "render page with text  'Money Advice Service (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(1)>a", "nisp.nirecord.voluntarycontributions.h2title.2.help.link1")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(1)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link1")
     }
     "render page with text  ' Pension wise (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2")
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")
     }
     "render page with link  'Pension wise (opens in new tab)'' " in {
       assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message","details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a")
     }
     "render page with text  'Citizens Advice (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(3)>a", "nisp.nirecord.voluntarycontributions.h2title.2.help.link3")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link3")
     }
     "render page with text  '3.  Find out how paying voluntary contributions affects your State Pension ' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body > h2.heading-medium:nth-child(10)", "nisp.nirecord.voluntarycontributions.h2title.3")
