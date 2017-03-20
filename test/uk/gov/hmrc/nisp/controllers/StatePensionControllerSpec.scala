@@ -19,32 +19,23 @@ package uk.gov.hmrc.nisp.controllers
 import java.util.UUID
 
 import org.joda.time.{LocalDate, LocalDateTime}
-import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispConnector
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.{SPAmountModel, StatePensionAmount, StatePensionAmountRegular}
+import uk.gov.hmrc.nisp.models.StatePensionAmountRegular
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
 
-class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfter with OneAppPerSuite {
+class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppPerSuite {
 
-  val mockUserNino = TestAccountBuilder.regularNino
-  val mockUserNinoExcluded = TestAccountBuilder.excludedAll
-  val mockUserNinoNotFound = TestAccountBuilder.blankNino
-  val json = s"test/resources/$mockUserNino.json"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
   val mockUserIdExcluded = "/auth/oid/mockexcludedall"
@@ -90,11 +81,11 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
       "redirect to the GG Login" in {
         val result = MockStatePensionController.show(fakeRequest)
+
         redirectLocation(result) shouldBe Some(ggSignInUrl)
       }
 
       "redirect to Verify with IV disabled" in {
-
         val controller = new MockStatePensionController {
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {

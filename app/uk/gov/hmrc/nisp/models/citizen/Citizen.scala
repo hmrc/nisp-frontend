@@ -38,11 +38,5 @@ object Citizen {
     case value => value.validate[String].map(LocalDate.parse)
   }
 
-  implicit val formats: Format[Citizen] = (
-      (__ \ "nino").format[Nino] and
-      (__ \ "firstName").format[Option[String]] and
-      (__ \ "lastName").format[Option[String]] and
-      (__ \ "sex").format[Option[String]] and
-      (__ \ "dateOfBirth").format[LocalDate]
-    ) (Citizen.apply, unlift(Citizen.unapply))
+  implicit val formats = Json.format[Citizen]
 }

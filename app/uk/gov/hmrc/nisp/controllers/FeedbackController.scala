@@ -19,20 +19,22 @@ package uk.gov.hmrc.nisp.controllers
 import java.net.URLEncoder
 
 import play.api.Logger
+import play.api.Play.current
 import play.api.http.{Status => HttpStatus}
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, NispHeaderCarrierForPartialsConverter, WSHttp}
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService}
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
+import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, _}
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 
 import scala.concurrent.Future
 
@@ -41,7 +43,9 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
   override implicit val formPartialRetriever: FormPartialRetriever = NispFormPartialRetriever
 
   override val httpPost = WSHttp
+
   override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
+
   override def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
 
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
@@ -52,15 +56,20 @@ trait FeedbackController extends NispFrontendController with Actions with Author
   implicit val formPartialRetriever: FormPartialRetriever
 
   def httpPost: HttpPost
+
   def contactFormReferer(implicit request: Request[AnyContent]): String
+
   def localSubmitUrl(implicit request: Request[AnyContent]): String
 
   private val TICKET_ID = "ticketId"
+
   private def feedbackFormPartialUrl(implicit request: Request[AnyContent]) =
     s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/beta-feedback/form/?submitUrl=${urlEncode(localSubmitUrl)}" +
       s"&service=${urlEncode(applicationConfig.contactFormServiceIdentifier)}&referer=${urlEncode(contactFormReferer)}"
+
   private def feedbackHmrcSubmitPartialUrl(implicit request: Request[AnyContent]) =
     s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/beta-feedback/form?resubmitUrl=${urlEncode(localSubmitUrl)}"
+
   private def feedbackThankYouPartialUrl(ticketId: String)(implicit request: Request[AnyContent]) =
     s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/beta-feedback/form/confirmation?ticketId=${urlEncode(ticketId)}"
 
@@ -80,10 +89,10 @@ trait FeedbackController extends NispFrontendController with Actions with Author
         httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier).map {
           resp =>
             resp.status match {
-            case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))
-            case HttpStatus.BAD_REQUEST => BadRequest(uk.gov.hmrc.nisp.views.html.feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
-            case status => Logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
-          }
+              case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))
+              case HttpStatus.BAD_REQUEST => BadRequest(uk.gov.hmrc.nisp.views.html.feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
+              case status => Logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
+            }
         }
       }.getOrElse {
         Logger.warn("Trying to submit an empty feedback form")

@@ -16,49 +16,24 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import javax.inject.Inject
 
+import play.api.Application
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.mvc.Call
+import uk.gov.hmrc.play.language.LanguageController
 
-import play.api.Play
-import play.api.i18n.Lang
-import play.api.mvc.{Action, AnyContent, Call}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
-import play.api.Play.current
+class CustomLanguageController @Inject()(implicit override val messagesApi: MessagesApi, application: Application) extends LanguageController with I18nSupport {
 
-trait CustomLanguageController extends LanguageController with RunMode {
-
-  val applicationConfig: ApplicationConfig
-
-  val englishLang = Lang("en")
+  private val englishLang = Lang("en")
 
   /** Converts a string to a URL, using the route to this controller. **/
-  def langToCall(lang: String): Call = {
-    if(applicationConfig.isWelshEnabled) {
-       routes.CustomLanguageController.switchToLanguage(lang)
-    } else {
-       routes.CustomLanguageController.switchToLanguage("english")
-    }
-  }
+  def langToCall(lang: String): Call = uk.gov.hmrc.nisp.controllers.routes.CustomLanguageController.switchToLanguage(lang)
 
-  override def switchToLanguage(language: String): Action[AnyContent] =  Action { implicit request =>
-    val lang =
-      if(applicationConfig.isWelshEnabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
-      else englishLang
-    val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
-
-    Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
-  }
-
-  /** Provides a fallback URL if there is no referer in the request header. **/
+  /** Provides a fallback URL if there is no referrer in the request header. **/
   override protected def fallbackURL: String = routes.LandingController.show().url
 
   /** Returns a mapping between strings and the corresponding Lang object. **/
   override def languageMap: Map[String, Lang] = Map("english" -> englishLang,
-    "cymraeg" -> Lang("cy-GB"))
-
-}
-
-object CustomLanguageController extends CustomLanguageController {
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
+    "cymraeg" -> Lang("cy"))
 }

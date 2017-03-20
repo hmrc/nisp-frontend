@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.nisp.controllers.connectors
 
-import uk.gov.hmrc.nisp.config.wiring.{NispAuthConnector, NispAuditConnector}
+import uk.gov.hmrc.nisp.config.wiring.{NispAuditConnector, NispAuthConnector}
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 trait AuthenticationConnectors {
 
-  lazy val auditConnector = NispAuditConnector
-  lazy val authConnector = NispAuthConnector
+  def auditConnector = NispAuditConnector
+
+  def authConnector: AuthConnector = NispAuthConnector
 
 }

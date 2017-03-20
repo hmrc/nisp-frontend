@@ -17,6 +17,8 @@
 package uk.gov.hmrc.nisp.controllers
 
 import play.api.Logger
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
@@ -40,38 +42,40 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
   val statePensionService: StatePensionService
   val nationalInsuranceService: NationalInsuranceService
 
-  def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+  def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>
 
-    val statePensionF = statePensionService.getSummary(user.nino)
-    val nationalInsuranceF = nationalInsuranceService.getSummary(user.nino)
+      val statePensionF = statePensionService.getSummary(user.nino)
+      val nationalInsuranceF = nationalInsuranceService.getSummary(user.nino)
 
-    for(
-      statePension <- statePensionF;
-      nationalInsurance <- nationalInsuranceF
-    ) yield {
-      statePension match {
-        case Left(exclusion) =>
-          if (exclusion.exclusion == Exclusion.Dead)
-            Ok(excluded_dead(Exclusion.Dead, exclusion.pensionAge))
-          else if (exclusion.exclusion == Exclusion.ManualCorrespondenceIndicator)
-            Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, exclusion.pensionAge))
-          else {
-            Ok(excluded_sp(exclusion.exclusion, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight))
-          }
-        case _ =>
-          Logger.warn("User accessed /exclusion as non-excluded user")
-          Redirect(routes.StatePensionController.show())
+      for (
+        statePension <- statePensionF;
+        nationalInsurance <- nationalInsuranceF
+      ) yield {
+        statePension match {
+          case Left(exclusion) =>
+            if (exclusion.exclusion == Exclusion.Dead)
+              Ok(excluded_dead(Exclusion.Dead, exclusion.pensionAge))
+            else if (exclusion.exclusion == Exclusion.ManualCorrespondenceIndicator)
+              Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, exclusion.pensionAge))
+            else {
+              Ok(excluded_sp(exclusion.exclusion, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight))
+            }
+          case _ =>
+            Logger.warn("User accessed /exclusion as non-excluded user")
+            Redirect(routes.StatePensionController.show())
+        }
       }
-    }
   }
 
-  def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-     nationalInsuranceService.getSummary(user.nino).map {
+  def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>
+      nationalInsuranceService.getSummary(user.nino).map {
         case Left(exclusion) =>
-          if(exclusion == Exclusion.Dead) {
+          if (exclusion == Exclusion.Dead) {
             Ok(excluded_dead(Exclusion.Dead, None))
           }
-          else if(exclusion == Exclusion.ManualCorrespondenceIndicator) {
+          else if (exclusion == Exclusion.ManualCorrespondenceIndicator) {
             Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, None))
           } else {
             Ok(excluded_ni(exclusion))
@@ -79,6 +83,6 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
         case _ =>
           Logger.warn("User accessed /exclusion/nirecord as non-excluded user")
           Redirect(routes.NIRecordController.showGaps())
-    }
+      }
   }
 }

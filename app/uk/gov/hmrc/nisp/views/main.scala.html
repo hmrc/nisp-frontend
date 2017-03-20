@@ -1,18 +1,18 @@
 @*
-* Copyright 2016 HM Revenue & Customs
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*@
+ * Copyright 2017 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
 
 @import layouts.govuk_template
 @import uk.gov.hmrc.play.views.html.layouts
@@ -23,15 +23,14 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.nisp.utils.Breadcrumb
 @import play.twirl.api.Html
-@import play.api.i18n._
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
+@import play.api.Application
 
-@(browserTitle: Option[String] = Some(Messages("nisp.title")),
+@(browserTitle: Option[String] = None,
     pageTitle: Option[String] = None,
     sidebarLinks: Option[Html] = None,
     sidebarClasses: Option[String] = None,
     userLoggedIn: Boolean = false,
-    contentHeader: Option[Html] = None,
     gaCalls: Option[(String,String) => Html] = None,
     applicationConfig: ApplicationConfig = ApplicationConfig,
     showTitleHeaderNav: Boolean = true,
@@ -41,7 +40,7 @@
     analyticsAdditionalJs: Option[Html] = None,
     articleEnabled: Boolean = true,
     loginDetailsHeader: Option[Html] = None,
-    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit lang: Lang, request : Request[_], authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever)
+    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever, application: Application)
 
 @linkElement = {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/nisp.css")'/>
@@ -80,7 +79,7 @@
 @betaBanner = {@if(showBetaBanner) {@layouts.betaBanner(userLoggedIn, applicationConfig.betaFeedbackUrl,applicationConfig.betaFeedbackUnauthenticatedUrl, true)}}
 
 @serviceInfoHtml = {
-    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user , lang)))
+    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user , messages)))
         .getOrElse(serviceInfo(betaBanner, false, None)
         )
     }
@@ -110,11 +109,13 @@
     }
 }
 
+@clc = @{ Application.instanceCache[CustomLanguageController].apply(application) }
+
 @contentHeader = {
     @loginDetailsHeader
 
     @if(applicationConfig.isWelshEnabled){
-        @includes.language_selection(CustomLanguageController.languageMap, CustomLanguageController.langToCall, Some("align-right"),Some("checkmystatepension"))
+        @language_selection(clc.languageMap, clc.langToCall, Some("align-right"), Some("checkmystatepension"), messages)
     }
 }
 
@@ -149,5 +150,5 @@
     @pageScripts
 }
 
-@govuk_template(browserTitle, None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footer_links()), true)(content)
+@govuk_template(browserTitle.orElse(Some(Messages("nisp.title"))), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footer_links()), true)(content)
 

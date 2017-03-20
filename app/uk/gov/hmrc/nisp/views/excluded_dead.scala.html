@@ -1,18 +1,18 @@
 @*
-* Copyright 2016 HM Revenue & Customs
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*@
+ * Copyright 2017 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
 
 @import uk.gov.hmrc.nisp.models.enums.Exclusion._
 @import uk.gov.hmrc.nisp.models.ExclusionsModel
@@ -20,9 +20,10 @@
 @import uk.gov.hmrc.nisp.models.SPAgeModel
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import exclusions.viewExclusions
+@import play.api.Application
 
-@(exclusion: Exclusion, statePensionAge: Option[Int])(implicit lang: Lang, request: Request[_], user: NispUser,
-  partialRetriever: CachedStaticHtmlPartialRetriever)
+@(exclusion: Exclusion, statePensionAge: Option[Int])(implicit messages: Messages, request: Request[_], user: NispUser,
+  partialRetriever: CachedStaticHtmlPartialRetriever, application: Application)
 
 @analyticsAdditionalJs = {
     ga('set', {
@@ -35,7 +36,7 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @main(browserTitle=Some(Messages("nisp.main.title")), userLoggedIn = true,
+    @main(Some(Messages("nisp.main.title")), userLoggedIn = true,
         pageTitle = Some(Messages("nisp.excluded.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
         @exclusions.dead()
     }

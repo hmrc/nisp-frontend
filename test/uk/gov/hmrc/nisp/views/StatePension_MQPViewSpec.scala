@@ -20,33 +20,33 @@ import java.util.UUID
 
 import org.apache.commons.lang3.StringEscapeUtils
 import org.joda.time.LocalDate
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.PlaySpec
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
+import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.formatting.Time
-import uk.gov.hmrc.nisp.views.html.HtmlSpec
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
 
-class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec with BeforeAndAfter with OneAppPerSuite {
-
+class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   lazy val fakeRequest = FakeRequest()
@@ -68,8 +68,8 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
-  implicit override val lang =  LanguageToggle.getLanguageCode
-  implicit val lanCookie =  LanguageToggle.getLanguageCookie
+  implicit override val lang = LanguageToggle.getLanguageCode
+  implicit val lanCookie = LanguageToggle.getLanguageCookie
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -95,7 +95,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
       "State Pension page with forecast only" should {
 
         lazy val controller = createStatePensionController
-        when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+        when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Right(StatePension(
             new LocalDate(2016, 4, 5),
             amounts = StatePensionAmounts(
@@ -114,7 +114,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           )
           )))
 
-        when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+        when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Right(NationalInsuranceRecord(
             qualifyingYears = 11,
             qualifyingYearsPriorTo1975 = 0,
@@ -146,7 +146,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
         }
         "render page with text  '7 june 2020' " in {
-          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
+          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
         }
         "render page with text  'Your forecast is' " in {
           val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -230,15 +230,12 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
         "render page with help text 'Get help with this page.' " in {
           assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Get help with this page.")
         }
-
       }
 
       "The scenario is continue working" when {
-
         "State Pension page with MQP : Continue Working || Fill Gaps || Full Rate" should {
-
           lazy val controller = createStatePensionController
-          when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -257,7 +254,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 4,
               qualifyingYearsPriorTo1975 = 0,
@@ -277,9 +274,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
-          val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
-
-
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
@@ -290,7 +284,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -378,13 +372,12 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
           "render page with help text 'Get help with this page.' " in {
             assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Get help with this page.")
           }
-
         }
 
         "State Pension page with MQP : Continue Working || no gaps || Full Rate" should {
 
           lazy val controller = createStatePensionController
-          when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -403,7 +396,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 4,
               qualifyingYearsPriorTo1975 = 0,
@@ -423,8 +416,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
-          val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
-
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
@@ -435,7 +426,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -457,7 +448,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased",Dates.formatDate(new LocalDate(2016, 4, 5)))
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
@@ -516,7 +507,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
         "State Pension page with MQP : Continue Working || 0 Qualify Years || has fillable Gaps ||  Personal Max" should {
 
           lazy val controller = createStatePensionController
-          when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -535,7 +526,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 0,
               qualifyingYearsPriorTo1975 = 0,
@@ -555,9 +546,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
-          val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
-
-
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
@@ -569,7 +557,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -648,7 +636,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
         "State Pension page with MQP : Continue Working || 9 Qualify Years || cant fill gaps ||  Personal Max" should {
 
           lazy val controller = createStatePensionController
-          when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -667,7 +655,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 9,
               qualifyingYearsPriorTo1975 = 0,
@@ -686,9 +674,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
-          val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
-
-
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
@@ -699,7 +684,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7))+".")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -777,13 +762,13 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
         }
       }
 
-      "The scenario is No years to contribute" when{
+      "The scenario is No years to contribute" when {
 
         "State Pension page with MQP :  No Gaps || Cant get pension" should {
 
           lazy val controller = createStatePensionController
 
-          when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -802,7 +787,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 4,
               qualifyingYearsPriorTo1975 = 0,
@@ -822,12 +807,9 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
-          val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
-
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
-
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
           }
 
@@ -836,7 +818,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
-            val sMessage =Dates.formatDate(new LocalDate(2017, 5, 4))+ "."
+            val sMessage = Dates.formatDate(new LocalDate(2017, 5, 4)) + "."
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
@@ -890,7 +872,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val controller = createStatePensionController
 
-          when(controller.statePensionService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -909,7 +891,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(Matchers.any())(Matchers.any()))
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 4,
               qualifyingYearsPriorTo1975 = 0,
@@ -929,8 +911,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
 
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
-          val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
-
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
@@ -942,7 +922,7 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
-            val sMessage = Dates.formatDate(new LocalDate(2018, 5, 4))+"."
+            val sMessage = Dates.formatDate(new LocalDate(2018, 5, 4)) + "."
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
@@ -995,9 +975,6 @@ class StatePension_MQPViewSpec extends UnitSpec with MockitoSugar with HtmlSpec 
       }
 
     }
-
-
-
 
 
   }

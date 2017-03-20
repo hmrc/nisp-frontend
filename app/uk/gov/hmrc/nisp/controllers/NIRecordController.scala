@@ -17,6 +17,8 @@
 package uk.gov.hmrc.nisp.controllers
 
 import org.joda.time.{DateTimeZone, LocalDate}
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.cache.client.SessionCache
@@ -33,7 +35,6 @@ import uk.gov.hmrc.nisp.utils.{Constants, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.time.TaxYear
-
 
 object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService

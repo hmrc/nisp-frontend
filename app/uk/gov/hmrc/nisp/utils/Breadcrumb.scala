@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.utils
 
 import java.net.URLEncoder
 
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 import play.api.mvc.Request
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
@@ -32,10 +32,11 @@ trait Breadcrumb {
 
   val applicationConfig: ApplicationConfig
 
-  def initialBreadCrumbList(implicit lang: Lang) = List((URLEncoder.encode(Messages("nisp.breadcrumb.account"),"UTF-8"), applicationConfig.pertaxFrontendUrl))
+  def initialBreadCrumbList(implicit messages: Messages) = List((URLEncoder.encode(Messages("nisp.breadcrumb.account"), "UTF-8"), applicationConfig.pertaxFrontendUrl))
+
   lazy val mainContentHeaderPartialUrl = applicationConfig.breadcrumbPartialUrl
 
-  private def buildBreadCrumb(implicit lang: Lang, request: Request[_]): List[(String, String)] = {
+  private def buildBreadCrumb(implicit messages: Messages, request: Request[_]): List[(String, String)] = {
     val links = Map(
       "account" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.pension"), "UTF-8"), routes.StatePensionController.show().url)),
       "nirecord" -> ((URLEncoder.encode(Messages("nisp.breadcrumb.nirecord"), "UTF-8"), routes.NIRecordController.showFull().url)),
@@ -50,14 +51,16 @@ trait Breadcrumb {
     initialBreadCrumbList ::: items.flatten
   }
 
-  def generateHeaderUrl(hideBreadcrumb: Boolean = false) (implicit request:Request[_], user: NispUser, lang: Lang): String =  {
-    val name: String =  user.name.map("?name=" + URLEncoder.encode(_,"UTF-8") + "&").getOrElse("?")
-    val lastLogin =  user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("")
-    val showBreadcrumb = if (hideBreadcrumb) "" else  { buildBreadCrumb(lang, request).map {
-        case (name: String, url: String) => s"item_text=$name&item_url=$url" }.mkString("&")}
+  def generateHeaderUrl(hideBreadcrumb: Boolean = false)(implicit request: Request[_], user: NispUser, messages: Messages): String = {
+    val name: String = user.name.map("?name=" + URLEncoder.encode(_, "UTF-8") + "&").getOrElse("?")
+    val lastLogin = user.previouslyLoggedInAt.map("lastLogin=" + _.getMillis + "&").getOrElse("")
+    val showBreadcrumb = if (hideBreadcrumb) "" else {
+      buildBreadCrumb(messages, request).map {
+        case (name: String, url: String) => s"item_text=$name&item_url=$url"
+      }.mkString("&")
+    }
     val showBetaBanner = "&showBetaBanner=true&deskProToken='NISP'"
     mainContentHeaderPartialUrl.concat(name).concat(lastLogin).concat(showBreadcrumb).concat(showBetaBanner)
-
 
 
   }

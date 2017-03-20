@@ -16,13 +16,11 @@
 
 package uk.gov.hmrc.nisp.auth
 
-import java.net.URLEncoder
-
-import play.api.mvc._
 import play.api.mvc.Results.Redirect
+import play.api.mvc._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.play.frontend.auth.GovernmentGateway
 import uk.gov.hmrc.nisp.controllers.routes
+import uk.gov.hmrc.play.frontend.auth.GovernmentGateway
 
 import scala.concurrent.Future
 

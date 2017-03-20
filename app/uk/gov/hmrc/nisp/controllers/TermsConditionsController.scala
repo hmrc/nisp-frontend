@@ -16,24 +16,22 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
-import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.views.html.termsAndConditions
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
-import scala.concurrent.Future
 
 object TermsConditionsController extends TermsConditionsController with AuthenticationConnectors with PartialRetriever
 
 trait TermsConditionsController extends NispFrontendController with Actions {
 
-  def show: Action[AnyContent] = UnauthorisedAction (
+  def show: Action[AnyContent] = UnauthorisedAction(
     implicit request =>
-        Ok(termsAndConditions())
+      Ok(termsAndConditions())
   )
 
 }

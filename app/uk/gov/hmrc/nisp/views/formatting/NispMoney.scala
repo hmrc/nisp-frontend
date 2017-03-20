@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.twirl.api.Html
 import uk.gov.hmrc.play.views.formatting.Money
 
 object NispMoney {
-  def pounds(value: BigDecimal): Html =  Money.pounds(value, if (value.isValidInt) 0 else 2)
+  def pounds(value: BigDecimal): Html = Money.pounds(value, if (value.isValidInt) 0 else 2)
 }
