@@ -27,13 +27,13 @@ import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_dead
-import uk.gov.hmrc.nisp.utils.LanguageUtils.Dates
+import uk.gov.hmrc.play.language.LanguageUtils.Dates
 
 class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
-  val mockUserNino = TestAccountBuilder.regularNino;
+  val mockUserNino = TestAccountBuilder.regularNino
   val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
@@ -60,8 +60,8 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
 
   "Exclusion Isle of Man : Can't see NI Record" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.IsleOfMan, Some(40), Some(new LocalDate(2019, 9, 6)), false);
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult));
+    lazy val sResult = html.excluded_sp(Exclusion.IsleOfMan, Some(40), Some(new LocalDate(2019, 9, 6)), false)
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
@@ -92,9 +92,9 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
 
   "Exclusion Manual Correspondence Indicator(MCI)" should {
 
-    lazy val sResult = html.excluded_mci(Exclusion.ManualCorrespondenceIndicator, Some(40));
+    lazy val sResult = html.excluded_mci(Exclusion.ManualCorrespondenceIndicator, Some(40))
 
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult));
+    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render page with heading  'There is a problem logging you in'" in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.excluded.mci.title")
@@ -224,7 +224,7 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
     "render page with heading  'You’ll reach State Pension age on' " in {
-      val sDate = Dates.formatDate(new LocalDate(2015, 9, 6)).toString();
+      val sDate = Dates.formatDate(new LocalDate(2015, 9, 6)).toString()
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", sDate, null, null)
 
     }

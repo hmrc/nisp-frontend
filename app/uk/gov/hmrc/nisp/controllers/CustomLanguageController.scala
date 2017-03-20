@@ -18,33 +18,17 @@ package uk.gov.hmrc.nisp.controllers
 
 import javax.inject.Inject
 
+import play.api.Application
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Call}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
+import play.api.mvc.Call
+import uk.gov.hmrc.play.language.LanguageController
 
-class CustomLanguageController @Inject()(implicit val messagesApi: MessagesApi) extends LanguageController with I18nSupport {
+class CustomLanguageController @Inject()(implicit override val messagesApi: MessagesApi, application: Application) extends LanguageController with I18nSupport {
 
-  val englishLang = Lang("en")
+  private val englishLang = Lang("en")
 
   /** Converts a string to a URL, using the route to this controller. **/
-  def langToCall(lang: String): Call = {
-    if (ApplicationConfig.isWelshEnabled) {
-      routes.CustomLanguageController.switchToLanguage(lang)
-    } else {
-      routes.CustomLanguageController.switchToLanguage("english")
-    }
-  }
-
-  override def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
-    val enabled = ApplicationConfig.isWelshEnabled
-    val lang =
-      if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
-      else englishLang
-    val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
-
-    Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
-  }
+  def langToCall(lang: String): Call = uk.gov.hmrc.nisp.controllers.routes.CustomLanguageController.switchToLanguage(lang)
 
   /** Provides a fallback URL if there is no referrer in the request header. **/
   override protected def fallbackURL: String = routes.LandingController.show().url
