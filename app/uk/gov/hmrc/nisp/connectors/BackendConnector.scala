@@ -68,7 +68,7 @@ trait BackendConnector {
     }
     httpResponseF.map {
       httpResponse => httpResponse.json.validate[A].fold(
-        errs => throw new JsonValidationException(s"Unable to deserialise: ${formatJsonErrors(errs)}"), valid => valid
+        errs => throw new JsonValidationException(s"Unable to deserialise $apiType: ${formatJsonErrors(errs)}"), valid => valid
       )
     }
   }
