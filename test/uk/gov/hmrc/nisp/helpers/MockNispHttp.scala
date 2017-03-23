@@ -39,6 +39,7 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.fillGapsMultiple,
     TestAccountBuilder.fillGapSingle,
+    TestAccountBuilder.noQualifyingYears,
 
     TestAccountBuilder.excludedAll,
     TestAccountBuilder.excludedAllButDead,

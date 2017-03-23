@@ -43,6 +43,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserIdExcluded = "/auth/oid/mockexcludedall"
   val mockUserIdHRP = "/auth/oid/mockhomeresponsibilitiesprotection"
   val mockUserWithGaps = "/auth/oid/mockfillgapsmultiple"
+  val mockNoQualifyingYearsUserId = "/auth/oid/mocknoqualifyingyears"
 
   val ggSignInUrl = s"http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
 
@@ -87,7 +88,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
       ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
-  }
+}
 
   "GET /account/nirecord (full)" should {
     "return redirect for unauthenticated user" in {
@@ -182,6 +183,24 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
       }
       val result = controller.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) shouldNot include("52 weeks")
+    }
+
+    "return NI record when numner of qualifying years is 0" in {
+      // Unit test for bug NISP-2436
+      val controller = new MockNIRecordController {
+        override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+        override val sessionCache: SessionCache = MockSessionCache
+        override val showFullNI = true
+        override val currentDate = new LocalDate(2016, 9, 9)
+
+        override protected def authConnector: AuthConnector = MockAuthConnector
+
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override val metricsService: MetricsService = MockMetricsService
+      }
+      val result = controller.showFull(authenticatedFakeRequest(mockNoQualifyingYearsUserId))
+      result.header.status shouldBe 200
     }
   }
 

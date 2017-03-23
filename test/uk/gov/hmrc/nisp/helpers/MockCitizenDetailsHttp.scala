@@ -40,6 +40,7 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.fillGapSingle,
     TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.noQualifyingYears,
 
     TestAccountBuilder.excludedAll,
     TestAccountBuilder.excludedAllButDead,
