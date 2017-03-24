@@ -40,6 +40,7 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
 
   private implicit val fakeRequest = FakeRequest("GET", "/")
   private implicit val lang = Lang("en")
+  val fakeRequestWelsh = FakeRequest("GET", "/cymraeg")
   private implicit val retriever = MockCachedStaticHtmlPartialRetriever
 
   val testLandingController = new LandingController {
@@ -162,6 +163,25 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
       val result = testLandingController.showNotAuthorised(None)(fakeRequest)
       contentAsString(result) must include("We were unable to confirm your identity")
       contentAsString(result) must not include "If you cannot confirm your identity and you have a query you can"
+    }
+  }
+
+  "GET /cymraeg" must {
+     implicit val lang = Lang("cy")
+    "return 200" in {
+      val result = testLandingController.show(fakeRequestWelsh)
+      status(result) mustBe Status.OK
+    }
+
+    "return HTML" in {
+      val result = testLandingController.show(fakeRequestWelsh)
+      Helpers.contentType(result) mustBe Some("text/html")
+      charset(result) mustBe Some("utf-8")
+    }
+
+    "load the landing page in welsh" in {
+      val result = testLandingController.show(fakeRequestWelsh)
+      contentAsString(result) must include("data-journey-click=\"checkmystatepension:language: cy\"")
     }
   }
 }
