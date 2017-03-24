@@ -27,6 +27,7 @@ import play.api.mvc._
 class CustomLanguageController @Inject()(implicit override val messagesApi: MessagesApi, application: Application) extends LanguageController with I18nSupport {
 
   private val englishLang = Lang("en")
+  private val welshLang = Lang("cy")
 
   /** Converts a string to a URL, using the route to this controller. **/
   def langToCall(lang: String): Call = uk.gov.hmrc.nisp.controllers.routes.CustomLanguageController.switchToLanguage(lang)
@@ -36,12 +37,12 @@ class CustomLanguageController @Inject()(implicit override val messagesApi: Mess
 
   /** Returns a mapping between strings and the corresponding Lang object. **/
   override def languageMap: Map[String, Lang] = Map("english" -> englishLang,
-    "cymraeg" -> Lang("cy"))
+    "cymraeg" -> welshLang)
 
   def switchToWelshLandingPage: Action[AnyContent] = Action { implicit request =>
     val enabled =  application.configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)
-    val lang =  if (enabled) Lang("cy")
-    else Lang("en")
+    val lang =  if (enabled) welshLang
+    else englishLang
     Redirect(uk.gov.hmrc.nisp.controllers.routes.LandingController.show()).withLang(lang)
   }
 }
