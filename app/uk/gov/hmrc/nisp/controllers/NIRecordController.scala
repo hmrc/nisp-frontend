@@ -133,7 +133,10 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
                 val tableStart: String =
                   if (recordHasEnded) Formatting.startYearToTaxYear(finalRelevantStartYear)
                   else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
-                val tableEnd: String = niRecord.taxYears.last.taxYear
+                val tableEnd: String = niRecord.taxYears match {
+                  case Nil  => tableStart
+                  case _    => niRecord.taxYears.last.taxYear
+                }
 
                 sendAuditEvent(user.nino, niRecord, yearsToContribute)
 

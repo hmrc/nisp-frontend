@@ -48,6 +48,7 @@ object TestAccountBuilder {
   val hrpNino: Nino = randomNino
   val fillGapSingle: Nino = randomNino
   val fillGapsMultiple: Nino = randomNino
+  val noQualifyingYears: Nino = randomNino
 
   val excludedAll: Nino = randomNino
   val excludedAllButDead: Nino = randomNino
@@ -73,6 +74,7 @@ object TestAccountBuilder {
     hrpNino -> "homeresponsibilitiesprotection",
     fillGapSingle -> "fillgaps-singlegap",
     fillGapsMultiple -> "fillgaps-multiple",
+    noQualifyingYears -> "no-qualifying-years",
 
     excludedAll -> "excluded-all",
     excludedAllButDead -> "excluded-all-but-dead",

@@ -1,0 +1,21 @@
+{
+  "niRecord": {
+    "taxYears": []
+  },
+  "niSummary": {
+    "noOfQualifyingYears": 0,
+    "noOfNonQualifyingYears": 0,
+    "yearsToContributeUntilPensionAge": 3,
+    "spaYear": 2019,
+    "earningsIncludedUpTo": "05\/04\/2016",
+    "unavailableYear": 2014,
+    "numberOfPayableGaps": 0,
+    "numberOfNonPayableGaps": 0,
+    "canImproveWithGaps": true,
+    "isAbroad": false,
+    "recordEnd": null,
+    "finalRelevantYear": 2018,
+    "homeResponsibilitiesProtection": false,
+    "dateOfEntry": "04\/05\/2015"
+  }
+}
