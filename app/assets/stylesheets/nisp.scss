@@ -267,19 +267,40 @@ textarea {
       text-align: right;
       font-size: 1.3em;
       font-weight: 800;
-      @media only screen and (min-width: 749px) and (max-width:948px) {
-                min-width:40%;
-            }
-      @media only screen and (min-width: 641px) and (max-width:748px) {
-                            min-width:48%;
-                        }
+      @media only screen and (max-width:972px) {
+         min-width:46%;
+      }
+      @media only screen and (min-width: 782px) and (max-width:948px) {
+         min-width:48%;
+      }
+      @media only screen and (min-width: 702px) and (max-width:781px) {
+         min-width:54%;
+      }
+      @media only screen and (min-width: 641px) and (max-width:701px) {
+          min-width:60%;
+      }
       @media only screen and (max-width: 640px) {
         font-size: 1em;
         line-height: 2em;
       }
+      @media only screen and (max-width: 407px) {
+         min-width:40%;
+      }
       @media only screen and (max-width: 398px) {
-              min-width:40%;
-            }
+          min-width:42%;
+      }
+      @media only screen and (max-width : 370px) and (min-width: 322px) {
+          min-width:50%;
+      }
+      @media only screen and (max-width : 321px) {
+          min-width:50%;
+      }
+      @media only screen and (max-width : 315px) {
+          min-width:58%;
+      }
+      @media only screen and (max-width : 315px) {
+           min-width:68%;
+      }
       & > * {
         padding-right: 10px;
       }      
