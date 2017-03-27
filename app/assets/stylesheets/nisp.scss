@@ -289,17 +289,11 @@ textarea {
       @media only screen and (max-width: 398px) {
           min-width:42%;
       }
-      @media only screen and (max-width : 370px) and (min-width: 322px) {
+      @media only screen and (max-width : 370px) and (min-width: 321px) {
           min-width:50%;
       }
-      @media only screen and (max-width : 321px) {
-          min-width:50%;
-      }
-      @media only screen and (max-width : 315px) {
-          min-width:58%;
-      }
-      @media only screen and (max-width : 315px) {
-           min-width:68%;
+      @media only screen and (max-width : 320px) {
+           min-width:60%;
       }
       & > * {
         padding-right: 10px;
