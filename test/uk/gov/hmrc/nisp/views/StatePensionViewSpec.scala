@@ -177,42 +177,47 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.main.context.fillgaps.para1.plural")
           }
           "render page with text  ' filling years can improve your forecast.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(10)>span", "nisp.main.context.fillgaps.chart.maxamount")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(10)>li:nth-child(1)", "nisp.main.context.fillgaps.bullet1")
           }
-
+          "render page with text  ' you only need to fill 2 years to get the most you can'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(10)>li:nth-child(2)", "nisp.main.context.fillgaps.bullet2.plural", "2")
+          }
+          "render page with text  ' The most you can get by filling any 2 years in your record is'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(11)>span", "nisp.main.context.fillgaps.chart.plural", "2")
+          }
           "render page with text  '  £149.71 a week'" in {
             val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(10)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>ul>li>span>span", sMessage)
           }
 
           "render page with link  'Gaps in your record and the cost of filling them'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(11)", "nisp.main.context.fillGaps.viewGapsAndCost")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(12)", "nisp.main.context.fillGaps.viewGapsAndCost")
           }
           "render page with href link  'Gaps in your record and the cost of filling them'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(11)", "/check-your-state-pension/account/nirecord/gaps")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(12)", "/check-your-state-pension/account/nirecord/gaps")
           }
 
           /*overseas message*/
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(12)>p", "nisp.main.overseas")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(13)", "nisp.main.puttingOff")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
           }
 
           "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
             "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "67")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "67")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(15)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
           }
 
           /*Side bar help*/
@@ -341,42 +346,47 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.main.context.fillgaps.para1.plural")
           }
           "render page with text  ' filling years can improve your forecast.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(10)>span", "nisp.main.context.fillgaps.chart.maxamount")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(10)>li:nth-child(1)", "nisp.main.context.fillgaps.bullet1")
           }
-
+          "render page with text  ' you only need to fill 2 years to get the most you can'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(10)>li:nth-child(2)", "nisp.main.context.fillgaps.bullet2.plural", "2")
+          }
+          "render page with text  ' The most you can get by filling any 2 years in your record is'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(11)>span", "nisp.main.context.fillgaps.chart.plural", "2")
+          }
           "render page with text  '  £172.71 a week'" in {
             val sMessage = "£172.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(10)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>ul>li>span>span", sMessage)
           }
 
           "render page with link  'Gaps in your record and the cost of filling them'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(11)", "nisp.main.context.fillGaps.viewGapsAndCost")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(12)", "nisp.main.context.fillGaps.viewGapsAndCost")
           }
           "render page with href link  'Gaps in your record and the cost of filling them'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(11)", "/check-your-state-pension/account/nirecord/gaps")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(12)", "/check-your-state-pension/account/nirecord/gaps")
           }
 
           /*overseas message*/
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(12)>p", "nisp.main.overseas")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(13)", "nisp.main.puttingOff")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
           }
 
           "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
             "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "67")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "67")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(15)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
           }
 
           /*Side bar help*/
@@ -504,41 +514,47 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.main.context.fillgaps.para1.plural")
           }
           "render page with text  ' filling years can improve your forecast.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(10)>span", "nisp.main.context.fillgaps.chart.maxamount")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(10)>li:nth-child(1)", "nisp.main.context.fillgaps.bullet1")
+          }
+          "render page with text  ' you only need to fill 2 years to get the most you can'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(10)>li:nth-child(2)", "nisp.main.context.fillgaps.bullet2.plural", "2")
+          }
+          "render page with text  ' The most you can get by filling any 2 years in your record is'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(11)>span", "nisp.main.context.fillgaps.chart.plural", "2")
           }
           "render page with text  '  £149.71 a week'" in {
             val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(10)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>ul>li>span>span", sMessage)
           }
 
           "render page with link  'Gaps in your record and the cost of filling them'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(11)", "nisp.main.context.fillGaps.viewGapsAndCost")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(12)", "nisp.main.context.fillGaps.viewGapsAndCost")
           }
           "render page with href link  'Gaps in your record and the cost of filling them'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(11)", "/check-your-state-pension/account/nirecord/gaps")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(12)", "/check-your-state-pension/account/nirecord/gaps")
           }
 
           /*overseas message*/
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(12)>p", "nisp.main.overseas")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(13)", "nisp.main.puttingOff")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
           }
 
           "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
             "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "67")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "67")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(15)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
           }
         }
 

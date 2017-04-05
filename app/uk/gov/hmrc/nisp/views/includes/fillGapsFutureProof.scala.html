@@ -24,8 +24,7 @@
 
 <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
 
-<p>@Messages("nisp.main.context.fillgaps.futureproof.para")</p>
-
-@spChart(Html(Messages("nisp.main.context.fillgaps.futureproof.chart", statePension.amounts.maximum.gapsToFill)), personalMaximumChart)
+<p>@Messages("nisp.main.context.fillgaps.para1.futurePersonalMax")</p>
+@spChart(Html(Messages("nisp.main.context.fillgaps.chart.maxamount")), personalMaximumChart)
 
 <a href='@routes.NIRecordController.showGaps.url'>@Html(Messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>

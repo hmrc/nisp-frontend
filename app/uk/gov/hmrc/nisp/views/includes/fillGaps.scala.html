@@ -1,29 +1,45 @@
 @*
- * Copyright 2017 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
+* Copyright 2017 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 
 @import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
-@(statePension: StatePension, numberOfGaps: Int, personalMaximumChart: SPChartModel)(implicit messages: Messages)
+@(statePension: StatePension, numberOfGaps: Int, personalMaximumChart: SPChartModel, applicationConfig: ApplicationConfig = ApplicationConfig)(implicit messages: Messages)
 
-    <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
+<h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
+    @if(numberOfGaps == 1) {
+        <p>@Messages("nisp.main.context.fillgaps.para1.singular")</p>
+        @spChart(Html(Messages("nisp.main.context.fillgaps.chart.onlyone")), personalMaximumChart)
+        } else {
         <p>@Messages("nisp.main.context.fillgaps.para1.plural")</p>
-        @spChart(Html(Messages("nisp.main.context.fillgaps.chart.maxamount")), personalMaximumChart)
+        <ul class="list-bullet">
+            <li>@Messages("nisp.main.context.fillgaps.bullet1")</li>
 
-    <a href='@routes.NIRecordController.showGaps.url'>@Html(Messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
+            @if(statePension.amounts.maximum.gapsToFill == 1) {
+            <li>@Messages("nisp.main.context.fillgaps.bullet2.singular")</li>
+        </ul>
+        @spChart(Html(Messages("nisp.main.context.fillgaps.chart.singular")), personalMaximumChart)
+    } else {
+        <li>@Messages("nisp.main.context.fillgaps.bullet2.plural", statePension.amounts.maximum.gapsToFill )</li>
+        </ul>
+        @spChart(Html(Messages("nisp.main.context.fillgaps.chart.plural", statePension.amounts.maximum.gapsToFill)), personalMaximumChart)
+    }
+    }
+<a href='@routes.NIRecordController.showGaps.url'>@Html(Messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>

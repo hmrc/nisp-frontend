@@ -426,8 +426,15 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       "the future config is set to off" should {
         "show year information when there is multiple years" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
-          contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension")
-          contentAsString(result) should include("The most you can increase your forecast to is")
+          contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
+          contentAsString(result) should include("filling years can improve your forecast")
+          contentAsString(result) should include("you only need to fill 7 years to get the most you can")
+          contentAsString(result) should include("The most you can get by filling any 7 years in your record is")
+        }
+        "show specific text when is only one payable gap" in {
+          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
+          contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
+          contentAsString(result) should include("The most you can get by filling this year in your record is")
         }
       }
 
@@ -465,13 +472,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
-        "show less text when there are multiple years" in {
+        "show new personal max text when there are multiple/single year" in {
           val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
-          contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.")
-          contentAsString(result) should include("The most you can get is")
-        }
-        "show ordinary text when is only one payable gap" in {
-          val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")
         }

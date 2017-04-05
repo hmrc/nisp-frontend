@@ -152,7 +152,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                   forecastChart,
                   personalMaximumChart,
                   isPertax,
-                  hidePersonalMaxYears = applicationConfig.futureProofPersonalMax && nationalInsuranceRecord.numberOfGaps > 1,
+                  hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
                   user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
                   user.livesAbroad,
                   yearsToContributeUntilPensionAge
