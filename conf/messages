@@ -106,7 +106,6 @@ nisp.main.context.fillgaps.para1.futurePersonalMax =  You have shortfalls in you
 nisp.main.context.fillgaps.chart.maxamount = The most you can increase your forecast to is
 
 nisp.main.context.fillgaps.futureproof.para = You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.
-nisp.main.context.fillgaps.futureproof.chart = The most you can get is
 
 #**********************
 # Exclusion messages

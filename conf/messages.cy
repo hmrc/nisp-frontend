@@ -106,7 +106,6 @@ nisp.main.context.fillgaps.para1.futurePersonalMax = Mae gennych ddiffygion yn e
 nisp.main.context.fillgaps.chart.maxamount = Y mwyaf y gallwch gynyddu eich rhagolwg i, yw
 
 nisp.main.context.fillgaps.futureproof.para = Mae gennych flynyddoedd ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon. Gall llenwi blynyddoedd wella eich rhagolwg.
-nisp.main.context.fillgaps.futureproof.chart = Y mwyaf y gallwch ei gael yw
 
 #**********************
 # Exclusion messages
