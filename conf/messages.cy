@@ -92,6 +92,7 @@ nisp.main.context.continueWorkingMax.stillNeedToPay = Pan fyddwch yn cyrraedd {0
 nisp.main.context.fillGaps.improve.title = Gallwch wella eich rhagolwg
 nisp.main.context.fillGaps.viewGaps = Edrych ar fylchau yn eich cofnod
 nisp.main.context.fillGaps.viewGapsAndCost = Bylchau yn eich cofnod a&rsquo;r gost o&rsquo;u llenwi
+
 nisp.main.context.fillgaps.para1.plural = Mae gennych flynyddoedd ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon.
 nisp.main.context.fillgaps.para1.singular = Mae gennych flwyddyn ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon. Dim ond y flwyddyn hon sydd angen i chi ei llenwi i gael y mwyaf y gallwch ei gael.
 nisp.main.context.fillgaps.bullet1 = gall llenwi blynyddoedd wella eich rhagolwg
@@ -100,8 +101,11 @@ nisp.main.context.fillgaps.bullet2.plural = dim ond {0} o flynyddoedd sydd angen
 nisp.main.context.fillgaps.chart.onlyone = Y mwyaf y gallwch ei gael drwy lenwi&rsquo;r flwyddyn hon yn eich cofnod yw
 nisp.main.context.fillgaps.chart.singular = Y mwyaf y gallwch ei gael drwy lenwi unrhyw flwyddyn yn eich cofnod yw
 nisp.main.context.fillgaps.chart.plural = Y mwyaf y gallwch ei gael drwy lenwi unrhyw {0} o flynyddoedd yn eich cofnod yw
+
+nisp.main.context.fillgaps.para1.futurePersonalMax = Mae gennych ddiffygion yn eich cofnod Yswiriant Gwladol y gallwch eu llenwi ac eu gwneud  i gyfrif tuag at eich Pensiwn y Wladwriaeth.
+nisp.main.context.fillgaps.chart.maxamount = Y mwyaf y gallwch gynyddu eich rhagolwg i, yw
+
 nisp.main.context.fillgaps.futureproof.para = Mae gennych flynyddoedd ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon. Gall llenwi blynyddoedd wella eich rhagolwg.
-nisp.main.context.fillgaps.futureproof.chart = Y mwyaf y gallwch ei gael yw
 
 #**********************
 # Exclusion messages
