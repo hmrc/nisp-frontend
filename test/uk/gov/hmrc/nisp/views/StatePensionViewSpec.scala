@@ -967,5 +967,4 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
 
     }
   }
-
 }

@@ -479,7 +479,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         }
       }
     }
-
     "calculateAge" should {
       "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-10-28" in {
         MockStatePensionController.calculateAge(new LocalDate(1986, 10, 28), new LocalDate(2016, 11, 2)) shouldBe 30

@@ -19,10 +19,8 @@
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
-@(statePension: StatePension, numberOfGaps: Int, personalMaximumChart: SPChartModel, applicationConfig: ApplicationConfig = ApplicationConfig)(implicit messages: Messages)
-
+@(statePension: StatePension, numberOfGaps: Int, personalMaximumChart: SPChartModel)(implicit messages: Messages)
 <h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
     @if(numberOfGaps == 1) {
         <p>@Messages("nisp.main.context.fillgaps.para1.singular")</p>
