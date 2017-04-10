@@ -17,15 +17,16 @@
 package uk.gov.hmrc.nisp.connectors
 
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{Format, JsPath}
+import play.api.libs.json.{Format, JsObject, JsPath}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.models.enums.APIType._
 import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
-
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 trait BackendConnector {
 
@@ -68,7 +69,14 @@ trait BackendConnector {
     }
     httpResponseF.map {
       httpResponse => httpResponse.json.validate[A].fold(
-        errs => throw new JsonValidationException(s"Unable to deserialise $apiType: ${formatJsonErrors(errs)}"), valid => valid
+        errs => {
+          val json = JsonDepersonaliser.depersonalise(httpResponse.json) match {
+            case Success(s) => s"Depersonalised JSON\n$s"
+            case Failure(e) => s"JSON could not be depersonalised\n${e.toString()}"
+          }
+          throw new JsonValidationException(s"Unable to deserialise $apiType: ${formatJsonErrors(errs)}\n$json")
+        },
+        valid => valid
       )
     }
   }
@@ -86,7 +94,14 @@ trait BackendConnector {
   }
 
   private def formatJsonErrors(errors: Seq[(JsPath, Seq[ValidationError])]): String = {
-    errors.map(p => p._1 + " - " + p._2.map(_.message).mkString(",")).mkString(" | ")
+    errors.map(p => p._1 + " - " + p._2.map(e => removeJson(e.message)).mkString(",")).mkString(" | ")
+  }
+
+  private def removeJson(message: String): String = {
+    message.indexOf("{") match {
+      case i if i != -1  => message.substring(0, i - 1) + " [JSON removed]"
+      case _ => message
+    }
   }
 
   private[connectors] class JsonValidationException(message: String) extends Exception(message)
