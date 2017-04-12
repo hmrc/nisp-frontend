@@ -16,9 +16,29 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import play.api.mvc.{Request, Result}
+import play.api.{Logger, PlayException}
+import uk.gov.hmrc.nisp.config.ApplicationGlobal
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 trait NispFrontendController extends FrontendController {
+  val logger: Logger = Logger(this.getClass)
+
   implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever
+
+  def onError(ex: Exception)(implicit request: Request[_]): Result = {
+    logger.error(
+      """
+        |
+        |! %sInternal server error, for (%s) [%s] ->
+        | """.stripMargin.format(ex match {
+        case p: PlayException => "@" + p.id + " - "
+        case _ => ""
+      }, request.method, request.uri),
+      ex
+    )
+    InternalServerError(ApplicationGlobal.internalServerErrorTemplate)
+  }
+
 }

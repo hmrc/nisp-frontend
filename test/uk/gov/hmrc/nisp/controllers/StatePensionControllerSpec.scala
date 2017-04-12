@@ -48,6 +48,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
   val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
   val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
+  val mockUserIdBackendNotFound = "/auth/oid/mockbackendnotfound"
 
   val ggSignInUrl = "http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
@@ -72,6 +73,11 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       "return 303 when no session" in {
         val result = MockStatePensionController.show().apply(fakeRequest)
         status(result) shouldBe Status.SEE_OTHER
+      }
+
+      "return 500 when backend 404" in {
+        val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBackendNotFound))
+        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
 
       "return the forecast only page for a user with a forecast lower than current amount" in {
@@ -169,11 +175,10 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       }
 
       "return error for blank user" in {
-        intercept[RuntimeException] {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBlank))
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-        }
+        val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBlank))
+        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
+
       "return content about COPE for contracted out (B) user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdContractedOut))
         contentAsString(result) should include("How contracting out affects your pension income")

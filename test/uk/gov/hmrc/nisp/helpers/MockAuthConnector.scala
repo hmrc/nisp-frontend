@@ -48,6 +48,7 @@ object MockAuthConnector extends AuthConnector {
     userID("mockfillgapsmultiple") -> TestAccountBuilder.fillGapsMultiple,
     userID("mockfillgapssingle") -> TestAccountBuilder.fillGapSingle,
     userID("mocknoqualifyingyears") -> TestAccountBuilder.noQualifyingYears,
+    userID("mockbackendnotfound") -> TestAccountBuilder.backendNotFound,
 
     userID("mockexcludedall") -> TestAccountBuilder.excludedAll,
     userID("mockexcludedallbutdead") -> TestAccountBuilder.excludedAllButDead,

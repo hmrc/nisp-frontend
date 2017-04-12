@@ -40,6 +40,7 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.fillGapsMultiple,
     TestAccountBuilder.fillGapSingle,
     TestAccountBuilder.noQualifyingYears,
+    TestAccountBuilder.backendNotFound,
 
     TestAccountBuilder.excludedAll,
     TestAccountBuilder.excludedAllButDead,
@@ -48,6 +49,12 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.excludedIomMwrreAbroad,
     TestAccountBuilder.excludedMwrreAbroad,
     TestAccountBuilder.excludedAbroad)
+
+  val noDataNinos = List(
+    TestAccountBuilder.backendNotFound
+  )
+
+  val ninosWithData = ninos.diff(noDataNinos)
 
   def createMockedURL(urlEndsWith: String, response: Future[HttpResponse]): Unit =
     when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(urlEndsWith))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(response)
@@ -71,12 +78,19 @@ object MockNispHttp extends MockitoSugar {
 
   // NISP
 
-  ninos.foreach(setupNispEndpoints)
+  ninosWithData.foreach(setupNispEndpoints)
 
   val badRequestNino = TestAccountBuilder.nonExistentNino
 
   createFailedMockedURL(s"nisp/$badRequestNino/spsummary")
   createFailedMockedURL(s"nisp/$badRequestNino/nirecord")
+
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"nisp/${TestAccountBuilder.backendNotFound}/spsummary"))(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
+      upstreamResponseCode = 404,
+      reportAs = 500
+    )))
 
   // State Pension
 
@@ -98,6 +112,13 @@ object MockNispHttp extends MockitoSugar {
     .thenReturn(Future.failed(new Upstream4xxResponse(
       message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"TThe customer cannot access the service, they should contact HMRC\"}'",
       upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"ni/${TestAccountBuilder.backendNotFound}"))(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
+      upstreamResponseCode = 404,
       reportAs = 500
     )))
 
@@ -138,5 +159,11 @@ object MockNispHttp extends MockitoSugar {
       reportAs = 500
     )))
 
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.backendNotFound}"))(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
+      upstreamResponseCode = 404,
+      reportAs = 500
+    )))
 
 }

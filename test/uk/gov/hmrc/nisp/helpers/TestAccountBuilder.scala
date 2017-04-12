@@ -49,6 +49,7 @@ object TestAccountBuilder {
   val fillGapSingle: Nino = randomNino
   val fillGapsMultiple: Nino = randomNino
   val noQualifyingYears: Nino = randomNino
+  val backendNotFound: Nino = randomNino
 
   val excludedAll: Nino = randomNino
   val excludedAllButDead: Nino = randomNino
@@ -75,6 +76,7 @@ object TestAccountBuilder {
     fillGapSingle -> "fillgaps-singlegap",
     fillGapsMultiple -> "fillgaps-multiple",
     noQualifyingYears -> "no-qualifying-years",
+    backendNotFound -> "backend-not-found",
 
     excludedAll -> "excluded-all",
     excludedAllButDead -> "excluded-all-but-dead",

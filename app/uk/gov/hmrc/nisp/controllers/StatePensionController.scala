@@ -99,7 +99,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
         val statePensionResponseF = statePensionService.getSummary(user.nino)
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
 
-        for (
+        (for (
           statePensionResponse <- statePensionResponseF;
           nationalInsuranceResponse <- nationalInsuranceResponseF
         ) yield {
@@ -168,6 +168,8 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
               Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
             case _ => throw new RuntimeException("StatePensionController: SP and NIR are unmatchable. This is probably a logic error.")
           }
+        }).recover {
+          case ex: Exception => onError(ex)
         }
       }
   }
