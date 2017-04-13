@@ -114,7 +114,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
         val statePensionResponseF = statePensionService.getSummary(user.nino)
 
-        for (
+        (for (
           nationalInsuranceRecordResponse <- nationalInsuranceResponseF;
           statePensionResponse <- statePensionResponseF
         ) yield {
@@ -160,6 +160,8 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
               ))
               Redirect(routes.ExclusionController.showNI())
           }
+        }).recover {
+          case ex: Exception => onError(ex)
         }
   }
 

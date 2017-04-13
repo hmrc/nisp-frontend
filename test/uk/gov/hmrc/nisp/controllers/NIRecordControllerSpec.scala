@@ -44,6 +44,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserIdHRP = "/auth/oid/mockhomeresponsibilitiesprotection"
   val mockUserWithGaps = "/auth/oid/mockfillgapsmultiple"
   val mockNoQualifyingYearsUserId = "/auth/oid/mocknoqualifyingyears"
+  val mockBackendNotFoundUserId = "/auth/oid/mockbackendnotfound"
 
   val ggSignInUrl = s"http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
 
@@ -73,10 +74,13 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     }
 
     "return error page for blank response NINO" in {
-      intercept[RuntimeException] {
-        val result = MockNIRecordController.showGaps(authenticatedFakeRequest(mockBlankUserId))
-        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-      }
+      val result = MockNIRecordController.showGaps(authenticatedFakeRequest(mockBlankUserId))
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+    }
+
+    "return 500 when backend 404" in {
+      val result = MockNIRecordController.showGaps(authenticatedFakeRequest(mockBackendNotFoundUserId))
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
     "redirect to exclusion for excluded user" in {
