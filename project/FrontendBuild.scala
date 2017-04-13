@@ -10,7 +10,7 @@ object FrontendBuild extends Build with MicroService {
 private object AppDependencies {
 
   private val playHealthVersion = "2.0.0"
-  private val frontendBootstrapVersion = "7.17.0"
+  private val frontendBootstrapVersion = "7.19.0"
   private val govukTemplateVersion = "5.0.0"
   private val playUiVersion = "7.0.1"
   private val playAuthorisedFrontendVersion = "6.3.0"
