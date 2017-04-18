@@ -33,29 +33,19 @@ case class NationalInsuranceRecord(
                                   )
 
 object NationalInsuranceRecord {
-  implicit val reads: Reads[NationalInsuranceRecord] = Reads[NationalInsuranceRecord] { json =>
-    for {
-      qualifyingYears <- (json \ "qualifyingYears").validate[Int]
-      qualifyingYearsPriorTo1975 <- (json \ "qualifyingYearsPriorTo1975").validate[Int]
-      numberOfGaps <- (json \ "numberOfGaps").validate[Int]
-      numberOfGapsPayable <- (json \ "numberOfGapsPayable").validate[Int]
-      dateOfEntry <- (json \ "dateOfEntry").validate[LocalDate]
-      homeResponsibilitiesProtection <- (json \ "homeResponsibilitiesProtection").validate[Boolean]
-      earningsIncludedUpTo <- (json \ "earningsIncludedUpTo").validate[LocalDate]
-      taxYears <- (json \ "_embedded" \ "taxYears").validate[List[NationalInsuranceTaxYear]]
-    } yield {
-      NationalInsuranceRecord(
-        qualifyingYears,
-        qualifyingYearsPriorTo1975,
-        numberOfGaps,
-        numberOfGapsPayable,
-        dateOfEntry,
-        homeResponsibilitiesProtection,
-        earningsIncludedUpTo,
-        taxYears
-      )
-    }
-  }
+  implicit val reads: Reads[NationalInsuranceRecord] = (
+    (JsPath \ "qualifyingYears").read[Int] and
+      (JsPath \ "qualifyingYearsPriorTo1975").read[Int] and
+      (JsPath \ "numberOfGaps").read[Int] and
+      (JsPath \ "numberOfGapsPayable").read[Int] and
+      (JsPath \ "dateOfEntry").read[LocalDate] and
+      (JsPath \ "homeResponsibilitiesProtection").read[Boolean] and
+      (JsPath \ "earningsIncludedUpTo").read[LocalDate] and
+      (JsPath \ "_embedded" \ "taxYears").read[JsValue].map {
+        case obj: JsObject => List(obj.as[NationalInsuranceTaxYear])
+        case other => other.as[List[NationalInsuranceTaxYear]]
+      }
+    ) (NationalInsuranceRecord.apply _)
 
   implicit val writes: Writes[NationalInsuranceRecord] = (
     (JsPath \ "qualifyingYears").write[Int] and
