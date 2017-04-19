@@ -52,11 +52,19 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
     <li>@Html(Messages("nisp.cope.why.bullet1"))</li>
     <li>@Html(Messages("nisp.cope.why.bullet2"))</li>
 </ul>
+<p>@Messages("nisp.cope.copeequivalent")</p>
 <h2 class="heading-medium">@Messages("nisp.cope.title2")</h2>
-<p>@Html(Messages("nisp.cope.definition"))</p>
-<p>@Html(Messages("nisp.cope.workplace"))</p>
 <p>@Html(Messages("nisp.cope.table.estimate.title"))<span class="heading-small">@NispMoney.pounds(copeEstimate) @Messages("nisp.main.chart.week")</span>.
 </p>
+<p>@Html(Messages("nisp.cope.definition"))</p>
+<p>@Html(Messages("nisp.cope.definition.mostcases"))</p>
+<ul class="list-bullet">
+    <li>@Html(Messages("nisp.cope.definition.mostcases.bullet1"))</li>
+    <li>@Html(Messages("nisp.cope.definition.mostcases.bullet2"))</li>
+</ul>
+
+<p>@Html(Messages("nisp.cope.workplace"))</p>
+
 <p>@Html(Messages("nisp.main.cope.linkTitle"))</p>
 <p class="backlink"><a href="@{routes.StatePensionController.show().url}">@Messages("nisp.back")</a>
 </p>

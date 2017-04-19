@@ -176,7 +176,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       }
       "return content about COPE for contracted out (B) user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdContractedOut))
-        contentAsString(result) should include("How contracting out affects your pension income")
+        contentAsString(result) should include("You’ve been in a contracted-out pension scheme")
       }
 
       "return COPE page for contracted out (B) user" in {

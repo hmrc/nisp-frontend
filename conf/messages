@@ -388,21 +388,24 @@ nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need a
 # COPE messages
 #*****************
 
-nisp.cope.title1 = How contracting out affects your pension income
-nisp.cope.likeMostPeople = Like most people, you were contracted out of part of the State Pension.
-nisp.cope.moreAbout = More about <a href="{0}">how contracting out has affected your pension income</a>.
+nisp.cope.title1 = You’ve been in a contracted-out pension scheme
+nisp.cope.likeMostPeople = Like most people, <a href="{0}">you were contracted out of part of the State Pension.</a>
 nisp.cope.youWereContractedOut = You were contracted out
-nisp.cope.inThePast = In the past you&rsquo;ve been part of one or more contracted out pension schemes, such as workplace or personal pension schemes.
+nisp.cope.inThePast = In the past you’ve been ‘contracted out’ of the additional State Pension.
 nisp.cope.why = When you were contracted out:
-nisp.cope.why.bullet1 = you and your employers paid lower rate National Insurance contributions; or
-nisp.cope.why.bullet2 = some of your National Insurance contributions were paid into your private pension schemes instead
-nisp.cope.definition = Your workplace or personal pension scheme should include an amount of pension which will, in most cases, be equal to the additional State Pension you would have been paid. We call this amount your Contracted Out Pension Equivalent (COPE). Your COPE estimate is shown below.
+nisp.cope.why.bullet1 = you and your employers paid lower rate National Insurance contributions, or
+nisp.cope.why.bullet2 = some of your National Insurance contributions were paid into another pension scheme, such as a personal or stakeholder pension
+nisp.cope.copeequivalent = The amount of additional State Pension you would have been paid if you had not been contracted out is known as the Contracted Out Pension Equivalent (COPE).
+nisp.cope.definition = This will not affect your State Pension forecast. The COPE amount is paid as part of your other pension schemes, not by the government.
+nisp.cope.definition.mostcases = In most cases the private pension scheme you were contracted out to:
+nisp.cope.definition.mostcases.bullet1 = will include an amount equal to the COPE amount
+nisp.cope.definition.mostcases.bullet2 = may not individually identify the COPE amount
 
 nisp.cope.title2 = Contracted Out Pension Equivalent (COPE)
-nisp.cope.workplace = The COPE amount is paid as part of your other pension schemes, not by the government. The total amount of pension paid by your workplace or personal pension scheme will depend on the scheme and on any investment choices.
+nisp.cope.workplace = The total amount of pension paid by your workplace or personal pension schemes will depend on the scheme and on any investment choices.
 nisp.cope.table.estimate.title = Your COPE estimate is
 
-nisp.main.cope.linkTitle = More about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">contracting out and the COPE amount (opens in new tab)</a>.
+nisp.main.cope.linkTitle = Find out more about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE and contracting out (opens in new tab)</a>.
 
 #******************************
 # Not authorised IV messages

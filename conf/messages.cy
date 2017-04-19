@@ -393,25 +393,25 @@ nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydy
 # COPE messages
 #*****************
 
-nisp.cope.title1 = Sut mae eithrio allan yn effeithio eich incwm pensiwn
-nisp.cope.likeMostPeople = Fel y rhan fwyaf o bobl, roeddech wedi eithrio allan o ran o&rsquo;r Pensiwn y Wladwriaeth.
-nisp.cope.moreAbout = Mwy am <a href="{0}">sut mae eithrio allan wedi effeithio ar incwm eich pensiwn</a>.
+nisp.cope.title1 = Rydych wedi bod mewn cynllun pensiwn wedi eithrio allan
+nisp.cope.likeMostPeople = Fel y rhan fwyaf o bobl, <a href="{0}">roeddech wedi eithrio allan o ran o’r Pensiwn y Wladwriaeth.</a>
 nisp.cope.youWereContractedOut = Roeddech wedi eithrio allan
-nisp.cope.inThePast = Yn y gorffennol rydych wedi bod yn ran o un neu fwy o gynlluniau pensiwn wedi&rsquo;i eithrio allan, fel cynlluniau pensiwn gwaith neu bersonol.
+nisp.cope.inThePast = Yn y gorffennol rydych wedi ‘eithrio allan’ o’r Pensiwn y Wladwriaeth ychwanegol.
 nisp.cope.why = Pan oeddech chi wedi eithrio allan:
-nisp.cope.why.bullet1 = roeddech chi a&rsquo;ch cyflogwyr yn talu cyfradd is o gyfraniadau Yswiriant Gwladol; neu
-nisp.cope.why.bullet2 = roedd rhywfaint o&rsquo;ch cyfraniadau Yswiriant Gwladol yn cael eu talu i&rsquo;ch cynlluniau pensiwn preifat yn lle hynny
-nisp.cope.definition = Dylai eich cynllun pensiwn gwaith neu bersonol gynnwys swm o bensiwn a fydd, yn y mwyafrif o achosion, yn gyfartal i&rsquo;r Pensiwn y Wladwriaeth ychwanegol a fyddai wedi cael ei dalu. Rydym yn galw&rsquo;r swm yma yn eich Pensiwn Cyfwerth Wedi&rsquo;i Eithrio (COPE). Mae eich amcangyfrif COPE yn cael ei ddangos isod.
+nisp.cope.why.bullet1 = roeddech chi a’ch cyflogwyr yn talu cyfradd is o gyfraniadau Yswiriant Gwladol, neu
+nisp.cope.why.bullet2 = roedd rhywfaint o’ch cyfraniadau Yswiriant Gwladol yn cael eu talu i mewn i gynllun pensiwn arall, fel pensiwn preifat neu randdeiliaid
+nisp.cope.copeequivalent = Rydym yn galw’r swm o Bensiwn y Wladwriaeth ychwanegol y byddech wedi cael eich talu os nad oeddech wedi eithrio allan yn Pensiwn Cyfwerth Wedi’i Eithrio (COPE).
+nisp.cope.definition =  Ni fydd hyn yn effeithio eich rhagolwg Pensiwn y Wladwriaeth. Mae’r swm o COPE yn cael ei dalu fel rhan o’ch cynlluniau pensiwn eraill, ddim gan y llywodraeth.
+nisp.cope.definition.mostcases = Yn y rhan fwyaf o achosion bydd y cynllun penswin preifat roeddech wedi eithrio allan iddo:
+nisp.cope.definition.mostcases.bullet1 = yn cynnwys swm sy’n gyfartal i’r swm COPE
+nisp.cope.definition.mostcases.bullet2 = efallai ddim yn nodi swm y COPE yn unigol
 
 nisp.cope.title2 = Pensiwn Cyfwerth Wedi’i Eithrio (COPE)
-nisp.cope.workplace = Mae&rsquo;r swm o COPE yn cael ei dalu fel rhan o&rsquo;ch cynlluniau pensiwn eraill, ddim gan y llywodraeth. Bydd cyfanswm y pensiwn a delir gan eich cynllun pensiwn gwaith neu bersonol yn dibynnu ar y cynllun ac ar unrhyw ddewisiadau buddsoddi.
+nisp.cope.workplace = Bydd cyfanswm y pensiwn a delir gan eich cynlluniau pensiwn gwaith neu bersonol yn dibynnu ar y cynllun ac ar unrhyw ddewisiadau buddsoddi.
 nisp.cope.table.estimate.title = Eich amcangyfrif COPE yw
 
-nisp.cope.table.title1 = Pan oeddech wedi eithrio allan
-nisp.cope.table.youWereContractedOut = Roeddech yn rhan o gynllun pensiwn wedi eithrio allan yn ystod y cyfnodau hyn.
+nisp.main.cope.linkTitle =  Darganfyddwch fwy am <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE ac eithrio allan (agor mewn tab newydd)</a>.
 
-nisp.main.cope.linkTitle = Mwy am <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">eithrio allan a swm y COPE (agor mewn tab newydd)</a>.
-nisp.main.cope.linkTitle.old = Darganfyddwch fwy am <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">eithrio allan a&rsquo;r amcangyfrif COPE (agor mewn tab newydd)</a>.
 
 #******************************
 # Not authorised IV messages
