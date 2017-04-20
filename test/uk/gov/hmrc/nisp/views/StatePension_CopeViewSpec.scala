@@ -145,31 +145,31 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
     }
 
     /*Contracting out affects*/
-    "render page with text  'How contracting out affects your pension income'" in {
+    "render page with text  'You’ve been in a contracted-out pension scheme'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.cope.title1")
     }
-    "render page with text  'Like most people, you were contracted out of part of the State Pension.'" in {
+   /* "render page with text  'Like most people, you were contracted out of part of the State Pension.'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.cope.likeMostPeople")
-    }
-    "render page with text  'More about how contracting out has affected your pension income'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.cope.moreAbout", "/check-your-state-pension/account/cope")
+    }*/
+    "render page with text  'Like most people, you were contracted out of part of the State Pension.'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.cope.likeMostPeople", "/check-your-state-pension/account/cope")
     }
     /*Ends*/
 
     "render page with heading  'Putting of claiming'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(15)", "nisp.main.puttingOff")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
     }
 
     "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
       "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "67")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "67")
     }
 
     "render page with link 'More on putting off claiming (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(17)", "nisp.main.puttingOff.linkTitle")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
     }
     "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
     }
 
     /*Side bar help*/
@@ -206,41 +206,52 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
     "render page with text 'when you were contracted out:'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.cope.why")
     }
-    "render page with text 'you and your employers paid lower rate National Insurance contributions; or'" in {
+    "render page with text 'you and your employers paid lower rate National Insurance contributions, or'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.cope.why.bullet1")
     }
-    "render page with text 'some of your National Insurance contributions were paid into your private pension schemes instead'" in {
+    "render page with text 'some of your National Insurance contributions were paid into another pension scheme, such as a personal or stakeholder pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.cope.why.bullet2")
     }
+    "render page with text 'The amount of additional State Pension you would have been paid if you had not been contracted out is known as the Contracted Out Pension Equivalent (COPE).'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.cope.copeequivalent")
+    }
     "render page with text 'Contracted Out Pension Equivalent (COPE)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(5)", "nisp.cope.title2")
-    }
-    "render page with text 'Your workplace or personal pension scheme should include an amount of pension which will, in most cases, be equal to the additional State Pension you would have been paid. " +
-      "We call this amount your Contracted Out Pension Equivalent (COPE). Your COPE estimate is shown below.'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)", "nisp.cope.definition")
-    }
-    "render page with test 'The COPE amount is paid as part of your other pension schemes, not by the government. " +
-      "The total amount of pension paid by your workplace or personal pension scheme will depend on the scheme and on any investment choices.'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.cope.workplace")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(6)", "nisp.cope.title2")
     }
     "render page with test 'your cope estimate is'" in {
-      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.cope.table.estimate.title", ".")
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.cope.table.estimate.title", ".")
     }
     "render page with test 'your cope estimate is : £99.54 a week'" in {
       val sWeekMessage = "£99.54 " + Messages("nisp.main.chart.week")
-      assertEqualsValue(htmlAccountDoc, "article.content__body>p:nth-child(8)>span", sWeekMessage)
+      assertEqualsValue(htmlAccountDoc, "article.content__body>p:nth-child(7)>span", sWeekMessage)
     }
-    "render page with link 'more about contracted out and the cope amount'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.main.cope.linkTitle")
+    "render page with text 'This will not affect your State Pension forecast. The COPE amount is paid as part of your other pension schemes, not by the government.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.cope.definition")
     }
-    "render page with href link 'more about contracted out and the cope amount'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(9)>a", "https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service")
+    "render page with text 'In most cases the private pension scheme you were contracted out to:'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.cope.definition.mostcases")
+    }
+    "render page with text 'will include an amount equal to the COPE amount'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(10)>li:nth-child(1)", "nisp.cope.definition.mostcases.bullet1")
+    }
+    "render page with text 'may not individually identify the COPE amount'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(10)>li:nth-child(2)", "nisp.cope.definition.mostcases.bullet2")
+    }
+    "render page with text 'The total amount of pension paid by your workplace or personal pension schemes will depend on the scheme and on any investment choices.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.cope.workplace")
+    }
+
+    "render page with link 'Find out more about COPE and contracting out'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.cope.linkTitle")
+    }
+    "render page with href link 'Find out more about COPE and contracting out'" in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(12)>a", "https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service")
     }
     "render page with link 'Back'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", "nisp.back")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "nisp.back")
     }
     "render page with href link 'Back'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", "/check-your-state-pension/account")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "/check-your-state-pension/account")
     }
 
     /*Side bar help*/
