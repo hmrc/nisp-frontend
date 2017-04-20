@@ -160,9 +160,8 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
     }
 
-    "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
-      "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "67")
+    "render page with text  'You can put off claiming your State Pension from 18 July 2021. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "18 July 2021")
     }
 
     "render page with link 'More on putting off claiming (opens in new tab)'" in {

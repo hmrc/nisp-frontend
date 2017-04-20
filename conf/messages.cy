@@ -61,7 +61,7 @@ nisp.main.after = Ar ôl oedran Pensiwn y Wladwriaeth, <span class="nowrap">{0}<
 nisp.main.basedOn = Gallwch gael eich Pensiwn y Wladwriaeth ar
 
 nisp.main.puttingOff = Oedi gwneud cais
-nisp.main.puttingOff.line1 = Pan fyddwch yn {0}, gallwch oedi gwneud cais am eich Pensiwn y Wladwriaeth. Gallai gwneud hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan fyddwch yn dod i wneud cais amdano. Mae&rsquo;r swm ychwanegol, gyda&rsquo;ch Pensiwn y Wladwriaeth, yn ffurfio rhan o&rsquo;ch incwm trethadwy.
+nisp.main.puttingOff.line1 = Gallwch oedi gwneud cais am eich Pensiwn y Wladwriaeth o’r {0}. Gallai gwneud hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan fyddwch yn dod i wneud cais amdano. Mae’r swm ychwanegol, gyda’ch Pensiwn y Wladwriaeth, yn ffurfio rhan o’ch incwm trethadwy.
 nisp.main.puttingOff.linkTitle = Mwy am oedi gwneud cais (agor mewn tab newydd)
 
 nisp.main.showyourrecord = Gweld eich cofnod Yswiriant Gwladol

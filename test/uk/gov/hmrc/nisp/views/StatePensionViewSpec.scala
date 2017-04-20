@@ -208,9 +208,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
           }
 
-          "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
-            "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "67")
+          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -377,9 +376,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
           }
 
-          "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
-            "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "67")
+          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -545,9 +543,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
           }
 
-          "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
-            "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "67")
+          "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2017")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -684,9 +681,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.main.puttingOff")
           }
 
-          "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
-            "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "67")
+          "render page with text  'You can put off claiming your State Pension from 7 June 2022. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "7 June 2022")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -824,9 +820,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(13)", "nisp.main.puttingOff")
           }
 
-          "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
-            "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "67")
+          "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "7 June 2017")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -951,9 +946,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(10)", "nisp.main.puttingOff")
         }
 
-        "render page with text  'When you are 67, you can put off claiming your State Pension. Doing this may mean you get extra State Pension when you do come to claim it. " +
-          "The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", "67")
+        "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", "7 June 2017")
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
