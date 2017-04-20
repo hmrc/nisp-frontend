@@ -394,7 +394,7 @@ nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydy
 #*****************
 
 nisp.cope.title1 = Rydych wedi bod mewn cynllun pensiwn wedi eithrio allan
-nisp.cope.likeMostPeople = Fel y rhan fwyaf o bobl, <a href="{0}">roeddech wedi eithrio allan o ran o’r Pensiwn y Wladwriaeth.</a>
+nisp.cope.likeMostPeople = Fel y rhan fwyaf o bobl, <a href="{0}">roeddech wedi eithrio allan o ran o’r Pensiwn y Wladwriaeth</a>.
 nisp.cope.youWereContractedOut = Roeddech wedi eithrio allan
 nisp.cope.inThePast = Yn y gorffennol rydych wedi ‘eithrio allan’ o’r Pensiwn y Wladwriaeth ychwanegol.
 nisp.cope.why = Pan oeddech chi wedi eithrio allan:
