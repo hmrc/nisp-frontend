@@ -165,7 +165,7 @@ application: Application)
 
     @for(age <- customerAge) {
         @if(age > Constants.deferralCutOffAge) {
-            @includes.deferral(statePension.pensionAge)
+            @includes.deferral(Dates.formatDate(statePension.pensionDate))
         }
     }
 
