@@ -389,7 +389,7 @@ nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need a
 #*****************
 
 nisp.cope.title1 = You’ve been in a contracted-out pension scheme
-nisp.cope.likeMostPeople = Like most people, <a href="{0}">you were contracted out of part of the State Pension.</a>
+nisp.cope.likeMostPeople = Like most people, <a href="{0}">you were contracted out of part of the State Pension</a>.
 nisp.cope.youWereContractedOut = You were contracted out
 nisp.cope.inThePast = In the past you’ve been ‘contracted out’ of the additional State Pension.
 nisp.cope.why = When you were contracted out:
