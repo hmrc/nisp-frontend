@@ -335,15 +335,9 @@ nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check your
 nisp.nirecord.voluntarycontributions.heading = Voluntary contributions
 nisp.nirecord.voluntarycontributions.title.message = Before considering paying voluntary contributions you should:
 
-nisp.nirecord.voluntarycontributions.h2title.1 = 1. Check if you may get extra pension income because you
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle1 = inherit or increase it from a partner
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.heading = Your amount may change if you:
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message1 = are widowed, divorced or have dissolved your civil partnership
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message2 = paid married women&rsquo;s reduced rate contributions
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle2 = lived or worked overseas
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message = You may be entitled to a State Pension from the country you lived or worked in. Contact the pension service of the country you were in to find out if you are eligible.
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle3 = lived or worked in the Isle of Man
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">visit GOV.IM – Retirement Pension (opens in new window)</a>.
+nisp.nirecord.voluntarycontributions.h2title.1 = 1. Find out how paying voluntary contributions affects your State Pension
+nisp.nirecord.voluntarycontributions.h2title.1.message = You can call the Future Pension Centre on 0345 608 0126 to find out more about how filling gaps can affect
+nisp.nirecord.voluntarycontributions.h2title.1.link1 = your State Pension forecast
 
 nisp.nirecord.voluntarycontributions.h2title.2 = 2. Seek guidance or financial advice
 nisp.nirecord.voluntarycontributions.h2title.2.message = Paying voluntary contributions may not be your best option when planning for your retirement.
@@ -351,12 +345,19 @@ nisp.nirecord.voluntarycontributions.h2title.2.help.title = Where you can get gu
 nisp.nirecord.voluntarycontributions.h2title.2.help.message = You can seek professional financial advice. For free impartial guidance (not on GOV.UK):
 nisp.nirecord.voluntarycontributions.h2title.2.help.link1 = <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a>
 nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = <a href="https://www.pensionwise.gov.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">Pension wise (opens in new tab)</a>
-nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - advice on pensions for over 50s
+nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - advice on private pensions for over 50s
 nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = <a href="https://www.citizensadvice.org.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">Citizens Advice (opens in new tab)</a>
 
-nisp.nirecord.voluntarycontributions.h2title.3 = 3. Find out how paying voluntary contributions affects your State Pension
-nisp.nirecord.voluntarycontributions.h2title.3.link1 = Contact the Future Pension Centre (opens in new tab)
-nisp.nirecord.voluntarycontributions.h2title.3.message = to find out more about how filling gaps can affect your pension.
+nisp.nirecord.voluntarycontributions.h2title.3 = 3. Check if you may get extra pension income because you
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1 = inherit or improve it from a partner
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading = Your amount may change if you:
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1 = are widowed, divorced or have dissolved your civil partnership
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2 = paid married women&rsquo;s reduced rate contributions
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle2 = lived or worked overseas
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message = You may be entitled to a State Pension from the country you lived or worked in. Contact the pension service of the country you were in to find out if you are eligible.
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle3 = lived or worked in the Isle of Man
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1 = You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">visit GOV.IM – Retirement Pension (opens in new window)</a>.
+
 
 #*****************************
 # Minimum qualifying period
@@ -440,13 +441,13 @@ nisp.tandcs.heading = Before using Check your State Pension, please read this pa
 
 nisp.tandcs.use = If you want to use &lsquo;Check your State Pension&rsquo; you have to agree to our terms and conditions. We can update our terms and conditions at any time. You should check this page regularly, so that you are aware of any changes.
 nisp.tandcs.information = The information given is based on details from your account at the time you use the service and, while we will make every effort to keep this service up to date, we do not guarantee that it will be or that it is error and omission free.
-nisp.tandcs.service = The service is free to use. We cannot guarantee that it will always be available, and we may stop or change it at any time. 
+nisp.tandcs.service = The service is free to use. We cannot guarantee that it will always be available, and we may stop or change it at any time.
 nisp.tandcs.rely = You should not rely on this information, as it does not amount to advice. You must get professional advice when planning for your retirement.
 nisp.tandcs.responsibility = It&rsquo;s up to you to make sure that you have everything needed to access our service. It&rsquo;s also your responsibility if anyone uses your internet connection to access our service, that they read our terms and conditions, and agree to them.
 nisp.tandcs.licence = The service is published under the Open Government Licence, and you can reproduce our information as long as you obey the licence. Our material is subject to Crown copyright protection, unless we say otherwise.
 nisp.tandcs.crownCopyright = More information on Crown copyright
 nisp.tandcs.liability = We are not liable for any loss or damage incurred from using the service, from being unable to use the service or reliance on anything displayed on the site.
-nisp.tandcs.links = You can only link to our homepage (you must own the website), as long as it&rsquo;s fair, legal, does not damage our reputation or take advantage of it. When creating the link, it must not suggest there&rsquo;s any form of association, approval or endorsement unless we have already agreed that. You must not frame our site on yours. We can withdraw linking permission at any time and without notice. 
+nisp.tandcs.links = You can only link to our homepage (you must own the website), as long as it&rsquo;s fair, legal, does not damage our reputation or take advantage of it. When creating the link, it must not suggest there&rsquo;s any form of association, approval or endorsement unless we have already agreed that. You must not frame our site on yours. We can withdraw linking permission at any time and without notice.
 nisp.tandcs.law = The terms and conditions are governed by English law. Any dispute is subject to the exclusive jurisdiction of the courts in England and Wales.
 nisp.tandcs.operated = The service is operated by the Department for Work and Pensions (DWP) and our main offices are at Caxton House, Tothill Street, London, SW1H 9NA.
 nisp.tandcs.thanks = Thank you for visiting the site.

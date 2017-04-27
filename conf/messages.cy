@@ -341,15 +341,10 @@ nisp.nirecord.voluntarycontributions.title = Cyfraniadau gwirfoddol: Gwirio eich
 nisp.nirecord.voluntarycontributions.heading = Cyfraniadau gwirfoddol
 nisp.nirecord.voluntarycontributions.title.message = Cyn i chi ystyried talu cyfraniadau gwirfoddol dylech:
 
-nisp.nirecord.voluntarycontributions.h2title.1 = 1. Edrych os gallech gael incwm pensiwn ychwanegol oherwydd eich bod yn
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle1 = ei etifeddu neu mae&rsquo;n cael ei gynyddu gan bartner
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.heading = Gallai eich swm newid os ydych:
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message1 = yn weddw, wedi ysgaru neu bod eich partneriaeth sifil wedi&rsquo;i ddiddymu
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message2 = wedi talu cyfraniadau cyfradd is gwraig briod
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle2 = wedi byw neu weithio dramor
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message = Efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o&rsquo;r wlad rydych wedi byw neu weithio ynddi. Cysylltwch â gwasanaeth pensiwn y wlad roeddech ynddi i ddarganfod os ydych yn gymwys.
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle3 = wedi byw neu weithio yn Ynys Manaw
-nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)</a>.
+nisp.nirecord.voluntarycontributions.h2title.1 = 1. Darganfyddwch sut mae talu cyfraniadau gwirfoddol yn effeithio eich Pensiwn y Wladwriaeth
+nisp.nirecord.voluntarycontributions.h2title.1.link1 = Cysylltwch â Chanolfan Bensiwn y Dyfodol (agor mewn tab newydd)
+nisp.nirecord.voluntarycontributions.h2title.1.message =  i ddarganfod mwy am sut y gall llenwi bylchau effeithio eich pensiwn.
+
 nisp.nirecord.voluntarycontributions.h2title.2 = 2. Chwiliwch am arweiniad neu gyngor ariannol
 nisp.nirecord.voluntarycontributions.h2title.2.message = Efallai nad talu cyfraniadau gwirfoddol fydd eich opsiwn gorau wrth gynllunio am eich ymddeoliad.
 nisp.nirecord.voluntarycontributions.h2title.2.help.title = Ble allwch chi gael arweiniad neu gyngor
@@ -359,9 +354,18 @@ nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = <a href="https://www
 nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - cyngor ar bensiynau i&rsquo;r rhai dros 50 oed
 nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = <a href="https://www.citizensadvice.org.uk/cymraeg/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">Cyngor ar Bopeth (agor mewn tab newydd)</a>
 
-nisp.nirecord.voluntarycontributions.h2title.3 = 3. Darganfyddwch sut mae talu cyfraniadau gwirfoddol yn effeithio eich Pensiwn y Wladwriaeth
-nisp.nirecord.voluntarycontributions.h2title.3.link1 = Cysylltwch â Chanolfan Bensiwn y Dyfodol (agor mewn tab newydd)
-nisp.nirecord.voluntarycontributions.h2title.3.message =  i ddarganfod mwy am sut y gall llenwi bylchau effeithio eich pensiwn.
+
+nisp.nirecord.voluntarycontributions.h2title.3 = 3. Edrych os gallech gael incwm pensiwn ychwanegol oherwydd eich bod yn
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1 = ei etifeddu neu mae&rsquo;n cael ei gynyddu gan bartner
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading = Gallai eich swm newid os ydych:
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1 = yn weddw, wedi ysgaru neu bod eich partneriaeth sifil wedi&rsquo;i ddiddymu
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2 = wedi talu cyfraniadau cyfradd is gwraig briod
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle2 = wedi byw neu weithio dramor
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message = Efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o&rsquo;r wlad rydych wedi byw neu weithio ynddi. Cysylltwch â gwasanaeth pensiwn y wlad roeddech ynddi i ddarganfod os ydych yn gymwys.
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle3 = wedi byw neu weithio yn Ynys Manaw
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)</a>.
+
+
 
 #*****************************
 # Minimum qualifying period
