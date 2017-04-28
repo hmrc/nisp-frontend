@@ -237,7 +237,7 @@ nisp.finishpage.title = Rydym wedi derbyn eich adborth: Gwirio eich Pensiwn y Wl
 
 nisp.timeout.title = Rydych wedi cael eich allgofnodi: Gwirio eich Pensiwn y Wladwriaeth
 nisp.timeout.heading = Rydych wedi cael eich allgofnodi
-nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd nad ydych wedi defnyddio&rsquo;r gwasanaeth am 15 munud neu fwy.
+nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd nad ydych wedi defnyddio’r gwasanaeth am 15 munud neu fwy.
 
 #******************
 # NI record page
@@ -342,8 +342,8 @@ nisp.nirecord.voluntarycontributions.heading = Cyfraniadau gwirfoddol
 nisp.nirecord.voluntarycontributions.title.message = Cyn i chi ystyried talu cyfraniadau gwirfoddol dylech:
 
 nisp.nirecord.voluntarycontributions.h2title.1 = 1. Darganfyddwch sut mae talu cyfraniadau gwirfoddol yn effeithio eich Pensiwn y Wladwriaeth
-nisp.nirecord.voluntarycontributions.h2title.1.link1 = Cysylltwch â Chanolfan Bensiwn y Dyfodol (agor mewn tab newydd)
-nisp.nirecord.voluntarycontributions.h2title.1.message =  i ddarganfod mwy am sut y gall llenwi bylchau effeithio eich pensiwn.
+nisp.nirecord.voluntarycontributions.h2title.1.link1 = eich rhagolwg Pensiwn y Wladwriaeth
+nisp.nirecord.voluntarycontributions.h2title.1.message =  Gallwch ffonio Canolfan Bensiwn y Dyfodol ar 0345 608 0126 i ddarganfod mwy am sut y gall llenwi bylchau effeithio
 
 nisp.nirecord.voluntarycontributions.h2title.2 = 2. Chwiliwch am arweiniad neu gyngor ariannol
 nisp.nirecord.voluntarycontributions.h2title.2.message = Efallai nad talu cyfraniadau gwirfoddol fydd eich opsiwn gorau wrth gynllunio am eich ymddeoliad.
@@ -351,12 +351,12 @@ nisp.nirecord.voluntarycontributions.h2title.2.help.title = Ble allwch chi gael 
 nisp.nirecord.voluntarycontributions.h2title.2.help.message = Gallwch chwilio am gyngor ariannol proffesiynol. Am arweiniad di-duedd am ddim (ddim ar GOV.UK):
 nisp.nirecord.voluntarycontributions.h2title.2.help.link1 = <a href="https://www.moneyadviceservice.org.uk/cy" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Y Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)</a>
 nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = <a href="https://www.pensionwise.gov.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">Pension wise (agor mewn tab newydd)</a>
-nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - cyngor ar bensiynau i&rsquo;r rhai dros 50 oed
+nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - cyngor ar bensiynau preifat i'r rhai sydd dros 50 oed
 nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = <a href="https://www.citizensadvice.org.uk/cymraeg/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">Cyngor ar Bopeth (agor mewn tab newydd)</a>
 
 
 nisp.nirecord.voluntarycontributions.h2title.3 = 3. Edrych os gallech gael incwm pensiwn ychwanegol oherwydd eich bod yn
-nisp.nirecord.voluntarycontributions.h2title.3.linktitle1 = ei etifeddu neu mae&rsquo;n cael ei gynyddu gan bartner
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle1 = etifeddu neu ei wella gan bartner
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading = Gallai eich swm newid os ydych:
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1 = yn weddw, wedi ysgaru neu bod eich partneriaeth sifil wedi&rsquo;i ddiddymu
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2 = wedi talu cyfraniadau cyfradd is gwraig briod
