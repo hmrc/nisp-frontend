@@ -48,91 +48,95 @@ class VoluntaryContributionsViewSpec extends PlaySpec with MockitoSugar with Htm
     "render page with text  Before considering paying voluntary contributions you should" in {
       assertEqualsMessage(htmlAccountDoc, "p.lede", "nisp.nirecord.voluntarycontributions.title.message")
     }
-    "render page with text  '1.  Check if you may get extra pension income because you' " in {
+
+    "render page with text  '1.  Find out how paying voluntary contributions affects your State Pension ' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body > h2.heading-medium:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.1")
     }
+    "render page with text  'You can call the Future Pension Centre on 0345 608 0126 to find out more about how filling gaps can affect your State Pension forecast.' " in {
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body >p:nth-child(4)", "nisp.nirecord.voluntarycontributions.h2title.1.message", ".")
+    }
+
+    "render page with link  'yoyr state pension forecaste.' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body >p:nth-child(4)>a", "nisp.nirecord.voluntarycontributions.h2title.1.link1")
+    }
+    "render page with link href 'yoyr state pension forecaste.' " in {
+      assertLinkHasValue(htmlAccountDoc, "article.content__body >p:nth-child(4)>a", "/check-your-state-pension/account")
+    }
+
+    "render page with text  '2.  Seek guidance or financial advice' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > h2.heading-medium:nth-child(5)", "nisp.nirecord.voluntarycontributions.h2title.2")
+    }
+    "render page with text  'Paying voluntary contributions may not be your best option when planning for your retirement." in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > p:nth-child(6)", "nisp.nirecord.voluntarycontributions.h2title.2.message")
+    }
+    "render page with text  'Where you can get guidance and advice." in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.2.help.title")
+    }
+    "render page with text  'You can seek professional financial advice. For free impartial guidance (not on GOV.UK):'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>p", "nisp.nirecord.voluntarycontributions.h2title.2.help.message")
+    }
+    "render page with text  'Money Advice Service (opens in new tab)'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link1")
+    }
+    "render page with text ' Pension wise (opens in new tab)'" in {
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")
+    }
+    "render page with link  'Pension wise (opens in new tab)'' " in {
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message", "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)>a")
+    }
+    "render page with text  'Citizens Advice (opens in new tab)'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(1)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link3")
+    }
+
+
+    "render page with text  '3. Check if you may get extra pension income because you' " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body >h2.heading-medium:nth-child(8)", "nisp.nirecord.voluntarycontributions.h2title.3")
+    }
     "render page with text  'inherit or increase it from a partner' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(4)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.1.linktitle1")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle1")
     }
     "render page with text  'Your amount may change if you:' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(4)>div.panel-indent>p", "nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.heading")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div.panel-indent>p", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading")
     }
     "render page with text  'are widowed, divorced or have dissolved your civil partnership' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(4)>div.panel-indent>ul.list-bullet>li:nth-child(1)", "nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message1")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div.panel-indent>ul.list-bullet>li:nth-child(1)", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1")
     }
     "render page with text  'paid married women’s reduced rate contributions' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(4)>div.panel-indent>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.1.linktitle1.message2")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div.panel-indent>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2")
     }
 
     "render page with text  'lived or worked overseas' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(5)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.1.linktitle2")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(10)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle2")
     }
     "render page with text  'You may be entitled to a State Pension from the country you lived or worked in. Contact the pension service of the country you were in to find out if you are eligible.' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(5)>div.panel-indent>p", "nisp.nirecord.voluntarycontributions.h2title.1.linktitle2.message")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(10)>div.panel-indent>p", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message")
     }
 
     "render page with text  'lived or worked in the isle of man' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(6)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.1.linktitle3")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(11)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")
     }
     "render page with text  'You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme, ' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(6)>div.panel-indent>p", "nisp.nirecord.voluntarycontributions.h2title.1.linktitle3.message1")
-    }
-    "render page with text  '2.  Seek guidance or financial advice' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > h2.heading-medium:nth-child(7)", "nisp.nirecord.voluntarycontributions.h2title.2")
-    }
-    "render page with text  'Paying voluntary contributions may not be your best option when planning for your retirement." in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > p:nth-child(8)", "nisp.nirecord.voluntarycontributions.h2title.2.message")
-    }
-    "render page with text  'Where you can get guidance and advice." in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.2.help.title")
-    }
-    "render page with text  'You can seek professional financial advice. For free impartial guidance (not on GOV.UK):'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>p", "nisp.nirecord.voluntarycontributions.h2title.2.help.message")
-    }
-    "render page with text  'Money Advice Service (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(1)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link1")
-    }
-    "render page with text  ' Pension wise (opens in new tab)'" in {
-      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")
-    }
-    "render page with link  'Pension wise (opens in new tab)'' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message", "details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a")
-    }
-    "render page with text  'Citizens Advice (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link3")
-    }
-    "render page with text  '3.  Find out how paying voluntary contributions affects your State Pension ' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > h2.heading-medium:nth-child(10)", "nisp.nirecord.voluntarycontributions.h2title.3")
-    }
-    "render page with text  'to find out more about how filling gaps can affect your pension.' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body >p:nth-child(11)", "nisp.nirecord.voluntarycontributions.h2title.3.message", "article.content__body >p:nth-child(11)>a")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(11)>div.panel-indent>p", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1")
     }
 
-    "render page with link  'to find out more about how filling gaps can affect your pension.' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body >p:nth-child(11)>a", "nisp.nirecord.voluntarycontributions.h2title.3.link1")
-    }
     "render page with text  'back' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body > div.backlink:nth-child(12)>a", "nisp.back")
     }
 
     "render page with href value of link 'GOV.IM – Retirement Pension (opens in new window)'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(6)>div.panel-indent>p>a", "https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(11)>div.panel-indent>p>a", "https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/")
     }
 
     "render page with href value of link 'Money advice service'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(1)>a", "https://www.moneyadviceservice.org.uk/en")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(2)>a", "https://www.moneyadviceservice.org.uk/en")
 
     }
     "render page with href value of link 'Pension wise'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(2)>a", "https://www.pensionwise.gov.uk/")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)>a", "https://www.pensionwise.gov.uk/")
     }
     "render page with href value of link 'Citizen advice'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(9)>div>ul.list-bullet>li:nth-child(3)>a", "https://www.citizensadvice.org.uk/")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(1)>a", "https://www.citizensadvice.org.uk/")
 
-    }
-
-    "render page with href value of link 'Contact the future pension Center'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body >p:nth-child(11)>a", "https://www.gov.uk/future-pension-centre")
     }
 
     "render page with href value of link 'back'" in {
