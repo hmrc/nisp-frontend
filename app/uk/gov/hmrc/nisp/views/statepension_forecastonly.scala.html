@@ -25,7 +25,7 @@
 
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Option[Int], isAbroad: Boolean,
 isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application)
+partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
 
 @sidebar = {
 <div class="helpline-sidebar" >

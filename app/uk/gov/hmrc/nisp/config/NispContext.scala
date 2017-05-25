@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import play.api.Application
+package uk.gov.hmrc.nisp.config
 
-@(partialUrl: String, redirectUrl: String)(implicit messages: Messages, request: Request[_],
-cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
+import uk.gov.hmrc.nisp.connectors.ContactFrontendConnector
+import uk.gov.hmrc.play.http.HeaderCarrier
 
-@main(showBetaBanner = false) {
-    @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
-    <a id="Start" href='@redirectUrl' role="button" tabindex="0" data-journey-click="checkmystatepension:feedback:return" class="button">@Messages("nisp.goback")</a>
+import scala.concurrent.Future
+
+trait NispContext {
+  def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String]
+}
+
+case object NispContextImpl extends NispContext {
+  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = ContactFrontendConnector.getHelpPartial
 }

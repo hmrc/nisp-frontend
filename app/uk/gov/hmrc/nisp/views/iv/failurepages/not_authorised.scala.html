@@ -20,7 +20,7 @@
 @import play.api.Application
 
 @(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_],
-partialRetriever: CachedStaticHtmlPartialRetriever, application: Application)
+partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
 
 @analyticsAdditionalJs = {
     ga('send', 'pageview', '/check-your-state-pension/unauthorised-confirm-identity');

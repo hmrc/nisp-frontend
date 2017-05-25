@@ -14,13 +14,14 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import play.api.Application
+@import uk.gov.hmrc.play.http.HeaderCarrier
+@import uk.gov.hmrc.nisp.connectors.{ContactFrontendConnector}
+@import scala.concurrent.Await
+@import scala.concurrent.duration._
+@import uk.gov.hmrc.nisp.config.{NispContext}
 
-@(partialUrl: String, redirectUrl: String)(implicit messages: Messages, request: Request[_],
-cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
+@(supportLinkEnabled: Boolean)(implicit request: Request[_], context: NispContext)
 
-@main(showBetaBanner = false) {
-    @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
-    <a id="Start" href='@redirectUrl' role="button" tabindex="0" data-journey-click="checkmystatepension:feedback:return" class="button">@Messages("nisp.goback")</a>
+@if(supportLinkEnabled) {
+    @Html(Await.result(context.getPageHelpPartial()(HeaderCarrier.fromHeadersAndSession(request.headers)), 5 seconds))
 }

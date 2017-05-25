@@ -250,8 +250,8 @@ class QuesionnairFormViewSpec extends PlaySpec with MockitoSugar with HtmlSpec w
 
     /*Ends here*/
 
-    "render page with help text 'Get help with this page.' " in {
-      assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Get help with this page.")
+    "render page with help text 'Is there anything wrong with this page?' " in {
+      assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Is there anything wrong with this page?")
     }
   }
 

@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.config._
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+@import uk.gov.hmrc.nisp.views._
 @import uk.gov.hmrc.play.frontend.auth.AuthContext
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.nisp.utils.Breadcrumb
@@ -40,7 +41,7 @@
     analyticsAdditionalJs: Option[Html] = None,
     articleEnabled: Boolean = true,
     loginDetailsHeader: Option[Html] = None,
-    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, authContext: Option[AuthContext] = None, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever, application: Application)
+    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
 
 @linkElement = {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/nisp.css")'/>
@@ -87,7 +88,8 @@
 }
 
 @getHelpForm = {
-    @uiHelpers.reportAProblemLink(applicationConfig.reportAProblemPartialUrl, applicationConfig.reportAProblemNonJSUrl)
+    <!--@uiHelpers.reportAProblemLink(applicationConfig.reportAProblemPartialUrl, applicationConfig.reportAProblemNonJSUrl)-->
+    @includes.report_problem(true)
 }
 
 @sidebar = {

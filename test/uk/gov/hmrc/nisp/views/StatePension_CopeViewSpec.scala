@@ -184,8 +184,8 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
     "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
     }
-    "render page with help text 'Get help with this page.' " in {
-      assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Get help with this page.")
+    "render page with help text 'Is there anything wrong with this page?' " in {
+      assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Is there anything wrong with this page?")
     }
 
   }
@@ -267,8 +267,8 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
     }
     /*Ends here*/
-    "render page with help text 'Get help with this page.' " in {
-      assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Get help with this page.")
+    "render page with help text 'Is there anything wrong with this page?' " in {
+      assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Is there anything wrong with this page?")
     }
 
   }

@@ -36,7 +36,7 @@
     isAbroad: Boolean,
     yearsToContributeUntilPensionAge: Int
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
-application: Application)
+application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
 
 @sidebar = {
 <div class="helpline-sidebar" >
