@@ -248,11 +248,6 @@ class QuesionnairFormViewSpec extends PlaySpec with MockitoSugar with HtmlSpec w
       assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>span", "nisp.textentry.charlimit")
     }
 
-    /*Ends here*/
-
-    "render page with help text 'Is there anything wrong with this page?' " in {
-      assertElementContainsText(htmlAccountDoc, "div.report-error>a", "Is there anything wrong with this page?")
-    }
   }
 
 }

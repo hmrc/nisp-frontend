@@ -232,10 +232,6 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
           }
-          "render page with help text 'Is there anything wrong with this page?' " in {
-            assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Is there anything wrong with this page?")
-          }
-
         }
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65" should {
@@ -400,10 +396,6 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
           }
-          "render page with help text 'Is there anything wrong with this page?' " in {
-            assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Is there anything wrong with this page?")
-          }
-
         }
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps" should {
