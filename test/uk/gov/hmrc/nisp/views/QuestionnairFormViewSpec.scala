@@ -249,6 +249,10 @@ class QuesionnairFormViewSpec extends PlaySpec with MockitoSugar with HtmlSpec w
     }
 
     /*Ends here*/
+
+    "render page with help text 'Is there anything wrong with this page?' " in {
+      assertElementContainsText(htmlAccountDoc, "div.report-error>a", "Is there anything wrong with this page?")
+    }
   }
 
 }
