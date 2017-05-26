@@ -52,10 +52,6 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
 
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p", "nisp.excluded.dead")
     }
-    "render page with help message 'Is there anything wrong with this page?' " in {
-
-      assertElementContainsText(htmlAccountDoc, "div.report-error>a#get-help-action", "Is there anything wrong with this page?")
-    }
   }
 
   "Exclusion Isle of Man : Can't see NI Record" should {
@@ -255,9 +251,6 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
     }
     "render page with link having  text sign out and leave feedback " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(7)", "nisp.excluded.mwrre.signOut")
-    }
-    "render page with help text 'Is there anything wrong with this page?' " in {
-      assertEqualsValue(htmlAccountDoc, "div.report-error>a#get-help-action", "Is there anything wrong with this page?")
     }
   }
 
