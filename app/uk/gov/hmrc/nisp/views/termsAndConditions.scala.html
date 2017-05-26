@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import play.api.Application
 
-@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application)
+@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application,  context: uk.gov.hmrc.nisp.config.NispContext)
 
 @main(browserTitle = Some(Messages("nisp.tandcs.title")),
 sidebarLinks = None) {

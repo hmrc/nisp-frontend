@@ -25,6 +25,7 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+import uk.gov.hmrc.nisp.config.{NispContext, NispContextImpl}
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
@@ -35,6 +36,7 @@ trait HtmlSpec extends PlaySpec {
   implicit val request = FakeRequest()
 
   implicit val lang = LanguageToggle.getLanguageCode
+  implicit val context: NispContext = NispContextImpl
 
   implicit val authContext = {
     val user = LoggedInUser("", None, None, None, CredentialStrength.None, ConfidenceLevel.L500, "test oid")

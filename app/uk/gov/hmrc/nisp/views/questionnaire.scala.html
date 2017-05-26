@@ -19,7 +19,7 @@
 @import play.api.Application
 
 @(form: Form[_])(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever,
-application: Application)
+application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
 
 @main(browserTitle = Some(Messages("nisp.questionnaire.title")), sidebarLinks = Some(includes.questionnaireSidebar()),
          pageTitle = Some(Messages("nisp.questionnaire.header"))) {
