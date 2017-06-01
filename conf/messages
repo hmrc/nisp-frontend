@@ -44,8 +44,8 @@ nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pensio
 # Main page messages
 #**********************
 
-nisp.main.title = Summary: Check your State Pension
-nisp.main.h1.title = Your State Pension
+nisp.main.title = Your State Pension summary – Check your State Pension – GOV.UK
+nisp.main.h1.title = Your State Pension summary
 nisp.main.caveats = Your forecast
 nisp.main.continueContribute = You need to continue to contribute National Insurance to reach your forecast
 nisp.main.mostYouCanGet = is the most you can get
@@ -242,7 +242,7 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 # NI record page
 #******************
 
-nisp.nirecord.title = Your National Insurance record: Check your State Pension
+nisp.nirecord.title = Your National Insurance record – Check your State Pension – GOV.UK
 nisp.nirecord.heading = Your National Insurance record
 nisp.nirecord.heading.uk = Your UK National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.

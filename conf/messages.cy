@@ -44,8 +44,8 @@ nisp.landing.noteligible = Cysylltwch â <a href="https://www.gov.uk/future-pens
 # Main page messages
 #**********************
 
-nisp.main.title = Crynodeb: Gwirio eich Pensiwn y Wladwriaeth
-nisp.main.h1.title = Eich Pensiwn y Wladwriaeth
+nisp.main.title = Crynodeb o’ch Pensiwn y Wladwriaeth – Gwirio’ch Pensiwn y Wladwriaeth – GOV.UK
+nisp.main.h1.title = Crynodeb o’ch Pensiwn y Wladwriaeth
 nisp.main.caveats = Eich rhagolwg
 nisp.main.continueContribute = Bydd angen i chi barhau i gyfrannu Yswiriant Gwladol i gyrraedd eich rhagolwg
 nisp.main.mostYouCanGet = yw’r mwyaf y gallwch ei gael
@@ -243,7 +243,7 @@ nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd n
 # NI record page
 #******************
 
-nisp.nirecord.title = Eich cofnod Yswiriant Gwladol: Gwirio eich Pensiwn y Wladwriaeth
+nisp.nirecord.title = Eich cofnod Yswiriant Gwladol – Gwirio'ch Pensiwn y Wladwriaeth – GOV.UK
 nisp.nirecord.heading = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.yournirecordgapyears = Blynyddoedd sydd ddim yn llawn.
