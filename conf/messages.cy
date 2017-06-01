@@ -449,7 +449,7 @@ nisp.tandcs.title = Telerau ac amodau
 nisp.tandcs.heading = Cyn defnyddio Gwirio eich Pensiwn y Wladwriaeth, dylech ddarllen y dudalen hon yn ofalus
 
 nisp.tandcs.use = Os ydych eisiau defnyddio &lsquo;Gwirio eich Pensiwn y Wladwriaeth&rsquo; mae&rsquo;n rhaid i chi gytuno i&rsquo;n telerau ac amodau. Gallwn ddiweddaru ein telerau ac amodau unrhyw bryd. Dylech gael golwg ar y dudalen hon yn rheolaidd, er mwyn i chi fod yn ymwybodol o unrhyw newidiadau.
-nisp.tandcs.information = Mae&rsquo;r wybodaeth a roddir yn seiliedig ar fanylion o&rsquo;ch cyfrif ar yr amser rydych yn defnyddio&rsquo;r gwasanaeth ac, tra rydym yn gwneud pob ymdrech i gadw&rsquo;r gwasanaeth hwn yn gyfredol, nid ydym yn gwarantu y bydd ac yw yn rhydd o wallau neu ddiffyg.
+nisp.tandcs.information = Mae’r wybodaeth a roddir yn seiliedig ar fanylion o'ch cofnod Yswiriant Gwladol ar yr adeg y gwnaethoch ddefnyddio’r gwasanaeth. Er y byddwn yn gwneud pob ymdrech i gadw’ch cofnod wedi’i ddiweddaru, ni allwn roi sicrwydd y bydd hynny’n digwydd. Ni allwn ychwaith roi sicrwydd na fydd gwallau neu hepgoriadau ynddo.
 nisp.tandcs.service = Mae&rsquo;r gwasanaeth hwn am ddim i&rsquo;w ddefnyddio. Ni allwn warantu y bydd bob amser ar gael, ac efallai y byddwn yn ei atal neu ei newid ar unrhyw adeg.
 nisp.tandcs.rely = Ni ddylech ddibynnu ar y wybodaeth hon, gan nad yw&rsquo;n gyfystyr â chyngor. Mae&rsquo;n rhaid i chi gael cyngor proffesiynol wrth gynllunio ar gyfer eich ymddeoliad.
 nisp.tandcs.responsibility = Mae i fyny i chi i sicrhau bod gennych popeth sydd ei angen i gael mynediad at ein gwasanaeth. Mae hefyd yn eich cyfrifoldeb os oes unrhyw un yn defnyddio eich cysylltiad rhyngrwyd i gael mynediad at ein gwasanaeth, eu bod yn darllen ein telerau ac amodau, ac yn cytuno â hwy.
