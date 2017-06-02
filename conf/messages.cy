@@ -91,7 +91,7 @@ nisp.main.context.continueWorkingMax.stillNeedToPay = Pan fyddwch yn cyrraedd {0
 
 nisp.main.context.fillGaps.improve.title = Gallwch wella eich rhagolwg
 nisp.main.context.fillGaps.viewGaps = Edrych ar fylchau yn eich cofnod
-nisp.main.context.fillGaps.viewGapsAndCost = Bylchau yn eich cofnod a&rsquo;r gost o&rsquo;u llenwi
+nisp.main.context.fillGaps.viewGapsAndCost = Bwrw golwg ar fylchau yn eich cofnod a’r gost o’u llenwi
 
 nisp.main.context.fillgaps.para1.plural = Mae gennych flynyddoedd ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon.
 nisp.main.context.fillgaps.para1.singular = Mae gennych flwyddyn ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon. Dim ond y flwyddyn hon sydd angen i chi ei llenwi i gael y mwyaf y gallwch ei gael.
