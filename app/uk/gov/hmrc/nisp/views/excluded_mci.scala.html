@@ -44,22 +44,19 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, co
         <h1 class="heading-large">@Html(Messages("nisp.excluded.mci.title"))</h1>
         <p class="lede">@Html(Messages("nisp.excluded.mci.info"))</p>
         <h2 class="heading-medium">@Html(Messages("nisp.excluded.mci.howToFix"))</h2>
-        <ol class="list-number">
+        <ul class="list-bullet">
             <li>@Messages("nisp.excluded.mci.howToFix.message1")</li>
             <li>@Html(Messages("nisp.excluded.mci.howToFix.message2"))</li>
             <li>@Html(Messages("nisp.excluded.mci.howToFix.message3"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToFix.message4"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToFix.message5"))</li>
-        </ol>
-        <h2 class="heading-medium">@Messages("nisp.excluded.mci.howToContact")</h2>
-        <ul class="list-bullet">
-            <li>@Html(Messages("nisp.excluded.mci.howToContact.textphone"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToContact.outsideUK"))</li>
         </ul>
+        <p>@Messages("nisp.excluded.mci.howToContact")</p>
+        <ul class="list-bullet">
+            <li>@Html(Messages("nisp.excluded.mci.howToContact.weekdays"))</li>
+            <li>@Html(Messages("nisp.excluded.mci.howToContact.saturday"))</li>
+            <li>@Html(Messages("nisp.excluded.mci.howToContact.sunday"))</li>
 
-        <p>@Html(Messages("nisp.excluded.mci.howToContact.message1"))</p>
-        <p>@Html(Messages("nisp.excluded.mci.howToContact.message2"))</p>
-        <p>@Html(Messages("nisp.excluded.mci.howToContact.message3"))</p>
+        </ul>
+        <p>@Html(Messages("nisp.excluded.mci.howToContact.bankholiday"))</p>
         <p>@Html(Messages("nisp.excluded.mci.howToContact.link"))</p>
     }
 

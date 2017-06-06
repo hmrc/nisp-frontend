@@ -92,7 +92,7 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
 
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
-    "render page with heading  'There is a problem logging you in'" in {
+    "render page with heading  'You cannot access your account right now'" in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.excluded.mci.title")
 
     }
@@ -101,53 +101,42 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
 
     }
 
-    "render page with text 'How to fix this'" in {
+    "render page with text 'How to contact us'" in {
       assertEqualsMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.mci.howToFix")
     }
 
-    "render page with message 'Telephone 0300 200 3300' " in {
-      assertEqualsMessage(htmlAccountDoc, "ol.list-number>li:nth-child(1)", "nisp.excluded.mci.howToFix.message1")
+    "render page with message 'Telephone: 0300 200 3300' " in {
+      assertEqualsMessage(htmlAccountDoc, "ul.list-bullet>li:nth-child(1)", "nisp.excluded.mci.howToFix.message1")
     }
-
-    "render page with message 'Say ‘I can’t log in' " in {
-      assertEqualsMessage(htmlAccountDoc, "ol.list-number>li:nth-child(2)", "nisp.excluded.mci.howToFix.message2")
-    }
-
-    "render page with message 'Say ‘Yes’ when asked if you are having problems logging in' " in {
-      assertEqualsMessage(htmlAccountDoc, "ol.list-number>li:nth-child(3)", "nisp.excluded.mci.howToFix.message3")
-    }
-
-    "render page with message 'You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an adviser will help you.'" in {
-      assertEqualsMessage(htmlAccountDoc, "ol.list-number>li:nth-child(4)", "nisp.excluded.mci.howToFix.message4")
-    }
-
-    "render page with message 'Tell the adviser this is an ‘MCI issue’" in {
-      assertEqualsMessage(htmlAccountDoc, "ol.list-number>li:nth-child(5)", "nisp.excluded.mci.howToFix.message5")
-    }
-
-    "render page with message 'Other ways to contact us'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2.heading-medium:nth-child(5)", "nisp.excluded.mci.howToContact")
-    }
-
     "render page with message 'Textphone: 0300 200 3319'" in {
-      assertEqualsMessage(htmlAccountDoc, "ul.list-bullet> li:nth-child(1)", "nisp.excluded.mci.howToContact.textphone")
+      assertEqualsMessage(htmlAccountDoc, "ul.list-bullet> li:nth-child(2)", "nisp.excluded.mci.howToFix.message2")
     }
 
     "render page with message 'Outside UK: +44 135 535 9022'" in {
-      assertEqualsMessage(htmlAccountDoc, "ul.list-bullet> li:nth-child(2)", "nisp.excluded.mci.howToContact.outsideUK")
+      assertEqualsMessage(htmlAccountDoc, "ul.list-bullet> li:nth-child(3)", "nisp.excluded.mci.howToFix.message3")
     }
 
-    "render page with message 'Telephone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.excluded.mci.howToContact.message1")
+    "render page with message 'Phone lines are open:'" in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.excluded.mci.howToContact")
     }
-    "render page with message 'Closed Sundays and bank holidays.'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.excluded.mci.howToContact.message2")
+
+    "render page with message '8am to 8pm, Monday to Friday'" in {
+      assertEqualsMessage(htmlAccountDoc, "article>ul.list-bullet:nth-child(6)> li:nth-child(1)", "nisp.excluded.mci.howToContact.weekdays")
     }
-    "render page with message 'Telephone lines are less busy before 10am Monday to Friday.'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(9)", "nisp.excluded.mci.howToContact.message3")
+
+    "render page with message '8am to 4pm Saturdays'" in {
+      assertEqualsMessage(htmlAccountDoc, "article>ul.list-bullet:nth-child(6)> li:nth-child(2)", "nisp.excluded.mci.howToContact.saturday")
     }
+
+    "render page with message '9am to 5pm Sundays'" in {
+      assertEqualsMessage(htmlAccountDoc, "article>ul.list-bullet:nth-child(6)> li:nth-child(3)", "nisp.excluded.mci.howToContact.sunday")
+    }
+    "render page with message 'Closed bank holidays.'" in {
+      assertEqualsMessage(htmlAccountDoc, "article>p:nth-child(7)", "nisp.excluded.mci.howToContact.bankholiday")
+    }
+
     "render page with message 'Find out about call charges (opens in a new window)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.excluded.mci.howToContact.link")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.excluded.mci.howToContact.link")
     }
   }
 

@@ -111,23 +111,20 @@ nisp.main.context.fillgaps.futureproof.para = Mae gennych flynyddoedd ar eich co
 # Exclusion messages
 #**********************
 
-nisp.excluded.mci.title = Mae problem i&rsquo;ch mewngofnodi
-nisp.excluded.mci.info = Rydym angen siarad â chi cyn y gallwch fewngofnodi i&rsquo;r gwasanaeth.
+nisp.excluded.mci.title = Ni allwch gyrchu'ch cyfrif ar hyn o bryd
+nisp.excluded.mci.info = Mae angen i ni siarad â chi am wall MCI cyn y gallwch fewngofnodi.
 
-nisp.excluded.mci.howToFix = Sut i ddatrys hyn
-nisp.excluded.mci.howToFix.message1 = Ffoniwch 0300 200 3300
-nisp.excluded.mci.howToFix.message2 = Dywedwch &lsquo;Nid wyf yn gallu mewngofnodi&rsquo;
-nisp.excluded.mci.howToFix.message3 = Dywedwch &lsquo;Ydw&rsquo; pan ofynnir i chi os ydych yn cael problemau i fewngofnodi
-nisp.excluded.mci.howToFix.message4 = Byddwch yn clywed neges wedi&rsquo;i recordio yn eich cynghori i ffonio rhif arall - <strong>peidiwch â rhoi&rsquo;r ffôn i lawr a deilau eto</strong>. Arhoswch ar y llinell a bydd ymgynghorydd yn eich helpu.
-nisp.excluded.mci.howToFix.message5 = Dywedwch wrth yr ymgynghorydd bod hyn yn ;fater MCI&rsquo;
+nisp.excluded.mci.howToFix = Sut i gysylltu â ni
+nisp.excluded.mci.howToFix.message1 = Ffôn: 0300 200 3300
+nisp.excluded.mci.howToFix.message2 = Ffôn Testun: 0300 200 3319
+nisp.excluded.mci.howToFix.message3 = Y tu allan i'r DU: +44135 535 9022
 
-nisp.excluded.mci.howToContact = Ffyrdd eraill i gysylltu â ni
-nisp.excluded.mci.howToContact.textphone = Ffôn testun: 0300 200 3319
-nisp.excluded.mci.howToContact.outsideUK = Y tu allan i&rsquo;r DU: +44 135 535 9022
-nisp.excluded.mci.howToContact.message1 = Mae&rsquo;r llinellau ffôn ar agor o 8am i 8pm dydd Llun i ddydd Gwener ac o 8am i 4pm ar ddydd Sadwrn.
-nisp.excluded.mci.howToContact.message2 = Wedi cau ar ddydd Sul a gwyliau banc.
-nisp.excluded.mci.howToContact.message3 = Mae&rsquo;r llinellau ffôn yn llai prysur cyn 10am dydd Llun i ddydd Gwener.
-nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/call-charges" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)</a>
+nisp.excluded.mci.howToContact = Llinellau ffôn ar agor:
+nisp.excluded.mci.howToContact.weekdays = 8am i 8pm, Dydd Llun i Dydd Gwener
+nisp.excluded.mci.howToContact.saturday = 8am i 4pm, Dydd Sadwrn
+nisp.excluded.mci.howToContact.sunday =	9am i 5pm, Dydd Sul
+nisp.excluded.mci.howToContact.bankholiday = Ar gau ar wyliau'r banc.
+nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/costau-galwadau" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)</a>
 
 nisp.excluded.title = Rydych yn methu defnyddio&rsquo;r gwasanaeth
 
