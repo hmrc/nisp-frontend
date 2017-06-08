@@ -23,6 +23,7 @@
 
 @(niTaxYear: NationalInsuranceTaxYear, currentDate: LocalDate)(implicit messages: Messages )
 
+
 <dt class="expandable" aria-expanded="false" aria-controls="tax-year-@niTaxYear.taxYear">
     <div class="ni-wrapper">
         <div class="ni-years"> @niTaxYear.taxYear</div>
@@ -32,9 +33,7 @@
             <div class="ni-notfull">@Html(Messages("nisp.nirecord.gap"))</div>
         }
         <div class="ni-action">
-            <a href="#" class="view-details">@Html(Messages("nisp.nirecord.gap.viewdetails", niTaxYear.taxYear))</a>
-            <a href="#" class="hide-details">@Html(Messages("nisp.nirecord.gap.hidedetails", niTaxYear.taxYear))</a>
-
+            <a href="#" class="view-details" aria-expanded="false">@Html(Messages("nisp.nirecord.gap.viewdetails", niTaxYear.taxYear))</a>
         </div>
     </div>
 </dt>

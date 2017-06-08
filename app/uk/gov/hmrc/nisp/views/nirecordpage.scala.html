@@ -194,6 +194,8 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, co
     }
 </dl>
 
+<span id="current-language" class="visuallyhidden">@{messages.lang.code}</span>
+
 @if(niRecord.numberOfGaps > 0 && !gapsOnlyView){
     <p><a href="@routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps)</a></p>
 }
