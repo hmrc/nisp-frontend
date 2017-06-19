@@ -19,7 +19,7 @@
 @import play.api.Application
 
 @(partialUrl: String, formBody: Option[Html])(implicit messages: Messages, request: Request[_],
-formPartialRetriever: FormPartialRetriever, partialRetriever: CachedStaticHtmlPartialRetriever, application: Application,  context: uk.gov.hmrc.nisp.config.NispContext)
+formPartialRetriever: FormPartialRetriever, partialRetriever: CachedStaticHtmlPartialRetriever, application: Application)
 
 @main(showBetaBanner = false) {
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))

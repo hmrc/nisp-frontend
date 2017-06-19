@@ -24,7 +24,7 @@
 @import play.api.Application
 
 @(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
+partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar">

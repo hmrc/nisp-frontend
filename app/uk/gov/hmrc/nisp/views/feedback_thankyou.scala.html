@@ -18,7 +18,7 @@
 @import play.api.Application
 
 @(partialUrl: String, redirectUrl: String)(implicit messages: Messages, request: Request[_],
-cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
+cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @main(showBetaBanner = false) {
     @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)

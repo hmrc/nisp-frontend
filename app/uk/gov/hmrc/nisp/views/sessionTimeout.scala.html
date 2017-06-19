@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
-@()(implicit partialRetriever: CachedStaticHtmlPartialRetriever, request: Request[_], messages: Messages, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
+@()(implicit partialRetriever: CachedStaticHtmlPartialRetriever, request: Request[_], messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @main(browserTitle = Some(Messages("nisp.timeout.title")), pageTitle = Some(Messages("nisp.timeout.heading")),
           showTitleHeaderNav = false) {

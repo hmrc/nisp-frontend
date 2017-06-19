@@ -36,7 +36,7 @@
   isPertaxUrl: Boolean,
   yearsToContributeUntilPensionAge: Int
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
-application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
+application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @sidebar = {
 <div class="helpline-sidebar" >

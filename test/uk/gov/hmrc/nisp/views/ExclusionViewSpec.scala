@@ -24,6 +24,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.common.FakePlayApplication
+import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_dead
@@ -32,6 +33,7 @@ import uk.gov.hmrc.play.language.LanguageUtils.Dates
 class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
