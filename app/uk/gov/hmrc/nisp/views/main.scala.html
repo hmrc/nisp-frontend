@@ -80,7 +80,7 @@
 @betaBanner = {@if(showBetaBanner) {@layouts.betaBanner(userLoggedIn, applicationConfig.betaFeedbackUrl,applicationConfig.betaFeedbackUnauthenticatedUrl, true)}}
 
 @serviceInfoHtml = {
-    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user , messages)))
+    @{user.map(user => formPartialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user , messages)))
         .getOrElse(serviceInfo(betaBanner, false, None)
         )
     }
