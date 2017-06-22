@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(betaBanner: Html, includeGridWrapper: Boolean, serviceInfoContent: Option[Html])(implicit messages: Messages, request: Request[_], context: uk.gov.hmrc.nisp.config.NispContext)
+@(betaBanner: Html, includeGridWrapper: Boolean, serviceInfoContent: Option[Html])(implicit messages: Messages, request: Request[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 <div class="service-info @if( includeGridWrapper ){ grid-wrapper}">
     @betaBanner    

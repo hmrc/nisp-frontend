@@ -41,7 +41,7 @@
     analyticsAdditionalJs: Option[Html] = None,
     articleEnabled: Boolean = true,
     loginDetailsHeader: Option[Html] = None,
-    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, partialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
+    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @linkElement = {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/nisp.css")'/>
@@ -80,7 +80,7 @@
 @betaBanner = {@if(showBetaBanner) {@layouts.betaBanner(userLoggedIn, applicationConfig.betaFeedbackUrl,applicationConfig.betaFeedbackUnauthenticatedUrl, true)}}
 
 @serviceInfoHtml = {
-    @{user.map(user => partialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user , messages)))
+    @{user.map(user => formPartialRetriever.getPartialContent(Breadcrumb.generateHeaderUrl(hideBreadcrumb)(request, user , messages)))
         .getOrElse(serviceInfo(betaBanner, false, None)
         )
     }
@@ -88,8 +88,7 @@
 }
 
 @getHelpForm = {
-    <!--@uiHelpers.reportAProblemLink(applicationConfig.reportAProblemPartialUrl, applicationConfig.reportAProblemNonJSUrl)-->
-    @includes.report_problem(true)
+    @formPartialRetriever.getPartialContent(s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
 }
 
 @sidebar = {

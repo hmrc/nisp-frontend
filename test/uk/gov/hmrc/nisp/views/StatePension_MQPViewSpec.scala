@@ -33,6 +33,7 @@ import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
 import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
@@ -70,6 +71,7 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
   implicit override val lang = LanguageToggle.getLanguageCode
   implicit val lanCookie = LanguageToggle.getLanguageCookie
+  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",

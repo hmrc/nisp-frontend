@@ -31,6 +31,7 @@ import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.nisp.builders.ApplicationConfigBuilder
 import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
@@ -66,6 +67,7 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
   lazy val fakeRequest = FakeRequest()
   implicit override val lang = LanguageToggle.getLanguageCode
   implicit val lanCookie = LanguageToggle.getLanguageCookie
+  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",

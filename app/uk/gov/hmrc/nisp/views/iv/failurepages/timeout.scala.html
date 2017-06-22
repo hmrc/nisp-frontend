@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
-@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, context: uk.gov.hmrc.nisp.config.NispContext)
+@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @analyticsAdditionalJs = {
     ga('send', 'pageview', '/check-your-state-pension/unauthorised-timeout');
