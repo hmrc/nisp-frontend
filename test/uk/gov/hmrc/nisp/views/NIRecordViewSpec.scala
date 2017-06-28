@@ -490,7 +490,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
         qualifyingYearsPriorTo1975 = 5,
         numberOfGaps = 0,
         numberOfGapsPayable = 0,
-        new LocalDate(1954, 3, 6),
+        Some(new LocalDate(1954, 3, 6)),
         false,
         new LocalDate(2016, 4, 5),
         List(
@@ -577,7 +577,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
         qualifyingYearsPriorTo1975 = 0,
         numberOfGaps = 1,
         numberOfGapsPayable = 1,
-        new LocalDate(1954, 3, 6),
+        Some(new LocalDate(1954, 3, 6)),
         false,
         new LocalDate(2015, 4, 5),
         List(
@@ -670,7 +670,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
         qualifyingYearsPriorTo1975 = 0,
         numberOfGaps = 1,
         numberOfGapsPayable = 1,
-        new LocalDate(1954, 3, 6),
+        Some(new LocalDate(1954, 3, 6)),
         false,
         new LocalDate(2017, 4, 5),
         List(
@@ -798,7 +798,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
         qualifyingYearsPriorTo1975 = 0,
         numberOfGaps = 1,
         numberOfGapsPayable = 1,
-        new LocalDate(1954, 3, 6),
+        Some(new LocalDate(1954, 3, 6)),
         false,
         new LocalDate(2017, 4, 5),
         List(

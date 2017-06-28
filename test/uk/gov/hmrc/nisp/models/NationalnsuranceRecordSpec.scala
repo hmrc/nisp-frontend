@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 class NationalnsuranceRecordSpec extends UnitSpec {
 
   "NationalInsuranceRecord" when {
-    "there is no years" should {
+    "there are no years" should {
       "parse the json correctly" in {
         Json.parse(
           """
@@ -51,7 +51,41 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             qualifyingYearsPriorTo1975 = 0,
             numberOfGaps = 0,
             numberOfGapsPayable = 0,
-            dateOfEntry = new LocalDate(2015, 5, 4),
+            dateOfEntry = Some(new LocalDate(2015, 5, 4)),
+            homeResponsibilitiesProtection = false,
+            earningsIncludedUpTo = new LocalDate(2016, 4, 5),
+            List()
+          )
+      }
+    }
+
+    "there is no date of entry" should {
+      "parse the json correctly" in {
+        Json.parse(
+          """
+            |{
+            |  "_links": {
+            |    "self": {
+            |      "href": "/national-insurance-record/ni/QQ123456A"
+            |    }
+            |  },
+            |  "qualifyingYears": 0,
+            |  "qualifyingYearsPriorTo1975": 0,
+            |  "numberOfGaps": 0,
+            |  "numberOfGapsPayable": 0,
+            |  "homeResponsibilitiesProtection": false,
+            |  "earningsIncludedUpTo": "2016-04-05",
+            |  "_embedded": {
+            |    "taxYears": []
+            |  }
+            |}
+          """.stripMargin).as[NationalInsuranceRecord] shouldBe
+          NationalInsuranceRecord(
+            qualifyingYears = 0,
+            qualifyingYearsPriorTo1975 = 0,
+            numberOfGaps = 0,
+            numberOfGapsPayable = 0,
+            dateOfEntry = None,
             homeResponsibilitiesProtection = false,
             earningsIncludedUpTo = new LocalDate(2016, 4, 5),
             List()
@@ -103,7 +137,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             qualifyingYearsPriorTo1975 = 0,
             numberOfGaps = 0,
             numberOfGapsPayable = 0,
-            dateOfEntry = new LocalDate(2015, 5, 4),
+            dateOfEntry = Some(new LocalDate(2015, 5, 4)),
             homeResponsibilitiesProtection = false,
             earningsIncludedUpTo = new LocalDate(2017, 4, 5),
             List(NationalInsuranceTaxYear(
@@ -187,7 +221,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             qualifyingYearsPriorTo1975 = 0,
             numberOfGaps = 1,
             numberOfGapsPayable = 1,
-            dateOfEntry = new LocalDate(2015, 5, 4),
+            dateOfEntry = Some(new LocalDate(2015, 5, 4)),
             homeResponsibilitiesProtection = false,
             earningsIncludedUpTo = new LocalDate(2018, 4, 5),
             List(

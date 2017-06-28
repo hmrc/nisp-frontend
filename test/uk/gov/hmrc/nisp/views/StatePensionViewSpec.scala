@@ -101,7 +101,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 2,
               numberOfGapsPayable = 2,
-              new LocalDate(1954, 3, 6),
+              Some(new LocalDate(1954, 3, 6)),
               false,
               new LocalDate(2017, 4, 5),
               List(
@@ -265,7 +265,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 2,
               numberOfGapsPayable = 2,
-              new LocalDate(1954, 3, 6),
+              Some(new LocalDate(1954, 3, 6)),
               false,
               new LocalDate(2017, 4, 5),
               List(
@@ -429,7 +429,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 2,
               numberOfGapsPayable = 2,
-              new LocalDate(1989, 3, 6),
+              Some(new LocalDate(1989, 3, 6)),
               false,
               new LocalDate(2017, 4, 5),
               List(
@@ -581,7 +581,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 0,
               numberOfGapsPayable = 0,
-              new LocalDate(1989, 3, 6),
+              Some(new LocalDate(1989, 3, 6)),
               false,
               new LocalDate(2017, 4, 5),
               List(
@@ -716,7 +716,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 2,
               numberOfGapsPayable = 2,
-              new LocalDate(1989, 3, 6),
+              Some(new LocalDate(1989, 3, 6)),
               false,
               new LocalDate(2017, 4, 5),
               List(
@@ -857,7 +857,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             qualifyingYearsPriorTo1975 = 0,
             numberOfGaps = 0,
             numberOfGapsPayable = 0,
-            new LocalDate(1989, 3, 6),
+            Some(new LocalDate(1989, 3, 6)),
             false,
             new LocalDate(2017, 4, 5),
             List(
@@ -952,7 +952,6 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
         }
 
       }
-
     }
   }
 }
