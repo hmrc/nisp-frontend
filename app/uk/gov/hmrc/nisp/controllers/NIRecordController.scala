@@ -82,18 +82,18 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
     ))
   }
 
-  private[controllers] def showPre1975Years(dateOfEntry: LocalDate, dateOfBirth: Option[LocalDate]): Boolean = {
+  private[controllers] def showPre1975Years(dateOfEntry: Option[LocalDate], dateOfBirth: Option[LocalDate], pre1975Years: Int): Boolean = {
 
-    val dateOfEntryDiff = Constants.niRecordStartYear - TaxYear.taxYearFor(dateOfEntry).startYear
+    val dateOfEntryDiff = dateOfEntry.map(Constants.niRecordStartYear - TaxYear.taxYearFor(_).startYear)
 
-    dateOfBirth match {
-      case None => dateOfEntryDiff > 0
-      case Some(dob) =>
-        val sixteenthBirthdayTaxYear = TaxYear.taxYearFor(dob.plusYears(Constants.niRecordMinAge))
-        val sixteenthBirthdayDiff = Constants.niRecordStartYear - sixteenthBirthdayTaxYear.startYear
+    val sixteenthBirthdayTaxYear = dateOfBirth.map(dob => TaxYear.taxYearFor(dob.plusYears(Constants.niRecordMinAge)))
+    val sixteenthBirthdayDiff = sixteenthBirthdayTaxYear.map(Constants.niRecordStartYear - _.startYear)
 
-        val yearsPre75 = dateOfEntryDiff.min(sixteenthBirthdayDiff)
-        yearsPre75 > 0
+    (sixteenthBirthdayDiff, dateOfEntryDiff) match {
+      case (Some(sb), Some(doe)) => sb.min(doe) > 0
+      case (Some(sb), _) => sb > 0
+      case (_, Some(doe)) => doe > 0
+      case _ => pre1975Years > 0
     }
   }
 
@@ -147,7 +147,7 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
                   recordHasEnded = recordHasEnded,
                   yearsToContribute = yearsToContribute,
                   finalRelevantEndYear = finalRelevantStartYear + 1,
-                  showPre1975Years = showPre1975Years(niRecord.dateOfEntry, user.dateOfBirth),
+                  showPre1975Years = showPre1975Years(niRecord.dateOfEntry, user.dateOfBirth, niRecord.qualifyingYearsPriorTo1975),
                   authenticationProvider = getAuthenticationProvider(user.authContext.user.confidenceLevel),
                   showFullNI = showFullNI,
                   currentDate = currentDate))

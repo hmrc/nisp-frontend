@@ -16,18 +16,17 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.joda.time.LocalDate
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.connectors.{NationalInsuranceConnector, NispConnector}
-import uk.gov.hmrc.nisp.models.{NIRecordTaxYear, NIResponse, NationalInsuranceRecord, NationalInsuranceTaxYear}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
+import uk.gov.hmrc.nisp.models.{NIRecordTaxYear, NIResponse, NationalInsuranceRecord, NationalInsuranceTaxYear}
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
+import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.Future
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.time.TaxYear
 
 trait NationalInsuranceService {
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]]
@@ -110,7 +109,7 @@ trait NispConnectionNI {
           qualifyingYearsPriorTo1975 = summary.pre75QualifyingYears.getOrElse(0),
           numberOfGaps = summary.noOfNonQualifyingYears,
           numberOfGapsPayable = summary.numberOfPayableGaps,
-          dateOfEntry = summary.dateOfEntry.localDate,
+          dateOfEntry = Some(summary.dateOfEntry.localDate),
           homeResponsibilitiesProtection = summary.homeResponsibilitiesProtection,
           earningsIncludedUpTo = summary.earningsIncludedUpTo.localDate,
           taxYears = record.taxYears.sortBy(_.taxYear)(Ordering[Int].reverse) map transformTaxYear
