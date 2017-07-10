@@ -60,7 +60,7 @@ trait Breadcrumb {
       }.mkString("&")
     }
     val showBetaBanner = "&showBetaBanner=true&deskProToken='NISP'"
-    mainContentHeaderPartialUrl.concat(name).concat(lastLogin).concat(showBreadcrumb).concat(showBetaBanner)
+    mainContentHeaderPartialUrl.concat(name).concat(lastLogin).concat(showBreadcrumb)
 
 
   }
