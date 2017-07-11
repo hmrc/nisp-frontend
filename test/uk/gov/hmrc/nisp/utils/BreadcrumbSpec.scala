@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLev
 import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class BreadcrumbSpec @Inject()(val messagesApi: MessagesApi) extends UnitSpec with OneAppPerSuite {
+class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequestSP = FakeRequest("GET", "/account")
   val fakeRequestNI = FakeRequest("GET", "/account/nirecord/gaps")
   val fakeRequestVolContribution = FakeRequest("GET", "/account/nirecord/voluntarycontribs")
@@ -57,6 +57,10 @@ class BreadcrumbSpec @Inject()(val messagesApi: MessagesApi) extends UnitSpec wi
 
     "return a breadcrumb url without a 'name' variable, when user.name has no value" in {
       MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, emptyNispUser, messages) should not include ("name=")
+    }
+
+    "always return a breadcrumb url without a 'showBetaBanner' variable" in {
+      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, emptyNispUser, messages) should not include "showBetaBanner="
     }
 
     "return a breadcrumb url with users' name, when user.name has value " in {

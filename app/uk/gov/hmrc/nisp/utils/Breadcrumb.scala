@@ -59,9 +59,6 @@ trait Breadcrumb {
         case (name: String, url: String) => s"item_text=$name&item_url=$url"
       }.mkString("&")
     }
-    val showBetaBanner = "&showBetaBanner=true&deskProToken='NISP'"
     mainContentHeaderPartialUrl.concat(name).concat(lastLogin).concat(showBreadcrumb)
-
-
   }
 }
