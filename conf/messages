@@ -136,6 +136,11 @@ nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National 
 nisp.excluded.contactNationalInsuranceHelplineIom = To get a copy of your UK National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
 
 nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
+nisp.excluded.dead.openingtime = Opening times:
+nisp.excluded.dead.openingtime.weekdays = 8am to 8pm, Monday to Friday
+nisp.excluded.dead.openingtime.saturday = 8am to 4pm, Saturday
+nisp.excluded.dead.openingtime.holidays = Closed Sundays and bank holidays
+
 
 nisp.excluded.isleOfMan.sp.line1 = We&rsquo;re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.
 nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
