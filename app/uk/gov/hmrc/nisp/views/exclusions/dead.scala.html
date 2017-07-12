@@ -27,4 +27,10 @@
 
 @viewExclusions() {
     <p> @Html(Messages("nisp.excluded.dead")) </p>
+    <p>@Messages("nisp.excluded.dead.openingtime")</p>
+    <ul class="bullets">
+    <li>@Messages("nisp.excluded.dead.openingtime.weekdays") </li>
+    <li>@Messages("nisp.excluded.dead.openingtime.saturday")</li>
+    <li>@Messages("nisp.excluded.dead.openingtime.holidays")</li>
+    </ul>
 }

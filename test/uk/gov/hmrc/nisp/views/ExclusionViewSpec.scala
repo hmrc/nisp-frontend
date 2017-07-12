@@ -52,7 +52,23 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
     }
     "render page with message  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
 
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p", "nisp.excluded.dead")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.excluded.dead")
+    }
+    "render page with message  'opening times' " in {
+
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.excluded.dead.openingtime")
+    }
+    "render page with message  '8am to 8pm, Monday to Friday' " in {
+
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(1)", "nisp.excluded.dead.openingtime.weekdays")
+    }
+    "render page with message  '8am to 4pm, Saturday' " in {
+
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(2)", "nisp.excluded.dead.openingtime.saturday")
+    }
+    "render page with message  'Closed Sundays and bank holidays' " in {
+
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(4)>li:nth-child(3)", "nisp.excluded.dead.openingtime.holidays")
     }
   }
 

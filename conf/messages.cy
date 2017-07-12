@@ -136,6 +136,10 @@ nisp.excluded.contactNationalInsuranceHelpline = I gael copi o&rsquo;ch cofnod Y
 nisp.excluded.contactNationalInsuranceHelplineIom = I gael copi o&rsquo;ch cofnod Yswiriant Gwladol y DU hyd yn hyn, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)</a>.
 
 nisp.excluded.dead = Cysylltwch â llinell gymorth Yswiriant Gwladol CThEM ar 0300 200 1900.
+nisp.excluded.dead.openingtime = Oriau agor:
+nisp.excluded.dead.openingtime.weekdays = 08:00 - 20:00, Dydd Llun - Dydd Gwener
+nisp.excluded.dead.openingtime.saturday = 08:00 - 16:00, Dydd Sadwrn
+nisp.excluded.dead.openingtime.holidays = Ar gau ar Ddydd Sul ac ar wyliau’r banc
 
 nisp.excluded.isleOfMan.sp.line1 = Rydym yn methu cyfrifo eich Pensiwn y Wladwriaeth, oherwydd bod Llywodraeth Ynys Manaw ar hyn o bryd yn ymgymryd ag adolygiad o&rsquo;i gynllun Pensiwn Ymddeol. Ni fydd yn mabwysiadu&rsquo;r diwygiadau newydd i Bensiwn y Wladwriaeth.
 nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (agor mewn tab newydd)</a>.
