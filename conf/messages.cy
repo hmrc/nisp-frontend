@@ -77,6 +77,9 @@ nisp.main.chart.estimateIfYouContinue.plural = Rhagolwg os byddwch yn cyfrannu a
 nisp.main.chart.estimateIfYouContinue2016 = Rhagolwg os byddwch yn cyfrannu digon mewn blwyddyn hyd at <span class="nowrap">5 Ebrill 2016</span>
 
 nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">Gan eich bod yn byw neu weithio dramor (agor mewn tab newydd)</a>, efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o&rsquo;r wlad rydych yn byw neu weithio ynddi.
+nisp.legal.forecastChanges = Gallai eich rhagolwg fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y
+nisp.legal.termsAndCondition = telerau ac amodau
+nisp.legal.mqp.forecastChanges = Gallai’r manylion fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y
 
 #*********************
 # Scenario messages

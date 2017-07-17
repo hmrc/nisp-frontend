@@ -22,6 +22,7 @@
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.play.language.LanguageUtils.Dates
 @import play.api.Application
+@import uk.gov.hmrc.nisp.controllers.routes
 
 @(
     statePension: StatePension,
@@ -154,6 +155,8 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         }
 
     }
+   <p>@Messages("nisp.legal.forecastChanges") <a href='@routes.TermsConditionsController.show.url'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
+
 
     @if(isAbroad) {
         @includes.abroad()

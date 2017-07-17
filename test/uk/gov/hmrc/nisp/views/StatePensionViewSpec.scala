@@ -199,26 +199,38 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(12)", "/check-your-state-pension/account/nirecord/gaps")
           }
 
+          "render page with text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+            val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
+            assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(13)", sMessage)
+          }
+
+          "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions -terms and condition'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "nisp.legal.termsAndCondition")
+          }
+          "render page with href link  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions -terms and condition'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "/check-your-state-pension/terms-and-conditions")
+          }
+
           /*overseas message*/
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(14)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(15)", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "7 June 2020")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(17)", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
           }
 
           /*Side bar help*/
@@ -363,26 +375,31 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(12)", "/check-your-state-pension/account/nirecord/gaps")
           }
 
+          "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+            val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
+            assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(13)", sMessage)
+          }
+
           /*overseas message*/
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(14)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(15)", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "7 June 2020")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(17)", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
           }
 
           /*Side bar help*/
@@ -526,26 +543,31 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(12)", "/check-your-state-pension/account/nirecord/gaps")
           }
 
+          "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+            val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
+            assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(13)", sMessage)
+          }
+
           /*overseas message*/
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(14)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(15)", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "7 June 2017")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(17)", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
           }
         }
 
@@ -663,27 +685,31 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(10)", "/check-your-state-pension/account/nirecord")
           }
 
+          "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+            val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
+            assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(11)", sMessage)
+          }
 
           /*overseas message*/
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(12)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.main.puttingOff")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(13)", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2022. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "7 June 2022")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "7 June 2022")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(14)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(15)", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(14)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
           }
 
         }
@@ -806,23 +832,23 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           /*overseas message*/
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(12)>p", "nisp.main.overseas")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(13)", "nisp.main.puttingOff")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "7 June 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2017")
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(15)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
           }
 
         }
@@ -932,23 +958,23 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
         /*overseas message*/
         "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
           "State Pension from the country you are living or working in.'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(9)>p", "nisp.main.overseas")
+          assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(10)>p", "nisp.main.overseas")
         }
         /*Ends*/
 
         "render page with heading  'Putting of claiming'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(10)", "nisp.main.puttingOff")
+          assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(11)", "nisp.main.puttingOff")
         }
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", "7 June 2017")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "7 June 2017")
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(12)", "nisp.main.puttingOff.linkTitle")
+          assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(13)", "nisp.main.puttingOff.linkTitle")
         }
         "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-          assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(12)", "https://www.gov.uk/deferring-state-pension")
+          assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(13)", "https://www.gov.uk/deferring-state-pension")
         }
 
       }
