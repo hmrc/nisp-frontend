@@ -929,7 +929,6 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
               )
             )
             )))
-
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
