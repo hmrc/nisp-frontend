@@ -199,9 +199,16 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(12)", "/check-your-state-pension/account/nirecord/gaps")
           }
 
-          "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+          "render page with text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(13)", sMessage)
+          }
+
+          "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions -terms and condition'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "nisp.legal.termsAndCondition")
+          }
+          "render page with href link  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions -terms and condition'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "/check-your-state-pension/terms-and-conditions")
           }
 
           /*overseas message*/

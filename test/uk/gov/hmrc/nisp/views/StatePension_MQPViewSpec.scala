@@ -860,9 +860,15 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
           }
 
 
-          "render page with href text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+          "render page with text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.mqp.forecastChanges")) + " ."
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(8)", sMessage)
+          }
+          "render page with href text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)>a", "nisp.legal.termsAndCondition")
+          }
+          "render page with href link  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(8)>a", "/check-your-state-pension/terms-and-conditions")
           }
 
           "render page with link 'What else you can do'" in {
