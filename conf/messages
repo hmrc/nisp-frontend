@@ -77,7 +77,9 @@ nisp.main.chart.estimateIfYouContinue.plural = Forecast if you contribute anothe
 nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in year up to <span class="nowrap">5 April 2016</span>
 
 nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">As you are living or working overseas (opens in new tab)</a>, you may be entitled to a State Pension from the country you are living or working in.
-
+nisp.legal.forecastChanges = Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the
+nisp.legal.termsAndCondition = terms and conditions
+nisp.legal.mqp.forecastChanges = These details may be different if there are any changes to your National Insurance information. There is more about this in the
 #*********************
 # Scenario messages
 #*********************

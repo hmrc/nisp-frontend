@@ -148,29 +148,26 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
 
     /*Contracting out affects*/
     "render page with text  'You’ve been in a contracted-out pension scheme'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.cope.title1")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(13)", "nisp.cope.title1")
     }
-   /* "render page with text  'Like most people, you were contracted out of part of the State Pension.'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.cope.likeMostPeople")
-    }*/
     "render page with text  'Like most people, you were contracted out of part of the State Pension.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.cope.likeMostPeople", "/check-your-state-pension/account/cope")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.cope.likeMostPeople", "/check-your-state-pension/account/cope")
     }
     /*Ends*/
 
     "render page with heading  'Putting of claiming'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(15)", "nisp.main.puttingOff")
     }
 
     "render page with text  'You can put off claiming your State Pension from 18 July 2021. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "18 July 2021")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "18 July 2021")
     }
 
     "render page with link 'More on putting off claiming (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(17)", "nisp.main.puttingOff.linkTitle")
     }
     "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
     }
 
     /*Side bar help*/
