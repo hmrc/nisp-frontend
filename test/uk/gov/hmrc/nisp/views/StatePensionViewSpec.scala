@@ -208,7 +208,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "nisp.legal.termsAndCondition")
           }
           "render page with href link  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions -terms and condition'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "/check-your-state-pension/terms-and-conditions")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(13)>a", "/check-your-state-pension/terms-and-conditions?showBackLink=true")
           }
 
           /*overseas message*/

@@ -1,23 +1,24 @@
 @*
- * Copyright 2017 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
+* Copyright 2017 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import play.api.Application
+@import uk.gov.hmrc.nisp.controllers.routes
 
-@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(showBackLink : Boolean)(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @main(browserTitle = Some(Messages("nisp.tandcs.title")),
 sidebarLinks = None) {
@@ -29,11 +30,17 @@ sidebarLinks = None) {
 <p>@Html(Messages("nisp.tandcs.service"))</p>
 <p>@Html(Messages("nisp.tandcs.rely"))</p>
 <p>@Html(Messages("nisp.tandcs.responsibility"))</p>
-<p>@Html(Messages("nisp.tandcs.licence")) <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/" target="_blank" rel="external" data-journey-click="checkmystatepension:external:crowncopyright">@Messages("nisp.tandcs.crownCopyright")</a>.</p>
+<p>@Html(Messages("nisp.tandcs.licence")) <a
+        href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/"
+        target="_blank" rel="external" data-journey-click="checkmystatepension:external:crowncopyright">@Messages("nisp.tandcs.crownCopyright")</a>.
+</p>
 <p>@Html(Messages("nisp.tandcs.liability"))</p>
 <p>@Html(Messages("nisp.tandcs.links"))</p>
 <p>@Html(Messages("nisp.tandcs.law"))</p>
 <p>@Html(Messages("nisp.tandcs.operated"))</p>
 <p>@Html(Messages("nisp.tandcs.thanks"))</p>
 
+@if(showBackLink){
+   <p class="backlink"><a href="@{routes.StatePensionController.show().url}">@Messages("nisp.back")</a></p>
+}
 }

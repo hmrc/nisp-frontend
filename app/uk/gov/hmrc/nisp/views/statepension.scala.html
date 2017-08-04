@@ -155,7 +155,7 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         }
 
     }
-   <p>@Messages("nisp.legal.forecastChanges") <a href='@routes.TermsConditionsController.show.url'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
+   <p>@Messages("nisp.legal.forecastChanges") <a href='@routes.TermsConditionsController.show(true).url'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
 
 
     @if(isAbroad) {
