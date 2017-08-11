@@ -297,6 +297,7 @@ nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any fu
 
 nisp.nirecord.helpline.getHelp = Get help
 nisp.nirecord.helpline.number = Helpline 0345 608 0126
+nisp.nirecord.helpline.textNumber = Textphone 0345 300 0169
 nisp.nirecord.helpline.openTimes = Monday to Friday: 8am to 6pm
 nisp.nirecord.helpline.callsCost = Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.
 
