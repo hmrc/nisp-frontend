@@ -302,7 +302,7 @@ nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gen
 nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0345 608 0126
 nisp.nirecord.helpline.textNumber = Ffôn testun 0345 300 0169
-nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am to 6pm
+nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
 nisp.nirecord.helpline.callsCost = Mae galwadau yn costio hyd at 12c y funud o linellau daear. Gallai galwadau o ffonau symudol gostio mwy.
 
 #****************************
