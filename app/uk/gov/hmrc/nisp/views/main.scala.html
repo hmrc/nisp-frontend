@@ -26,6 +26,7 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
 @import play.api.Application
+@import uk.gov.hmrc.renderer.TemplateRenderer
 
 @(browserTitle: Option[String] = None,
     pageTitle: Option[String] = None,
@@ -41,7 +42,7 @@
     analyticsAdditionalJs: Option[Html] = None,
     articleEnabled: Boolean = true,
     loginDetailsHeader: Option[Html] = None,
-    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @linkElement = {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/nisp.css")'/>

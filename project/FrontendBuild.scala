@@ -17,6 +17,7 @@ private object AppDependencies {
   private val playLanguageVersion = "3.3.0"
   private val httpCachingClientVersion = "6.2.0"
   private val cspClientVersion = "1.0.0"
+  private val localTemplateRendererVersion = "0.10.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
@@ -28,7 +29,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
     "uk.gov.hmrc" %% "tax-year" % "0.3.0",
     "uk.gov.hmrc" %% "csp-client" % cspClientVersion,
-    "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0"
+    "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0",
+    "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion
   )
 
   trait TestDependencies {

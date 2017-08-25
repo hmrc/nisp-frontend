@@ -37,7 +37,7 @@
     isAbroad: Boolean,
     yearsToContributeUntilPensionAge: Int
 )(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
-application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar" >
