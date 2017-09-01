@@ -11,7 +11,6 @@ private object AppDependencies {
 
   private val playHealthVersion = "2.0.0"
   private val frontendBootstrapVersion = "7.19.0"
-  private val govukTemplateVersion = "5.0.0"
   private val playUiVersion = "7.4.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
   private val playLanguageVersion = "3.3.0"
@@ -24,13 +23,13 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
     "uk.gov.hmrc" %% "play-language" % playLanguageVersion,
-    "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
     "uk.gov.hmrc" %% "tax-year" % "0.3.0",
     "uk.gov.hmrc" %% "csp-client" % cspClientVersion,
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0",
-    "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion
+    "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion,
+    "uk.gov.hmrc" %%  "play-breadcrumb"  %  "1.0.0"
   )
 
   trait TestDependencies {

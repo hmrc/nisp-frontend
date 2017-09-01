@@ -17,7 +17,6 @@
 @import play.api.Play.current
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 
-@import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
 @(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig = ApplicationConfig)(implicit messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
@@ -28,49 +27,28 @@
 <p>@message</p>
 }
 
-@head = {
-@uiLayouts.head(
-linkElem = None,
-headScripts = None)
-<meta name="format-detection" content="telephone=no" />
-}
-
-@betaBanner = {
-@uiLayouts.betaBanner(
-userLoggedIn = false,
-applicationConfig.betaFeedbackUrl,
-applicationConfig.betaFeedbackUnauthenticatedUrl,
-showFeedbackLinkInBetaBanner = true)
-}
-
-@serviceInfo = {
-@uiLayouts.serviceInfo(
-betaBanner = HtmlFormat.empty,
-includeGridWrapper = false,
-serviceInfoContent = None)
+@googleAnalytics = @{
+ Map[String, Any](
+ "trackingId" -> applicationConfig.analyticsToken,
+ "cookieDomain" -> applicationConfig.analyticsHost
+ )
 }
 
 
-@content = {
-@uiLayouts.main_content(
-article = uiLayouts.article(mainContent),
-serviceInfo = serviceInfo)
+@{
+templateRenderer.renderDefaultTemplate(uiLayouts.article(mainContent, false, None), Map[String, Any](
+"pageTitle" -> pageTitle,
+"linkElems" -> None,
+"scriptElems" -> None,
+
+"googleAnalytics" -> googleAnalytics,
+"ssoUrl" -> None,
+
+"betaBanner" -> false,
+"includeHMRCBranding" -> false,
+
+"showLastLogInStatus" ->  false
+
+)
+)
 }
-
-@bodyEnd = {
-@uiLayouts.footer(
-analyticsToken = applicationConfig.analyticsToken,
-analyticsHost = applicationConfig.analyticsHost,
-ssoUrl = None,
-scriptElem = None,
-gaCalls = None)
-}
-
-@footerTop = {}
-@footerLinks = {}
-
-@insideHeader = {}
-@afterHeader = {}
-
-
-@hmrcGovUkTemplate(Some(pageTitle), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
