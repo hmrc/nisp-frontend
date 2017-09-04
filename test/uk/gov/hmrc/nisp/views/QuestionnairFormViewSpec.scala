@@ -95,41 +95,6 @@ class QuesionnairFormViewSpec extends PlaySpec  with MockitoSugar with HtmlSpec 
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.questionnaire.please")
     }
 
-    /*Side bar of feedback form*/
-    "render page with  ext ''what can you do next. " in {
-      assertEqualsMessage(htmlAccountDoc, "aside>h2:nth-child(1)", "nisp.questionnaire.sidebar.whatcanyoudonext")
-    }
-    "render page with link 'Pension Wise - understanding your pension options'  " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "aside>nav>ul>li:nth-child(1)>a", "nisp.questionnaire.sidebar.understandingyouroption", "aside>nav>ul>li:nth-child(1)>a>span")
-    }
-    "render page with href link 'Pension Wise - understanding your pension options'  " in {
-      assertLinkHasValue(htmlAccountDoc, "aside>nav>ul>li:nth-child(1)>a", "https://pensionwise.gov.uk")
-    }
-    "render page with  link 'Planning your retirement income'  " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "aside>nav>ul>li:nth-child(2)>a", "nisp.questionnaire.sidebar.planningyourretirementincome", "aside>nav>ul>li:nth-child(2)>a>span")
-    }
-    "render page with href link 'Planning your retirement income'" in {
-      assertLinkHasValue(htmlAccountDoc, "aside>nav>ul>li:nth-child(2)>a", "https://gov.uk/plan-retirement-income")
-    }
-    "render page with  link 'Defer your state pension '  " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "aside>nav>ul>li:nth-child(3)>a", "nisp.questionnaire.sidebar.deferyourstatepension", "aside>nav>ul>li:nth-child(3)>a>span")
-    }
-    "render page with href link 'Defer your state pension'" in {
-      assertLinkHasValue(htmlAccountDoc, "aside>nav>ul>li:nth-child(3)>a", "http://gov.uk/deferring-state-pension")
-    }
-    "render page with  link 'Contact the pension service'  " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "aside>nav>ul>li:nth-child(4)>a", "nisp.questionnaire.sidebar.contactpensionservice", "aside>nav>ul>li:nth-child(4)>a>span")
-    }
-    "render page with href link 'Contact the pension service'" in {
-      assertLinkHasValue(htmlAccountDoc, "aside>nav>ul>li:nth-child(4)>a", "https://gov.uk/contact-pension-service")
-    }
-    "render page with  link 'More on State service'  " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "aside>nav>ul>li:nth-child(5)>a", "nisp.questionnaire.sidebar.moreonpensionservice", "aside>nav>ul>li:nth-child(5)>a>span")
-    }
-    "render page with href link 'More on State service'" in {
-      assertLinkHasValue(htmlAccountDoc, "aside>nav>ul>li:nth-child(5)>a", "http://gov.uk/browse/working/state-pension")
-    }
-    /*Ends here */
 
     /*Main form starts here*/
 

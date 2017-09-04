@@ -48,6 +48,7 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
+
   val testLandingController = new LandingController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
 
@@ -60,6 +61,8 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
     override protected def authConnector: AuthConnector = MockAuthConnector
 
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
+
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }
 
   "GET /" should {
@@ -182,11 +185,6 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
       val result = testLandingController.show(fakeRequestWelsh)
       Helpers.contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
-    }
-
-    "load the landing page in welsh" in {
-      val result = testLandingController.show(fakeRequestWelsh)
-      contentAsString(result) must include("data-journey-click=\"checkmystatepension:language: cy\"")
     }
   }
 }
