@@ -49,11 +49,18 @@ import uk.gov.hmrc.nisp.models.forms.QuestionnaireForm
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
-class QuesionnairFormViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+
+class QuesionnairFormViewSpec extends PlaySpec  with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val controller = new StatePensionController {
 

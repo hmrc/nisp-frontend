@@ -39,8 +39,9 @@ import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.nisp.controllers.NispFrontendController
 
-class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class StatePension_CopeViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
@@ -67,7 +68,7 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
   lazy val fakeRequest = FakeRequest()
   implicit override val lang = LanguageToggle.getLanguageCode
   implicit val lanCookie = LanguageToggle.getLanguageCookie
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",

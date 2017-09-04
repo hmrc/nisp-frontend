@@ -44,6 +44,8 @@ import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils._
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
 import scala.concurrent.Future
 
@@ -51,6 +53,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
@@ -75,6 +78,8 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
 
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
+
+
     }
 
     lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
@@ -202,6 +207,8 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
 
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
+
+
     }
 
     lazy val result = controller.showGaps(authenticatedFakeRequest(mockUserId))

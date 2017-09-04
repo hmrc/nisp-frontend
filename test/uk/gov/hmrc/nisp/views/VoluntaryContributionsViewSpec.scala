@@ -25,9 +25,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
+import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
 
-class VoluntaryContributionsViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class VoluntaryContributionsViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
 
@@ -38,7 +39,7 @@ class VoluntaryContributionsViewSpec extends PlaySpec with MockitoSugar with Htm
 
   lazy val fakeRequest = FakeRequest();
   implicit override val lang = LanguageToggle.getLanguageCode
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   "Voluntary contributions view" should {
     lazy val sResult = html.nirecordVoluntaryContributions()

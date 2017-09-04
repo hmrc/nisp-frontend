@@ -66,21 +66,20 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
 }
 
 
-@analyticsAdditionalJs = {
-    ga('set', {
-        'dimension10': '@niRecord.qualifyingYears',
-        'dimension12': '@niRecord.numberOfGapsPayable',
-        'dimension13': '@yearsToContribute',
-        'dimension22': '@authenticationProvider',
-        'metric5': 1
-    });
+@analyticsAdditionalJs = @{
+    Map[String, Any](
+        "qualifyingYears" -> niRecord.qualifyingYears,
+        "payableGaps" -> niRecord.numberOfGapsPayable,
+        "yearsToContribute" -> yearsToContribute,
+        "authenticationProvider" -> authenticationProvider
+    )
 }
 
 @defining(Some(user)) { implicit userOption =>
     @main(browserTitle = Some(Messages("nisp.nirecord.title")), userLoggedIn = true,
         sidebarLinks = Some(sidebar),
         pageTitle = Some(Messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
-        analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+        gaDimensions = Some(analyticsAdditionalJs)) {
 
 <div class="sidebar-mobile">
       

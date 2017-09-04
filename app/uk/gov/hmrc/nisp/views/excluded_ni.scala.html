@@ -22,18 +22,18 @@
 @(exclusion: Exclusion)(implicit messages: Messages, request: Request[_], user: NispUser,
 partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@analyticsAdditionalJs = {
-    ga('set', {
-        @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
-        'dimension20': '@exclusion.toString'
-    });
+@analyticsAdditionalJs = @{
+    Map[String, Any](
+        "nispExclusionType" -> exclusion.toString,
+        "gender" -> user.sex
+    )
 }
 
 
 
 @defining(Some(user)) { implicit userOption =>    
     @main(browserTitle=Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.nirecord.heading")),
-      userLoggedIn = true, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+      userLoggedIn = true, gaDimensions = Some(analyticsAdditionalJs)) {
         <div class="panel-indent">
             @if(exclusion.equals(IsleOfMan)) {
                 @exclusions.ni.isleOfMan()

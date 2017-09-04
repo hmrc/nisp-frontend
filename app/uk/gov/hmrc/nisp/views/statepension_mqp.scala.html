@@ -53,30 +53,29 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
 </div>
 }
 
-@analyticsAdditionalJs = {
-    ga('set', {
-        'dimension7':  '@statePension.forecastScenario',
-        'dimension8':  '@statePension.amounts.forecast.weeklyAmount',
-        'dimension10': '@statePension.numberOfQualifyingYears',
-        'dimension11': '@numberOfGaps',
-        'dimension12': '@numberOfPayableGaps',
-        'dimension13': '@yearsToContributeUntilPensionAge',
-        'dimension14': '@statePension.contractedOut',
-        'dimension15': '@statePension.pensionAge',
-        'dimension16': '@statePension.amounts.cope.weeklyAmount',
-        'dimension22': '@user.authProviderOld',
-        'dimension38': '@user.authProvider',
-        'dimension39': '@user.confidenceLevel',
-        @Html(customerAge.map( age => s"'dimension40': '$age',").getOrElse(""))
-        @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
-        'metric5': 1
-    });
+@analyticsAdditionalJs = @{
+    Map[String, Any](
+        "scenarioType" -> statePension.forecastScenario,
+        "forecastValue" -> statePension.amounts.forecast.weeklyAmount,
+        "qualifyingYears" -> statePension.numberOfQualifyingYears,
+        "gaps" -> numberOfGaps,
+        "payableGaps" -> numberOfPayableGaps,
+        "yearsToContribute" -> yearsToContributeUntilPensionAge,
+        "contractedOut" -> statePension.contractedOut,
+        "statePensionAge" -> statePension.pensionAge,
+        "copeAmount" -> statePension.amounts.cope.weeklyAmount,
+        "authenticationProvider" -> user.authProviderOld,
+        "authProvider" -> user.authProvider,
+        "confidenceLevel" -> user.confidenceLevel,
+        "ageOnVisit" -> customerAge,
+        "gender" -> user.sex
+    )
 }
 
 @defining(Some(user)) { implicit userOption =>
 @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
   sidebarLinks = Some(sidebar),
-  analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+  gaDimensions = Some(analyticsAdditionalJs)) {
 
     <div class="panel-indent panel-border-wide panel-indent--info">
         <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@Dates.formatDate(statePension.pensionDate). </span></p>

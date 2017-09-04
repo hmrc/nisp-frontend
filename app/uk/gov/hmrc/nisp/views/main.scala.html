@@ -41,8 +41,8 @@
     pageScripts: Option[Html] = None,
     articleClasses: Option[String] = None,
     analyticsAdditionalJs: Option[Html] = None,
+    gaDimensions: Option[Map[String, Any]] = None,
     articleEnabled: Boolean = true,
-    loginDetailsHeader: Option[Html] = None,
     hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @mustacheCheck(str: String) = @{
@@ -91,11 +91,13 @@
 }
 
 @breadcrumb = @{
-    if(user.isDefined) {
-        val bc = NispBreadcrumb.buildBreadCrumb(messages, request)
-            if(!bc.isEmpty) {
-                 breadcrumbTag(bc, false)
-            }
+    if(!hideBreadcrumb){
+        if(user.isDefined) {
+            val bc = NispBreadcrumb.buildBreadCrumb(request, messages)
+                if(!bc.isEmpty) {
+                     breadcrumbTag(bc, false)
+                }
+        }
     }
 }
 
@@ -125,15 +127,7 @@
 
 }
 @betaHeaderEnable = @{
-if(articleEnabled) {
-true
-
-} else {
 false
-
-}
-
-
 }
 @article = @{
 
@@ -154,7 +148,7 @@ if(articleEnabled) {
     Map[String, Any](
         "trackingId" -> applicationConfig.analyticsToken,
         "cookieDomain" -> applicationConfig.analyticsHost
-    )
+    ) ++ gaDimensions.getOrElse(Map.empty)
 }
 @showLastLogInStatus = {
     if(articleEnabled) {
@@ -166,6 +160,10 @@ if(articleEnabled) {
 
 @userDisplayName = @{
     mustacheCheck( user.fold("")(_.name.get) )
+}
+
+@additionalFooterLinks = @{
+    Map("url" -> routes.TermsConditionsController.show().url , "text" -> Messages("nisp.tandcs.title"))
 }
 
 

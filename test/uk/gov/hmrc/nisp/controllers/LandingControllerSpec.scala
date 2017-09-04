@@ -36,6 +36,8 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils._
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
 class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
@@ -44,6 +46,7 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
   val fakeRequestWelsh = FakeRequest("GET", "/cymraeg")
   private implicit val retriever = MockCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val testLandingController = new LandingController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService

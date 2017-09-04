@@ -39,7 +39,7 @@ trait NispBreadcrumb{
 
   lazy val mainContentHeaderPartialUrl = applicationConfig.breadcrumbPartialUrl
 
-   def buildBreadCrumb(implicit messages: Messages, request: Request[_]): Breadcrumb = {
+   def buildBreadCrumb(implicit request: Request[_], messages: Messages): Breadcrumb = {
     val links = Map(
       "account" -> (Messages("nisp.breadcrumb.pension"), routes.StatePensionController.show().url),
       "nirecord" -> (Messages("nisp.breadcrumb.nirecord"), routes.NIRecordController.showFull().url),
