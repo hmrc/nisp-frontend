@@ -27,10 +27,13 @@ import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class VoluntaryContributionsViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val mockUserNino = TestAccountBuilder.regularNino;
   val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"

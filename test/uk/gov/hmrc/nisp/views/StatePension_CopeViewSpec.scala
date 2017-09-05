@@ -40,10 +40,13 @@ import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class StatePension_CopeViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded = TestAccountBuilder.excludedAll
@@ -82,6 +85,7 @@ class StatePension_CopeViewSpec extends PlaySpec with NispFrontendController wit
       override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
       override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdContractedOut).withCookies(lanCookie))

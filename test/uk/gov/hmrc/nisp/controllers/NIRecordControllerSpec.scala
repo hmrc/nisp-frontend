@@ -27,11 +27,13 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
 
 class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
@@ -46,6 +48,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
   val ggSignInUrl = s"http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
 
+  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   lazy val fakeRequest = FakeRequest()
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(

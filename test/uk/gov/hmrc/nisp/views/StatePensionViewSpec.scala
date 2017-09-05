@@ -42,6 +42,8 @@ import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -64,6 +66,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val statePensionService: StatePensionService = mock[StatePensionService]
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
   }
 

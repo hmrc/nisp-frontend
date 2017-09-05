@@ -28,9 +28,11 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HttpPost, HttpResponse}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -42,6 +44,8 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
   val testFeedbackController = new FeedbackController with AuthenticationConnectors {
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
     override implicit val formPartialRetriever: FormPartialRetriever = MockFormPartialRetriever
+
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     override def httpPost: HttpPost = mockHttp
 

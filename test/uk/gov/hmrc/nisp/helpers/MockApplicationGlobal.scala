@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.utils
+package uk.gov.hmrc.nisp.helpers
 
+import uk.gov.hmrc.nisp.config.ApplicationGlobalTrait
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.renderer.TemplateRenderer
-import play.twirl.api.Html
 
-
-object MockTemplateRenderer extends TemplateRenderer {
-  override def connection = ???
-  override def templateServiceBaseUrl = ???
-  override def refreshAfter = ???
-
-  override def renderDefaultTemplate = (content: Html, extraArgs: Map[String, Any]) => {
-    Html("<title>" + extraArgs("pageTitle") + "</title>"+ "<sidebar>"+extraArgs("sidebar")+"</sidebar>" + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"+ content)
-  }
+object MockApplicationGlobal extends ApplicationGlobalTrait {
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 }
-
-

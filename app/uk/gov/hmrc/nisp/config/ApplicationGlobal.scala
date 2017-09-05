@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.config
 import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
 import play.api.Play.current
+import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.api.{Application, Configuration, Play}
@@ -34,7 +35,9 @@ import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.http.logging.filters.FrontendLoggingFilter
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-object ApplicationGlobal extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController {
+object ApplicationGlobal extends ApplicationGlobalTrait
+
+trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController {
   override val auditConnector = NispAuditConnector
   override val loggingFilter = NispLoggingFilter
   override val frontendAuditFilter = NispFrontendAuditFilter

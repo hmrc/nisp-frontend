@@ -77,6 +77,9 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       override protected def authConnector: AuthConnector = MockAuthConnector
 
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+
       override val metricsService: MetricsService = MockMetricsService
 
 
