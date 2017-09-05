@@ -186,5 +186,9 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
       Helpers.contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
     }
+    "load the landing page in welsh" in {
+      val result = testLandingController.show(fakeRequestWelsh)
+      contentAsString(result) must include("data-journey-click=\"checkmystatepension:language: cy\"")
+    }
   }
 }

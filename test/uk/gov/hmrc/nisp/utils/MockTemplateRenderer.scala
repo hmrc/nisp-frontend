@@ -26,7 +26,7 @@ object MockTemplateRenderer extends TemplateRenderer {
   override def refreshAfter = ???
 
   override def renderDefaultTemplate = (content: Html, extraArgs: Map[String, Any]) => {
-    Html("<title>" + extraArgs("pageTitle") + "</title>"+ "<sidebar>"+extraArgs("sidebar")+"</sidebar>" + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"+ content)
+    Html("<title>" + extraArgs("pageTitle") + "</title>"+ "<sidebar>"+extraArgs("sidebar")+"</sidebar>" + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"+ "<mainContentHeader>"+extraArgs("mainContentHeader")+"</mainContentHeader>"+ content)
   }
 }
 
