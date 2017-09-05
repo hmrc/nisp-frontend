@@ -104,6 +104,9 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
           nationalInsuranceResponse <- nationalInsuranceResponseF
         ) yield {
           (statePensionResponse, nationalInsuranceResponse) match {
+            case (Right(statePension), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+              Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
+
             case (Right(statePension), Right(nationalInsuranceRecord)) =>
 
               sendAuditEvent(statePension, user)

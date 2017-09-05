@@ -63,7 +63,7 @@ trait NispConnectionSP extends StatePensionService {
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFiltered, StatePension]] = {
     nisp.connectToGetSPResponse(nino) map {
-      case SPResponseModel(Some(spSummary: SPSummaryModel), None, None) => Right(StatePension(
+      case SPResponseModel(Some(spSummary: SPSummaryModel), None, None, reducedRateElection) => Right(StatePension(
         earningsIncludedUpTo = spSummary.lastProcessedDate.localDate,
         amounts = StatePensionAmounts(
           protectedPayment = spSummary.forecast.oldRulesCustomer,
@@ -95,10 +95,11 @@ trait NispConnectionSP extends StatePensionService {
         finalRelevantYear = spSummary.finalRelevantYear.toString,
         numberOfQualifyingYears = spSummary.numberOfQualifyingYears,
         pensionSharingOrder = spSummary.hasPsod,
-        currentFullWeeklyPensionAmount = spSummary.fullNewStatePensionAmount
+        currentFullWeeklyPensionAmount = spSummary.fullNewStatePensionAmount,
+        reducedRateElection
       ))
 
-      case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), _) =>
+      case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), _, _) =>
         Left(StatePensionExclusionFiltered(
           exclusion = filterExclusions(spExclusions.exclusions),
           pensionAge = Some(spSummary.statePensionAge.age),
