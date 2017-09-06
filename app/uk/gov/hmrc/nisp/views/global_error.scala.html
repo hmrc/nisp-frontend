@@ -16,6 +16,7 @@
 
 @import play.api.Play.current
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
+@import uk.gov.hmrc.nisp.controllers.routes
 
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
@@ -35,6 +36,9 @@
 }
 @sidebar = {
 }
+@termsAndConditionFooterLinks = @{
+ Map("url" -> routes.TermsConditionsController.show().url , "text" -> Messages("nisp.tandcs.title"))
+}
 
 
 @{
@@ -53,7 +57,9 @@ templateRenderer.renderDefaultTemplate(uiLayouts.article(mainContent, false, Non
 
 "sidebar" -> sidebar,
 "navLinks" -> None,
-"mainContentHeader" -> None
+"mainContentHeader" -> None,
+
+"termsAndConditionFooterLinks" -> termsAndConditionFooterLinks
 
 )
 )
