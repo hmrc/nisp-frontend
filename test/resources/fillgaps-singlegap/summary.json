@@ -43,5 +43,6 @@
       "year": 0
     },
     "isAbroad": false
-  }
+  },
+  "reducedRateElection": false
 }

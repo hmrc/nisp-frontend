@@ -26,5 +26,6 @@
     "fullNewStatePensionAmount": 151.25,
     "mqp": null,
     "isAbroad": false
-  }
+  },
+  "reducedRateElection": false
 }

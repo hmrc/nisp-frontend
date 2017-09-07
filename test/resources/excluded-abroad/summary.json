@@ -47,5 +47,6 @@
     "mqp": null,
     "isAbroad": true
   },
+  "reducedRateElection": false,
   "spExclusions":{"exclusions":["Abroad"]}
 }

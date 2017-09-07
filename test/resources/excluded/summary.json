@@ -47,6 +47,7 @@
     "mqp": null,
     "isAbroad": false
   },
+  "reducedRateElection": false,
   "spExclusions":{"exclusions":["ContractedOut","PostStatePensionAge"]},
   "niExclusions":{"exclusions":[]}
 }
