@@ -56,6 +56,7 @@ object MockAuthConnector extends AuthConnector {
     userID("mockexcludeddissonanceiommwrreabroad") -> TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     userID("mockexcludediommwrreabroad") -> TestAccountBuilder.excludedIomMwrreAbroad,
     userID("mockexcludedmwrreabroad") -> TestAccountBuilder.excludedMwrreAbroad,
+    userID("mockexcludedmwrre") -> TestAccountBuilder.excludedMwrre,
     userID("mockexcludedabroad") -> TestAccountBuilder.excludedAbroad
   )
 

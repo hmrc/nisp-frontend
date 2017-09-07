@@ -30,7 +30,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
-  /*"yearsToContributeUntilPensionAge" should {
+  "yearsToContributeUntilPensionAge" should {
     "shouldBe 2 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2016-4-5" in {
       MockStatePensionServiceViaNisp.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2016, 4, 5),
@@ -66,7 +66,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
       ) shouldBe 0
     }
   }
-*/
+
   "StatePensionConnection" should {
 
     implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
@@ -99,7 +99,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
       }
     }
 
-/*    "return the connector response for a RRE user" in {
+    "return the connector response for a RRE user" in {
       whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedMwrre)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
@@ -110,10 +110,10 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true
         ))
       }
-    }*/
+    }
 
     "return the connector response with PostStatePensionAge exclusion for all the exclusions except MCI and Dead" in {
       whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAllButDeadMCI)) { statePension =>
