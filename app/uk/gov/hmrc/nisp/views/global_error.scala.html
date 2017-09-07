@@ -36,7 +36,7 @@
 }
 @sidebar = {
 }
-@termsAndConditionFooterLinks = @{
+@termsAndConditionFooterLink = @{
  Map("url" -> routes.TermsConditionsController.show().url , "text" -> Messages("nisp.tandcs.title"))
 }
 
@@ -59,7 +59,7 @@ templateRenderer.renderDefaultTemplate(uiLayouts.article(mainContent, false, Non
 "navLinks" -> None,
 "mainContentHeader" -> None,
 
-"termsAndConditionFooterLinks" -> termsAndConditionFooterLinks
+"termsAndConditionFooterLink" -> termsAndConditionFooterLink
 
 )
 )

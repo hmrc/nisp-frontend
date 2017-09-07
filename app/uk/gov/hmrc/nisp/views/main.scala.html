@@ -163,7 +163,7 @@ if(articleEnabled) {
     mustacheCheck( user.fold("")(_.name.get) )
 }
 
-@termsAndConditionFooterLinks = @{
+@termsAndConditionFooterLink = @{
     Map("url" -> routes.TermsConditionsController.show().url , "text" -> Messages("nisp.tandcs.title"))
 }
 
@@ -194,7 +194,7 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
 "navLinks" -> links,
 "hasNavLinks" -> showTitleHeaderNav,
 "sidebar" -> sidebar,
-"termsAndConditionFooterLinks" -> termsAndConditionFooterLinks,
+"termsAndConditionFooterLink" -> termsAndConditionFooterLink,
 
 "optimizelyBaseUrl" -> "//cdn.optimizely.com/",
 "optimizelyProjectId" -> "8451981545"
