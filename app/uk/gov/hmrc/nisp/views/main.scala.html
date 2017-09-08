@@ -121,9 +121,9 @@
 @mainContentHeader = {
 
        @breadcrumb
-    @if(applicationConfig.isWelshEnabled){
-     @language_selection(clc.languageMap, clc.langToCall, Some("align-right"), Some("checkmystatepension"))
-    }
+        @if(applicationConfig.isWelshEnabled){
+            @language_selection(clc.languageMap, clc.langToCall, Some("align-right"), Some("checkmystatepension"))
+        }
 
 }
 @betaHeaderEnable = @{
@@ -196,7 +196,7 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
 "sidebar" -> sidebar,
 "termsAndConditionFooterLink" -> termsAndConditionFooterLink,
 
-"optimizelyBaseUrl" -> "//cdn.optimizely.com/",
+"optimizelyBaseUrl" -> "//cdn.optimizely.com/js/",
 "optimizelyProjectId" -> "8451981545"
 
 )
