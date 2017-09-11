@@ -35,6 +35,7 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.invalidKeyNino,
     TestAccountBuilder.abroadNino,
+    TestAccountBuilder.mwrreNino,
     TestAccountBuilder.mqpAbroadNino,
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.fillGapsMultiple,
@@ -54,7 +55,6 @@ object MockNispHttp extends MockitoSugar {
   val noDataNinos = List(
     TestAccountBuilder.backendNotFound
   )
-
   val ninosWithData = ninos.diff(noDataNinos)
 
   def createMockedURL(urlEndsWith: String, response: Future[HttpResponse]): Unit =
@@ -98,7 +98,8 @@ object MockNispHttp extends MockitoSugar {
   val spNinos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.excludedAllButDeadMCI,
-    TestAccountBuilder.excludedMwrre
+    TestAccountBuilder.excludedMwrre,
+    TestAccountBuilder.mwrreNino
   )
 
   spNinos.foreach(setupStatePensionEndpoints)

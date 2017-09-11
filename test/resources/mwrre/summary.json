@@ -1,0 +1,51 @@
+{
+  "spSummary": {
+    "nino": "<NINO>",
+    "lastProcessedDate": "05/04/2014",
+    "statePensionAmount": {
+      "week": 46.38,
+      "month": 201.67,
+      "year": 2420.04
+    },
+    "statePensionAge": {
+      "age": 65,
+      "date": "18/07/2017"
+    },
+    "contextMessage": "ScenarioEight",
+    "finalRelevantYear": 2016,
+    "numberOfQualifyingYears": 35,
+    "numberOfGaps": 24,
+    "numberOfGapsPayable": 8,
+    "yearsToContributeUntilPensionAge": 3,
+    "hasPsod": false,
+    "dateOfBirth": "18/07/1952",
+    "forecast": {
+      "forecastAmount": {
+        "week": 155.55,
+        "month": 622.35,
+        "year": 76022.24
+      },
+      "yearsLeftToWork": 3,
+      "personalMaximum": {
+        "week": 155.55,
+        "month": 622.35,
+        "year": 76022.24
+      },
+      "minGapsToFillToReachMaximum": 0,
+      "scenario": "Reached",
+      "oldRulesCustomer": false
+    },
+    "fullNewStatePensionAmount": 155.65,
+    "contractedOutFlag": false,
+    "forecastOnlyFlag": false,
+    "customerAge": 61,
+    "copeAmount": {
+      "week": 0,
+      "month": 0,
+      "year": 0
+    },
+    "mqp": null,
+    "isAbroad": false
+  },
+  "reducedRateElection": true
+}

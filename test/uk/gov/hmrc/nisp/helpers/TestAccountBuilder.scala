@@ -44,6 +44,7 @@ object TestAccountBuilder {
   val noNameNino: Nino = randomNino
   val weakNino: Nino = randomNino
   val abroadNino: Nino = randomNino
+  val mwrreNino: Nino = randomNino
   val mqpAbroadNino: Nino = randomNino
   val hrpNino: Nino = randomNino
   val fillGapSingle: Nino = randomNino
@@ -74,6 +75,7 @@ object TestAccountBuilder {
     invalidKeyNino -> "invalidkey",
     noNameNino -> "noname",
     abroadNino -> "abroad",
+    mwrreNino -> "mwrre",
     mqpAbroadNino -> "mqp_abroad",
     hrpNino -> "homeresponsibilitiesprotection",
     fillGapSingle -> "fillgaps-singlegap",

@@ -41,7 +41,6 @@ import scala.concurrent.Future
 class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequest = FakeRequest()
 
-
   private def authId(username: String): String = s"/auth/oid/$username"
 
   val mockUserId = authId("mockuser")
@@ -52,8 +51,8 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserIdExcludedDissonanceIomMwrreAbroad = authId("mockexcludeddissonanceiommwrreabroad")
   val mockUserIdExcludedIomMwrreAbroad = authId("mockexcludediommwrreabroad")
   val mockUserIdExcludedMwrreAbroad = authId("mockexcludedmwrreabroad")
+  val mockUserIdExcludedMwrre = authId("mockexcludedmwrre")
   val mockUserIdExcludedAbroad = authId("mockexcludedabroad")
-
 
   val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
   val mciMessaging = "We need to talk to you about an MCI error before you sign in."
@@ -64,7 +63,6 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val mwrreMessagingSP = "We&rsquo;re unable to calculate your State Pension forecast as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)"
   val mwrreMessagingNI = "We&rsquo;re currently unable to show your National Insurance Record as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>."
   val abroadMessaging = "We&rsquo;re unable to calculate your UK State Pension forecast as you&rsquo;ve lived or worked abroad."
-
 
   "GET /exclusion" should {
 
@@ -80,7 +78,6 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
     }
 
     "Exclusion Controller" when {
-
 
       def generateSPRequest(userId: String): Future[Result] = {
         MockExclusionController.showSP()(fakeRequest.withSession(
@@ -99,7 +96,6 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
           SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
       }
-
 
       "The User has every exclusion" should {
         "return only the Dead Exclusion on /exclusion" in {
@@ -231,6 +227,28 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
         "return only the MWRRE Exclusion on /exclusionni" in {
           val result = generateNIRequest(mockUserIdExcludedMwrreAbroad)
+          redirectLocation(result) shouldBe None
+          contentAsString(result) should not include deadMessaging
+          contentAsString(result) should not include mciMessaging
+          contentAsString(result) should not include isleOfManMessagingNI
+          contentAsString(result) should include (mwrreMessagingNI)
+        }
+
+      }
+
+      "The User has MWRRE exclusion" should {
+
+        "return only the MWRRE Exclusion on /exclusion" in {
+          val result = generateSPRequest(mockUserIdExcludedMwrre)
+          redirectLocation(result) shouldBe None
+          contentAsString(result) should not include deadMessaging
+          contentAsString(result) should not include mciMessaging
+          contentAsString(result) should not include isleOfManMessagingSP
+          contentAsString(result) should include (mwrreMessagingSP)
+        }
+
+        "return only the MWRRE Exclusion on /exclusionni" in {
+          val result = generateNIRequest(mockUserIdExcludedMwrre)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging

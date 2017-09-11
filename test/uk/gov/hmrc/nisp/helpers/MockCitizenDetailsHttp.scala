@@ -36,6 +36,7 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.noNameNino,
     TestAccountBuilder.abroadNino,
+    TestAccountBuilder.mwrreNino,
     TestAccountBuilder.mqpAbroadNino,
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.fillGapSingle,
@@ -49,9 +50,9 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     TestAccountBuilder.excludedIomMwrreAbroad,
     TestAccountBuilder.excludedMwrreAbroad,
-    TestAccountBuilder.excludedAbroad
+    TestAccountBuilder.excludedAbroad,
+    TestAccountBuilder.excludedMwrre
   )
-
   def createMockedURL(nino: Nino, response: Future[HttpResponse]): Unit =
     when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"citizen-details/$nino/designatory-details"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(response)
 
