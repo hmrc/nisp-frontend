@@ -36,6 +36,8 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils._
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
 class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
@@ -44,6 +46,8 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
   val fakeRequestWelsh = FakeRequest("GET", "/cymraeg")
   private implicit val retriever = MockCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+
 
   val testLandingController = new LandingController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
@@ -57,6 +61,8 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
     override protected def authConnector: AuthConnector = MockAuthConnector
 
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
+
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }
 
   "GET /" should {
@@ -180,7 +186,6 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
       Helpers.contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
     }
-
     "load the landing page in welsh" in {
       val result = testLandingController.show(fakeRequestWelsh)
       contentAsString(result) must include("data-journey-click=\"checkmystatepension:language: cy\"")

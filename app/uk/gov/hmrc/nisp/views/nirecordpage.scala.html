@@ -28,7 +28,7 @@
 @(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean,
 yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String,
 showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages, request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="sidebar-border" >
@@ -65,25 +65,21 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
 </div>
 }
 
-@pageScripts = {  
-  <script src="@controllers.routes.Assets.versioned("javascript/nirecord.js")" type="text/javascript"></script>
-}
 
-@analyticsAdditionalJs = {
-    ga('set', {
-        'dimension10': '@niRecord.qualifyingYears',
-        'dimension12': '@niRecord.numberOfGapsPayable',
-        'dimension13': '@yearsToContribute',
-        'dimension22': '@authenticationProvider',
-        'metric5': 1
-    });
+@analyticsAdditionalJs = @{
+    Map[String, Any](
+        "qualifyingYears" -> niRecord.qualifyingYears,
+        "payableGaps" -> niRecord.numberOfGapsPayable,
+        "yearsToContribute" -> yearsToContribute,
+        "authenticationProvider" -> authenticationProvider
+    )
 }
 
 @defining(Some(user)) { implicit userOption =>
     @main(browserTitle = Some(Messages("nisp.nirecord.title")), userLoggedIn = true,
-        pageScripts=Some(pageScripts), sidebarLinks = Some(sidebar),
+        sidebarLinks = Some(sidebar),
         pageTitle = Some(Messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
-        analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+        gaDimensions = Some(analyticsAdditionalJs)) {
 
 <div class="sidebar-mobile">
       

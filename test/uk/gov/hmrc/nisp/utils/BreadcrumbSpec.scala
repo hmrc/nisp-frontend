@@ -46,57 +46,28 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
     new NispUser(authContext, None, "testAuthProvider", Some("M"), Some(new LocalDate(1999, 12, 31)), None)
   }
 
-  "Breadcrumb utils" should {
-    "return a item text as Account Home and State Pension" in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser, messages) should include("Account+home")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser, messages) should include("State+Pension")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser, messages) should not include ("NI+record")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser, messages) should not include "Voluntary+contributions"
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser, messages) should not include "Gaps+in+your+record"
-    }
+        "Breadcrumb utils" should {
+          "return a item text as Account Home and State Pension" in {
+           val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestSP, messages)
+            bc.lastItem.map(_.text) shouldBe Some("State Pension")
+          }
 
-    "return a breadcrumb url without a 'name' variable, when user.name has no value" in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, emptyNispUser, messages) should not include ("name=")
-    }
+        "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gaps" in {
+          val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestNI, messages)
+          val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), lastItem: Some(BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord))"
+          bc.toString() shouldBe breadcrumbItem
+        }
 
-    "always return a breadcrumb url without a 'showBetaBanner' variable" in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, emptyNispUser, messages) should not include "showBetaBanner="
-    }
+        "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/voluntarycontribs" in {
+          val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestVolContribution, messages)
+          val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Voluntary contributions,/check-your-state-pension/account/nirecord/voluntarycontribs))"
+          bc.toString() shouldBe breadcrumbItem
+        }
 
-    "return a breadcrumb url with users' name, when user.name has value " in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestSP, nispUser, messages) should include("name=" + nispUser.name.get)
-    }
-
-    "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gaps" in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestNI, nispUser, messages) should include("Account+home")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestNI, nispUser, messages) should include("State+Pension")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestNI, nispUser, messages) should include("NI+record")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestNI, nispUser, messages) should not include "Voluntary+contributions"
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestNI, nispUser, messages) should not include "Gaps+in+your+record"
-    }
-
-    "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/voluntarycontribs" in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestVolContribution, nispUser, messages) should include("Account+home")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestVolContribution, nispUser, messages) should include("State+Pension")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestVolContribution, nispUser, messages) should include("NI+record")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestVolContribution, nispUser, messages) should include("Voluntary+contributions")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestVolContribution, nispUser, messages) should not include "Gaps+in+your+record"
-    }
-
-    "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gapsandhowtocheck" in {
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser, messages) should include("Account+home")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser, messages) should include("State+Pension")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser, messages) should include("NI+record")
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser, messages) should not include "Voluntary+contributions"
-      MockBreadcrumb.generateHeaderUrl()(fakeRequestHowToImproveGaps, nispUser, messages) should include("Gaps+in+your+record")
-    }
-
-    "return no items when hideBreadcrumb is set to true" in {
-      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser, messages) should not include ("Account+home")
-      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser, messages) should not include ("State+Pension")
-      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser, messages) should not include ("NI+record")
-      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser, messages) should not include "Voluntary+contributions"
-      MockBreadcrumb.generateHeaderUrl(hideBreadcrumb = true)(fakeRequestHowToImproveGaps, nispUser, messages) should not include ("Gaps+in+your+record")
-    }
+        "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gapsandhowtocheck" in {
+          val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestHowToImproveGaps, messages)
+          val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Gaps in your record and how to check them,/check-your-state-pension/account/nirecord/gapsandhowtocheck))"
+          bc.toString() shouldBe breadcrumbItem
+        }
   }
 }

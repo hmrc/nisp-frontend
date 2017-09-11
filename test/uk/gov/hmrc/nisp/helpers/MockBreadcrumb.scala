@@ -17,9 +17,9 @@
 package uk.gov.hmrc.nisp.helpers
 
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.utils.Breadcrumb
+import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 
-object MockBreadcrumb extends Breadcrumb {
+object MockBreadcrumb extends NispBreadcrumb {
   override lazy val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val ggSignInUrl: String = ""
     override val verifySignIn: String = ""

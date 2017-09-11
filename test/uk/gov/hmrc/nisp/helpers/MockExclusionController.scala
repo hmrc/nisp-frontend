@@ -20,8 +20,10 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.ExclusionController
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 object MockExclusionController extends ExclusionController {
   override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
@@ -59,4 +61,5 @@ object MockExclusionController extends ExclusionController {
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp
   override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 }

@@ -25,7 +25,7 @@
 
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Option[Int], isAbroad: Boolean,
 isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -43,30 +43,31 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
 </div>
 }
 
-@analyticsAdditionalJs(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever) = {
-    ga('set', {
-        'dimension7':  '@statePension.forecastScenario',
-        'dimension8':  '@statePension.amounts.forecast.annualAmount',
-        'dimension10': '@statePension.numberOfQualifyingYears',
-        'dimension11': '@numberOfGaps',
-        'dimension12': '@numberOfGapsPayable',
-        'dimension13': '@yearsToContributeUntilPensionAge',
-        'dimension14': '@statePension.contractedOut',
-        'dimension15': '@statePension.pensionAge',
-        'dimension16': '@statePension.amounts.cope.weeklyAmount',
-        'dimension22': '@user.authProviderOld',
-        'dimension38': '@user.authProvider',
-        'dimension39': '@user.confidenceLevel',
-        @Html(customerAge.map( age => s"'dimension40': '$age',").getOrElse(""))
-        @Html(user.sex.map( sex => s"'dimension41': '$sex',").getOrElse(""))
-        'metric5': 1
-    });
+@analyticsAdditionalJs(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever) = @{
+    Map[String, Any](
+        "scenarioType" -> statePension.forecastScenario,
+        "forecastValue" -> statePension.amounts.forecast.annualAmount,
+        "qualifyingYears" -> statePension.numberOfQualifyingYears,
+        "gaps" -> numberOfGaps,
+        "payableGaps" -> numberOfGapsPayable,
+
+        "yearsToContribute" -> yearsToContributeUntilPensionAge,
+        "contractedOut" -> statePension.contractedOut,
+        "statePensionAge" -> statePension.pensionAge,
+        "copeAmount" -> statePension.amounts.cope.weeklyAmount,
+        "authenticationProvider" -> user.authProviderOld,
+        "authProvider" -> user.authProvider,
+        "confidenceLevel" -> user.confidenceLevel,
+        "ageOnVisit" -> customerAge,
+        "gender" -> user.sex
+    )
 }
+
 
 @pageTitle = { @Messages("nisp.main.h1.title") }
 
 @defining(Some(user)) { implicit userOption =>
-@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")), analyticsAdditionalJs = Some(analyticsAdditionalJs), sidebarLinks = Some(sidebar)) {
+@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")), gaDimensions = Some(analyticsAdditionalJs), sidebarLinks = Some(sidebar)) {
 
     <div class="highlighted-event">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@Messages("nisp.main.caveats") @Messages("nisp.is")</span></p>

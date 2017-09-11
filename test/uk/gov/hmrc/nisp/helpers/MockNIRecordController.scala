@@ -18,13 +18,15 @@ package uk.gov.hmrc.nisp.helpers
 
 import org.joda.time.LocalDate
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.{ApplicationConfig, ApplicationGlobalTrait}
 import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.NIRecordController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 object MockNIRecordController extends MockNIRecordController {
   override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
@@ -33,7 +35,6 @@ object MockNIRecordController extends MockNIRecordController {
   override val showFullNI: Boolean = true
   override val currentDate = new LocalDate(2016,9,9)
   override val metricsService: MetricsService = MockMetricsService
-
 }
 
 trait MockNIRecordController extends NIRecordController {
@@ -71,5 +72,7 @@ trait MockNIRecordController extends NIRecordController {
     override val isWelshEnabled = false
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  override val applicationGlobal:ApplicationGlobalTrait = MockApplicationGlobal
 
 }
