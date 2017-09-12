@@ -197,9 +197,10 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         contentAsString(result) should include("As you are living or working overseas")
       }
 
-      "return RRE message for abroad user" in {
+      "return /exclusion for MWRRE user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
-        contentAsString(result) should include("As you are living or working overseas")
+        status(result) shouldBe SEE_OTHER // 303
+        redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
       "return abroad message for forecast only user" in {
@@ -210,12 +211,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
 
       "return abroad message for an mqp user instead of standard mqp overseas message" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
-        contentAsString(result) should include("As you are living or working overseas")
-        contentAsString(result) should not include "If you have lived or worked overseas"
-      }
-
-      "return mwree message for an RRE user instead of standard mqp overseas message" in {
-        val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "If you have lived or worked overseas"
       }
