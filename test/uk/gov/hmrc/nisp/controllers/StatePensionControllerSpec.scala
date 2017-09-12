@@ -202,7 +202,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         contentAsString(result) should include("As you are living or working overseas")
       }
 
-      "return abroad message for forecast only user" ignore {
+      "return abroad message for forecast only user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "£80.38"
@@ -220,7 +220,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         contentAsString(result) should not include "If you have lived or worked overseas"
       }
 
-      "redirect to statepension page for non contracted out user" ignore {
+      "redirect to statepension page for non contracted out user" in {
         val result = MockStatePensionController.showCope()(authenticatedFakeRequest(mockUserIdMQP))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
       }
@@ -240,77 +240,77 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       }
 
       "display the correct Google Analytics code" should {
-        "dimension7 should be the scenario" ignore {
+        "dimension7 should be the scenario" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension7': 'FillGaps'" shouldBe true
         }
 
-        "dimension8 should be the forecast weekly amount" ignore {
+        "dimension8 should be the forecast weekly amount" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension8': '146.76'" shouldBe true
         }
 
-        "dimension10 should be the number of qualifying years" ignore {
+        "dimension10 should be the number of qualifying years" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension10': '30'" shouldBe true
         }
 
-        "dimension11 should be the number of gaps" ignore {
+        "dimension11 should be the number of gaps" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension11': '10'" shouldBe true
         }
 
-        "dimension12 should be the number of gaps payable" ignore {
+        "dimension12 should be the number of gaps payable" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension12': '4'" shouldBe true
         }
 
-        "dimension13 should be years until state pension age" ignore {
+        "dimension13 should be years until state pension age" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension13': '3'" shouldBe true
         }
 
-        "dimension14 should be if the user is contracted out" ignore {
+        "dimension14 should be if the user is contracted out" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension14': 'false'" shouldBe true
         }
 
-        "dimension15 should be the pension age" ignore {
+        "dimension15 should be the pension age" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension15': '64'" shouldBe true
         }
 
-        "dimension16 should be the COPE amount" ignore {
+        "dimension16 should be the COPE amount" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension16': '0'" shouldBe true
         }
 
-        "dimension22 should be the old auth provider" ignore {
+        "dimension22 should be the old auth provider" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension22': 'verify'" shouldBe true
         }
 
-        "dimension38 should be the auth provider" ignore {
+        "dimension38 should be the auth provider" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension38': 'IDA'" shouldBe true
         }
 
-        "dimension39 should be the confidence level" ignore {
+        "dimension39 should be the confidence level" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension39': '500'" shouldBe true
         }
 
-        "dimension40 should be the customer age" ignore {
+        "dimension40 should be the customer age" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension40': '63'" shouldBe true
         }
 
-        "dimension41 should be the sex" ignore {
+        "dimension41 should be the sex" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'dimension41': 'M'" shouldBe true
         }
 
-        "metric should be 1" ignore {
+        "metric should be 1" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
           contentAsString(result) contains "'metric5': 1" shouldBe true
         }
@@ -500,14 +500,14 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
     }
 
     "calculateAge" should {
-      "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-10-28" ignore {
+      "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-10-28" in {
         MockStatePensionController.calculateAge(new LocalDate(1986, 10, 28), new LocalDate(2016, 11, 2)) shouldBe 30
       }
-      "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-2" ignore {
+      "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-2" in {
         MockStatePensionController.calculateAge(new LocalDate(1986, 11, 2), new LocalDate(2016, 11, 2)) shouldBe 30
 
       }
-      "return 29 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-3" ignore {
+      "return 29 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-3" in {
         MockStatePensionController.calculateAge(new LocalDate(1986, 11, 3), new LocalDate(2016, 11, 2)) shouldBe 29
       }
     }
