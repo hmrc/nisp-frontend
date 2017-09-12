@@ -36,7 +36,6 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.noNameNino,
     TestAccountBuilder.abroadNino,
-    TestAccountBuilder.mwrreNino,
     TestAccountBuilder.mqpAbroadNino,
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.fillGapSingle,

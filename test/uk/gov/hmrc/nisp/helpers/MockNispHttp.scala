@@ -35,7 +35,6 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.invalidKeyNino,
     TestAccountBuilder.abroadNino,
-    TestAccountBuilder.mwrreNino,
     TestAccountBuilder.mqpAbroadNino,
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.fillGapsMultiple,
@@ -98,8 +97,7 @@ object MockNispHttp extends MockitoSugar {
   val spNinos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.excludedAllButDeadMCI,
-    TestAccountBuilder.excludedMwrre,
-    TestAccountBuilder.mwrreNino
+    TestAccountBuilder.excludedMwrre
   )
 
   spNinos.foreach(setupStatePensionEndpoints)

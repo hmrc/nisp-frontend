@@ -46,7 +46,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
   val mockUserIdWeak = "/auth/oid/mockweak"
   val mockUserIdAbroad = "/auth/oid/mockabroad"
   val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
-  val mockUserIdMwrre = "/auth/oid/mockmwrre"
+  val mockUserIdMwrre = "/auth/oid/mockexcludedmwrre"
 
   val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
