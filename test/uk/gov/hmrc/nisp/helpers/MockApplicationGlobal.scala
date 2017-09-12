@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import play.api.Application
+package uk.gov.hmrc.nisp.helpers
 
-@(partialUrl: String, formBody: Option[Html])(implicit messages: Messages, request: Request[_],
-formPartialRetriever: FormPartialRetriever, partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+import uk.gov.hmrc.nisp.config.ApplicationGlobalTrait
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-@main(showBetaBanner = false) {
-    @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
+object MockApplicationGlobal extends ApplicationGlobalTrait {
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 }

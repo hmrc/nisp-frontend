@@ -73,28 +73,28 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
   "State Pension controller" should {
 
     "GET /statepension" should {
-      "return 303 when no session" ignore {
+      "return 303 when no session" in {
         val result = MockStatePensionController.show().apply(fakeRequest)
         status(result) shouldBe Status.SEE_OTHER
       }
 
-      "return 500 when backend 404" ignore {
+      "return 500 when backend 404" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBackendNotFound))
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
 
-      "return the forecast only page for a user with a forecast lower than current amount" ignore {
+      "return the forecast only page for a user with a forecast lower than current amount" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
         contentAsString(result) should not include ("£80.38")
       }
 
-      "redirect to the GG Login" ignore {
+      "redirect to the GG Login" in {
         val result = MockStatePensionController.show(fakeRequest)
 
         redirectLocation(result) shouldBe Some(ggSignInUrl)
       }
 
-      "redirect to Verify with IV disabled" ignore {
+      "redirect to Verify with IV disabled" in {
         val controller = new MockStatePensionController {
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {
@@ -133,19 +133,19 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         redirectLocation(result) shouldBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
       }
 
-      "redirect to the GG Login, for session ID NOSESSION" ignore {
+      "redirect to the GG Login, for session ID NOSESSION" in {
         val result = MockStatePensionController.show().apply(fakeRequest.withSession(
           SessionKeys.sessionId -> "NOSESSION"
         ))
         redirectLocation(result) shouldBe Some(ggSignInUrl)
       }
 
-      "return 200, create an authenticated session" ignore {
+      "return 200, create an authenticated session" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest())
         contentAsString(result) should include("Sign out")
       }
 
-      "return timeout error for last request -14 minutes, 59 seconds" ignore {
+      "return timeout error for last request -14 minutes, 59 seconds" in {
         val result = MockStatePensionController.show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.minusMinutes(14).minusSeconds(59).getMillis.toString,
@@ -156,7 +156,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         redirectLocation(result) should not be Some("/check-your-state-pension/timeout")
       }
 
-      "return timeout error for last request -15 minutes" ignore {
+      "return timeout error for last request -15 minutes" in {
         val result = MockStatePensionController.show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.minusMinutes(15).getMillis.toString,
@@ -167,7 +167,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         redirectLocation(result) shouldBe Some("/check-your-state-pension/timeout")
       }
 
-      "return 200, with exclusion message for excluded user" ignore {
+      "return 200, with exclusion message for excluded user" in {
         val result = MockStatePensionController.show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
@@ -177,22 +177,22 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
-      "return error for blank user" ignore {
+      "return error for blank user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBlank))
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
 
-      "return content about COPE for contracted out (B) user" ignore {
+      "return content about COPE for contracted out (B) user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdContractedOut))
         contentAsString(result) should include("You’ve been in a contracted-out pension scheme")
       }
 
-      "return COPE page for contracted out (B) user" ignore {
+      "return COPE page for contracted out (B) user" in {
         val result = MockStatePensionController.showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
         contentAsString(result) should include("You were contracted out")
       }
 
-      "return abroad message for abroad user" ignore {
+      "return abroad message for abroad user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdAbroad))
         contentAsString(result) should include("As you are living or working overseas")
       }
@@ -208,7 +208,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         contentAsString(result) should not include "£80.38"
       }
 
-      "return abroad message for an mqp user instead of standard mqp overseas message" ignore {
+      "return abroad message for an mqp user instead of standard mqp overseas message" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "If you have lived or worked overseas"
@@ -224,12 +224,12 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         val result = MockStatePensionController.showCope()(authenticatedFakeRequest(mockUserIdMQP))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
       }
-      "return page with MQP messaging for MQP user" ignore {
+      "return page with MQP messaging for MQP user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMQP))
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
 
-      "redirect to 2FA when authentication is not strong" ignore {
+      "redirect to 2FA when authentication is not strong" in {
         val result = MockStatePensionController.show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
@@ -318,7 +318,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
     }
 
     "GET /signout" should {
-      "redirect to the questionnaire page when govuk done page is disabled" ignore {
+      "redirect to the questionnaire page when govuk done page is disabled" in {
         val controller = new MockStatePensionController {
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {
@@ -356,7 +356,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         redirectLocation(result).get shouldBe routes.QuestionnaireController.show().url
       }
 
-      "redirect to the gov.uk done page when govuk done page is enabled" ignore {
+      "redirect to the gov.uk done page when govuk done page is enabled" in {
         val controller = new MockStatePensionController {
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {
@@ -396,7 +396,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
     }
 
     "GET /timeout" should {
-      "return the timeout page" ignore {
+      "return the timeout page" in {
         val result = MockStatePensionController.timeout(fakeRequest)
         contentType(result) shouldBe Some("text/html")
         contentAsString(result).contains("For your security we signed you out because you didn't use the service for 15 minutes or more.")
@@ -407,32 +407,32 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       def calculateCharts(currentAmount: BigDecimal, forecastAmount: BigDecimal, personalMax: BigDecimal) =
         MockStatePensionController.calculateChartWidths(StatePensionAmountRegular(currentAmount, 0, 0), StatePensionAmountRegular(forecastAmount, 0, 0), StatePensionAmountRegular(personalMax, 0, 0))
 
-      "current chart is 100 when current amount is higher" ignore {
+      "current chart is 100 when current amount is higher" in {
         val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 30, 0)
         currentChart.width shouldBe 100
       }
 
-      "forecast chart is 100 when forecast amount is higher" ignore {
+      "forecast chart is 100 when forecast amount is higher" in {
         val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 80, 80)
         forecastChart.width shouldBe 100
         personalMaxChart.width shouldBe 100
       }
 
-      "current chart and forecast chart are 100 when amounts are equal" ignore {
+      "current chart and forecast chart are 100 when amounts are equal" in {
         val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 70, 70)
         currentChart.width shouldBe 100
         forecastChart.width shouldBe 100
         personalMaxChart.width shouldBe 100
       }
 
-      "current chart is 66 when current amount is 2 and forecast is 3" ignore {
+      "current chart is 66 when current amount is 2 and forecast is 3" in {
         val (currentChart, forecastChart, personalMaxChart) = calculateCharts(2, 3, 4)
         currentChart.width shouldBe 50
         forecastChart.width shouldBe 75
         personalMaxChart.width shouldBe 100
       }
 
-      "forecast chart is 30 when forecast amount is 4 and current is 13" ignore {
+      "forecast chart is 30 when forecast amount is 4 and current is 13" in {
         val (currentChart, forecastChart, personalMaxChart) = calculateCharts(13, 4, 20)
         forecastChart.width shouldBe 31
         currentChart.width shouldBe 65
@@ -443,14 +443,14 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
 
     "when there is a Fill Gaps Scenario" when {
       "the future config is set to off" should {
-        "show year information when there is multiple years" ignore {
+        "show year information when there is multiple years" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
           contentAsString(result) should include("filling years can improve your forecast")
           contentAsString(result) should include("you only need to fill 7 years to get the most you can")
           contentAsString(result) should include("The most you can get by filling any 7 years in your record is")
         }
-        "show specific text when is only one payable gap" ignore {
+        "show specific text when is only one payable gap" in {
           val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
           contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
           contentAsString(result) should include("The most you can get by filling this year in your record is")
@@ -491,7 +491,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
-        "show new personal max text when there are multiple/single year" ignore {
+        "show new personal max text when there are multiple/single year" in {
           val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")

@@ -44,10 +44,11 @@ import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.nisp.controllers.NispFrontendController
 
 import scala.concurrent.Future
 
-class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   lazy val fakeRequest = FakeRequest()
@@ -71,7 +72,7 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
   implicit override val lang = LanguageToggle.getLanguageCode
   implicit val lanCookie = LanguageToggle.getLanguageCookie
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",

@@ -34,7 +34,9 @@ import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.http.logging.filters.FrontendLoggingFilter
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-object ApplicationGlobal extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController {
+object ApplicationGlobal extends ApplicationGlobalTrait
+
+trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController {
   override val auditConnector = NispAuditConnector
   override val loggingFilter = NispLoggingFilter
   override val frontendAuditFilter = NispFrontendAuditFilter
