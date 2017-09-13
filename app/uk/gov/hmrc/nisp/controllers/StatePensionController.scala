@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
+import uk.gov.hmrc.nisp.models.enums.{Exclusion, MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
@@ -105,6 +105,11 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
         ) yield {
           (statePensionResponse, nationalInsuranceResponse) match {
             case (Right(statePension), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+              customAuditConnector.sendEvent(AccountExclusionEvent(
+                user.nino.nino,
+                user.name,
+                nationalInsuranceExclusion
+              ))
               Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
 
             case (Right(statePension), Right(nationalInsuranceRecord)) =>
