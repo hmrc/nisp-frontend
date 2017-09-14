@@ -34,7 +34,6 @@
     sidebarLinks: Option[Html] = None,
     sidebarClasses: Option[String] = None,
     userLoggedIn: Boolean = false,
-    gaCalls: Option[(String,String) => Html] = None,
     applicationConfig: ApplicationConfig = ApplicationConfig,
     showTitleHeaderNav: Boolean = true,
     showBetaBanner: Boolean = false,
@@ -43,6 +42,7 @@
     analyticsAdditionalJs: Option[Html] = None,
     gaDimensions: Option[Map[String, Any]] = None,
     articleEnabled: Boolean = true,
+    IsQuestionnair: Boolean = true,
     hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @mustacheCheck(str: String) = @{
@@ -152,7 +152,7 @@ if(articleEnabled) {
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 @showLastLogInStatus = @{
-    if(articleEnabled) {
+    if(articleEnabled && IsQuestionnair) {
         true
     } else {
         false
