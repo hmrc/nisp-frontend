@@ -57,6 +57,9 @@ object TestAccountBuilder {
   val excludedDissonanceIomMwrreAbroad: Nino = randomNino
   val excludedIomMwrreAbroad: Nino = randomNino
   val excludedMwrreAbroad: Nino = randomNino
+
+  val excludedMwrre: Nino = randomNino
+
   val excludedAbroad: Nino = randomNino
 
   val internalServerError: Nino = randomNino
@@ -84,6 +87,7 @@ object TestAccountBuilder {
     excludedDissonanceIomMwrreAbroad -> "excluded-dissonance-iom-mwrre-abroad",
     excludedIomMwrreAbroad -> "excluded-iom-mwrre-abroad",
     excludedMwrreAbroad -> "excluded-mwrre-abroad",
+    excludedMwrre -> "excluded-mwrre",
     excludedAbroad -> "excluded-abroad"
   )
 

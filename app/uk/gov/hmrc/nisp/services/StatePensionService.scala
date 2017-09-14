@@ -95,7 +95,8 @@ trait NispConnectionSP extends StatePensionService {
         finalRelevantYear = spSummary.finalRelevantYear.toString,
         numberOfQualifyingYears = spSummary.numberOfQualifyingYears,
         pensionSharingOrder = spSummary.hasPsod,
-        currentFullWeeklyPensionAmount = spSummary.fullNewStatePensionAmount
+        currentFullWeeklyPensionAmount = spSummary.fullNewStatePensionAmount,
+        false
       ))
 
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), _) =>

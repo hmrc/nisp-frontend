@@ -45,7 +45,8 @@ class StatePensionSpec extends UnitSpec {
       finalRelevantYear,
       qualifyingYears,
       false,
-      fullStatePensionAmount
+      fullStatePensionAmount,
+      false
     )
   }
 

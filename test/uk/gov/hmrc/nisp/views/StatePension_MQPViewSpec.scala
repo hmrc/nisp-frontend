@@ -113,7 +113,8 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             "2019-20",
             20,
             pensionSharingOrder = false,
-            currentFullWeeklyPensionAmount = 155.65
+            currentFullWeeklyPensionAmount = 155.65,
+            false
           )
           )))
 
@@ -252,7 +253,8 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
               "2019-20",
               4,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -398,7 +400,8 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
               "2019-20",
               4,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -530,7 +533,8 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
               "2019-20",
               0,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -663,7 +667,8 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
               "2019-20",
               9,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -799,7 +804,8 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
               "2016-17",
               4,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -915,7 +921,8 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
               "2017-18",
               4,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
