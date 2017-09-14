@@ -32,6 +32,15 @@ object MockStatePensionController extends MockStatePensionController {
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 }
 
+object MockMWRREStatePensionController extends MockStatePensionController {
+  override val citizenDetailsService = MockCitizenDetailsService
+  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+
+  override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
+  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
+}
+
 trait MockStatePensionController extends StatePensionController {
   override implicit def authConnector: AuthConnector = MockAuthConnector
 
@@ -41,7 +50,6 @@ trait MockStatePensionController extends StatePensionController {
 
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   override val applicationGlobal:ApplicationGlobalTrait = MockApplicationGlobal
-
 
   override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp
   override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp

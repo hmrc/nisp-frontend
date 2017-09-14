@@ -75,12 +75,12 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
     "GET /statepension" should {
       "return 303 when no session" in {
         val result = MockStatePensionController.show().apply(fakeRequest)
-        status(result) shouldBe Status.SEE_OTHER
+        status(result) shouldBe SEE_OTHER
       }
 
       "return 500 when backend 404" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBackendNotFound))
-        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
       "return the forecast only page for a user with a forecast lower than current amount" in {
@@ -179,7 +179,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
 
       "return error for blank user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBlank))
-        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
       "return content about COPE for contracted out (B) user" in {
@@ -198,7 +198,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       }
 
       "return /exclusion for MWRRE user" in {
-        val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
+        val result = MockMWRREStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
         status(result) shouldBe SEE_OTHER // 303
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
-
 import org.joda.time.LocalDate
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.mvc.Result
@@ -27,7 +26,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.NispConnector
-import uk.gov.hmrc.nisp.helpers.MockExclusionController
+import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
@@ -35,7 +34,6 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, SessionKeys}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
-
 import scala.concurrent.Future
 
 class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
@@ -239,7 +237,13 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
       "The User has MWRRE exclusion" should {
 
         "return only the MWRRE Exclusion on /exclusion" in {
-          val result = generateSPRequest(mockUserIdExcludedMwrre)
+
+          val result = MockMWRREExclusionController.showSP()(fakeRequest.withSession(
+              SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+              SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+              SessionKeys.userId -> mockUserIdExcludedMwrre,
+              SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+            ))
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging

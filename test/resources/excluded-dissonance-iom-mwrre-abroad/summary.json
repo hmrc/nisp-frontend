@@ -47,7 +47,6 @@
     "mqp": null,
     "isAbroad": true
   },
-  "reducedRateElection": false,
   "spExclusions":{"exclusions":["AmountDissonance", "MarriedWomenReducedRateElection", "IsleOfMan", "Abroad"]},
   "niExclusions":{"exclusions":["MarriedWomenReducedRateElection", "IsleOfMan"]}
 }

@@ -45,6 +45,5 @@
     },
     "mqp": "CanGetWithGaps",
     "isAbroad": false
-  },
-  "reducedRateElection": false
+  }
 }
