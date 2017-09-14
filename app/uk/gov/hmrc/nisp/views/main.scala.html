@@ -151,7 +151,7 @@ if(articleEnabled) {
         "cookieDomain" -> applicationConfig.analyticsHost
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
-@showLastLogInStatus = {
+@showLastLogInStatus = @{
     if(articleEnabled) {
         true
     } else {
@@ -165,6 +165,14 @@ if(articleEnabled) {
 
 @termsAndConditionFooterLink = @{
     Map("url" -> routes.TermsConditionsController.show().url , "text" -> Messages("nisp.tandcs.title"))
+}
+@isWelsh = @{
+    if(messages.lang.code == "cy"){
+        true
+    }
+    else {
+        false
+    }
 }
 
 
@@ -196,8 +204,8 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
 "sidebar" -> sidebar,
 "termsAndConditionFooterLink" -> termsAndConditionFooterLink,
 
-"optimizelyBaseUrl" -> "//cdn.optimizely.com/js/",
-"optimizelyProjectId" -> "8451981545"
+"optimizelyProjectId" -> "8451981545",
+"isWelsh" -> isWelsh
 
 )
 )

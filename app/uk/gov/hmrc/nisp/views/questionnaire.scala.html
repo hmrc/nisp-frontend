@@ -21,7 +21,7 @@
 @(form: Form[_])(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@main(browserTitle = Some(Messages("nisp.questionnaire.title")), sidebarLinks = Some(includes.questionnaireSidebar()),
+@main(browserTitle = Some(Messages("nisp.questionnaire.title")),articleEnabled = false, sidebarLinks = Some(includes.questionnaireSidebar()),
          pageTitle = Some(Messages("nisp.questionnaire.header"))) {
     <p>@Html(Messages("nisp.useagain", routes.LandingController.show.url))</p>
     <p>@Html(Messages("nisp.questionnaire.please"))</p>
