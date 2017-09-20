@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(additionalLinks: Option[Html] = None)(implicit messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(additionalLinks: Option[Html] = None)(implicit messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 @import uk.gov.hmrc.nisp.controllers.routes
 
 <ul class="platform-help-links">

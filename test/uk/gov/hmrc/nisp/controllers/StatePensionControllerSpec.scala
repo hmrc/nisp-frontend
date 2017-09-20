@@ -46,6 +46,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
   val mockUserIdWeak = "/auth/oid/mockweak"
   val mockUserIdAbroad = "/auth/oid/mockabroad"
   val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
+  val mockUserIdMwrre = "/auth/oid/mockexcludedmwrre"
+
   val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
   val mockUserIdBackendNotFound = "/auth/oid/mockbackendnotfound"
@@ -69,15 +71,16 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
   }
 
   "State Pension controller" should {
+
     "GET /statepension" should {
       "return 303 when no session" in {
         val result = MockStatePensionController.show().apply(fakeRequest)
-        status(result) shouldBe Status.SEE_OTHER
+        status(result) shouldBe SEE_OTHER
       }
 
       "return 500 when backend 404" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBackendNotFound))
-        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
       "return the forecast only page for a user with a forecast lower than current amount" in {
@@ -176,7 +179,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
 
       "return error for blank user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBlank))
-        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
       "return content about COPE for contracted out (B) user" in {
@@ -192,6 +195,12 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       "return abroad message for abroad user" in {
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdAbroad))
         contentAsString(result) should include("As you are living or working overseas")
+      }
+
+      "return /exclusion for MWRRE user" in {
+        val result = MockMWRREStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
+        status(result) shouldBe SEE_OTHER // 303
+        redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
       "return abroad message for forecast only user" in {
@@ -225,82 +234,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         redirectLocation(result) shouldBe Some(twoFactorUrl)
       }
 
-      "display the correct Google Analytics code" should {
-        "dimension7 should be the scenario" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension7': 'FillGaps'" shouldBe true
-        }
-
-        "dimension8 should be the forecast weekly amount" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension8': '146.76'" shouldBe true
-        }
-
-        "dimension10 should be the number of qualifying years" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension10': '30'" shouldBe true
-        }
-
-        "dimension11 should be the number of gaps" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension11': '10'" shouldBe true
-        }
-
-        "dimension12 should be the number of gaps payable" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension12': '4'" shouldBe true
-        }
-
-        "dimension13 should be years until state pension age" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension13': '3'" shouldBe true
-        }
-
-        "dimension14 should be if the user is contracted out" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension14': 'false'" shouldBe true
-        }
-
-        "dimension15 should be the pension age" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension15': '64'" shouldBe true
-        }
-
-        "dimension16 should be the COPE amount" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension16': '0'" shouldBe true
-        }
-
-        "dimension22 should be the old auth provider" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension22': 'verify'" shouldBe true
-        }
-
-        "dimension38 should be the auth provider" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension38': 'IDA'" shouldBe true
-        }
-
-        "dimension39 should be the confidence level" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension39': '500'" shouldBe true
-        }
-
-        "dimension40 should be the customer age" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension40': '63'" shouldBe true
-        }
-
-        "dimension41 should be the sex" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'dimension41': 'M'" shouldBe true
-        }
-
-        "metric should be 1" in {
-          val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserId))
-          contentAsString(result) contains "'metric5': 1" shouldBe true
-        }
-      }
     }
 
     "GET /signout" should {
@@ -484,6 +417,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         }
       }
     }
+
     "calculateAge" should {
       "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-10-28" in {
         MockStatePensionController.calculateAge(new LocalDate(1986, 10, 28), new LocalDate(2016, 11, 2)) shouldBe 30
@@ -496,5 +430,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         MockStatePensionController.calculateAge(new LocalDate(1986, 11, 3), new LocalDate(2016, 11, 2)) shouldBe 29
       }
     }
+
   }
 }

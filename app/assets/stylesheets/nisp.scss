@@ -100,7 +100,7 @@ h2.summary {
   }
 }
 
-.service-info-p {
+.service-info-p,  div.last-login>p {
   color: $grey-1;
   font-size: 16px;
   font-family: nta,Arial,sans-serif;
@@ -344,3 +344,6 @@ input[name="email"] {
 .align-right{
 text-align : right;
 }
+ .summary-list-item{
+     display : list-item
+ }

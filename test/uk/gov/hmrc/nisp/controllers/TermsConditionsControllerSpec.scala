@@ -21,8 +21,10 @@ import play.api.http._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class TermsConditionsControllerSpec extends PlaySpec with OneAppPerSuite {
 
@@ -32,6 +34,8 @@ class TermsConditionsControllerSpec extends PlaySpec with OneAppPerSuite {
     override protected def authConnector: AuthConnector = MockAuthConnector
 
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }
 
   "GET /" should {

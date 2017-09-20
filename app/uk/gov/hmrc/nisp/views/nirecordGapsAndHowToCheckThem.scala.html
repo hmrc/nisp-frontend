@@ -20,7 +20,7 @@
 @import play.api.Application
 
 @(homeResponsibilitiesProtection: Boolean)(implicit messages: Messages, request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @defining(Some(user)) { implicit userOption =>
 @main(browserTitle = Some(Messages("nisp.nirecord.gapsinyourrecord.title")),
@@ -44,7 +44,7 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
 <p>@Html(Messages("nisp.nirecord.gapsinyourrecord.paidemployment.desc"))</p>
 
 <details class="helptext">
-    <summary>
+    <summary class="summary-list-item">
         <span class="summary">@Messages("nisp.nirecord.gapsinyourrecord.donothavep60.title")</span>
     </summary>
     <div class="panel-indent">

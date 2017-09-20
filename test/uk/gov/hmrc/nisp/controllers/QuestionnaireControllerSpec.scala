@@ -24,13 +24,19 @@ import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, MockCustomAuditConnector, TestAccountBuilder}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequest = FakeRequest("GET", "/")
 
+
   val testQuestionnaireController: QuestionnaireController = new QuestionnaireController {
     override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }
 
   "GET /questionnaire" should {
@@ -38,6 +44,19 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       val result = testQuestionnaireController.show(fakeRequest)
       contentAsString(result).contains("signed out of your account") shouldBe true
       contentAsString(result).contains("Give us feedback to help us improve this service.") shouldBe true
+      contentAsString(result).contains("What you can do next")
+      contentAsString(result).contains("Pension Wise - understanding your pension options")
+      contentAsString(result).contains("Planning your retirement income")
+      contentAsString(result).contains("Defer your State Pension")
+      contentAsString(result).contains("Contact the Pension Service")
+      contentAsString(result).contains("More on State Pensions")
+      contentAsString(result).contains("http://gov.uk/browse/working/state-pension")
+      contentAsString(result).contains("https://gov.uk/contact-pension-service")
+      contentAsString(result).contains("http://gov.uk/deferring-state-pension")
+      contentAsString(result).contains("https://gov.uk/plan-retirement-income")
+      contentAsString(result).contains("https://pensionwise.gov.uk")
+
+
     }
   }
 

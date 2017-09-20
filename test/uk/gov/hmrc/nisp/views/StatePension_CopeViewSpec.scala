@@ -39,10 +39,14 @@ import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class StatePension_CopeViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded = TestAccountBuilder.excludedAll
@@ -67,7 +71,7 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
   lazy val fakeRequest = FakeRequest()
   implicit override val lang = LanguageToggle.getLanguageCode
   implicit val lanCookie = LanguageToggle.getLanguageCookie
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -81,6 +85,7 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
       override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
       override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdContractedOut).withCookies(lanCookie))
@@ -177,11 +182,14 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
     "render page with text  'Helpline 0345 608 0126'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
     }
+    "render page with text  'Textphone 0345 300 0169'" in {
+      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
+    }
     "render page with text  'Monday to Friday: 8am to 6pm'" in {
-      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.openTimes")
+      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
     }
     "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
+      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
     }
   }
 
@@ -255,11 +263,14 @@ class StatePension_CopeViewSpec extends PlaySpec with MockitoSugar with HtmlSpec
     "render page with text  'Helpline 0345 608 0126'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
     }
+    "render page with text  'Textphone 0345 300 0169'" in {
+      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
+    }
     "render page with text  'Monday to Friday: 8am to 6pm'" in {
-      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.openTimes")
+      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
     }
     "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
+      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
     }
   }
 }

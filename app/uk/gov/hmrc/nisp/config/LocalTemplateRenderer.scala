@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import play.api.Application
+package uk.gov.hmrc.nisp.config
 
-@(partialUrl: String, formBody: Option[Html])(implicit messages: Messages, request: Request[_],
-formPartialRetriever: FormPartialRetriever, partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+import uk.gov.hmrc.play.http.ws.WSGet
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.nisp.config.wiring.WSHttp
+import uk.gov.hmrc.play.http.ws.WSGet
 
-@main(showBetaBanner = false) {
-    @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
+import scala.concurrent.duration._
+
+object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
+  override val connection: WSGet = WSHttp
+  override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")
+  override val refreshAfter: Duration = 10 minutes
 }

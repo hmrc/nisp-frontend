@@ -18,7 +18,8 @@
 @import play.api.Application
 @import uk.gov.hmrc.nisp.controllers.routes
 
-@(showBackLink : Boolean)(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@(showBackLink : Boolean)(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @main(browserTitle = Some(Messages("nisp.tandcs.title")),
 sidebarLinks = None) {

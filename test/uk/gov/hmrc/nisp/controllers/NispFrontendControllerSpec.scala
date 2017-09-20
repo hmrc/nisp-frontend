@@ -25,17 +25,26 @@ import play.api.Logger
 import play.api.http.Status
 import play.api.mvc.Result
 import play.api.test.FakeRequest
-import uk.gov.hmrc.nisp.helpers.MockCachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.nisp.config.{ApplicationGlobal, ApplicationGlobalTrait}
+import uk.gov.hmrc.nisp.helpers.{MockApplicationGlobal, MockCachedStaticHtmlPartialRetriever}
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.renderer.TemplateRenderer
+
+
 
 class NispFrontendControllerSpec extends UnitSpec with MockitoSugar with OneAppPerSuite {
 
   val mockLogger: Slf4JLogger = mock[Slf4JLogger]
   when(mockLogger.isErrorEnabled).thenReturn(true)
 
-  val controller = new NispFrontendController {
+
+
+  def controller = new NispFrontendController {
     override val logger = new Logger(mockLogger)
     val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+    override  val applicationGlobal:ApplicationGlobalTrait = MockApplicationGlobal
   }
 
   implicit val request = FakeRequest()

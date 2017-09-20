@@ -41,6 +41,9 @@ import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -63,6 +66,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val statePensionService: StatePensionService = mock[StatePensionService]
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
   }
 
@@ -91,7 +95,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2019-20",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 149.65
+              currentFullWeeklyPensionAmount = 149.65,
+              false
             )
             )))
 
@@ -240,11 +245,14 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           "render page with text  'Helpline 0345 608 0126'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
+          "render page with text  'Textphone 0345 300 0169'" in {
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
+          }
           "render page with text  'Monday to Friday: 8am to 6pm'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.openTimes")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
           "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
           }
         }
 
@@ -267,7 +275,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2019-20",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 149.65
+              currentFullWeeklyPensionAmount = 149.65,
+              false
             )
             )))
 
@@ -409,11 +418,14 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           "render page with text  'Helpline 0345 608 0126'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
+          "render page with text  'Textphone 0345 300 0169'" in {
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
+          }
           "render page with text  'Monday to Friday: 8am to 6pm'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.openTimes")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
           "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
           }
         }
 
@@ -436,7 +448,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2019-20",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 149.65
+              currentFullWeeklyPensionAmount = 149.65,
+              false
             )
             )))
 
@@ -593,7 +606,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2021-22",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 151.65
+              currentFullWeeklyPensionAmount = 151.65,
+              false
             )
             )))
 
@@ -732,7 +746,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2019-20",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 149.65
+              currentFullWeeklyPensionAmount = 149.65,
+              false
             )
             )))
 
@@ -873,7 +888,8 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             "2019-20",
             11,
             pensionSharingOrder = false,
-            currentFullWeeklyPensionAmount = 149.65
+            currentFullWeeklyPensionAmount = 149.65,
+            false
           )
           )))
 

@@ -44,10 +44,11 @@ import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.nisp.controllers.NispFrontendController
 
 import scala.concurrent.Future
 
-class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   lazy val fakeRequest = FakeRequest()
@@ -71,7 +72,7 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
   implicit override val lang = LanguageToggle.getLanguageCode
   implicit val lanCookie = LanguageToggle.getLanguageCookie
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -112,7 +113,8 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
             "2019-20",
             20,
             pensionSharingOrder = false,
-            currentFullWeeklyPensionAmount = 155.65
+            currentFullWeeklyPensionAmount = 155.65,
+            false
           )
           )))
 
@@ -222,11 +224,14 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
         "render page with text  'Helpline 0345 608 0126'" in {
           assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
         }
+        "render page with text  'Textphone 0345 300 0169'" in {
+          assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
+        }
         "render page with text  'Monday to Friday: 8am to 6pm'" in {
-          assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.openTimes")
+          assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
         }
         "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-          assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
+          assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
         }
       }
 
@@ -248,7 +253,8 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
               "2019-20",
               4,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -365,11 +371,14 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
           "render page with text  'Helpline 0345 608 0126'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
+          "render page with text  'Textphone 0345 300 0169'" in {
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
+          }
           "render page with text  'Monday to Friday: 8am to 6pm'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.openTimes")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
           "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.callsCost")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
           }
         }
 
@@ -391,7 +400,8 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
               "2019-20",
               4,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -523,7 +533,8 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
               "2019-20",
               0,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -656,7 +667,8 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
               "2019-20",
               9,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -792,7 +804,8 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
               "2016-17",
               4,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 
@@ -908,7 +921,8 @@ class StatePension_MQPViewSpec extends PlaySpec with MockitoSugar with HtmlSpec 
               "2017-18",
               4,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65
+              currentFullWeeklyPensionAmount = 155.65,
+              false
             )
             )))
 

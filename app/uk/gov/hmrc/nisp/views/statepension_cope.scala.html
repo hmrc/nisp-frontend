@@ -24,13 +24,15 @@
 @import play.api.Application
 
 @(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar">
     <h2>@Messages("nisp.nirecord.helpline.getHelp")</h2>
 
     <p>@Messages("nisp.nirecord.helpline.number")</p>
+
+    <p>@Messages("nisp.nirecord.helpline.textNumber")</p>
 
     <p class="font-xsmall">@Messages("nisp.nirecord.helpline.openTimes")</p>
 
