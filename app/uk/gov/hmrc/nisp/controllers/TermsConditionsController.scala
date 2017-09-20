@@ -29,9 +29,9 @@ object TermsConditionsController extends TermsConditionsController with Authenti
 
 trait TermsConditionsController extends NispFrontendController with Actions {
 
-  def show: Action[AnyContent] = UnauthorisedAction(
+  def show(showBackLink: Boolean): Action[AnyContent] = UnauthorisedAction(
     implicit request =>
-      Ok(termsAndConditions())
+      Ok(termsAndConditions(showBackLink))
   )
 
 }
