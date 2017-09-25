@@ -16,7 +16,7 @@ private object AppDependencies {
   private val playLanguageVersion = "3.3.0"
   private val httpCachingClientVersion = "6.2.0"
   private val cspClientVersion = "1.0.0"
-  private val localTemplateRendererVersion = "0.10.0"
+  private val localTemplateRendererVersion = "1.0.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,

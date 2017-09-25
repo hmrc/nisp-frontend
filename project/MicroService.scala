@@ -31,24 +31,24 @@ trait MicroService {
   )
 
   lazy val scoverageSettings = {
-    Seq(
-      ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-      ScoverageKeys.coverageMinimum := 80,
-      ScoverageKeys.coverageFailOnMinimum := false,
-      ScoverageKeys.coverageHighlighting := true
-    )
-  }
+  Seq(
+    ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
+    ScoverageKeys.coverageMinimum := 80,
+    ScoverageKeys.coverageFailOnMinimum := false,
+    ScoverageKeys.coverageHighlighting := true
+  )
+}
 
-  lazy val microservice = Project(appName, file("."))
-    .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtWeb) ++ plugins: _*)
-    .settings(publishingSettings: _*)
-    .settings(playSettings ++ scoverageSettings: _*)
-    .settings(
-      libraryDependencies ++= appDependencies,
-      retrieveManaged := true,
-      evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-      routesGenerator := StaticRoutesGenerator
-    )
-    .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
-    .settings(resolvers ++= Seq(Resolver.jcenterRepo))
+lazy val microservice = Project(appName, file("."))
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtWeb) ++ plugins: _*)
+  .settings(publishingSettings: _*)
+  .settings(playSettings ++ scoverageSettings: _*)
+  .settings(
+    libraryDependencies ++= appDependencies,
+    retrieveManaged := true,
+    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
+    routesGenerator := StaticRoutesGenerator
+  )
+  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(resolvers ++= Seq(Resolver.jcenterRepo))
 }
