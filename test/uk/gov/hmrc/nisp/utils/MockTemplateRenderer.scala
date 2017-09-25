@@ -16,18 +16,19 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import uk.gov.hmrc.renderer.TemplateRenderer
+import org.scalatest.mock.MockitoSugar
+import play.api.i18n.Messages
 import play.twirl.api.Html
+import uk.gov.hmrc.nisp.config.{LocalTemplateRenderer, WsAllMethods}
 
+import scala.concurrent.duration._
 
-object MockTemplateRenderer extends TemplateRenderer {
-  override def connection = ???
-  override def templateServiceBaseUrl = ???
-  override def refreshAfter = ???
+object MockTemplateRenderer extends LocalTemplateRenderer {
+  override lazy val templateServiceBaseUrl = "http://example.com/template/mustache"
+  override val refreshAfter = 10 minutes
+  override val wsHttp = MockitoSugar.mock[WsAllMethods]
 
-  override def renderDefaultTemplate = (content: Html, extraArgs: Map[String, Any]) => {
+  override def renderDefaultTemplate(content: Html, extraArgs: Map[String, Any])(implicit messages: Messages) = {
     Html("<title>" + extraArgs("pageTitle") + "</title>"+ "<sidebar>"+extraArgs("sidebar")+"</sidebar>" + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"+ "<mainContentHeader>"+extraArgs("mainContentHeader")+"</mainContentHeader>"+ content)
   }
 }
-
-
