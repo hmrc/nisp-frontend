@@ -34,7 +34,6 @@
     sidebarLinks: Option[Html] = None,
     sidebarClasses: Option[String] = None,
     userLoggedIn: Boolean = false,
-    gaCalls: Option[(String,String) => Html] = None,
     applicationConfig: ApplicationConfig = ApplicationConfig,
     showTitleHeaderNav: Boolean = true,
     showBetaBanner: Boolean = false,
@@ -43,6 +42,7 @@
     analyticsAdditionalJs: Option[Html] = None,
     gaDimensions: Option[Map[String, Any]] = None,
     articleEnabled: Boolean = true,
+    IsQuestionnair: Boolean = true,
     hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @mustacheCheck(str: String) = @{
@@ -151,8 +151,8 @@ if(articleEnabled) {
         "cookieDomain" -> applicationConfig.analyticsHost
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
-@showLastLogInStatus = {
-    if(articleEnabled) {
+@showLastLogInStatus = @{
+    if(articleEnabled && IsQuestionnair) {
         true
     } else {
         false
@@ -164,7 +164,15 @@ if(articleEnabled) {
 }
 
 @termsAndConditionFooterLink = @{
-    Map("url" -> routes.TermsConditionsController.show().url , "text" -> Messages("nisp.tandcs.title"))
+    Map("url" -> routes.TermsConditionsController.show(false).url , "text" -> Messages("nisp.tandcs.title"))
+}
+@isWelsh = @{
+    if(messages.lang.code == "cy"){
+        true
+    }
+    else {
+        false
+    }
 }
 
 
@@ -196,9 +204,8 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
 "sidebar" -> sidebar,
 "termsAndConditionFooterLink" -> termsAndConditionFooterLink,
 
-"optimizelyBaseUrl" -> "//cdn.optimizely.com/js/",
-"optimizelyProjectId" -> "8451981545"
-
+"optimizelyProjectId" -> "8451981545",
+"isWelsh" -> isWelsh
 )
 )
 }

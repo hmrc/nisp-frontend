@@ -16,16 +16,35 @@
 
 package uk.gov.hmrc.nisp.config
 
-import uk.gov.hmrc.play.http.ws.WSGet
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.nisp.config.wiring.WSHttp
-import uk.gov.hmrc.play.http.ws.WSGet
+import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
+import uk.gov.hmrc.nisp.config.wiring.{NispAuditConnector, WSHttp}
+import uk.gov.hmrc.play.audit.http.HttpAuditing
+import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import uk.gov.hmrc.play.http.ws.WSHttp
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
-object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
-  override val connection: WSGet = WSHttp
+trait LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
   override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")
   override val refreshAfter: Duration = 10 minutes
+  private implicit val hc = HeaderCarrier()
+  val wsHttp: WSHttp
+
+  override def fetchTemplate(path: String): Future[String] =  {
+    wsHttp.GET(path).map(_.body)
+  }
+}
+
+object LocalTemplateRenderer extends LocalTemplateRenderer {
+  override val wsHttp = WsAllMethods
+}
+
+trait WsAllMethods extends WSHttp with HttpAuditing with AppName with RunMode
+
+object WsAllMethods extends WsAllMethods {
+  override val auditConnector = NispAuditConnector
+  override val hooks = Seq (AuditingHook)
 }
