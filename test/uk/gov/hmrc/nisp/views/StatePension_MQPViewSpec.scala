@@ -887,7 +887,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)>a", "nisp.legal.termsAndCondition")
           }
           "render page with href link  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(8)>a", "/check-your-state-pension/terms-and-conditions")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(8)>a", "/check-your-state-pension/terms-and-conditions?showBackLink=true")
           }
 
           "render page with link 'What else you can do'" in {
