@@ -78,8 +78,9 @@ case class StatePension(earningsIncludedUpTo: LocalDate,
                         finalRelevantYear: String,
                         numberOfQualifyingYears: Int,
                         pensionSharingOrder: Boolean,
-                        currentFullWeeklyPensionAmount: BigDecimal,
-                        reducedRateElection: Boolean) {
+                        currentFullWeeklyPensionAmount: BigDecimal) {
+/*                      ,
+                        reducedRateElection: Boolean) {*/
 
   lazy val contractedOut: Boolean = amounts.cope.weeklyAmount > 0
 

@@ -95,8 +95,9 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2019-20",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 149.65,
-              false
+              currentFullWeeklyPensionAmount = 149.65
+/*              ,
+              false*/
             )
             )))
 
@@ -275,8 +276,9 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2019-20",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 149.65,
-              false
+              currentFullWeeklyPensionAmount = 149.65
+/*              ,
+              false*/
             )
             )))
 
@@ -448,8 +450,9 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2019-20",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 149.65,
-              false
+              currentFullWeeklyPensionAmount = 149.65
+/*              ,
+              false*/
             )
             )))
 
@@ -606,8 +609,9 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2021-22",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 151.65,
-              false
+              currentFullWeeklyPensionAmount = 151.65
+/*              ,
+              false*/
             )
             )))
 
@@ -746,8 +750,9 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               "2019-20",
               11,
               pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 149.65,
-              false
+              currentFullWeeklyPensionAmount = 149.65
+/*              ,
+              false*/
             )
             )))
 
@@ -888,8 +893,9 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             "2019-20",
             11,
             pensionSharingOrder = false,
-            currentFullWeeklyPensionAmount = 149.65,
-            false
+            currentFullWeeklyPensionAmount = 149.65
+/*            ,
+            false*/
           )
           )))
 

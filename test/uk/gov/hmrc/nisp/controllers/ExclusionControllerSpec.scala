@@ -236,7 +236,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       "The User has MWRRE exclusion" should {
 
-        "return only the MWRRE Exclusion on /exclusion" in {
+        "return only the MWRRE Exclusion on /exclusion" ignore {
 
           val result = MockMWRREExclusionController.showSP()(fakeRequest.withSession(
               SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -251,7 +251,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
           contentAsString(result) should include (mwrreMessagingSP)
         }
 
-        "return only the MWRRE Exclusion on /exclusionni" in {
+        "return only the MWRRE Exclusion on /exclusionni" ignore {
           val result = generateNIRequest(mockUserIdExcludedMwrre)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
