@@ -94,7 +94,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65/*, false*/
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false
         ))
       }
     }
@@ -110,7 +110,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65/*, true*/
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true
         ))
       }
     }
