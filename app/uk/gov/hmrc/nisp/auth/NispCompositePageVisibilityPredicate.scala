@@ -24,7 +24,6 @@ import uk.gov.hmrc.play.frontend.auth.{CompositePageVisibilityPredicate, PageVis
 
 object NispCompositePageVisibilityPredicate extends CompositePageVisibilityPredicate {
   override def children: Seq[PageVisibilityPredicate] = Seq(
-    new NispStrongCredentialPredicate(twoFactorURI),
     new UpliftingIdentityConfidencePredicate(L200, ivUpliftURI)
   )
 
@@ -33,9 +32,4 @@ object NispCompositePageVisibilityPredicate extends CompositePageVisibilityPredi
       s"completionURL=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
       s"failureURL=${URLEncoder.encode(ApplicationConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
       s"&confidenceLevel=200")
-
-  private val twoFactorURI: URI =
-    new URI(s"${ApplicationConfig.twoFactorUrl}?" +
-      s"continue=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
-      s"failure=${URLEncoder.encode(ApplicationConfig.notAuthorisedRedirectUrl, "UTF-8")}")
 }

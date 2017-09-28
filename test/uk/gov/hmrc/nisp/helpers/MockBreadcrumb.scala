@@ -24,7 +24,6 @@ object MockBreadcrumb extends NispBreadcrumb {
     override val ggSignInUrl: String = ""
     override val verifySignIn: String = ""
     override val verifySignInContinue: Boolean = false
-    override val twoFactorUrl: String = ""
     override val assetsPrefix: String = ""
     override val reportAProblemNonJSUrl: String = ""
     override val ssoUrl: Option[String] = None
