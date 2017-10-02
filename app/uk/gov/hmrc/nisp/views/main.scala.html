@@ -188,7 +188,8 @@ if(articleEnabled) {
         "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
         "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
         "isSa" -> (for(nu <- user; sa <- nu.authContext.principal.accounts.sa) yield sa.utr).isDefined,
-        "signOutUrl" -> Some(routes.StatePensionController.signOut).filter(_ => articleEnabled),
+        "signOutUrl" -> Some(routes.StatePensionController.signOut).filter(_ => articleEnabled && user.isDefined),
+        "hideAccountMenu" -> !user.isDefined,
 
         "googleAnalytics" -> googleAnalytics,
         "ssoUrl" -> applicationConfig.ssoUrl,
