@@ -28,6 +28,7 @@
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import uk.gov.hmrc.play.language.LanguageUtils.Dates._
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.play.http.SessionKeys
 
 @(browserTitle: Option[String] = None,
     pageTitle: Option[String] = None,
@@ -177,35 +178,39 @@ if(articleEnabled) {
 
 
 @{
-templateRenderer.renderDefaultTemplate(article, Map[String, Any](
-"pageTitle" -> pageTitle,
-"linkElems" -> linkElems,
-"scriptElems" -> scriptElement,
+    templateRenderer.renderDefaultTemplate(article, Map[String, Any](
+        "pageTitle" -> pageTitle,
+        "linkElems" -> linkElems,
+        "scriptElems" -> scriptElement,
 
-"mainContentHeader" -> mainContentHeader,
+        "mainContentHeader" -> mainContentHeader,
 
-"googleAnalytics" -> googleAnalytics,
-"ssoUrl" -> applicationConfig.ssoUrl,
+        "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
+        "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
+        "isSa" -> (for(nu <- user; sa <- nu.authContext.principal.accounts.sa) yield sa.utr).isDefined,
+        "signOutUrl" -> Some(routes.StatePensionController.signOut).filter(_ => articleEnabled),
 
-"betaBanner" -> betaHeaderEnable,
-"feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier,
-"includeHMRCBranding" -> true,
+        "googleAnalytics" -> googleAnalytics,
+        "ssoUrl" -> applicationConfig.ssoUrl,
 
-"showLastLogInStatus" ->  showLastLogInStatus,
-"userDisplayName" ->      userDisplayName,
-"previouslyLoggedInAt" -> previouslyLoggedInAt,
+        "betaBanner" -> betaHeaderEnable,
+        "feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier,
+        "includeHMRCBranding" -> true,
 
-"getHelpForm" -> getHelpForm,
-"actingAttorneyBanner" -> actingAttorneyBanner,
+        "showLastLogInStatus" ->  showLastLogInStatus,
+        "userDisplayName" ->      userDisplayName,
+        "previouslyLoggedInAt" -> previouslyLoggedInAt,
 
-"navTitle" -> navTitle,
-"navLinks" -> links,
-"hasNavLinks" -> showTitleHeaderNav,
-"sidebar" -> sidebar,
-"termsAndConditionFooterLink" -> termsAndConditionFooterLink,
+        "getHelpForm" -> getHelpForm,
+        "actingAttorneyBanner" -> actingAttorneyBanner,
 
-"optimizelyProjectId" -> "8451981545",
-"isWelsh" -> isWelsh
-)
-)
+        "navTitle" -> navTitle,
+        "navLinks" -> links,
+        "hasNavLinks" -> showTitleHeaderNav,
+        "sidebar" -> sidebar,
+        "termsAndConditionFooterLink" -> termsAndConditionFooterLink,
+
+        "optimizelyProjectId" -> "8451981545",
+        "isWelsh" -> isWelsh
+    ))
 }
