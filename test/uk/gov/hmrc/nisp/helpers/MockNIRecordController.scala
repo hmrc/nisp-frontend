@@ -61,7 +61,6 @@ trait MockNIRecordController extends NIRecordController {
     override val identityVerification: Boolean = true
     override val ivUpliftUrl: String = "ivuplift"
     override val ggSignInUrl: String = "ggsignin"
-    override val twoFactorUrl: String = "twofactor"
     override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = ""

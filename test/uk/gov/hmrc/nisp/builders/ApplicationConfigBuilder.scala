@@ -48,7 +48,6 @@ object ApplicationConfigBuilder {
     override val verifySignIn: String = verifySignIn
     override val verifySignInContinue: Boolean = verifySignInContinue
     override val ivUpliftUrl: String = ivUpliftUrl
-    override val twoFactorUrl: String = twoFactorUrl
     override val ggSignInUrl: String = ggSignInUrl
     override val pertaxFrontendUrl: String = pertaxFrontendUrl
     override val breadcrumbPartialUrl: String = breadcrumbPartialUrl

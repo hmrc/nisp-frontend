@@ -39,7 +39,6 @@ trait ApplicationConfig {
   val verifySignIn: String
   val verifySignInContinue: Boolean
   val ivUpliftUrl: String
-  val twoFactorUrl: String
   val ggSignInUrl: String
   val pertaxFrontendUrl: String
   val breadcrumbPartialUrl: String
@@ -78,7 +77,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
-  override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
 
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")

@@ -116,7 +116,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val identityVerification: Boolean = false
             override val ivUpliftUrl: String = "ivuplift"
             override val ggSignInUrl: String = "ggsignin"
-            override val twoFactorUrl: String = "twofactor"
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
@@ -223,17 +222,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMQP))
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
-
-      "redirect to 2FA when authentication is not strong" in {
-        val result = MockStatePensionController.show()(fakeRequest.withSession(
-          SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> mockUserIdWeak,
-          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
-        ))
-        redirectLocation(result) shouldBe Some(twoFactorUrl)
-      }
-
     }
 
     "GET /signout" should {
@@ -259,7 +247,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val identityVerification: Boolean = false
             override val ivUpliftUrl: String = "ivuplift"
             override val ggSignInUrl: String = "ggsignin"
-            override val twoFactorUrl: String = "twofactor"
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
@@ -297,7 +284,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val identityVerification: Boolean = false
             override val ivUpliftUrl: String = "ivuplift"
             override val ggSignInUrl: String = "ggsignin"
-            override val twoFactorUrl: String = "twofactor"
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
@@ -398,7 +384,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val identityVerification: Boolean = false
             override val ivUpliftUrl: String = "ivuplift"
             override val ggSignInUrl: String = "ggsignin"
-            override val twoFactorUrl: String = "twofactor"
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
