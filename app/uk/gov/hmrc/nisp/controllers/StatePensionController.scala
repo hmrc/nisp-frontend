@@ -145,6 +145,14 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
 
+              }  else if (statePension.abroadAutoCredits) {
+                customAuditConnector.sendEvent(AccountExclusionEvent(
+                  user.nino.nino,
+                  user.name,
+                  Exclusion.Abroad
+                ))
+                Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
+
               } else {
                 val (currentChart, forecastChart, personalMaximumChart) =
                   calculateChartWidths(

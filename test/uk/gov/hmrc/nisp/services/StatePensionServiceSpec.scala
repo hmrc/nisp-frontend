@@ -94,7 +94,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
         ))
       }
     }
@@ -110,7 +110,23 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true, false
+        ))
+      }
+    }
+
+    "return the connector response for a Abroad user" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAbroad)) { statePension =>
+        statePension shouldBe Right(StatePension(
+          new LocalDate(2015, 4, 5),
+          StatePensionAmounts(
+            false,
+            StatePensionAmountRegular(133.41, 580.1, 6961.14),
+            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+            StatePensionAmountRegular(0, 0, 0)
+          ),
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, true
         ))
       }
     }
