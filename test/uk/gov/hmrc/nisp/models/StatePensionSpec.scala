@@ -29,7 +29,8 @@ class StatePensionSpec extends UnitSpec {
                          forecastAmount: BigDecimal = 0,
                          maximumAmount: BigDecimal = 0,
                          fullStatePensionAmount: BigDecimal = 155.65,
-                         qualifyingYears: Int = 30
+                         qualifyingYears: Int = 30,
+                         abroadAutoCredits: Boolean = false
                         ) = {
     StatePension(
       new LocalDate(earningsIncludedUpTo + 1, 4, 5),
@@ -46,7 +47,8 @@ class StatePensionSpec extends UnitSpec {
       qualifyingYears,
       false,
       fullStatePensionAmount,
-      false
+      false,
+      abroadAutoCredits
     )
   }
 
@@ -134,5 +136,15 @@ class StatePensionSpec extends UnitSpec {
     "be CantGetPension when maximum is 0" in {
       createStatePension(maximumAmount = 0).forecastScenario shouldBe Scenario.CantGetPension
     }
+  }
+
+  "abroadAutoCredits" should {
+    "return true when the user comes under Abroad" in {
+      createStatePension(abroadAutoCredits=true).abroadAutoCredits shouldBe true
+    }
+    "return true when the user does not come under Abroad" in {
+      createStatePension(abroadAutoCredits=false).abroadAutoCredits shouldBe false
+    }
+
   }
 }

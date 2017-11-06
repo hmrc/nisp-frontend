@@ -45,6 +45,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountRegular(0, 0, 0)
           ),
           64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65,
+          false,
           false
         ))
       }

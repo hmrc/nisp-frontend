@@ -17,20 +17,18 @@
 package uk.gov.hmrc.nisp.models
 
 import org.joda.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.json.{JsPath, Json, Reads}
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
 import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.time.CurrentTaxYear
-
+import play.api.libs.functional.syntax._
 
 sealed trait StatePensionAmount {
   val weeklyAmount: BigDecimal
   val monthlyAmount: BigDecimal
   val annualAmount: BigDecimal
 }
-
 
 case class StatePensionAmountRegular(weeklyAmount: BigDecimal,
                                      monthlyAmount: BigDecimal,
@@ -70,7 +68,6 @@ object StatePensionAmounts {
   implicit val formats = Json.format[StatePensionAmounts]
 }
 
-
 case class StatePension(earningsIncludedUpTo: LocalDate,
                         amounts: StatePensionAmounts,
                         pensionAge: Int,
@@ -79,7 +76,8 @@ case class StatePension(earningsIncludedUpTo: LocalDate,
                         numberOfQualifyingYears: Int,
                         pensionSharingOrder: Boolean,
                         currentFullWeeklyPensionAmount: BigDecimal,
-                        reducedRateElection: Boolean) {
+                        reducedRateElection: Boolean,
+                        abroadAutoCredits: Boolean) {
 
   lazy val contractedOut: Boolean = amounts.cope.weeklyAmount > 0
 
@@ -124,5 +122,21 @@ case class StatePension(earningsIncludedUpTo: LocalDate,
 }
 
 object StatePension {
-  implicit val formats = Json.format[StatePension]
+  val readNullableBoolean: JsPath => Reads[Boolean] =
+    jsPath => jsPath.readNullable[Boolean].map(_.getOrElse(false))
+
+  implicit val reads: Reads[StatePension] = (
+    (JsPath \ "earningsIncludedUpTo").read[LocalDate] and
+    (JsPath \ "amounts").read[StatePensionAmounts] and
+    (JsPath \ "pensionAge").read[Int] and
+    (JsPath \ "pensionDate").read[LocalDate] and
+    (JsPath \ "finalRelevantYear").read[String] and
+    (JsPath \ "numberOfQualifyingYears").read[Int] and
+    (JsPath \ "pensionSharingOrder").read[Boolean] and
+    (JsPath \ "currentFullWeeklyPensionAmount").read[BigDecimal] and
+    readNullableBoolean(JsPath \ "reducedRateElection") and
+    readNullableBoolean(JsPath \ "abroadAutoCredits")
+  ) (StatePension.apply _)
+
+  implicit val writes = Json.writes[StatePension]
 }
