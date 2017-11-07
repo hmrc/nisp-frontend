@@ -145,7 +145,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
 
-              }  else if (statePension.abroadAutoCredits) {
+              }  else if (statePension.abroadAutoCredit) {
                 customAuditConnector.sendEvent(AccountExclusionEvent(
                   user.nino.nino,
                   user.name,
