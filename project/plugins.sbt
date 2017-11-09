@@ -4,11 +4,11 @@ resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/
 
 resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksamuel/sbt-plugins/"))(Resolver.ivyStylePatterns)
 
-addSbtPlugin("uk.gov.hmrc" % "sbt-auto-build" % "1.4.0")
+addSbtPlugin("uk.gov.hmrc" % "sbt-auto-build" % "1.7.0")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-git-versioning" % "0.9.0")
 
-addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "0.13.0")
+addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "1.0.0")
 
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.12")
 
@@ -19,3 +19,5 @@ addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.6.0")
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.8")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.1")
+
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.5.2")

@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.events
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 object AccountAccessEvent {
   def apply(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,

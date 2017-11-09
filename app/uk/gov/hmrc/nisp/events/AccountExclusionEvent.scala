@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.events
 
 import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 object AccountExclusionEvent {
   def apply(nino: String, name: Option[String], spExclusion: Exclusion)(implicit hc: HeaderCarrier): AccountExclusionEvent =

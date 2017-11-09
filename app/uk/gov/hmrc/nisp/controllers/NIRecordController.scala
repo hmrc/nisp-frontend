@@ -33,8 +33,8 @@ import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.time.TaxYear
+import uk.gov.hmrc.http.HeaderCarrier
 
 object NIRecordController extends NIRecordController with AuthenticationConnectors with PartialRetriever {
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService

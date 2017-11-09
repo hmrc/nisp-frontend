@@ -30,11 +30,11 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, SessionKeys}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
 import scala.concurrent.Future
+import uk.gov.hmrc.http.SessionKeys
 
 class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequest = FakeRequest()

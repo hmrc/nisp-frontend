@@ -18,8 +18,8 @@ package uk.gov.hmrc.nisp.helpers
 
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import uk.gov.hmrc.play.http.HttpGet
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.http.HttpGet
 
 object MockFormPartialRetriever extends FormPartialRetriever {
   override def crypto: (String) => String = ???

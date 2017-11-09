@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.helpers
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet }
 
 object MockCitizenDetailsConnector extends CitizenDetailsConnector with MockitoSugar{
   override val serviceUrl: String = ""
