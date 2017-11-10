@@ -29,7 +29,6 @@ import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
-//import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -48,7 +47,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
     override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
-    override def httpPost: WSHttp = mockHttp
+    override def httpPost: HttpPost = mockHttp
 
     override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
 

@@ -32,7 +32,6 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
-import uk.gov.hmrc.nisp.config.wiring.WSHttp
 
 class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 

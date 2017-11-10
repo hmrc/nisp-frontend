@@ -33,7 +33,6 @@ import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.Future
@@ -44,7 +43,7 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
 
   override implicit val formPartialRetriever: FormPartialRetriever = NispFormPartialRetriever
 
-  override val httpPost: WSHttp = WSHttp
+  override val httpPost = WSHttp
 
   override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
 
@@ -57,7 +56,7 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
 trait FeedbackController extends NispFrontendController with Actions with AuthorisedForNisp {
   implicit val formPartialRetriever: FormPartialRetriever
 
-  def httpPost: WSHttp
+  def httpPost: HttpPost
 
   def contactFormReferer(implicit request: Request[AnyContent]): String
 
