@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.events
 
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 object NIRecordEvent {
   def apply(nino: String, yearsToContribute: Int, qualifyingYears: Int, nonQualifyingYears: Int, fillableGaps: Int, nonFillableGaps: Int, pre75Years: Int)(implicit hc: HeaderCarrier): NIRecordEvent =

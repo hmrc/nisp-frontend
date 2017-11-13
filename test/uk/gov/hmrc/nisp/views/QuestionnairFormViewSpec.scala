@@ -130,93 +130,122 @@ class QuesionnairFormViewSpec extends PlaySpec  with MockitoSugar with HtmlSpec 
     }
 
     "render page with text  'How easy was it to use Check your State Pension - very easy' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>label:nth-child(2)", "nisp.questionnaire.easytouse.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>label:nth-child(2)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>div:nth-child(2)>label:nth-child(2)",
+        "nisp.questionnaire.easytouse.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>div:nth-child(3)")
     }
+
     "render page with text  'How easy was it to use Check your State Pension - easy' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>label:nth-child(3)", "nisp.questionnaire.easytouse.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>label:nth-child(3)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>div:nth-child(3)>label:nth-child(2)",
+        "nisp.questionnaire.easytouse.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>div:nth-child(4)")
     }
     "render page with text  'How easy was it to use Check your State Pension - diff' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>label:nth-child(4)", "nisp.questionnaire.easytouse.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>label:nth-child(4)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>div:nth-child(4)>label:nth-child(2)",
+        "nisp.questionnaire.easytouse.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>div:nth-child(5)")
     }
     "render page with text  'How easy was it to use Check your State Pension - very diff' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>label:nth-child(5)", "nisp.questionnaire.easytouse.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>label:nth-child(5)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(3)>div:nth-child(5)>label:nth-child(2)",
+        "nisp.questionnaire.easytouse.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(4)")
     }
 
     "render page with text  'When you used this service, did you: - use it by yourself' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.useitbyyourself.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(2)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>div:nth-child(2)>label:nth-child(2)",
+        "nisp.questionnaire.useitbyyourself.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>div:nth-child(3)")
     }
     "render page with text  'When you used this service, did you: - use it with someone' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(3)", "nisp.questionnaire.useitbyyourself.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(3)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>div:nth-child(3)>label:nth-child(2)",
+        "nisp.questionnaire.useitbyyourself.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>div:nth-child(4)")
     }
     "render page with text  'When you used this service, did you: - have someone one to use it for you' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(4)", "nisp.questionnaire.useitbyyourself.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>label:nth-child(4)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(4)>div:nth-child(4)>label:nth-child(2)",
+        "nisp.questionnaire.useitbyyourself.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(5)")
     }
 
     "render page with text  'How likely would you be to use this service again? - very likely' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>label:nth-child(2)", "nisp.questionnaire.likely.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>label:nth-child(2)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>div:nth-child(2)>label:nth-child(2)",
+        "nisp.questionnaire.likely.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>div:nth-child(3)")
     }
     "render page with text  'How likely would you be to use this service again? - likely' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>label:nth-child(3)", "nisp.questionnaire.likely.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>label:nth-child(3)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>div:nth-child(3)>label:nth-child(2)",
+        "nisp.questionnaire.likely.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>div:nth-child(4)")
     }
     "render page with text  'How likely would you be to use this service again? - unlikely' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>label:nth-child(4)", "nisp.questionnaire.likely.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>label:nth-child(4)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>div:nth-child(4)>label:nth-child(2)",
+        "nisp.questionnaire.likely.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>div:nth-child(5)")
     }
     "render page with text  'How likely would you be to use this service again? - very unlikely' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>label:nth-child(5)", "nisp.questionnaire.likely.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>label:nth-child(5)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(5)>div:nth-child(5)>label:nth-child(2)",
+        "nisp.questionnaire.likely.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)")
     }
 
     "render page with text  'Overall, how did you feel about the service you received today? - very satisfied' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(2)", "nisp.questionnaire.satisfied.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(2)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(2)>label:nth-child(2)",
+        "nisp.questionnaire.satisfied.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(3)")
     }
     "render page with text  'Overall, how did you feel about the service you received today? - satisfied' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(3)", "nisp.questionnaire.satisfied.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(3)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(3)>label:nth-child(2)",
+        "nisp.questionnaire.satisfied.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(4)")
     }
     "render page with text  'Overall, how did you feel about the service you received today? - neither satisfied' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(4)", "nisp.questionnaire.satisfied.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(4)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(4)>label:nth-child(2)",
+        "nisp.questionnaire.satisfied.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(5)")
     }
     "render page with text  'Overall, how did you feel about the service you received today? - unsatisfied' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(5)", "nisp.questionnaire.satisfied.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(5)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(5)>label:nth-child(2)",
+        "nisp.questionnaire.satisfied.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(6)")
     }
     "render page with text  'Overall, how did you feel about the service you received today? - very unsatisfied' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(6)", "nisp.questionnaire.satisfied.4", "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>label:nth-child(6)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(6)>div:nth-child(6)>label:nth-child(2)",
+        "nisp.questionnaire.satisfied.4", "article.content__body>form:nth-child(4)>fieldset:nth-child(7)")
     }
 
     "render page with text  'After using Check your State Pension, do you feel you have: - better understanding' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>label:nth-child(2)", "nisp.questionnaire.understanding.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>label:nth-child(2)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>div:nth-child(2)>label:nth-child(2)",
+        "nisp.questionnaire.understanding.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>div:nth-child(3)")
     }
     "render page with text  'After using Check your State Pension, do you feel you have: - less understanding' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>label:nth-child(3)", "nisp.questionnaire.understanding.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>label:nth-child(3)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>div:nth-child(3)>label:nth-child(2)",
+        "nisp.questionnaire.understanding.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>div:nth-child(4)")
     }
     "render page with text  'After using Check your State Pension, do you feel you have: - no understanding' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>label:nth-child(4)", "nisp.questionnaire.understanding.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>label:nth-child(4)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(7)>div:nth-child(4)>label:nth-child(2)",
+        "nisp.questionnaire.understanding.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)")
     }
 
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - speak to financial advisor' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(2)", "nisp.questionnaire.whatwillyoudonext.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(2)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(2)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.0", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(3)")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to DWP/HMRC' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(3)", "nisp.questionnaire.whatwillyoudonext.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(3)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(3)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.1", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(4)")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to your employer' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(4)", "nisp.questionnaire.whatwillyoudonext.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(4)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(4)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.2", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(5)")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to friends and family' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(5)", "nisp.questionnaire.whatwillyoudonext.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(5)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(5)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.3", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(6)")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Look into my other pensions/savings/other assets' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(6)", "nisp.questionnaire.whatwillyoudonext.4", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(6)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(6)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.4", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(7)")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Get more pensions information online' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(7)", "nisp.questionnaire.whatwillyoudonext.5", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(7)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(7)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.5", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(8)")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Pay gaps in my National Insurance record' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(8)", "nisp.questionnaire.whatwillyoudonext.6", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(8)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(8)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.6", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(9)")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Nothing' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(9)", "nisp.questionnaire.whatwillyoudonext.7", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(9)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(9)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.7", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(10)")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Other' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(10)", "nisp.questionnaire.whatwillyoudonext.8", "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>label:nth-child(10)>input")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(8)>div:nth-child(10)>label:nth-child(2)",
+        "nisp.questionnaire.whatwillyoudonext.8", "article.content__body>form:nth-child(4)>label:nth-child(9)")
     }
     "render page with text  'How could we improve the service? limit characters' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(10)>span", "nisp.textentry.charlimit")

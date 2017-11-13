@@ -24,9 +24,9 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse, NotFoundException}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse, NotFoundException, Upstream4xxResponse }
 
 sealed trait IdentityVerificationResponse
 case object IdentityVerificationForbiddenResponse extends IdentityVerificationResponse

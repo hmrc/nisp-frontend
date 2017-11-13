@@ -24,6 +24,7 @@ import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
 
 class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
 

@@ -27,9 +27,9 @@ import uk.gov.hmrc.nisp.models.{NIResponse, SPResponseModel, SchemeMembership}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet }
 
 object NispConnector extends NispConnector with ServicesConfig {
   override val serviceUrl = baseUrl("nisp")

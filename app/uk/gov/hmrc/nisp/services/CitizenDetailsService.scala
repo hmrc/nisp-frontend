@@ -21,10 +21,10 @@ import play.api.http.Status
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsResponse}
-import uk.gov.hmrc.play.http.{BadRequestException, HeaderCarrier, NotFoundException, Upstream4xxResponse}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ BadRequestException, HeaderCarrier, NotFoundException, Upstream4xxResponse }
 
 object CitizenDetailsService extends CitizenDetailsService {
   override val citizenDetailsConnector = CitizenDetailsConnector

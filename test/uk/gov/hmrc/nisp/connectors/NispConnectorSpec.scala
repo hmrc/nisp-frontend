@@ -25,8 +25,8 @@ import uk.gov.hmrc.nisp.connectors.NispConnector.JsonValidationException
 import uk.gov.hmrc.nisp.helpers.{MockNispConnector, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Scenario
-import uk.gov.hmrc.play.http.{BadRequestException, HeaderCarrier, UserId}
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.{ BadRequestException, HeaderCarrier, UserId }
 
 class NispConnectorSpec extends UnitSpec with MockitoSugar with  BeforeAndAfter with OneAppPerSuite with ScalaFutures {
   val nino = TestAccountBuilder.regularNino

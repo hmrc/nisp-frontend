@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.HttpGet
+import uk.gov.hmrc.http.HttpGet
 
 
 object MockNationalInsuranceConnector extends NationalInsuranceConnector {

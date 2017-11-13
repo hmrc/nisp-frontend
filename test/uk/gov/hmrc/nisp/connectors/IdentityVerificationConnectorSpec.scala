@@ -19,8 +19,8 @@ package uk.gov.hmrc.nisp.connectors
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.nisp.helpers.MockIdentityVerificationConnector
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.HeaderCarrier
 
 class IdentityVerificationConnectorSpec extends UnitSpec with OneAppPerSuite with ScalaFutures {
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()

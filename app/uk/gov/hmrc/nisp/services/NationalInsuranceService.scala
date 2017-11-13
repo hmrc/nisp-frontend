@@ -23,10 +23,10 @@ import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 import uk.gov.hmrc.nisp.models.{NIRecordTaxYear, NIResponse, NationalInsuranceRecord, NationalInsuranceTaxYear}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
 
 trait NationalInsuranceService {
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]]

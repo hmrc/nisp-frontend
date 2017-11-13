@@ -21,10 +21,10 @@ import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.nisp.helpers.MockNationalInsuranceConnector
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
-import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 import uk.gov.hmrc.nisp.models
+import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
 
 
 class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {

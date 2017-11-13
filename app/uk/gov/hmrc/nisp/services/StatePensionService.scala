@@ -23,11 +23,11 @@ import uk.gov.hmrc.nisp.connectors.{NispConnector, StatePensionConnector}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion._
-import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 
 import scala.concurrent.Future
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.time.CurrentTaxYear
+import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
 
 
 trait StatePensionService extends CurrentTaxYear {
