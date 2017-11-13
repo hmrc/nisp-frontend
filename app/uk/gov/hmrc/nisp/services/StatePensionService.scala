@@ -97,7 +97,8 @@ trait NispConnectionSP extends StatePensionService {
         pensionSharingOrder = spSummary.hasPsod,
         currentFullWeeklyPensionAmount = spSummary.fullNewStatePensionAmount,
         false,
-        false
+        false,
+        statePensionAgeUnderConsideration = false
       ))
 
       case SPResponseModel(Some(spSummary: SPSummaryModel), Some(spExclusions: ExclusionsModel), _) =>

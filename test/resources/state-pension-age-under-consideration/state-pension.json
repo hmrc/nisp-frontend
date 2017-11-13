@@ -34,10 +34,10 @@
   "currentFullWeeklyPensionAmount": 155.65,
   "reducedRateElection": false,
   "abroadAutoCredit": false,
-  "statePensionAgeUnderConsideration": false,
+  "statePensionAgeUnderConsideration": true,
   "_links" : {
     "self": {
-      "href": "/state-pension/ni/QQ123456A"
+      "href": "/state-pension/ni/SS111111A"
     }
   }
 }

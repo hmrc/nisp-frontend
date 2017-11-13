@@ -97,6 +97,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
               false,
+              false,
               false
             )
             )))
@@ -278,6 +279,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
               false,
+              false,
               false
             )
             )))
@@ -452,6 +454,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
               false,
+              false,
               false
             )
             )))
@@ -611,6 +614,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 151.65,
               false,
+              false,
               false
             )
             )))
@@ -751,6 +755,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
               11,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
+              false,
               false,
               false
             )
@@ -894,6 +899,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             11,
             pensionSharingOrder = false,
             currentFullWeeklyPensionAmount = 149.65,
+            false,
             false,
             false
           )

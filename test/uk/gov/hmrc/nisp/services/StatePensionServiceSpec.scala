@@ -94,7 +94,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false, false
         ))
       }
     }
@@ -110,7 +110,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true, false
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true, false, false
         ))
       }
     }
@@ -126,7 +126,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, true
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, true, false
         ))
       }
     }
@@ -140,6 +140,39 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
         ))
       }
     }
+
+    "return the connector response for a user with date of birth within the correct range for State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.statePensionAgeUnderConsiderationNino)) { statePension =>
+        statePension shouldBe Right(StatePension(
+          new LocalDate(2015, 4, 5),
+          StatePensionAmounts(
+            false,
+            StatePensionAmountRegular(133.41, 580.1, 6961.14),
+            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+            StatePensionAmountRegular(0, 0, 0)
+          ),
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false, true
+        ))
+      }
+    }
+
+    "return the connector response for a user with no flag for State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.statePensionAgeUnderConsiderationNoFlagNino)) { statePension =>
+        statePension shouldBe Right(StatePension(
+          new LocalDate(2015, 4, 5),
+          StatePensionAmounts(
+            false,
+            StatePensionAmountRegular(133.41, 580.1, 6961.14),
+            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+            StatePensionAmountRegular(0, 0, 0)
+          ),
+          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false, false
+        ))
+      }
+    }
+
   }
 
 }
