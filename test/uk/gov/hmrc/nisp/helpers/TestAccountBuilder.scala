@@ -38,7 +38,9 @@ object TestAccountBuilder {
   val fullUserNino: Nino = randomNino
   val blankNino: Nino = randomNino
   val notFoundNino: Nino = randomNino
-  
+  val statePensionAgeUnderConsiderationNino: Nino = randomNino
+  val statePensionAgeUnderConsiderationNoFlagNino: Nino = randomNino
+
   val invalidKeyNino: Nino = randomNino
   val cachedNino: Nino = randomNino
   val noNameNino: Nino = randomNino
@@ -80,6 +82,8 @@ object TestAccountBuilder {
     fillGapsMultiple -> "fillgaps-multiple",
     noQualifyingYears -> "no-qualifying-years",
     backendNotFound -> "backend-not-found",
+    statePensionAgeUnderConsiderationNino -> "state-pension-age-under-consideration",
+    statePensionAgeUnderConsiderationNoFlagNino -> "state-pension-age-under-consideration-no-flag",
 
     excludedAll -> "excluded-all",
     excludedAllButDead -> "excluded-all-but-dead",

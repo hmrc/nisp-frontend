@@ -30,7 +30,8 @@ class StatePensionSpec extends UnitSpec {
                          maximumAmount: BigDecimal = 0,
                          fullStatePensionAmount: BigDecimal = 155.65,
                          qualifyingYears: Int = 30,
-                         abroadAutoCredit: Boolean = false
+                         abroadAutoCredit: Boolean = false,
+                         statePensionAgeUnderConsideration: Boolean = false
                         ) = {
     StatePension(
       new LocalDate(earningsIncludedUpTo + 1, 4, 5),
@@ -48,7 +49,8 @@ class StatePensionSpec extends UnitSpec {
       false,
       fullStatePensionAmount,
       false,
-      abroadAutoCredit
+      abroadAutoCredit,
+      statePensionAgeUnderConsideration
     )
   }
 
@@ -145,6 +147,15 @@ class StatePensionSpec extends UnitSpec {
     "return true when the user does not come under Abroad" in {
       createStatePension(abroadAutoCredit=false).abroadAutoCredit shouldBe false
     }
-
   }
+
+  "statePensionAgeUnderConsideration" should {
+    "return true when the user has a date of birth within the correct range" in {
+      createStatePension(statePensionAgeUnderConsideration=true).statePensionAgeUnderConsideration shouldBe true
+    }
+    "return true when the user does not have a date of birth within the correct range" in {
+      createStatePension(statePensionAgeUnderConsideration=false).statePensionAgeUnderConsideration shouldBe false
+    }
+  }
+
 }
