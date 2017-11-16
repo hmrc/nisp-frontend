@@ -91,6 +91,10 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
         @includes.abroad()
     }
 
+    @if(statePension.statePensionAgeUnderConsideration) {
+        @includes.statePensionAgeUnderConsideration(Dates.formatDate(statePension.pensionDate))
+    }
+
     @if(statePension.contractedOut) {
         @includes.contractedOut()
     }

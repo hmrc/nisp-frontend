@@ -80,6 +80,7 @@ nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="check
 nisp.legal.forecastChanges = Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the
 nisp.legal.termsAndCondition = terms and conditions
 nisp.legal.mqp.forecastChanges = These details may be different if there are any changes to your National Insurance information. There is more about this in the
+
 #*********************
 # Scenario messages
 #*********************
@@ -391,6 +392,15 @@ nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.u
 nisp.mqp.howManyToContribute = assumes that you&rsquo;ll contribute another {0}
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
+
+
+#**************************************************
+# State Pension Age under consideration messages
+#**************************************************
+
+nisp.spa.under.consideration.title = Proposed change to your State Pension age
+nisp.spa.under.consideration.detail = You&rsquo;ll reach State Pension age on <span class="nowrap">{0}</span>. Under government proposals this may increase by up to a year.
+
 
 #*****************
 # COPE messages
