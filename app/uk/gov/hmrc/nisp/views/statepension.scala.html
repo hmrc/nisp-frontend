@@ -156,11 +156,15 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         }
 
     }
-   <p>@Messages("nisp.legal.forecastChanges") <a href='@routes.TermsConditionsController.show(true).url'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
+    <p>@Messages("nisp.legal.forecastChanges") <a href='@routes.TermsConditionsController.show(true).url'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
 
 
     @if(isAbroad) {
         @includes.abroad()
+    }
+
+    @if(statePension.statePensionAgeUnderConsideration) {
+        @includes.statePensionAgeUnderConsideration(Dates.formatDate(statePension.pensionDate))
     }
 
     @if(statePension.contractedOut) {

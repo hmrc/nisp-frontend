@@ -154,5 +154,11 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     <p>@Html(Messages("nisp.mqp.moneyAdvice"))</p>
 
     @if(isPertaxUrl) {<div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>}
+
+
+    @if(statePension.statePensionAgeUnderConsideration) {
+        @includes.statePensionAgeUnderConsideration(Dates.formatDate(statePension.pensionDate))
+    }
+
 }
 }
