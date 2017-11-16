@@ -40,13 +40,13 @@ import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceServic
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.formatting.Time
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.SessionKeys
 
 class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 

@@ -29,10 +29,10 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.StatePensionAmountRegular
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.http.SessionKeys
 
 class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppPerSuite {
 

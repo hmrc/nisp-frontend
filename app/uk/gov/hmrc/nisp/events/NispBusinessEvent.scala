@@ -17,10 +17,10 @@
 package uk.gov.hmrc.nisp.events
 
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.http.logging.ForwardedFor
 
 import scala.util.Try
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.logging.ForwardedFor
 
 abstract class NispBusinessEvent(auditType: String, detail: Map[String, String])(implicit hc: HeaderCarrier)
   extends DataEvent(auditSource = "nisp-frontend", auditType = auditType, detail = detail, tags =

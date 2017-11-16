@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nisp.events
 
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.HeaderCarrier
 
 class QuestionnaireEventSpec extends UnitSpec {
 

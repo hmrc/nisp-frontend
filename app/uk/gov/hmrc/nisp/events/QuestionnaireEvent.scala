@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.events
 
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 class QuestionnaireEvent(easyToUse: Option[Int], useItByYourself: Option[Int], likelyToUse: Option[Int],
                          satisfied: Option[Int],

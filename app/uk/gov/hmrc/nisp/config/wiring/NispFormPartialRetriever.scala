@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nisp.config.wiring
 
-import uk.gov.hmrc.play.http.HttpGet
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.http.HttpGet
 
 object NispFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
   override def httpGet: HttpGet = WSHttp

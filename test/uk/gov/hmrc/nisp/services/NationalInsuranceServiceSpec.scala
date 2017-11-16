@@ -25,11 +25,11 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.connectors.{NationalInsuranceConnector, NispConnector}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 import scala.util.Random
+import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
 
 class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 

@@ -19,13 +19,13 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.play.audit.http.config.AuditingConfig
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.model.AuditEvent
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.model.DataEvent
+import uk.gov.hmrc.http.HeaderCarrier
 
 object MockCustomAuditConnector extends CustomAuditConnector {
   override val auditConnector: AuditConnector = new AuditConnector {
     override def auditingConfig: AuditingConfig = ???
   }
 
-  override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier): Unit = ()
+  override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier): Unit = ()
 }

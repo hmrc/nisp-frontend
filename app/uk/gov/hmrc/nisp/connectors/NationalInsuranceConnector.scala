@@ -23,9 +23,9 @@ import uk.gov.hmrc.nisp.connectors.StatePensionConnector.baseUrl
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet }
 
 trait NationalInsuranceConnector extends BackendConnector {
 

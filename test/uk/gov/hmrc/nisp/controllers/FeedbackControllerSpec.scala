@@ -29,12 +29,12 @@ import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
-import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HttpPost, HttpResponse}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{HttpPost, HttpResponse}
+import uk.gov.hmrc.nisp.config.wiring.WSHttp
 
 class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
   val fakeRequest = FakeRequest("GET", "/")
@@ -99,7 +99,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
   "POST /feedback" should {
     val fakePostRequest = FakeRequest("POST", "/check-your-state-pension/feedback").withFormUrlEncodedBody("test" -> "test")
     "return form with thank you for valid selections" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(
+      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
         Future.successful(HttpResponse(Status.OK, responseString = Some("1234"))))
 
       val result = testFeedbackController.submit(fakePostRequest)
@@ -107,14 +107,14 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
     }
 
     "return form with errors for invalid selections" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(
+      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
         Future.successful(HttpResponse(Status.BAD_REQUEST, responseString = Some("<p>:^(</p>"))))
       val result = testFeedbackController.submit(fakePostRequest)
       status(result) mustBe Status.BAD_REQUEST
     }
 
     "return error for other http code back from contact-frontend" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(
+      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
         Future.successful(HttpResponse(418)))
       // 418 - I'm a teapot
       val result = testFeedbackController.submit(fakePostRequest)
@@ -122,7 +122,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
     }
 
     "return internal server error when there is an empty form" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(
+      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
         Future.successful(HttpResponse(Status.OK, responseString = Some("1234"))))
 
       val result = testFeedbackController.submit(fakeRequest)

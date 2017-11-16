@@ -33,10 +33,11 @@ import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, _}
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpPost, HttpReads, HttpResponse }
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object FeedbackController extends FeedbackController with AuthenticationConnectors with PartialRetriever {
 
@@ -86,7 +87,7 @@ trait FeedbackController extends NispFrontendController with Actions with Author
   def submit: Action[AnyContent] = UnauthorisedAction.async {
     implicit request =>
       request.body.asFormUrlEncoded.map { formData =>
-        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier).map {
+        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier,ec=global).map {
           resp =>
             resp.status match {
               case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))

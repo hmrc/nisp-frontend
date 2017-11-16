@@ -25,9 +25,9 @@ import uk.gov.hmrc.nisp.models.{StatePension, StatePensionExclusion}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet }
 
 trait StatePensionConnector extends BackendConnector {
   implicit val reads = eitherReads[StatePensionExclusion, StatePension]

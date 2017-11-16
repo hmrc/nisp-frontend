@@ -18,10 +18,11 @@ package uk.gov.hmrc.nisp.config.wiring
 
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.HttpGet
+import uk.gov.hmrc.http.HttpGet
+import uk.gov.hmrc.play.http.ws._
 
 object NispAuthConnector extends AuthConnector with ServicesConfig {
   override val serviceUrl: String = baseUrl("auth")
 
-  override def http: HttpGet = WSHttp
+  override def http: HttpGet = new HttpGet with WSHttp
 }

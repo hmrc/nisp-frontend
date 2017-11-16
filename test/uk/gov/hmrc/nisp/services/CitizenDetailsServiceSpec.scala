@@ -24,10 +24,10 @@ import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.nisp.helpers.{MockCitizenDetailsService, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.play.http
-import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream5xxResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, Upstream5xxResponse }
 
 class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfter with ScalaFutures with OneAppPerSuite {
   val nino = TestAccountBuilder.regularNino

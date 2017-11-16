@@ -40,7 +40,6 @@ import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusionFi
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.language.LanguageUtils._
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
@@ -48,6 +47,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.SessionKeys
 
 class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
 

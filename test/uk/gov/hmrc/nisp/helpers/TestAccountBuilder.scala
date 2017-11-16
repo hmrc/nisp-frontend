@@ -19,12 +19,12 @@ package uk.gov.hmrc.nisp.helpers
 import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.{Generator, Nino}
-import uk.gov.hmrc.play.http.HttpResponse
 
 import scala.concurrent.Future
 import scala.io.Source
 import scala.util.Random
 import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.http.HttpResponse
 
 object TestAccountBuilder {
 

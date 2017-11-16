@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.events
 
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 object FeedbackPageEvent {
   def apply(referrer: String)(implicit hc: HeaderCarrier): FeedbackPageEvent = new FeedbackPageEvent(referrer)
