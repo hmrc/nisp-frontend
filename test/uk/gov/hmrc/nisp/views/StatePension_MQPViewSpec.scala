@@ -237,6 +237,87 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
         }
       }
 
+      "State Pension page with forecast only: With State Pension age under consideration message" should {
+
+        lazy val controller = createStatePensionController
+        when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(Right(StatePension(
+            new LocalDate(2016, 4, 5),
+            amounts = StatePensionAmounts(
+              protectedPayment = false,
+              StatePensionAmountRegular(151.71, 590.10, 7081.15),
+              StatePensionAmountForecast(4, 150.71, 590.10, 7081.15),
+              StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+              StatePensionAmountRegular(0, 0, 0)
+            ),
+            pensionAge = 67,
+            new LocalDate(2020, 6, 7),
+            "2019-20",
+            20,
+            pensionSharingOrder = false,
+            currentFullWeeklyPensionAmount = 155.65,
+            reducedRateElection = false,
+            abroadAutoCredit = false,
+            statePensionAgeUnderConsideration = true
+          )
+          )))
+
+        when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+            qualifyingYears = 11,
+            qualifyingYearsPriorTo1975 = 0,
+            numberOfGaps = 1,
+            numberOfGapsPayable = 1,
+            Some(new LocalDate(1954, 3, 6)),
+            false,
+            new LocalDate(2017, 4, 5),
+            List(
+
+              NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+              NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+              NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+            )
+          )
+          )))
+
+        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+
+        //val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
+
+        lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+        //overseas message
+        "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+          "State Pension from the country you are living or working in.'" in {
+          assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(9)>p", "nisp.main.overseas")
+        }
+
+        //state pension age under consideration message
+        "render page with heading  'Proposed change to your State Pension age'" in {
+          assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(10)", "nisp.spa.under.consideration.title")
+        }
+
+        "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.spa.under.consideration.detail", "7 June 2020")
+        }
+
+        //deferral message
+        "render page with heading  'Putting of claiming'" in {
+          assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.main.puttingOff")
+        }
+
+        "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "7 June 2020")
+        }
+
+        "render page with link 'More on putting off claiming (opens in new tab)'" in {
+          assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(14)", "nisp.main.puttingOff.linkTitle")
+        }
+        "render page with href link 'More on putting off claiming (opens in new tab)'" in {
+          assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(14)", "https://www.gov.uk/deferring-state-pension")
+        }
+      }
+
       "The scenario is continue working" when {
         "State Pension page with MQP : Continue Working || Fill Gaps || Full Rate" should {
           lazy val controller = createStatePensionController
@@ -386,6 +467,84 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
         }
 
+        "State Pension page with MQP : Continue Working || Fill Gaps || Full Rate: With State Pension age under consideration message" should {
+          lazy val controller = createStatePensionController
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(StatePension(
+              new LocalDate(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                StatePensionAmountForecast(4, 137.86, 599.44, 7193.34),
+                StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              new LocalDate(2020, 6, 7),
+              "2019-20",
+              4,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65,
+              reducedRateElection = false,
+              abroadAutoCredit = false,
+              statePensionAgeUnderConsideration = true
+            )
+            )))
+
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              qualifyingYears = 4,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 2,
+              numberOfGapsPayable = 2,
+              Some(new LocalDate(1954, 3, 6)),
+              false,
+              new LocalDate(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              )
+            )
+            )))
+
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+
+          lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+          //overseas message
+          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+            "State Pension from the country you are living or working in.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(10)>p", "nisp.main.overseas")
+          }
+
+          //state pension age under consideration message
+          "render page with heading  'Proposed change to your State Pension age'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(11)", "nisp.spa.under.consideration.title")
+          }
+
+          "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.spa.under.consideration.detail", "7 June 2020")
+          }
+
+          //deferral message
+          "render page with heading  'Putting of claiming'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(13)", "nisp.main.puttingOff")
+          }
+
+          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "7 June 2020")
+          }
+
+          "render page with link 'More on putting off claiming (opens in new tab)'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(15)", "nisp.main.puttingOff.linkTitle")
+          }
+          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
+          }
+        }
+
         "State Pension page with MQP : Continue Working || no gaps || Full Rate" should {
 
           lazy val controller = createStatePensionController
@@ -518,6 +677,85 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(14)", "https://www.gov.uk/deferring-state-pension")
+          }
+        }
+
+        "State Pension page with MQP : Continue Working || no gaps || Full Rate: With State Pension age under consideration message" should {
+
+          lazy val controller = createStatePensionController
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(StatePension(
+              new LocalDate(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              new LocalDate(2020, 6, 7),
+              "2019-20",
+              4,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65,
+              reducedRateElection = false,
+              abroadAutoCredit = false,
+              statePensionAgeUnderConsideration = true
+            )
+            )))
+
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              qualifyingYears = 4,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 0,
+              numberOfGapsPayable = 0,
+              Some(new LocalDate(1954, 3, 6)),
+              false,
+              new LocalDate(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              )
+            )
+            )))
+
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+
+          lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+          //overseas message
+          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+            "State Pension from the country you are living or working in.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
+          }
+
+          //state pension age under consideration message
+          "render page with heading  'Proposed change to your State Pension age'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+          }
+
+          "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "7 June 2020")
+          }
+
+          //deferral message
+          "render page with heading  'Putting of claiming'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+          }
+
+          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
+          }
+
+          "render page with link 'More on putting off claiming (opens in new tab)'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+          }
+          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
           }
         }
 
@@ -657,6 +895,85 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
         }
 
+        "State Pension page with MQP : Continue Working || 0 Qualify Years || has fillable Gaps ||  Personal Max: With State Pension age under consideration message" should {
+
+          lazy val controller = createStatePensionController
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(StatePension(
+              new LocalDate(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              new LocalDate(2020, 6, 7),
+              "2019-20",
+              0,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65,
+              reducedRateElection = false,
+              abroadAutoCredit = false,
+              statePensionAgeUnderConsideration = true
+            )
+            )))
+
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              qualifyingYears = 0,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 1,
+              numberOfGapsPayable = 1,
+              Some(new LocalDate(1954, 3, 6)),
+              false,
+              new LocalDate(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              )
+            )
+            )))
+
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+
+          lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+          //overseas message
+          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+            "State Pension from the country you are living or working in.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
+          }
+
+          //state pension age under consideration message
+          "render page with heading  'Proposed change to your State Pension age'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+          }
+
+          "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "7 June 2020")
+          }
+
+          //deferral message
+          "render page with heading  'Putting of claiming'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+          }
+
+          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
+          }
+
+          "render page with link 'More on putting off claiming (opens in new tab)'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+          }
+          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+          }
+        }
+
         "State Pension page with MQP : Continue Working || 9 Qualify Years || cant fill gaps ||  Personal Max" should {
 
           lazy val controller = createStatePensionController
@@ -791,6 +1108,84 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(14)", "https://www.gov.uk/deferring-state-pension")
           }
         }
+
+        "State Pension page with MQP : Continue Working || 9 Qualify Years || cant fill gaps ||  Personal Max: With State Pension age under consideration message" should {
+
+          lazy val controller = createStatePensionController
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(StatePension(
+              new LocalDate(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              new LocalDate(2020, 6, 7),
+              "2019-20",
+              9,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65,
+              reducedRateElection = false,
+              abroadAutoCredit = false,
+              statePensionAgeUnderConsideration = true
+            )
+            )))
+
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              qualifyingYears = 9,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 0,
+              numberOfGapsPayable = 0,
+              Some(new LocalDate(1954, 3, 6)),
+              false,
+              new LocalDate(2017, 4, 5),
+              List(
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              )
+            )
+            )))
+
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+
+          lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+          //overseas message
+          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+            "State Pension from the country you are living or working in.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
+          }
+
+          //state pension age under consideration message
+          "render page with heading  'Proposed change to your State Pension age'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+          }
+
+          "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "7 June 2020")
+          }
+
+          //deferral message
+          "render page with heading  'Putting of claiming'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+          }
+
+          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
+          }
+
+          "render page with link 'More on putting off claiming (opens in new tab)'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+          }
+          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+          }
+        }
       }
 
       "The scenario is No years to contribute" when {
@@ -851,7 +1246,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             val sMessage = Messages("nisp.main.description.mqp")
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>div:nth-child(2)>p", sMessage)
           }
-          "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
+          "render page with text  'You’ll reach State Pension age on 4 May 2017. ' " in {
             val sMessage = Dates.formatDate(new LocalDate(2017, 5, 4)) + "."
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
@@ -912,6 +1307,71 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", "https://www.moneyadviceservice.org.uk/en")
           }
 
+        }
+
+        "State Pension page with MQP :  No Gaps || Cant get pension: With State Pension age under consideration message" should {
+
+          lazy val controller = createStatePensionController
+
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(StatePension(
+              new LocalDate(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(0, 0, 0),
+                StatePensionAmountForecast(0, 0, 0, 0),
+                StatePensionAmountMaximum(0, 0, 0, 0, 0),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              new LocalDate(2017, 5, 4),
+              "2016-17",
+              4,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65,
+              reducedRateElection = false,
+              abroadAutoCredit = false,
+              statePensionAgeUnderConsideration = true
+            )
+            )))
+
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              qualifyingYears = 4,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 0,
+              numberOfGapsPayable = 0,
+              Some(new LocalDate(1954, 3, 6)),
+              false,
+              new LocalDate(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              )
+            )
+            )))
+
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+
+          lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+          "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+          }
+          "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", "https://www.moneyadviceservice.org.uk/en")
+          }
+
+          //state pension age under consideration message
+          "render page with heading  'Proposed change to your State Pension age'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+          }
+
+          "render page with text  'Youll reach State Pension age on 4 May 2017. Under government proposals this may increase by up to a year.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "4 May 2017")
+          }
         }
 
         "State Pension page with MQP :  has fillable Gaps || Personal Max" should {
@@ -1000,7 +1460,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord/gaps")
           }
 
-          "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
+          "render page with text  'After State Pension age, 4 May 2018 you no longer pay National Insurance contributions.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(new LocalDate(2018, 5, 4)))
           }
 
@@ -1024,6 +1484,70 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", "https://www.moneyadviceservice.org.uk/en")
+          }
+        }
+
+        "State Pension page with MQP :  has fillable Gaps || Personal Max: With State Pension age under consideration message" should {
+
+          lazy val controller = createStatePensionController
+
+          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(StatePension(
+              new LocalDate(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(0, 0, 0),
+                StatePensionAmountForecast(0, 0, 0, 0),
+                StatePensionAmountMaximum(2, 2, 12, 0, 0),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              new LocalDate(2018, 5, 4),
+              "2017-18",
+              4,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65,
+              reducedRateElection = false,
+              abroadAutoCredit = false,
+              statePensionAgeUnderConsideration = true
+            )
+            )))
+
+          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              qualifyingYears = 4,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 2,
+              numberOfGapsPayable = 2,
+              Some(new LocalDate(1954, 3, 6)),
+              false,
+              new LocalDate(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              )
+            )
+            )))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+
+          lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+          "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+          }
+          "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", "https://www.moneyadviceservice.org.uk/en")
+          }
+
+          //state pension age under consideration message
+          "render page with heading  'Proposed change to your State Pension age'" in {
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+          }
+
+          "render page with text  'Youll reach State Pension age on 4 May 2018. Under government proposals this may increase by up to a year.'" in {
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "4 May 2018")
           }
         }
       }
