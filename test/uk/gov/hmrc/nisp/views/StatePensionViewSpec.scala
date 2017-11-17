@@ -970,7 +970,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(15)", "nisp.main.puttingOff.linkTitle")
           }
-          "render page with href link 'More on putting off claiming (opens in new tab)' A" in {
+          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
           }
 
@@ -1049,7 +1049,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(17)", "nisp.main.puttingOff.linkTitle")
           }
-          "render page with href link 'More on putting off claiming (opens in new tab)' B" in {
+          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
           }
 
