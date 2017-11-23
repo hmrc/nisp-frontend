@@ -18,19 +18,15 @@ package uk.gov.hmrc.nisp.views
 
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
-import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
+import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, TestAccountBuilder}
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class VoluntaryContributionsViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
@@ -41,8 +37,10 @@ class VoluntaryContributionsViewSpec extends PlaySpec with NispFrontendControlle
   val mockUserId = "/auth/oid/" + mockUsername
 
   lazy val fakeRequest = FakeRequest();
-  implicit override val lang = LanguageToggle.getLanguageCode
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+
+  val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"
+  val expectedCitizensAdviceLink = "https://www.citizensadvice.org.uk/"
 
   "Voluntary contributions view" should {
     lazy val sResult = html.nirecordVoluntaryContributions()
@@ -134,14 +132,14 @@ class VoluntaryContributionsViewSpec extends PlaySpec with NispFrontendControlle
     }
 
     "render page with href value of link 'Money advice service'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(2)>a", "https://www.moneyadviceservice.org.uk/en")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(2)>a", expectedMoneyServiceLink)
 
     }
     "render page with href value of link 'Pension wise'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)>a", "https://www.pensionwise.gov.uk/")
     }
     "render page with href value of link 'Citizen advice'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(1)>a", "https://www.citizensadvice.org.uk/")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(1)>a", expectedCitizensAdviceLink)
 
     }
 

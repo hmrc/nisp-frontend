@@ -398,6 +398,15 @@ nisp.mqp.howManyToContribute = yn cymryd eich bod yn cyfrannu {0} arall
 nisp.mqp.youCurrentlyHaveZero = Nid oes gennych unrhyw flynyddoedd ar eich cofnod ac rydych angen o leiaf {0} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydych angen o leiaf {1} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
 
+
+#**************************************************
+# State Pension Age under consideration messages
+#**************************************************
+
+nisp.spa.under.consideration.title = Newid arfaethedig i'ch oedran Pensiwn y Wladwriaeth
+nisp.spa.under.consideration.detail = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>. O dan gynigion gan y Llywodraeth, gall hwn godi gan hyd at flwyddyn.
+
+
 #*****************
 # COPE messages
 #*****************

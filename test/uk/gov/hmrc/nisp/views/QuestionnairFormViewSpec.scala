@@ -14,32 +14,13 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2017 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package uk.gov.hmrc.nisp.views
 
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers._
@@ -49,14 +30,11 @@ import uk.gov.hmrc.nisp.models.forms.QuestionnaireForm
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.nisp.controllers.NispFrontendController
-import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
 
-class QuesionnairFormViewSpec extends PlaySpec  with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class QuestionnairFormViewSpec extends HtmlSpec  with MockitoSugar with BeforeAndAfter  {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever

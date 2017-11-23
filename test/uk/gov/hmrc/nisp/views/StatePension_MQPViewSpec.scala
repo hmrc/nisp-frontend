@@ -24,14 +24,13 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
+
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
-import uk.gov.hmrc.nisp.common.FakePlayApplication
+
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.helpers._
@@ -48,7 +47,7 @@ import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import scala.concurrent.Future
 import uk.gov.hmrc.http.SessionKeys
 
-class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   lazy val fakeRequest = FakeRequest()
@@ -70,11 +69,12 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
-  implicit override val lang = LanguageToggle.getLanguageCode
-  implicit val lanCookie = LanguageToggle.getLanguageCookie
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
-  def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
+  val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"
+  val expectedPensionCreditOverviewLink = "https://www.gov.uk/pension-credit/overview"
+
+  def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
     SessionKeys.userId -> userId,
@@ -209,7 +209,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
         }
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", "7 June 2020")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -298,7 +298,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
         }
 
         "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.spa.under.consideration.detail", "7 June 2020")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
         }
 
         //deferral message
@@ -307,7 +307,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
         }
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "7 June 2020")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -439,7 +439,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -525,7 +525,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.spa.under.consideration.detail", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           //deferral message
@@ -534,7 +534,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -669,7 +669,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -739,7 +739,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           //deferral message
@@ -748,7 +748,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -884,7 +884,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -954,7 +954,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           //deferral message
@@ -963,7 +963,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1098,7 +1098,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1167,7 +1167,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           //deferral message
@@ -1176,7 +1176,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1298,13 +1298,13 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.mqp.pensionCredit")
           }
           "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", "https://www.gov.uk/pension-credit/overview")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", expectedPensionCreditOverviewLink)
           }
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", "https://www.moneyadviceservice.org.uk/en")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
           }
 
         }
@@ -1361,7 +1361,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", "https://www.moneyadviceservice.org.uk/en")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
           }
 
           //state pension age under consideration message
@@ -1370,7 +1370,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'Youll reach State Pension age on 4 May 2017. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "4 May 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2017, 5, 4)))
           }
         }
 
@@ -1477,13 +1477,13 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(10)", "nisp.mqp.pensionCredit")
           }
           "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", "https://www.gov.uk/pension-credit/overview")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(10)>a", expectedPensionCreditOverviewLink)
           }
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", "https://www.moneyadviceservice.org.uk/en")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
           }
         }
 
@@ -1538,7 +1538,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
-            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", "https://www.moneyadviceservice.org.uk/en")
+            assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
           }
 
           //state pension age under consideration message
@@ -1547,7 +1547,7 @@ class StatePension_MQPViewSpec extends PlaySpec with NispFrontendController with
           }
 
           "render page with text  'Youll reach State Pension age on 4 May 2018. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", "4 May 2018")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2018, 5, 4)))
           }
         }
       }

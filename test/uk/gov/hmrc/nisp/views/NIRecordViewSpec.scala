@@ -23,15 +23,11 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
-import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
@@ -49,7 +45,7 @@ import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import scala.concurrent.Future
 import uk.gov.hmrc.http.SessionKeys
 
-class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
@@ -59,7 +55,9 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
   val mockUserId = "/auth/oid/" + mockUsername
   val mockAbroadUserId = "/auth/oid/mockabroad"
 
-  def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
+  implicit lazy val fakeRequest = FakeRequest()
+
+  def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
     SessionKeys.userId -> userId,
@@ -73,20 +71,13 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       override val sessionCache: SessionCache = MockSessionCache
       override val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-
       override protected def authConnector: AuthConnector = MockAuthConnector
-
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-
       override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
       override val metricsService: MetricsService = MockMetricsService
-
-
     }
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
-
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     /*Check side border :summary */
@@ -195,8 +186,8 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
     "render page with href link  'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
     }
-
   }
+
   "Render Ni Record view Gaps Only" should {
 
     lazy val controller = new MockNIRecordController {
@@ -205,17 +196,12 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       override val sessionCache: SessionCache = MockSessionCache
       override val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-
       override protected def authConnector: AuthConnector = MockAuthConnector
-
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
-
-
     }
 
-    lazy val result = controller.showGaps(authenticatedFakeRequest(mockUserId))
-
+    lazy val result = controller.showGaps(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     /*Check side border :summary */
@@ -311,9 +297,9 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
     "render page with href link  'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
     }
-
-
   }
+
+
   "Render Ni Record view With HRP Message" should {
 
     lazy val result = html.nirecordGapsAndHowToCheckThem(true);
@@ -396,6 +382,8 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       assertLinkHasValue(htmlAccountDoc, "article.content__body>div:nth-child(18)>a", "/check-your-state-pension/account/nirecord/gaps")
     }
   }
+
+
   "Render Ni Record without With HRP Message" should {
 
 
@@ -477,6 +465,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
     }
   }
 
+
   "Render Ni Record without gap and has pre75years" should {
     lazy val controller = new MockNIRecordController {
       override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
@@ -484,12 +473,9 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       override val sessionCache: SessionCache = MockSessionCache
       override val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-
       override protected def authConnector: AuthConnector = MockAuthConnector
-
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
-
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
     }
@@ -507,7 +493,6 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
           NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
           NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
           NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true, underInvestigation = false)
-
         )
       )
       )))
@@ -520,9 +505,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
-
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     /*Check side border :summary */
@@ -561,8 +544,8 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
     "render page with href link  'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
     }
-
   }
+
 
   "Render Ni Record without gap and has gaps pre75years" should {
     lazy val controller = new MockNIRecordController {
@@ -571,12 +554,9 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       override val sessionCache: SessionCache = MockSessionCache
       override val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-
       override protected def authConnector: AuthConnector = MockAuthConnector
-
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
-
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
     }
@@ -606,8 +586,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
-
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     /*Check side border :summary */
@@ -657,6 +636,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
     }
   }
 
+
   "Render Ni Record without gap and has gaps pre75years with Years to contribute " should {
     lazy val controller = new MockNIRecordController {
       override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
@@ -664,12 +644,9 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       override val sessionCache: SessionCache = MockSessionCache
       override val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-
       override protected def authConnector: AuthConnector = MockAuthConnector
-
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
-
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
     }
@@ -684,7 +661,6 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
         false,
         new LocalDate(2017, 4, 5),
         List(
-
           NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
           NationalInsuranceTaxYearBuilder("2014-15", qualifying = true, underInvestigation = false),
           NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
@@ -703,8 +679,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId))
-
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     /*Check side border :summary */
@@ -782,8 +757,8 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
     "render page with href link 'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
     }
-
   }
+
 
   "Render Ni Record with Single weeks in self ,contribution and paid -and a abroad User" should {
     lazy val controller = new MockNIRecordController {
@@ -792,12 +767,9 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       override val sessionCache: SessionCache = MockSessionCache
       override val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-
       override protected def authConnector: AuthConnector = MockAuthConnector
-
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
-
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
     }
@@ -812,7 +784,6 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
         false,
         new LocalDate(2017, 4, 5),
         List(
-
           NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
           NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
           NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, underInvestigation = false) /*payable = true*/
@@ -831,8 +802,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
       )
       )))
 
-    lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId))
-
+    lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     "render page with heading your UK National Insurance Record " in {
@@ -893,6 +863,7 @@ class NIRecordViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Bef
     "render page with text 'These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(8)", "nisp.nirecord.gap.whenyouareclaiming.info.singular")
     }
-
   }
+
+
 }

@@ -22,28 +22,25 @@ import org.apache.commons.lang3.StringEscapeUtils
 import org.joda.time.LocalDate
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.builders.ApplicationConfigBuilder
-import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
+import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.time.DateTimeUtils.now
-import uk.gov.hmrc.nisp.controllers.NispFrontendController
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.time.DateTimeUtils.now
 
-class StatePension_CopeViewSpec extends PlaySpec with NispFrontendController with MockitoSugar with HtmlSpec with BeforeAndAfter with FakePlayApplication {
+class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
@@ -69,25 +66,24 @@ class StatePension_CopeViewSpec extends PlaySpec with NispFrontendController wit
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
   lazy val fakeRequest = FakeRequest()
-  implicit override val lang = LanguageToggle.getLanguageCode
-  implicit val lanCookie = LanguageToggle.getLanguageCookie
+
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
-  def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
+  def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
     SessionKeys.userId -> userId,
     SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
   )
 
-  "Render State Pension view with Contracted out User" should {
-    lazy val controller = new MockStatePensionController {
-      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-    }
+  lazy val controller = new MockStatePensionController {
+    override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+    override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  }
 
+  "Render State Pension view with Contracted out User" should {
     lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdContractedOut).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -165,7 +161,7 @@ class StatePension_CopeViewSpec extends PlaySpec with NispFrontendController wit
     }
 
     "render page with text  'You can put off claiming your State Pension from 18 July 2021. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "18 July 2021")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2021, 7, 18)))
     }
 
     "render page with link 'More on putting off claiming (opens in new tab)'" in {

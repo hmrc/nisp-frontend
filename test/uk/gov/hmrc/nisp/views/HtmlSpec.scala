@@ -19,10 +19,8 @@ package uk.gov.hmrc.nisp.views
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.controllers.auth.NispUser
@@ -30,11 +28,14 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
 import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 
-trait HtmlSpec extends PlaySpec {
+trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
   implicit val request = FakeRequest()
 
-  implicit val lang = LanguageToggle.getLanguageCode
+  implicit val lang = LanguageToggle.getLanguageCode()
+  implicit val lanCookie = LanguageToggle.getLanguageCookie()
+  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
+  implicit def messages = new Messages(lang, messagesApi)
 
   implicit val authContext = {
     val user = LoggedInUser("", None, None, None, CredentialStrength.None, ConfidenceLevel.L500, "test oid")

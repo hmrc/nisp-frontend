@@ -23,14 +23,10 @@ import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
-import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.helpers._
@@ -40,19 +36,20 @@ import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
-import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.SessionKeys
 
-class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with FakePlayApplication {
+class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
   private val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
-  def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
+  lazy val fakeRequest = FakeRequest()
+
+  def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
     SessionKeys.userId -> userId,
@@ -120,7 +117,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -230,7 +227,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -302,7 +299,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -318,7 +315,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.spa.under.consideration.detail", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           //deferral message
@@ -327,7 +324,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -382,7 +379,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -485,7 +482,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -557,7 +554,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -573,7 +570,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.spa.under.consideration.detail", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           //deferral message
@@ -582,7 +579,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.main.puttingOff.line1", "7 June 2020")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -637,7 +634,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -739,7 +736,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "7 June 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2017, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -794,7 +791,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -810,7 +807,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.spa.under.consideration.detail", "7 June 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2017, 6, 7)))
           }
 
           //deferral message
@@ -819,7 +816,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.main.puttingOff.line1", "7 June 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2017, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -877,7 +874,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
@@ -964,7 +961,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2022. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "7 June 2022")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2022, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1019,7 +1016,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           //overseas message
@@ -1034,7 +1031,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.spa.under.consideration.detail", "7 June 2022")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2022, 6, 7)))
           }
 
           //deferral message
@@ -1043,7 +1040,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2022. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", "7 June 2022")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2022, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1098,7 +1095,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -1185,7 +1182,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", "7 June 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2017, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1240,7 +1237,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -1256,7 +1253,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", "7 June 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2017, 6, 7)))
           }
 
           //deferral message
@@ -1265,7 +1262,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", "7 June 2017")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2017, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1321,7 +1318,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           )
           )))
 
-        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
         lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -1393,7 +1390,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
         }
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", "7 June 2017")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2017, 6, 7)))
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1449,7 +1446,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
           )
           )))
 
-        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
         lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -1465,7 +1462,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
         }
 
         "render page with text  'Youll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.spa.under.consideration.detail", "7 June 2017")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2017, 6, 7)))
         }
 
         //deferral message
@@ -1474,7 +1471,7 @@ class StatePensionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with
         }
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", "7 June 2017")
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2017, 6, 7)))
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
