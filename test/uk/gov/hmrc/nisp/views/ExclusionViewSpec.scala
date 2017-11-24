@@ -18,21 +18,17 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.helpers.{LanguageToggle, _}
+import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_dead
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
-class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with FakePlayApplication {
+class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
@@ -42,8 +38,9 @@ class ExclusionViewSpec extends PlaySpec with MockitoSugar with HtmlSpec with Fa
   val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
-  implicit override val lang = LanguageToggle.getLanguageCode
+
   implicit lazy val fakeRequest = FakeRequest()
+
 
   "Exclusion Dead" should {
     lazy val sResult = excluded_dead(Exclusion.Dead, Some(65))

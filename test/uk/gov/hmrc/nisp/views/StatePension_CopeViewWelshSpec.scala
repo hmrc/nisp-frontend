@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.helpers
+package uk.gov.hmrc.nisp.views
 
-import play.api.i18n.Lang
-import play.api.mvc.Cookie
+import uk.gov.hmrc.nisp.helpers._
 
-object LanguageToggle {
-  val defaultTestInWelsh = false
+class StatePension_CopeViewWelshSpec extends StatePension_CopeViewSpec {
 
-  def getLanguageCode(testInWelsh: Boolean = defaultTestInWelsh): Lang = {
-    if (testInWelsh) Lang("cy")
-    else Lang("en")
-  }
+  implicit override val lang = LanguageToggle.getLanguageCode(testInWelsh = true)
+  implicit override val lanCookie = LanguageToggle.getLanguageCookie(testInWelsh = true)
 
-  def getLanguageCookie(testInWelsh: Boolean = defaultTestInWelsh): Cookie = {
-    val language = if (testInWelsh) "cy" else "en-GB"
-    Cookie("PLAY_LANG", language, None, "/", None, false, true)
-  }
 }
