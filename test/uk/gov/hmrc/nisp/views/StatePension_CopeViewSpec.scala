@@ -189,7 +189,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     }
   }
 
-
   "Render Contracted Out View" should {
 
     lazy val sResult = html.statepension_cope(99.54, true)
