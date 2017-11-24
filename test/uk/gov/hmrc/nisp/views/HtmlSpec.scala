@@ -65,6 +65,17 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
+  def assertNotEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
+    val elements = doc.select(cssSelector)
+
+    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) != StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
+  }
+
   def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
     val elements = doc.select(cssSelector)
 
@@ -88,6 +99,41 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
+  }
+
+  def assertDoesNotContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: String*) = {
+    val elements = doc.select(cssSelector)
+
+    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) != expectedString)
+  }
+
+  def assertPageContainsDynamicMessage(doc: Document, expectedMessageKey: String, args: String*) = {
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(doc.text().contains(expectedString))
+  }
+
+  def assertPageDoesNotContainsDynamicMessage(doc: Document, expectedMessageKey: String, args: String*) = {
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(!doc.text().contains(expectedString))
+  }
+
+  def assertPageContainsMessage(doc: Document, expectedMessage: String) = {
+    assertMessageKeyHasValue(expectedMessage)
+    assert(doc.text().contains(expectedMessage))
+  }
+
+  def assertPageDoesNotContainsMessage(doc: Document, expectedMessage: String) = {
+    assertMessageKeyHasValue(expectedMessage)
+    assert(!doc.text().contains(expectedMessage))
   }
 
   def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {
