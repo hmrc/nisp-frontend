@@ -139,9 +139,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           )))
 
         lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
-
-        //val scenario = controller.statePensionService.getSummary(mockUserNino)(HeaderCarrier()).right.get.forecastScenario
-
         lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
         "render page with heading  'Your State Pension' " in {
@@ -201,6 +198,16 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
         "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
           "State Pension from the country you are living or working in.'" in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(9)>p", "nisp.main.overseas")
+        }
+        /*Ends*/
+
+        /*Start of Non SPA Checks*/
+        "NOT render page with heading 'Proposed change to your State Pension age'" in {
+          assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
+        }
+
+        "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+          assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", "7 June 2020")
         }
         /*Ends*/
 
@@ -292,7 +299,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(9)>p", "nisp.main.overseas")
         }
 
-        //state pension age under consideration message
+        // SPA consideration message
         "render page with heading  'Proposed change to your State Pension age'" in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(10)", "nisp.spa.under.consideration.title")
         }
@@ -319,6 +326,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
       }
 
       "The scenario is continue working" when {
+
         "State Pension page with MQP : Continue Working || Fill Gaps || Full Rate" should {
           lazy val controller = createStatePensionController
           when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
@@ -428,17 +436,27 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           }
 
           /*overseas message*/
-          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(10)>p", "nisp.main.overseas")
           }
           /*Ends*/
 
-          "render page with heading  'Putting of claiming'" in {
+          /*Start of Non SPA Checks*/
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
+            assertPageDoesNotContainMessage(htmlAccountDoc,"nisp.spa.under.consideration.title")
+          }
+
+          "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+          }
+          /*Ends*/
+
+          "render page with heading 'Putting of claiming'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(11)", "nisp.main.puttingOff")
           }
 
-          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+          "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
@@ -450,19 +468,19 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           }
 
           /*Side bar help*/
-          "render page with heading  'Get help'" in {
+          "render page with heading 'Get help'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
           }
-          "render page with text  'Helpline 0345 608 0126'" in {
+          "render page with text 'Helpline 0345 608 0126'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
-          "render page with text  'Textphone 0345 300 0169'" in {
+          "render page with text 'Textphone 0345 300 0169'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
           }
-          "render page with text  'Monday to Friday: 8am to 6pm'" in {
+          "render page with text 'Monday to Friday: 8am to 6pm'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
-          "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
+          "render page with text 'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
           }
         }
@@ -519,7 +537,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(10)>p", "nisp.main.overseas")
           }
 
-          //state pension age under consideration message
+          // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(11)", "nisp.spa.under.consideration.title")
           }
@@ -649,26 +667,37 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(9)", "nisp.main.showyourrecord")
           }
-          "render page with href link  'View your National Insurence Record'" in {
+          "render page with href link 'View your National Insurence Record'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(9)", "/check-your-state-pension/account/nirecord")
           }
 
-          "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+          "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(10)", sMessage)
           }
 
           /*overseas message*/
-          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
           }
           /*Ends*/
-          "render page with heading  'Putting of claiming'" in {
+
+          /* Start of Non SPA Checks*/
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
+            assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
+          }
+
+          "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+          }
+          /* Ends */
+
+          "render page with heading 'Putting of claiming'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.main.puttingOff")
           }
 
-          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+          "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
@@ -732,8 +761,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
           }
+          /* Ends */
 
-          //state pension age under consideration message
+          // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
           }
@@ -741,6 +771,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
+          /* Ends */
 
           //deferral message
           "render page with heading  'Putting of claiming'" in {
@@ -874,16 +905,27 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           }
 
           /*overseas message*/
-          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
           }
           /*Ends*/
-          "render page with heading  'Putting of claiming'" in {
+
+          /*Start of Non SPA Checks*/
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
+            assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
+          }
+
+          "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+          }
+          /*Ends*/
+
+          "render page with heading 'Putting of claiming'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.main.puttingOff")
           }
 
-          "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+          "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
 
@@ -947,8 +989,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
           }
+          /* Ends */
 
-          //state pension age under consideration message
+          // SPA consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
           }
@@ -956,6 +999,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
+          /* Ends */
 
           //deferral message
           "render page with heading  'Putting of claiming'" in {
@@ -1078,21 +1122,32 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with link  'View your National Insurence Record'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(9)", "nisp.main.showyourrecord")
           }
-          "render page with href link  'View your National Insurence Record'" in {
+          "render page with href link 'View your National Insurence Record'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(9)", "/check-your-state-pension/account/nirecord")
           }
 
-          "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions''" in {
+          "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions''" in {
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(10)", sMessage)
           }
 
           /*overseas message*/
-          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
           }
           /*Ends*/
+
+          /*Start of Non SPA Checks*/
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
+            assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
+          }
+
+          "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+          }
+          /* Ends */
+
           "render page with heading  'Putting of claiming'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.main.puttingOff")
           }
@@ -1160,8 +1215,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
           }
+          /* Ends */
 
-          //state pension age under consideration message
+          // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
           }
@@ -1169,6 +1225,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
+          /* Ends */
 
           //deferral message
           "render page with heading  'Putting of claiming'" in {
@@ -1251,21 +1308,32 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
-          "render page with text  'By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.' " in {
+          "render page with text 'By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.' " in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.notPossible")
           }
 
-          "render page with text  'What you can do next" in {
+          "render page with text 'What you can do next" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
           }
 
           /*overseas message*/
-          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)", "nisp.main.overseas")
           }
           /*Ends*/
-          "render page with text ' You do not have any years on your record that do not count towards your pension. '" in {
+
+          /*Start of Non SPA Checks*/
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
+            assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
+          }
+
+          "Not render page with text 'Youll reach State Pension age on 4 May 2017. Under government proposals this may increase by up to a year.'" in {
+            assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2017, 5, 4)))
+          }
+          /*Ends*/
+
+          "render page with text 'You do not have any years on your record that do not count towards your pension.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.mqp.years.dontCount.zero")
           }
           "render page with link  'View your National Insurence Record'" in {
@@ -1278,7 +1346,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(new LocalDate(2017, 5, 4)))
           }
-
 
           "render page with text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.mqp.forecastChanges")) + " ."
@@ -1364,7 +1431,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
           }
 
-          //state pension age under consideration message
+          // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
           }
@@ -1372,6 +1439,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with text  'Youll reach State Pension age on 4 May 2017. Under government proposals this may increase by up to a year.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2017, 5, 4)))
           }
+          /* Ends */
         }
 
         "State Pension page with MQP :  has fillable Gaps || Personal Max" should {
@@ -1434,21 +1502,32 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
-          "render page with text  'By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.' " in {
+          "render page with text 'By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.' " in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.possible")
           }
 
-          "render page with text  'What you can do next" in {
+          "render page with text 'What you can do next" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
           }
 
           /*overseas message*/
-          "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
+          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)", "nisp.main.overseas")
           }
           /*Ends*/
-          "render page with text '  You also have 2 years on your record which do not count towards your pension because you did not contribute enough National Insurance." +
+
+          /*Start of Non SPA Checks*/
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
+            assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
+          }
+
+          "Not render page with text 'Youll reach State Pension age on 4 May 2018. Under government proposals this may increase by up to a year.'" in {
+            assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2018, 5, 4)))
+          }
+          /*Ends*/
+
+          "render page with text 'You also have 2 years on your record which do not count towards your pension because you did not contribute enough National Insurance." +
             " Filling some of these years may get you some State Pension.  '" in {
             val sMessage = Messages("nisp.mqp.years.dontCount.plural", Time.years(2).toString()) + " " + Messages("nisp.mqp.filling.may.plural")
             assertEqualsValue(htmlAccountDoc, "article.content__body>p:nth-child(5)", sMessage)
@@ -1463,7 +1542,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with text  'After State Pension age, 4 May 2018 you no longer pay National Insurance contributions.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(new LocalDate(2018, 5, 4)))
           }
-
 
           "render page with href text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.mqp.forecastChanges")) + " ."
@@ -1541,7 +1619,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
           }
 
-          //state pension age under consideration message
+          // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
           }
@@ -1549,6 +1627,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           "render page with text  'Youll reach State Pension age on 4 May 2018. Under government proposals this may increase by up to a year.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2018, 5, 4)))
           }
+          /* Ends */
         }
       }
     }
