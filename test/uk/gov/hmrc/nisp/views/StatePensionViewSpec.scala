@@ -224,11 +224,11 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           /*Start of Non SPA Checks*/
           "Not render page with heading 'Proposed change to your State Pension age'" in {
-            assertPageDoesNotContainsMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
+            assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
           }
 
           "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            assertPageDoesNotContainsDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
           /*Ends*/
 
