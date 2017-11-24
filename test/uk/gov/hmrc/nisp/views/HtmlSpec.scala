@@ -31,7 +31,6 @@ import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
   implicit val request = FakeRequest()
-
   implicit val lang = LanguageToggle.getLanguageCode()
   implicit val lanCookie = LanguageToggle.getLanguageCookie()
   implicit val messagesApi = app.injector.instanceOf[MessagesApi]
@@ -65,13 +64,23 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
+  def assertNotEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
+    val elements = doc.select(cssSelector)
+
+    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) != StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
+  }
+
   def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
-
     assert(StringEscapeUtils.unescapeHtml4(elements.first().text().replace("\n", "")) == expectedValue)
   }
 
@@ -88,6 +97,41 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
+  }
+
+  def assertDoesNotContainDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: String*) = {
+    val elements = doc.select(cssSelector)
+
+    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) != expectedString)
+  }
+
+  def assertPageContainsDynamicMessage(doc: Document, expectedMessageKey: String, args: String*) = {
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(doc.text().contains(expectedString))
+  }
+
+  def assertPageDoesNotContainDynamicMessage(doc: Document, expectedMessageKey: String, args: String*) = {
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(!doc.text().contains(expectedString))
+  }
+
+  def assertPageContainsMessage(doc: Document, expectedMessage: String) = {
+    assertMessageKeyHasValue(expectedMessage)
+    assert(doc.text().contains(expectedMessage))
+  }
+
+  def assertPageDoesNotContainMessage(doc: Document, expectedMessage: String) = {
+    assertMessageKeyHasValue(expectedMessage)
+    assert(!doc.text().contains(expectedMessage))
   }
 
   def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {
@@ -206,7 +250,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     if (elements.isEmpty)
       throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
-
 
     val expectedString = StringEscapeUtils.unescapeHtml4(expectedText);
     assert(StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString.replace("\u00a0", ""))
