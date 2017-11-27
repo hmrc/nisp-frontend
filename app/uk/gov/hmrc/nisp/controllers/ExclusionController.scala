@@ -54,16 +54,16 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
       ) yield {
         statePension match {
           case Right(sp) if sp.reducedRateElection =>
-            Ok(excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), nationalInsurance.isRight))
+            Ok(excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), nationalInsurance.isRight, None))
           case Right(sp) if sp.abroadAutoCredit =>
-            Ok(excluded_sp(Exclusion.Abroad, Some(sp.pensionAge), Some(sp.pensionDate), nationalInsurance.isRight))
+            Ok(excluded_sp(Exclusion.Abroad, Some(sp.pensionAge), Some(sp.pensionDate), nationalInsurance.isRight, None))
           case Left(exclusion) =>
             if (exclusion.exclusion == Exclusion.Dead)
               Ok(excluded_dead(Exclusion.Dead, exclusion.pensionAge))
             else if (exclusion.exclusion == Exclusion.ManualCorrespondenceIndicator)
               Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, exclusion.pensionAge))
             else {
-              Ok(excluded_sp(exclusion.exclusion, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight))
+              Ok(excluded_sp(exclusion.exclusion, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight, exclusion.statePensionAgeUnderConsideration))
             }
           case _ =>
             Logger.warn("User accessed /exclusion as non-excluded user")

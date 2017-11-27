@@ -80,7 +80,89 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
             Exclusion.Abroad
           ),
           pensionAge = Some(65),
-          pensionDate = Some(new LocalDate(2017, 7, 18))
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = Some(false)
+        ))
+      }
+    }
+
+    "return the state pension age flag as true for a user with Amount Dis exclusion with a true flag for incoming State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)) { result =>
+        result shouldBe Left(StatePensionExclusion(
+          List(
+            Exclusion.AmountDissonance
+          ),
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = Some(true)
+        ))
+      }
+    }
+
+    "return the state pension age flag as true for a user with IOM exclusion with a true flag for incoming State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { result =>
+        result shouldBe Left(StatePensionExclusion(
+          List(
+            Exclusion.IsleOfMan
+          ),
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = Some(true)
+        ))
+      }
+    }
+
+    "return the state pension age flag as true for a user with MWRRE exclusion with a true flag for incoming State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)) { result =>
+        result shouldBe Left(StatePensionExclusion(
+          List(
+            Exclusion.MarriedWomenReducedRateElection
+          ),
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = Some(true)
+        ))
+      }
+    }
+
+    "return the state pension age flag as true for a user with Over SPA exclusion with a true flag for incoming State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)) { result =>
+        result shouldBe Left(StatePensionExclusion(
+          List(
+            Exclusion.PostStatePensionAge
+          ),
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = Some(true)
+        ))
+      }
+    }
+
+    "return the state pension age flag as true for a user with Multiple exclusions with a true flag for incoming State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)) { result =>
+        result shouldBe Left(StatePensionExclusion(
+          List(
+            Exclusion.PostStatePensionAge,
+            Exclusion.AmountDissonance,
+            Exclusion.MarriedWomenReducedRateElection,
+            Exclusion.IsleOfMan
+          ),
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = Some(true)
+        ))
+      }
+    }
+
+    "return the state pension age flag as none for a user with exclusion with no flag for incoming State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { result =>
+        result shouldBe Left(StatePensionExclusion(
+          List(
+            Exclusion.IsleOfMan
+          ),
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = None
         ))
       }
     }

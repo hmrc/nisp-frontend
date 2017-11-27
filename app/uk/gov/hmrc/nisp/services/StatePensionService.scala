@@ -105,7 +105,8 @@ trait NispConnectionSP extends StatePensionService {
         Left(StatePensionExclusionFiltered(
           exclusion = filterExclusions(spExclusions.exclusions),
           pensionAge = Some(spSummary.statePensionAge.age),
-          pensionDate = Some(spSummary.statePensionAge.date.localDate)
+          pensionDate = Some(spSummary.statePensionAge.date.localDate),
+          statePensionAgeUnderConsideration = None
         ))
 
       case _ => throw new RuntimeException("SP Response Model is unmatchable. This is probably a logic error.")
@@ -133,7 +134,8 @@ trait StatePensionConnection extends StatePensionService {
         case Left(spExclusion) => Left(StatePensionExclusionFiltered(
             filterExclusions(spExclusion.exclusionReasons),
             spExclusion.pensionAge,
-            spExclusion.pensionDate
+            spExclusion.pensionDate,
+            spExclusion.statePensionAgeUnderConsideration
           ))
       }
       .recover {

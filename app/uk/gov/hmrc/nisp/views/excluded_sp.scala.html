@@ -28,7 +28,8 @@
 exclusion: Exclusion,
 statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
-canSeeNIRecord: Boolean
+canSeeNIRecord: Boolean,
+statePensionAgeUnderConsideration: Option[Boolean]
 )(implicit messages: Messages, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever,
 application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
@@ -110,6 +111,15 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
             <h2 class="heading-medium">@Html(Messages("nisp.excluded.mwrre.improve"))</h2>
             <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
             <a href="@routes.StatePensionController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>
+        }
+
+        @for(
+            spaUnderConsideration <- statePensionAgeUnderConsideration;
+            date <- statePensionAgeDate
+        ) {
+            @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
+                @includes.statePensionAgeUnderConsideration(Dates.formatDate(date))
+            }
         }
     }
 }

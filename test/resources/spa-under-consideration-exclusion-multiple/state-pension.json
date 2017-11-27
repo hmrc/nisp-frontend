@@ -3,12 +3,11 @@
     "PostStatePensionAge",
     "AmountDissonance",
     "MarriedWomenReducedRateElection",
-    "IsleOfMan",
-    "Abroad"
+    "IsleOfMan"
   ],
   "pensionAge": 65,
   "pensionDate": "2017-07-18",
-  "statePensionAgeUnderConsideration": false,
+  "statePensionAgeUnderConsideration": true,
   "_links" : {
     "self": {
       "href": "/state-pension/ni/NINO"

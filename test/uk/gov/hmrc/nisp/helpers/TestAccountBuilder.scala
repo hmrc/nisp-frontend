@@ -38,8 +38,14 @@ object TestAccountBuilder {
   val fullUserNino: Nino = randomNino
   val blankNino: Nino = randomNino
   val notFoundNino: Nino = randomNino
-  val statePensionAgeUnderConsiderationNino: Nino = randomNino
-  val statePensionAgeUnderConsiderationNoFlagNino: Nino = randomNino
+  val spaUnderConsiderationNino: Nino = randomNino
+  val spaUnderConsiderationNoFlagNino: Nino = randomNino
+  val spaUnderConsiderationExclusionAmountDisNino: Nino = randomNino
+  val spaUnderConsiderationExclusionIoMNino: Nino = randomNino
+  val spaUnderConsiderationExclusionMwrreNino: Nino = randomNino
+  val spaUnderConsiderationExclusionOverSpaNino: Nino = randomNino
+  val spaUnderConsiderationExclusionMultipleNino: Nino = randomNino
+  val spaUnderConsiderationExclusionNoFlagNino: Nino = randomNino
 
   val invalidKeyNino: Nino = randomNino
   val cachedNino: Nino = randomNino
@@ -82,8 +88,14 @@ object TestAccountBuilder {
     fillGapsMultiple -> "fillgaps-multiple",
     noQualifyingYears -> "no-qualifying-years",
     backendNotFound -> "backend-not-found",
-    statePensionAgeUnderConsiderationNino -> "state-pension-age-under-consideration",
-    statePensionAgeUnderConsiderationNoFlagNino -> "state-pension-age-under-consideration-no-flag",
+    spaUnderConsiderationNino -> "spa-under-consideration",
+    spaUnderConsiderationNoFlagNino -> "spa-under-consideration-no-flag",
+    spaUnderConsiderationExclusionAmountDisNino -> "spa-under-consideration-exclusion-amount-dis",
+    spaUnderConsiderationExclusionIoMNino -> "spa-under-consideration-exclusion-iom",
+    spaUnderConsiderationExclusionMwrreNino -> "spa-under-consideration-exclusion-mwrre",
+    spaUnderConsiderationExclusionOverSpaNino -> "spa-under-consideration-exclusion-over-spa",
+    spaUnderConsiderationExclusionMultipleNino -> "spa-under-consideration-exclusion-multiple",
+    spaUnderConsiderationExclusionNoFlagNino -> "spa-under-consideration-exclusion-no-flag",
 
     excludedAll -> "excluded-all",
     excludedAllButDead -> "excluded-all-but-dead",

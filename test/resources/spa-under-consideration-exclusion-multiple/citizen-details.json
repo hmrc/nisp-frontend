@@ -1,0 +1,23 @@
+{
+  "etag":"1",
+  "person":{
+    "sex":"M",
+    "dateOfBirth":-499132800000,
+    "nino":"<NINO>",
+    "firstName":"ASHLEY",
+    "middleName":"",
+    "lastName":"Power",
+    "title":"Prof",
+    "honours":null
+  },
+  "address":{
+    "line1":"",
+    "line2":"",
+    "line3":"",
+    "line4":null,
+    "postcode":"",
+    "country":"SPAIN",
+    "startDate":1223510400000,
+    "type":"Residential"
+  }
+}

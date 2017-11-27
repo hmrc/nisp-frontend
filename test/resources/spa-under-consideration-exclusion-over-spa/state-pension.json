@@ -1,0 +1,13 @@
+{
+  "exclusionReasons": [
+    "PostStatePensionAge"
+  ],
+  "pensionAge": 65,
+  "pensionDate": "2017-07-18",
+  "statePensionAgeUnderConsideration": true,
+  "_links" : {
+    "self": {
+      "href": "/state-pension/ni/NINO"
+    }
+  }
+}
