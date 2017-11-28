@@ -32,14 +32,5 @@ case class StatePensionExclusion(exclusionReasons: List[Exclusion.Exclusion],
 
 object StatePensionExclusion {
   implicit val formats = Json.format[StatePensionExclusion]
-
-  implicit val reads: Reads[StatePensionExclusion] = (
-      (JsPath \ "exclusionReasons").read[List[Exclusion.Exclusion]] and
-      (JsPath \ "pensionAge").readNullable[Int] and
-      (JsPath \ "pensionDate").readNullable[LocalDate] and
-      (JsPath \ "statePensionAgeUnderConsideration").readNullable[Boolean]
-    ) (StatePensionExclusion.apply _)
-
-  implicit val writes = Json.writes[StatePensionExclusion]
 }
 
