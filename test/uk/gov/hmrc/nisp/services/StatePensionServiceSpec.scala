@@ -136,13 +136,14 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
         statePension shouldBe Left(StatePensionExclusionFiltered(
           Exclusion.PostStatePensionAge,
           pensionAge = Some(65),
-          pensionDate = Some(new LocalDate(2017, 7, 18))
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = Some(false)
         ))
       }
     }
 
-    "return the connector response for a user with date of birth within the correct range for State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.statePensionAgeUnderConsiderationNino)) { statePension =>
+    "return the connector response for a user with a true flag for State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.spaUnderConsiderationNino)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
           StatePensionAmounts(
@@ -158,7 +159,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the connector response for a user with no flag for State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.statePensionAgeUnderConsiderationNoFlagNino)) { statePension =>
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.spaUnderConsiderationNoFlagNino)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
           StatePensionAmounts(
@@ -169,6 +170,28 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
             StatePensionAmountRegular(0, 0, 0)
           ),
           64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false, false
+        ))
+      }
+    }
+
+    "return the connector response for a user with exclusion with a true flag for State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { statePension =>
+        statePension shouldBe Left(StatePensionExclusionFiltered(
+          Exclusion.IsleOfMan,
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = Some(true)
+        ))
+      }
+    }
+
+    "return the connector response for a user with exclusion with no flag for State Pension Age Under Consideration" in {
+      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { statePension =>
+        statePension shouldBe Left(StatePensionExclusionFiltered(
+          Exclusion.IsleOfMan,
+          pensionAge = Some(65),
+          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          statePensionAgeUnderConsideration = None
         ))
       }
     }

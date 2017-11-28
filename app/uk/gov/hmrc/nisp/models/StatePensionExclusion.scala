@@ -16,18 +16,21 @@
 
 package uk.gov.hmrc.nisp.models
 
+
 import org.joda.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, Reads}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.utils.Formatting
 import uk.gov.hmrc.time.TaxYear
 
 case class StatePensionExclusion(exclusionReasons: List[Exclusion.Exclusion],
                                  pensionAge: Option[Int] = None,
-                                 pensionDate: Option[LocalDate] = None) {
+                                 pensionDate: Option[LocalDate] = None,
+                                 statePensionAgeUnderConsideration: Option[Boolean] = None) {
   val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
 }
 
 object StatePensionExclusion {
   implicit val formats = Json.format[StatePensionExclusion]
 }
+

@@ -41,8 +41,14 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.fillGapSingle,
     TestAccountBuilder.noQualifyingYears,
     TestAccountBuilder.backendNotFound,
-    TestAccountBuilder.statePensionAgeUnderConsiderationNino,
-    TestAccountBuilder.statePensionAgeUnderConsiderationNoFlagNino,
+    TestAccountBuilder.spaUnderConsiderationNino,
+    TestAccountBuilder.spaUnderConsiderationNoFlagNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionIoMNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
 
     TestAccountBuilder.excludedAll,
     TestAccountBuilder.excludedAllButDead,
@@ -98,8 +104,14 @@ object MockNispHttp extends MockitoSugar {
   // State Pension
   val spNinos = List(
     TestAccountBuilder.regularNino,
-    TestAccountBuilder.statePensionAgeUnderConsiderationNino,
-    TestAccountBuilder.statePensionAgeUnderConsiderationNoFlagNino,
+    TestAccountBuilder.spaUnderConsiderationNino,
+    TestAccountBuilder.spaUnderConsiderationNoFlagNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionIoMNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
     TestAccountBuilder.excludedAllButDeadMCI,
     TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.excludedAbroad

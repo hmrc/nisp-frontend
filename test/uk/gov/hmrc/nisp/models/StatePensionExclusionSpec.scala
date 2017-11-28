@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 class StatePensionExclusionSpec extends UnitSpec {
 
   "finalRelevantStartYear" when {
-    "the is no pension date" should {
+    "there is no pension date" should {
       "be none" in {
         StatePensionExclusion(List(Exclusion.Dead), None, None).finalRelevantStartYear shouldBe None
       }
@@ -47,6 +47,26 @@ class StatePensionExclusionSpec extends UnitSpec {
         StatePensionExclusion(List(Exclusion.AmountDissonance, Exclusion.PostStatePensionAge), Some(65), Some(new LocalDate(2000, 4, 6))).finalRelevantStartYear shouldBe Some(1999)
       }
     }
+
+    "the pensionDate is 5th April 2020 and there is no flag for state pension age under consideration" should {
+      "be 2018" in {
+        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(new LocalDate(2020, 4, 5))).finalRelevantStartYear shouldBe Some(2018)
+      }
+    }
+
+    "the pensionDate is 5th April 2020 and there is a true flag for state pension age under consideration" should {
+      "be 2018" in {
+        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(new LocalDate(2020, 4, 5)), Some(true)).finalRelevantStartYear shouldBe Some(2018)
+      }
+    }
+
+    "the pensionDate is 5th April 2020 and there is a false flag for state pension age under consideration" should {
+      "be 2018" in {
+        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(new LocalDate(2020, 4, 5)), Some(false)).finalRelevantStartYear shouldBe Some(2018)
+      }
+    }
+
+
   }
 
 }

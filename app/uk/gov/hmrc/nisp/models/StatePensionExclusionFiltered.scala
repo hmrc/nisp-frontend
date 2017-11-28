@@ -24,7 +24,8 @@ import uk.gov.hmrc.time.TaxYear
 
 case class StatePensionExclusionFiltered(exclusion: Exclusion.Exclusion,
                                  pensionAge: Option[Int] = None,
-                                 pensionDate: Option[LocalDate] = None) {
+                                 pensionDate: Option[LocalDate] = None,
+                                 statePensionAgeUnderConsideration: Option[Boolean] = None) {
   val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
 }
 

@@ -52,6 +52,14 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserIdExcludedMwrre = authId("mockexcludedmwrre")
   val mockUserIdExcludedAbroad = authId("mockexcludedabroad")
 
+  val mockUserIdSPAUnderConsiderationExcludedAmountDis = authId("mockspaunderconsiderationexclusionamountdis")
+  val mockUserIdSPAUnderConsiderationExcludedIoM = authId("mockspaunderconsiderationexclusioniom")
+  val mockUserIdSPAUnderConsiderationExcludedMwrre = authId("mockspaunderconsiderationexclusionmwree")
+  val mockUserIdSPAUnderConsiderationExcludedOverSpa = authId("mockspaunderconsiderationexclusionoverspa")
+  val mockUserIdSPAUnderConsiderationExcludedMultiple = authId("mockspaunderconsiderationexclusionmultiple")
+  val mockUserIdSPAUnderConsiderationExcludedNoFlag = authId("mockspaunderconsiderationexclusionnoflag")
+
+
   val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
   val mciMessaging = "We need to talk to you about an MCI error before you sign in."
   val postSPAMessaging = "If you have not already started <a href=\"https://www.gov.uk/claim-state-pension-online\" rel=\"external\" data-journey-click=\"checkmystatepension:external:claimstatepension\">claiming your State Pension</a>, you can <a href=\"https://www.gov.uk/deferring-state-pension\" rel=\"external\" data-journey-click=\"checkmystatepension:external:deferstatepension\" target=\"_blank\">put off claiming your State Pension (opens in new tab)</a> and this may mean you get extra State Pension when you do want to claim it."
@@ -61,6 +69,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val mwrreMessagingSP = "We&rsquo;re unable to calculate your State Pension forecast as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)"
   val mwrreMessagingNI = "We&rsquo;re currently unable to show your National Insurance Record as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>."
   val abroadMessaging = "We&rsquo;re unable to calculate your UK State Pension forecast as you&rsquo;ve lived or worked abroad."
+  val spaUnderConsiderationMessaging = "Proposed change to your State Pension age"
 
   "GET /exclusion" should {
 
@@ -79,6 +88,15 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       def generateSPRequest(userId: String): Future[Result] = {
         MockExclusionController.showSP()(fakeRequest.withSession(
+          SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+          SessionKeys.userId -> userId,
+          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+        ))
+      }
+
+      def generateSPRequestViaStatePension(userId: String): Future[Result] = {
+        MockMWRREExclusionController.showSP()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> userId,
@@ -278,6 +296,54 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
           val result = generateNIRequest(mockUserIdExcludedAbroad)
           redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
 
+        }
+      }
+
+      "The User has SPA under consideration flag and Amount Dis exclusion" should {
+        "return with SPA under consideration message" in {
+          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedAmountDis)
+          redirectLocation(result) shouldBe None
+          contentAsString(result) should include (spaUnderConsiderationMessaging)
+        }
+      }
+
+      "The User has SPA under consideration flag and IoM exclusion" should {
+        "return with SPA under consideration message" in {
+          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedIoM)
+          redirectLocation(result) shouldBe None
+          contentAsString(result) should include (spaUnderConsiderationMessaging)
+        }
+      }
+
+      "The User has SPA under consideration flag and Mwrre exclusion" should {
+        "return with no SPA under consideration message" in {
+          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedMwrre)
+          redirectLocation(result) shouldBe None
+          contentAsString(result) should not include spaUnderConsiderationMessaging
+        }
+      }
+
+      "The User has SPA under consideration flag and Over Spa exclusion" should {
+        "return with no SPA under consideration message" in {
+          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedOverSpa)
+          redirectLocation(result) shouldBe None
+          contentAsString(result) should not include spaUnderConsiderationMessaging
+        }
+      }
+
+      "The User has SPA under consideration flag and Multiple exclusions with Over SPA first" should {
+        "return with no SPA under consideration message" in {
+          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedMultiple)
+          redirectLocation(result) shouldBe None
+          contentAsString(result) should not include spaUnderConsiderationMessaging
+        }
+      }
+
+      "The User has no SPA under consideration flag and exclusion" should {
+        "return with no SPA under consideration message" in {
+          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedNoFlag)
+          redirectLocation(result) shouldBe None
+          contentAsString(result) should not include spaUnderConsiderationMessaging
         }
       }
 
