@@ -403,7 +403,7 @@ nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydy
 # State Pension Age under consideration messages
 #**************************************************
 
-nisp.spa.under.consideration.title = Newid arfaethedig i'ch oedran Pensiwn y Wladwriaeth
+nisp.spa.under.consideration.title = Newid arfaethedig i’ch oedran Pensiwn y Wladwriaeth
 nisp.spa.under.consideration.detail = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>. O dan gynigion gan y Llywodraeth, gall hwn godi gan hyd at flwyddyn.
 
 
