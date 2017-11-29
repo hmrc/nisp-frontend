@@ -42,10 +42,8 @@ object StatePensionController extends StatePensionController {
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val metricsService: MetricsService = MetricsService
-  override val statePensionService: StatePensionService =
-    if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
-  override val nationalInsuranceService: NationalInsuranceService =
-    if (applicationConfig.useNationalInsuranceAPI) NationalInsuranceService else NispNationalInsuranceService
+  override val statePensionService: StatePensionService = StatePensionService
+  override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
 }
 
 trait StatePensionController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with AuthenticationConnectors with PartialRetriever {

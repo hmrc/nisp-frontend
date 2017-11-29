@@ -31,10 +31,8 @@ import uk.gov.hmrc.nisp.views.html._
 object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever with NispFrontendController {
   override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val applicationConfig: ApplicationConfig = ApplicationConfig
-  override val statePensionService: StatePensionService =
-    if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
-  override val nationalInsuranceService: NationalInsuranceService =
-    if (applicationConfig.useNationalInsuranceAPI) NationalInsuranceService else NispNationalInsuranceService
+  override val statePensionService: StatePensionService = StatePensionService
+  override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
 }
 
 trait ExclusionController extends NispFrontendController with AuthorisedForNisp {

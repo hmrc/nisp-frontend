@@ -44,11 +44,8 @@ object NIRecordController extends NIRecordController with AuthenticationConnecto
   override val showFullNI: Boolean = ApplicationConfig.showFullNI
   override val currentDate = new LocalDate(DateTimeZone.forID("Europe/London"))
   override val metricsService: MetricsService = MetricsService
-  override val nationalInsuranceService: NationalInsuranceService =
-    if (applicationConfig.useNationalInsuranceAPI) NationalInsuranceService else NispNationalInsuranceService
-  override val statePensionService: StatePensionService =
-    if (applicationConfig.useStatePensionAPI) StatePensionService else NispStatePensionService
-
+  override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
+  override val statePensionService: StatePensionService = StatePensionService
 }
 
 trait NIRecordController extends NispFrontendController with AuthorisedForNisp with PertaxHelper {

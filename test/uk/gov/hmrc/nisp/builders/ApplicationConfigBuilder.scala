@@ -27,7 +27,7 @@ object ApplicationConfigBuilder {
             notAuthorisedRedirectUrl: String = "", verifySignIn: String = "", verifySignInContinue: Boolean = false,
             ivUpliftUrl: String = "ivuplift", ggSignInUrl: String = "ggsignin", twoFactorUrl: String = "twofactor",
             pertaxFrontendUrl: String = "", breadcrumbPartialUrl: String = "", showFullNI: Boolean = false,
-            futureProofPersonalMax: Boolean = false, useStatePensionAPI: Boolean = true, useNationalInsuranceAPI: Boolean = true,
+            futureProofPersonalMax: Boolean = false,
             isWelshEnabled: Boolean = true
            ): ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = assetsPrefix
@@ -53,8 +53,6 @@ object ApplicationConfigBuilder {
     override val breadcrumbPartialUrl: String = breadcrumbPartialUrl
     override val showFullNI: Boolean = showFullNI
     override val futureProofPersonalMax: Boolean = futureProofPersonalMax
-    override val useStatePensionAPI: Boolean = useStatePensionAPI
-    override val useNationalInsuranceAPI: Boolean = useNationalInsuranceAPI
     override val isWelshEnabled: Boolean = isWelshEnabled
   }
 }

@@ -121,8 +121,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
             override val isWelshEnabled = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -252,8 +250,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
             override val isWelshEnabled = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -289,8 +285,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
             override val isWelshEnabled = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -389,8 +383,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = true
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
             override val isWelshEnabled = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
