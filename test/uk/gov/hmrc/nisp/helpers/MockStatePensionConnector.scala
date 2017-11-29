@@ -26,7 +26,7 @@ object MockStatePensionConnector extends StatePensionConnector {
 
   override def sessionCache: SessionCache = MockSessionCache
 
-  override def serviceUrl: String = ""
+  override def serviceUrl: String = "state-pension"
 
   override val metricsService: MetricsService = MockMetricsService
 }

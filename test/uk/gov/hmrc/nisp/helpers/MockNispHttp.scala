@@ -77,7 +77,7 @@ object MockNispHttp extends MockitoSugar {
   }
 
   def setupStatePensionEndpoints(nino: Nino): Unit = {
-    createMockedURL(s"ni/$nino", TestAccountBuilder.jsonResponse(nino, "state-pension"))
+    createMockedURL(s"state-pension/ni/$nino", TestAccountBuilder.jsonResponse(nino, "state-pension"))
   }
 
   def setupNationalInsuranceEndpoints(nino: Nino): Unit = {
@@ -114,7 +114,8 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
     TestAccountBuilder.excludedAllButDeadMCI,
     TestAccountBuilder.excludedMwrre,
-    TestAccountBuilder.excludedAbroad
+    TestAccountBuilder.excludedAbroad,
+    TestAccountBuilder.fullUserNino
   )
 
   spNinos.foreach(setupStatePensionEndpoints)
@@ -146,7 +147,9 @@ object MockNispHttp extends MockitoSugar {
   // National Insurance
 
   val niNinos = List(
-    TestAccountBuilder.regularNino
+    TestAccountBuilder.regularNino,
+    TestAccountBuilder.fullUserNino
+
   )
 
   niNinos.foreach(setupNationalInsuranceEndpoints)

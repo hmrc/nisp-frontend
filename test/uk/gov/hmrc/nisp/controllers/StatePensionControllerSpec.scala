@@ -67,7 +67,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
   def testAccountController(testNow: LocalDateTime): StatePensionController = new MockStatePensionController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
+    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
   }
 
   "State Pension controller" should {

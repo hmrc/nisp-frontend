@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.services
 
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.connectors.{NationalInsuranceConnector, NispConnector}
+import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 import uk.gov.hmrc.nisp.models.{NIRecordTaxYear, NIResponse, NationalInsuranceRecord, NationalInsuranceTaxYear}
@@ -60,70 +60,6 @@ trait NationalInsuranceConnection {
   }
 }
 
-trait NispConnectionNI {
-  val nispConnector: NispConnector
-
-  private def filterExclusions(exclusions: List[Exclusion]): Exclusion = {
-    if (exclusions.contains(Exclusion.Dead)) {
-      Exclusion.Dead
-    } else if (exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
-      Exclusion.ManualCorrespondenceIndicator
-    } else if (exclusions.contains(Exclusion.IsleOfMan)) {
-      Exclusion.IsleOfMan
-    } else if (exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
-      Exclusion.MarriedWomenReducedRateElection
-    } else {
-      throw new RuntimeException(s"Un-accounted for exclusion in NispConnectionNI: $exclusions")
-    }
-  }
-
-  private[services] def startYearToTaxYear(startYear: Int): String = {
-    val endYear = TaxYear(startYear).finishYear
-    s"$startYear-${endYear.toString.substring(Constants.shortYearStartCharacter, Constants.shortYearEndCharacter)}"
-  }
-
-  private def transformTaxYear(niRecordTaxYear: NIRecordTaxYear): NationalInsuranceTaxYear = {
-    NationalInsuranceTaxYear(
-      taxYear = startYearToTaxYear(niRecordTaxYear.taxYear),
-      qualifying = niRecordTaxYear.qualifying,
-      classOneContributions = niRecordTaxYear.classOneContributions,
-      classTwoCredits = niRecordTaxYear.classTwoCredits,
-      classThreeCredits = niRecordTaxYear.classThreeCredits,
-      otherCredits = niRecordTaxYear.otherCredits,
-      classThreePayable = niRecordTaxYear.classThreePayable.getOrElse(0),
-      classThreePayableBy = niRecordTaxYear.classThreePayableBy.map(_.localDate),
-      classThreePayableByPenalty = niRecordTaxYear.classThreePayableByPenalty.map(_.localDate),
-      payable = niRecordTaxYear.payable,
-      underInvestigation = niRecordTaxYear.underInvestigation
-    )
-  }
-
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
-    nispConnector.connectToGetNIResponse(nino) map {
-      case NIResponse(_, _, Some(exclusionsModel)) => {
-        Left(filterExclusions(exclusionsModel.exclusions))
-      }
-      case NIResponse(Some(record), Some(summary), None) => {
-        Right(NationalInsuranceRecord(
-          qualifyingYears = summary.noOfQualifyingYears,
-          qualifyingYearsPriorTo1975 = summary.pre75QualifyingYears.getOrElse(0),
-          numberOfGaps = summary.noOfNonQualifyingYears,
-          numberOfGapsPayable = summary.numberOfPayableGaps,
-          dateOfEntry = Some(summary.dateOfEntry.localDate),
-          homeResponsibilitiesProtection = summary.homeResponsibilitiesProtection,
-          earningsIncludedUpTo = summary.earningsIncludedUpTo.localDate,
-          taxYears = record.taxYears.sortBy(_.taxYear)(Ordering[Int].reverse) map transformTaxYear
-        ))
-      }
-      case _ => throw new RuntimeException("NI Response Model is unmatchable. This is probably a logic error.")
-    }
-  }
-}
-
 object NationalInsuranceService extends NationalInsuranceService with NationalInsuranceConnection {
   override val nationalInsuranceConnector: NationalInsuranceConnector = NationalInsuranceConnector
-}
-
-object NispNationalInsuranceService extends NationalInsuranceService with NispConnectionNI {
-  override val nispConnector: NispConnector = NispConnector
 }

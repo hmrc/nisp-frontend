@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.helpers
 
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.ExclusionController
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
@@ -56,8 +55,8 @@ object MockExclusionController extends ExclusionController {
     override val isWelshEnabled = true
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp
-  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
+  override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
+  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 }
 
@@ -93,6 +92,6 @@ object MockMWRREExclusionController extends ExclusionController {
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
-  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
+  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 }
