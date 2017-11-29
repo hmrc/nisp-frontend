@@ -90,10 +90,9 @@ object MockNispHttp extends MockitoSugar {
 
   val badRequestNino = TestAccountBuilder.nonExistentNino
 
-  createFailedMockedURL(s"nisp/$badRequestNino/spsummary")
-  createFailedMockedURL(s"nisp/$badRequestNino/nirecord")
+  createFailedMockedURL(s"ni/$badRequestNino")
 
-  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"nisp/${TestAccountBuilder.backendNotFound}/spsummary"))
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"ni/${TestAccountBuilder.backendNotFound}"))
     (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
     .thenReturn(Future.failed(new Upstream4xxResponse(
       message = """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
@@ -115,7 +114,9 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.excludedAllButDeadMCI,
     TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.excludedAbroad,
-    TestAccountBuilder.fullUserNino
+    TestAccountBuilder.fullUserNino,
+    TestAccountBuilder.hrpNino
+
   )
 
   spNinos.foreach(setupStatePensionEndpoints)
@@ -148,7 +149,8 @@ object MockNispHttp extends MockitoSugar {
 
   val niNinos = List(
     TestAccountBuilder.regularNino,
-    TestAccountBuilder.fullUserNino
+    TestAccountBuilder.fullUserNino,
+    TestAccountBuilder.hrpNino
 
   )
 

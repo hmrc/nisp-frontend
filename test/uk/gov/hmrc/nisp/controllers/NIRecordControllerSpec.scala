@@ -71,7 +71,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return full page for user without gaps" in {
       val result = MockNIRecordController.showGaps(authenticatedFakeRequest(mockFullUserId))
-      println(contentAsString(result))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord")
     }
 
