@@ -22,7 +22,7 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.domain.Nino
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ BadRequestException, HttpGet, HttpResponse, Upstream4xxResponse }
+import uk.gov.hmrc.http.{BadRequestException, HttpGet, HttpResponse, Upstream4xxResponse}
 
 object MockNispHttp extends MockitoSugar {
   val mockHttp = mock[HttpGet]
@@ -115,8 +115,10 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.excludedAbroad,
     TestAccountBuilder.fullUserNino,
-    TestAccountBuilder.hrpNino
-
+    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.noQualifyingYears,
+    TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.contractedOutBTestNino
   )
 
   spNinos.foreach(setupStatePensionEndpoints)
@@ -150,8 +152,10 @@ object MockNispHttp extends MockitoSugar {
   val niNinos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.fullUserNino,
-    TestAccountBuilder.hrpNino
-
+    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.noQualifyingYears,
+    TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.contractedOutBTestNino
   )
 
   niNinos.foreach(setupNationalInsuranceEndpoints)

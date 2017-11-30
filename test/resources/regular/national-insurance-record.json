@@ -74,7 +74,7 @@
           }
         },
         "taxYear": "2012-13",
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
@@ -92,7 +92,7 @@
           }
         },
         "taxYear": "2011-12",
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
@@ -110,7 +110,7 @@
           }
         },
         "taxYear": "2010-11",
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 1149.98,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
@@ -146,7 +146,7 @@
           }
         },
         "taxYear": "2008-09",
-        "qualifying": false,
+        "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,

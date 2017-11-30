@@ -1,0 +1,17 @@
+{
+  "_links": {
+    "self": {
+      "href": "/national-insurance-record/ni/QQ123456A"
+    }
+  },
+  "qualifyingYears": 0,
+  "qualifyingYearsPriorTo1975": 0,
+  "numberOfGaps": 0,
+  "numberOfGapsPayable": 0,
+  "dateOfEntry": "1975-08-01",
+  "homeResponsibilitiesProtection": false,
+  "earningsIncludedUpTo": "2016-04-05",
+  "_embedded": {
+    "taxYears": []
+  }
+}
