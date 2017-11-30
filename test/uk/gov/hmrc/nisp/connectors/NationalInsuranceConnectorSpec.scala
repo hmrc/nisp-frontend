@@ -48,8 +48,8 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
         nationalInsuranceRecord.qualifyingYearsPriorTo1975 shouldBe 0
       }
 
-      "return a National Insurance Record with 6 numberOfGaps" in {
-        nationalInsuranceRecord.numberOfGaps shouldBe 6
+      "return a National Insurance Record with 10 numberOfGaps" in {
+        nationalInsuranceRecord.numberOfGaps shouldBe 10
       }
 
       "return a National Insurance Record with 4 numberOfGapsPayable" in {
@@ -60,27 +60,27 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
         nationalInsuranceRecord.homeResponsibilitiesProtection shouldBe false
       }
 
-      "return a National Insurance Record with earningsIncludedUpTo of 2016-04-05" in {
-        nationalInsuranceRecord.earningsIncludedUpTo shouldBe new LocalDate(2016, 4, 5)
+      "return a National Insurance Record with earningsIncludedUpTo of 2014-04-05" in {
+        nationalInsuranceRecord.earningsIncludedUpTo shouldBe new LocalDate(2014, 4, 5)
       }
 
-      "return a National Insurance Record with 41 tax years" in {
-        nationalInsuranceRecord.taxYears.length shouldBe 41
+      "return a National Insurance Record with 39 tax years" in {
+        nationalInsuranceRecord.taxYears.length shouldBe 39
       }
 
       "the first tax year" should {
 
         val taxYear = nationalInsuranceRecord.taxYears.head
-        "be the 2015-16 tax year" in {
-          taxYear.taxYear shouldBe "2015-16"
+        "be the 2013-14 tax year" in {
+          taxYear.taxYear shouldBe "2013-14"
         }
 
         "be qualifying" in {
-          taxYear.qualifying shouldBe true
+          taxYear.qualifying shouldBe false
         }
 
-        "have classOneContributions of 2430.24" in {
-          taxYear.classOneContributions shouldBe 2430.24
+        "have classOneContributions of 0" in {
+          taxYear.classOneContributions shouldBe 0
         }
 
         "have classTwoCredits of 0" in {
@@ -95,20 +95,20 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
           taxYear.otherCredits shouldBe 0
         }
 
-        "have classThreePayable of 0" in {
-          taxYear.classThreePayable shouldBe 0
+        "have classThreePayable of 704.60" in {
+          taxYear.classThreePayable shouldBe 704.60
         }
 
         "have no classThreePayableBy date" in {
-          taxYear.classThreePayableBy shouldBe None
+          taxYear.classThreePayableBy shouldBe Some(new LocalDate(2019, 4, 5))
         }
 
         "have no classThreePayableByPenalty date" in {
-          taxYear.classThreePayableByPenalty shouldBe None
+          taxYear.classThreePayableByPenalty shouldBe Some(new LocalDate(2023, 4, 5))
         }
 
         "be not payable" in {
-          taxYear.payable shouldBe false
+          taxYear.payable shouldBe true
         }
 
         "be not underInvestigation " in {
