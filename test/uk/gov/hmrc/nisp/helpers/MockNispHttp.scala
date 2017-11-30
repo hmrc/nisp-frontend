@@ -118,7 +118,11 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.noQualifyingYears,
     TestAccountBuilder.fillGapsMultiple,
-    TestAccountBuilder.contractedOutBTestNino
+    TestAccountBuilder.contractedOutBTestNino,
+    TestAccountBuilder.abroadNino,
+    TestAccountBuilder.forecastOnlyNino,
+    TestAccountBuilder.contractedOutBTestNino,
+    TestAccountBuilder.hrpNino
   )
 
   spNinos.foreach(setupStatePensionEndpoints)
@@ -155,7 +159,12 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.noQualifyingYears,
     TestAccountBuilder.fillGapsMultiple,
-    TestAccountBuilder.contractedOutBTestNino
+    TestAccountBuilder.contractedOutBTestNino,
+    TestAccountBuilder.abroadNino,
+    TestAccountBuilder.forecastOnlyNino,
+    TestAccountBuilder.contractedOutBTestNino,
+    TestAccountBuilder.excludedMwrre,
+    TestAccountBuilder.hrpNino
   )
 
   niNinos.foreach(setupNationalInsuranceEndpoints)
