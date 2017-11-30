@@ -115,6 +115,9 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.excludedAbroad,
     TestAccountBuilder.fullUserNino,
+    TestAccountBuilder.abroadNino,
+    TestAccountBuilder.forecastOnlyNino,
+    TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.hrpNino
 
   )
@@ -150,6 +153,10 @@ object MockNispHttp extends MockitoSugar {
   val niNinos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.fullUserNino,
+    TestAccountBuilder.abroadNino,
+    TestAccountBuilder.forecastOnlyNino,
+    TestAccountBuilder.contractedOutBTestNino,
+    TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.hrpNino
 
   )
