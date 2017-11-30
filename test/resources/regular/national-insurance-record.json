@@ -92,7 +92,7 @@
           }
         },
         "taxYear": "2011-12",
-        "qualifying": true,
+        "qualifying": false,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
