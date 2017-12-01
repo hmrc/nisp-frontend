@@ -196,6 +196,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
 
       "return /exclusion for MWRRE user" in {
         val result = MockMWRREStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
+        println(contentAsString(result));
         status(result) shouldBe SEE_OTHER // 303
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
@@ -387,7 +388,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
-        "show new personal max text when there are multiple/single year" in {
+          "show new personal max text when there are multiple/single year" in {
           val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")

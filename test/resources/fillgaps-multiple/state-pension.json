@@ -15,7 +15,7 @@
     },
     "maximum": {
       "yearsToWork": 50,
-      "gapsToFill": 0,
+      "gapsToFill": 7,
       "weeklyAmount": 155.65,
       "monthlyAmount": 676.8,
       "annualAmount": 8121.59
@@ -29,7 +29,7 @@
   "pensionAge": 64,
   "pensionDate": "2050-07-06",
   "finalRelevantYear": "2050-51",
-  "numberOfQualifyingYears": 0,
+  "numberOfQualifyingYears": 25,
   "pensionSharingOrder": false,
   "currentFullWeeklyPensionAmount": 155.65,
   "reducedRateElection": false,

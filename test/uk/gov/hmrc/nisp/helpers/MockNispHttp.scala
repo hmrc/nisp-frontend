@@ -118,11 +118,15 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.noQualifyingYears,
     TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.fillGapSingle,
     TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.abroadNino,
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.contractedOutBTestNino,
-    TestAccountBuilder.hrpNino
+    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
+    TestAccountBuilder.mqpNino,
+    TestAccountBuilder.mqpAbroadNino
   )
 
   spNinos.foreach(setupStatePensionEndpoints)
@@ -159,12 +163,24 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.noQualifyingYears,
     TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.fillGapSingle,
     TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.abroadNino,
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.excludedMwrre,
-    TestAccountBuilder.hrpNino
+    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
+    TestAccountBuilder.spaUnderConsiderationNino,
+    TestAccountBuilder.spaUnderConsiderationNoFlagNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionIoMNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
+    TestAccountBuilder.mqpNino,
+    TestAccountBuilder.mqpAbroadNino
   )
 
   niNinos.foreach(setupNationalInsuranceEndpoints)

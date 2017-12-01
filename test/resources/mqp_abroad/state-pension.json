@@ -3,19 +3,19 @@
   "amounts": {
     "protectedPayment": false,
     "current": {
-      "weeklyAmount": 133.41,
-      "monthlyAmount": 580.1,
-      "annualAmount": 6961.14
+      "weeklyAmount": 0,
+      "monthlyAmount": 0,
+      "annualAmount": 0
     },
     "forecast": {
-      "yearsToWork": 3,
-      "weeklyAmount": 146.76,
-      "monthlyAmount": 638.14,
-      "annualAmount": 7657.73
+      "yearsToWork": 30,
+      "weeklyAmount": 0,
+      "monthlyAmount": 0,
+      "annualAmount": 0
     },
     "maximum": {
-      "yearsToWork": 3,
-      "gapsToFill": 2,
+      "yearsToWork": 30,
+      "gapsToFill": 0,
       "weeklyAmount": 155.65,
       "monthlyAmount": 676.8,
       "annualAmount": 8121.59
@@ -27,13 +27,13 @@
     }
   },
   "pensionAge": 64,
-  "pensionDate": "2018-07-06",
-  "finalRelevantYear": "2017-18",
-  "numberOfQualifyingYears": 30,
+  "pensionDate": "2034-07-06",
+  "finalRelevantYear": "2034-35",
+  "numberOfQualifyingYears": 0,
   "pensionSharingOrder": false,
-  "currentFullWeeklyPensionAmount": 155.65,
-  "reducedRateElection": false,
-  "abroadAutoCredit": false,
+  "currentFullWeeklyPensionAmount": 0,
+  "reducedRateElection": true,
+  "abroadAutoCredit": true,
   "statePensionAgeUnderConsideration": false,
   "_links" : {
     "self": {
