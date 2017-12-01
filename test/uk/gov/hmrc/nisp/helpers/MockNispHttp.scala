@@ -126,7 +126,15 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     TestAccountBuilder.mqpNino,
-    TestAccountBuilder.mqpAbroadNino
+    TestAccountBuilder.mqpAbroadNino,
+    TestAccountBuilder.excludedAll,
+    TestAccountBuilder.excludedAllButDead,
+    TestAccountBuilder.excludedAllButDeadMCI,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
+    TestAccountBuilder.excludedIomMwrreAbroad,
+    TestAccountBuilder.excludedMwrreAbroad,
+    TestAccountBuilder.excludedMwrre,
+    TestAccountBuilder.excludedAbroad
   )
 
   spNinos.foreach(setupStatePensionEndpoints)
@@ -180,7 +188,16 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
     TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
     TestAccountBuilder.mqpNino,
-    TestAccountBuilder.mqpAbroadNino
+    TestAccountBuilder.mqpAbroadNino,
+    TestAccountBuilder.excludedAbroad,
+    TestAccountBuilder.excludedAll,
+    TestAccountBuilder.excludedAllButDead,
+    TestAccountBuilder.excludedAllButDeadMCI,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
+    TestAccountBuilder.excludedIomMwrreAbroad,
+    TestAccountBuilder.excludedMwrreAbroad,
+    TestAccountBuilder.excludedMwrre,
+    TestAccountBuilder.excludedAbroad
   )
 
   niNinos.foreach(setupNationalInsuranceEndpoints)

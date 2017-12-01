@@ -1,5 +1,14 @@
 {
-  "exclusionReasons" : ["MarriedWomenReducedRateElection"],
-  "pensionAge": 65,
-  "pensionDate": "2005-08-22"
+  "code": "EXCLUSION_MARRIED_WOMENS_REDUCED_RATE",
+  "message": "The customer needs to contact the National Insurance helpline",
+  "qualifyingYears": 28,
+  "qualifyingYearsPriorTo1975": 0,
+  "numberOfGaps": 0,
+  "numberOfGapsPayable": 0,
+  "dateOfEntry": "1975-08-01",
+  "homeResponsibilitiesProtection": false,
+  "earningsIncludedUpTo": "2014-04-05",
+  "_embedded": {
+    "taxYears": []
+  }
 }
