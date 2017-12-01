@@ -14,8 +14,8 @@
       "annualAmount": 7657.73
     },
     "maximum": {
-      "yearsToWork": 0,
-      "gapsToFill": 0,
+      "yearsToWork": 3,
+      "gapsToFill": 2,
       "weeklyAmount": 155.65,
       "monthlyAmount": 676.8,
       "annualAmount": 8121.59
