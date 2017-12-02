@@ -176,9 +176,7 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.abroadNino,
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.contractedOutBTestNino,
-    TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.hrpNino,
-    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     TestAccountBuilder.spaUnderConsiderationNino,
     TestAccountBuilder.spaUnderConsiderationNoFlagNino,
     TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
@@ -190,17 +188,36 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.mqpNino,
     TestAccountBuilder.mqpAbroadNino,
     TestAccountBuilder.excludedAbroad,
-    TestAccountBuilder.excludedAll,
-    TestAccountBuilder.excludedAllButDead,
-    TestAccountBuilder.excludedAllButDeadMCI,
     TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
-    TestAccountBuilder.excludedIomMwrreAbroad,
-    TestAccountBuilder.excludedMwrreAbroad,
-    TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.excludedAbroad
   )
 
   niNinos.foreach(setupNationalInsuranceEndpoints)
+
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedMwrreAbroad}"))
+    (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedDissonanceIomMwrreAbroad}"))
+    (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedMwrre}"))
+    (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
 
   when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedAll}"))
     (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
@@ -230,7 +247,7 @@ object MockNispHttp extends MockitoSugar {
   when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedIomMwrreAbroad}"))
     (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
     .thenReturn(Future.failed(new Upstream4xxResponse(
-      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":[\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"EXCLUSION_ISLE_OF_MAN\"],\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
       upstreamResponseCode = 403,
       reportAs = 500
     )))
