@@ -95,7 +95,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
       }
 
       def generateSPRequestViaStatePension(userId: String): Future[Result] = {
-        MockMWRREExclusionController.showSP()(fakeRequest.withSession(
+        MockExclusionController.showSP()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> userId,
@@ -256,7 +256,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
         "return only the MWRRE Exclusion on /exclusion" in {
 
-          val result = MockMWRREExclusionController.showSP()(fakeRequest.withSession(
+          val result = MockExclusionController.showSP()(fakeRequest.withSession(
               SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
               SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
               SessionKeys.userId -> mockUserIdExcludedMwrre,

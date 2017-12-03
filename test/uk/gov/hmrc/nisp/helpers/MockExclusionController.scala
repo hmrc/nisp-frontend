@@ -59,39 +59,3 @@ object MockExclusionController extends ExclusionController {
   override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 }
-
-object MockMWRREExclusionController extends ExclusionController {
-  override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-
-  override protected def authConnector: AuthConnector = MockAuthConnector
-  override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-    override val ggSignInUrl: String = ""
-    override val verifySignIn: String = ""
-    override val verifySignInContinue: Boolean = false
-    override val assetsPrefix: String = ""
-    override val reportAProblemNonJSUrl: String = ""
-    override val ssoUrl: Option[String] = None
-    override val identityVerification: Boolean = true
-    override val betaFeedbackUnauthenticatedUrl: String = ""
-    override val notAuthorisedRedirectUrl: String = ""
-    override val contactFrontendPartialBaseUrl: String = ""
-    override val govUkFinishedPageUrl: String = ""
-    override val showGovUkDonePage: Boolean = true
-    override val analyticsHost: String = ""
-    override val betaFeedbackUrl: String = ""
-    override val analyticsToken: Option[String] = None
-    override val reportAProblemPartialUrl: String = ""
-    override val contactFormServiceIdentifier: String = ""
-    override val postSignInRedirectUrl: String = ""
-    override val ivUpliftUrl: String = ""
-    override val pertaxFrontendUrl: String = ""
-    override val breadcrumbPartialUrl: String = ""
-    override val showFullNI: Boolean = false
-    override val futureProofPersonalMax: Boolean = false
-    override val isWelshEnabled = true
-  }
-  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
-  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-}

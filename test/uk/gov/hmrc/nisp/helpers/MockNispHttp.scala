@@ -26,55 +26,16 @@ import uk.gov.hmrc.http.{BadRequestException, HttpGet, HttpResponse, Upstream4xx
 
 object MockNispHttp extends MockitoSugar {
   val mockHttp = mock[HttpGet]
-  val ninos = List(
-    TestAccountBuilder.regularNino,
-    TestAccountBuilder.blankNino,
-    TestAccountBuilder.fullUserNino,
-    TestAccountBuilder.contractedOutBTestNino,
-    TestAccountBuilder.mqpNino,
-    TestAccountBuilder.forecastOnlyNino,
-    TestAccountBuilder.invalidKeyNino,
-    TestAccountBuilder.abroadNino,
-    TestAccountBuilder.mqpAbroadNino,
-    TestAccountBuilder.hrpNino,
-    TestAccountBuilder.fillGapsMultiple,
-    TestAccountBuilder.fillGapSingle,
-    TestAccountBuilder.noQualifyingYears,
-    TestAccountBuilder.backendNotFound,
-    TestAccountBuilder.spaUnderConsiderationNino,
-    TestAccountBuilder.spaUnderConsiderationNoFlagNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionIoMNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
-
-    TestAccountBuilder.excludedAll,
-    TestAccountBuilder.excludedAllButDead,
-    TestAccountBuilder.excludedAllButDeadMCI,
-    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
-    TestAccountBuilder.excludedIomMwrreAbroad,
-    TestAccountBuilder.excludedMwrreAbroad,
-    TestAccountBuilder.excludedMwrre,
-    TestAccountBuilder.excludedAbroad)
 
   val noDataNinos = List(
     TestAccountBuilder.backendNotFound
   )
-  val ninosWithData = ninos.diff(noDataNinos)
 
   def createMockedURL(urlEndsWith: String, response: Future[HttpResponse]): Unit =
     when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(urlEndsWith))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(response)
 
   def createFailedMockedURL(urlEndsWith: String): Unit =
     when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(urlEndsWith))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(Future.failed(new BadRequestException("")))
-
-  def setupNispEndpoints(nino: Nino): Unit = {
-    createMockedURL(s"nisp/$nino/spsummary", TestAccountBuilder.jsonResponse(nino, "summary"))
-    createMockedURL(s"nisp/$nino/nirecord", TestAccountBuilder.jsonResponse(nino, "nirecord"))
-    createMockedURL(s"nisp/$nino/schememembership", TestAccountBuilder.jsonResponse(nino, "schememembership"))
-  }
 
   def setupStatePensionEndpoints(nino: Nino): Unit = {
     createMockedURL(s"state-pension/ni/$nino", TestAccountBuilder.jsonResponse(nino, "state-pension"))
@@ -84,9 +45,6 @@ object MockNispHttp extends MockitoSugar {
     createMockedURL(s"national-insurance/ni/$nino", TestAccountBuilder.jsonResponse(nino, "national-insurance-record"))
   }
 
-  // NISP
-
-  ninosWithData.foreach(setupNispEndpoints)
 
   val badRequestNino = TestAccountBuilder.nonExistentNino
 
