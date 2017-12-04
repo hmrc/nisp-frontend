@@ -61,6 +61,24 @@ object MockNispHttp extends MockitoSugar {
   // State Pension
   val spNinos = List(
     TestAccountBuilder.regularNino,
+    TestAccountBuilder.fullUserNino,
+    TestAccountBuilder.forecastOnlyNino,
+    TestAccountBuilder.fillGapSingle,
+    TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.contractedOutBTestNino,
+    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.noQualifyingYears,
+    TestAccountBuilder.abroadNino,
+    TestAccountBuilder.mqpNino,
+    TestAccountBuilder.mqpAbroadNino,
+    TestAccountBuilder.excludedAll,
+    TestAccountBuilder.excludedAllButDead,
+    TestAccountBuilder.excludedAllButDeadMCI,
+    TestAccountBuilder.excludedAbroad,
+    TestAccountBuilder.excludedMwrre,
+    TestAccountBuilder.excludedMwrreAbroad,
+    TestAccountBuilder.excludedIomMwrreAbroad,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     TestAccountBuilder.spaUnderConsiderationNino,
     TestAccountBuilder.spaUnderConsiderationNoFlagNino,
     TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
@@ -68,31 +86,7 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
     TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
     TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
-    TestAccountBuilder.excludedAllButDeadMCI,
-    TestAccountBuilder.excludedMwrre,
-    TestAccountBuilder.excludedAbroad,
-    TestAccountBuilder.fullUserNino,
-    TestAccountBuilder.hrpNino,
-    TestAccountBuilder.noQualifyingYears,
-    TestAccountBuilder.fillGapsMultiple,
-    TestAccountBuilder.fillGapSingle,
-    TestAccountBuilder.contractedOutBTestNino,
-    TestAccountBuilder.abroadNino,
-    TestAccountBuilder.forecastOnlyNino,
-    TestAccountBuilder.contractedOutBTestNino,
-    TestAccountBuilder.hrpNino,
-    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
-    TestAccountBuilder.mqpNino,
-    TestAccountBuilder.mqpAbroadNino,
-    TestAccountBuilder.excludedAll,
-    TestAccountBuilder.excludedAllButDead,
-    TestAccountBuilder.excludedAllButDeadMCI,
-    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
-    TestAccountBuilder.excludedIomMwrreAbroad,
-    TestAccountBuilder.excludedMwrreAbroad,
-    TestAccountBuilder.excludedMwrre,
-    TestAccountBuilder.excludedAbroad
+    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino
   )
 
   spNinos.foreach(setupStatePensionEndpoints)
@@ -122,19 +116,20 @@ object MockNispHttp extends MockitoSugar {
     )))
 
   // National Insurance
-
   val niNinos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.fullUserNino,
+    TestAccountBuilder.forecastOnlyNino,
+    TestAccountBuilder.fillGapSingle,
+    TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.hrpNino,
     TestAccountBuilder.noQualifyingYears,
-    TestAccountBuilder.fillGapsMultiple,
-    TestAccountBuilder.fillGapSingle,
-    TestAccountBuilder.contractedOutBTestNino,
     TestAccountBuilder.abroadNino,
-    TestAccountBuilder.forecastOnlyNino,
-    TestAccountBuilder.contractedOutBTestNino,
-    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.mqpNino,
+    TestAccountBuilder.mqpAbroadNino,
+    TestAccountBuilder.excludedAbroad,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     TestAccountBuilder.spaUnderConsiderationNino,
     TestAccountBuilder.spaUnderConsiderationNoFlagNino,
     TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
@@ -142,12 +137,7 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
     TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
     TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
-    TestAccountBuilder.mqpNino,
-    TestAccountBuilder.mqpAbroadNino,
-    TestAccountBuilder.excludedAbroad,
-    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
-    TestAccountBuilder.excludedAbroad
+    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino
   )
 
   niNinos.foreach(setupNationalInsuranceEndpoints)
