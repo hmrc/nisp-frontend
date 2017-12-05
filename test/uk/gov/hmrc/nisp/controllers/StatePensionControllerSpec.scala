@@ -196,7 +196,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
 
       "return /exclusion for MWRRE user" in {
         val result = MockMWRREStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
-        println(contentAsString(result));
         status(result) shouldBe SEE_OTHER // 303
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
