@@ -1,0 +1,5 @@
+{
+  "message" : "The customer is not eligible",
+  "code" : "EXCLUSION_DEAD",
+  "eligibilityDate" : "2019-02-03"
+}

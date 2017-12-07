@@ -19,7 +19,6 @@ package uk.gov.hmrc.nisp.helpers
 import org.joda.time.LocalDate
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.{ApplicationConfig, ApplicationGlobalTrait}
-import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.controllers.NIRecordController
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
@@ -39,8 +38,8 @@ object MockNIRecordController extends MockNIRecordController {
 
 trait MockNIRecordController extends NIRecordController {
   override protected def authConnector: AuthConnector = MockAuthConnector
-  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
-  override val statePensionService: StatePensionService = MockStatePensionServiceViaNisp
+  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
+  override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
 
   override val applicationConfig: ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = ""
@@ -66,8 +65,6 @@ trait MockNIRecordController extends NIRecordController {
     override val breadcrumbPartialUrl: String = ""
     override val showFullNI: Boolean = true
     override val futureProofPersonalMax: Boolean = false
-    override val useStatePensionAPI: Boolean = true
-    override val useNationalInsuranceAPI: Boolean = true
     override val isWelshEnabled = true
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever

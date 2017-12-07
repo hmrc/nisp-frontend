@@ -44,8 +44,6 @@ object MockBreadcrumb extends NispBreadcrumb {
     override val breadcrumbPartialUrl: String = "http://localhost:9232/account"
     override val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
-    override val useStatePensionAPI: Boolean = true
-    override val useNationalInsuranceAPI: Boolean = true
     override val isWelshEnabled = true
   }
 }

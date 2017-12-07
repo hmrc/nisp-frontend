@@ -67,7 +67,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
   def testAccountController(testNow: LocalDateTime): StatePensionController = new MockStatePensionController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNisp
+    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
   }
 
   "State Pension controller" should {
@@ -121,8 +121,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
             override val isWelshEnabled = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -252,8 +250,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
             override val isWelshEnabled = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -289,8 +285,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
             override val isWelshEnabled = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -389,13 +383,11 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val breadcrumbPartialUrl: String = ""
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = true
-            override val useStatePensionAPI: Boolean = true
-            override val useNationalInsuranceAPI: Boolean = true
             override val isWelshEnabled = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
-        "show new personal max text when there are multiple/single year" in {
+          "show new personal max text when there are multiple/single year" in {
           val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")

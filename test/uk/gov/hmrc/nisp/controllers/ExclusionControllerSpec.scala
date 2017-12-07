@@ -25,7 +25,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
@@ -88,15 +87,6 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       def generateSPRequest(userId: String): Future[Result] = {
         MockExclusionController.showSP()(fakeRequest.withSession(
-          SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> userId,
-          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
-        ))
-      }
-
-      def generateSPRequestViaStatePension(userId: String): Future[Result] = {
-        MockMWRREExclusionController.showSP()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> userId,
@@ -256,7 +246,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
         "return only the MWRRE Exclusion on /exclusion" in {
 
-          val result = MockMWRREExclusionController.showSP()(fakeRequest.withSession(
+          val result = MockExclusionController.showSP()(fakeRequest.withSession(
               SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
               SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
               SessionKeys.userId -> mockUserIdExcludedMwrre,
@@ -301,7 +291,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       "The User has SPA under consideration flag and Amount Dis exclusion" should {
         "return with SPA under consideration message" in {
-          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedAmountDis)
+          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedAmountDis)
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (spaUnderConsiderationMessaging)
         }
@@ -309,7 +299,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       "The User has SPA under consideration flag and IoM exclusion" should {
         "return with SPA under consideration message" in {
-          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedIoM)
+          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedIoM)
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (spaUnderConsiderationMessaging)
         }
@@ -317,7 +307,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       "The User has SPA under consideration flag and Mwrre exclusion" should {
         "return with no SPA under consideration message" in {
-          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedMwrre)
+          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedMwrre)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
         }
@@ -325,7 +315,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       "The User has SPA under consideration flag and Over Spa exclusion" should {
         "return with no SPA under consideration message" in {
-          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedOverSpa)
+          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedOverSpa)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
         }
@@ -333,7 +323,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       "The User has SPA under consideration flag and Multiple exclusions with Over SPA first" should {
         "return with no SPA under consideration message" in {
-          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedMultiple)
+          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedMultiple)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
         }
@@ -341,7 +331,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
       "The User has no SPA under consideration flag and exclusion" should {
         "return with no SPA under consideration message" in {
-          val result = generateSPRequestViaStatePension(mockUserIdSPAUnderConsiderationExcludedNoFlag)
+          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedNoFlag)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
         }

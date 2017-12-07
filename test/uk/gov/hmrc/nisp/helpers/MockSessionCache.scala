@@ -40,8 +40,6 @@ object MockSessionCache extends SessionCache{
 
   private def loadObjectBasedOnKey[T](key: String)(implicit rds: Reads[T]): Option[T] =
     key match {
-      case "NI" => loadObjectFromFile(s"test/resources/regular/nirecord.json")
-      case "SP" => loadObjectFromFile(s"test/resources/regular/summary.json")
       case _ => None
     }
 

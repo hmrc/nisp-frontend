@@ -6,13 +6,49 @@
   },
   "qualifyingYears": 28,
   "qualifyingYearsPriorTo1975": 0,
-  "numberOfGaps": 10,
+  "numberOfGaps": 6,
   "numberOfGapsPayable": 4,
   "dateOfEntry": "1975-08-01",
-  "homeResponsibilitiesProtection": false,
-  "earningsIncludedUpTo": "2014-04-05",
+  "homeResponsibilitiesProtection": true,
+  "earningsIncludedUpTo": "2016-04-05",
   "_embedded": {
     "taxYears": [
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2015-16"
+          }
+        },
+        "taxYear": "2015-16",
+        "qualifying": true,
+        "classOneContributions": 2430.24,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2014-15"
+          }
+        },
+        "taxYear": "2014-15",
+        "qualifying": true,
+        "classOneContributions": 2430.24,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
       {
         "_links": {
           "self": {
@@ -20,15 +56,15 @@
           }
         },
         "taxYear": "2013-14",
-        "qualifying": false,
-        "classOneContributions": 0,
+        "qualifying": true,
+        "classOneContributions": 2430.24,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 0,
-        "classThreePayable": 704.60,
-        "classThreePayableBy": "2019-04-05",
-        "classThreePayableByPenalty": "2023-04-05",
-        "payable": true,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
         "underInvestigation": false
       },
       {
@@ -38,12 +74,12 @@
           }
         },
         "taxYear": "2012-13",
-        "qualifying": true,
+        "qualifying": false,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 52,
-        "classThreePayable": 689,
+        "otherCredits": 12,
+        "classThreePayable": 530,
         "classThreePayableBy": "2019-04-05",
         "classThreePayableByPenalty": "2023-04-05",
         "payable": true,
@@ -74,7 +110,7 @@
           }
         },
         "taxYear": "2010-11",
-        "qualifying": true,
+        "qualifying": false,
         "classOneContributions": 1149.98,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
@@ -93,7 +129,7 @@
         },
         "taxYear": "2009-10",
         "qualifying": true,
-        "classOneContributions": 4259.6,
+        "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
         "otherCredits": 52,
@@ -110,7 +146,7 @@
           }
         },
         "taxYear": "2008-09",
-        "qualifying": true,
+        "qualifying": false,
         "classOneContributions": 0,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
@@ -453,10 +489,10 @@
         },
         "taxYear": "1989-90",
         "qualifying": true,
-        "classOneContributions": 0,
+        "classOneContributions": 1149.98,
         "classTwoCredits": 0,
         "classThreeCredits": 0,
-        "otherCredits": 52,
+        "otherCredits": 0,
         "classThreePayable": 0,
         "classThreePayableBy": null,
         "classThreePayableByPenalty": null,

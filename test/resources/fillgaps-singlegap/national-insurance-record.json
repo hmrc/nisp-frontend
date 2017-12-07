@@ -1,0 +1,54 @@
+{
+  "_links": {
+    "self": {
+      "href": "/national-insurance-record/ni/QQ123456A"
+    }
+  },
+  "qualifyingYears": 28,
+  "qualifyingYearsPriorTo1975": 0,
+  "numberOfGaps": 1,
+  "numberOfGapsPayable": 1,
+  "dateOfEntry": "1975-08-01",
+  "homeResponsibilitiesProtection": true,
+  "earningsIncludedUpTo": "2014-04-05",
+  "_embedded": {
+    "taxYears": [
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2013-14"
+          }
+        },
+        "taxYear": "2013-14",
+        "qualifying": false,
+        "classOneContributions": 2430.24,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 722.8,
+        "classThreePayableBy": "2019-04-05",
+        "classThreePayableByPenalty": "2024-04-05",
+        "payable": true,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2012-13"
+          }
+        },
+        "taxYear": "2012-13",
+        "qualifying": false,
+        "classOneContributions": 2430.24,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 722.8,
+        "classThreePayableBy": "2018-04-05",
+        "classThreePayableByPenalty": "2023-04-05",
+        "payable": true,
+        "underInvestigation": false
+      }
+    ]
+  }
+}

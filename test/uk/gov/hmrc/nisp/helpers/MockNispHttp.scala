@@ -22,47 +22,14 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.domain.Nino
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ BadRequestException, HttpGet, HttpResponse, Upstream4xxResponse }
+import uk.gov.hmrc.http.{BadRequestException, HttpGet, HttpResponse, Upstream4xxResponse}
 
 object MockNispHttp extends MockitoSugar {
   val mockHttp = mock[HttpGet]
-  val ninos = List(
-    TestAccountBuilder.regularNino,
-    TestAccountBuilder.blankNino,
-    TestAccountBuilder.fullUserNino,
-    TestAccountBuilder.contractedOutBTestNino,
-    TestAccountBuilder.mqpNino,
-    TestAccountBuilder.forecastOnlyNino,
-    TestAccountBuilder.invalidKeyNino,
-    TestAccountBuilder.abroadNino,
-    TestAccountBuilder.mqpAbroadNino,
-    TestAccountBuilder.hrpNino,
-    TestAccountBuilder.fillGapsMultiple,
-    TestAccountBuilder.fillGapSingle,
-    TestAccountBuilder.noQualifyingYears,
-    TestAccountBuilder.backendNotFound,
-    TestAccountBuilder.spaUnderConsiderationNino,
-    TestAccountBuilder.spaUnderConsiderationNoFlagNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionIoMNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
-
-    TestAccountBuilder.excludedAll,
-    TestAccountBuilder.excludedAllButDead,
-    TestAccountBuilder.excludedAllButDeadMCI,
-    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
-    TestAccountBuilder.excludedIomMwrreAbroad,
-    TestAccountBuilder.excludedMwrreAbroad,
-    TestAccountBuilder.excludedMwrre,
-    TestAccountBuilder.excludedAbroad)
 
   val noDataNinos = List(
     TestAccountBuilder.backendNotFound
   )
-  val ninosWithData = ninos.diff(noDataNinos)
 
   def createMockedURL(urlEndsWith: String, response: Future[HttpResponse]): Unit =
     when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(urlEndsWith))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(response)
@@ -70,30 +37,20 @@ object MockNispHttp extends MockitoSugar {
   def createFailedMockedURL(urlEndsWith: String): Unit =
     when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(urlEndsWith))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(Future.failed(new BadRequestException("")))
 
-  def setupNispEndpoints(nino: Nino): Unit = {
-    createMockedURL(s"nisp/$nino/spsummary", TestAccountBuilder.jsonResponse(nino, "summary"))
-    createMockedURL(s"nisp/$nino/nirecord", TestAccountBuilder.jsonResponse(nino, "nirecord"))
-    createMockedURL(s"nisp/$nino/schememembership", TestAccountBuilder.jsonResponse(nino, "schememembership"))
-  }
-
   def setupStatePensionEndpoints(nino: Nino): Unit = {
-    createMockedURL(s"ni/$nino", TestAccountBuilder.jsonResponse(nino, "state-pension"))
+    createMockedURL(s"state-pension/ni/$nino", TestAccountBuilder.jsonResponse(nino, "state-pension"))
   }
 
   def setupNationalInsuranceEndpoints(nino: Nino): Unit = {
     createMockedURL(s"national-insurance/ni/$nino", TestAccountBuilder.jsonResponse(nino, "national-insurance-record"))
   }
 
-  // NISP
-
-  ninosWithData.foreach(setupNispEndpoints)
 
   val badRequestNino = TestAccountBuilder.nonExistentNino
 
-  createFailedMockedURL(s"nisp/$badRequestNino/spsummary")
-  createFailedMockedURL(s"nisp/$badRequestNino/nirecord")
+  createFailedMockedURL(s"ni/$badRequestNino")
 
-  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"nisp/${TestAccountBuilder.backendNotFound}/spsummary"))
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"ni/${TestAccountBuilder.backendNotFound}"))
     (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
     .thenReturn(Future.failed(new Upstream4xxResponse(
       message = """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
@@ -104,6 +61,24 @@ object MockNispHttp extends MockitoSugar {
   // State Pension
   val spNinos = List(
     TestAccountBuilder.regularNino,
+    TestAccountBuilder.fullUserNino,
+    TestAccountBuilder.forecastOnlyNino,
+    TestAccountBuilder.fillGapSingle,
+    TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.contractedOutBTestNino,
+    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.noQualifyingYears,
+    TestAccountBuilder.abroadNino,
+    TestAccountBuilder.mqpNino,
+    TestAccountBuilder.mqpAbroadNino,
+    TestAccountBuilder.excludedAll,
+    TestAccountBuilder.excludedAllButDead,
+    TestAccountBuilder.excludedAllButDeadMCI,
+    TestAccountBuilder.excludedAbroad,
+    TestAccountBuilder.excludedMwrre,
+    TestAccountBuilder.excludedMwrreAbroad,
+    TestAccountBuilder.excludedIomMwrreAbroad,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     TestAccountBuilder.spaUnderConsiderationNino,
     TestAccountBuilder.spaUnderConsiderationNoFlagNino,
     TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
@@ -111,10 +86,7 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
     TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
     TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
-    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
-    TestAccountBuilder.excludedAllButDeadMCI,
-    TestAccountBuilder.excludedMwrre,
-    TestAccountBuilder.excludedAbroad
+    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino
   )
 
   spNinos.foreach(setupStatePensionEndpoints)
@@ -144,12 +116,56 @@ object MockNispHttp extends MockitoSugar {
     )))
 
   // National Insurance
-
   val niNinos = List(
-    TestAccountBuilder.regularNino
+    TestAccountBuilder.regularNino,
+    TestAccountBuilder.fullUserNino,
+    TestAccountBuilder.forecastOnlyNino,
+    TestAccountBuilder.fillGapSingle,
+    TestAccountBuilder.fillGapsMultiple,
+    TestAccountBuilder.contractedOutBTestNino,
+    TestAccountBuilder.hrpNino,
+    TestAccountBuilder.noQualifyingYears,
+    TestAccountBuilder.abroadNino,
+    TestAccountBuilder.mqpNino,
+    TestAccountBuilder.mqpAbroadNino,
+    TestAccountBuilder.excludedAbroad,
+    TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
+    TestAccountBuilder.spaUnderConsiderationNino,
+    TestAccountBuilder.spaUnderConsiderationNoFlagNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionIoMNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
+    TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino
   )
 
   niNinos.foreach(setupNationalInsuranceEndpoints)
+
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedMwrreAbroad}"))
+    (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedDissonanceIomMwrreAbroad}"))
+    (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
+  when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedMwrre}"))
+    (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
+    .thenReturn(Future.failed(new Upstream4xxResponse(
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      upstreamResponseCode = 403,
+      reportAs = 500
+    )))
+
 
   when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedAll}"))
     (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
@@ -179,7 +195,7 @@ object MockNispHttp extends MockitoSugar {
   when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"national-insurance/ni/${TestAccountBuilder.excludedIomMwrreAbroad}"))
     (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any()))
     .thenReturn(Future.failed(new Upstream4xxResponse(
-      message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+      message = "GET of 'http://url' returned 403. Response body: '{\"code\":[\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"EXCLUSION_ISLE_OF_MAN\"],\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
       upstreamResponseCode = 403,
       reportAs = 500
     )))
