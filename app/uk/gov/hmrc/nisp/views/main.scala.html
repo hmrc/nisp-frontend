@@ -165,7 +165,7 @@ if(articleEnabled) {
 }
 
 @termsAndConditionFooterLink = @{
-    Map("url" -> routes.TermsConditionsController.show(false).url , "text" -> Messages("nisp.tandcs.title"))
+    Map("url" -> routes.TermsConditionsController.show().url , "text" -> Messages("nisp.tandcs.title"))
 }
 @isWelsh = @{
     if(messages.lang.code == "cy"){
