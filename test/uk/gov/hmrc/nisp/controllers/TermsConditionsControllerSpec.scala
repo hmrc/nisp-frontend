@@ -39,32 +39,48 @@ class TermsConditionsControllerSpec extends PlaySpec with OneAppPerSuite {
   }
 
   "GET /" should {
-    "return 200" in {
-      val result = MockTermsConditionsController.show(Some(false))(fakeRequest)
-      status(result) mustBe Status.OK
-    }
 
-    "return 200 without flag value" in {
-      val result = MockTermsConditionsController.show()(fakeRequest)
+    "return 200" in {
+      val result = MockTermsConditionsController.show(fakeRequest)
       status(result) mustBe Status.OK
     }
 
     "return HTML" in {
-      val result = MockTermsConditionsController.show(Some(false))(fakeRequest)
+      val result = MockTermsConditionsController.show(fakeRequest)
       contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
     }
 
     "load the T&Cs page without back link" in {
-      val result = contentAsString(MockTermsConditionsController.show(Some(false))(fakeRequest))
+      val result = contentAsString(MockTermsConditionsController.show(fakeRequest))
       result must include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
       result must not include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
     }
 
     "load the T&Cs page with back link" in {
-      val result = contentAsString(MockTermsConditionsController.show(Some(true))(fakeRequest))
+      val fakeRequest = FakeRequest("GET", "/?showBackLink=true")
+      val result = contentAsString(MockTermsConditionsController.show(fakeRequest))
       result must include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
       result must include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
     }
+
+  }
+
+  "GET / with showBackLink query parameter" should {
+
+    "return 200 with flag value" in {
+      val fakeRequest = FakeRequest("GET", "/?showBackLink=false")
+      val result = MockTermsConditionsController.show(fakeRequest)
+      status(result) mustBe Status.OK
+      contentAsString(result) must not include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
+    }
+
+    "load the T&Cs page with back link" in {
+      val fakeRequest = FakeRequest("GET", "/?showBackLink=true")
+      val result = contentAsString(MockTermsConditionsController.show(fakeRequest))
+      result must include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
+      result must include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
+    }
+
   }
 }
