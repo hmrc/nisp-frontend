@@ -145,7 +145,7 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     </p>    
    
     <p>@Html(Messages("nisp.mqp.afterSpa", Dates.formatDate(statePension.pensionDate)))</p>
-    <p>@Messages("nisp.legal.mqp.forecastChanges") <a href='@routes.TermsConditionsController.show(Some(true)).url'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
+    <p>@Messages("nisp.legal.mqp.forecastChanges") <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
 
     <!-- WHAT ELSE YOU CAN DO -->
 
