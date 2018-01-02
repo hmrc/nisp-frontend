@@ -31,7 +31,7 @@ trait TermsConditionsController extends NispFrontendController with Actions {
 
   def show: Action[AnyContent] = UnauthorisedAction{
     implicit request =>
-      val showBackLink = request.queryString.get("showBackLink").getOrElse(List("false")).head.toBoolean
+      val showBackLink = request.queryString.get("showBackLink").fold(false)(_.head.toBoolean)
       Ok(termsAndConditions(showBackLink))
   }
 }
