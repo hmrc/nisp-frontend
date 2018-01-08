@@ -52,7 +52,7 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
       ) yield {
         statePension match {
           case Right(sp) if sp.reducedRateElection =>
-            Ok(excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), nationalInsurance.isRight, None))
+            Ok(excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), false, None))
           case Right(sp) if sp.abroadAutoCredit =>
             Ok(excluded_sp(Exclusion.Abroad, Some(sp.pensionAge), Some(sp.pensionDate), nationalInsurance.isRight, None))
           case Left(exclusion) =>
