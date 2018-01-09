@@ -58,7 +58,6 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserIdSPAUnderConsiderationExcludedMultiple = authId("mockspaunderconsiderationexclusionmultiple")
   val mockUserIdSPAUnderConsiderationExcludedNoFlag = authId("mockspaunderconsiderationexclusionnoflag")
 
-
   val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
   val mciMessaging = "We need to talk to you about an MCI error before you sign in."
   val postSPAMessaging = "If you have not already started <a href=\"https://www.gov.uk/claim-state-pension-online\" rel=\"external\" data-journey-click=\"checkmystatepension:external:claimstatepension\">claiming your State Pension</a>, you can <a href=\"https://www.gov.uk/deferring-state-pension\" rel=\"external\" data-journey-click=\"checkmystatepension:external:deferstatepension\" target=\"_blank\">put off claiming your State Pension (opens in new tab)</a> and this may mean you get extra State Pension when you do want to claim it."
@@ -261,11 +260,11 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
         "return only the MWRRE Exclusion on /exclusionni" in {
           val result = generateNIRequest(mockUserIdExcludedMwrre)
-          redirectLocation(result) shouldBe None
+          redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include isleOfManMessagingNI
-          contentAsString(result) should include (mwrreMessagingNI)
+          contentAsString(result) should not include (mwrreMessagingNI)
         }
       }
 

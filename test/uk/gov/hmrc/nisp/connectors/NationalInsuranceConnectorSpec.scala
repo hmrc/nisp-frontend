@@ -26,7 +26,6 @@ import org.scalatest.time.{Millis, Seconds, Span}
 import uk.gov.hmrc.nisp.models
 import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
 
-
 class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
 
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
@@ -114,7 +113,6 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
         "be not underInvestigation " in {
           taxYear.underInvestigation shouldBe false
         }
-
 
       }
 
@@ -209,9 +207,6 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
       }
     }
 
-
-
   }
-
 
 }

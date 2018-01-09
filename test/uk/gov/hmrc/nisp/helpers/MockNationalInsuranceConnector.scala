@@ -21,7 +21,6 @@ import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.http.HttpGet
 
-
 object MockNationalInsuranceConnector extends NationalInsuranceConnector {
   override def http: HttpGet = MockNispHttp.mockHttp
   override def sessionCache: SessionCache = MockSessionCache

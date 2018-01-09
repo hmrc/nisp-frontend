@@ -69,9 +69,9 @@ class TermsConditionsControllerSpec extends PlaySpec with OneAppPerSuite {
   "GET / with showBackLink query parameter" should {
 
     "return 200 with flag value" in {
-      val fakeRequest = FakeRequest("GET", "/?showBackLink=false")
       val result = MockTermsConditionsController.show(fakeRequest)
       status(result) mustBe Status.OK
+      contentAsString(result) must include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
       contentAsString(result) must not include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
     }
 

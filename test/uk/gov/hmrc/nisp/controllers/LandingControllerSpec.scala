@@ -48,13 +48,10 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
-
   val testLandingController = new LandingController {
     override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
 
     override val applicationConfig: ApplicationConfig = mock[ApplicationConfig]
-
-
 
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
 

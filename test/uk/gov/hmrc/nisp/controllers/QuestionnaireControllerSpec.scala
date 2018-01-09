@@ -32,7 +32,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequest = FakeRequest("GET", "/")
 
-
   val testQuestionnaireController: QuestionnaireController = new QuestionnaireController {
     override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -55,7 +54,6 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       contentAsString(result).contains("http://gov.uk/deferring-state-pension")
       contentAsString(result).contains("https://gov.uk/plan-retirement-income")
       contentAsString(result).contains("https://pensionwise.gov.uk")
-
 
     }
   }
