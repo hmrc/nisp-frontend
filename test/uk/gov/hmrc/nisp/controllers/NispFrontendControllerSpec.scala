@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,14 +31,10 @@ import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-
-
 class NispFrontendControllerSpec extends UnitSpec with MockitoSugar with OneAppPerSuite {
 
   val mockLogger: Slf4JLogger = mock[Slf4JLogger]
   when(mockLogger.isErrorEnabled).thenReturn(true)
-
-
 
   def controller = new NispFrontendController {
     override val logger = new Logger(mockLogger)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,6 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserIdSPAUnderConsiderationExcludedOverSpa = authId("mockspaunderconsiderationexclusionoverspa")
   val mockUserIdSPAUnderConsiderationExcludedMultiple = authId("mockspaunderconsiderationexclusionmultiple")
   val mockUserIdSPAUnderConsiderationExcludedNoFlag = authId("mockspaunderconsiderationexclusionnoflag")
-
 
   val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
   val mciMessaging = "We need to talk to you about an MCI error before you sign in."
@@ -261,11 +260,11 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
         "return only the MWRRE Exclusion on /exclusionni" in {
           val result = generateNIRequest(mockUserIdExcludedMwrre)
-          redirectLocation(result) shouldBe None
+          redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include isleOfManMessagingNI
-          contentAsString(result) should include (mwrreMessagingNI)
+          contentAsString(result) should not include (mwrreMessagingNI)
         }
       }
 

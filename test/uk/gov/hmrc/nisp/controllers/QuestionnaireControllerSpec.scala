@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequest = FakeRequest("GET", "/")
 
-
   val testQuestionnaireController: QuestionnaireController = new QuestionnaireController {
     override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -55,7 +54,6 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
       contentAsString(result).contains("http://gov.uk/deferring-state-pension")
       contentAsString(result).contains("https://gov.uk/plan-retirement-income")
       contentAsString(result).contains("https://pensionwise.gov.uk")
-
 
     }
   }

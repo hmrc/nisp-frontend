@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 import uk.gov.hmrc.nisp.models
 import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
-
 
 class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
 
@@ -114,7 +113,6 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
         "be not underInvestigation " in {
           taxYear.underInvestigation shouldBe false
         }
-
 
       }
 
@@ -209,9 +207,6 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
       }
     }
 
-
-
   }
-
 
 }

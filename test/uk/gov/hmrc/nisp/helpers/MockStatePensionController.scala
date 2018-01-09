@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,15 +30,6 @@ object MockStatePensionController extends MockStatePensionController {
   override val citizenDetailsService = MockCitizenDetailsService
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-}
-
-object MockMWRREStatePensionController extends MockStatePensionController {
-  override val citizenDetailsService = MockCitizenDetailsService
-  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-  override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
-  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
 }
 
 trait MockStatePensionController extends StatePensionController {

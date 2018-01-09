@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -195,7 +195,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       }
 
       "return /exclusion for MWRRE user" in {
-        val result = MockMWRREStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
+        val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdMwrre))
         status(result) shouldBe SEE_OTHER // 303
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
