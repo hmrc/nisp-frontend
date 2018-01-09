@@ -156,7 +156,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       "return timeout error for last request -15 minutes" in {
         val result = MockStatePensionController.show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.minusMinutes(15).getMillis.toString,
+          SessionKeys.lastRequestTimestamp -> now.minusMinutes(16).getMillis.toString,
           SessionKeys.userId -> mockUserId,
           SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
         ))
