@@ -151,15 +151,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                 ))
                 Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
 
-              } /*else if (statePension.reducedRateElection) {
-                customAuditConnector.sendEvent(AccountExclusionEvent(
-                  user.nino.nino,
-                  user.name,
-                  Exclusion.MarriedWomenReducedRateElection
-                ))
-                Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
-
-              }*/ else {
+              } else {
                 val (currentChart, forecastChart, personalMaximumChart) =
                   calculateChartWidths(
                     statePension.amounts.current,
