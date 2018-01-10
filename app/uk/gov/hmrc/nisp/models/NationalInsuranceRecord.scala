@@ -29,7 +29,8 @@ case class NationalInsuranceRecord(
                                     dateOfEntry: Option[LocalDate],
                                     homeResponsibilitiesProtection: Boolean,
                                     earningsIncludedUpTo: LocalDate,
-                                    taxYears: List[NationalInsuranceTaxYear]
+                                    taxYears: List[NationalInsuranceTaxYear],
+                                    reducedRateElection:Boolean
                                   )
 
 object NationalInsuranceRecord {
@@ -44,7 +45,8 @@ object NationalInsuranceRecord {
       (JsPath \ "_embedded" \ "taxYears").read[JsValue].map {
         case obj: JsObject => List(obj.as[NationalInsuranceTaxYear])
         case other => other.as[List[NationalInsuranceTaxYear]]
-      }
+      } and
+    (JsPath \ "reducedRateElection").read[Boolean]
     ) (NationalInsuranceRecord.apply _)
 
   implicit val writes: Writes[NationalInsuranceRecord] = (
@@ -55,7 +57,8 @@ object NationalInsuranceRecord {
       (JsPath \ "dateOfEntry").writeNullable[LocalDate] and
       (JsPath \ "homeResponsibilitiesProtection").write[Boolean] and
       (JsPath \ "earningsIncludedUpTo").write[LocalDate] and
-      (JsPath \ "_embedded" \ "taxYears").write[List[NationalInsuranceTaxYear]]
+      (JsPath \ "_embedded" \ "taxYears").write[List[NationalInsuranceTaxYear]] and
+      (JsPath \ "reducedRateElection").write[Boolean]
     ) (unlift(NationalInsuranceRecord.unapply))
 
   implicit val formats: Format[NationalInsuranceRecord] = Format(reads, writes)

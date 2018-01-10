@@ -102,6 +102,14 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
           nationalInsuranceResponse <- nationalInsuranceResponseF
         ) yield {
           (statePensionResponse, nationalInsuranceResponse) match {
+            case (Right(statePension), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+              customAuditConnector.sendEvent(AccountExclusionEvent(
+                user.nino.nino,
+                user.name,
+                nationalInsuranceExclusion
+              ))
+              Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
+
             case (Right(statePension), Right(nationalInsuranceRecord)) =>
 
               sendAuditEvent(statePension, user)
@@ -143,7 +151,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                 ))
                 Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
 
-              } else if (statePension.reducedRateElection) {
+              } /*else if (statePension.reducedRateElection) {
                 customAuditConnector.sendEvent(AccountExclusionEvent(
                   user.nino.nino,
                   user.name,
@@ -151,7 +159,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                 ))
                 Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
 
-              } else {
+              }*/ else {
                 val (currentChart, forecastChart, personalMaximumChart) =
                   calculateChartWidths(
                     statePension.amounts.current,

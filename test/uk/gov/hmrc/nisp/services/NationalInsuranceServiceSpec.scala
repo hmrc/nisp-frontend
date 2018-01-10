@@ -89,7 +89,8 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
             payable = false,
             underInvestigation = false
           )
-        )
+        ),
+        reducedRateElection =false
       )
 
       val service = new NationalInsuranceService with NationalInsuranceConnection {

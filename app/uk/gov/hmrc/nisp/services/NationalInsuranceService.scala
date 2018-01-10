@@ -46,7 +46,10 @@ trait NationalInsuranceConnection {
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
     nationalInsuranceConnector.getNationalInsurance(nino)
-      .map(ni => Right(ni.copy(taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse))))
+      .map{ni =>
+        if(ni.reducedRateElection) Left(Exclusion.MarriedWomenReducedRateElection)
+        else Right(ni.copy(taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse)))
+      }
       .recover {
         case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead) =>
           Left(Exclusion.Dead)

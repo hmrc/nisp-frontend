@@ -11,6 +11,7 @@
   "dateOfEntry": "1975-08-01",
   "homeResponsibilitiesProtection": false,
   "earningsIncludedUpTo": "2014-04-05",
+  "reducedRateElection": false,
   "_embedded": {
     "taxYears": []
   }

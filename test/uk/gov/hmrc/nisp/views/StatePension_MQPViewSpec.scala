@@ -134,7 +134,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
               NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
               NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-            )
+            ),
+            reducedRateElection = false
           )
           )))
 
@@ -283,7 +284,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
               NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
               NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-            )
+            ),
+            reducedRateElection = false
           )
           )))
 
@@ -365,7 +367,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -523,7 +526,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -602,7 +606,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -748,7 +753,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -829,7 +835,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -976,7 +983,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1056,7 +1064,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1202,7 +1211,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1287,7 +1297,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1416,7 +1427,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1482,7 +1494,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
@@ -1605,7 +1618,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
           lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))

@@ -260,11 +260,11 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
         "return only the MWRRE Exclusion on /exclusionni" in {
           val result = generateNIRequest(mockUserIdExcludedMwrre)
-          redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
+          redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include isleOfManMessagingNI
-          contentAsString(result) should not include (mwrreMessagingNI)
+          contentAsString(result) should include (mwrreMessagingNI)
         }
       }
 
