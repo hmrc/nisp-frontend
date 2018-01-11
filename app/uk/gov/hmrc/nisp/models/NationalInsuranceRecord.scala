@@ -20,7 +20,6 @@ import org.joda.time.LocalDate
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-
 case class NationalInsuranceRecord(
                                     qualifyingYears: Int,
                                     qualifyingYearsPriorTo1975: Int,
@@ -34,6 +33,10 @@ case class NationalInsuranceRecord(
                                   )
 
 object NationalInsuranceRecord {
+
+  val readNullableBoolean: JsPath => Reads[Boolean] =
+    jsPath => jsPath.readNullable[Boolean].map(_.getOrElse(false))
+
   implicit val reads: Reads[NationalInsuranceRecord] = (
     (JsPath \ "qualifyingYears").read[Int] and
       (JsPath \ "qualifyingYearsPriorTo1975").read[Int] and
@@ -46,7 +49,7 @@ object NationalInsuranceRecord {
         case obj: JsObject => List(obj.as[NationalInsuranceTaxYear])
         case other => other.as[List[NationalInsuranceTaxYear]]
       } and
-    (JsPath \ "reducedRateElection").read[Boolean]
+      readNullableBoolean(JsPath \ "reducedRateElection")
     ) (NationalInsuranceRecord.apply _)
 
   implicit val writes: Writes[NationalInsuranceRecord] = (
