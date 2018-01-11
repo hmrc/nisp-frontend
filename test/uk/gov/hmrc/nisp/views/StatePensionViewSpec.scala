@@ -113,7 +113,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -322,7 +323,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -403,7 +405,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -596,7 +599,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -677,7 +681,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -844,7 +849,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -928,7 +934,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1080,7 +1087,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1160,7 +1168,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1311,7 +1320,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-              )
+              ),
+              reducedRateElection = false
             )
             )))
 
@@ -1393,7 +1403,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
               NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
               NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-            )
+            ),
+            reducedRateElection = false
           )
           )))
 
@@ -1531,7 +1542,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
               NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
               NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
-            )
+            ),
+            reducedRateElection = false
           )
           )))
 

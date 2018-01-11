@@ -29,7 +29,8 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 import scala.util.Random
-import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
+import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 
 class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
@@ -89,7 +90,8 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
             payable = false,
             underInvestigation = false
           )
-        )
+        ),
+        reducedRateElection = false
       )
 
       val service = new NationalInsuranceService with NationalInsuranceConnection {
@@ -234,6 +236,48 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
           ex shouldBe Left(Exclusion.MarriedWomenReducedRateElection)
         }
       }
+    }
+
+    "There is a MWRRE Exclusion response for reducedRateElection = true" should {
+
+      val mockNationalInsuranceRecord = NationalInsuranceRecord(
+        qualifyingYears = 40,
+        qualifyingYearsPriorTo1975 = 0,
+        numberOfGaps = 2,
+        numberOfGapsPayable = 1,
+        Some(new LocalDate(1973, 7, 7)),
+        homeResponsibilitiesProtection = false,
+        earningsIncludedUpTo = new LocalDate(2016, 4, 5),
+        taxYears = List(
+          NationalInsuranceTaxYear(
+            taxYear = "2015-16",
+            qualifying = true,
+            classOneContributions = 12345.45,
+            classTwoCredits = 0,
+            classThreeCredits = 0,
+            otherCredits = 0,
+            classThreePayable = 0,
+            classThreePayableBy = None,
+            classThreePayableByPenalty = None,
+            payable = false,
+            underInvestigation = false
+          )
+        ),
+        reducedRateElection = true
+      )
+
+      val service = new NationalInsuranceService with NationalInsuranceConnection {
+        override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
+      }
+      when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful(mockNationalInsuranceRecord))
+
+      "return a Left(Excelution)" in {
+        val niSummary = service.getSummary(generateNino)
+        niSummary.isLeft shouldBe true
+        niSummary.left.get shouldBe a[Exclusion]
+      }
+
     }
   }
 }

@@ -102,6 +102,14 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
           nationalInsuranceResponse <- nationalInsuranceResponseF
         ) yield {
           (statePensionResponse, nationalInsuranceResponse) match {
+            case (Right(statePension), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+              customAuditConnector.sendEvent(AccountExclusionEvent(
+                user.nino.nino,
+                user.name,
+                nationalInsuranceExclusion
+              ))
+              Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
+
             case (Right(statePension), Right(nationalInsuranceRecord)) =>
 
               sendAuditEvent(statePension, user)
@@ -140,14 +148,6 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                   user.nino.nino,
                   user.name,
                   Exclusion.Abroad
-                ))
-                Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
-
-              } else if (statePension.reducedRateElection) {
-                customAuditConnector.sendEvent(AccountExclusionEvent(
-                  user.nino.nino,
-                  user.name,
-                  Exclusion.MarriedWomenReducedRateElection
                 ))
                 Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
 

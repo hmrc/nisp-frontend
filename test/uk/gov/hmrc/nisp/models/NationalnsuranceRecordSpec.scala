@@ -43,7 +43,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |  "earningsIncludedUpTo": "2016-04-05",
             |  "_embedded": {
             |    "taxYears": []
-            |  }
+            |  },
+            |  "reducedRateElection": false
             |}
           """.stripMargin).as[NationalInsuranceRecord] shouldBe
           NationalInsuranceRecord(
@@ -54,7 +55,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             dateOfEntry = Some(new LocalDate(2015, 5, 4)),
             homeResponsibilitiesProtection = false,
             earningsIncludedUpTo = new LocalDate(2016, 4, 5),
-            List()
+            List(),
+            reducedRateElection = false
           )
       }
     }
@@ -77,7 +79,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |  "earningsIncludedUpTo": "2016-04-05",
             |  "_embedded": {
             |    "taxYears": []
-            |  }
+            |  },
+            |  "reducedRateElection": false
             |}
           """.stripMargin).as[NationalInsuranceRecord] shouldBe
           NationalInsuranceRecord(
@@ -88,7 +91,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             dateOfEntry = None,
             homeResponsibilitiesProtection = false,
             earningsIncludedUpTo = new LocalDate(2016, 4, 5),
-            List()
+            List(),
+            reducedRateElection = false
           )
       }
     }
@@ -129,7 +133,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |      "payable": false,
             |      "underInvestigation": false
             |    }
-            |  }
+            |  },
+            |  "reducedRateElection": false
             |}
           """.stripMargin).as[NationalInsuranceRecord] shouldBe
           NationalInsuranceRecord(
@@ -152,7 +157,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
               None,
               false,
               false
-            ))
+            )),
+            reducedRateElection = false
           )
       }
     }
@@ -174,6 +180,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |  "dateOfEntry": "2015-05-04",
             |  "homeResponsibilitiesProtection": false,
             |  "earningsIncludedUpTo": "2018-04-05",
+            |  "reducedRateElection" : false,
             |  "_embedded": {
             |    "taxYears": [
             |      {
@@ -251,7 +258,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
                 false,
                 false
               )
-            )
+            ),
+            reducedRateElection = false
           )
       }
     }
