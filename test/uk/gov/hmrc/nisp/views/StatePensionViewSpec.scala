@@ -265,11 +265,11 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
           }
 
-          "render page with text  'Helpline 0345 608 0126'" in {
+          "render page with text  'Helpline 0800 731 0181'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
 
-          "render page with text  'Textphone 0345 300 0169'" in {
+          "render page with text  'Textphone 0800 731 0176'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
           }
 
@@ -545,10 +545,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           "render page with heading 'Get help'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
           }
-          "render page with text 'Helpline 0345 608 0126'" in {
+          "render page with text 'Helpline 0800 731 0181'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
-          "render page with text 'Textphone 0345 300 0169'" in {
+          "render page with text 'Textphone 0800 731 0176'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
           }
           "render page with text 'Monday to Friday: 8am to 6pm'" in {
