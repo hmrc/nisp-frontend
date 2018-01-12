@@ -184,9 +184,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     "render page with text  'Monday to Friday: 8am to 6pm'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
     }
-    "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
-    }
   }
 
   "Render Contracted Out View" should {
@@ -263,9 +260,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     }
     "render page with text  'Monday to Friday: 8am to 6pm'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
-    }
-    "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
     }
   }
 }

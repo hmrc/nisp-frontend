@@ -303,7 +303,6 @@ nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0800 731 0181
 nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 0176
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
-nisp.nirecord.helpline.callsCost = Mae galwadau yn costio hyd at 12c y funud o linellau daear. Gallai galwadau o ffonau symudol gostio mwy.
 
 #****************************
 # Gaps in your record page

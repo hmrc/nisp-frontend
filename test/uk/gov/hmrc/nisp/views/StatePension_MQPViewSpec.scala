@@ -240,9 +240,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
         "render page with text  'Monday to Friday: 8am to 6pm'" in {
           assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
         }
-        "render page with text  'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-          assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
-        }
       }
 
       "State Pension page with forecast only: With State Pension age under consideration message" should {
@@ -482,9 +479,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           }
           "render page with text 'Monday to Friday: 8am to 6pm'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
-          }
-          "render page with text 'Calls cost up to 12p a minute from landlines. Calls from mobiles may cost more.'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.callsCost")
           }
         }
 
