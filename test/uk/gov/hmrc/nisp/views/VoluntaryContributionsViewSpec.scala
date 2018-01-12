@@ -56,7 +56,7 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendControlle
     "render page with text  '1.  Find out how paying voluntary contributions affects your State Pension ' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body > h2.heading-medium:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.1")
     }
-    "render page with text  'You can call the Future Pension Centre on 0345 608 0126 to find out more about how filling gaps can affect your State Pension forecast.' " in {
+    "render page with text  'You can call the Future Pension Centre on 0800 731 0181 to find out more about how filling gaps can affect your State Pension forecast.' " in {
       assertElemetsOwnMessage(htmlAccountDoc, "article.content__body >p:nth-child(4)", "nisp.nirecord.voluntarycontributions.h2title.1.message", ".")
     }
 
