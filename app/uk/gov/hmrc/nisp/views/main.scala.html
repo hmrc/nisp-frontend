@@ -91,16 +91,6 @@
 @actingAttorneyBanner = {
 }
 
-@breadcrumb = @{
-    if(!hideBreadcrumb){
-        if(user.isDefined) {
-            val bc = NispBreadcrumb.buildBreadCrumb(request, messages)
-                if(!bc.isEmpty) {
-                     breadcrumbTag(bc, false)
-                }
-        }
-    }
-}
 
 @getHelpForm = {
     @formPartialRetriever.getPartialContent(s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
@@ -121,9 +111,8 @@
 
 @mainContentHeader = {
 
-       @breadcrumb
     @if(applicationConfig.isWelshEnabled){
-     @language_selection(clc.languageMap, clc.langToCall, Some("align-right"), Some("checkmystatepension"))
+     @language_selection(clc.languageMap, clc.langToCall, Some("lang-select"), Some("checkmystatepension"))
     }
 
 }
@@ -182,6 +171,7 @@ if(articleEnabled) {
         "pageTitle" -> pageTitle,
         "linkElems" -> linkElems,
         "scriptElems" -> scriptElement,
+        "assetsPath" -> "http://localhost:9032/assets/3.0.2/",
 
         "mainContentHeader" -> mainContentHeader,
 
