@@ -21,6 +21,10 @@
 
 @helpers.form(postRoute) {
 
+    @if(form.hasErrors){
+        @helpers.errorSummary(Messages("nisp.validation.summary.heading"), form)
+    }
+
     <input type="hidden" name="referer" id="referer" value="@form.data.get("referer")">
 
     @helpers.inputRadioGroup(
