@@ -54,7 +54,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
 
-  override lazy val assetsPrefix: String = loadConfig(s"assets.url") + loadConfig(s"assets.version")
+  override lazy val assetsPrefix: String = loadConfig(s"assets.url") + loadConfig(s"assets.version") + "/"
   override lazy val betaFeedbackUrl = s"${Constants.baseUrl}/feedback"
   override lazy val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
   override lazy val analyticsToken: Option[String] = configuration.getString(s"google-analytics.token")
