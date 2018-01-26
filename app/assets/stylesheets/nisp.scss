@@ -161,7 +161,7 @@ div.panel-indent{
     #Amount Box
 \*------------------------------------*/
 
-.highlighted-event {
+.highlighted-event, .govuk-box-highlight {
   padding:1.75em 0.75em 1.25em 0.75em;
   margin: 1.5em 0 1em;
 
@@ -347,3 +347,14 @@ text-align : right;
  .summary-list-item{
      display : list-item
  }
+.lang-select{
+    border-bottom: 0px;
+    float: right;
+    padding: 0.65em 0px;
+    text-align: right;
+    width: 100%;
+    line-height: 1.25;
+    font-weight: 300;
+    text-transform: none;
+    }
+
