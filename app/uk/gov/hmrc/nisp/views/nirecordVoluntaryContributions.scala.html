@@ -19,13 +19,16 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @()(implicit messages: Messages, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @defining(Some(user)) { implicit userOption =>
-@main(browserTitle = Some(Messages("nisp.nirecord.voluntarycontributions.title")),
-userLoggedIn = true,
-sidebarLinks = None) {
+@main(MainTemplateParams(
+    browserTitle = Some(Messages("nisp.nirecord.voluntarycontributions.title")),
+    userLoggedIn = true,
+    sidebarLinks = None)
+) {
 
 <h1 class="heading-large top-title-heading">@Messages("nisp.nirecord.voluntarycontributions.heading")</h1>
 <p class="lede">@Messages("nisp.nirecord.voluntarycontributions.title.message")</p>

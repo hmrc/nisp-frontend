@@ -24,8 +24,10 @@ import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
+import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
+import play.twirl.api.Html
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
@@ -44,6 +46,8 @@ import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.nisp.views.html.main
+import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 
 class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
@@ -79,6 +83,28 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
     lazy val result = controller.showFull(authenticatedFakeRequest(mockUserId).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+    "render UR banner on page before no thanks is clicked" in {
+      val urBanner =  htmlAccountDoc.getElementsByClass("full-width-banner__title")
+      val urBannerHref =  htmlAccountDoc.getElementById("fullWidthBannerLink")
+      val urDismissedText = htmlAccountDoc.getElementById("fullWidthBannerDismissText")
+      println(htmlAccountDoc.toString)
+      assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
+      assert(urBannerHref.text() == Messages("nisp.home.banner.recruitment.linkURL"))
+      assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
+      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+    }
+
+    "not render the UR banner" in {
+      val request = authenticatedFakeRequest(mockUserId).withCookies(new Cookie("cysp-nisp-urBannerHide", "9999"))
+      val result = controller.showFull(request)
+      val doc = asDocument(contentAsString(result))
+      println("-----"+doc)
+      assert(doc.getElementById("full-width-banner") == null)
+
+    }
+
+
 
     /*Check side border :summary */
     "render page with heading  Summary" in {

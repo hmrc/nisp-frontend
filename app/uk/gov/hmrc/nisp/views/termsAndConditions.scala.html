@@ -18,11 +18,13 @@
 @import play.api.Application
 @import uk.gov.hmrc.nisp.controllers.routes
 
-
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @(showBackLink : Boolean)(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@main(browserTitle = Some(Messages("nisp.tandcs.title")),
-sidebarLinks = None) {
+@main(MainTemplateParams(
+ browserTitle = Some(Messages("nisp.tandcs.title")),
+ sidebarLinks = None
+)) {
 
 <h1 class="heading-large top-title-heading">@Messages("nisp.tandcs.title")</h1>
 <h2 class="heading-medium">@Messages("nisp.tandcs.heading")</h2>

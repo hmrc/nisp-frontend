@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import exclusions.viewExclusions
 @import play.api.Application
+@import uk.gov.hmrc.nisp.views.viewParams._
 
 @(exclusion: Exclusion, statePensionAge: Option[Int])(implicit messages: Messages, request: Request[_], user: NispUser,
   partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
@@ -36,8 +37,12 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @main(Some(Messages("nisp.main.title")), userLoggedIn = true,
-        pageTitle = Some(Messages("nisp.excluded.title")), gaDimensions = Some(analyticsAdditionalJs)) {
+    @main(MainTemplateParams(
+        Some(Messages("nisp.main.title")),
+        userLoggedIn = true,
+        pageTitle = Some(Messages("nisp.excluded.title")),
+        gaDimensions = Some(analyticsAdditionalJs)
+    )) {
         @exclusions.dead()
     }
 }

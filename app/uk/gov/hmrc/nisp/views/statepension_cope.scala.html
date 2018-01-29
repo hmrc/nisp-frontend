@@ -22,6 +22,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser,
 partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
@@ -42,7 +43,12 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
 }
 
 @defining(Some(user)) { implicit userOption =>
-@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.cope.youWereContractedOut")), sidebarLinks = Some(sidebar)) {
+@main(MainTemplateParams(
+    userLoggedIn = true,
+    browserTitle = Some(Messages("nisp.main.title")),
+    pageTitle = Some(Messages("nisp.cope.youWereContractedOut")),
+    sidebarLinks = Some(sidebar)
+)) {
 
 <p>@Html(Messages("nisp.cope.inThePast"))</p>
 

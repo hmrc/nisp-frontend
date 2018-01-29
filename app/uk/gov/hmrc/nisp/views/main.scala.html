@@ -15,11 +15,7 @@
  *@
 
 @import uk.gov.hmrc.play.views.html.layouts
-@import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.nisp.config._
-@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
-@import uk.gov.hmrc.nisp.views._
-@import uk.gov.hmrc.play.frontend.auth.AuthContext
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 @import play.twirl.api.Html
@@ -30,21 +26,21 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.http.SessionKeys
 
-@(browserTitle: Option[String] = None,
-    pageTitle: Option[String] = None,
-    sidebarLinks: Option[Html] = None,
-    sidebarClasses: Option[String] = None,
-    userLoggedIn: Boolean = false,
-    applicationConfig: ApplicationConfig = ApplicationConfig,
-    showTitleHeaderNav: Boolean = true,
-    showBetaBanner: Boolean = false,
-    pageScripts: Option[Html] = None,
-    articleClasses: Option[String] = None,
-    analyticsAdditionalJs: Option[Html] = None,
-    gaDimensions: Option[Map[String, Any]] = None,
-    articleEnabled: Boolean = true,
-    IsQuestionnair: Boolean = true,
-    hideBreadcrumb: Boolean = false)(mainContent: Html)(implicit request: Request[_], messages: Messages, user: Option[NispUser] = None, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
+
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@(
+    mainTemplateParams: MainTemplateParams
+)(
+    mainContent: Html
+)(
+    implicit
+        request: Request[_],
+        messages: Messages,
+        user: Option[NispUser] = None,
+        application: Application,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
+        templateRenderer: TemplateRenderer
+)
 
 @mustacheCheck(str: String) = @{
     if(str.trim=="") false else str
@@ -54,13 +50,15 @@
 @scriptElement = @{
     Seq(
         Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),
-        Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js"))
+        Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js")),
+        Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js"))
       )
 }
 
+
 @contentWithTitle =  {
 
-@pageTitle.map { title =>
+@mainTemplateParams.pageTitle.map { title =>
 <h1 class="heading-large top-title-heading heading-bottom-margin"> @Html(title) </h1>
 }
 @mainContent
@@ -68,20 +66,18 @@
 
 
 @linkElems = @{
-    Map(
-        "url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css")
-    )
+    Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
 }
 
 
 @links = @{
-    if(articleEnabled) {
+    if(mainTemplateParams.articleEnabled) {
        Map("url" -> routes.StatePensionController.signOut , "text" -> Messages("nisp.signOut"))
     }
 }
 
 @navTitle = @{
-    if(showTitleHeaderNav) {
+    if(mainTemplateParams.showTitleHeaderNav) {
          Messages("nisp.title")
     } else {
         None
@@ -91,8 +87,13 @@
 @actingAttorneyBanner = {
 }
 
+@checkForUrCookie = @{
+    println("checking cookies"+ request.cookies)
+    !request.cookies.exists(x => x.name == "cysp-nisp-urBannerHide")
+}
+
 @breadcrumb = @{
-    if(!hideBreadcrumb){
+    if(!mainTemplateParams.hideBreadcrumb){
         if(user.isDefined) {
             val bc = NispBreadcrumb.buildBreadCrumb(request, messages)
                 if(!bc.isEmpty) {
@@ -103,15 +104,15 @@
 }
 
 @getHelpForm = {
-    @formPartialRetriever.getPartialContent(s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
+    @formPartialRetriever.getPartialContent(s"${mainTemplateParams.applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
 }
 
 @sidebar = {
-    @if(sidebarLinks.isDefined) {
-        @if(sidebarClasses.isDefined) {
-            @layouts.sidebar(sidebarLinks.get, Some(s"sidebar ${sidebarClasses.get}"))
+    @if(mainTemplateParams.sidebarLinks.isDefined) {
+        @if(mainTemplateParams.sidebarClasses.isDefined) {
+            @layouts.sidebar(mainTemplateParams.sidebarLinks.get, Some(s"sidebar ${mainTemplateParams.sidebarClasses.get}"))
         } else {
-            @layouts.sidebar(sidebarLinks.get, Some("sidebar"))
+            @layouts.sidebar(mainTemplateParams.sidebarLinks.get, Some("sidebar"))
         }
     }
 }
@@ -122,19 +123,33 @@
 @mainContentHeader = {
 
        @breadcrumb
-    @if(applicationConfig.isWelshEnabled){
+    @if(mainTemplateParams.applicationConfig.isWelshEnabled){
      @language_selection(clc.languageMap, clc.langToCall, Some("align-right"), Some("checkmystatepension"))
     }
 
 }
+
+@urBanner = @{
+    println("has UR banner" + mainTemplateParams.showUrBanner.toString, "ur banner enabled" + ApplicationConfig.showUrBanner.toString, "cookie: " + checkForUrCookie.toString)
+    if(mainTemplateParams.showUrBanner && ApplicationConfig.showUrBanner && checkForUrCookie){
+        println("hello")
+        Map("fullWidthBannerTitle" -> messages("nisp.home.banner.recruitment.title"),
+            "fullWidthBannerText" -> messages("nisp.home.banner.recruitment.link"),
+            "fullWidthBannerLink" -> messages("nisp.home.banner.recruitment.linkURL"),
+            "fullWidthBannerDismissText" -> messages("nisp.home.banner.recruitment.reject"),
+            "fullWidthBannerGaAction" -> ApplicationConfig.GaEventAction)
+        //messages("nisp.home.banner.recruitment.title")
+    }else{Map()}
+}
+
 @betaHeaderEnable = @{
 false
 }
 
 @article = @{
 
-if(articleEnabled) {
-      layouts.article(contentWithTitle, false, articleClasses)
+if(mainTemplateParams.articleEnabled) {
+      layouts.article(contentWithTitle, false, mainTemplateParams.articleClasses)
 } else {
       contentWithTitle
 }
@@ -148,12 +163,12 @@ if(articleEnabled) {
 
 @googleAnalytics = @{
     Map[String, Any](
-        "trackingId" -> applicationConfig.analyticsToken,
-        "cookieDomain" -> applicationConfig.analyticsHost
-    ) ++ gaDimensions.getOrElse(Map.empty)
+        "trackingId" -> mainTemplateParams.applicationConfig.analyticsToken,
+        "cookieDomain" -> mainTemplateParams.applicationConfig.analyticsHost
+    ) ++ mainTemplateParams.gaDimensions.getOrElse(Map.empty)
 }
 @showLastLogInStatus = @{
-    if(articleEnabled && IsQuestionnair) {
+    if(mainTemplateParams.articleEnabled && mainTemplateParams.IsQuestionnair) {
         true
     } else {
         false
@@ -167,6 +182,7 @@ if(articleEnabled) {
 @termsAndConditionFooterLink = @{
      Map("url" -> routes.TermsConditionsController.show.url , "text" -> Messages("nisp.tandcs.title"))
 }
+
 @isWelsh = @{
     if(messages.lang.code == "cy"){
         true
@@ -179,7 +195,7 @@ if(articleEnabled) {
 
 @{
     templateRenderer.renderDefaultTemplate(article, Map[String, Any](
-        "pageTitle" -> pageTitle,
+        "pageTitle" -> mainTemplateParams.pageTitle,
         "linkElems" -> linkElems,
         "scriptElems" -> scriptElement,
 
@@ -188,14 +204,14 @@ if(articleEnabled) {
         "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
         "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
         "isSa" -> (for(nu <- user; sa <- nu.authContext.principal.accounts.sa) yield sa.utr).isDefined,
-        "signOutUrl" -> Some(routes.StatePensionController.signOut).filter(_ => articleEnabled && user.isDefined),
+        "signOutUrl" -> Some(routes.StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && user.isDefined),
         "hideAccountMenu" -> !user.isDefined,
 
         "googleAnalytics" -> googleAnalytics,
-        "ssoUrl" -> applicationConfig.ssoUrl,
+        "ssoUrl" -> mainTemplateParams.applicationConfig.ssoUrl,
 
         "betaBanner" -> betaHeaderEnable,
-        "feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier,
+        "feedbackIdentifier" -> mainTemplateParams.applicationConfig.contactFormServiceIdentifier,
         "includeHMRCBranding" -> true,
 
         "showLastLogInStatus" ->  showLastLogInStatus,
@@ -207,11 +223,11 @@ if(articleEnabled) {
 
         "navTitle" -> navTitle,
         "navLinks" -> links,
-        "hasNavLinks" -> showTitleHeaderNav,
+        "hasNavLinks" -> mainTemplateParams.showTitleHeaderNav,
         "sidebar" -> sidebar,
         "termsAndConditionFooterLink" -> termsAndConditionFooterLink,
 
         "optimizelyProjectId" -> "8451981545",
         "isWelsh" -> isWelsh
-    ))
+    ) ++ urBanner)
 }

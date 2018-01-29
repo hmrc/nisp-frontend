@@ -26,6 +26,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @(
   statePension: StatePension,
   numberOfGaps: Int,
@@ -71,9 +72,13 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
 }
 
 @defining(Some(user)) { implicit userOption =>
-@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")),
-  sidebarLinks = Some(sidebar),
-  gaDimensions = Some(analyticsAdditionalJs)) {
+@main(MainTemplateParams(
+    userLoggedIn = true,
+    browserTitle = Some(Messages("nisp.main.title")),
+    pageTitle = Some(Messages("nisp.main.h1.title")),
+    sidebarLinks = Some(sidebar),
+    gaDimensions = Some(analyticsAdditionalJs)
+)) {
 
     <div class="panel-indent panel-border-wide panel-indent--info">
         <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@Dates.formatDate(statePension.pensionDate). </span></p>

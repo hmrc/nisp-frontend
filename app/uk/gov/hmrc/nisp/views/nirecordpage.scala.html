@@ -25,10 +25,12 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean,
 yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String,
 showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages, request: Request[_], user: NispUser,
 partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 
 @sidebar = {
 <div class="sidebar-border" >
@@ -76,10 +78,14 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
 }
 
 @defining(Some(user)) { implicit userOption =>
-    @main(browserTitle = Some(Messages("nisp.nirecord.title")), userLoggedIn = true,
+    @main(MainTemplateParams(
+        browserTitle = Some(Messages("nisp.nirecord.title")),
+        userLoggedIn = true,
         sidebarLinks = Some(sidebar),
         pageTitle = Some(Messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
-        gaDimensions = Some(analyticsAdditionalJs)) {
+        gaDimensions = Some(analyticsAdditionalJs),
+        showUrBanner = true
+    )) {
 
 <div class="sidebar-mobile">
       
