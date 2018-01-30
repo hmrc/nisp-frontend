@@ -34,7 +34,7 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     showUrBannerOn == Abroad | showUrBannerOn ==  PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
-@defining(Some(user)) { implicit userOption =>
+@defining(Some()) { implicit userOption =>
 
     @main(MainTemplateParams(
         browserTitle=Some(Messages("nisp.main.title")),

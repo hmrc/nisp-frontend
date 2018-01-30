@@ -88,7 +88,6 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       val urBanner =  htmlAccountDoc.getElementsByClass("full-width-banner__title")
       val urBannerHref =  htmlAccountDoc.getElementById("fullWidthBannerLink")
       val urDismissedText = htmlAccountDoc.getElementById("fullWidthBannerDismissText")
-      println(htmlAccountDoc.toString)
       assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
       assert(urBannerHref.text() == Messages("nisp.home.banner.recruitment.linkURL"))
       assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
@@ -99,9 +98,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       val request = authenticatedFakeRequest(mockUserId).withCookies(new Cookie("cysp-nisp-urBannerHide", "9999"))
       val result = controller.showFull(request)
       val doc = asDocument(contentAsString(result))
-      println("-----"+doc)
       assert(doc.getElementById("full-width-banner") == null)
-
     }
 
 

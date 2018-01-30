@@ -28,6 +28,8 @@
 
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import scala.util.Random
+@import java.util.NoSuchElementException
 @(
     mainTemplateParams: MainTemplateParams
 )(
@@ -62,6 +64,7 @@
 <h1 class="heading-large top-title-heading heading-bottom-margin"> @Html(title) </h1>
 }
 @mainContent
+
 }
 
 
@@ -76,6 +79,16 @@
     }
 }
 
+@ninoChanceGenerator = @{
+    val hash = user.get.nino.nino.hashCode()
+    val rand = new Random(hash)
+    if(rand.nextFloat() * 100 > 80){
+        true
+    }else{
+        false
+    }
+}
+
 @navTitle = @{
     if(mainTemplateParams.showTitleHeaderNav) {
          Messages("nisp.title")
@@ -87,24 +100,14 @@
 @actingAttorneyBanner = {
 }
 
-<<<<<<< HEAD
 @checkForUrCookie = @{
-    println("checking cookies"+ request.cookies)
     !request.cookies.exists(x => x.name == "cysp-nisp-urBannerHide")
 }
 
-@breadcrumb = @{
-    if(!mainTemplateParams.hideBreadcrumb){
-        if(user.isDefined) {
-            val bc = NispBreadcrumb.buildBreadCrumb(request, messages)
-                if(!bc.isEmpty) {
-                     breadcrumbTag(bc, false)
-                }
-        }
-    }
+
+@generateChanceOnNino = @{
+
 }
-=======
->>>>>>> master
 
 @getHelpForm = {
     @formPartialRetriever.getPartialContent(s"${mainTemplateParams.applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
@@ -131,15 +134,12 @@
 }
 
 @urBanner = @{
-    println("has UR banner" + mainTemplateParams.showUrBanner.toString, "ur banner enabled" + ApplicationConfig.showUrBanner.toString, "cookie: " + checkForUrCookie.toString)
-    if(mainTemplateParams.showUrBanner && ApplicationConfig.showUrBanner && checkForUrCookie){
-        println("hello")
+    if(mainTemplateParams.showUrBanner && ApplicationConfig.showUrBanner && checkForUrCookie && ninoChanceGenerator){
         Map("fullWidthBannerTitle" -> messages("nisp.home.banner.recruitment.title"),
             "fullWidthBannerText" -> messages("nisp.home.banner.recruitment.link"),
             "fullWidthBannerLink" -> messages("nisp.home.banner.recruitment.linkURL"),
             "fullWidthBannerDismissText" -> messages("nisp.home.banner.recruitment.reject"),
             "fullWidthBannerGaAction" -> ApplicationConfig.GaEventAction)
-        //messages("nisp.home.banner.recruitment.title")
     }else{Map()}
 }
 
@@ -199,7 +199,7 @@ if(mainTemplateParams.articleEnabled) {
         "pageTitle" -> mainTemplateParams.pageTitle,
         "linkElems" -> linkElems,
         "scriptElems" -> scriptElement,
-        "assetsPath" -> applicationConfig.assetsPrefix,
+        "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
 
