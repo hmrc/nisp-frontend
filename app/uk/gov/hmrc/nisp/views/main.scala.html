@@ -87,6 +87,7 @@
 @actingAttorneyBanner = {
 }
 
+<<<<<<< HEAD
 @checkForUrCookie = @{
     println("checking cookies"+ request.cookies)
     !request.cookies.exists(x => x.name == "cysp-nisp-urBannerHide")
@@ -102,6 +103,8 @@
         }
     }
 }
+=======
+>>>>>>> master
 
 @getHelpForm = {
     @formPartialRetriever.getPartialContent(s"${mainTemplateParams.applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
@@ -121,9 +124,7 @@
 
 
 @mainContentHeader = {
-
-       @breadcrumb
-    @if(mainTemplateParams.applicationConfig.isWelshEnabled){
+ @if(mainTemplateParams.applicationConfig.isWelshEnabled){
      @language_selection(clc.languageMap, clc.langToCall, Some("align-right"), Some("checkmystatepension"))
     }
 
@@ -198,6 +199,7 @@ if(mainTemplateParams.articleEnabled) {
         "pageTitle" -> mainTemplateParams.pageTitle,
         "linkElems" -> linkElems,
         "scriptElems" -> scriptElement,
+        "assetsPath" -> applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
 
