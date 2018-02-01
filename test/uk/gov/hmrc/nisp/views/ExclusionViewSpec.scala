@@ -35,12 +35,13 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
-  val mockUserNino = TestAccountBuilder.regularNino
-  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
-  val mockUsername = "mockuser"
-  val mockUserId = "/auth/oid/" + mockUsername
+ // val mockUserNino = TestAccountBuilder.urBannerNino
+  //val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
 
-  implicit lazy val fakeRequest = FakeRequest()
+  //val mockUsername = "mockuser"
+  //val mockUserId = "/auth/oid/" + mockUsername
+
+  //implicit lazy val fakeRequest = FakeRequest()
 
 
   "Exclusion Dead" should {
@@ -84,7 +85,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -128,7 +129,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -172,7 +173,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -274,7 +275,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -314,7 +315,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -354,7 +355,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -671,7 +672,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -714,7 +715,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -757,7 +758,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render the UR banner" in {
-      assert(htmlAccountDoc.getElementById("full-width-banner") != null)
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
     "render page with heading  'Your State Pension'" in {

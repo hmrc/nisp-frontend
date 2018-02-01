@@ -81,12 +81,16 @@
 }
 
 @ninoChanceGenerator = @{
-    val hash = user.get.nino.nino.hashCode()
-    val rand = new Random(hash)
-    if(rand.nextFloat() * 100 > 80){
-        true
-    }else{
-        false
+    try{
+        val hash = user.get.nino.nino.hashCode()
+        val rand = new Random(hash)
+        if(rand.nextFloat() * 100 > 80){
+            true
+        }else{
+            false
+        }
+    }catch{
+        case _ => true
     }
 }
 
