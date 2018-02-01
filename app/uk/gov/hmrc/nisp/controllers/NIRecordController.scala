@@ -108,9 +108,9 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
   private def show(gapsOnlyView: Boolean): Action[AnyContent] = AuthorisedByAny.async {
     implicit user =>
       implicit request =>
+        println("*****************" + user.nino.nino + "******************************")
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
         val statePensionResponseF = statePensionService.getSummary(user.nino)
-
         (for (
           nationalInsuranceRecordResponse <- nationalInsuranceResponseF;
           statePensionResponse <- statePensionResponseF

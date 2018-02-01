@@ -47,6 +47,9 @@ object TestAccountBuilder {
   val spaUnderConsiderationExclusionMultipleNino: Nino = randomNino
   val spaUnderConsiderationExclusionNoFlagNino: Nino = randomNino
 
+  val urBannerNino: Nino = new Nino("CL928713A")
+  val noUrBannerNino: Nino = new Nino("HT009413A")
+
   val invalidKeyNino: Nino = randomNino
   val cachedNino: Nino = randomNino
   val noNameNino: Nino = randomNino
@@ -96,6 +99,9 @@ object TestAccountBuilder {
     spaUnderConsiderationExclusionOverSpaNino -> "spa-under-consideration-exclusion-over-spa",
     spaUnderConsiderationExclusionMultipleNino -> "spa-under-consideration-exclusion-multiple",
     spaUnderConsiderationExclusionNoFlagNino -> "spa-under-consideration-exclusion-no-flag",
+
+    urBannerNino -> "showurbanner",
+    noUrBannerNino -> "hideurbanner",
 
     excludedAll -> "excluded-all",
     excludedAllButDead -> "excluded-all-but-dead",

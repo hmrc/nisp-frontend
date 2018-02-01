@@ -60,6 +60,8 @@ object MockNispHttp extends MockitoSugar {
   // State Pension
   val spNinos = List(
     TestAccountBuilder.regularNino,
+    TestAccountBuilder.urBannerNino,
+    TestAccountBuilder.noUrBannerNino,
     TestAccountBuilder.fullUserNino,
     TestAccountBuilder.forecastOnlyNino,
     TestAccountBuilder.fillGapSingle,
@@ -128,6 +130,8 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.mqpNino,
     TestAccountBuilder.mqpAbroadNino,
     TestAccountBuilder.excludedAbroad,
+    TestAccountBuilder.urBannerNino,
+    TestAccountBuilder.noUrBannerNino,
     //TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     TestAccountBuilder.spaUnderConsiderationNino,

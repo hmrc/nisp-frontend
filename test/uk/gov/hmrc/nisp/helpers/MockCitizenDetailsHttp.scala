@@ -44,6 +44,9 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
     TestAccountBuilder.noQualifyingYears,
     TestAccountBuilder.backendNotFound,
 
+    TestAccountBuilder.urBannerNino,
+    TestAccountBuilder.noUrBannerNino,
+
     TestAccountBuilder.excludedAll,
     TestAccountBuilder.excludedAllButDead,
     TestAccountBuilder.excludedAllButDeadMCI,
