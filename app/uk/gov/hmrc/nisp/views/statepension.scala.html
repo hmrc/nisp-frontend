@@ -75,6 +75,7 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
 @defining(Some(user)) { implicit userOption =>
     @main(MainTemplateParams(
         userLoggedIn = true,
+        showUrBanner =  true,
         browserTitle = Some(Messages("nisp.main.title")),
         pageTitle = Some(Messages("nisp.main.h1.title")),
         sidebarLinks = Some(sidebar),
