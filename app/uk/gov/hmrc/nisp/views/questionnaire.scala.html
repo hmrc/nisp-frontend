@@ -26,7 +26,8 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     browserTitle = Some(Messages("nisp.questionnaire.title")),
     IsQuestionnair = false,
     sidebarLinks = Some(includes.questionnaireSidebar()),
-    pageTitle = Some(Messages("nisp.questionnaire.header")))
+    pageTitle = Some(Messages("nisp.questionnaire.header")),
+    hideNavBar = true)
 ) {
     <p>@Html(Messages("nisp.useagain", routes.LandingController.show.url))</p>
     <p>@Html(Messages("nisp.questionnaire.please"))</p>

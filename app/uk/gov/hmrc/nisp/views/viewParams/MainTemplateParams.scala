@@ -35,5 +35,6 @@ case class MainTemplateParams(
   articleEnabled: Boolean = true,
   IsQuestionnair: Boolean = true,
   hideBreadcrumb: Boolean = false,
-  showUrBanner: Boolean = false
+  showUrBanner: Boolean = false,
+  hideNavBar: Boolean = false
 )
