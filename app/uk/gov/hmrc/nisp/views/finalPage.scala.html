@@ -19,9 +19,13 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@main(browserTitle = Some(Messages("nisp.finishpage.title")), sidebarLinks = Some(includes.questionnaireSidebar())) {
+@main(MainTemplateParams(
+ browserTitle = Some(Messages("nisp.finishpage.title")),
+ sidebarLinks = Some(includes.questionnaireSidebar())
+)) {
 <h1 class="heading-large">@Messages("nisp.thankyou.title")</h1>
 
 <p>@Html(Messages("nisp.thankyou.received"))</p>

@@ -1,0 +1,721 @@
+{
+  "_links": {
+    "self": {
+      "href": "/national-insurance-record/ni/CL928713A"
+    }
+  },
+  "qualifyingYears": 28,
+  "qualifyingYearsPriorTo1975": 0,
+  "numberOfGaps": 10,
+  "numberOfGapsPayable": 4,
+  "dateOfEntry": "1975-08-01",
+  "homeResponsibilitiesProtection": false,
+  "earningsIncludedUpTo": "2014-04-05",
+  "reducedRateElection": false,
+  "_embedded": {
+    "taxYears": [
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2013-14"
+          }
+        },
+        "taxYear": "2013-14",
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 704.60,
+        "classThreePayableBy": "2019-04-05",
+        "classThreePayableByPenalty": "2023-04-05",
+        "payable": true,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2012-13"
+          }
+        },
+        "taxYear": "2012-13",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 689,
+        "classThreePayableBy": "2019-04-05",
+        "classThreePayableByPenalty": "2023-04-05",
+        "payable": true,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2011-12"
+          }
+        },
+        "taxYear": "2011-12",
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 655.2,
+        "classThreePayableBy": "2019-04-05",
+        "classThreePayableByPenalty": "2023-04-05",
+        "payable": true,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2010-11"
+          }
+        },
+        "taxYear": "2010-11",
+        "qualifying": true,
+        "classOneContributions": 1149.98,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": "2023-04-05",
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2009-10"
+          }
+        },
+        "taxYear": "2009-10",
+        "qualifying": true,
+        "classOneContributions": 4259.6,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2008-09"
+          }
+        },
+        "taxYear": "2008-09",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 1,
+        "classThreePayable": 675.75,
+        "classThreePayableBy": "2019-04-05",
+        "classThreePayableByPenalty": "2023-04-05",
+        "payable": true,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2007-08"
+          }
+        },
+        "taxYear": "2007-08",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2006-07"
+          }
+        },
+        "taxYear": "2006-07",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2005-06"
+          }
+        },
+        "taxYear": "2005-06",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2004-05"
+          }
+        },
+        "taxYear": "2004-05",
+        "qualifying": true,
+        "classOneContributions": 2779.48,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2003-04"
+          }
+        },
+        "taxYear": "2003-04",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 53,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2002-03"
+          }
+        },
+        "taxYear": "2002-03",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2001-02"
+          }
+        },
+        "taxYear": "2001-02",
+        "qualifying": false,
+        "classOneContributions": 14.3,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 7,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": "2008-04-05",
+        "payable": true,
+        "underInvestigation": true
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/2000-01"
+          }
+        },
+        "taxYear": "2000-01",
+        "qualifying": true,
+        "classOneContributions": 1111.95,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 2,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1999-00"
+          }
+        },
+        "taxYear": "1999-00",
+        "qualifying": true,
+        "classOneContributions": 860.99,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 1,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1998-99"
+          }
+        },
+        "taxYear": "1998-99",
+        "qualifying": true,
+        "classOneContributions": 311.44,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1997-98"
+          }
+        },
+        "taxYear": "1997-98",
+        "qualifying": true,
+        "classOneContributions": 2094.04,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1996-97"
+          }
+        },
+        "taxYear": "1996-97",
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1995-96"
+          }
+        },
+        "taxYear": "1995-96",
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1994-95"
+          }
+        },
+        "taxYear": "1994-95",
+        "qualifying": true,
+        "classOneContributions": 2094.04,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1993-94"
+          }
+        },
+        "taxYear": "1993-94",
+        "qualifying": true,
+        "classOneContributions": 996.32,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1992-93"
+          }
+        },
+        "taxYear": "1992-93",
+        "qualifying": true,
+        "classOneContributions": 1555.84,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1991-92"
+          }
+        },
+        "taxYear": "1991-92",
+        "qualifying": true,
+        "classOneContributions": 1085.76,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1990-91"
+          }
+        },
+        "taxYear": "1990-91",
+        "qualifying": true,
+        "classOneContributions": 840.84,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 0,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1989-90"
+          }
+        },
+        "taxYear": "1989-90",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1988-89"
+          }
+        },
+        "taxYear": "1988-89",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1987-88"
+          }
+        },
+        "taxYear": "1987-88",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1986-87"
+          }
+        },
+        "taxYear": "1986-87",
+        "qualifying": false,
+        "classOneContributions": 36.04,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 3,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1985-86"
+          }
+        },
+        "taxYear": "1985-86",
+        "qualifying": false,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 34,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1984-85"
+          }
+        },
+        "taxYear": "1984-85",
+        "qualifying": true,
+        "classOneContributions": 239.21,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 19,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1983-84"
+          }
+        },
+        "taxYear": "1983-84",
+        "qualifying": false,
+        "classOneContributions": 17.76,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 44,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1982-83"
+          }
+        },
+        "taxYear": "1982-83",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1981-82"
+          }
+        },
+        "taxYear": "1981-82",
+        "qualifying": true,
+        "classOneContributions": 0,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 52,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1980-81"
+          }
+        },
+        "taxYear": "1980-81",
+        "qualifying": true,
+        "classOneContributions": 114.19,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 35,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1979-80"
+          }
+        },
+        "taxYear": "1979-80",
+        "qualifying": true,
+        "classOneContributions": 24.9,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 42,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1978-79"
+          }
+        },
+        "taxYear": "1978-79",
+        "qualifying": true,
+        "classOneContributions": 69.35,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 41,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1977-78"
+          }
+        },
+        "taxYear": "1977-78",
+        "qualifying": true,
+        "classOneContributions": 82.13,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 28,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1976-77"
+          }
+        },
+        "taxYear": "1976-77",
+        "qualifying": true,
+        "classOneContributions": 53.5,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 34,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/national-insurance-record/ni/CL928713A/taxyear/1975-76"
+          }
+        },
+        "taxYear": "1975-76",
+        "qualifying": true,
+        "classOneContributions": 70.67,
+        "classTwoCredits": 0,
+        "classThreeCredits": 0,
+        "otherCredits": 6,
+        "classThreePayable": 0,
+        "classThreePayableBy": null,
+        "classThreePayableByPenalty": null,
+        "payable": false,
+        "underInvestigation": false
+      }
+    ]
+  }
+}

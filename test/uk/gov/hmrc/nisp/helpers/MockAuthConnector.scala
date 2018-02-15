@@ -58,6 +58,9 @@ object MockAuthConnector extends AuthConnector {
     userID("mockspaunderconsiderationexclusionmultiple") -> TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
     userID("mockspaunderconsiderationexclusionnoflag") -> TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
 
+    userID("showurbanner") -> TestAccountBuilder.urBannerNino,
+    userID("hideurbanner") -> TestAccountBuilder.noUrBannerNino,
+
     userID("mockexcludedall") -> TestAccountBuilder.excludedAll,
     userID("mockexcludedallbutdead") -> TestAccountBuilder.excludedAllButDead,
     userID("mockexcludedallbutdeadmci") -> TestAccountBuilder.excludedAllButDeadMCI,

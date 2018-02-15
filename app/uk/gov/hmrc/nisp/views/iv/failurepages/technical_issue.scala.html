@@ -20,13 +20,17 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @analyticsAdditionalJs = {
     ga('send', 'pageview', '/check-your-state-pension/unauthorised-technical-issue');
 }
 
-@main(articleClasses = Some("mainpage"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@main(MainTemplateParams(
+ articleClasses = Some("mainpage"),
+ analyticsAdditionalJs = Some(analyticsAdditionalJs)
+)) {
 
 <h1 class="heading-xlarge">@Html(Messages("nisp.iv.failure.technical.title"))</h1>
 

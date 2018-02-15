@@ -23,6 +23,7 @@
 @import uk.gov.hmrc.play.language.LanguageUtils.Dates
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
+@import uk.gov.hmrc.nisp.views.viewParams._
 
 @(
 exclusion: Exclusion,
@@ -44,11 +45,15 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
     )
 }
 
+@excludeUrPanel(showUrBannerOn: Exclusion) = @{
+    showUrBannerOn == Abroad | showUrBannerOn ==  PostStatePensionAge | showUrBannerOn == IsleOfMan
+}
 
 @defining(Some(user)) { implicit userOption =>
-    @main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
+    @main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
                 pageTitle = Some(Messages("nisp.main.h1.title")), articleClasses = Some("mainpage"),
-                gaDimensions = Some(analyticsAdditionalJs)) {
+                gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
+    ) {
 
         @for(
            age <- statePensionAge;

@@ -110,7 +110,6 @@ trait NIRecordController extends NispFrontendController with AuthorisedForNisp w
       implicit request =>
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
         val statePensionResponseF = statePensionService.getSummary(user.nino)
-
         (for (
           nationalInsuranceRecordResponse <- nationalInsuranceResponseF;
           statePensionResponse <- statePensionResponseF

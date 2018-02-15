@@ -16,8 +16,11 @@
 
 package uk.gov.hmrc.nisp.utils
 
+import akka.stream.actor.ActorPublisherMessage.Request
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.{LocalTemplateRenderer, WsAllMethods}
 
@@ -29,6 +32,19 @@ object MockTemplateRenderer extends LocalTemplateRenderer {
   override val wsHttp = MockitoSugar.mock[WsAllMethods]
 
   override def renderDefaultTemplate(content: Html, extraArgs: Map[String, Any])(implicit messages: Messages) = {
-    Html("<title>" + extraArgs("pageTitle") + "</title>"+ "<sidebar>"+extraArgs("sidebar")+"</sidebar>" + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"+ "<mainContentHeader>"+extraArgs("mainContentHeader")+"</mainContentHeader>"+ content)
+    Html(
+      "<title>" + extraArgs("pageTitle") + "</title>"
+        + "<sidebar>"+extraArgs("sidebar")+"</sidebar>"
+        + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"
+        + displayUrBanner(extraArgs) +
+        "<mainContentHeader>" +extraArgs("mainContentHeader")+ "</mainContentHeader>"
+        + content)
   }
+
+    def displayUrBanner(extraArgs: Map[String, Any]): String ={
+      if(extraArgs.contains("fullWidthBannerTitle")){
+        "<div id=full-width-banner>" + "<div class = \"full-width-banner__title\">" + extraArgs("fullWidthBannerTitle") + "</div>" + "<div id = fullWidthBannerLink>" + extraArgs("fullWidthBannerLink") +  "</div>"+ "<div>" + extraArgs("fullWidthBannerText")+ "</div>"+ "<div id = fullWidthBannerDismissText>"+extraArgs("fullWidthBannerDismissText")+"</div>"
+      }
+      else ""
+    }
 }

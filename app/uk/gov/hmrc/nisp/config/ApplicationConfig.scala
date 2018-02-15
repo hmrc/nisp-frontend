@@ -76,6 +76,9 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
 
+  val showUrBanner:Boolean = configuration.getBoolean("urBannerToggle").getOrElse(false)
+  val GaEventAction: String = "home page UR"
+
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
   override lazy val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"

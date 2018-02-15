@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.views
 import java.util.UUID
 
 import org.apache.commons.lang3.StringEscapeUtils
+import play.api.mvc.Cookie
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
@@ -47,6 +48,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
   private val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
+  val urMockUsername = "showurbanner"
+  val urMockUserId = "/auth/oid/" + urMockUsername
+
   lazy val fakeRequest = FakeRequest()
 
   def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
@@ -66,6 +70,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
       override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
   }
+
 
   "The State Pension page" when {
 
@@ -124,6 +129,28 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with heading  'Your State Pension' " in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
+          }
+
+          "render page with UR banner" in {
+            val request = controller.show()(authenticatedFakeRequest(urMockUserId).withCookies(lanCookie))
+
+            val source = asDocument(contentAsString(request))
+
+            val urBanner =  source.getElementsByClass("full-width-banner__title")
+            val urBannerHref =  source.getElementById("fullWidthBannerLink")
+            val urDismissedText = source.getElementById("fullWidthBannerDismissText")
+            assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
+            assert(urBannerHref.text() == Messages("nisp.home.banner.recruitment.linkURL"))
+            assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
+            assert(source.getElementById("full-width-banner") != null)
+          }
+
+          "render page without UR banner if ur banner hide cookie is set" in {
+            val request = controller.show()(authenticatedFakeRequest(urMockUserId).withCookies(lanCookie, new Cookie("cysp-nisp-urBannerHide", "9999")))
+
+            val source = asDocument(contentAsString(request))
+
+            assert(source.getElementById("full-width-banner") == null)
           }
 
           "render page with text  'You can get your State Pension on' " in {
@@ -889,7 +916,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
       "The scenario is continue working  || No Gaps/No need to fill gaps" when {
 
-        "State Pension view with NON-MQP :  No Gapss || Full Rate & Personal Max" should {
+        "State Pension view with NON-MQP :  No Gaps || Full Rate & Personal Max" should {
 
           lazy val controller = createStatePensionController
           when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))

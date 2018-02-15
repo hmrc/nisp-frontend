@@ -24,8 +24,10 @@ import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
+import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
+import play.twirl.api.Html
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
@@ -44,6 +46,8 @@ import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.nisp.views.html.main
+import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 
 class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
@@ -55,6 +59,12 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
   val mockUserId = "/auth/oid/" + mockUsername
   val mockAbroadUserId = "/auth/oid/mockabroad"
 
+  val urMockUsername = "showurbanner"
+  val urMockUserId = "/auth/oid/" + urMockUsername
+
+  val noUrMockUsername = "hideurbanner"
+  val noUrMockUserId = "/auth/oid/" + noUrMockUsername
+
   implicit lazy val fakeRequest = FakeRequest()
 
   def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
@@ -63,6 +73,54 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     SessionKeys.userId -> userId,
     SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
   )
+
+  "Render Ni Record UR banner" should {
+    lazy val controller = new MockNIRecordController {
+      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+      override val sessionCache: SessionCache = MockSessionCache
+      override val showFullNI = true
+      override val currentDate = new LocalDate(2016, 9, 9)
+      override protected def authConnector: AuthConnector = MockAuthConnector
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+      override val metricsService: MetricsService = MockMetricsService
+    }
+
+    lazy val urResult = controller.showFull(authenticatedFakeRequest(urMockUserId).withCookies(lanCookie))
+    lazy val urHtmlAccountDoc = asDocument(contentAsString(urResult))
+
+    "render UR banner on page before no thanks is clicked" in {
+      val urBanner =  urHtmlAccountDoc.getElementsByClass("full-width-banner__title")
+      val urBannerHref =  urHtmlAccountDoc.getElementById("fullWidthBannerLink")
+      val urDismissedText = urHtmlAccountDoc.getElementById("fullWidthBannerDismissText")
+      assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
+      assert(urBannerHref.text() == Messages("nisp.home.banner.recruitment.linkURL"))
+      assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
+      assert(urHtmlAccountDoc.getElementById("full-width-banner") != null)
+    }
+
+    "not render the UR banner" in {
+      val request = authenticatedFakeRequest(urMockUserId).withCookies(new Cookie("cysp-nisp-urBannerHide", "9999"))
+      val result = controller.showFull(request)
+      val doc = asDocument(contentAsString(result))
+      assert(doc.getElementById("full-width-banner") == null)
+    }
+
+    "render for nino: CL928713A" in {
+      val urBanner =  urHtmlAccountDoc.getElementsByClass("full-width-banner__title")
+      assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
+      assert(urHtmlAccountDoc.getElementById("full-width-banner") != null)
+    }
+
+    "not render for nino: HT009413A" in {
+      val request = authenticatedFakeRequest(noUrMockUserId).withCookies(new Cookie("cysp-nisp-urBannerHide", "9999"))
+      val result = controller.showFull(request)
+      val doc = asDocument(contentAsString(result))
+      assert(doc.getElementById("full-width-banner") == null)
+    }
+
+  }
 
   "Render Ni Record to view all the years" should {
     lazy val controller = new MockNIRecordController {
@@ -96,7 +154,6 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     "render page with text  'years to contribute before 5 April 2017'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining", "2018")
     }
-
     /*Ends here*/
     "render page with Gaps  heading  Your National Insurance record " in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.heading")

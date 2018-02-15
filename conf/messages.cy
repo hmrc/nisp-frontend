@@ -480,3 +480,11 @@ nisp.tandcs.thanks = Diolch i chi am ymweld â&rsquo;r safle.
 
 nisp.validation.summary.error.max = Mwyafswm yr hyd yw 1,200
 error.email = Rhowch gyfeiriad e-bost dilys
+
+#***********************
+# UR banner
+#***********************
+nisp.home.banner.recruitment.link = Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor ffenestr newydd)
+nisp.home.banner.recruitment.reject = Dim diolch
+nisp.home.banner.recruitment.title = Helpwch gwella gov.uk
+

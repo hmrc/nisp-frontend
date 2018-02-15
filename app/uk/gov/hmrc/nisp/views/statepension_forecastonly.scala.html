@@ -23,6 +23,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Option[Int], isAbroad: Boolean,
 isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispUser,
 partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
@@ -65,7 +66,14 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
 @pageTitle = { @Messages("nisp.main.h1.title") }
 
 @defining(Some(user)) { implicit userOption =>
-@main(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")), pageTitle = Some(Messages("nisp.main.h1.title")), gaDimensions = Some(analyticsAdditionalJs), sidebarLinks = Some(sidebar)) {
+@main(MainTemplateParams(
+    userLoggedIn = true,
+    browserTitle = Some(Messages("nisp.main.title")),
+    pageTitle = Some(Messages("nisp.main.h1.title")),
+    gaDimensions = Some(analyticsAdditionalJs),
+    sidebarLinks = Some(sidebar),
+    showUrBanner = true
+)) {
 
     <div class="highlighted-event govuk-box-highlight">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@Messages("nisp.main.caveats") @Messages("nisp.is")</span></p>

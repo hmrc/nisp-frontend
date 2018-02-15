@@ -18,11 +18,17 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @(form: Form[_])(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@main(browserTitle = Some(Messages("nisp.questionnaire.title")),IsQuestionnair = false, sidebarLinks = Some(includes.questionnaireSidebar()),
-         pageTitle = Some(Messages("nisp.questionnaire.header"))) {
+@main(MainTemplateParams(
+    browserTitle = Some(Messages("nisp.questionnaire.title")),
+    IsQuestionnair = false,
+    sidebarLinks = Some(includes.questionnaireSidebar()),
+    pageTitle = Some(Messages("nisp.questionnaire.header")),
+    hideNavBar = true)
+) {
     <p>@Html(Messages("nisp.useagain", routes.LandingController.show.url))</p>
     <p>@Html(Messages("nisp.questionnaire.please"))</p>
 
