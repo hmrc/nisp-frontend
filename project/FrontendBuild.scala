@@ -9,7 +9,7 @@ object FrontendBuild extends Build with MicroService {
 
 private object AppDependencies {
 
-  private val frontendBootstrapVersion = "8.10.0"
+  private val frontendBootstrapVersion = "8.19.0"
   private val playLanguageVersion = "3.3.0"
   private val httpCachingClientVersion = "7.0.0"
   private val cspClientVersion = "2.1.0"
