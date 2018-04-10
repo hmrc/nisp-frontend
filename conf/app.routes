@@ -1,6 +1,8 @@
 # microservice specific routes
 
 GET         /                                      uk.gov.hmrc.nisp.controllers.LandingController.show
+GET         /redirect                              uk.gov.hmrc.nisp.controllers.RedirectController.show
+
 GET         /cymraeg                               @uk.gov.hmrc.nisp.controllers.CustomLanguageController.switchToWelshLandingPage
 
 GET         /signin/verify                         uk.gov.hmrc.nisp.controllers.LandingController.verifySignIn
