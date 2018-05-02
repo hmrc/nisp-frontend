@@ -44,7 +44,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
       val mockNationalInsuranceRecord = NationalInsuranceRecord(
         qualifyingYears = 40,
-        qualifyingYearsPriorTo1975 = 0,
+        qualifyingYearsPriorTo1975 = 39,
         numberOfGaps = 2,
         numberOfGapsPayable = 1,
         Some(new LocalDate(1973, 7, 7)),
