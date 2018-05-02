@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 
 trait NationalInsuranceService {
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]]
@@ -46,9 +46,16 @@ trait NationalInsuranceConnection {
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
     nationalInsuranceConnector.getNationalInsurance(nino)
-      .map{ni =>
-        if(ni.reducedRateElection) Left(Exclusion.MarriedWomenReducedRateElection)
-        else Right(ni.copy(taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse)))
+      .map { ni =>
+        if (ni.reducedRateElection) Left(Exclusion.MarriedWomenReducedRateElection)
+        else {
+          Right(
+            ni.copy(
+              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
+              qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
+            )
+          )
+        }
       }
       .recover {
         case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead) =>
