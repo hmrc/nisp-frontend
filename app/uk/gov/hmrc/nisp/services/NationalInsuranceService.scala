@@ -48,14 +48,12 @@ trait NationalInsuranceConnection {
     nationalInsuranceConnector.getNationalInsurance(nino)
       .map { ni =>
         if (ni.reducedRateElection) Left(Exclusion.MarriedWomenReducedRateElection)
-        else {
-          Right(
-            ni.copy(
-              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
-              qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
-            )
+        else Right(
+          ni.copy(
+            taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
+            qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
           )
-        }
+        )
       }
       .recover {
         case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead) =>
