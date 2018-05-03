@@ -36,12 +36,89 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
   def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
 
+  val listTaxYears = List(
+    NationalInsuranceTaxYear(
+      taxYear = "2015-16",
+      qualifying = true,
+      classOneContributions = 12345.45,
+      classTwoCredits = 0,
+      classThreeCredits = 0,
+      otherCredits = 0,
+      classThreePayable = 0,
+      classThreePayableBy = None,
+      classThreePayableByPenalty = None,
+      payable = false,
+      underInvestigation = false
+    ),
+    NationalInsuranceTaxYear(
+      taxYear = "2014-15",
+      qualifying = false,
+      classOneContributions = 123,
+      classTwoCredits = 1,
+      classThreeCredits = 1,
+      otherCredits = 1,
+      classThreePayable = 456.58,
+      classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
+      classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+      payable = false,
+      underInvestigation = false
+    ),
+    NationalInsuranceTaxYear(
+      taxYear = "1999-00",
+      qualifying = false,
+      classOneContributions = 2,
+      classTwoCredits = 5,
+      classThreeCredits = 0,
+      otherCredits = 1,
+      classThreePayable = 111.11,
+      classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
+      classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+      payable = false,
+      underInvestigation = false
+    )
+  )
+
   implicit val headerCarrier = HeaderCarrier()
 
-  "NationalInsuranceConnection" when {
+  "NationalInsuranceService" when {
+
+    "There is a successful response for an NI record where ni service is getting total 5 for pre-1975 records," +
+      " 1 full post-1975 record and total qualifying years of 7" should {
+      val mockNationalInsuranceRecord = NationalInsuranceRecord(
+        qualifyingYears = 7,
+        qualifyingYearsPriorTo1975 = 5,
+        numberOfGaps = 2,
+        numberOfGapsPayable = 1,
+        Some(new LocalDate(1973, 7, 7)),
+        homeResponsibilitiesProtection = false,
+        earningsIncludedUpTo = new LocalDate(2016, 4, 5),
+        taxYears = listTaxYears,
+        reducedRateElection = false
+      )
+
+      val expectedNIRec = mockNationalInsuranceRecord copy(qualifyingYearsPriorTo1975 = 6)
+
+      val service = new NationalInsuranceService with NationalInsuranceConnection {
+        override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
+      }
+      when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful(mockNationalInsuranceRecord))
+
+      "return a Right(NationalInsuranceRecord)" in {
+        service.getSummary(generateNino).isRight shouldBe true
+        service.getSummary(generateNino).right.get shouldBe a[NationalInsuranceRecord]
+      }
+
+      "return correct data with value of 6 (i.e. 7 - 1)) for pre-1975 years, overriding the original incorrect 5" in {
+        whenReady(service.getSummary(generateNino)) { record =>
+          record shouldBe Right(expectedNIRec)
+        }
+      }
+
+    }
+
 
     "There is a successful response" should {
-
       val mockNationalInsuranceRecord = NationalInsuranceRecord(
         qualifyingYears = 40,
         qualifyingYearsPriorTo1975 = 39,
@@ -50,47 +127,7 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         Some(new LocalDate(1973, 7, 7)),
         homeResponsibilitiesProtection = false,
         earningsIncludedUpTo = new LocalDate(2016, 4, 5),
-        taxYears = List(
-          NationalInsuranceTaxYear(
-            taxYear = "2015-16",
-            qualifying = true,
-            classOneContributions = 12345.45,
-            classTwoCredits = 0,
-            classThreeCredits = 0,
-            otherCredits = 0,
-            classThreePayable = 0,
-            classThreePayableBy = None,
-            classThreePayableByPenalty = None,
-            payable = false,
-            underInvestigation = false
-          ),
-          NationalInsuranceTaxYear(
-            taxYear = "2014-15",
-            qualifying = false,
-            classOneContributions = 123,
-            classTwoCredits = 1,
-            classThreeCredits = 1,
-            otherCredits = 1,
-            classThreePayable = 456.58,
-            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
-            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
-            payable = false,
-            underInvestigation = false
-          ),
-          NationalInsuranceTaxYear(
-            taxYear = "1999-00",
-            qualifying = false,
-            classOneContributions = 2,
-            classTwoCredits = 5,
-            classThreeCredits = 0,
-            otherCredits = 1,
-            classThreePayable = 111.11,
-            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
-            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
-            payable = false,
-            underInvestigation = false
-          )
-        ),
+        taxYears = listTaxYears,
         reducedRateElection = false
       )
 
