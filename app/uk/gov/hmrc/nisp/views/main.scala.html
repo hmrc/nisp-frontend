@@ -139,7 +139,7 @@
 }
 
 @urBanner = @{
-    if(mainTemplateParams.showUrBanner && ApplicationConfig.showUrBanner && checkForUrCookie && ninoChanceGenerator){
+    if(mainTemplateParams.showUrBanner && ApplicationConfig.showUrBanner && checkForUrCookie){
         Map("fullWidthBannerTitle" -> messages("nisp.home.banner.recruitment.title"),
             "fullWidthBannerText" -> messages("nisp.home.banner.recruitment.link"),
             "fullWidthBannerLink" -> messages("nisp.home.banner.recruitment.linkURL"),

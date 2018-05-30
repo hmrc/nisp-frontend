@@ -490,5 +490,5 @@ language.day.plural = days
 nisp.home.banner.recruitment.link = Help improve digital services by joining the HMRC user panel (opens in new window)
 nisp.home.banner.recruitment.reject = No thanks
 nisp.home.banner.recruitment.title = Help improve GOV.UK
-nisp.home.banner.recruitment.linkURL = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=Companycar_FPOS&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=93
+nisp.home.banner.recruitment.linkURL = https://signup.take-part-in-research.service.gov.uk/home?utm_campaign=A/Btesting&utm_source=Other&utm_medium=gov.uk&t=HMRC&id=141
 
