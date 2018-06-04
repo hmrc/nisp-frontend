@@ -223,7 +223,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
     }
 
     "GET /signout" should {
-      "redirect to the questionnaire page when govuk done page is disabled" in {
+      "go to the sign out page when govuk done page is disabled" in {
         val controller = new MockStatePensionController {
           override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
           override val applicationConfig: ApplicationConfig = new ApplicationConfig {
@@ -255,7 +255,9 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
         val result = controller.signOut(fakeRequest)
-        redirectLocation(result).get shouldBe routes.QuestionnaireController.show().url
+
+        contentType(result) shouldBe Some("text/html")
+        contentAsString(result).contains("You've signed out of your account")
       }
 
       "redirect to the gov.uk done page when govuk done page is enabled" in {
@@ -290,6 +292,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
         val result = controller.signOut(fakeRequest)
+
         redirectLocation(result).get shouldBe "govukdone"
       }
     }

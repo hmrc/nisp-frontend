@@ -17,19 +17,23 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
-
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@(form: Form[_])(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever,
-application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
+@()(implicit partialRetriever: CachedStaticHtmlPartialRetriever, request: Request[_], messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 
 @main(MainTemplateParams(
-    browserTitle = Some(Messages("nisp.questionnaire.title")),
-    IsQuestionnaire = false,
-    sidebarLinks = Some(includes.questionnaireSidebar()),
-    pageTitle = Some(Messages("nisp.questionnaire.header")),
-    hideNavBar = true)
+  browserTitle = Some(Messages("nisp.signedOut.heading")),
+  sidebarLinks = Some(includes.signedOutSidebar()),
+  pageTitle = Some(Messages("nisp.signedOut.heading")),
+  hideNavBar = true)
 ) {
-    <p>@Html(Messages("nisp.questionnaire.please"))</p>
 
-   @includes.questionnaireForm(form, routes.QuestionnaireController.submit)
+  <p>@Html(Messages("nisp.useagain", routes.LandingController.show.url))</p>
+  <p>@Html(Messages("nisp.signedOut.whatDidYouThink",routes.QuestionnaireController.show()))</p>
+
+  <h2>@Html(Messages("nisp.signedOut.planningForRetirement"))</h2>
+  <p>@Html(Messages("nisp.signedOut.statePensionSaving"))</p>
+  <p>@Html(Messages("nisp.signedOut.havingMoreInRetirement"))</p>
+
 }

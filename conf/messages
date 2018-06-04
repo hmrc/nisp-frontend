@@ -170,7 +170,7 @@ nisp.nirecord.summary.youhave = You have:
 #**************************
 
 nisp.questionnaire.title =  You’ve signed out of your account: Check your State Pension
-nisp.questionnaire.header = You’ve signed out of your account
+nisp.questionnaire.header = What did you think of this service?
 
 nisp.questionnaire.please = Give us feedback to help us improve this service. It will take no more than 2&nbsp;minutes.
 
@@ -244,6 +244,16 @@ nisp.finishpage.title = We’ve received your feedback: Check your State Pension
 nisp.timeout.title = You’ve been signed out: Check your State Pension
 nisp.timeout.heading = You’ve been signed out
 nisp.timeout.body = For your security we signed you out because you did not use the service for 15 minutes or more.
+
+#*******************
+# Signed out
+#*******************
+
+nisp.signedOut.heading = You’ve signed out of your account
+nisp.signedOut.whatDidYouThink = <a href="{0}">What did you think of this service?</a> (takes 2 minutes)
+nisp.signedOut.planningForRetirement = Planning for retirement
+nisp.signedOut.statePensionSaving = Checking your State Pension is a good start, but you should also think about how much you'll need to live on when you're saving for your future.
+nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/having-more-for-retirement/">Having more in retirement</a>
 
 #******************
 # NI record page
