@@ -61,15 +61,7 @@ class QuestionnairFormViewSpec extends HtmlSpec  with MockitoSugar with BeforeAn
     lazy val sResult = html.questionnaire(QuestionnaireForm.form)
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
-
-
-    "render page with heading  you have signed out of you account " in {
-
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.questionnaire.header")
-
-    }
     "render page with text  'to use the service again you’ll need to sign in.' " in {
-
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.useagain", "/check-your-state-pension", null, null)
     }
     "render page with text  'Give us feedback to help us improve this service. It will take no more than 2 minutes.' " in {
