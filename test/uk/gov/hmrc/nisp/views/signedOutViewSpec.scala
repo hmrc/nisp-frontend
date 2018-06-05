@@ -63,27 +63,27 @@ class signedOutViewSpec  extends HtmlSpec  with MockitoSugar with BeforeAndAfter
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "display 'You've signed out of your account' header" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1:nth-child(1)", "nisp.signedOut.heading")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.signedOut.heading")
     }
 
     "display 'To use the service again you’ll need to sign in.' with a link" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(1)", "nisp.signedOut.useagain", "/check-your-state-pension/questionnaire")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.useagain", "/check-your-state-pension")
     }
 
     "display 'What did you think of this service? (takes 2 minutes).' with a link" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.whatDidYouThink", "/check-your-state-pension")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.signedOut.whatDidYouThink", "/check-your-state-pension/questionnaire")
     }
 
     "display 'Planning for retirement' header" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(1)", "nisp.signedOut.planningForRetirement")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h2", "nisp.signedOut.planningForRetirement")
     }
 
     "display 'Checking your State Pension is a good start...'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.signedOut.statePensionSaving")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.signedOut.statePensionSaving")
     }
 
     "display 'Having more in retirement'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)", "nisp.signedOut.havingMoreInRetirement")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)", "nisp.signedOut.havingMoreInRetirement")
     }
   }
 }
