@@ -166,8 +166,8 @@ nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <s
 # Questionnaire messages
 #**************************
 
-nisp.questionnaire.title =  Rydych wedi allgofnodi o&rsquo;ch cyfrif: Gwirio eich Pensiwn y Wladwriaeth
-nisp.questionnaire.header = Rydych wedi allgofnodi o&rsquo;ch cyfrif
+nisp.questionnaire.title =  Beth oedd eich barn am y gwasanaeth hwn?
+nisp.questionnaire.header = Beth oedd eich barn am y gwasanaeth hwn?
 
 nisp.questionnaire.please = Rhowch adborth i ni wella&rsquo;r gwasanaeth hwn. Ni fydd yn cymryd mwy na 2 funud.
 
@@ -242,6 +242,16 @@ nisp.finishpage.title = Rydym wedi derbyn eich adborth: Gwirio eich Pensiwn y Wl
 nisp.timeout.title = Rydych wedi cael eich allgofnodi: Gwirio eich Pensiwn y Wladwriaeth
 nisp.timeout.heading = Rydych wedi cael eich allgofnodi
 nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd nad ydych wedi defnyddio’r gwasanaeth am 15 munud neu fwy.
+
+#*******************
+# Signed out
+#*******************
+
+nisp.signedOut.heading = Rydych wedi allgofnodi o&rsquo;ch cyfrif
+nisp.signedOut.whatDidYouThink = <a href="{0}">Beth oedd eich barn am y gwasanaeth hwn??</a> (mae’n cymryd 2 funud)
+nisp.signedOut.planningForRetirement = Cynllunio ar gyfer ymddeoliad
+nisp.signedOut.statePensionSaving = Mae bwrw golwg ar eich Pensiwn y Wladwriaeth yn ddechrau da, ond dylech hefyd ystyried faint o arian y bydd ei angen arnoch i fyw arno wrth gynilo ar gyfer eich dyfodol.
+nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/having-more-for-retirement/">Bod â mwy ar ôl ymddeol</a>
 
 #******************
 # NI record page
