@@ -65,25 +65,37 @@ class signedOutViewSpec  extends HtmlSpec  with MockitoSugar with BeforeAndAfter
     "display 'You've signed out of your account' header" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.signedOut.heading")
     }
-
     "display 'To use the service again you’ll need to sign in.' with a link" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.useagain", "/check-your-state-pension")
     }
-
     "display 'What did you think of this service? (takes 2 minutes).' with a link" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.signedOut.whatDidYouThink", "/check-your-state-pension/questionnaire")
     }
-
     "display 'Planning for retirement' header" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h2", "nisp.signedOut.planningForRetirement")
     }
-
     "display 'Checking your State Pension is a good start...'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.signedOut.statePensionSaving")
     }
-
     "display 'Having more in retirement'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)", "nisp.signedOut.havingMoreInRetirement")
+    }
+
+    /*Side bar*/
+    "render page with heading  'Pension Wise-understanding your pension options'" in {
+      assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.questionnaire.sidebar.whatcanyoudonext")
+    }
+    "render page with text  'Pension Wise- understanding your pension incomes' with correct link" in {
+      assertElementContainsText(htmlAccountDoc, "aside.sidebar>div>nav>ul>li:nth-child(1)", messages("nisp.questionnaire.sidebar.understandingyouroption"))
+      assertElementContainsText(htmlAccountDoc, "aside.sidebar>div>nav>ul>li:nth-child(1)", "https://pensionwise.gov.uk")
+    }
+    "render page with text  'Planning your retirement income' with correct link" in {
+      assertElementContainsText(htmlAccountDoc, "aside.sidebar>div>nav>ul>li:nth-child(2)", messages("nisp.questionnaire.sidebar.planningyourretirementincome"))
+      assertElementContainsText(htmlAccountDoc, "aside.sidebar>div>nav>ul>li:nth-child(2)", "https://gov.uk/plan-retirement-income")
+    }
+    "render page with text  'Defer your state pension' with correct link" in {
+      assertElementContainsText(htmlAccountDoc, "aside.sidebar>div>nav>ul>li:nth-child(3)", messages("nisp.questionnaire.sidebar.deferyourstatepension"))
+      assertElementContainsText(htmlAccountDoc, "aside.sidebar>div>nav>ul>li:nth-child(3)", "http://gov.uk/deferring-state-pension")
     }
   }
 }
