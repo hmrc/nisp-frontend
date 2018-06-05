@@ -28,12 +28,12 @@
   pageTitle = Some(Messages("nisp.signedOut.heading")),
   hideNavBar = true)
 ) {
-
-  <p>@Html(Messages("nisp.useagain", routes.LandingController.show.url))</p>
-  <p>@Html(Messages("nisp.signedOut.whatDidYouThink",routes.QuestionnaireController.show()))</p>
+<div class="signOutContent">
+  <p class="signOut">@Html(Messages("nisp.useagain", routes.LandingController.show.url))</p>
+  <p class="whatDidYouThink">@Html(Messages("nisp.signedOut.whatDidYouThink",routes.QuestionnaireController.show()))</p>
 
   <h2>@Html(Messages("nisp.signedOut.planningForRetirement"))</h2>
-  <p>@Html(Messages("nisp.signedOut.statePensionSaving"))</p>
-  <p>@Html(Messages("nisp.signedOut.havingMoreInRetirement"))</p>
-
+  <p class="statePensionSaving">@Html(Messages("nisp.signedOut.statePensionSaving"))</p>
+  <p class="havingMoreInRetirement">@Html(Messages("nisp.signedOut.havingMoreInRetirement"))</p>
+</div>
 }
