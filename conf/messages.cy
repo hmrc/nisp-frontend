@@ -114,19 +114,19 @@ nisp.main.context.fillgaps.futureproof.para = Mae gennych flynyddoedd ar eich co
 # Exclusion messages
 #**********************
 
-nisp.excluded.mci.title = Ni allwch gyrchu'ch cyfrif ar hyn o bryd
+nisp.excluded.mci.title = Ni allwch gyrchu’ch cyfrif ar hyn o bryd
 nisp.excluded.mci.info = Mae angen i ni siarad â chi am wall MCI cyn y gallwch fewngofnodi.
 
 nisp.excluded.mci.howToFix = Sut i gysylltu â ni
 nisp.excluded.mci.howToFix.message1 = Ffôn: 0300 200 3300
 nisp.excluded.mci.howToFix.message2 = Ffôn Testun: 0300 200 3319
-nisp.excluded.mci.howToFix.message3 = Y tu allan i'r DU: +44135 535 9022
+nisp.excluded.mci.howToFix.message3 = Y tu allan i’r DU: +44135 535 9022
 
 nisp.excluded.mci.howToContact = Llinellau ffôn ar agor:
 nisp.excluded.mci.howToContact.weekdays = 8am i 8pm, Dydd Llun i Dydd Gwener
 nisp.excluded.mci.howToContact.saturday = 8am i 4pm, Dydd Sadwrn
 nisp.excluded.mci.howToContact.sunday =	9am i 5pm, Dydd Sul
-nisp.excluded.mci.howToContact.bankholiday = Ar gau ar wyliau'r banc.
+nisp.excluded.mci.howToContact.bankholiday = Ar gau ar wyliau’r banc.
 nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/costau-galwadau" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)</a>
 
 nisp.excluded.title = Rydych yn methu defnyddio&rsquo;r gwasanaeth
@@ -169,7 +169,7 @@ nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <s
 nisp.questionnaire.title =  Beth oedd eich barn am y gwasanaeth hwn?
 nisp.questionnaire.header = Beth oedd eich barn am y gwasanaeth hwn?
 
-nisp.questionnaire.please = Rhowch adborth i ni wella&rsquo;r gwasanaeth hwn. Ni fydd yn cymryd mwy na 2 funud.
+nisp.questionnaire.please = Rhowch adborth i ni wella’r gwasanaeth hwn. Ni fydd yn cymryd mwy na 2 funud.
 
 nisp.questionnaire.easytouse.question = Pa mor hawdd oedd hi i ddefnyddio Gwirio eich Pensiwn y Wladwriaeth?
 nisp.questionnaire.easytouse.0 = Hawdd iawn
@@ -257,7 +257,7 @@ nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/
 # NI record page
 #******************
 
-nisp.nirecord.title = Eich cofnod Yswiriant Gwladol – Gwirio'ch Pensiwn y Wladwriaeth – GOV.UK
+nisp.nirecord.title = Eich cofnod Yswiriant Gwladol – Gwirio’ch Pensiwn y Wladwriaeth – GOV.UK
 nisp.nirecord.heading = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.yournirecordgapyears = Blynyddoedd sydd ddim yn llawn.
@@ -365,7 +365,7 @@ nisp.nirecord.voluntarycontributions.h2title.2.help.title = Ble allwch chi gael 
 nisp.nirecord.voluntarycontributions.h2title.2.help.message = Gallwch chwilio am gyngor ariannol proffesiynol. Am arweiniad di-duedd am ddim (ddim ar GOV.UK):
 nisp.nirecord.voluntarycontributions.h2title.2.help.link1 = <a href="https://www.moneyadviceservice.org.uk/cy" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Y Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)</a>
 nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = <a href="https://www.pensionwise.gov.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">Pension wise (agor mewn tab newydd)</a>
-nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - cyngor ar bensiynau preifat i'r rhai sydd dros 50 oed
+nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - cyngor ar bensiynau preifat i’r rhai sydd dros 50 oed
 nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = <a href="https://www.citizensadvice.org.uk/cymraeg/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">Cyngor ar Bopeth (agor mewn tab newydd)</a>
 
 
@@ -472,7 +472,7 @@ nisp.tandcs.title = Telerau ac amodau
 nisp.tandcs.heading = Cyn defnyddio Gwirio eich Pensiwn y Wladwriaeth, dylech ddarllen y dudalen hon yn ofalus
 
 nisp.tandcs.use = Os ydych eisiau defnyddio &lsquo;Gwirio eich Pensiwn y Wladwriaeth&rsquo; mae&rsquo;n rhaid i chi gytuno i&rsquo;n telerau ac amodau. Gallwn ddiweddaru ein telerau ac amodau unrhyw bryd. Dylech gael golwg ar y dudalen hon yn rheolaidd, er mwyn i chi fod yn ymwybodol o unrhyw newidiadau.
-nisp.tandcs.information = Mae’r wybodaeth a roddir yn seiliedig ar fanylion o'ch cofnod Yswiriant Gwladol ar yr adeg y gwnaethoch ddefnyddio’r gwasanaeth. Er y byddwn yn gwneud pob ymdrech i gadw’ch cofnod wedi’i ddiweddaru, ni allwn roi sicrwydd y bydd hynny’n digwydd. Ni allwn ychwaith roi sicrwydd na fydd gwallau neu hepgoriadau ynddo.
+nisp.tandcs.information = Mae’r wybodaeth a roddir yn seiliedig ar fanylion o’ch cofnod Yswiriant Gwladol ar yr adeg y gwnaethoch ddefnyddio’r gwasanaeth. Er y byddwn yn gwneud pob ymdrech i gadw’ch cofnod wedi’i ddiweddaru, ni allwn roi sicrwydd y bydd hynny’n digwydd. Ni allwn ychwaith roi sicrwydd na fydd gwallau neu hepgoriadau ynddo.
 nisp.tandcs.service = Mae&rsquo;r gwasanaeth hwn am ddim i&rsquo;w ddefnyddio. Ni allwn warantu y bydd bob amser ar gael, ac efallai y byddwn yn ei atal neu ei newid ar unrhyw adeg.
 nisp.tandcs.rely = Ni ddylech ddibynnu ar y wybodaeth hon, gan nad yw&rsquo;n gyfystyr â chyngor. Mae&rsquo;n rhaid i chi gael cyngor proffesiynol wrth gynllunio ar gyfer eich ymddeoliad.
 nisp.tandcs.responsibility = Mae i fyny i chi i sicrhau bod gennych popeth sydd ei angen i gael mynediad at ein gwasanaeth. Mae hefyd yn eich cyfrifoldeb os oes unrhyw un yn defnyddio eich cysylltiad rhyngrwyd i gael mynediad at ein gwasanaeth, eu bod yn darllen ein telerau ac amodau, ac yn cytuno â hwy.
