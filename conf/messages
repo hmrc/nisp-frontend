@@ -249,10 +249,10 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 # Signed out
 #*******************
 
-nisp.signedOut.heading = You’ve signed out of your account
+nisp.signedOut.heading = You have signed out of your account
 nisp.signedOut.whatDidYouThink = <a href="{0}">What did you think of this service?</a> (takes 2 minutes)
 nisp.signedOut.planningForRetirement = Planning for retirement
-nisp.signedOut.statePensionSaving = Checking your State Pension is a good start, but you should also think about how much you'll need to live on when you're saving for your future.
+nisp.signedOut.statePensionSaving = Checking your State Pension is a good start, but you should also think about how much you will need to live on when you are saving for your future.
 nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/cysp-having-more-for-retirement/">Having more in retirement</a>
 
 #******************
