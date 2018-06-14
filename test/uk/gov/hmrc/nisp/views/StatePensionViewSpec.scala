@@ -1221,7 +1221,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             val sForecastAmount = "£676.80 " + Messages("nisp.main.month") + ", £8,121.59 " + Messages("nisp.main.year")
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(2)>p:nth-child(3)", sForecastAmount)
           }
-          "render page with text  ' Your forcaste '" in {
+          "render page with text  ' Your forecast '" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.main.caveats")
           }
           "render page with text  ' is not a guarantee and is based on the current law '" in {

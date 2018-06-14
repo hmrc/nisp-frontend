@@ -10,7 +10,7 @@ GET         /not-authorised                        uk.gov.hmrc.nisp.controllers.
 GET         /account                               uk.gov.hmrc.nisp.controllers.StatePensionController.show
 GET         /account/pta                           uk.gov.hmrc.nisp.controllers.StatePensionController.pta
 GET         /account/cope                          uk.gov.hmrc.nisp.controllers.StatePensionController.showCope
-GET         /signout                               uk.gov.hmrc.nisp.controllers.StatePensionController.signOut
+GET         /sign-out                              uk.gov.hmrc.nisp.controllers.StatePensionController.signOut
 GET         /timeout                               uk.gov.hmrc.nisp.controllers.StatePensionController.timeout
 
 GET         /exclusion                             uk.gov.hmrc.nisp.controllers.ExclusionController.showSP

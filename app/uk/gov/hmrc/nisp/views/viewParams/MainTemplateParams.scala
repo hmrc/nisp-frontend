@@ -33,7 +33,7 @@ case class MainTemplateParams(
   gaDimensions: Option[Map[String, Any]] = None,
   analyticsAdditionalJs: Option[Html] = None,
   articleEnabled: Boolean = true,
-  IsQuestionnair: Boolean = true,
+  IsQuestionnaire: Boolean = true,
   hideBreadcrumb: Boolean = false,
   showUrBanner: Boolean = false,
   hideNavBar: Boolean = false
