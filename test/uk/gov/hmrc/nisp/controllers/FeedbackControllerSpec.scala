@@ -79,6 +79,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       override val showFullNI: Boolean = false
       override val futureProofPersonalMax: Boolean = false
       override val isWelshEnabled = false
+      override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
     }
   }
 

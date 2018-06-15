@@ -21,6 +21,7 @@ import java.util.UUID
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
+import play.api.Play.configuration
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -122,6 +123,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val isWelshEnabled = false
+            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -251,6 +253,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val isWelshEnabled = false
+            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -288,6 +291,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val isWelshEnabled = false
+            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -387,6 +391,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = true
             override val isWelshEnabled = false
+            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }

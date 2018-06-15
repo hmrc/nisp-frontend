@@ -28,7 +28,7 @@ object ApplicationConfigBuilder {
             ivUpliftUrl: String = "ivuplift", ggSignInUrl: String = "ggsignin", twoFactorUrl: String = "twofactor",
             pertaxFrontendUrl: String = "", breadcrumbPartialUrl: String = "", showFullNI: Boolean = false,
             futureProofPersonalMax: Boolean = false,
-            isWelshEnabled: Boolean = true
+            isWelshEnabled: Boolean = true, frontendTemplatePath: String = ""
            ): ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = assetsPrefix
     override val betaFeedbackUrl: String = betaFeedbackUrl
@@ -54,5 +54,6 @@ object ApplicationConfigBuilder {
     override val showFullNI: Boolean = showFullNI
     override val futureProofPersonalMax: Boolean = futureProofPersonalMax
     override val isWelshEnabled: Boolean = isWelshEnabled
+    override val frontendTemplatePath: String = frontendTemplatePath
   }
 }

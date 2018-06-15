@@ -53,6 +53,7 @@ object MockExclusionController extends ExclusionController {
     override val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
     override val isWelshEnabled = true
+    override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension

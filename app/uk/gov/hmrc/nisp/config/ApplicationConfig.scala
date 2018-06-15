@@ -45,6 +45,7 @@ trait ApplicationConfig {
   val showFullNI: Boolean
   val futureProofPersonalMax: Boolean
   val isWelshEnabled: Boolean
+  val frontendTemplatePath: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
