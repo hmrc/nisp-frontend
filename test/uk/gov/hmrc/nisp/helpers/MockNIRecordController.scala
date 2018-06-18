@@ -66,6 +66,7 @@ trait MockNIRecordController extends NIRecordController {
     override val showFullNI: Boolean = true
     override val futureProofPersonalMax: Boolean = false
     override val isWelshEnabled = true
+    override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer

@@ -31,7 +31,7 @@ object MockTemplateRenderer extends LocalTemplateRenderer {
   override val refreshAfter = 10 minutes
   override val wsHttp = MockitoSugar.mock[WsAllMethods]
 
-  override def renderDefaultTemplate(content: Html, extraArgs: Map[String, Any])(implicit messages: Messages) = {
+  override def renderDefaultTemplate(path:String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages) = {
     Html(
       "<title>" + extraArgs("pageTitle") + "</title>"
         + "<sidebar>"+extraArgs("sidebar")+"</sidebar>"

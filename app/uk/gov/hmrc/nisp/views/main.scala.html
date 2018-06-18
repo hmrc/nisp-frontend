@@ -198,9 +198,8 @@ if(mainTemplateParams.articleEnabled) {
     }
 }
 
-
 @{
-    templateRenderer.renderDefaultTemplate(article, Map[String, Any](
+    templateRenderer.renderDefaultTemplate(ApplicationConfig.frontendTemplatePath, article, Map[String, Any](
         "pageTitle" -> mainTemplateParams.pageTitle,
         "linkElems" -> linkElems,
         "scriptElems" -> scriptElement,

@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import play.api.Play.configuration
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.{ApplicationConfig, ApplicationGlobalTrait}
 import uk.gov.hmrc.nisp.controllers.StatePensionController
@@ -69,5 +70,6 @@ trait MockStatePensionController extends StatePensionController {
     override val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
     override val isWelshEnabled = true
+    override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
   }
 }

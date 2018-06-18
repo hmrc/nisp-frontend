@@ -45,6 +45,7 @@ trait ApplicationConfig {
   val showFullNI: Boolean
   val futureProofPersonalMax: Boolean
   val isWelshEnabled: Boolean
+  val frontendTemplatePath: String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -60,6 +61,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val analyticsToken: Option[String] = configuration.getString(s"google-analytics.token")
   override lazy val analyticsHost: String = configuration.getString(s"google-analytics.host").getOrElse("auto")
   override lazy val ssoUrl: Option[String] = configuration.getString(s"portal.ssoUrl")
+  lazy val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
 
   override val contactFormServiceIdentifier = "NISP"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
