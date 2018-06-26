@@ -447,8 +447,11 @@ nisp.main.cope.linkTitle =  Darganfyddwch fwy am <a href="https://www.gov.uk/gov
 nisp.iv.failure.otherways.heading = Ffyrdd eraill o gael datganiad
 nisp.iv.failure.otherways.text = Os na allwch ddefnyddio’r gwasanaeth ar-lein cysylltwch â <a href="https://www.gov.uk/future-pension-centre" rel="external">Canolfan Bensiwn y Dyfodol</a>.
 
-nisp.iv.failure.general.title = Roeddem yn methu cadarnhau pwy ydych chi
-nisp.iv.failure.general.text = Os na allwch gadarnhau pwy ydych chi ac mae gennych ymholiad, gallwch <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/online-services-helpdesk" rel="external">gysylltu â CThEM i gael help</a>.
+nisp.iv.failure.general.title = Ni allwn gadarnhau pwy ydych
+nisp.iv.failure.general.youcan = Gallwch wneud y canlynol:
+nisp.iv.failure.general.confirmIdentityAgain = ceisio rhoi prawf o bwy ydych eto
+nisp.iv.failure.general.contactHMRC = cysylltu â Chyllid a Thollau EM am gymorth
+nisp.iv.failure.general.contactFuturePension = cysylltwch â Chanolfan Bensiwn y Dyfodol i gael datganiad
 
 nisp.iv.failure.technical.title = Mae problem dechnegol
 nisp.iv.failure.technical.message = Mae gan y gwasanaeth ar-lein broblemau technegol.
