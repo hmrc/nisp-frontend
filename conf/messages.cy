@@ -27,7 +27,7 @@ nisp.breadcrumb.cope = Tudalen Cope
 # Landing page messages
 #*************************
 
-nisp.title = Gwirio eich Pensiwn y Wladwriaeth
+nisp.title = Gwirio eich Pensiwn y Wladwriaeth – Gwirio eich Pensiwn y Wladwriaeth – GOV.UK
 nisp.continue = Parhau
 nisp.landing.title = Gwirio eich Pensiwn y Wladwriaeth
 nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych chi
@@ -166,7 +166,7 @@ nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <s
 # Questionnaire messages
 #**************************
 
-nisp.questionnaire.title =  Beth oedd eich barn am y gwasanaeth hwn?
+nisp.questionnaire.title =  Beth oedd eich barn am y gwasanaeth hwn? – Gwirio eich Pensiwn y Wladwriaeth – GOV.UK
 nisp.questionnaire.header = Beth oedd eich barn am y gwasanaeth hwn?
 
 nisp.questionnaire.please = Rhowch adborth i ni wella’r gwasanaeth hwn. Ni fydd yn cymryd mwy na 2 funud.
@@ -233,13 +233,13 @@ nisp.questionnaire.sidebar.moreonpensionservice = Mwy am Bensiynau’r Wladwriae
 
 nisp.thankyou.title = Diolch yn fawr
 nisp.thankyou.received = Rydym wedi derbyn eich adborth.
-nisp.finishpage.title = Rydym wedi derbyn eich adborth: Gwirio eich Pensiwn y Wladwriaeth
+nisp.finishpage.title = Rydym wedi derbyn eich adborth – Gwirio eich Pensiwn y Wladwriaeth – GOV.UK
 
 #*******************
 # Session timeout
 #*******************
 
-nisp.timeout.title = Rydych wedi cael eich allgofnodi: Gwirio eich Pensiwn y Wladwriaeth
+nisp.timeout.title = Rydych wedi cael eich allgofnodi – Gwirio eich Pensiwn y Wladwriaeth – GOV.UK
 nisp.timeout.heading = Rydych wedi cael eich allgofnodi
 nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd nad ydych wedi defnyddio’r gwasanaeth am 15 munud neu fwy.
 
@@ -247,7 +247,7 @@ nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd n
 # Signed out
 #*******************
 
-nisp.signedOut.heading = Rydych wedi allgofnodi o’ch cyfrif
+nisp.signedOut.heading = Rydych wedi allgofnodi o’ch cyfrif – Gwirio eich Pensiwn y Wladwriaeth – GOV.UK
 nisp.signedOut.whatDidYouThink = <a href="{0}">Beth oedd eich barn am y gwasanaeth hwn?</a> (mae’n cymryd 2 funud)
 nisp.signedOut.planningForRetirement = Cynllunio ar gyfer ymddeoliad
 nisp.signedOut.statePensionSaving = Mae bwrw golwg ar eich Pensiwn y Wladwriaeth yn ddechrau da, ond dylech hefyd ystyried faint o arian y bydd ei angen arnoch i fyw arno wrth gynilo ar gyfer eich dyfodol.
@@ -318,7 +318,7 @@ nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
 # Gaps in your record page
 #****************************
 
-nisp.nirecord.gapsinyourrecord.title = Bylchau yn eich cofnod a sut i’w gwirio: Gwirio eich Pensiwn y Wladwriaeth
+nisp.nirecord.gapsinyourrecord.title = Bylchau yn eich cofnod a sut i’w gwirio – Gwirio eich Pensiwn y Wladwriaeth – GOV.UK
 nisp.nirecord.gapsinyourrecord.heading = Bylchau yn eich cofnod a sut i’w gwirio
 nisp.nirecord.gapsinyourrecord.title.message = Yn y rhan fwyaf o achosion, bydd gennych fwlch yn eich cofnod oherwydd na wnaethoch gyfrannu digon o Yswiriant Gwladol.
 nisp.nirecord.gapsinyourrecord.listheader = Gallai hyn fod oherwydd eich bod:
@@ -351,7 +351,7 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = Mwy am gredydau Y
 # Voluntary contributions page
 #********************************
 
-nisp.nirecord.voluntarycontributions.title = Cyfraniadau gwirfoddol: Gwirio eich Pensiwn y Wladwriaeth
+nisp.nirecord.voluntarycontributions.title = Cyfraniadau gwirfoddol – Gwirio eich Pensiwn y Wladwriaeth – GOV.UK
 nisp.nirecord.voluntarycontributions.heading = Cyfraniadau gwirfoddol
 nisp.nirecord.voluntarycontributions.title.message = Cyn i chi ystyried talu cyfraniadau gwirfoddol dylech:
 
@@ -468,7 +468,7 @@ nisp.iv.failure.timeout.button = Dechrau eto
 # Terms and conditions
 #************************
 
-nisp.tandcs.title = Telerau ac amodau
+nisp.tandcs.title = Telerau ac amodau – Gwirio eich Pensiwn y Wladwriaeth – GOV.UK
 nisp.tandcs.heading = Cyn defnyddio Gwirio eich Pensiwn y Wladwriaeth, dylech ddarllen y dudalen hon yn ofalus
 
 nisp.tandcs.use = Os ydych eisiau defnyddio &lsquo;Gwirio eich Pensiwn y Wladwriaeth’ mae’n rhaid i chi gytuno i’n telerau ac amodau. Gallwn ddiweddaru ein telerau ac amodau unrhyw bryd. Dylech gael golwg ar y dudalen hon yn rheolaidd, er mwyn i chi fod yn ymwybodol o unrhyw newidiadau.
