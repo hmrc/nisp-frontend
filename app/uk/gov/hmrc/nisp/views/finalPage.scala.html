@@ -24,9 +24,9 @@
 
 @main(MainTemplateParams(
  browserTitle = Some(Messages("nisp.finishpage.title")),
+ pageTitle = Some(messages("nisp.thankyou.title")),
  sidebarLinks = Some(includes.questionnaireSidebar())
 )) {
-<h1 class="heading-large">@Messages("nisp.thankyou.title")</h1>
 
 <p>@Html(Messages("nisp.thankyou.received"))</p>
 <p>@Html(Messages("nisp.useagain", routes.LandingController.show.url))</p>

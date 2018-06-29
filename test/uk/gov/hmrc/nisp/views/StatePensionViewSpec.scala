@@ -37,7 +37,7 @@ import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
@@ -964,7 +964,11 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           "render page with heading  'Your State Pension' " in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
+            assertEqualsValue(htmlAccountDoc, "article.content__body>h1.heading-large", messages("nisp.main.h1.title"))
+          }
+
+          "render with correct page title" in {
+            assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
           }
 
           "render page with text  'You can get your State Pension on' " in {

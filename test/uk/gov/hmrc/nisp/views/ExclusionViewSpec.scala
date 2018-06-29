@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_dead
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 
 class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
@@ -51,6 +51,11 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     "not render the UR banner" in {
       val urBanner = htmlAccountDoc.getElementById("full-width-banner")
       assert(urBanner == null)
+    }
+
+
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.excluded.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
 
     "render page with heading  You are unable to use this service " in {
