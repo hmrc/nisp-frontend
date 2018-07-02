@@ -239,7 +239,7 @@ nisp.finishpage.title = Rydym wedi derbyn eich adborth: Gwirio eich Pensiwn y Wl
 # Session timeout
 #*******************
 
-nisp.timeout.title = Rydych wedi cael eich allgofnodi: Gwirio eich Pensiwn y Wladwriaeth
+nisp.timeout.title = Rydych wedi cael eich allgofnodi
 nisp.timeout.heading = Rydych wedi cael eich allgofnodi
 nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd nad ydych wedi defnyddio’r gwasanaeth am 15 munud neu fwy.
 
@@ -257,7 +257,7 @@ nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/
 # NI record page
 #******************
 
-nisp.nirecord.title = Eich cofnod Yswiriant Gwladol – Gwirio’ch Pensiwn y Wladwriaeth – GOV.UK
+nisp.nirecord.title = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.yournirecordgapyears = Blynyddoedd sydd ddim yn llawn.
@@ -318,7 +318,7 @@ nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
 # Gaps in your record page
 #****************************
 
-nisp.nirecord.gapsinyourrecord.title = Bylchau yn eich cofnod a sut i’w gwirio: Gwirio eich Pensiwn y Wladwriaeth
+nisp.nirecord.gapsinyourrecord.title = Bylchau yn eich cofnod a sut i’w gwirio
 nisp.nirecord.gapsinyourrecord.heading = Bylchau yn eich cofnod a sut i’w gwirio
 nisp.nirecord.gapsinyourrecord.title.message = Yn y rhan fwyaf o achosion, bydd gennych fwlch yn eich cofnod oherwydd na wnaethoch gyfrannu digon o Yswiriant Gwladol.
 nisp.nirecord.gapsinyourrecord.listheader = Gallai hyn fod oherwydd eich bod:
@@ -351,7 +351,7 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = Mwy am gredydau Y
 # Voluntary contributions page
 #********************************
 
-nisp.nirecord.voluntarycontributions.title = Cyfraniadau gwirfoddol: Gwirio eich Pensiwn y Wladwriaeth
+nisp.nirecord.voluntarycontributions.title = Cyfraniadau gwirfoddol
 nisp.nirecord.voluntarycontributions.heading = Cyfraniadau gwirfoddol
 nisp.nirecord.voluntarycontributions.title.message = Cyn i chi ystyried talu cyfraniadau gwirfoddol dylech:
 

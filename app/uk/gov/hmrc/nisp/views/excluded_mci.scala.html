@@ -42,12 +42,11 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     @main(MainTemplateParams(
             userLoggedIn = true,
             browserTitle = Some(Messages("nisp.main.title")),
-            pageTitle = None,
+            pageTitle = Some(messages("nisp.excluded.mci.title")),
             articleClasses = Some("mainpage"),
             gaDimensions = Some(analyticsAdditionalJs),
             hideBreadcrumb = true
     )) {
-        <h1 class="heading-large">@Html(Messages("nisp.excluded.mci.title"))</h1>
         <p class="lede">@Html(Messages("nisp.excluded.mci.info"))</p>
         <h2 class="heading-medium">@Html(Messages("nisp.excluded.mci.howToFix"))</h2>
         <ul class="list-bullet">

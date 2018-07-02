@@ -142,7 +142,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     "render page with heading  Summary" in {
       assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>h2", "nisp.nirecord.summary.yourrecord")
     }
-    "render page with number of qualifying yeras - 28" in {
+    "render page with number of qualifying years - 28" in {
       assertEqualsValue(htmlAccountDoc, "div.sidebar-border>p:nth-child(2)", "28")
     }
     "render page with text 'years of full contributions'" in {
@@ -155,6 +155,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertContainsDynamicMessage(htmlAccountDoc, "div.sidebar-border>p:nth-child(5)", "nisp.nirecord.summary.yearsRemaining", "2018")
     }
     /*Ends here*/
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with Gaps  heading  Your National Insurance record " in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.heading")
     }
@@ -367,6 +370,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.gapsinyourrecord.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading 'Gaps in your record and how to check them'" in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.gapsinyourrecord.heading")
     }
@@ -452,6 +458,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.gapsinyourrecord.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading 'Gaps in your record and how to check them'" in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.gapsinyourrecord.heading")
     }
@@ -582,6 +591,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(1)", contributionMessage)
     }
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  Summary" in {
       assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>h2", "nisp.nirecord.summary.yourrecord")
     }
@@ -668,6 +680,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsValue(htmlAccountDoc, "div.sidebar-mobile>ul.list-bullet>li:nth-child(2)", contributionMessage)
     }
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  Summary" in {
       assertEqualsMessage(htmlAccountDoc, "div.sidebar-border>h2", "nisp.nirecord.summary.yourrecord")
     }
@@ -870,6 +885,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     lazy val result = controller.showFull(authenticatedFakeRequest(mockAbroadUserId).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.heading.uk") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading your UK National Insurance Record " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.nirecord.heading.uk")
     }

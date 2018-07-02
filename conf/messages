@@ -242,7 +242,7 @@ nisp.finishpage.title = We’ve received your feedback: Check your State Pension
 # Session timeout
 #*******************
 
-nisp.timeout.title = You’ve been signed out: Check your State Pension
+nisp.timeout.title = You’ve been signed out
 nisp.timeout.heading = You’ve been signed out
 nisp.timeout.body = For your security we signed you out because you did not use the service for 15 minutes or more.
 
@@ -260,7 +260,7 @@ nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/
 # NI record page
 #******************
 
-nisp.nirecord.title = Your National Insurance record – Check your State Pension – GOV.UK
+nisp.nirecord.title = Your National Insurance record
 nisp.nirecord.heading = Your National Insurance record
 nisp.nirecord.heading.uk = Your UK National Insurance record
 nisp.nirecord.yournirecordgapyears = Years which are not full.
@@ -316,7 +316,7 @@ nisp.nirecord.helpline.openTimes = Monday to Friday: 8am to 6pm
 # Gaps in your record page
 #****************************
 
-nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them: Check your State Pension
+nisp.nirecord.gapsinyourrecord.title = Gaps in your record and how to check them
 nisp.nirecord.gapsinyourrecord.heading = Gaps in your record and how to check them
 nisp.nirecord.gapsinyourrecord.title.message = In most cases, you will have a gap in your record as you did not contribute enough National Insurance.
 nisp.nirecord.gapsinyourrecord.listheader = This could be because you were:
@@ -349,7 +349,7 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = More on National 
 # Voluntary contribution page
 #*******************************
 
-nisp.nirecord.voluntarycontributions.title = Voluntary contributions: Check your State Pension
+nisp.nirecord.voluntarycontributions.title = Voluntary contributions
 nisp.nirecord.voluntarycontributions.heading = Voluntary contributions
 nisp.nirecord.voluntarycontributions.title.message = Before considering paying voluntary contributions you should:
 

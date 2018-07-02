@@ -33,7 +33,7 @@ import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
@@ -87,6 +87,9 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdContractedOut).withCookies(lanCookie))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
     }
@@ -191,6 +194,9 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     lazy val sResult = html.statepension_cope(99.54, true)
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.cope.youWereContractedOut") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  you were contracted out " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.cope.youWereContractedOut")
     }
