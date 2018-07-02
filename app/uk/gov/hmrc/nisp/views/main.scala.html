@@ -61,9 +61,8 @@
 
 
 @contentWithTitle =  {
-
-@mainTemplateParams.pageTitle.map { title =>
-<h1 class="heading-large top-title-heading heading-bottom-margin"> @Html(title) </h1>
+    @mainTemplateParams.pageTitle.map { title =>
+    <h1 class=@headerClass> @Html(title) </h1>
 }
 @mainContent
 
@@ -196,6 +195,14 @@ if(mainTemplateParams.articleEnabled) {
     }
     else {
         false
+    }
+}
+
+@headerClass = @{
+    if (mainTemplateParams.h1Class.isDefined){
+        mainTemplateParams.h1Class.get + " top-title-heading heading-bottom-margin"
+    }else{
+        "heading-large top-title-heading heading-bottom-margin"
     }
 }
 
