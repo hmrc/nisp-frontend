@@ -29,10 +29,11 @@ import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.forms.QuestionnaireForm
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+
 import scala.concurrent.duration._
 import akka.util.Timeout
 
@@ -62,6 +63,9 @@ class signedOutViewSpec  extends HtmlSpec  with MockitoSugar with BeforeAndAfter
     lazy val sResult = html.signedOut()
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.signedOut.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "display 'You've signed out of your account' header" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.signedOut.heading")
     }

@@ -29,10 +29,9 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
 
 @main(MainTemplateParams(
  articleClasses = Some("mainpage"),
- analyticsAdditionalJs = Some(analyticsAdditionalJs)
+ analyticsAdditionalJs = Some(analyticsAdditionalJs),
+ pageTitle= Some(messages("nisp.iv.failure.general.title")), h1Class = Some("heading-xlarge")
 )) {
-
-<h1 class="heading-xlarge">@Messages("nisp.iv.failure.general.title")</h1>
 
 @if(showFirstParagraph) {
     <p>@Html(Messages("nisp.iv.failure.general.text"))</p>

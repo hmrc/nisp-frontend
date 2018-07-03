@@ -51,4 +51,6 @@ object Constants {
   val niRecordMinAge = 16
 
   var yearStringLength = 4
+
+  val titleSplitter = " - "
 }

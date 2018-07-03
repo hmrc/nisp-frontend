@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.views
 
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -31,10 +30,10 @@ import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, Nationa
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 
 
-class QuestionnairFormViewSpec extends HtmlSpec  with MockitoSugar with BeforeAndAfter  {
+class QuestionnaireFormViewSpec extends HtmlSpec  with MockitoSugar with BeforeAndAfter  {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
@@ -61,7 +60,10 @@ class QuestionnairFormViewSpec extends HtmlSpec  with MockitoSugar with BeforeAn
     lazy val sResult = html.questionnaire(QuestionnaireForm.form)
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
-    "render page with title 'What did you think of this service?'' " in {
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.questionnaire.header") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
+    "render page with heading 'What did you think of this service?'' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.questionnaire.header")
     }
     "render page with text  'Give us feedback to help us improve this service. It will take no more than 2 minutes.' " in {

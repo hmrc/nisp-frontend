@@ -29,10 +29,10 @@
 
 @main(MainTemplateParams(
  articleClasses = Some("mainpage"),
- analyticsAdditionalJs = Some(analyticsAdditionalJs)
+ analyticsAdditionalJs = Some(analyticsAdditionalJs),
+ pageTitle = Some(messages("nisp.iv.failure.technical.title")),
+ h1Class = Some("heading-xlarge")
 )) {
-
-<h1 class="heading-xlarge">@Html(Messages("nisp.iv.failure.technical.title"))</h1>
 
 <p class="lede">@Messages("nisp.iv.failure.technical.message")</p>
 

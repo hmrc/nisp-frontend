@@ -142,6 +142,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
         lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
         lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+        "render with correct page title" in {
+          assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+        }
         "render page with heading  'Your State Pension' " in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
         }
@@ -373,6 +376,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+          "render with correct page title" in {
+            assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+          }
           "render page with heading  'Your State Pension' " in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
           }
@@ -609,6 +615,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+          "render with correct page title" in {
+            assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+          }
           "render page with heading  'Your State Pension' " in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
           }
@@ -838,6 +847,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+          "render with correct page title" in {
+            assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+          }
           "render page with heading  'Your State Pension' " in {
 
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
@@ -1067,6 +1079,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+          "render with correct page title" in {
+            assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+          }
           "render page with heading  'Your State Pension' " in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
           }
@@ -1300,6 +1315,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+          "render with correct page title" in {
+            assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+          }
           "render page with heading  'Your State Pension' " in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
           }
@@ -1496,6 +1514,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
+          "render with correct page title" in {
+            assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+          }
           "render page with heading  'Your State Pension' " in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
           }
