@@ -237,6 +237,8 @@ nisp.questionnaire.sidebar.moreonpensionservice = More on State Pensions
 nisp.thankyou.title = Thank you
 nisp.thankyou.received = We’ve received your feedback.
 nisp.finishpage.title = We’ve received your feedback: Check your State Pension
+nisp.feedback.title = Send your feedback - Check your State Pension - GOV.UK
+nisp.feedback.finished.title = Your feedback - Check your State Pension - GOV.UK
 
 #*******************
 # Session timeout
