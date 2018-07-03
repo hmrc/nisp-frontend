@@ -52,5 +52,5 @@ object Constants {
 
   var yearStringLength = 4
 
-  val titleSplitter = " – "
+  val titleSplitter = " - "
 }
