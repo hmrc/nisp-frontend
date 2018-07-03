@@ -27,7 +27,7 @@ nisp.breadcrumb.cope = Tudalen Cope
 # Landing page messages
 #*************************
 
-nisp.title = Gwirio eich Pensiwn y Wladwriaeth
+nisp.title = Gwirio’ch Pensiwn y Wladwriaeth
 nisp.continue = Parhau
 nisp.landing.title = Gwirio eich Pensiwn y Wladwriaeth
 nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych chi
@@ -451,7 +451,7 @@ nisp.iv.failure.general.title = Ni allwn gadarnhau pwy ydych
 nisp.iv.failure.general.youcan = Gallwch wneud y canlynol:
 nisp.iv.failure.general.confirmIdentityAgain = ceisio rhoi prawf o bwy ydych eto
 nisp.iv.failure.general.contactHMRC = cysylltu â Chyllid a Thollau EM am gymorth
-nisp.iv.failure.general.contactFuturePension = cysylltwch â Chanolfan Bensiwn y Dyfodol i gael datganiad
+nisp.iv.failure.general.contactFuturePension = cysylltu â Chanolfan Bensiwn y Dyfodol i gael datganiad
 
 nisp.iv.failure.technical.title = Mae problem dechnegol
 nisp.iv.failure.technical.message = Mae gan y gwasanaeth ar-lein broblemau technegol.
