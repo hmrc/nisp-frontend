@@ -22,7 +22,7 @@ nisp.breadcrumb.nirecord.voluntaryContrib = Cyfraniadau gwirfoddol
 nisp.breadcrumb.nirecord.gapsandhowtocheck = Bylchau yn eich cofnod a sut i’w gwirio
 nisp.breadcrumb.excluded = Wedi’i eithrio
 nisp.breadcrumb.cope = Tudalen Cope
-
+nisp.title.extension = Gwirio eich Pensiwn y Wladwriaeth
 #*************************
 # Landing page messages
 #*************************
@@ -44,7 +44,7 @@ nisp.landing.noteligible = Cysylltwch â <a href="https://www.gov.uk/future-pens
 # Main page messages
 #**********************
 
-nisp.main.title = Crynodeb o’ch Pensiwn y Wladwriaeth – Gwirio’ch Pensiwn y Wladwriaeth – GOV.UK
+nisp.main.title = Crynodeb o’ch Pensiwn y Wladwriaeth
 nisp.main.h1.title = Crynodeb o’ch Pensiwn y Wladwriaeth
 nisp.main.caveats = Eich rhagolwg
 nisp.main.continueContribute = Bydd angen i chi barhau i gyfrannu Yswiriant Gwladol i gyrraedd eich rhagolwg
@@ -234,12 +234,14 @@ nisp.questionnaire.sidebar.moreonpensionservice = Mwy am Bensiynau’r Wladwriae
 nisp.thankyou.title = Diolch yn fawr
 nisp.thankyou.received = Rydym wedi derbyn eich adborth.
 nisp.finishpage.title = Rydym wedi derbyn eich adborth: Gwirio eich Pensiwn y Wladwriaeth
+nisp.feedback.title = Anfon eich adborth - Gwirio eich Pensiwn y Wladwriaeth - GOV.UK
+nisp.feedback.finished.title = Eich adborth - Gwirio eich Pensiwn y Wladwriaeth - GOV.UK
 
 #*******************
 # Session timeout
 #*******************
 
-nisp.timeout.title = Rydych wedi cael eich allgofnodi: Gwirio eich Pensiwn y Wladwriaeth
+nisp.timeout.title = Rydych wedi cael eich allgofnodi
 nisp.timeout.heading = Rydych wedi cael eich allgofnodi
 nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd nad ydych wedi defnyddio’r gwasanaeth am 15 munud neu fwy.
 
@@ -257,7 +259,7 @@ nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/
 # NI record page
 #******************
 
-nisp.nirecord.title = Eich cofnod Yswiriant Gwladol – Gwirio’ch Pensiwn y Wladwriaeth – GOV.UK
+nisp.nirecord.title = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.yournirecordgapyears = Blynyddoedd sydd ddim yn llawn.
@@ -318,7 +320,7 @@ nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
 # Gaps in your record page
 #****************************
 
-nisp.nirecord.gapsinyourrecord.title = Bylchau yn eich cofnod a sut i’w gwirio: Gwirio eich Pensiwn y Wladwriaeth
+nisp.nirecord.gapsinyourrecord.title = Bylchau yn eich cofnod a sut i’w gwirio
 nisp.nirecord.gapsinyourrecord.heading = Bylchau yn eich cofnod a sut i’w gwirio
 nisp.nirecord.gapsinyourrecord.title.message = Yn y rhan fwyaf o achosion, bydd gennych fwlch yn eich cofnod oherwydd na wnaethoch gyfrannu digon o Yswiriant Gwladol.
 nisp.nirecord.gapsinyourrecord.listheader = Gallai hyn fod oherwydd eich bod:
@@ -351,7 +353,7 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = Mwy am gredydau Y
 # Voluntary contributions page
 #********************************
 
-nisp.nirecord.voluntarycontributions.title = Cyfraniadau gwirfoddol: Gwirio eich Pensiwn y Wladwriaeth
+nisp.nirecord.voluntarycontributions.title = Cyfraniadau gwirfoddol
 nisp.nirecord.voluntarycontributions.heading = Cyfraniadau gwirfoddol
 nisp.nirecord.voluntarycontributions.title.message = Cyn i chi ystyried talu cyfraniadau gwirfoddol dylech:
 

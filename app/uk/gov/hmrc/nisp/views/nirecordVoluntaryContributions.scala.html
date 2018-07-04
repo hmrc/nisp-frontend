@@ -26,11 +26,11 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
 @defining(Some(user)) { implicit userOption =>
 @main(MainTemplateParams(
     browserTitle = Some(Messages("nisp.nirecord.voluntarycontributions.title")),
+    pageTitle = Some(Messages("nisp.nirecord.voluntarycontributions.heading")),
     userLoggedIn = true,
     sidebarLinks = None)
 ) {
 
-<h1 class="heading-large top-title-heading">@Messages("nisp.nirecord.voluntarycontributions.heading")</h1>
 <p class="lede">@Messages("nisp.nirecord.voluntarycontributions.title.message")</p>
 
 

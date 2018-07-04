@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_dead
 import uk.gov.hmrc.play.language.LanguageUtils.Dates
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 
 class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
@@ -51,6 +51,11 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     "not render the UR banner" in {
       val urBanner = htmlAccountDoc.getElementById("full-width-banner")
       assert(urBanner == null)
+    }
+
+
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.excluded.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
 
     "render page with heading  You are unable to use this service " in {
@@ -87,6 +92,11 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
+
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
+
 
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
@@ -130,6 +140,10 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
+    }
+
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
 
     "render page with heading  'Your State Pension'" in {
@@ -176,6 +190,10 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
+
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
 
@@ -217,6 +235,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.excluded.mci.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "not render the UR banner" in {
       assert(htmlAccountDoc.getElementById("full-width-banner") == null)
     }
@@ -278,6 +299,10 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
+
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -318,6 +343,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -357,7 +385,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
-
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -394,6 +424,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val sResult = html.excluded_sp(Exclusion.AmountDissonance, Some(70), Some(new LocalDate(2015, 9, 6)), true, None)
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -434,6 +467,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val sResult = html.excluded_sp(Exclusion.AmountDissonance, Some(70), Some(new LocalDate(2015, 9, 6)), true, Some(false))
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -474,6 +510,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val sResult = html.excluded_sp(Exclusion.AmountDissonance, Some(70), Some(new LocalDate(2015, 9, 6)), true, Some(true))
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -514,6 +553,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val sResult = html.excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(new LocalDate(2015, 9, 6)), false, None)
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -568,6 +610,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val sResult = html.excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(new LocalDate(2015, 9, 6)), false, Some(false))
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -619,6 +664,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     lazy val sResult = html.excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(new LocalDate(2015, 9, 6)), false, Some(true))
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
     }
@@ -674,6 +722,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
 
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
@@ -717,6 +768,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
     }
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+    }
 
     "render page with heading  'Your State Pension'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.main.h1.title")
@@ -759,6 +813,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
+    }
+    "render with correct page title" in {
+      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
 
     "render page with heading  'Your State Pension'" in {
