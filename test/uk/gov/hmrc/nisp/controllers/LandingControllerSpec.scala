@@ -121,32 +121,32 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
   "GET /not-authorised" must {
     "show not authorised page" in {
       val result = testLandingController.showNotAuthorised(None)(fakeRequest)
-      contentAsString(result) must include("We were unable to confirm your identity")
+      contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for FailedMatching journey" in {
       val result = testLandingController.showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
-      contentAsString(result) must include("We were unable to confirm your identity")
+      contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for InsufficientEvidence journey" in {
       val result = testLandingController.showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
-      contentAsString(result) must include("We were unable to confirm your identity")
+      contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for Incomplete journey" in {
       val result = testLandingController.showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
-      contentAsString(result) must include("We were unable to confirm your identity")
+      contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for PreconditionFailed journey" in {
       val result = testLandingController.showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
-      contentAsString(result) must include("We were unable to confirm your identity")
+      contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for UserAborted journey" in {
       val result = testLandingController.showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
-      contentAsString(result) must include("We were unable to confirm your identity")
+      contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show technical_issue template for TechnicalIssue journey" in {
@@ -166,7 +166,7 @@ class LandingControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSu
 
     "show 2FA failure page when no journey ID specified" in {
       val result = testLandingController.showNotAuthorised(None)(fakeRequest)
-      contentAsString(result) must include("We were unable to confirm your identity")
+      contentAsString(result) must include("We cannot confirm your identity")
       contentAsString(result) must not include "If you cannot confirm your identity and you have a query you can"
     }
   }

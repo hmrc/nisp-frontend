@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import play.api.Application
+@import uk.gov.hmrc.nisp.auth._
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_],
@@ -33,11 +34,12 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
  pageTitle= Some(messages("nisp.iv.failure.general.title")), h1Class = Some("heading-xlarge")
 )) {
 
-@if(showFirstParagraph) {
-    <p>@Html(Messages("nisp.iv.failure.general.text"))</p>
-}
+<p class="margin-bottom">@Messages("nisp.iv.failure.general.youcan")</p>
 
-<h2 class="heading-medium">@Messages("nisp.iv.failure.otherways.heading")</h2>
-<p>@Html(Messages("nisp.iv.failure.otherways.text"))</p>
+<ul class="list list-bullet">
+ <li><a href=@GovernmentGatewayProvider.continueURL>@Messages("nisp.iv.failure.general.confirmIdentityAgain")</a></li>
+ <li><a href="https://www.gov.uk/contact-hmrc" data-journey-click=checkmystatepension:external:helpline>@Messages("nisp.iv.failure.general.contactHMRC")</a></li>
+ <li><a href="https://www.gov.uk/future-pension-centre" data-journey-click=checkmystatepension:external:pensioncentre>@Messages("nisp.iv.failure.general.contactFuturePension")</a></li>
+</ul>
 
 }
