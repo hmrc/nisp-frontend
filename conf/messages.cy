@@ -170,6 +170,7 @@ nisp.questionnaire.title =  Beth oedd eich barn am y gwasanaeth hwn?
 nisp.questionnaire.header = Beth oedd eich barn am y gwasanaeth hwn?
 
 nisp.questionnaire.please = Rhowch adborth i ni wella’r gwasanaeth hwn. Ni fydd yn cymryd mwy na 2 funud.
+nisp.questionnaire.please2 = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
 
 nisp.questionnaire.easytouse.question = Pa mor hawdd oedd hi i ddefnyddio Gwirio eich Pensiwn y Wladwriaeth?
 nisp.questionnaire.easytouse.0 = Hawdd iawn
