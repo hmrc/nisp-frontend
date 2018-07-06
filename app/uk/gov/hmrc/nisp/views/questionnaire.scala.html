@@ -30,6 +30,7 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     hideNavBar = true)
 ) {
     <p>@Html(Messages("nisp.questionnaire.please"))</p>
+    <p>@Html(Messages("nisp.questionnaire.please2"))</p>
 
    @includes.questionnaireForm(form, routes.QuestionnaireController.submit)
 }
