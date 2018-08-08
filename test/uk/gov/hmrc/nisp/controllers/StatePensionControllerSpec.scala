@@ -296,7 +296,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         }
         val result = controller.signOut(fakeRequest)
 
-        redirectLocation(result).get shouldBe "govukdone"
+        redirectLocation(result).get shouldBe "/check-your-state-pension/questionnaire"
       }
     }
 

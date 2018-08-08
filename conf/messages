@@ -170,8 +170,8 @@ nisp.nirecord.summary.youhave = You have:
 # Questionnaire messages
 #**************************
 
-nisp.questionnaire.title =  What did you think of this service?
-nisp.questionnaire.header = What did you think of this service?
+nisp.questionnaire.title =  You’ve signed out of your account: Check your State Pension	nisp.questionnaire.title =  You’ve signed out of your account: Check your State Pension
+nisp.questionnaire.header = You’ve signed out of your account
 
 nisp.questionnaire.please = Give us feedback to help us improve this service. It will take no more than 2&nbsp;minutes.
 nisp.questionnaire.please2 = We use your feedback to make our services better.
@@ -240,6 +240,9 @@ nisp.thankyou.received = We’ve received your feedback.
 nisp.finishpage.title = We’ve received your feedback: Check your State Pension
 nisp.feedback.title = Send your feedback - Check your State Pension - GOV.UK
 nisp.feedback.finished.title = Your feedback - Check your State Pension - GOV.UK
+nisp.feedback.planning = Planning for retirement
+nisp.feedback.planning.text = Checking your State Pension is a good start, but you should also think about how much you will need to live on when you are saving for your future.
+nisp.feedback.planning.link = Having more in retirement
 
 #*******************
 # Session timeout
@@ -249,15 +252,6 @@ nisp.timeout.title = You’ve been signed out
 nisp.timeout.heading = You’ve been signed out
 nisp.timeout.body = For your security we signed you out because you did not use the service for 15 minutes or more.
 
-#*******************
-# Signed out
-#*******************
-
-nisp.signedOut.heading = You have signed out of your account
-nisp.signedOut.whatDidYouThink = <a href="{0}">What did you think of this service?</a> (takes 2 minutes)
-nisp.signedOut.planningForRetirement = Planning for retirement
-nisp.signedOut.statePensionSaving = Checking your State Pension is a good start, but you should also think about how much you will need to live on when you are saving for your future.
-nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/cysp-having-more-for-retirement/">Having more in retirement</a>
 
 #******************
 # NI record page

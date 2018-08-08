@@ -229,7 +229,7 @@ nisp.questionnaire.sidebar.contactpensionservice =  Cysylltu â’r Gwasanaeth P
 nisp.questionnaire.sidebar.moreonpensionservice = Mwy am Bensiynau’r Wladwriaeth
 
 #***********************
-# Thank you messagges
+# Thank you messages
 #***********************
 
 nisp.thankyou.title = Diolch yn fawr
@@ -237,6 +237,9 @@ nisp.thankyou.received = Rydym wedi derbyn eich adborth.
 nisp.finishpage.title = Rydym wedi derbyn eich adborth: Gwirio eich Pensiwn y Wladwriaeth
 nisp.feedback.title = Anfon eich adborth - Gwirio eich Pensiwn y Wladwriaeth - GOV.UK
 nisp.feedback.finished.title = Eich adborth - Gwirio eich Pensiwn y Wladwriaeth - GOV.UK
+nisp.feedback.planning = Planning for retirement
+nisp.feedback.planning.text = Checking your State Pension is a good start, but you should also think about how much you will need to live on when you are saving for your future.
+nisp.feedback.planning.link = Having more in retirement
 
 #*******************
 # Session timeout
