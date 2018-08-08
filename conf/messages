@@ -240,9 +240,10 @@ nisp.thankyou.received = We’ve received your feedback.
 nisp.finishpage.title = We’ve received your feedback: Check your State Pension
 nisp.feedback.title = Send your feedback - Check your State Pension - GOV.UK
 nisp.feedback.finished.title = Your feedback - Check your State Pension - GOV.UK
-nisp.feedback.planning = Planning for retirement
-nisp.feedback.planning.text = Checking your State Pension is a good start, but you should also think about how much you will need to live on when you are saving for your future.
-nisp.feedback.planning.link = Having more in retirement
+nisp.signedOut.planningForRetirement = Planning for retirement
+nisp.signedOut.statePensionSaving = Checking your State Pension is a good start, but you should also think about how much you will need to live on when you are saving for your future.
+nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/having-more-for-retirement/">Having more in retirement</a>
+
 
 #*******************
 # Session timeout
