@@ -60,6 +60,10 @@ class QuestionnaireFormViewSpec extends HtmlSpec  with MockitoSugar with BeforeA
     lazy val sResult = html.questionnaire(QuestionnaireForm.form)
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render page with heading  you have signed out of you account " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.questionnaire.header")
+    }
+
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.questionnaire.header") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }

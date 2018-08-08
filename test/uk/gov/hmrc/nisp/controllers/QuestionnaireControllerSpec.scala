@@ -41,6 +41,7 @@ class QuestionnaireControllerSpec extends UnitSpec with OneAppPerSuite {
   "GET /questionnaire" should {
     "return questionnaire page" in {
       val result = testQuestionnaireController.show(fakeRequest)
+      contentAsString(result).contains("signed out of your account") shouldBe true
       contentAsString(result).contains("Give us feedback to help us improve this service.") shouldBe true
       contentAsString(result).contains("What you can do next")
       contentAsString(result).contains("Pension Wise - understanding your pension options")
