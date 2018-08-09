@@ -226,24 +226,10 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
     new Period(dateOfBirth, currentDate).getYears
   }
 
-  def questionnaire: Action[AnyContent] = UnauthorisedAction { implicit request =>
+  def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>
     Redirect(routes.QuestionnaireController.show())
   }
   
-  def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>
-    if (applicationConfig.showGovUkDonePage) {
-      Redirect(applicationConfig.govUkFinishedPageUrl).withNewSession
-    } else {
-      val name = request.session.get(NAME).getOrElse("")
-      val nino = request.session.get(NINO).getOrElse("")
-      val contractedOut = request.session.get(CONTRACTEDOUT).getOrElse("")
-
-      Ok(signedOut()).withNewSession.withSession(
-        NAME -> name,
-        NINO -> nino,
-        CONTRACTEDOUT -> contractedOut)
-    }
-  }
 
   def timeout = UnauthorisedAction { implicit request =>
     Ok(sessionTimeout())

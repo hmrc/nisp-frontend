@@ -60,6 +60,10 @@ class QuestionnaireFormViewSpec extends HtmlSpec  with MockitoSugar with BeforeA
     lazy val sResult = html.questionnaire(QuestionnaireForm.form)
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
+    "render page with heading  you have signed out of you account " in {
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.questionnaire.header")
+    }
+
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.questionnaire.header") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
@@ -67,153 +71,153 @@ class QuestionnaireFormViewSpec extends HtmlSpec  with MockitoSugar with BeforeA
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1", "nisp.questionnaire.header")
     }
     "render page with text  'Give us feedback to help us improve this service. It will take no more than 2 minutes.' " in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.questionnaire.please", "/check-your-state-pension", null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.questionnaire.please", "/check-your-state-pension", null, null)
     }
     "render page with text  ' We use your feedback to make our services better.' " in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.questionnaire.please2", "/check-your-state-pension", null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(4)", "nisp.questionnaire.please2", "/check-your-state-pension", null, null)
     }
 
 
     /*Main form starts here*/
 
     "render page with text  'How easy was it to use Check your State Pension?' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(2)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.easytouse.question")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(2)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.easytouse.question")
     }
     "render page with text  'When you used this service, did you:' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(3)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.useitbyyourself.question")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(3)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.useitbyyourself.question")
     }
     "render page with text  'How likely would you be to use this service again?' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(4)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.likelytouse.question")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(4)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.likelytouse.question")
     }
     "render page with text  'overall, how did you feel about the service you received today?' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(5)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.satisfied.question")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(5)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.satisfied.question")
     }
     "render page with text  'After using Check your State Pension, do you feel you have:' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(6)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.understanding.question")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(6)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.understanding.question")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next:' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.whatwillyoudonext.question")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.whatwillyoudonext.question")
     }
     "render page with text  'How could we improve the service?' " in {
-      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(9)>label:nth-child(1)", "nisp.questionnaire.improve.question")
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>fieldset:nth-child(9)>label:nth-child(1)", "nisp.questionnaire.improve.question")
     }
     "render page with text  'Please do not include any personal or financial information, for example your National Insurance or credit card number.' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(9)>label>small", "nisp.textentry.warning")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>fieldset:nth-child(9)>label>small", "nisp.textentry.warning")
     }
     "render page with text  'Would you like to take part in any future research to help us improve the service?' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(10)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.research.question")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(10)>fieldset:nth-child(1)>legend:nth-child(1)", "nisp.questionnaire.research.question")
     }
     "render page with text  'Please leave your email address so we can cotact you' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>label:nth-child(11)>span", "nisp.questionnaire.email")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>label:nth-child(11)>span", "nisp.questionnaire.email")
     }
 
     "render page with text  'How easy was it to use Check your State Pension - very easy' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(2)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)", "nisp.questionnaire.easytouse.0")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(2)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)", "nisp.questionnaire.easytouse.0")
     }
 
     "render page with text  'How easy was it to use Check your State Pension - easy' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(2)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)","nisp.questionnaire.easytouse.1")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(2)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)","nisp.questionnaire.easytouse.1")
     }
     "render page with text  'How easy was it to use Check your State Pension - diff' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(2)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.easytouse.2")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(2)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.easytouse.2")
     }
     "render page with text  'How easy was it to use Check your State Pension - very diff' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(2)>fieldset:nth-child(1)>div:nth-child(5)>label:nth-child(2)", "nisp.questionnaire.easytouse.3")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(2)>fieldset:nth-child(1)>div:nth-child(5)>label:nth-child(2)", "nisp.questionnaire.easytouse.3")
     }
 
     "render page with text  'When you used this service, did you: - use it by yourself' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(3)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)", "nisp.questionnaire.useitbyyourself.0")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(3)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)", "nisp.questionnaire.useitbyyourself.0")
     }
     "render page with text  'When you used this service, did you: - use it with someone' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(3)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)", "nisp.questionnaire.useitbyyourself.1")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(3)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)", "nisp.questionnaire.useitbyyourself.1")
     }
     "render page with text  'When you used this service, did you: - have someone one to use it for you' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(3)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.useitbyyourself.2")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(3)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.useitbyyourself.2")
     }
 
     "render page with text  'How likely would you be to use this service again? - very likely' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(4)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)", "nisp.questionnaire.likely.0")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(4)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)", "nisp.questionnaire.likely.0")
     }
 
     "render page with text  'How likely would you be to use this service again? - likely' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(4)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)", "nisp.questionnaire.likely.1")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(4)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)", "nisp.questionnaire.likely.1")
     }
     "render page with text  'How likely would you be to use this service again? - unlikely' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(4)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.likely.2")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(4)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.likely.2")
     }
     "render page with text  'How likely would you be to use this service again? - very unlikely' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(4)>fieldset:nth-child(1)>div:nth-child(5)>label:nth-child(2)", "nisp.questionnaire.likely.3")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(4)>fieldset:nth-child(1)>div:nth-child(5)>label:nth-child(2)", "nisp.questionnaire.likely.3")
     }
 
     "render page with text  'Overall, how did you feel about the service you received today? - very satisfied' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)", "nisp.questionnaire.satisfied.0")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)", "nisp.questionnaire.satisfied.0")
     }
     "render page with text  'Overall, how did you feel about the service you received today? - satisfied' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)", "nisp.questionnaire.satisfied.1")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)", "nisp.questionnaire.satisfied.1")
     }
     "render page with text  'Overall, how did you feel about the service you received today? - neither satisfied' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.satisfied.2")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)", "nisp.questionnaire.satisfied.2")
     }
     "render page with text  'Overall, how did you feel about the service you received today? - unsatisfied' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(5)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(5)>label:nth-child(2)",
         "nisp.questionnaire.satisfied.3")
     }
     "render page with text  'Overall, how did you feel about the service you received today? - very unsatisfied' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(6)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(5)>fieldset:nth-child(1)>div:nth-child(6)>label:nth-child(2)",
         "nisp.questionnaire.satisfied.4")
     }
 
     "render page with text  'After using Check your State Pension, do you feel you have: - better understanding' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(6)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(6)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)",
         "nisp.questionnaire.understanding.0")
     }
     "render page with text  'After using Check your State Pension, do you feel you have: - less understanding' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(6)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(6)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)",
         "nisp.questionnaire.understanding.1")
     }
     "render page with text  'After using Check your State Pension, do you feel you have: - no understanding' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(6)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(6)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)",
         "nisp.questionnaire.understanding.2")
     }
 
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - speak to financial advisor' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(2)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.0")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to DWP/HMRC' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(3)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.1")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to your employer' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(4)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.2")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Speak to friends and family' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(5)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(5)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.3")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Look into my other pensions/savings/other assets' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(6)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(6)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.4")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Get more pensions information online' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(7)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(7)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.5")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Pay gaps in my National Insurance record' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(8)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(8)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.6")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Nothing' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(9)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(9)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.7")
     }
     "render page with text  'After using Check your State Pension, which of the following are you most likely to do next: - Other' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(10)>label:nth-child(2)",
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>div:nth-child(7)>fieldset:nth-child(1)>div:nth-child(10)>label:nth-child(2)",
         "nisp.questionnaire.whatwillyoudonext.8")
     }
     "render page with text  'How could we improve the service? limit characters' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(4)>fieldset:nth-child(9)>span", "nisp.textentry.charlimit")
+      assertEqualsMessage(htmlAccountDoc, "article.content__body>form:nth-child(5)>fieldset:nth-child(9)>span", "nisp.textentry.charlimit")
     }
 
   }
