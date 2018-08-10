@@ -170,7 +170,7 @@ nisp.nirecord.summary.youhave = You have:
 # Questionnaire messages
 #**************************
 
-git s =  What did you think of this service?
+nisp.questionnaire.title =  What did you think of this service?
 nisp.questionnaire.header = What did you think of this service?
 
 nisp.questionnaire.please = Give us feedback to help us improve this service. It will take no more than 2&nbsp;minutes.
