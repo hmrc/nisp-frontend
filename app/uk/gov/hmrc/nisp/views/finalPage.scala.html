@@ -25,7 +25,8 @@
 @main(MainTemplateParams(
  browserTitle = Some(Messages("nisp.finishpage.title")),
  pageTitle = Some(messages("nisp.thankyou.title")),
- sidebarLinks = Some(includes.questionnaireSidebar())
+ sidebarLinks = Some(includes.questionnaireSidebar()),
+ hideNavBar = true
 )) {
 
 <p>@Html(Messages("nisp.thankyou.received"))</p>
