@@ -244,7 +244,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
     }
     "render page with href link  'back'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
     }
   }
 
@@ -359,7 +359,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
     }
     "render page with href link  'back'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
     }
   }
 
@@ -616,7 +616,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
     }
     "render page with href link  'back'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
     }
   }
 
@@ -710,7 +710,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
     }
     "render page with href link 'back'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
     }
   }
 
@@ -834,7 +834,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
     }
     "render page with href link 'back'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "/check-your-state-pension/account")
+      assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
     }
   }
 

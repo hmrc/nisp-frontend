@@ -206,7 +206,7 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     <p><a href="@routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
 }
 
-<p class="backlink"><a href="@{routes.StatePensionController.show().url}">@Messages("nisp.back")</a></p>
+<p class="backlink"><a href="javascript:window.history.back();">@Messages("nisp.back")</a></p>
 
 }
 }
