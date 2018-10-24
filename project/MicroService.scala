@@ -10,6 +10,8 @@ import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.versioning.SbtGitVersioning
+import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
+import uk.gov.hmrc.SbtArtifactory
 
 trait MicroService {
 
@@ -40,7 +42,7 @@ trait MicroService {
 }
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtWeb) ++ plugins: _*)
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory, SbtWeb) ++ plugins: _*)
   .settings(publishingSettings: _*)
   .settings(playSettings ++ scoverageSettings: _*)
   .settings(
@@ -52,4 +54,5 @@ lazy val microservice = Project(appName, file("."))
   )
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(resolvers ++= Seq(Resolver.jcenterRepo))
+  .settings(majorVersion := 9)
 }
