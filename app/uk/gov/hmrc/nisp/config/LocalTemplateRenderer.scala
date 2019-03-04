@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,10 @@
 
 package uk.gov.hmrc.nisp.config
 
+import akka.actor.ActorSystem
+import com.typesafe.config.Config
+import play.api.{Configuration, Play}
+import play.api.Mode.Mode
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
 import uk.gov.hmrc.nisp.config.wiring.{NispAuditConnector, WSHttp}
@@ -39,6 +43,8 @@ trait LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
 
 object LocalTemplateRenderer extends LocalTemplateRenderer {
   override val wsHttp = WsAllMethods
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
 
 trait WsAllMethods extends WSHttp with HttpAuditing with AppName with RunMode
@@ -46,4 +52,10 @@ trait WsAllMethods extends WSHttp with HttpAuditing with AppName with RunMode
 object WsAllMethods extends WsAllMethods {
   override lazy val auditConnector = NispAuditConnector
   override val hooks = Seq (AuditingHook)
+
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override protected def actorSystem: ActorSystem = Play.current.actorSystem
+  override protected def configuration: Option[Config] = Option(Play.current.configuration.underlying)
 }

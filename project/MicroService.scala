@@ -48,7 +48,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     scalaVersion := "2.11.11",
     libraryDependencies ++= appDependencies,
-    dependencyOverrides +=  "uk.gov.hmrc" %% "play-config" % "4.3.0",
+    dependencyOverrides +=  "uk.gov.hmrc" %% "play-config" % "7.3.0",
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     routesGenerator := StaticRoutesGenerator

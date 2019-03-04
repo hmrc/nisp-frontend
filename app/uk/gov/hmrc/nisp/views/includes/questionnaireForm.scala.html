@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
     <input type="hidden" name="referer" id="referer" value="@form.data.get("referer")">
 
-    @helpers.inputRadioGroup(
+    @helpers.input_radio_group(
         form("easytouse"), Seq(
             ("0", Messages("nisp.questionnaire.easytouse.0")),
             ("1", Messages("nisp.questionnaire.easytouse.1")),
@@ -40,7 +40,7 @@
         '_labelClass -> "block-label"
     )
 
-    @helpers.inputRadioGroup(
+    @helpers.input_radio_group(
         form("useitbyyourself"), Seq(
             ("0", Messages("nisp.questionnaire.useitbyyourself.0")),
             ("1", Messages("nisp.questionnaire.useitbyyourself.1")),
@@ -52,7 +52,7 @@
         '_labelClass -> "block-label"
     )
 
-    @helpers.inputRadioGroup(
+    @helpers.input_radio_group(
         form("likelytouse"), Seq(
             ("0", Messages("nisp.questionnaire.likely.0")),
             ("1", Messages("nisp.questionnaire.likely.1")),
@@ -66,7 +66,7 @@
     )
 
 
-    @helpers.inputRadioGroup(
+    @helpers.input_radio_group(
         form("satisfied"), Seq(
             ("0", Messages("nisp.questionnaire.satisfied.0")),
             ("1", Messages("nisp.questionnaire.satisfied.1")),
@@ -80,7 +80,7 @@
         '_labelClass -> "block-label"
     )
 
-    @helpers.inputRadioGroup(
+    @helpers.input_radio_group(
         form("understanding"), Seq(
                 ("0", Messages("nisp.questionnaire.understanding.0")),
                 ("1", Messages("nisp.questionnaire.understanding.1")),
@@ -92,7 +92,7 @@
         '_labelClass -> "block-label"
     )
 
-    @helpers.inputRadioGroup(
+    @helpers.input_radio_group(
         form("whatWillYouDoNext"), Seq(
             ("0", Messages("nisp.questionnaire.whatwillyoudonext.0")),
             ("1", Messages("nisp.questionnaire.whatwillyoudonext.1")),
@@ -133,7 +133,7 @@
     </fieldset>
 
 
-    @helpers.inputRadioGroup(
+    @helpers.input_radio_group(
         form("research"), Seq(
             ("0", Messages("nisp.questionnaire.research.0")),
             ("1", Messages("nisp.questionnaire.research.1"))

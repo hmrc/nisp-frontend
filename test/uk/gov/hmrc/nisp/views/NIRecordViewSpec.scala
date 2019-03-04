@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import play.twirl.api.Html
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
@@ -36,18 +36,15 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusionFiltered}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.language.LanguageUtils._
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
+import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.nisp.views.html.main
-import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 
 class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
