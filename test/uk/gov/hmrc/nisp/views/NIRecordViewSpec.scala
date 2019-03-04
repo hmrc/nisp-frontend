@@ -196,7 +196,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of £530 by 5 April 2023. This shortfall may increase after 5 April 2019.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60 ", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -210,7 +210,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
 
     "render page with text 'Paid employment £ 4,259.60'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £4,259.60 ")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", "£4,259.60")
     }
 
     /*check for medical credit year*/
@@ -325,7 +325,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60 ", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -811,7 +811,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
 
     "render page with text 'paid employment : £12,345.67'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £12,345.67 ")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", "£12,345.67")
     }
     "render page with text 'self- employment : 10 weeks'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.selfemployed.plural", "10")
