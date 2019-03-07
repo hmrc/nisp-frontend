@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ class RedirectControllerSpec extends PlaySpec with OneAppPerSuite {
     "redirect to /check-your-state-pension" in {
       val request = FakeRequest("GET", "/checkmystatepension")
       val result = Helpers.route(request).get
-      redirectLocation(result) mustBe Some("/check-your-state-pension?=")
+      redirectLocation(result) mustBe Some("/check-your-state-pension")
     }
   }
 
@@ -42,7 +42,7 @@ class RedirectControllerSpec extends PlaySpec with OneAppPerSuite {
     "redirect to /check-your-state-pension/account" in {
       val request = FakeRequest("GET", "/checkmystatepension/account")
       val result = Helpers.route(request).get
-      redirectLocation(result) mustBe Some("/check-your-state-pension/account?=")
+      redirectLocation(result) mustBe Some("/check-your-state-pension/account")
     }
   }
 
@@ -58,7 +58,7 @@ class RedirectControllerSpec extends PlaySpec with OneAppPerSuite {
     "redirect to /check-your-state-pension/account" in {
       val request = FakeRequest("GET", "/checkmystatepension//account")
       val result = Helpers.route(request).get
-      redirectLocation(result) mustBe Some("/check-your-state-pension/account?=")
+      redirectLocation(result) mustBe Some("/check-your-state-pension/account")
     }
   }
 }

@@ -48,8 +48,13 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     scalaVersion := "2.11.11",
     libraryDependencies ++= appDependencies,
-    dependencyOverrides +=  "uk.gov.hmrc" %% "play-config" % "4.3.0",
+    dependencyOverrides +=  "uk.gov.hmrc" %% "play-config" % "7.3.0",
     retrieveManaged := true,
+    resolvers ++= Seq(
+      Resolver.bintrayRepo("hmrc", "releases"),
+      Resolver.jcenterRepo,
+      "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
+    ),
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     routesGenerator := StaticRoutesGenerator
   )

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,11 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import java.net.URLEncoder
-
 import play.api.i18n.Messages
 import play.api.mvc.Request
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
-import uk.gov.hmrc.play.breadcrumb.factory.BreadcrumbFactory
 import uk.gov.hmrc.play.breadcrumb.model.{Breadcrumb, BreadcrumbItem}
-import uk.gov.hmrc.play._
-
 
 object NispBreadcrumb extends NispBreadcrumb {
   override lazy val applicationConfig = ApplicationConfig

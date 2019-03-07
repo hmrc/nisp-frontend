@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import play.api.{Configuration, Play}
+import play.api.Mode.Mode
 import play.api.libs.json.{Format, Json, Writes}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.cache.client.SessionCache
@@ -27,7 +29,7 @@ import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
 trait StatePensionConnector extends BackendConnector {
   implicit val reads = eitherReads[StatePensionExclusion, StatePension]
@@ -50,8 +52,9 @@ trait StatePensionConnector extends BackendConnector {
 
 object StatePensionConnector extends StatePensionConnector with ServicesConfig {
   override val serviceUrl = baseUrl("state-pension")
-
   override def http: HttpGet = WSHttp
   override def sessionCache: SessionCache = NispSessionCache
   override val metricsService: MetricsService = MetricsService
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

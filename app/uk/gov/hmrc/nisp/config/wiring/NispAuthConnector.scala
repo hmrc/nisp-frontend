@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,23 @@
 
 package uk.gov.hmrc.nisp.config.wiring
 
+import akka.actor.ActorSystem
+import com.typesafe.config.Config
+import play.api.Mode.Mode
+import play.api.{Configuration, Play}
+import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.http.HttpGet
-import uk.gov.hmrc.play.http.ws._
 
 object NispAuthConnector extends AuthConnector with ServicesConfig {
   override val serviceUrl: String = baseUrl("auth")
 
-  override def http: HttpGet = new HttpGet with WSHttp
+  override def http: HttpGet = new HttpGet with WSHttp {
+    override protected def appNameConfiguration: Configuration = Play.current.configuration
+    override protected def actorSystem: ActorSystem = Play.current.actorSystem
+    override protected def configuration: Option[Config] = Option(Play.current.configuration.underlying)
+  }
+
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import play.twirl.api.Html
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
@@ -36,18 +36,15 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusionFiltered}
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.language.LanguageUtils._
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
+import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.nisp.views.html.main
-import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 
 class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
@@ -199,7 +196,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of £530 by 5 April 2023. This shortfall may increase after 5 April 2019.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60 ", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -213,7 +210,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
 
     "render page with text 'Paid employment £ 4,259.60'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £4,259.60 ")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", "£4,259.60")
     }
 
     /*check for medical credit year*/
@@ -328,7 +325,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", " &pound;704.60 ", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -814,7 +811,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
 
     "render page with text 'paid employment : £12,345.67'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", " £12,345.67 ")
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", "£12,345.67")
     }
     "render page with text 'self- employment : 10 weeks'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl:nth-child(5)>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.selfemployed.plural", "10")

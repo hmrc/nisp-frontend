@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
 import play.twirl.api.Html
 import uk.gov.hmrc.play.views.formatting.Money
 

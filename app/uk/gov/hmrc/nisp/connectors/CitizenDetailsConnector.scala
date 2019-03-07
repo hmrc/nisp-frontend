@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,24 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import play.api.Mode.Mode
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
 
 object CitizenDetailsConnector extends CitizenDetailsConnector with ServicesConfig {
   override val serviceUrl = baseUrl("citizen-details")
   override val metricsService: MetricsService = MetricsService
   override def http: HttpGet = WSHttp
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
 
 trait CitizenDetailsConnector {
