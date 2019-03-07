@@ -13,7 +13,7 @@ private object AppDependencies {
   private val playLanguageVersion = "3.4.0"
   private val httpCachingClientVersion = "8.1.0"
   private val cspClientVersion = "3.1.0"
-  private val localTemplateRendererVersion = "2.0.0"
+  private val localTemplateRendererVersion = "2.3.0"
   private val taxYearVersion="0.5.0"
   private val playConditionalFormMappingVersion="0.2.0"
   private val playBreadCrumbVersion="1.0.0"
