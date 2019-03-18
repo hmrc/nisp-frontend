@@ -47,6 +47,8 @@ trait ApplicationConfig {
   val showFullNI: Boolean
   val futureProofPersonalMax: Boolean
   val isWelshEnabled: Boolean
+  val feedbackFrontendRedirectEnabled: Boolean
+  val feedbackFrontendUrl: String
   val frontendTemplatePath: String
 }
 
@@ -89,6 +91,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val showFullNI: Boolean = configuration.getBoolean("microservice.services.features.fullNIrecord").getOrElse(false)
   override lazy val futureProofPersonalMax: Boolean = configuration.getBoolean("microservice.services.features.future-proof.personalMax").getOrElse(false)
   override val isWelshEnabled = configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
+  override val feedbackFrontendRedirectEnabled = configuration.getBoolean("microservice.services.features.feedback-frontend-redirect").getOrElse(false)
+  override val feedbackFrontendUrl: String = loadConfig("feedback-frontend.url")
   override protected def mode: Mode = Play.current.mode
   override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
