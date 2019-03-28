@@ -227,13 +227,8 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
   }
 
   def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>
-
-    if (applicationConfig.feedbackFrontendRedirectEnabled)
-      Redirect(applicationConfig.feedbackFrontendUrl).withNewSession
-    else
-      Redirect(routes.QuestionnaireController.show()).withNewSession
+    Redirect(applicationConfig.feedbackFrontendUrl).withNewSession
   }
-  
 
   def timeout = UnauthorisedAction { implicit request =>
     Ok(sessionTimeout())

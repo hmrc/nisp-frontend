@@ -30,7 +30,6 @@ object ApplicationConfigBuilder {
             futureProofPersonalMax: Boolean = false,
             isWelshEnabled: Boolean = true,
             frontendTemplatePath: String = "",
-            feedbackFrontendRedirectEnabled: Boolean = true,
             feedbackFrontendUrl: String = "/foo"
            ): ApplicationConfig = new ApplicationConfig {
     override val assetsPrefix: String = assetsPrefix
@@ -58,7 +57,6 @@ object ApplicationConfigBuilder {
     override val futureProofPersonalMax: Boolean = futureProofPersonalMax
     override val isWelshEnabled: Boolean = isWelshEnabled
     override val frontendTemplatePath: String = frontendTemplatePath
-    override val feedbackFrontendRedirectEnabled: Boolean = true
     override val feedbackFrontendUrl: String = "/foo"
   }
 }
