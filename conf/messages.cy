@@ -181,16 +181,6 @@ nisp.timeout.title = Rydych wedi cael eich allgofnodi
 nisp.timeout.heading = Rydych wedi cael eich allgofnodi
 nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd nad ydych wedi defnyddio’r gwasanaeth am 15 munud neu fwy.
 
-#*******************
-# Signed out
-#*******************
-
-nisp.signedOut.heading = Rydych wedi allgofnodi o’ch cyfrif
-nisp.signedOut.whatDidYouThink = <a href="{0}">Beth oedd eich barn am y gwasanaeth hwn?</a> (mae’n cymryd 2 funud)
-nisp.signedOut.planningForRetirement = Cynllunio ar gyfer ymddeoliad
-nisp.signedOut.statePensionSaving = Mae bwrw golwg ar eich Pensiwn y Wladwriaeth yn ddechrau da, ond dylech hefyd ystyried faint o arian y bydd ei angen arnoch i fyw arno wrth gynilo ar gyfer eich dyfodol.
-nisp.signedOut.havingMoreInRetirement = <a href="https://www.yourpension.gov.uk/cymraeg/cysp-cael-mwy-ar-gyfer-ymddeoliad/">Bod â mwy ar ôl ymddeol</a>
-
 #******************
 # NI record page
 #******************

@@ -10,8 +10,6 @@
  *
  * Amount Box
  *
- * Questionnaire
- *
  * Chart lines
  *
  * Cope page
@@ -204,22 +202,6 @@ div.panel-indent{
       }        
     }
  } 
-}
-
-
-/*------------------------------------*\
-    #Questionnaire
-\*------------------------------------*/
-
-@media (min-width : 641px) {
-
-    .form-field--error {
-        width: inherit;
-    }
-}
-
-textarea {
-  height: 13em;
 }
 
 /*----------------------------------*\
