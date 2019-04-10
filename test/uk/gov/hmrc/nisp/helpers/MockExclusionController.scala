@@ -54,7 +54,6 @@ object MockExclusionController extends ExclusionController {
     override val futureProofPersonalMax: Boolean = false
     override val isWelshEnabled = true
     override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
-    override val feedbackFrontendRedirectEnabled: Boolean = true
     override val feedbackFrontendUrl: String = "/foo"
   }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever

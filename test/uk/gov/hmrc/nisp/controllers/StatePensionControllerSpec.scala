@@ -124,7 +124,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val futureProofPersonalMax: Boolean = false
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendRedirectEnabled: Boolean = true
             override val feedbackFrontendUrl: String = "/foo"
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -256,7 +255,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val futureProofPersonalMax: Boolean = false
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendRedirectEnabled: Boolean = true
             override val feedbackFrontendUrl: String = "/foo"
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -295,7 +293,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val futureProofPersonalMax: Boolean = false
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendRedirectEnabled: Boolean = true
             override val feedbackFrontendUrl: String = "/foo"
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -397,7 +394,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val futureProofPersonalMax: Boolean = true
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendRedirectEnabled: Boolean = true
             override val feedbackFrontendUrl: String = "/foo"
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever

@@ -80,7 +80,6 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       override val futureProofPersonalMax: Boolean = false
       override val isWelshEnabled = false
       override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
-      override val feedbackFrontendRedirectEnabled: Boolean = true
       override val feedbackFrontendUrl: String = "/foo"
     }
   }

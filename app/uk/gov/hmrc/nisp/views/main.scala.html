@@ -174,7 +174,7 @@ if(mainTemplateParams.articleEnabled) {
     ) ++ mainTemplateParams.gaDimensions.getOrElse(Map.empty)
 }
 @showLastLogInStatus = @{
-    if(mainTemplateParams.articleEnabled && mainTemplateParams.IsQuestionnaire) {
+    if(mainTemplateParams.articleEnabled) {
         true
     } else {
         false
