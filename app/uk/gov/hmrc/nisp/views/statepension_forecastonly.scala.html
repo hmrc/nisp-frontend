@@ -69,11 +69,15 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
 @main(MainTemplateParams(
     userLoggedIn = true,
     browserTitle = Some(Messages("nisp.main.title")),
+    pageInfo = Some(user.name.getOrElse("")),
     pageTitle = Some(Messages("nisp.main.h1.title")),
+    h1Class = Some("titleWithPAgeInfo"),
     gaDimensions = Some(analyticsAdditionalJs),
     sidebarLinks = Some(sidebar),
     showUrBanner = true
 )) {
+
+    <p>@Messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
 
     <div class="highlighted-event govuk-box-highlight">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@Messages("nisp.main.caveats") @Messages("nisp.is")</span></p>

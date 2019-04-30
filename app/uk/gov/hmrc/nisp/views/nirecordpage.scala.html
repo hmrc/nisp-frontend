@@ -83,7 +83,10 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
         browserTitle = Some(Messages("nisp.nirecord.title")),
         userLoggedIn = true,
         sidebarLinks = Some(sidebar),
+        pageInfo = Some(user.name.getOrElse("")),
+        printableDocument = true,
         pageTitle = Some(Messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
+        h1Class = Some("titleWithPAgeInfo"),
         gaDimensions = Some(analyticsAdditionalJs),
         showUrBanner = true
     )) {
@@ -121,6 +124,8 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
         }
     </ul>
 </div>
+
+<p>@Messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
 
 @if(!gapsOnlyView){
     @if(niRecord.numberOfGaps > 0){
@@ -197,7 +202,9 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     }
 </dl>
 
-<span id="current-language" class="visuallyhidden">@{messages.lang.code}</span>
+<span id="current-language" class="visuallyhidden" aria-hidden="true">@{messages.lang.code}</span>
+
+<p class="print-ni-link"><a href="javascript:window.print();">@Messages("nisp.print.this.ni.record")</a></p>
 
 @if(niRecord.numberOfGaps > 0 && !gapsOnlyView){
     <p><a href="@routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps)</a></p>

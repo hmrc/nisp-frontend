@@ -1,0 +1,26 @@
+@media print {
+
+  .printable {
+    visibility: hidden;
+  }
+
+  .printable .content__body *, .printable .sidebar {
+    visibility: visible;
+  }
+
+  .printable #skipto {
+    left: 0px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .printable .content__body a {
+     display: none;
+  }
+
+  .printable .content__body .accordion a {
+     display: block;
+  }
+
+}

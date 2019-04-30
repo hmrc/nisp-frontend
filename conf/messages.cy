@@ -59,6 +59,8 @@ nisp.main.inflation = nid yw’n cynnwys unrhyw gynnydd o ganlyniad i chwyddiant
 nisp.main.psod = nid yw’n cynnwys y gorchymun rhannu pensiwn sydd gennych yn weithredol
 nisp.main.after = Ar ôl oedran Pensiwn y Wladwriaeth, <span class="nowrap">{0}</span>, nid oes yn rhaid i chi dalu cyfraniadau Yswiriant Gwladol.
 nisp.main.basedOn = Gallwch gael eich Pensiwn y Wladwriaeth ar
+nisp.national.insurance.number = Rhif Yswiriant Gwladol
+nisp.print.this.ni.record = Argraffwch y cofnod Yswiriant Gwladol hwn
 
 nisp.main.puttingOff = Oedi gwneud cais
 nisp.main.puttingOff.line1 = Gallwch oedi gwneud cais am eich Pensiwn y Wladwriaeth o’r {0}. Gallai gwneud hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan fyddwch yn dod i wneud cais amdano. Mae’r swm ychwanegol, gyda’ch Pensiwn y Wladwriaeth, yn ffurfio rhan o’ch incwm trethadwy.

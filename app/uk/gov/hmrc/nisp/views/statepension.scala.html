@@ -77,11 +77,15 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         userLoggedIn = true,
         showUrBanner =  true,
         browserTitle = Some(Messages("nisp.main.title")),
+        pageInfo = Some(user.name.getOrElse("")),
         pageTitle = Some(Messages("nisp.main.h1.title")),
+        h1Class = Some("titleWithPAgeInfo"),
         sidebarLinks = Some(sidebar),
         articleClasses = Some("mainpage"),
         gaDimensions = Some(analyticsAdditionalJs)
     )) {
+
+    <p>@Messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
 
     <div class="highlighted-event govuk-box-highlight">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@Dates.formatDate(statePension.pensionDate). </span>
