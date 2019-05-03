@@ -194,11 +194,10 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 nisp.nirecord.title = Your National Insurance record
 nisp.nirecord.heading = Your National Insurance record
 nisp.nirecord.heading.uk = Your UK National Insurance record
-nisp.nirecord.yournirecordgapyears = Years which are not full.
 nisp.nirecord.yournirecordallyears = All years.
 nisp.nirecord.youdonothaveanygaps = You do not have any gaps in your record.
-nisp.nirecord.showgaps = View gaps only
-nisp.nirecord.showfull = View all years
+nisp.nirecord.showgaps = View years only showing gaps in your contributions
+nisp.nirecord.showfull = View all years of contributions
 nisp.nirecord.fullyear = Full year
 
 nisp.nirecord.gap = Year is not full
@@ -227,12 +226,12 @@ nisp.nirecord.youdidnotmakeanycontrib = You did not make any contributions this 
 
 nisp.nirecord.summary.yourrecord = Summary
 nisp.nirecord.summary.yourrecord.mobile = Summary
-nisp.nirecord.summary.fullContributions = years of full contributions
-nisp.nirecord.summary.fullContributions.single = year of full contributions
-nisp.nirecord.summary.gaps = years when you did not contribute enough
-nisp.nirecord.summary.gaps.single = year when you did not contribute enough
-nisp.nirecord.summary.yearsRemaining = years to contribute before 5 April {0}
-nisp.nirecord.summary.yearsRemaining.single = year to contribute before 5 April {0}
+nisp.nirecord.summary.fullContributions = {0} years of full contributions
+nisp.nirecord.summary.fullContributions.single = {0} year of full contributions
+nisp.nirecord.summary.gaps = {0} years when you did not contribute enough
+nisp.nirecord.summary.gaps.single = {0} year when you did not contribute enough
+nisp.nirecord.summary.yearsRemaining = {0} years to contribute before 5 April {1}
+nisp.nirecord.summary.yearsRemaining.single = {0} year to contribute before 5 April {1}
 
 nisp.nirecord.pre75Years = Up to 1975
 nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>

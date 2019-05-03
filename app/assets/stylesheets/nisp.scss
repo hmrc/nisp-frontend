@@ -348,23 +348,3 @@ text-align : right;
     }
 
 
-.page-info {
-    color: $grey-1;
-    font-size: 18px;
-}
-
-@media only screen and (min-width: 641px) {
-    .page-info {
-        font-size: 27px;
-        margin-bottom: 5px;
-    }
-}
-
-.titleWithPAgeInfo {
-    margin-top: 0;
-    margin-bottom: 1.5em;
-}
-
-.print-ni-link {
-    margin-top: 1em;
-}

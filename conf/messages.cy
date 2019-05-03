@@ -190,7 +190,6 @@ nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd n
 nisp.nirecord.title = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
-nisp.nirecord.yournirecordgapyears = Blynyddoedd sydd ddim yn llawn.
 nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
 
@@ -232,8 +231,8 @@ nisp.nirecord.summary.fullContributions = o flynyddoedd o gyfraniadau llawn
 nisp.nirecord.summary.fullContributions.single = blwyddyn o gyfraniadau llawn
 nisp.nirecord.summary.gaps = o flynyddoedd pan na wnaethoch gyfrannu digon
 nisp.nirecord.summary.gaps.single = blwyddyn pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.yearsRemaining = o flynyddoedd i gyfrannu cyn 5 Ebrill {0}
-nisp.nirecord.summary.yearsRemaining.single = blwyddyn i gyfrannu cyn 5 Ebrill {0}
+nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i gyfrannu cyn 5 Ebrill {1}
+nisp.nirecord.summary.yearsRemaining.single = {0} blwyddyn i gyfrannu cyn 5 Ebrill {1}
 
 nisp.nirecord.pre75Years = Hyd at 1975
 nisp.nirecord.pre75QualifyingYears = Mae ein cofnodion yn dangos bod gennych {0} o flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
