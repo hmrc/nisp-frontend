@@ -4,8 +4,13 @@
     visibility: hidden;
   }
 
-  .printable .content__body *, .printable .sidebar {
+  .printable .content__body * {
     visibility: visible;
+  }
+
+  .printable .content__body {
+    width: 100%;
+    float: none;
   }
 
   .printable #skipto {
