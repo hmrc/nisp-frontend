@@ -165,17 +165,18 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(4)", sMessage)
+            println(htmlAccountDoc)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£148.71  a week" in {
             val sWeek = "£148.71 " + Messages("nisp.main.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(4)>em", sWeek)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
           }
 
           "render page with text  ' £590.10 a month, £7,081.15 a year '" in {
             val sForecastAmount = "£590.10 " + Messages("nisp.main.month") + ", £7,081.15 " + Messages("nisp.main.year")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(5)", sForecastAmount)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
           }
 
           "render page with text  ' Your forcaste '" in {
@@ -186,7 +187,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.inflation")
           }
 
 
@@ -225,7 +226,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with text  ' you only need to fill 2 years to get the most you can'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(12)>li:nth-child(4)", "nisp.main.context.fillgaps.bullet2.plural", "2")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(12)>li:nth-child(2)", "nisp.main.context.fillgaps.bullet2.plural", "2")
           }
 
           "render page with text  ' The most you can get by filling any 2 years in your record is'" in {
@@ -295,15 +296,15 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with text  'Helpline 0800 731 0181'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.number")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
 
           "render page with text  'Textphone 0800 731 0176'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.textNumber")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
           }
 
           "render page with text  'Monday to Friday: 8am to 6pm'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(6)", "nisp.nirecord.helpline.openTimes")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
 
         }
@@ -455,17 +456,17 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(4)", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£168.08  a week" in {
             val sWeek = "£168.08 " + Messages("nisp.main.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(4)>em", sWeek)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
           }
 
           "render page with text  ' £590.10 a month, £7,081.15 a year '" in {
             val sForecastAmount = "£590.10 " + Messages("nisp.main.month") + ", £7,081.15 " + Messages("nisp.main.year")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(5)", sForecastAmount)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
           }
 
           "render page with text  ' Your forcaste '" in {
@@ -477,7 +478,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.inflation")
           }
 
           "render page with Heading  'You need to continue to contribute National Insurance to reach your forecast'" in {
@@ -514,7 +515,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with text  ' you only need to fill 2 years to get the most you can'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(12)>li:nth-child(4)", "nisp.main.context.fillgaps.bullet2.plural", "2")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(12)>li:nth-child(2)", "nisp.main.context.fillgaps.bullet2.plural", "2")
           }
 
           "render page with text  ' The most you can get by filling any 2 years in your record is'" in {
@@ -574,13 +575,13 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
           }
           "render page with text 'Helpline 0800 731 0181'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.number")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
           "render page with text 'Textphone 0800 731 0176'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(5)", "nisp.nirecord.helpline.textNumber")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
           }
           "render page with text 'Monday to Friday: 8am to 6pm'" in {
-            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(6)", "nisp.nirecord.helpline.openTimes")
+            assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
 
         }
@@ -731,16 +732,16 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(4)", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£148.71  a week" in {
             val sWeek = "£148.71 " + Messages("nisp.main.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(4)>em", sWeek)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
           }
           "render page with text  ' £590.10 a month, £7,081.15 a year '" in {
             val sForecastAmount = "£590.10 " + Messages("nisp.main.month") + ", £7,081.15 " + Messages("nisp.main.year")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(5)", sForecastAmount)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
           }
           "render page with text  ' Your forcaste '" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.main.caveats")
@@ -750,7 +751,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.inflation")
           }
 
           "render page with Heading  'You need to continue to contribute National Insurance to reach your forecast'" in {
@@ -783,7 +784,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(12)>li:nth-child(1)", "nisp.main.context.fillgaps.bullet1")
           }
           "render page with text  ' you only need to fill 2 years to get the most you can'" in {
-            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(12)>li:nth-child(4)", "nisp.main.context.fillgaps.bullet2.plural", "2")
+            assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(12)>li:nth-child(2)", "nisp.main.context.fillgaps.bullet2.plural", "2")
           }
           "render page with text  ' The most you can get by filling any 2 years in your record is'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(13)>span", "nisp.main.context.fillgaps.chart.plural", "2")
@@ -988,16 +989,16 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(4)", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£150.65  a week" in {
             val sWeek = "£150.65 " + Messages("nisp.main.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(4)>em", sWeek)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
           }
           "render page with text  ' £676.80 a month, £8,121.59 a year '" in {
             val sForecastAmount = "£676.80 " + Messages("nisp.main.month") + ", £8,121.59 " + Messages("nisp.main.year")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(5)", sForecastAmount)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
           }
           "render page with text  ' Your forcaste '" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.main.caveats")
@@ -1006,7 +1007,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' does not include any increase due to inflation '" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.inflation")
           }
 
           "render page with Heading  'You need to continue to contribute National Insurance to reach your forecast'" in {
@@ -1226,16 +1227,16 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(4)", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£155.65  a week" in {
             val sWeek = "£155.65 " + Messages("nisp.main.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(4)>em", sWeek)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
           }
           "render page with text  ' £676.80 a month, £8,121.59 a year '" in {
             val sForecastAmount = "£676.80 " + Messages("nisp.main.month") + ", £8,121.59 " + Messages("nisp.main.year")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(5)", sForecastAmount)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
           }
           "render page with text  ' Your forecast '" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.main.caveats")
@@ -1244,7 +1245,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' does not include any increase due to inflation '" in {
-            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.inflation")
           }
 
           "render page with Heading  'You need to continue to contribute National Insurance to reach your forecast'" in {
@@ -1464,16 +1465,16 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
         }
         "render page with text  'Your forecast is' " in {
           val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(4)", sMessage)
+          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
         }
 
         "render page with text  '£155.65  a week" in {
           val sWeek = "£155.65 " + Messages("nisp.main.week")
-          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(4)>em", sWeek)
+          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
         }
         "render page with text  ' £676.80 a month, £8,121.59 a year '" in {
           val sForecastAmount = "£676.80 " + Messages("nisp.main.month") + ", £8,121.59 " + Messages("nisp.main.year")
-          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(5)", sForecastAmount)
+          assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
         }
         "render page with text  ' Your forcaste '" in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(5)", "nisp.main.caveats")
@@ -1482,11 +1483,11 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(1)", "nisp.main.notAGuarantee")
         }
         "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
-          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
+          assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
         }
 
         "render page with text  ' does not include any increase due to inflation '" in {
-          assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(5)", "nisp.main.inflation")
+          assertEqualsMessage(htmlAccountDoc, "article.content__body>ul:nth-child(6)>li:nth-child(3)", "nisp.main.inflation")
         }
 
 
