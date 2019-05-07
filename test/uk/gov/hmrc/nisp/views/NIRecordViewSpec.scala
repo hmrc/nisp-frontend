@@ -152,12 +152,16 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
 
+    "render page with Gaps  heading  Your National Insurance record " in {
+      assertEqualsMessage(htmlAccountDoc, "h1.titleWithPageInfo", "nisp.nirecord.heading")
+    }
+
     "render page with name " in {
       assertEqualsValue(htmlAccountDoc, ".page-info", "AHMED BRENNAN")
     }
 
-    "render page with Gaps  heading  Your National Insurance record " in {
-      assertEqualsMessage(htmlAccountDoc, "h1.titleWithPageInfo", "nisp.nirecord.heading")
+    "render page with national insurence number " in {
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.national.insurance.number")
     }
 
     "render page with link 'View gaps only'" in {
@@ -283,7 +287,15 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assertEqualsMessage(htmlAccountDoc, "h1.titleWithPageInfo", "nisp.nirecord.heading")
     }
 
-    "render page with link 'View all years'" in {
+    "render page with name " in {
+      assertEqualsValue(htmlAccountDoc, ".page-info", "AHMED BRENNAN")
+    }
+
+    "render page with national insurence number " in {
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.national.insurance.number")
+    }
+
+      "render page with link 'View all years'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p.panel-indent>a", "nisp.nirecord.showfull")
     }
 
