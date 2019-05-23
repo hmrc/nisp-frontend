@@ -228,10 +228,10 @@ nisp.nirecord.youdidnotmakeanycontrib = Ni wnaethoch chi wneud unrhyw gyfraniada
 
 nisp.nirecord.summary.yourrecord = Crynodeb
 nisp.nirecord.summary.yourrecord.mobile = Crynodeb
-nisp.nirecord.summary.fullContributions = o flynyddoedd o gyfraniadau llawn
-nisp.nirecord.summary.fullContributions.single = blwyddyn o gyfraniadau llawn
-nisp.nirecord.summary.gaps = o flynyddoedd pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.gaps.single = blwyddyn pan na wnaethoch gyfrannu digon
+nisp.nirecord.summary.fullContributions = {0} o flynyddoedd o gyfraniadau llawn
+nisp.nirecord.summary.fullContributions.single = {0} blwyddyn o gyfraniadau llawn
+nisp.nirecord.summary.gaps = {0} o flynyddoedd pan na wnaethoch gyfrannu digon
+nisp.nirecord.summary.gaps.single = {0} blwyddyn pan na wnaethoch gyfrannu digon
 nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i gyfrannu cyn 5 Ebrill {1}
 nisp.nirecord.summary.yearsRemaining.single = {0} blwyddyn i gyfrannu cyn 5 Ebrill {1}
 
@@ -257,7 +257,7 @@ nisp.nirecord.gapsinyourrecord.line2 = yn ddi-waith a ddim yn hawlio budd-dal
 nisp.nirecord.gapsinyourrecord.line3 = yn hunangyflogedig ond ddim yn talu cyfraniadau oherwydd elw bychan
 nisp.nirecord.gapsinyourrecord.line4 = yn byw dramor
 nisp.nirecord.gapsinyourrecord.line5 = yn byw neu weithio yn Ynys Manaw
-nisp.nirecord.gap.viewdetails = Edrychwch ar <span class="visuallyhidden">{0} </span>fanylion
+nisp.nirecord.gap.viewdetails = Gweld y <span class="visuallyhidden">{0} </span>manylion
 nisp.nirecord.gap.hidedetails = Cuddio <span class="visuallyhidden">{0} </span>manylion
 nisp.nirecord.gapsinyourrecord.howtocheckrecord= Sut i wirio eich cofnod
 nisp.nirecord.gapsinyourrecord.paidemployment.title = Gwaith â thâl

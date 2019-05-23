@@ -7,7 +7,7 @@
       $('.accordion > dt.expandable').click(function() {
          var taxYear = $(this).find(".ni-years").text()
          var showDetailsEnglish = 'View <span class="visuallyhidden">'+taxYear+'</span>details'
-         var showDetailsWelsh = 'Edrychwch ar <span class="visuallyhidden">'+taxYear+'</span>fanylion'
+         var showDetailsWelsh = 'Gweld y <span class="visuallyhidden">'+taxYear+'</span>manylion'
 
          var hideDetailsEnglish ='Hide <span class="visuallyhidden">'+taxYear+'</span>details'
          var hideDetailsWelsh = 'Cuddio <span class="visuallyhidden">'+taxYear+'</span>manylion'
