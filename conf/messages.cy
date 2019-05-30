@@ -257,8 +257,8 @@ nisp.nirecord.gapsinyourrecord.line2 = yn ddi-waith a ddim yn hawlio budd-dal
 nisp.nirecord.gapsinyourrecord.line3 = yn hunangyflogedig ond ddim yn talu cyfraniadau oherwydd elw bychan
 nisp.nirecord.gapsinyourrecord.line4 = yn byw dramor
 nisp.nirecord.gapsinyourrecord.line5 = yn byw neu weithio yn Ynys Manaw
-nisp.nirecord.gap.viewdetails = Gweld y <span class="visuallyhidden">{0} </span>manylion
-nisp.nirecord.gap.hidedetails = Cuddio <span class="visuallyhidden">{0} </span>manylion
+nisp.nirecord.gap.viewdetails = Gweld y manylion<span class="visuallyhidden"> {0}</span>
+nisp.nirecord.gap.hidedetails = Cuddio manylion<span class="visuallyhidden"> {0}</span>
 nisp.nirecord.gapsinyourrecord.howtocheckrecord= Sut i wirio eich cofnod
 nisp.nirecord.gapsinyourrecord.paidemployment.title = Gwaith â thâl
 nisp.nirecord.gapsinyourrecord.paidemployment.desc = Gwiriwch y cyfraniadau rydych wedi’u gwneud yn erbyn P60 gan eich cyflogwyr.
