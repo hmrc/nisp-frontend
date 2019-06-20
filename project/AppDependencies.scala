@@ -1,22 +1,15 @@
 import sbt._
 
-object FrontendBuild extends Build with MicroService {
+object AppDependencies {
 
-  val appName = "nisp-frontend"
-
-  override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
-}
-
-private object AppDependencies {
-
-  private val frontendBootstrapVersion = "12.9.0"
-  private val playLanguageVersion = "3.4.0"
-  private val httpCachingClientVersion = "8.1.0"
-  private val cspClientVersion = "3.1.0"
-  private val localTemplateRendererVersion = "2.3.0"
-  private val taxYearVersion="0.5.0"
-  private val playConditionalFormMappingVersion="0.2.0"
-  private val playBreadCrumbVersion="1.0.0"
+  val frontendBootstrapVersion = "12.9.0"
+  val playLanguageVersion = "3.4.0"
+  val httpCachingClientVersion = "8.1.0"
+  val cspClientVersion = "3.1.0"
+  val localTemplateRendererVersion = "2.3.0"
+  val taxYearVersion="0.5.0"
+  val playConditionalFormMappingVersion="0.2.0"
+  val playBreadCrumbVersion="1.0.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
@@ -35,11 +28,11 @@ private object AppDependencies {
   }
 
   object Test {
-    private val hmrcTestVersion = "2.3.0"
-    private val pegdownVersion = "1.6.0"
-    private val jsoupVersion = "1.10.2"
-    private val scalaTestPlusVersion = "1.5.1"
-    private val mockitoCoreVersion = "2.6.3"
+    val hmrcTestVersion = "2.3.0"
+    val pegdownVersion = "1.6.0"
+    val jsoupVersion = "1.10.2"
+    val scalaTestPlusVersion = "1.5.1"
+    val mockitoCoreVersion = "2.6.3"
 
     def apply() = new TestDependencies {
       override lazy val test = Seq(
@@ -51,7 +44,8 @@ private object AppDependencies {
       )
     }.test
   }
+  
+  val all: Seq[ModuleID] = compile ++ Test()
 
-  def apply() = compile ++ Test()
 }
 
