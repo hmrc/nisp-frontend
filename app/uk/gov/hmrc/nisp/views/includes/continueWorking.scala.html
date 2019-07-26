@@ -17,8 +17,8 @@
 @import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.models.enums.Scenario
-@import uk.gov.hmrc.play.language.LanguageUtils.Dates
 @import uk.gov.hmrc.nisp.controllers.routes
 
 @(statePension: StatePension, yearsToContributeUntilPensionAge: Int, currentChart: SPChartModel, forecastChart: SPChartModel)(implicit messages: Messages)
@@ -27,7 +27,7 @@
 
     <h3 class="heading-medium"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(Messages("nisp.main.mostYouCanGet"))</h3>
     <p>@Messages("nisp.main.context.willReach")</p>
-    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", Dates.formatDate(statePension.pensionDate)))</p>
+    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)))</p>
 
 } else {
 
@@ -71,11 +71,11 @@
     <h2 class="heading-medium"> @NispMoney.pounds(forecastChart.amountModel.weeklyAmount) @Html(Messages("nisp.main.mostYouCanGet"))</h2>
     @if(statePension.amounts.forecast.yearsToWork != yearsToContributeUntilPensionAge) {
         <p>@Messages("nisp.main.context.willReach")</p>
-        <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (Dates.formatDate(statePension.pensionDate)).toString()))</p>
+        <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
     }
 
     @if(statePension.amounts.forecast.yearsToWork == yearsToContributeUntilPensionAge){
-    <p>@Html(Messages("nisp.main.after", Dates.formatDate(statePension.pensionDate)))</p>
+    <p>@Html(Messages("nisp.main.after", LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)))</p>
     }
 }
 

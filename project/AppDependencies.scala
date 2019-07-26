@@ -5,7 +5,7 @@ object AppDependencies {
   val compile = Seq(
     "uk.gov.hmrc" %% "frontend-bootstrap" % "12.9.0",
     "uk.gov.hmrc" %% "http-caching-client" % "8.1.0",
-    "uk.gov.hmrc" %% "play-language" % "3.4.0",
+    "uk.gov.hmrc" %% "play-language" % "4.0.0",
     "uk.gov.hmrc" %% "tax-year" % "0.5.0",
     "uk.gov.hmrc" %% "csp-client" % "3.1.0",
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0",

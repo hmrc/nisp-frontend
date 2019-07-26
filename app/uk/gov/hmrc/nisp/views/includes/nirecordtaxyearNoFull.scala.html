@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.nisp.models.NationalInsuranceTaxYear
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
-@import uk.gov.hmrc.play.language.LanguageUtils.Dates
+@import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import org.joda.time.LocalDate
 @import uk.gov.hmrc.nisp.controllers.routes
@@ -97,9 +97,9 @@
                     <p class="contributions-header">@Html(Messages("nisp.nirecord.gap.youcanmakeupshortfall"))</p>
 
                     @if(niTaxYear.currentDateAfterCutOff(currentDate)) {
-                        <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontribaftercutoff",NispMoney.pounds(niTaxYear.classThreePayable),Dates.formatDate(classThreePayableWithPenalty)))</p>
+                        <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontribaftercutoff",NispMoney.pounds(niTaxYear.classThreePayable),LanguageHelper.langUtils.Dates.formatDate(classThreePayableWithPenalty)))</p>
                     } else {
-                        <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niTaxYear.classThreePayable),Dates.formatDate(classThreePayableWithPenalty),Dates.formatDate(classThreePayableByDate)))</p>
+                        <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niTaxYear.classThreePayable),LanguageHelper.langUtils.Dates.formatDate(classThreePayableWithPenalty),LanguageHelper.langUtils.Dates.formatDate(classThreePayableByDate)))</p>
                     }
 
                     <p>@Html(Messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
