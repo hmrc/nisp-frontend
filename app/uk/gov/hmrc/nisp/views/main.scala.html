@@ -22,7 +22,7 @@
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
 @import play.api.Application
 @import uk.gov.hmrc.renderer.TemplateRenderer
-@import uk.gov.hmrc.play.language.LanguageUtils.Dates._
+@import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.http.SessionKeys
 @import uk.gov.hmrc.nisp.utils.Constants
@@ -133,7 +133,7 @@
 
 @mainContentHeader = {
  @if(mainTemplateParams.applicationConfig.isWelshEnabled){
-     @language_selection(clc.languageMap, clc.langToCall, Some("align-right"), Some("checkmystatepension"))
+     @language_selection(clc.languageMap, clc.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
     }
 
 }
@@ -163,7 +163,7 @@ if(mainTemplateParams.articleEnabled) {
 }
 
 @previouslyLoggedInAt = @{
-    val msg = user.fold("") { nispUser => formatEasyReadingTimestamp(nispUser.authContext.user.previouslyLoggedInAt, "") }
+    val msg = user.fold("") { nispUser => LanguageHelper.langUtils.Dates.formatEasyReadingTimestamp(nispUser.authContext.user.previouslyLoggedInAt, "") }
     mustacheCheck(msg)
 }
 

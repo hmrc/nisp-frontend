@@ -25,7 +25,7 @@ import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_dead
-import uk.gov.hmrc.play.language.LanguageUtils.Dates
+import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 
