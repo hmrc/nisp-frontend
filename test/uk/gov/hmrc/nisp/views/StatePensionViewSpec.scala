@@ -200,7 +200,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  ' £149.71 a week '" in {
             val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>div>div>span>span", sMessage)
           }
 
           "render page with text  'Forecast if you contribute until '" in {
@@ -209,7 +209,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  '  £148.71 a week '" in {
             val sMessage = "£148.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>div>div>span>span", sMessage)
           }
 
           "render page with text  ' You can improve your forecast'" in {
@@ -233,7 +233,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with text  '  £149.71 a week'" in {
             val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>div>div>span>span", sMessage)
           }
 
           "render page with link  'Gaps in your record and the cost of filling them'" in {
@@ -490,7 +490,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  ' £162.34 a week '" in {
             val sMessage = "£162.34 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>div>div>span>span", sMessage)
           }
 
           "render page with text  'Forecast if you contribute enough in year up to 5 April 2016'" in {
@@ -499,7 +499,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  '  £168.08 a week '" in {
             val sMessage = "£168.08 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>div>div>span>span", sMessage)
           }
 
           "render page with text  ' You can improve your forecast'" in {
@@ -522,7 +522,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with text  '  £172.71 a week'" in {
             val sMessage = "£172.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>div>div>span>span", sMessage)
           }
 
           "render page with link  'Gaps in your record and the cost of filling them'" in {
@@ -762,7 +762,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  ' £133.71 a week '" in {
             val sMessage = "£133.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>div>div>span>span", sMessage)
           }
           "render page with text  'Forecast if you contribute until '" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(7)>span", "nisp.main.chart.spa.title", "2020")
@@ -770,7 +770,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  '  £148.71 a week '" in {
             val sMessage = "£148.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>div>div>span>span", sMessage)
           }
 
           "render page with text  ' You can improve your forecast'" in {
@@ -790,7 +790,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with text  '  £149.71 a week'" in {
             val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(11)>div>div>span>span", sMessage)
           }
 
           "render page with link  'Gaps in your record and the cost of filling them'" in {
@@ -1018,7 +1018,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  ' £118.65 a week '" in {
             val sMessage = "£118.65 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>div>div>span>span", sMessage)
           }
           "render page with text  'Forecast if you contribute until 5 April 2022'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(7)>span", "nisp.main.chart.spa.title", "2022")
@@ -1026,7 +1026,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  '  £150.65 a week '" in {
             val sMessage = "£150.65 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>div>div>span>span", sMessage)
           }
 
           "render page with text  '£150.65 is the most you can get'" in {
@@ -1256,7 +1256,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  ' £149.65 a week '" in {
             val sMessage = "£149.65 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(6)>div>div>span>span", sMessage)
           }
           "render page with text  'Forecast if you contribute another 4 years before 5 April 2020'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div:nth-child(7)>span", "nisp.main.chart.estimateIfYouContinue.plural", "4", "2020")
@@ -1264,7 +1264,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  '  £155.65 a week '" in {
             val sMessage = "£155.65 " + Messages("nisp.main.chart.week")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>ul>li>span>span", sMessage)
+            assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(7)>div>div>span>span", sMessage)
           }
 
           "render page with text  '£155.65 is the most you can get'" in {
