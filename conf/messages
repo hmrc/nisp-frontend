@@ -435,3 +435,8 @@ nisp.home.banner.recruitment.reject = No thanks
 nisp.home.banner.recruitment.title = Help improve GOV.UK
 nisp.home.banner.recruitment.linkURL = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183
 
+
+
+global.error.InternalServerError500.title = Sorry, there is a problem with the service
+global.error.InternalServerError500.heading = Sorry, there is a problem with the service
+global.error.InternalServerError500.message = Try again later.
