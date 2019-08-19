@@ -67,14 +67,14 @@ class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAn
     "return correct name, gender and Date of Birth for NINO" in {
       val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p.map(_.person.copy(nino = nino)) shouldBe Some(Citizen(nino, Some("AHMED"), Some("BRENNAN"), Some("M"), new LocalDate(1954, 3, 9)))
+        p.map(_.person.copy(nino = nino)) shouldBe Some(Citizen(nino, Some("AHMED"), Some("BRENNAN"), new LocalDate(1954, 3, 9)))
       }
     }
 
     "return formatted name of None if Citizen returns without a name" in {
       val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nonamenino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p shouldBe Some(CitizenDetailsResponse(Citizen(nonamenino, None, None, None, new LocalDate(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
+        p shouldBe Some(CitizenDetailsResponse(Citizen(nonamenino, None, None, new LocalDate(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
         p.get.person.getNameFormatted shouldBe None
       }
     }
