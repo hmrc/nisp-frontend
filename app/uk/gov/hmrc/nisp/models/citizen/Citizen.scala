@@ -22,7 +22,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class Citizen(nino: Nino, firstName: Option[String] = None, lastName: Option[String] = None,
-                   sex: Option[String] = None, dateOfBirth: LocalDate) {
+                   dateOfBirth: LocalDate) {
   def getNameFormatted: Option[String] = {
     (firstName, lastName) match {
       case (Some(firstName), Some(lastName)) => Some("%s %s".format(firstName, lastName))

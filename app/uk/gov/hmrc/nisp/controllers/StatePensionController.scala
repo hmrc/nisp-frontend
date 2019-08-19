@@ -82,7 +82,6 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
       statePension.amounts.forecast.weeklyAmount,
       user.dateOfBirth,
       user.name,
-      user.sex,
       statePension.contractedOut,
       statePension.forecastScenario,
       statePension.amounts.cope.weeklyAmount,
