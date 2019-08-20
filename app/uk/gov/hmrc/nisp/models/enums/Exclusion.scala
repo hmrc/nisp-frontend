@@ -20,7 +20,6 @@ import play.api.libs.json._
 
 object Exclusion extends Enumeration {
   type Exclusion = Value
-  val Abroad = Value
   val MarriedWomenReducedRateElection = Value
   val ContractedOut = Value
   val Dead = Value
