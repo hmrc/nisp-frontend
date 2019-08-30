@@ -20,6 +20,7 @@ import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
 import play.api.Mode.Mode
 import play.api.Play.current
+import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.api.{Application, Configuration, Play}
@@ -46,6 +47,13 @@ trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with Par
     super.onStart(app)
     new ApplicationCrypto (Play.current.configuration.underlying).verifyConfiguration()
   }
+
+  override def internalServerErrorTemplate(implicit request: Request[_]): Html =
+    standardErrorTemplate(
+      Messages("global.error.InternalServerError500.title"),
+      Messages("global.error.InternalServerError500.heading"),
+      Messages("global.error.InternalServerError500.message")
+    )
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     uk.gov.hmrc.nisp.views.html.global_error(pageTitle, heading, message)
