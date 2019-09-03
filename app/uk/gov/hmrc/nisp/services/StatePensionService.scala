@@ -50,8 +50,6 @@ trait StatePensionService extends CurrentTaxYear {
       Exclusion.IsleOfMan
     } else if (exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
       Exclusion.MarriedWomenReducedRateElection
-    } else if (exclusions.contains(Exclusion.Abroad)) {
-      Exclusion.Abroad
     } else {
       throw new RuntimeException(s"Un-accounted for exclusion in NispConnectionNI: $exclusions")
     }

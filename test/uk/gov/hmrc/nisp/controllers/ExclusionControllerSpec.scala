@@ -268,26 +268,6 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         }
       }
 
-      "The User has the Abroad only should" should {
-        "return only the Abroad Exclusion on /exclusion" in {
-          val result = generateSPRequest(mockUserIdExcludedAbroad)
-          redirectLocation(result) shouldBe None
-          contentAsString(result) should not include deadMessaging
-          contentAsString(result) should not include mciMessaging
-          contentAsString(result) should not include postSPAMessaging
-          contentAsString(result) should not include dissonanceMessaging
-          contentAsString(result) should not include isleOfManMessagingSP
-          contentAsString(result) should not include mwrreMessagingSP
-          contentAsString(result) should include (abroadMessaging)
-        }
-
-        "they should be redirected from /exclusionni to /nirecord" in {
-          val result = generateNIRequest(mockUserIdExcludedAbroad)
-          redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
-
-        }
-      }
-
       "The User has SPA under consideration flag and Amount Dis exclusion" should {
         "return with SPA under consideration message" in {
           val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedAmountDis)

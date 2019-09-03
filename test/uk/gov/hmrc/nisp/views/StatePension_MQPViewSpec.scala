@@ -115,7 +115,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             pensionSharingOrder = false,
             currentFullWeeklyPensionAmount = 155.65,
             false,
-            false,
             false
           )
           )))
@@ -265,7 +264,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
             pensionSharingOrder = false,
             currentFullWeeklyPensionAmount = 155.65,
             reducedRateElection = false,
-            abroadAutoCredit = false,
             statePensionAgeUnderConsideration = true
           )
           )))
@@ -347,7 +345,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               4,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
-              false,
               false,
               false
             )
@@ -507,7 +504,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -586,7 +582,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               4,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
-              false,
               false,
               false
             )
@@ -737,7 +732,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -818,7 +812,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               0,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
-              false,
               false,
               false
             )
@@ -970,7 +963,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -1051,7 +1043,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               9,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
-              false,
               false,
               false
             )
@@ -1202,7 +1193,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -1286,7 +1276,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               4,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
-              false,
               false,
               false
             )
@@ -1420,7 +1409,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -1486,7 +1474,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               4,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
-              false,
               false,
               false
             )
@@ -1614,7 +1601,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 155.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))

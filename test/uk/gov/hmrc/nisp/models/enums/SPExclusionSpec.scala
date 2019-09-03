@@ -27,12 +27,12 @@ class SPExclusionSpec extends UnitSpec {
 
   "SP Exclusion" when {
     "serialised into JSON" should {
-      "output Abroad when Abroad is formatted" in {
-        Json.toJson(Exclusion.Abroad) shouldBe JsString("Abroad")
+      "output Dead when Dead is formatted" in {
+        Json.toJson(Exclusion.Dead) shouldBe JsString("Dead")
       }
 
-      "parse Abroad when Abroad is read" in {
-        Json.fromJson[Exclusion](JsString("Abroad")).get shouldBe Exclusion.Abroad
+      "parse Dead when Dead is read" in {
+        Json.fromJson[Exclusion](JsString("Dead")).get shouldBe Exclusion.Dead
       }
     }
   }
