@@ -40,10 +40,10 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
     principal = Principal(None, Accounts()), None, None, None, None)
 
   val nispUser: NispUser = {
-    new NispUser(authContext, Some("testName"), "testAuthProvider", Some("M"), Some(new LocalDate(1999, 12, 31)), None)
+    new NispUser(authContext, Some("testName"), "testAuthProvider", Some(new LocalDate(1999, 12, 31)), None)
   }
   val emptyNispUser: NispUser = {
-    new NispUser(authContext, None, "testAuthProvider", Some("M"), Some(new LocalDate(1999, 12, 31)), None)
+    new NispUser(authContext, None, "testAuthProvider", Some(new LocalDate(1999, 12, 31)), None)
   }
 
         "Breadcrumb utils" should {

@@ -32,7 +32,6 @@ class CitizenDetailsResponseSpec extends UnitSpec {
           nino,
           Some("AHMED"),
           Some("BRENNAN"),
-          Some("M"),
           new LocalDate(1954, 3, 9)
         ),
         Some(Address(

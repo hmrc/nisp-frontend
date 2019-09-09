@@ -47,7 +47,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
     Some("First Last"),
     "",
     None,
-    None,
     None
   )
 

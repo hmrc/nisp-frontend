@@ -82,7 +82,6 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
       statePension.amounts.forecast.weeklyAmount,
       user.dateOfBirth,
       user.name,
-      user.sex,
       statePension.contractedOut,
       statePension.forecastScenario,
       statePension.amounts.cope.weeklyAmount,
@@ -142,14 +141,6 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                   isPertax,
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
-
-              }  else if (statePension.abroadAutoCredit) {
-                customAuditConnector.sendEvent(AccountExclusionEvent(
-                  user.nino.nino,
-                  user.name,
-                  Exclusion.Abroad
-                ))
-                Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
 
               } else {
                 val (currentChart, forecastChart, personalMaximumChart) =

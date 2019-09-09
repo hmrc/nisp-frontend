@@ -77,7 +77,6 @@ case class StatePension(earningsIncludedUpTo: LocalDate,
                         pensionSharingOrder: Boolean,
                         currentFullWeeklyPensionAmount: BigDecimal,
                         reducedRateElection: Boolean,
-                        abroadAutoCredit: Boolean,
                         statePensionAgeUnderConsideration: Boolean) {
 
   lazy val contractedOut: Boolean = amounts.cope.weeklyAmount > 0
@@ -136,7 +135,6 @@ object StatePension {
     (JsPath \ "pensionSharingOrder").read[Boolean] and
     (JsPath \ "currentFullWeeklyPensionAmount").read[BigDecimal] and
     readNullableBoolean(JsPath \ "reducedRateElection") and
-    readNullableBoolean(JsPath \ "abroadAutoCredit") and
     readNullableBoolean(JsPath \ "statePensionAgeUnderConsideration")
   ) (StatePension.apply _)
 

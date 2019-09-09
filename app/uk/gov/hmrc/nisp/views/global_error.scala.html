@@ -17,50 +17,68 @@
 @import play.api.Play.current
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.routes
+@import play.api.Application
+@import uk.gov.hmrc.nisp.controllers.CustomLanguageController
 
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig = ApplicationConfig)(implicit messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig = ApplicationConfig)(implicit request: Request[_], messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @mainContent = {
-<h1 class="heading-large">@heading</h1>
+    <h1 class="heading-xlarge">@heading</h1>
 
-<p>@message</p>
+    <p>@message</p>
+}
+
+@clc = @{ Application.instanceCache[CustomLanguageController].apply(application) }
+
+@mainContentHeader = {
+     @language_selection(clc.languageMap, clc.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
 }
 
 @googleAnalytics = @{
- Map[String, Any](
- "trackingId" -> applicationConfig.analyticsToken,
- "cookieDomain" -> applicationConfig.analyticsHost
- )
-}
-@sidebar = {
-}
-@termsAndConditionFooterLink = @{
- Map("url" -> routes.TermsConditionsController.show.url , "text" -> Messages("nisp.tandcs.title"))
+     Map[String, Any](
+         "trackingId" -> applicationConfig.analyticsToken,
+         "cookieDomain" -> applicationConfig.analyticsHost
+     )
 }
 
+@linkElems = @{
+    Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
+}
+
+@sidebar = {}
+
+@getHelpForm = {
+    @formPartialRetriever.getPartialContent(s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
+}
+
+@termsAndConditionFooterLink = @{
+    Map("url" -> routes.TermsConditionsController.show.url , "text" -> Messages("nisp.tandcs.title"))
+}
+
+@navTitle = @{
+    Messages("nisp.title")
+}
 
 @{
-templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, uiLayouts.article(mainContent, false, None), Map[String, Any](
-"pageTitle" -> pageTitle,
-"linkElems" -> None,
-"scriptElems" -> None,
+     templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, uiLayouts.article(mainContent, false, None), Map[String, Any](
+          "pageTitle" -> pageTitle,
+           "linkElems" -> linkElems,
+          "scriptElems" -> None,
+          "mainContentHeader" -> mainContentHeader,
+          "googleAnalytics" -> googleAnalytics,
+          "ssoUrl" -> None,
+          "signOutUrl" -> Some(routes .StatePensionController.signOut),
+          "betaBanner" -> false,
+          "includeHMRCBranding" -> false,
+          "getHelpForm" -> getHelpForm,
+          "showLastLogInStatus" ->  false,
+          "navTitle" -> navTitle,
+          "sidebar" -> sidebar,
+          "navLinks" -> None,
+          "termsAndConditionFooterLink" -> termsAndConditionFooterLink
 
-"googleAnalytics" -> googleAnalytics,
-"ssoUrl" -> None,
-
-"betaBanner" -> false,
-"includeHMRCBranding" -> false,
-
-"showLastLogInStatus" ->  false,
-
-"sidebar" -> sidebar,
-"navLinks" -> None,
-"mainContentHeader" -> None,
-
-"termsAndConditionFooterLink" -> termsAndConditionFooterLink
-
-)
-)
+          )
+     )
 }
