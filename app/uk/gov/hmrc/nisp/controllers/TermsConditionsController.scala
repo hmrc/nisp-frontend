@@ -25,9 +25,7 @@ import uk.gov.hmrc.nisp.views.html.termsAndConditions
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
-object TermsConditionsController extends TermsConditionsController with AuthenticationConnectors with PartialRetriever
-
-trait TermsConditionsController extends NispFrontendController with Actions {
+class TermsConditionsController extends NispFrontendController with PartialRetriever {
 
   def show: Action[AnyContent] = UnauthorisedAction{
     implicit request =>

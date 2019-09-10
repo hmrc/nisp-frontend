@@ -33,14 +33,18 @@ import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
 import scala.concurrent.Future
 
-object LandingController extends LandingController with AuthenticationConnectors with PartialRetriever {
-  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
+object LandingController extends LandingController with PartialRetriever {
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
+  override val verifyAuthAction: AuthAction = new VerifyAuthActionImpl(
+    new NispAuthConnector,
+    new CitizenDetailsService(CitizenDetailsConnector))
 }
 
-trait LandingController extends NispFrontendController with Actions with AuthorisedForNisp {
+trait LandingController extends NispFrontendController {
   val identityVerificationConnector: IdentityVerificationConnector
+  val applicationConfig: ApplicationConfig
+  val verifyAuthAction: AuthAction
 
   def show: Action[AnyContent] = UnauthorisedAction(
     implicit request =>
@@ -51,7 +55,7 @@ trait LandingController extends NispFrontendController with Actions with Authori
       }
   )
 
-  def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user =>
+  def verifySignIn: Action[AnyContent] = verifyAuthAction {
     implicit request =>
       Redirect(routes.StatePensionController.show())
   }

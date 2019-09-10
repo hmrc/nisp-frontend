@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import scala.concurrent.Future
 
 object CitizenDetailsConnector extends CitizenDetailsConnector with ServicesConfig {
-  override val serviceUrl = baseUrl("citizen-details")
+  override lazy val serviceUrl = baseUrl("citizen-details")
   override val metricsService: MetricsService = MetricsService
   override def http: HttpGet = WSHttp
   override protected def mode: Mode = Play.current.mode

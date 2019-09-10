@@ -34,32 +34,37 @@ import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.http.HeaderCarrier
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.time.DateTimeUtils
 
 object StatePensionController extends StatePensionController {
 
   override val sessionCache: SessionCache = NispSessionCache
   override val customAuditConnector = CustomAuditConnector
   override val applicationConfig: ApplicationConfig = ApplicationConfig
-  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val metricsService: MetricsService = MetricsService
   override val statePensionService: StatePensionService = StatePensionService
   override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
+  override val authenticate: AuthAction = AuthActionSelector.decide(applicationConfig)
 }
 
-trait StatePensionController extends NispFrontendController with AuthorisedForNisp with PertaxHelper with AuthenticationConnectors with PartialRetriever {
+trait StatePensionController extends NispFrontendController with PertaxHelper with PartialRetriever {
 
-  import play.api.Play.current
-  import play.api.i18n.Messages.Implicits._
+
+  def authenticate: AuthAction
 
   def statePensionService: StatePensionService
 
   def nationalInsuranceService: NationalInsuranceService
 
   val customAuditConnector: CustomAuditConnector
+
   val applicationConfig: ApplicationConfig
 
-  def showCope: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+  def showCope: Action[AnyContent] = authenticate.async {
     implicit request =>
+      implicit val user: NispAuthedUser = request.nispAuthedUser
       isFromPertax.flatMap { isPertax =>
 
         statePensionService.getSummary(user.nino) map {
@@ -74,14 +79,14 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
       }
   }
 
-  private def sendAuditEvent(statePension: StatePension, user: NispUser)(implicit hc: HeaderCarrier) = {
+  private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser)(implicit hc: HeaderCarrier) = {
     customAuditConnector.sendEvent(AccountAccessEvent(
       user.nino.nino,
       statePension.pensionDate,
       statePension.amounts.current.weeklyAmount,
       statePension.amounts.forecast.weeklyAmount,
       user.dateOfBirth,
-      user.name,
+      user.name.toString,
       statePension.contractedOut,
       statePension.forecastScenario,
       statePension.amounts.cope.weeklyAmount,
@@ -89,8 +94,9 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
     ))
   }
 
-  def show: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+  def show: Action[AnyContent] = authenticate.async {
     implicit request =>
+      implicit val user = request.nispAuthedUser
       isFromPertax.flatMap { isPertax =>
 
         val statePensionResponseF = statePensionService.getSummary(user.nino)
@@ -126,7 +132,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                   nationalInsuranceRecord.numberOfGapsPayable,
                   yearsMissing,
                   user.livesAbroad,
-                  user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
                   isPertax,
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
@@ -136,7 +142,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
-                  user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
                   user.livesAbroad,
                   isPertax,
                   yearsToContributeUntilPensionAge
@@ -158,7 +164,7 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
                   personalMaximumChart,
                   isPertax,
                   hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
-                  user.dateOfBirth.map(calculateAge(_, now().toLocalDate)),
+                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
                   user.livesAbroad,
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
@@ -179,42 +185,17 @@ trait StatePensionController extends NispFrontendController with AuthorisedForNi
       }
   }
 
-  def pta(): Action[AnyContent] = AuthorisedByAny { implicit user =>
+  def pta(): Action[AnyContent] = authenticate {
     implicit request =>
       setFromPertax
       Redirect(routes.StatePensionController.show())
   }
 
-  def calculateChartWidths(current: StatePensionAmount, forecast: StatePensionAmount, personalMaximum: StatePensionAmount): (SPChartModel, SPChartModel, SPChartModel) = {
-    // scalastyle:off magic.number
-    if (personalMaximum.weeklyAmount > forecast.weeklyAmount) {
-      val currentChart = SPChartModel((current.weeklyAmount / personalMaximum.weeklyAmount * 100).toInt.max(Constants.chartWidthMinimum), current)
-      val forecastChart = SPChartModel((forecast.weeklyAmount / personalMaximum.weeklyAmount * 100).toInt.max(Constants.chartWidthMinimum), forecast)
-      val personalMaxChart = SPChartModel(100, personalMaximum)
-      (currentChart, forecastChart, personalMaxChart)
-    } else {
-      if (forecast.weeklyAmount > current.weeklyAmount) {
-        val currentPercentage = (current.weeklyAmount / forecast.weeklyAmount * 100).toInt
-        val currentChart = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), current)
-        val forecastChart = SPChartModel(100, forecast)
-        (currentChart, forecastChart, forecastChart)
-      } else {
-        val currentChart = SPChartModel(100, current)
-        val forecastChart = SPChartModel((forecast.weeklyAmount / current.weeklyAmount * 100).toInt, forecast)
-        (currentChart, forecastChart, forecastChart)
-      }
-    }
-  }
-
-  private def storeUserInfoInSession(user: NispUser, contractedOut: Boolean)(implicit request: Request[AnyContent]): Session = {
+  private def storeUserInfoInSession(user: NispAuthedUser, contractedOut: Boolean)(implicit request: Request[AnyContent]): Session = {
     request.session +
-      (NAME -> user.name.getOrElse("N/A")) +
+      (NAME -> user.name.toString()) +
       (NINO -> user.nino.nino) +
       (CONTRACTEDOUT -> contractedOut.toString)
-  }
-
-  private[controllers] def calculateAge(dateOfBirth: LocalDate, currentDate: LocalDate): Int = {
-    new Period(dateOfBirth, currentDate).getYears
   }
 
   def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>

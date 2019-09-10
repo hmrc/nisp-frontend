@@ -30,14 +30,7 @@ import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import scala.concurrent.Future
 
-object GARedirectController extends GARedirectController with AuthenticationConnectors with PartialRetriever {
-  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
-  override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
-}
-
-trait GARedirectController extends NispFrontendController with Actions with AuthorisedForNisp {
-  val identityVerificationConnector: IdentityVerificationConnector
+class GARedirectController extends NispFrontendController with PartialRetriever {
 
   def show: Action[AnyContent] = UnauthorisedAction(
     implicit request =>

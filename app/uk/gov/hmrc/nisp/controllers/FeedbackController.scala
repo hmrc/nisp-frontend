@@ -39,7 +39,7 @@ import scala.concurrent.Future
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpPost, HttpReads, HttpResponse }
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object FeedbackController extends FeedbackController with AuthenticationConnectors with PartialRetriever {
+object FeedbackController extends FeedbackController with PartialRetriever {
 
   override implicit val formPartialRetriever: FormPartialRetriever = NispFormPartialRetriever
 
@@ -49,12 +49,13 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
 
   override def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
 
-  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
-trait FeedbackController extends NispFrontendController with Actions with AuthorisedForNisp {
+trait FeedbackController extends NispFrontendController {
   implicit val formPartialRetriever: FormPartialRetriever
+
+  def applicationConfig: ApplicationConfig
 
   def httpPost: HttpPost
 
@@ -87,7 +88,7 @@ trait FeedbackController extends NispFrontendController with Actions with Author
   def submit: Action[AnyContent] = UnauthorisedAction.async {
     implicit request =>
       request.body.asFormUrlEncoded.map { formData =>
-        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier,ec=global).map {
+        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = global).map {
           resp =>
             resp.status match {
               case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))
