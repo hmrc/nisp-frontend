@@ -18,26 +18,31 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import com.google.inject.{ImplementedBy, Inject}
 import play.api.Mode.Mode
-import play.api.mvc.Results.Redirect
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Application, Configuration, Play}
+import uk.gov.hmrc.auth.core.AuthProvider.{GovernmentGateway, Verify}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, ConfidenceLevel, NoActiveSession, PlayAuthConnector}
+import uk.gov.hmrc.auth.core.{AuthProviders, AuthorisedFunctions, ConfidenceLevel, Enrolment, Enrolments, NoActiveSession, PlayAuthConnector}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{CorePost, HeaderCarrier, InternalServerException}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.WSHttp
-import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
+import uk.gov.hmrc.nisp.config.{ApplicationConfig, LocalTemplateRenderer}
+import uk.gov.hmrc.nisp.config.wiring.{NispCachedStaticHtmlPartialRetriever, NispFormPartialRetriever, WSHttp}
 import uk.gov.hmrc.nisp.models.UserName
+import uk.gov.hmrc.nisp.models.citizen._
+import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.ExecutionContext.Implicits._
-import scala.concurrent.{ExecutionContext, Future}
-
 import scala.concurrent.{ExecutionContext, Future}
 
 case class AuthenticatedRequest[A](request: Request[A],
@@ -48,16 +53,20 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
                                cds: CitizenDetailsService)
                               (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
+  //can be removed after injecting views
+  implicit val partialRetriever: CachedStaticHtmlPartialRetriever = NispCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    //TODO: Add authorisation parameters
-    authorised().
-      retrieve(Retrievals.nino and Retrievals.confidenceLevel) {
+    authorised(ConfidenceLevel.L200 and Enrolment("HMRC-NI"))
+      .retrieve(Retrievals.nino and Retrievals.confidenceLevel) {
         case Some(nino) ~ confidenceLevel => {
           cds.retrievePerson(Nino(nino)).flatMap {
-            case Some(cdr) => {
+            case Right(cdr) => {
               block(AuthenticatedRequest(request,
                 NispAuthedUser(Nino(nino),
                   confidenceLevel,
@@ -65,13 +74,14 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
                   UserName(Name(cdr.person.firstName, cdr.person.lastName)),
                   cdr.address)))
             }
-            case None => throw new InternalServerException("")
+            case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
+            case Left(MCI_EXCLUSION) => Future.successful(Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, None)(implicitly, request, implicitly, formPartialRetriever, templateRenderer)))
           }
 
         }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case t: NoActiveSession => Redirect(ApplicationConfig.ggSignInUrl, Map("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl),
+      case _: NoActiveSession => Redirect(ApplicationConfig.ggSignInUrl, Map("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl),
         "origin" -> Seq("nisp-frontend"), "accountType" -> Seq("individual")))
     }
   }
@@ -102,17 +112,20 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
                                      cds: CitizenDetailsService)
                                     (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
+  //can be removed after injecting views
+  implicit val partialRetriever: CachedStaticHtmlPartialRetriever = NispCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    //Add authorisation parameters
-    authorised(ConfidenceLevel.L500).
-      retrieve(Retrievals.nino and Retrievals.confidenceLevel) {
+    authorised(ConfidenceLevel.L500 and Enrolment("HMRC-NI")and AuthProviders(Verify))
+      .retrieve(Retrievals.nino and Retrievals.confidenceLevel) {
         case Some(nino) ~ confidenceLevel => {
           cds.retrievePerson(Nino(nino)).flatMap {
-            //TODO MCI
-            case Some(cdr) => {
+            case Right(cdr) => {
               block(AuthenticatedRequest(request,
                 NispAuthedUser(Nino(nino),
                   confidenceLevel,
@@ -120,12 +133,13 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
                   UserName(Name(cdr.person.firstName, cdr.person.lastName)),
                   cdr.address)))
             }
-            case None => throw new InternalServerException("")
+            case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
+            case Left(MCI_EXCLUSION) => Future.successful(Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, None)(implicitly, request, implicitly, formPartialRetriever, templateRenderer)))
           }
         }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case t: NoActiveSession => Redirect(ApplicationConfig.verifySignIn, parameters)
+      case _: NoActiveSession => Redirect(ApplicationConfig.verifySignIn, parameters)
     }
   }
 

@@ -22,12 +22,12 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.nisp.helpers.{MockCitizenDetailsService, TestAccountBuilder}
-import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsResponse}
+import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsError, CitizenDetailsResponse}
 import uk.gov.hmrc.play.http
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, Upstream5xxResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
 
 class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfter with ScalaFutures with OneAppPerSuite {
   val nino = TestAccountBuilder.regularNino
@@ -37,45 +37,45 @@ class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAn
 
   "CitizenDetailsService" should {
     "return something for valid NINO" in {
-      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p should not be None
+        p.isRight shouldBe true
       }
     }
 
     "return None for bad NINO" in {
-      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nonExistentNino)(new HeaderCarrier())
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nonExistentNino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p shouldBe None
+        p.isLeft shouldBe true
       }
     }
 
     "return None for bad request" in {
-      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(badRequestNino)(new HeaderCarrier())
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(badRequestNino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p shouldBe None
+        p.isLeft shouldBe true
       }
     }
 
     "return a Failed Future for a 5XX error" in {
-      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(TestAccountBuilder.internalServerError)(new HeaderCarrier())
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(TestAccountBuilder.internalServerError)(new HeaderCarrier())
       whenReady(person.failed) { ex =>
         ex shouldBe a [Upstream5xxResponse]
       }
     }
 
-    "return correct name, gender and Date of Birth for NINO" in {
-      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
+    "return correct name and Date of Birth for NINO" in {
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p.map(_.person.copy(nino = nino)) shouldBe Some(Citizen(nino, Some("AHMED"), Some("BRENNAN"), new LocalDate(1954, 3, 9)))
+        p.right.map(_.person.copy(nino = nino)) shouldBe Right(Citizen(nino, Some("AHMED"), Some("BRENNAN"), new LocalDate(1954, 3, 9)))
       }
     }
 
     "return formatted name of None if Citizen returns without a name" in {
-      val person: Future[Option[CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nonamenino)(new HeaderCarrier())
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(nonamenino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p shouldBe Some(CitizenDetailsResponse(Citizen(nonamenino, None, None, new LocalDate(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
-        p.get.person.getNameFormatted shouldBe None
+        p shouldBe Right(CitizenDetailsResponse(Citizen(nonamenino, None, None, new LocalDate(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
+        p.right.get.person.getNameFormatted shouldBe None
       }
     }
   }

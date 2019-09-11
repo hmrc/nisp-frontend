@@ -25,45 +25,40 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 
 @(exclusion: Exclusion,
-statePensionAge: Option[Int])(implicit messages: Messages, request: Request[_], user: NispAuthedUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+statePensionAge: Option[Int])(implicit messages: Messages, request: Request[_],
+application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
 @analyticsAdditionalJs = @{
     Map[String, Any](
     "nispExclusionType" -> exclusion.toString,
-    "statePensionAge" -> statePensionAge,
-    "authProvider" -> user.authProvider,
-    "authProvider" -> user.confidenceLevel
+    "statePensionAge" -> statePensionAge
     )
 }
 
 
-@defining(Some(user)) { implicit userOption =>
-    @main(MainTemplateParams(
-            userLoggedIn = true,
-            browserTitle = Some(Messages("nisp.main.title")),
-            pageTitle = Some(messages("nisp.excluded.mci.title")),
-            articleClasses = Some("mainpage"),
-            gaDimensions = Some(analyticsAdditionalJs),
-            hideBreadcrumb = true
-    )) {
-        <p class="lede">@Html(Messages("nisp.excluded.mci.info"))</p>
-        <h2 class="heading-medium">@Html(Messages("nisp.excluded.mci.howToFix"))</h2>
-        <ul class="list-bullet">
-            <li>@Messages("nisp.excluded.mci.howToFix.message1")</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToFix.message2"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToFix.message3"))</li>
-        </ul>
-        <p>@Messages("nisp.excluded.mci.howToContact")</p>
-        <ul class="list-bullet">
-            <li>@Html(Messages("nisp.excluded.mci.howToContact.weekdays"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToContact.saturday"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToContact.sunday"))</li>
+@main(MainTemplateParams(
+        userLoggedIn = true,
+        browserTitle = Some(Messages("nisp.main.title")),
+        pageTitle = Some(messages("nisp.excluded.mci.title")),
+        articleClasses = Some("mainpage"),
+        gaDimensions = Some(analyticsAdditionalJs),
+        hideBreadcrumb = true
+)) {
+    <p class="lede">@Html(Messages("nisp.excluded.mci.info"))</p>
+    <h2 class="heading-medium">@Html(Messages("nisp.excluded.mci.howToFix"))</h2>
+    <ul class="list-bullet">
+        <li>@Messages("nisp.excluded.mci.howToFix.message1")</li>
+        <li>@Html(Messages("nisp.excluded.mci.howToFix.message2"))</li>
+        <li>@Html(Messages("nisp.excluded.mci.howToFix.message3"))</li>
+    </ul>
+    <p>@Messages("nisp.excluded.mci.howToContact")</p>
+    <ul class="list-bullet">
+        <li>@Html(Messages("nisp.excluded.mci.howToContact.weekdays"))</li>
+        <li>@Html(Messages("nisp.excluded.mci.howToContact.saturday"))</li>
+        <li>@Html(Messages("nisp.excluded.mci.howToContact.sunday"))</li>
 
-        </ul>
-        <p>@Html(Messages("nisp.excluded.mci.howToContact.bankholiday"))</p>
-        <p>@Html(Messages("nisp.excluded.mci.howToContact.link"))</p>
-    }
-
+    </ul>
+    <p>@Html(Messages("nisp.excluded.mci.howToContact.bankholiday"))</p>
+    <p>@Html(Messages("nisp.excluded.mci.howToContact.link"))</p>
 }

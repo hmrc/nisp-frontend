@@ -22,7 +22,7 @@ import org.mockito.Mockito.when
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
-import play.api.http.Status._
+import play.api.http.Status.SEE_OTHER
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, Controller}
@@ -33,6 +33,7 @@ import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.auth.core.{AuthConnector, SessionRecordNotFound}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.models.citizen.{CitizenDetailsError, NOT_FOUND}
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.test.UnitSpec
@@ -75,10 +76,10 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
       redirectLocation(result).get should endWith(ggSignInUrl)
     }
 
-    "return error for blank user" in {
+    "return error for not found user" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
       when(mockCitizenDetailsService.retrievePerson(any())(any()))
-        .thenReturn(Future.successful(None))
+        .thenReturn(Future.successful(Left(NOT_FOUND)))
       when(mockAuthConnector.authorise(any(), any())(any(), any()))
         .thenReturn(Future.failed(new InternalServerException("")))
       val authAction: AuthActionImpl = new AuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
