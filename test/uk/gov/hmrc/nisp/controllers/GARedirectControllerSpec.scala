@@ -48,13 +48,6 @@ class GARedirectControllerSpec  extends PlaySpec with MockitoSugar with OneAppPe
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val testGARedirectController = new GARedirectController {
-    override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-
-    override val applicationConfig: ApplicationConfig = mock[ApplicationConfig]
-
-    override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
-
-    override protected def authConnector: AuthConnector = MockAuthConnector
 
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
 

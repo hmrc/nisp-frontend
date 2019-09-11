@@ -24,13 +24,10 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-
 import play.api.i18n.Messages
-
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
-
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.helpers._
@@ -46,6 +43,7 @@ import uk.gov.hmrc.nisp.controllers.NispFrontendController
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 
 class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
 
@@ -83,7 +81,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
 
   def createStatePensionController = {
     new MockStatePensionController {
-      override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.forecastOnlyNino)
       override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val statePensionService: StatePensionService = mock[StatePensionService]

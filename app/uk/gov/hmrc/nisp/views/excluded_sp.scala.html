@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 @import uk.gov.hmrc.nisp.views.viewParams._
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 
 @(
 exclusion: Exclusion,
@@ -31,7 +32,7 @@ statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
 canSeeNIRecord: Boolean,
 statePensionAgeUnderConsideration: Option[Boolean]
-)(implicit messages: Messages, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever,
+)(implicit messages: Messages, request: Request[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever,
 application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 

@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.connectors
+package uk.gov.hmrc.nisp.models
 
-import uk.gov.hmrc.nisp.config.wiring.{NispAuditConnector, NispAuthConnector}
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.retrieve.Name
 
-trait AuthenticationConnectors {
+case class UserName(name: Name) {
 
-  def auditConnector = NispAuditConnector
+  override def toString: String =
+    s"${name.name.getOrElse("")} ${name.lastName.getOrElse("")}".trim
 
-  def authConnector: AuthConnector = NispAuthConnector
-
+  def getOrElse(defaultName: String): String = {
+    name match {
+      case Name(None, None) => defaultName
+      case _ => this.toString
+    }
+  }
 }

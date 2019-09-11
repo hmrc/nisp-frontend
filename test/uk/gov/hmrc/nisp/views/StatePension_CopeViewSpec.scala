@@ -16,31 +16,29 @@
 
 package uk.gov.hmrc.nisp.views
 
-import java.util.UUID
-
 import org.apache.commons.lang3.StringEscapeUtils
 import org.joda.time.LocalDate
 import org.scalatest._
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.nisp.builders.ApplicationConfigBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils.now
 
-class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
+class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter with ScalaFutures {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
@@ -65,19 +63,21 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
+  implicit val user: NispAuthedUser = NispAuthedUser(mockUserNino, ConfidenceLevel.L200, LocalDate.now(), UserName(Name(None, None)), None)
+
   lazy val fakeRequest = FakeRequest()
 
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
-  def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
+  def authenticatedFakeRequest(userId: String) = fakeRequest/*.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
     SessionKeys.userId -> userId,
     SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
-  )
+  )*/
 
   lazy val controller = new MockStatePensionController {
-    override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+    override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.contractedOutBTestNino)
     override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
     override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
@@ -132,14 +132,14 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
       val sWeek = "£46.38 " + Messages("nisp.main.week")
       assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(8)>div>div>span>span", sWeek)
     }
-    "render page with Heading  ' £155.55 is the most you can get'" in {
+    "render page with Heading '£155.55 is the most you can get'" in {
       val sMaxCanGet = "£155.55 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
       assertEqualsValue(htmlAccountDoc, "article.content__body>h2:nth-child(10)", sMaxCanGet)
     }
     "render page with text  'You cannot improve your forecast any further, unless you choose to put off claiming.'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(11)", "nisp.main.context.willReach")
     }
-    "render page with text  'If you’re working you may still need to pay National Insurance contributions until 18 " +
+    "render page with text 'If you’re working you may still need to pay National Insurance contributions until 18 " +
       "July 2021 as they fund other state benefits and the NHS.'" in {
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2021, 7, 18)))
     }
@@ -178,13 +178,13 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     "render page with heading  'Get help'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
     }
-    "render page with text  'Helpline 0800 731 0181'" in {
+    "render page with text 'Helpline 0800 731 0181'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
     }
-    "render page with text  'Textphone 0800 731 0176'" in {
+    "render page with text 'Textphone 0800 731 0176'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
     }
-    "render page with text  'Monday to Friday: 8am to 6pm'" in {
+    "render page with text 'Monday to Friday: 8am to 6pm'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
     }
   }
@@ -197,10 +197,10 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.cope.youWereContractedOut") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
-    "render page with heading  you were contracted out " in {
+    "render page with heading you were contracted out " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>h1.heading-large", "nisp.cope.youWereContractedOut")
     }
-    "render page with text  'In the past you’ve been part of one or more contracted out pension schemes, such as workplace or personal pension schemes.' " in {
+    "render page with text 'In the past you’ve been part of one or more contracted out pension schemes, such as workplace or personal pension schemes.' " in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(2)", "nisp.cope.inThePast")
     }
     "render page with text 'when you were contracted out:'" in {
@@ -258,13 +258,13 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     "render page with heading  'Get help'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
     }
-    "render page with text  'Helpline 0800 731 0181'" in {
+    "render page with text 'Helpline 0800 731 0181'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
     }
-    "render page with text  'Textphone 0800 731 0176'" in {
+    "render page with text 'Textphone 0800 731 0176'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
     }
-    "render page with text  'Monday to Friday: 8am to 6pm'" in {
+    "render page with text 'Monday to Friday: 8am to 6pm'" in {
       assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
     }
   }

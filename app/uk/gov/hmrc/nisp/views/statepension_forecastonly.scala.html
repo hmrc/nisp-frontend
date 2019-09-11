@@ -18,14 +18,14 @@
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Option[Int], isAbroad: Boolean,
-isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispUser,
+@(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
+isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispAuthedUser,
 partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
@@ -42,7 +42,7 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
 </div>
 }
 
-@analyticsAdditionalJs(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever) = @{
+@analyticsAdditionalJs(implicit request: Request[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever) = @{
     Map[String, Any](
         "scenarioType" -> statePension.forecastScenario,
         "forecastValue" -> statePension.amounts.forecast.annualAmount,
@@ -108,10 +108,8 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
         @includes.contractedOut()
     }
 
-    @for(age <- customerAge) {
-        @if(age > Constants.deferralCutOffAge) {
-            @includes.deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
-        }
+    @if(customerAge > Constants.deferralCutOffAge) {
+        @includes.deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
     @if(isPertaxUrl){<div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>}

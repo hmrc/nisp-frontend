@@ -1,5 +1,3 @@
-package uk.gov.hmrc.nisp.controllers.auth
-
 /*
  * Copyright 2019 HM Revenue & Customs
  *
@@ -40,6 +38,8 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
+import scala.concurrent.{ExecutionContext, Future}
+
 case class AuthenticatedRequest[A](request: Request[A],
                                    nispAuthedUser: NispAuthedUser
                                   ) extends WrappedRequest[A](request)
@@ -63,8 +63,7 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
                   confidenceLevel,
                   cdr.person.dateOfBirth,
                   UserName(Name(cdr.person.firstName, cdr.person.lastName)),
-                  cdr.address,
-                  cdr.person.sex)))
+                  cdr.address)))
             }
             case None => throw new InternalServerException("")
           }
@@ -119,8 +118,7 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
                   confidenceLevel,
                   cdr.person.dateOfBirth,
                   UserName(Name(cdr.person.firstName, cdr.person.lastName)),
-                  cdr.address,
-                  cdr.person.sex)))
+                  cdr.address)))
             }
             case None => throw new InternalServerException("")
           }

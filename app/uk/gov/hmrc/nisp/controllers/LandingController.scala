@@ -21,17 +21,16 @@ import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import uk.gov.hmrc.nisp.connectors.{CitizenDetailsConnector, IdentityVerificationConnector, IdentityVerificationSuccessResponse}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthConnector, VerifyAuthActionImpl}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
-import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits._
 
 object LandingController extends LandingController with PartialRetriever {
   override val applicationConfig: ApplicationConfig = ApplicationConfig

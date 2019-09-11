@@ -17,13 +17,13 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispUser,
+@(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: Request[_], user: NispAuthedUser,
 partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {

@@ -18,7 +18,6 @@
 @import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import org.joda.time.LocalDate
@@ -26,10 +25,17 @@
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+
 @(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean,
 yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String,
-showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages, request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages,
+request: Request[_],
+user: NispAuthedUser,
+partialRetriever: CachedStaticHtmlPartialRetriever,
+application: Application,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
 @analyticsAdditionalJs = @{
@@ -41,7 +47,6 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     )
 }
 
-@defining(Some(user)) { implicit userOption =>
     @main(MainTemplateParams(
         browserTitle = Some(Messages("nisp.nirecord.title")),
         userLoggedIn = true,
@@ -174,5 +179,4 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
 
 <p class="backlink"><a href="javascript:window.history.back();">@Messages("nisp.back")</a></p>
 
-}
 }

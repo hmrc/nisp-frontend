@@ -71,8 +71,6 @@ trait AuthorisedForNisp extends Actions {
     def apply(action: UserRequest): Action[AnyContent] = async(user => request => Future.successful(action(user)(request)))
   }
 
-  object AuthorisedByAny extends AuthorisedBy(NispAnyRegime)
-
   object AuthorisedByVerify extends AuthorisedBy(NispVerifyRegime)
 
   def retrievePerson(authContext: AuthContext)(implicit request: Request[AnyContent]): Future[Option[CitizenDetailsResponse]] =

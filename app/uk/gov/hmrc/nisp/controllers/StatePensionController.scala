@@ -16,27 +16,28 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.joda.time.{LocalDate, Period}
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent, Request, Session}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
-import uk.gov.hmrc.nisp.controllers.auth.{AuthorisedForNisp, NispUser}
-import uk.gov.hmrc.nisp.controllers.connectors.{AuthenticationConnectors, CustomAuditConnector}
+import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector}
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.{Exclusion, MQPScenario, Scenario}
+import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import uk.gov.hmrc.http.HeaderCarrier
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
 import uk.gov.hmrc.time.DateTimeUtils
+import uk.gov.hmrc.nisp.utils.Calculate._
 
 object StatePensionController extends StatePensionController {
 

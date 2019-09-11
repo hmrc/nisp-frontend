@@ -16,21 +16,17 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.{Logger, Play}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import play.api.{Logger, Play}
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
 
 object ExclusionController extends ExclusionController with PartialRetriever with NispFrontendController {
-  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val statePensionService: StatePensionService = StatePensionService
   override val authenticate: AuthAction = Play.current.injector.instanceOf[AuthAction]
   override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService

@@ -10,7 +10,8 @@ object AppDependencies {
     "uk.gov.hmrc" %% "csp-client" % "3.1.0",
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "0.2.0",
     "uk.gov.hmrc" %% "local-template-renderer"  % "2.3.0",
-    "uk.gov.hmrc" %% "play-breadcrumb"  % "1.0.0"
+    "uk.gov.hmrc" %% "play-breadcrumb"  % "1.0.0",
+    "uk.gov.hmrc" %% "auth-client"  %  "2.22.0-play-25"
   )
 
   val test = Seq(
