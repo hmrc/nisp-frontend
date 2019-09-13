@@ -24,7 +24,6 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 @import uk.gov.hmrc.nisp.views.viewParams._
-@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 
 @(
 exclusion: Exclusion,
@@ -32,16 +31,14 @@ statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
 canSeeNIRecord: Boolean,
 statePensionAgeUnderConsideration: Option[Boolean]
-)(implicit messages: Messages, request: Request[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever,
+)(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
 @analyticsAdditionalJs = @{
     Map[String, Any](
         "nispExclusionType" -> exclusion.toString,
-        "statePensionAge" -> statePensionAge,
-        "authProvider" -> user.authProvider,
-        "authProvider" -> user.confidenceLevel
+        "statePensionAge" -> statePensionAge
     )
 }
 
@@ -49,69 +46,68 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
     showUrBannerOn ==  PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
-@defining(Some(user)) { implicit userOption =>
-    @main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
-                pageTitle = Some(Messages("nisp.main.h1.title")), articleClasses = Some("mainpage"),
-                gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
+@main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(Messages("nisp.main.title")),
+            pageTitle = Some(Messages("nisp.main.h1.title")), articleClasses = Some("mainpage"),
+            gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
+) {
+
+    @for(
+       age <- statePensionAge;
+       date <- statePensionAgeDate
     ) {
-
-        @for(
-           age <- statePensionAge;
-           date <- statePensionAgeDate
-        ) {
-            @if(exclusion.equals(PostStatePensionAge)) {
-                <h2 class="heading-medium"> @Html(Messages("nisp.excluded.haveReached", LanguageHelper.langUtils.Dates.formatDate(date))) </h2>
-            } else {
-                <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", LanguageHelper.langUtils.Dates.formatDate(date))) </h2>
-            }
-        }
-        <div class="panel-indent">
-            @if(exclusion.equals(PostStatePensionAge)) {
-                    @exclusions.sp.postStatePensionAge()
-            } else {
-                    @if(exclusion.equals(AmountDissonance)) {
-                        @exclusions.sp.amountDissonance()
-                    } else {
-                        @if(exclusion.equals(IsleOfMan)) {
-                            @exclusions.sp.isleOfMan()
-                        } else {
-                            @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-                                @exclusions.sp.mwrre()
-                            }
-                        }
-                }
-
-                <p> @Html(Messages("nisp.excluded.contactFuturePensionCentre")) </p>
-            }
-        </div>
-        @if(canSeeNIRecord) {
-            <p> @Html(Messages("nisp.excluded.niRecordIntro")) </p>
-            <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+        @if(exclusion.equals(PostStatePensionAge)) {
+            <h2 class="heading-medium"> @Html(Messages("nisp.excluded.haveReached", LanguageHelper.langUtils.Dates.formatDate(date))) </h2>
         } else {
-            @if(exclusion.equals(IsleOfMan)) {
-            
-                <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelplineIom"))</p> 
-            
-            } else {        
-            
-                <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelpline"))</p>
-
-            }
+            <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", LanguageHelper.langUtils.Dates.formatDate(date))) </h2>
         }
-
-        @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-            <h2 class="heading-medium">@Html(Messages("nisp.excluded.mwrre.improve"))</h2>
-            <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
-            <a href="@routes.StatePensionController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>
-        }
-
-        @for(
-            spaUnderConsideration <- statePensionAgeUnderConsideration;
-            date <- statePensionAgeDate
-        ) {
-            @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
-                @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(date))
+    }
+    <div class="panel-indent">
+        @if(exclusion.equals(PostStatePensionAge)) {
+                @exclusions.sp.postStatePensionAge()
+        } else {
+                @if(exclusion.equals(AmountDissonance)) {
+                    @exclusions.sp.amountDissonance()
+                } else {
+                    @if(exclusion.equals(IsleOfMan)) {
+                        @exclusions.sp.isleOfMan()
+                    } else {
+                        @if(exclusion.equals(MarriedWomenReducedRateElection)) {
+                            @exclusions.sp.mwrre()
+                        }
+                    }
             }
+
+            <p> @Html(Messages("nisp.excluded.contactFuturePensionCentre")) </p>
+        }
+    </div>
+    @if(canSeeNIRecord) {
+        <p> @Html(Messages("nisp.excluded.niRecordIntro")) </p>
+        <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+    } else {
+        @if(exclusion.equals(IsleOfMan)) {
+
+            <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelplineIom"))</p>
+
+        } else {
+
+            <p>@Html(Messages("nisp.excluded.contactNationalInsuranceHelpline"))</p>
+
+        }
+    }
+
+    @if(exclusion.equals(MarriedWomenReducedRateElection)) {
+        <h2 class="heading-medium">@Html(Messages("nisp.excluded.mwrre.improve"))</h2>
+        <p>@Messages("nisp.excluded.mwrre.futureResearch")</p>
+        <a href="@routes.StatePensionController.signOut">@Messages("nisp.excluded.mwrre.signOut")</a>
+    }
+
+    @for(
+        spaUnderConsideration <- statePensionAgeUnderConsideration;
+        date <- statePensionAgeDate
+    ) {
+        @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
+            @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(date))
         }
     }
 }
+

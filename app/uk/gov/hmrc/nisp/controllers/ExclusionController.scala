@@ -20,7 +20,7 @@ import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import play.api.{Logger, Play}
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, ExcludedAuthAction, ExcludedAuthActionImpl}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services._
@@ -28,7 +28,7 @@ import uk.gov.hmrc.nisp.views.html._
 
 object ExclusionController extends ExclusionController with PartialRetriever with NispFrontendController {
   override val statePensionService: StatePensionService = StatePensionService
-  override val authenticate: AuthAction = Play.current.injector.instanceOf[AuthAction]
+  override val authenticate: ExcludedAuthActionImpl = Play.current.injector.instanceOf[ExcludedAuthActionImpl]
   override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
 }
 
@@ -36,14 +36,13 @@ trait ExclusionController extends NispFrontendController {
 
   val statePensionService: StatePensionService
   val nationalInsuranceService: NationalInsuranceService
-  val authenticate: AuthAction
+  val authenticate: ExcludedAuthAction
 
   def showSP: Action[AnyContent] = authenticate.async {
     implicit request =>
 
-      implicit val user = request.nispAuthedUser
-      val statePensionF = statePensionService.getSummary(user.nino)
-      val nationalInsuranceF = nationalInsuranceService.getSummary(user.nino)
+      val statePensionF = statePensionService.getSummary(request.nino)
+      val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
 
       for (
         statePension <- statePensionF;
@@ -69,8 +68,7 @@ trait ExclusionController extends NispFrontendController {
 
   def showNI: Action[AnyContent] = authenticate.async {
     implicit request =>
-      implicit val user = request.nispAuthedUser
-      nationalInsuranceService.getSummary(user.nino).map {
+      nationalInsuranceService.getSummary(request.nino).map {
         case Left(exclusion) =>
           if (exclusion == Exclusion.Dead) {
             Ok(excluded_dead(Exclusion.Dead, None))

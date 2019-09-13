@@ -19,15 +19,15 @@ package uk.gov.hmrc.nisp.helpers
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthenticatedRequest}
-import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
+import uk.gov.hmrc.nisp.controllers.auth.{ExcludedAuthAction, ExcludedAuthenticatedRequest}
 
 import scala.concurrent.Future
 
-class MockAuthAction(ninoToReturn: Nino) extends AuthAction {
+class MockExcludedAuthAction(nino: Nino) extends ExcludedAuthAction {
+
   override def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = ""
 
-  override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(AuthenticatedRequest(request, NispAuthedUserFixture.user(ninoToReturn)))
+  override def invokeBlock[A](request: Request[A], block: ExcludedAuthenticatedRequest[A] => Future[Result]): Future[Result] = {
+    block(ExcludedAuthenticatedRequest(request, nino, ConfidenceLevel.L50))
   }
 }

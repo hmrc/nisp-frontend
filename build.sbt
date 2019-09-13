@@ -1,3 +1,4 @@
+import play.sbt.PlayImport.PlayKeys
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJvm}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
@@ -31,6 +32,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(publishingSettings,
     playSettings,
     scoverageSettings,
+    PlayKeys.playDefaultPort := 9234,
     scalaVersion := "2.11.11",
     libraryDependencies ++= AppDependencies.all,
     dependencyOverrides += "uk.gov.hmrc" %% "play-config" % "7.3.0",

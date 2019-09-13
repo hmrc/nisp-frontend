@@ -20,9 +20,8 @@
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 
-@(exclusion: Exclusion)(implicit messages: Messages, request: Request[_], user: NispAuthedUser,
+@(exclusion: Exclusion)(implicit messages: Messages, request: Request[_],
 partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @analyticsAdditionalJs = @{
@@ -35,23 +34,20 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     showUrBannerOn ==  PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
-@defining(Some()) { implicit userOption =>
-
-    @main(MainTemplateParams(
-        browserTitle=Some(Messages("nisp.main.title")),
-        pageTitle = Some(Messages("nisp.nirecord.heading")),
-        userLoggedIn = true,
-        gaDimensions = Some(analyticsAdditionalJs),
-        showUrBanner = excludeUrPanel(exclusion)
-    )) {
-        <div class="panel-indent">
-            @if(exclusion.equals(IsleOfMan)) {
-                @exclusions.ni.isleOfMan()
-            } else {
-                @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-                    @exclusions.ni.mwrre()
-                }
+@main(MainTemplateParams(
+    browserTitle=Some(Messages("nisp.main.title")),
+    pageTitle = Some(Messages("nisp.nirecord.heading")),
+    userLoggedIn = true,
+    gaDimensions = Some(analyticsAdditionalJs),
+    showUrBanner = excludeUrPanel(exclusion)
+)) {
+    <div class="panel-indent">
+        @if(exclusion.equals(IsleOfMan)) {
+            @exclusions.ni.isleOfMan()
+        } else {
+            @if(exclusion.equals(MarriedWomenReducedRateElection)) {
+                @exclusions.ni.mwrre()
             }
-        </div>
-    }
+        }
+    </div>
 }
