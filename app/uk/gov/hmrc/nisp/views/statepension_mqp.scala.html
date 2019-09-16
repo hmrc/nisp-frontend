@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.models.enums.MQPScenario._
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
 @import play.api.Logger
 @import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
@@ -36,7 +37,7 @@
   customerAge: Int,
   isPertaxUrl: Boolean,
   yearsToContributeUntilPensionAge: Int
-)(implicit request: Request[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
+)(implicit request: Request[_], user: NispAuthedUser, authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
@@ -63,9 +64,9 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         "contractedOut" -> statePension.contractedOut,
         "statePensionAge" -> statePension.pensionAge,
         "copeAmount" -> statePension.amounts.cope.weeklyAmount,
-        "authenticationProvider" -> user.authProviderOld,
-        "authProvider" -> user.authProvider,
-        "confidenceLevel" -> user.confidenceLevel,
+        "authenticationProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+        "authProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+        "confidenceLevel" -> authDetails.confidenceLevel,
         "ageOnVisit" -> customerAge
     )
 }

@@ -24,7 +24,6 @@ import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.nisp.builders.ApplicationConfigBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -63,18 +62,13 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
-  implicit val user: NispAuthedUser = NispAuthedUser(mockUserNino, ConfidenceLevel.L200, LocalDate.now(), UserName(Name(None, None)), None)
+  implicit val user: NispAuthedUser = NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None)
 
   lazy val fakeRequest = FakeRequest()
 
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
-  def authenticatedFakeRequest(userId: String) = fakeRequest/*.withSession(
-    SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-    SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-    SessionKeys.userId -> userId,
-    SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
-  )*/
+  def authenticatedFakeRequest(userId: String) = fakeRequest
 
   lazy val controller = new MockStatePensionController {
     override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.contractedOutBTestNino)

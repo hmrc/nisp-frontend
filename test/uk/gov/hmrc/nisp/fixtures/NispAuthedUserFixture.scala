@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.nisp.fixtures
 
-import uk.gov.hmrc.auth.core.ConfidenceLevel
-import uk.gov.hmrc.auth.core.retrieve.{ItmpAddress, Name}
+import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
@@ -31,10 +30,9 @@ object NispAuthedUserFixture {
     val citizenDetailsResponse: CitizenDetailsResponse = TestAccountBuilder.directJsonResponse(nino, "citizen-details")
 
     NispAuthedUser(nino,
-      confidenceLevel =  ConfidenceLevel.L200,
       dateOfBirth =  citizenDetailsResponse.person.dateOfBirth,
       name = UserName(Name(citizenDetailsResponse.person.firstName,
-        citizenDetailsResponse.person.lastName)),
+                      citizenDetailsResponse.person.lastName)),
       address = citizenDetailsResponse.address)
   }
 

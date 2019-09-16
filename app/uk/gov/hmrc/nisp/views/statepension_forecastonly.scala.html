@@ -19,6 +19,8 @@
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
+
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
@@ -26,7 +28,8 @@
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
 isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispAuthedUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -54,9 +57,9 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
         "contractedOut" -> statePension.contractedOut,
         "statePensionAge" -> statePension.pensionAge,
         "copeAmount" -> statePension.amounts.cope.weeklyAmount,
-        "authenticationProvider" -> user.authProviderOld,
-        "authProvider" -> user.authProvider,
-        "confidenceLevel" -> user.confidenceLevel,
+        "authenticationProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+        "authProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+        "confidenceLevel" -> authDetails.confidenceLevel,
         "ageOnVisit" -> customerAge
     )
 }

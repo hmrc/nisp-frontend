@@ -21,9 +21,9 @@ import java.net.{URI, URLEncoder}
 import com.google.inject.{ImplementedBy, Inject}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -43,12 +43,12 @@ class ExcludedAuthActionImpl @Inject()(override val authConnector: NispAuthConne
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(ConfidenceLevel.L200 and Enrolment("HMRC-NI"))
-      .retrieve(Retrievals.nino and Retrievals.confidenceLevel) {
-        case Some(nino) ~ confidenceLevel =>
+      .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials) {
+        case Some(nino) ~ confidenceLevel ~ credentials =>
           block(ExcludedAuthenticatedRequest(request,
             Nino(nino),
-            confidenceLevel
-          ))
+            AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType)))
+          )
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
       case _: NoActiveSession => Redirect(ApplicationConfig.ggSignInUrl, Map("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl),

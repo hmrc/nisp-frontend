@@ -23,8 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
-import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, AuthDetails, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
@@ -80,7 +79,7 @@ trait StatePensionController extends NispFrontendController with PertaxHelper wi
       }
   }
 
-  private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser)(implicit hc: HeaderCarrier) = {
+  private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser, authDetails: AuthDetails)(implicit hc: HeaderCarrier) = {
     customAuditConnector.sendEvent(AccountAccessEvent(
       user.nino.nino,
       statePension.pensionDate,
@@ -91,13 +90,14 @@ trait StatePensionController extends NispFrontendController with PertaxHelper wi
       statePension.contractedOut,
       statePension.forecastScenario,
       statePension.amounts.cope.weeklyAmount,
-      user.authProviderOld
+      authDetails.authProvider.getOrElse("N/A")
     ))
   }
 
   def show: Action[AnyContent] = authenticate.async {
     implicit request =>
       implicit val user = request.nispAuthedUser
+      implicit val authDetails = request.authDetails
       isFromPertax.flatMap { isPertax =>
 
         val statePensionResponseF = statePensionService.getSummary(user.nino)
@@ -118,7 +118,7 @@ trait StatePensionController extends NispFrontendController with PertaxHelper wi
 
             case (Right(statePension), Right(nationalInsuranceRecord)) =>
 
-              sendAuditEvent(statePension, user)
+              sendAuditEvent(statePension, user, request.authDetails)
 
               val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
                 statePension.earningsIncludedUpTo,

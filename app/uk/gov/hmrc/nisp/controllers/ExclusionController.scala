@@ -40,6 +40,7 @@ trait ExclusionController extends NispFrontendController {
 
   def showSP: Action[AnyContent] = authenticate.async {
     implicit request =>
+      implicit val authDetails = request.authDetails
 
       val statePensionF = statePensionService.getSummary(request.nino)
       val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
@@ -68,6 +69,7 @@ trait ExclusionController extends NispFrontendController {
 
   def showNI: Action[AnyContent] = authenticate.async {
     implicit request =>
+      implicit val authDetails = request.authDetails
       nationalInsuranceService.getSummary(request.nino).map {
         case Left(exclusion) =>
           if (exclusion == Exclusion.Dead) {

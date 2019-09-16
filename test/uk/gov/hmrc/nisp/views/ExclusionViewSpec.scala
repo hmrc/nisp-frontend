@@ -21,8 +21,9 @@ import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, NispAuthedUser}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.enums.Exclusion
@@ -233,6 +234,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
   }
 
   "Exclusion Manual Correspondence Indicator(MCI)" should {
+
+    implicit val authDetails = AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"))
 
     lazy val sResult = html.excluded_mci(Exclusion.ManualCorrespondenceIndicator, Some(40))
 

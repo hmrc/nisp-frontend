@@ -17,23 +17,19 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
-import org.joda.time.LocalDate
+
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
+
 import scala.concurrent.Future
-import uk.gov.hmrc.http.SessionKeys
 
 class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequest = FakeRequest()

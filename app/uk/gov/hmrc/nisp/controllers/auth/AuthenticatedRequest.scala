@@ -16,17 +16,9 @@
 
 package uk.gov.hmrc.nisp.controllers.auth
 
-import org.joda.time.LocalDate
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.models.UserName
-import uk.gov.hmrc.nisp.models.citizen.Address
-import uk.gov.hmrc.nisp.utils.Country
+import play.api.mvc.{Request, WrappedRequest}
 
-case class NispAuthedUser(nino: Nino,
-                          dateOfBirth: LocalDate,
-                          name: UserName,
-                          address: Option[Address]) {
-
-  lazy val livesAbroad: Boolean = address.fold(false)( co => co.country.exists(Country.isAbroad))
-
-}
+case class AuthenticatedRequest[A](request: Request[A],
+                                   nispAuthedUser: NispAuthedUser,
+                                   authDetails: AuthDetails
+                                  ) extends WrappedRequest[A](request)

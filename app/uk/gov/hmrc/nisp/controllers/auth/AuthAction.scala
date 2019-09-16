@@ -31,7 +31,6 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{CorePost, HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
-import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
@@ -43,14 +42,6 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AuthenticatedRequest[A](request: Request[A],
-                                   nispAuthedUser: NispAuthedUser
-                                  ) extends WrappedRequest[A](request)
-
-case class ExcludedAuthenticatedRequest[A](request: Request[A],
-                                           nino: Nino,
-                                           confidenceLevel: ConfidenceLevel) extends WrappedRequest[A](request)
-
 class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
                                cds: CitizenDetailsService)
                               (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
@@ -60,16 +51,16 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(ConfidenceLevel.L200 and Enrolment("HMRC-NI"))
-      .retrieve(Retrievals.nino and Retrievals.confidenceLevel) {
-        case Some(nino) ~ confidenceLevel => {
+      .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials) {
+        case Some(nino) ~ confidenceLevel ~ credentials => {
           cds.retrievePerson(Nino(nino)).flatMap {
             case Right(cdr) => {
               block(AuthenticatedRequest(request,
                 NispAuthedUser(Nino(nino),
-                  confidenceLevel,
                   cdr.person.dateOfBirth,
                   UserName(Name(cdr.person.firstName, cdr.person.lastName)),
-                  cdr.address)))
+                  cdr.address),
+                AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType))))
             }
             case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
             case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))
@@ -119,16 +110,16 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(ConfidenceLevel.L500 and Enrolment("HMRC-NI")and AuthProviders(Verify))
-      .retrieve(Retrievals.nino and Retrievals.confidenceLevel) {
-        case Some(nino) ~ confidenceLevel => {
+      .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials) {
+        case Some(nino) ~ confidenceLevel ~ credentials => {
           cds.retrievePerson(Nino(nino)).flatMap {
             case Right(cdr) => {
               block(AuthenticatedRequest(request,
                 NispAuthedUser(Nino(nino),
-                  confidenceLevel,
                   cdr.person.dateOfBirth,
                   UserName(Name(cdr.person.firstName, cdr.person.lastName)),
-                  cdr.address)))
+                  cdr.address),
+                AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType))))
             }
             case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
             case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))

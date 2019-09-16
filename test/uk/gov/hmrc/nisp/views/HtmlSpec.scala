@@ -23,10 +23,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
-import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 
 trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
@@ -35,20 +32,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
   implicit val lanCookie = LanguageToggle.getLanguageCookie()
   implicit val messagesApi = app.injector.instanceOf[MessagesApi]
   implicit def messages = new Messages(lang, messagesApi)
-
-  implicit val authContext = {
-    val user = LoggedInUser("", None, None, None, CredentialStrength.None, ConfidenceLevel.L500, "test oid")
-    val principal = Principal(None, accounts = Accounts(paye = Some(PayeAccount("", TestAccountBuilder.regularNino))))
-    AuthContext(user, principal, None, None, None, None)
-  }
-
-  implicit val nispUser = NispUser(
-    authContext = authContext,
-    Some("First Last"),
-    "",
-    None,
-    None
-  )
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 

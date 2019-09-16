@@ -147,7 +147,7 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
                 yearsToContribute = yearsToContribute,
                 finalRelevantEndYear = finalRelevantStartYear + 1,
                 showPre1975Years = showPre1975Years(niRecord.dateOfEntry, request.nispAuthedUser.dateOfBirth, niRecord.qualifyingYearsPriorTo1975),
-                authenticationProvider = authenticate.getAuthenticationProvider(request.nispAuthedUser.confidenceLevel),
+                authenticationProvider = request.authDetails.authProvider.getOrElse("N/A"),
                 showFullNI = showFullNI,
                 currentDate = currentDate))
             }

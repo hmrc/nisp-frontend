@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.helpers
+package uk.gov.hmrc.nisp.controllers.auth
 
-import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction, ExcludedAuthenticatedRequest}
 
-import scala.concurrent.Future
-
-class MockExcludedAuthAction(nino: Nino) extends ExcludedAuthAction {
-
-  override def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = ""
-
-  override def invokeBlock[A](request: Request[A], block: ExcludedAuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(ExcludedAuthenticatedRequest(request, nino, AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"))))
-  }
-}
+case class AuthDetails(confidenceLevel: ConfidenceLevel,
+                       authProvider: Option[String]
+                      )
