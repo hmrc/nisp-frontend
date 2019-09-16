@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.nisp.models.SPAgeModel
 @import uk.gov.hmrc.nisp.models.enums.Exclusion._
 @import org.joda.time.LocalDate
-@import uk.gov.hmrc.play.language.LanguageUtils.Dates
+@import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 @import uk.gov.hmrc.nisp.views.viewParams._
@@ -40,13 +40,12 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
         "nispExclusionType" -> exclusion.toString,
         "statePensionAge" -> statePensionAge,
         "authProvider" -> user.authProvider,
-        "gender" -> user.sex,
         "authProvider" -> user.confidenceLevel
     )
 }
 
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
-    showUrBannerOn == Abroad | showUrBannerOn ==  PostStatePensionAge | showUrBannerOn == IsleOfMan
+    showUrBannerOn ==  PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
 @defining(Some(user)) { implicit userOption =>
@@ -60,9 +59,9 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
            date <- statePensionAgeDate
         ) {
             @if(exclusion.equals(PostStatePensionAge)) {
-                <h2 class="heading-medium"> @Html(Messages("nisp.excluded.haveReached", Dates.formatDate(date))) </h2>
+                <h2 class="heading-medium"> @Html(Messages("nisp.excluded.haveReached", LanguageHelper.langUtils.Dates.formatDate(date))) </h2>
             } else {
-                <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", Dates.formatDate(date))) </h2>
+                <h2 class="heading-medium"> @Html(Messages("nisp.excluded.willReach", LanguageHelper.langUtils.Dates.formatDate(date))) </h2>
             }
         }
         <div class="panel-indent">
@@ -77,10 +76,6 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
                         } else {
                             @if(exclusion.equals(MarriedWomenReducedRateElection)) {
                                 @exclusions.sp.mwrre()
-                            } else {
-                                @if(exclusion.equals(Abroad)) {
-                                    @exclusions.sp.overseas()
-                                }
                             }
                         }
                 }
@@ -89,17 +84,8 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
             }
         </div>
         @if(canSeeNIRecord) {
-            @if(exclusion.equals(Abroad)) {
-
-                <p>@Html(Messages("nisp.excluded.niRecordIntroUK"))</p>
-                <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecordUK")</a>
-
-            } else {
-
-                <p> @Html(Messages("nisp.excluded.niRecordIntro")) </p>
-                <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
-
-            }
+            <p> @Html(Messages("nisp.excluded.niRecordIntro")) </p>
+            <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
         } else {
             @if(exclusion.equals(IsleOfMan)) {
             
@@ -123,7 +109,7 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
             date <- statePensionAgeDate
         ) {
             @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
-                @includes.statePensionAgeUnderConsideration(Dates.formatDate(date))
+                @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(date))
             }
         }
     }

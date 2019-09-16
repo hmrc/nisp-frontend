@@ -33,7 +33,6 @@
   "pensionSharingOrder": false,
   "currentFullWeeklyPensionAmount": 155.65,
   "reducedRateElection": false,
-  "abroadAutoCredit": true,
   "statePensionAgeUnderConsideration": false,
   "_links" : {
     "self": {

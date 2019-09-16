@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 object AccountAccessEvent {
   def apply(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,
-            statePensionForecast: BigDecimal, dateOfBirth: Option[LocalDate], name: Option[String], sex: Option[String],
+            statePensionForecast: BigDecimal, dateOfBirth: Option[LocalDate], name: Option[String],
             contractedOutFlag: Boolean = false, forecastScenario: Scenario, copeAmount: BigDecimal,
             authenticationProvider: String)(implicit hc: HeaderCarrier): AccountAccessEvent =
     new AccountAccessEvent(
@@ -33,7 +33,6 @@ object AccountAccessEvent {
       statePensionForecast,
       dateOfBirth,
       name.getOrElse("N/A"),
-      sex.getOrElse("N/A"),
       contractedOutFlag,
       forecastScenario,
       copeAmount,
@@ -41,7 +40,7 @@ object AccountAccessEvent {
     )
 }
 class AccountAccessEvent(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,
-                         statePensionForecast: BigDecimal, dateOfBirth: Option[LocalDate], name: String, sex: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
+                         statePensionForecast: BigDecimal, dateOfBirth: Option[LocalDate], name: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
                          copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("AccountPage",
     Map(
@@ -51,7 +50,6 @@ class AccountAccessEvent(nino: String, statePensionAge: LocalDate, statePensionA
       "StatePensionForecast" -> statePensionForecast.toString(),
       "DateOfBirth" -> dateOfBirth.map(date => DateTimeFormat.forPattern("dd/MM/yyyy").print(date)).getOrElse(""),
       "Name" -> name,
-      "Sex" -> sex,
       "ContractedOut" -> contractedOutFlag.toString,
       "ForecastScenario" -> forecastScenario.toString,
       "COPEAmount" -> copeAmount.toString(),

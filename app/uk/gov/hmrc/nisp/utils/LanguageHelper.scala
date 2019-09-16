@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.models.enums
+package uk.gov.hmrc.nisp.utils
 
-import Exclusion.Exclusion
-import play.api.libs.json.{JsString, Json}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.language.LanguageUtils
 
-/**
- * Created by callum on 02/03/15.
- */
-class SPExclusionSpec extends UnitSpec {
+object LanguageHelper {
 
-  "SP Exclusion" when {
-    "serialised into JSON" should {
-      "output Dead when Dead is formatted" in {
-        Json.toJson(Exclusion.Dead) shouldBe JsString("Dead")
-      }
+  val langUtils = play.api.Play.current.injector.instanceOf[LanguageUtils]
 
-      "parse Dead when Dead is read" in {
-        Json.fromJson[Exclusion](JsString("Dead")).get shouldBe Exclusion.Dead
-      }
-    }
-  }
 }

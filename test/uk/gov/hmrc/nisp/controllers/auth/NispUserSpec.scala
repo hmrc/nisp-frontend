@@ -27,7 +27,7 @@ class NispUserSpec extends UnitSpec {
     ConfidenceLevel.L0, "test oid"), Principal(None, Accounts()), None, None, None, None)
 
   def createNispUser(address: Option[Address] = None) = {
-    NispUser(fakeAuthContext, None, "", None, None, address)
+    NispUser(fakeAuthContext, None, "", None, address)
   }
 
   "livesAbroad" should {

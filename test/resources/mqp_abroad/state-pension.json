@@ -33,7 +33,6 @@
   "pensionSharingOrder": false,
   "currentFullWeeklyPensionAmount": 0,
   "reducedRateElection": true,
-  "abroadAutoCredit": true,
   "statePensionAgeUnderConsideration": false,
   "_links" : {
     "self": {

@@ -34,7 +34,7 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.language.LanguageUtils.Dates
+import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
@@ -99,7 +99,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = false
             )
             )))
@@ -330,7 +329,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -411,7 +409,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               11,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
-              false,
               false,
               false
             )
@@ -607,7 +604,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -688,7 +684,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               11,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
-              false,
               false,
               false
             )
@@ -860,7 +855,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -944,7 +938,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               11,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 151.65,
-              false,
               false,
               false
             )
@@ -1103,7 +1096,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 151.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -1183,7 +1175,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               11,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
-              false,
               false,
               false
             )
@@ -1339,7 +1330,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
               reducedRateElection = false,
-              abroadAutoCredit = false,
               statePensionAgeUnderConsideration = true
             )
             )))
@@ -1421,7 +1411,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             11,
             pensionSharingOrder = false,
             currentFullWeeklyPensionAmount = 149.65,
-            false,
             false,
             false
           )
@@ -1563,7 +1552,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             pensionSharingOrder = false,
             currentFullWeeklyPensionAmount = 149.65,
             reducedRateElection = false,
-            abroadAutoCredit = false,
             statePensionAgeUnderConsideration = true
           )
           )))
