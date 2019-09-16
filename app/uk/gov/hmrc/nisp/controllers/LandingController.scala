@@ -77,7 +77,7 @@ trait LandingController extends NispFrontendController {
         case IdentityVerificationSuccessResponse(FailedIV) => not_authorised()
         case response => Logger.warn(s"Unhandled Response from Identity Verification: $response"); technical_issue()
       }
-    } getOrElse Future.successful(not_authorised(showFirstParagraph = false)) // 2FA returns no journeyId
+    } getOrElse Future.successful(not_authorised(showFirstParagraph = false))
 
     result.map {
       Ok(_).withNewSession

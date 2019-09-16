@@ -106,11 +106,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
-    /*  "return error for blank user" in {
-        val result = MockStatePensionController.show()(authenticatedFakeRequest(mockUserIdBlank))
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }*/
-
       "return content about COPE for contracted out (B) user" in {
         val result = new MockStatePensionControllerImpl(TestAccountBuilder.contractedOutBTestNino)
           .show()(authenticatedFakeRequest(mockUserIdContractedOut))
@@ -132,7 +127,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       "return /exclusion for MWRRE user" in {
         val result = new MockStatePensionControllerImpl(TestAccountBuilder.excludedMwrreAbroad)
           .show()(authenticatedFakeRequest(mockUserIdMwrre))
-        status(result) shouldBe SEE_OTHER // 303
+        status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
@@ -162,130 +157,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
     }
-
-    /*"GET /signout" should {
-      "redirect to the questionnaire page when govuk done page is disabled" in {
-        val controller = new MockStatePensionController {
-          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = false
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val isWelshEnabled = false
-            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendUrl: String = "/foo"
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-        }
-        val result = controller.signOut(fakeRequest)
-
-        redirectLocation(result).get shouldBe "/foo"
-      }
-
-      "redirect to the gov.uk done page when govuk done page is enabled" in {
-        val controller = new MockStatePensionController {
-          override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = true
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val isWelshEnabled = false
-            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendUrl: String = "/foo"
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-        }
-        val result = controller.signOut(fakeRequest)
-
-        redirectLocation(result).get shouldBe "/foo"
-      }
-    }
-
-    "GET /timeout" should {
-      "return the timeout page" in {
-        val result = MockStatePensionController.timeout(fakeRequest)
-        contentType(result) shouldBe Some("text/html")
-        contentAsString(result).contains("For your security we signed you out because you didn't use the service for 15 minutes or more.")
-      }
-    }
-
-    "calculate chart widths" should {
-      def calculateCharts(currentAmount: BigDecimal, forecastAmount: BigDecimal, personalMax: BigDecimal) =
-        MockStatePensionController.calculateChartWidths(StatePensionAmountRegular(currentAmount, 0, 0), StatePensionAmountRegular(forecastAmount, 0, 0), StatePensionAmountRegular(personalMax, 0, 0))
-
-      "current chart is 100 when current amount is higher" in {
-        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 30, 0)
-        currentChart.width shouldBe 100
-      }
-
-      "forecast chart is 100 when forecast amount is higher" in {
-        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 80, 80)
-        forecastChart.width shouldBe 100
-        personalMaxChart.width shouldBe 100
-      }
-
-      "current chart and forecast chart are 100 when amounts are equal" in {
-        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 70, 70)
-        currentChart.width shouldBe 100
-        forecastChart.width shouldBe 100
-        personalMaxChart.width shouldBe 100
-      }
-
-      "current chart is 66 when current amount is 2 and forecast is 3" in {
-        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(2, 3, 4)
-        currentChart.width shouldBe 50
-        forecastChart.width shouldBe 75
-        personalMaxChart.width shouldBe 100
-      }
-
-      "forecast chart is 30 when forecast amount is 4 and current is 13" in {
-        val (currentChart, forecastChart, personalMaxChart) = calculateCharts(13, 4, 20)
-        forecastChart.width shouldBe 31
-        currentChart.width shouldBe 65
-        personalMaxChart.width shouldBe 100
-
-      }
-    }*/
 
     "when there is a Fill Gaps Scenario" when {
       "the future config is set to off" should {
@@ -422,19 +293,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
         redirectLocation(result).get shouldBe "/foo"
       }
     }
-
-    /*"calculateAge" should {
-      "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-10-28" in {
-        MockStatePensionController.calculateAge(new LocalDate(1986, 10, 28), new LocalDate(2016, 11, 2)) shouldBe 30
-      }
-      "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-2" in {
-        MockStatePensionController.calculateAge(new LocalDate(1986, 11, 2), new LocalDate(2016, 11, 2)) shouldBe 30
-
-      }
-      "return 29 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-3" in {
-        MockStatePensionController.calculateAge(new LocalDate(1986, 11, 3), new LocalDate(2016, 11, 2)) shouldBe 29
-      }
-    }*/
 
   }
 }

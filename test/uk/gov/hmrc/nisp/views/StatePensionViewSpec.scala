@@ -117,7 +117,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false)
               ),
               reducedRateElection = false
             )
@@ -257,14 +257,11 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>p:nth-child(15)>a", "/check-your-state-pension/terms-and-conditions?showBackLink=true")
           }
 
-          /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(16)>p", "nisp.main.overseas")
           }
-          /*Ends*/
 
-          /*Start of Non SPA Checks*/
           "Not render page with heading 'Proposed change to your State Pension age'" in {
             assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
           }
@@ -272,7 +269,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
-          /*Ends*/
 
           "render page with heading  'Putting of claiming'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(17)", "nisp.main.puttingOff")
@@ -289,7 +285,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(19)", "https://www.gov.uk/deferring-state-pension")
           }
 
-          /*Side bar help*/
           "render page with heading  'Get help'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
           }
@@ -374,9 +369,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
           }
-          /*Ends*/
 
-          //deferral message
           "render page with heading  'Putting of claiming'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>h2:nth-child(19)", "nisp.main.puttingOff")
           }
@@ -435,7 +428,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false)
               ),
               reducedRateElection = false
             )
@@ -543,14 +536,11 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertElemetsOwnText(htmlAccountDoc, "article.content__body>p:nth-child(15)", sMessage)
           }
 
-          /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             assertEqualsMessage(htmlAccountDoc, "article.content__body>div.panel-indent:nth-child(16)>p", "nisp.main.overseas")
           }
-          /*Ends*/
 
-          /*Start of Non SPA Checks*/
           "Not render page with heading 'Proposed change to your State Pension age'" in {
             assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
           }

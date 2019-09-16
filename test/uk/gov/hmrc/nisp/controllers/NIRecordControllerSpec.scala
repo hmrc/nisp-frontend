@@ -179,7 +179,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     }
 
     "return NI record when number of qualifying years is 0" in {
-      // Unit test for bug NISP-2436
       val controller = new MockNIRecordController {
         override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
         override val sessionCache: SessionCache = MockSessionCache
@@ -290,19 +289,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
       }
 
     }
-
-    //Todo: Confirm not valid
-    /*"the date of birth is unavailable" should {
-      "return true for date of entry 5th April 1975" in {
-        val date = new LocalDate(1975, 4, 5)
-        MockNIRecordController.showPre1975Years(Some(date), None, 0) shouldBe true
-      }
-
-      "return false for date of entry  6th April 1975" in {
-        val date = new LocalDate(1975, 4, 6)
-        MockNIRecordController.showPre1975Years(Some(date), None, 0) shouldBe false
-      }
-    }*/
     
     "there is no date of entry" should {
       "return false for 16th birthday: 6th April 1975" in {
@@ -316,15 +302,6 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
       }
     }
 
-    //Todo: Confirm not valid
-    /*"both date of birth and date of entry are unavailable" should {
-      "return true for pre1975 > 0" in {
-        MockNIRecordController.showPre1975Years(None, None, 1) shouldBe true
-      }
-      "return false for pre1975 years = 0" in {
-        MockNIRecordController.showPre1975Years(None, None, 0) shouldBe false
-      }
-    }*/
   }
 
   "generateTableList" when {

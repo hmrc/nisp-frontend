@@ -213,8 +213,6 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", "£4,259.60")
     }
 
-    /*check for medical credit year*/
-
     "render page with text  'full year'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl>dt:nth-child(50)>div>div.ni-notfull", "nisp.nirecord.fullyear")
     }
@@ -229,7 +227,6 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
     "render page with text 'These may have been added to your record if you were ill/disabled...'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(51)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.whenyouareclaiming.info.plural")
     }
-    /*ends here*/
 
     "render page with link  'view gaps only'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p>a", "nisp.nirecord.showgaps")

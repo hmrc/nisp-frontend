@@ -59,7 +59,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
@@ -70,7 +69,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) != StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
@@ -79,7 +77,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(StringEscapeUtils.unescapeHtml4(elements.first().text().replace("\n", "")) == expectedValue)
   }
 
