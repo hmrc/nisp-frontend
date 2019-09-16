@@ -72,7 +72,7 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
                   cdr.address)))
             }
             case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
-            case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showNI))
+            case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))
           }
 
         }
