@@ -130,7 +130,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
     }
     "render page with Heading  '£46.38 a week'" in {
       val sWeek = "£46.38 " + Messages("nisp.main.week")
-      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(8)>ul:nth-child(2)>li:nth-child(1)>span>span", sWeek)
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(8)>div>div>span>span", sWeek)
     }
     "render page with Heading  ' £155.55 is the most you can get'" in {
       val sMaxCanGet = "£155.55 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
