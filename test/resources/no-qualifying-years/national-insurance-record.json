@@ -1,7 +1,7 @@
 {
   "_links": {
     "self": {
-      "href": "/national-insurance-record/ni/QQ123456A"
+      "href": "/national-insurance-record/ni/<NINO>"
     }
   },
   "qualifyingYears": 0,

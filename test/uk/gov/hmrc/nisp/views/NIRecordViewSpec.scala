@@ -104,13 +104,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
       assert(doc.getElementById("full-width-banner") == null)
     }
 
-    "render for nino: CL928713A" in {
-      val urBanner =  urHtmlAccountDoc.getElementsByClass("full-width-banner__title")
-      assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
-      assert(urHtmlAccountDoc.getElementById("full-width-banner") != null)
-    }
-
-    "not render for nino: HT009413A" in {
+    "not render when hide cookie is present" in {
       val request = authenticatedFakeRequest(noUrMockUserId).withCookies(new Cookie("cysp-nisp-urBannerHide", "9999"))
       val result = controller.showFull(request)
       val doc = asDocument(contentAsString(result))
