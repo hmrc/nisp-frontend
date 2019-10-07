@@ -1,7 +1,7 @@
 {
   "_links": {
     "self": {
-      "href": "/national-insurance-record/ni/QQ123456A"
+      "href": "/national-insurance-record/ni/<NINO>"
     }
   },
   "qualifyingYears": 28,
@@ -17,7 +17,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2013-14"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2013-14"
           }
         },
         "taxYear": "2013-14",
@@ -35,7 +35,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2012-13"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2012-13"
           }
         },
         "taxYear": "2012-13",
@@ -53,7 +53,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2011-12"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2011-12"
           }
         },
         "taxYear": "2011-12",
@@ -71,7 +71,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2010-11"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2010-11"
           }
         },
         "taxYear": "2010-11",
@@ -89,7 +89,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2009-10"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2009-10"
           }
         },
         "taxYear": "2009-10",
@@ -107,7 +107,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2008-09"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2008-09"
           }
         },
         "taxYear": "2008-09",
@@ -125,7 +125,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2007-08"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2007-08"
           }
         },
         "taxYear": "2007-08",
@@ -143,7 +143,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2006-07"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2006-07"
           }
         },
         "taxYear": "2006-07",
@@ -161,7 +161,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2005-06"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2005-06"
           }
         },
         "taxYear": "2005-06",
@@ -179,7 +179,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2004-05"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2004-05"
           }
         },
         "taxYear": "2004-05",
@@ -197,7 +197,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2003-04"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2003-04"
           }
         },
         "taxYear": "2003-04",
@@ -215,7 +215,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2002-03"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2002-03"
           }
         },
         "taxYear": "2002-03",
@@ -233,7 +233,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2001-02"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2001-02"
           }
         },
         "taxYear": "2001-02",
@@ -251,7 +251,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2000-01"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2000-01"
           }
         },
         "taxYear": "2000-01",
@@ -269,7 +269,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1999-00"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1999-00"
           }
         },
         "taxYear": "1999-00",
@@ -287,7 +287,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1998-99"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1998-99"
           }
         },
         "taxYear": "1998-99",
@@ -305,7 +305,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1997-98"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1997-98"
           }
         },
         "taxYear": "1997-98",
@@ -323,7 +323,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1996-97"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1996-97"
           }
         },
         "taxYear": "1996-97",
@@ -341,7 +341,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1995-96"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1995-96"
           }
         },
         "taxYear": "1995-96",
@@ -359,7 +359,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1994-95"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1994-95"
           }
         },
         "taxYear": "1994-95",
@@ -377,7 +377,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1993-94"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1993-94"
           }
         },
         "taxYear": "1993-94",
@@ -395,7 +395,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1992-93"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1992-93"
           }
         },
         "taxYear": "1992-93",
@@ -413,7 +413,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1991-92"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1991-92"
           }
         },
         "taxYear": "1991-92",
@@ -431,7 +431,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1990-91"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1990-91"
           }
         },
         "taxYear": "1990-91",
@@ -449,7 +449,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1989-90"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1989-90"
           }
         },
         "taxYear": "1989-90",
@@ -467,7 +467,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1988-89"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1988-89"
           }
         },
         "taxYear": "1988-89",
@@ -485,7 +485,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1987-88"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1987-88"
           }
         },
         "taxYear": "1987-88",
@@ -503,7 +503,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1986-87"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1986-87"
           }
         },
         "taxYear": "1986-87",
@@ -521,7 +521,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1985-86"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1985-86"
           }
         },
         "taxYear": "1985-86",
@@ -539,7 +539,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1984-85"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1984-85"
           }
         },
         "taxYear": "1984-85",
@@ -557,7 +557,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1983-84"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1983-84"
           }
         },
         "taxYear": "1983-84",
@@ -575,7 +575,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1982-83"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1982-83"
           }
         },
         "taxYear": "1982-83",
@@ -593,7 +593,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1981-82"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1981-82"
           }
         },
         "taxYear": "1981-82",
@@ -611,7 +611,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1980-81"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1980-81"
           }
         },
         "taxYear": "1980-81",
@@ -629,7 +629,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1979-80"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1979-80"
           }
         },
         "taxYear": "1979-80",
@@ -647,7 +647,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1978-79"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1978-79"
           }
         },
         "taxYear": "1978-79",
@@ -665,7 +665,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1977-78"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1977-78"
           }
         },
         "taxYear": "1977-78",
@@ -683,7 +683,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1976-77"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1976-77"
           }
         },
         "taxYear": "1976-77",
@@ -701,7 +701,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/1975-76"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/1975-76"
           }
         },
         "taxYear": "1975-76",

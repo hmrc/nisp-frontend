@@ -35,7 +35,7 @@
   "reducedRateElection": false,
   "_links" : {
     "self": {
-      "href": "/state-pension/ni/SS222222A"
+      "href": "/state-pension/ni/<NINO>"
     }
   }
 }

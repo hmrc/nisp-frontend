@@ -36,7 +36,7 @@
   "statePensionAgeUnderConsideration": true,
   "_links" : {
     "self": {
-      "href": "/state-pension/ni/SS111111A"
+      "href": "/state-pension/ni/<NINO>"
     }
   }
 }
