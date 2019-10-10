@@ -47,8 +47,8 @@ object TestAccountBuilder {
   val spaUnderConsiderationExclusionMultipleNino: Nino = randomNino
   val spaUnderConsiderationExclusionNoFlagNino: Nino = randomNino
 
-  val urBannerNino: Nino = new Nino("CL928713A")
-  val noUrBannerNino: Nino = new Nino("HT009413A")
+  val urBannerNino: Nino = randomNino
+  val noUrBannerNino: Nino = randomNino
 
   val invalidKeyNino: Nino = randomNino
   val cachedNino: Nino = randomNino

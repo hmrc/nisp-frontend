@@ -31,7 +31,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |{
             |  "_links": {
             |    "self": {
-            |      "href": "/national-insurance-record/ni/QQ123456A"
+            |      "href": "/national-insurance-record/ni/<NINO>"
             |    }
             |  },
             |  "qualifyingYears": 0,
@@ -68,7 +68,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |{
             |  "_links": {
             |    "self": {
-            |      "href": "/national-insurance-record/ni/QQ123456A"
+            |      "href": "/national-insurance-record/ni/<NINO>"
             |    }
             |  },
             |  "qualifyingYears": 0,
@@ -104,7 +104,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |{
             |  "_links": {
             |    "self": {
-            |      "href": "/national-insurance-record/ni/QQ123456A"
+            |      "href": "/national-insurance-record/ni/<NINO>"
             |    }
             |  },
             |  "qualifyingYears": 1,
@@ -118,7 +118,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |    "taxYears": {
             |      "_links": {
             |        "self": {
-            |          "href": "/national-insurance-record/ni/QQ123456A/taxyear/2016-17"
+            |          "href": "/national-insurance-record/ni/<NINO>/taxyear/2016-17"
             |        }
             |      },
             |      "taxYear": "2016-17",
@@ -170,7 +170,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |{
             |  "_links": {
             |    "self": {
-            |      "href": "/national-insurance-record/ni/QQ123456A"
+            |      "href": "/national-insurance-record/ni/<NINO>"
             |    }
             |  },
             |  "qualifyingYears": 1,
@@ -186,7 +186,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |      {
             |        "_links": {
             |          "self": {
-            |            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2017-18"
+            |            "href": "/national-insurance-record/ni/<NINO>/taxyear/2017-18"
             |          }
             |        },
             |        "taxYear": "2017-18",
@@ -204,7 +204,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |      {
             |        "_links": {
             |          "self": {
-            |            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2016-17"
+            |            "href": "/national-insurance-record/ni/<NINO>/taxyear/2016-17"
             |          }
             |        },
             |        "taxYear": "2016-17",

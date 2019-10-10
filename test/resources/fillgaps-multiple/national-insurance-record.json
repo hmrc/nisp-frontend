@@ -1,7 +1,7 @@
 {
   "_links": {
     "self": {
-      "href": "/national-insurance-record/ni/QQ123456A"
+      "href": "/national-insurance-record/ni/<NINO>"
     }
   },
   "qualifyingYears": 28,
@@ -17,7 +17,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2013-14"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2013-14"
           }
         },
         "taxYear": "2013-14",
@@ -35,7 +35,7 @@
       {
         "_links": {
           "self": {
-            "href": "/national-insurance-record/ni/QQ123456A/taxyear/2012-13"
+            "href": "/national-insurance-record/ni/<NINO>/taxyear/2012-13"
           }
         },
         "taxYear": "2012-13",
