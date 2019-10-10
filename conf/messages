@@ -62,6 +62,7 @@ nisp.main.after = After State Pension age, <span class="nowrap">{0}</span>, you 
 nisp.main.basedOn = You can get your State Pension on
 nisp.national.insurance.number = National Insurance number
 nisp.print.this.ni.record = Print this National Insurance record
+nisp.show.nino = Show your National Insurance number
 
 nisp.main.puttingOff = Putting off claiming
 nisp.main.puttingOff.line1 = You can put off claiming your State Pension from {0}. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.

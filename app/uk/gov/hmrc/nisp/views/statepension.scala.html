@@ -84,7 +84,13 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         gaDimensions = Some(analyticsAdditionalJs)
     )) {
 
-    <p>@Messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
+
+    <details id="nino">
+        <summary data-journey-click="accordion - click:Your State Pension summary:Show your National Insurance number"><span class="summary">@Messages("nisp.show.nino")</span></summary>
+        <div class="panel">
+            <p class="bold">@user.nino</p>
+        </div>
+    </details>
 
     <div class="highlighted-event govuk-box-highlight">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span>

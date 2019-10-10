@@ -53,7 +53,14 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
         showUrBanner = true
     )) {
 
-<p>@Messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
+<details id="nino">
+    <summary data-journey-click="accordion - click:Your National Insurance record:Show your National Insurance number"><span class="summary">@Messages("nisp.show.nino")</span></summary>
+    <div class="panel">
+        <p class="bold">@user.nino</p>
+    </div>
+</details>
+
+
 
 
 
@@ -163,7 +170,7 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
 
 <span id="current-language" class="visuallyhidden" aria-hidden="true">@{messages.lang.code}</span>
 
-<p class="print-ni-link"><a href="javascript:window.print();">@Messages("nisp.print.this.ni.record")</a></p>
+<p class="print-ni-link"><a href="javascript:window.print();" data-journey-click="link - click:Your National Insurance record:Print this National Insurance record">@Messages("nisp.print.this.ni.record")</a></p>
 
 <p class="backlink"><a href="javascript:window.history.back();">@Messages("nisp.back")</a></p>
 
