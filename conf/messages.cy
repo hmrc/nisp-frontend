@@ -230,7 +230,7 @@ nisp.nirecord.summary.fullContributions = o flynyddoedd o gyfraniadau llawn
 nisp.nirecord.summary.fullContributions.single = blwyddyn o gyfraniadau llawn
 nisp.nirecord.summary.gaps = o flynyddoedd pan na wnaethoch gyfrannu digon
 nisp.nirecord.summary.gaps.single = blwyddyn pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.yearsRemaining = o flynyddoedd i gyfrannu cyn 5 Ebrill {0}
+nisp.nirecord.summary.yearsRemaining = o flynyddoedd i‘w cyfrannu' cyn 5 Ebrill {0}
 nisp.nirecord.summary.yearsRemaining.single = blwyddyn i gyfrannu cyn 5 Ebrill {0}
 
 nisp.nirecord.pre75Years = Hyd at 1975
