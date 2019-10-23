@@ -32,6 +32,7 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport}
+import play.api.i18n.Lang
 
 object ApplicationGlobal extends ApplicationGlobalTrait {
   override protected def mode: Mode = Play.current.mode
@@ -39,6 +40,10 @@ object ApplicationGlobal extends ApplicationGlobalTrait {
 }
 
 trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController {
+
+  private def lang(implicit request: Request[_]): Lang =
+    Lang(request.cookies.get("PLAY_LANG").map(_.value).getOrElse("en"))
+
   override val auditConnector = NispAuditConnector
   override val loggingFilter = NispLoggingFilter
   override val frontendAuditFilter = NispFrontendAuditFilter
@@ -57,6 +62,10 @@ trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with Par
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     uk.gov.hmrc.nisp.views.html.global_error(pageTitle, heading, message)
+
+  override def notFoundTemplate(implicit request: Request[_]): Html = {
+    uk.gov.hmrc.nisp.views.html.page_not_found_template()
+  }
 
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig(s"microservice.metrics")
 }
