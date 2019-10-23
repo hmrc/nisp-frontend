@@ -76,11 +76,21 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         userLoggedIn = true,
         showUrBanner =  true,
         browserTitle = Some(Messages("nisp.main.title")),
+        pageInfo = Some(user.name.getOrElse("")),
         pageTitle = Some(Messages("nisp.main.h1.title")),
+        h1Class = Some("titleWithPageInfo"),
         sidebarLinks = Some(sidebar),
         articleClasses = Some("mainpage"),
         gaDimensions = Some(analyticsAdditionalJs)
     )) {
+
+
+    <details id="nino">
+        <summary data-journey-click="accordion - click:Your State Pension summary:Show your National Insurance number"><span class="summary">@Messages("nisp.show.nino")</span></summary>
+        <div class="panel">
+            <p class="bold">@user.nino</p>
+        </div>
+    </details>
 
     <div class="highlighted-event govuk-box-highlight">
         <p>@Messages("nisp.main.basedOn") <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span>

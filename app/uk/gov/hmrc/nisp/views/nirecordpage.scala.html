@@ -32,43 +32,6 @@ showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages, reques
 partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
-@sidebar = {
-
-<div class="sidebar-border" >
-
-    <h2 aria-hidden="true">@Messages("nisp.nirecord.summary.yourrecord")</h2>
-
-    <p aria-hidden="true" class="nisummary-number">@niRecord.qualifyingYears</p>
-
-    @if(niRecord.qualifyingYears != 1) {
-        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullContributions")</p> 
-    } else {
-        <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.fullContributions.single")</p>
-    }
-
-    @if(!recordHasEnded) {
-        <p aria-hidden="true" class="nisummary-number">@yearsToContribute</p>
-        @if(yearsToContribute != 1) {
-            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining", finalRelevantEndYear.toString)</p>
-        } else {
-            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.yearsRemaining.single", finalRelevantEndYear.toString)</p>
-        }
-    }
-
-    @if(niRecord.numberOfGaps > 0) {
-        <p aria-hidden="true" class="nisummary-number">@niRecord.numberOfGaps</p>
-
-        @if(niRecord.numberOfGaps != 1) {
-            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps")</p>
-        } else {
-            <p aria-hidden="true" class="nisummary-text">@Messages("nisp.nirecord.summary.gaps.single")</p>
-        }
-    }
-  
-</div>
-}
-
-
 @analyticsAdditionalJs = @{
     Map[String, Any](
         "qualifyingYears" -> niRecord.qualifyingYears,
@@ -82,58 +45,66 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     @main(MainTemplateParams(
         browserTitle = Some(Messages("nisp.nirecord.title")),
         userLoggedIn = true,
-        sidebarLinks = Some(sidebar),
+        pageInfo = Some(user.name.getOrElse("")),
+        printableDocument = true,
         pageTitle = Some(Messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
+        h1Class = Some("titleWithPageInfo"),
         gaDimensions = Some(analyticsAdditionalJs),
         showUrBanner = true
     )) {
 
-<div class="sidebar-mobile">
-      
-    <h2>@Messages("nisp.nirecord.summary.yourrecord.mobile")</h2>
-    <p>@Messages("nisp.nirecord.summary.youhave")</p>
-    <ul class="list-bullet">
-        <li>@niRecord.qualifyingYears
-            @if(niRecord.qualifyingYears != 1) {
-            @Messages("nisp.nirecord.summary.fullContributions")
+<details id="nino">
+    <summary data-journey-click="accordion - click:Your National Insurance record:Show your National Insurance number"><span class="summary">@Messages("nisp.show.nino")</span></summary>
+    <div class="panel">
+        <p class="bold">@user.nino</p>
+    </div>
+</details>
+
+
+
+
+
+<p>@Messages("nisp.nirecord.summary.youhave")</p>
+<ul class="list-bullet">
+    <li>
+    @if(niRecord.qualifyingYears != 1) {
+        @Messages("nisp.nirecord.summary.fullContributions", niRecord.qualifyingYears)
+    } else {
+        @Messages("nisp.nirecord.summary.fullContributions.single", niRecord.qualifyingYears)
+    }
+    </li>
+
+    @if(!recordHasEnded) {
+        <li>@if(yearsToContribute != 1) {
+                @Messages("nisp.nirecord.summary.yearsRemaining", yearsToContribute, finalRelevantEndYear.toString)
+            } else {
+                @Messages("nisp.nirecord.summary.yearsRemaining.single", yearsToContribute, finalRelevantEndYear.toString)
+            }
+        </li>
+    }
+
+    @if(niRecord.numberOfGaps > 0) {
+        <li>
+        @if(niRecord.numberOfGaps != 1) {
+            @Messages("nisp.nirecord.summary.gaps", niRecord.numberOfGaps)
         } else {
-            @Messages("nisp.nirecord.summary.fullContributions.single")
+            @Messages("nisp.nirecord.summary.gaps.single", niRecord.numberOfGaps)
         }
         </li>
+    }
+</ul>
 
-        @if(!recordHasEnded) {
-            <li>@yearsToContribute @if(yearsToContribute != 1) {
-                    @Messages("nisp.nirecord.summary.yearsRemaining", finalRelevantEndYear.toString)
-                } else {
-                    @Messages("nisp.nirecord.summary.yearsRemaining.single", finalRelevantEndYear.toString)
-                }
-            </li>
-        }
 
-        @if(niRecord.numberOfGaps > 0) {
-            <li>@niRecord.numberOfGaps
-            @if(niRecord.numberOfGaps != 1) {
-                @Messages("nisp.nirecord.summary.gaps")
-            } else {
-                @Messages("nisp.nirecord.summary.gaps.single")
-            }
-            </li>
-        }
-    </ul>
-</div>
 
 @if(!gapsOnlyView){
-    @if(niRecord.numberOfGaps > 0){
-        <p class="lede">@Messages("nisp.nirecord.yournirecordallyears")</p>
-    } else {
-        <p class="lede">@Messages("nisp.nirecord.youdonothaveanygaps")</p>
+    @if(niRecord.numberOfGaps == 0) {
+        <p>@Messages("nisp.nirecord.youdonothaveanygaps")</p>
     }
     @if(niRecord.numberOfGaps > 0){
-            <p><a href="@routes.NIRecordController.showGaps.url">@Html(Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps))</a></p>
+        <p class="panel-indent panel-border-wide panel-info"><a href="@routes.NIRecordController.showGaps.url">@Html(Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps))</a></p>
     }
 } else {
-    <p class="lede">@Messages("nisp.nirecord.yournirecordgapyears")</p>
-    <p><a href="@routes.NIRecordController.showFull.url">@Html(Messages("nisp.nirecord.showfull"))</a></p>
+    <p class="panel-indent panel-border-wide panel-info"><a href="@routes.NIRecordController.showFull.url">@Html(Messages("nisp.nirecord.showfull"))</a></p>
 }
 
 <dl class="accordion">
@@ -197,14 +168,9 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     }
 </dl>
 
-<span id="current-language" class="visuallyhidden">@{messages.lang.code}</span>
+<span id="current-language" class="visuallyhidden" aria-hidden="true">@{messages.lang.code}</span>
 
-@if(niRecord.numberOfGaps > 0 && !gapsOnlyView){
-    <p><a href="@routes.NIRecordController.showGaps.url">@Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps)</a></p>
-}
-@if(gapsOnlyView) {
-    <p><a href="@routes.NIRecordController.showFull.url">@Messages("nisp.nirecord.showfull")</a></p>
-}
+<p class="print-ni-link"><a href="javascript:window.print();" data-journey-click="link - click:Your National Insurance record:Print this National Insurance record">@Messages("nisp.print.this.ni.record")</a></p>
 
 <p class="backlink"><a href="javascript:window.history.back();">@Messages("nisp.back")</a></p>
 

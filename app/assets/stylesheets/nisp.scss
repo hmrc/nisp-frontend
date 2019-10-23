@@ -25,6 +25,8 @@ $breadcrumb: '/check-your-state-pension/assets/images/icons/breadcrumb-separator
 
 @import 'urBanner.css';
 
+@import 'print';
+
 $light-bg-chart-bar:#C1DFE4;
 
 
@@ -345,3 +347,6 @@ text-align : right;
     text-transform: none;
     }
 
+#nino {
+    margin-bottom: 3rem;
+}

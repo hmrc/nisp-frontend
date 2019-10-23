@@ -55,12 +55,16 @@
     Seq(
         Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),
         Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js")),
-        Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js"))
+        Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js")),
+        Map("url" -> controllers.routes.Assets.versioned("javascript/polyfill.js"))
       )
 }
 
 
 @contentWithTitle =  {
+    @mainTemplateParams.pageInfo.map { pageInfo =>
+    <div class="page-info">@Html(pageInfo)</div>
+}
     @mainTemplateParams.pageTitle.map { title =>
     <h1 class=@headerClass> @Html(title) </h1>
 }
@@ -149,16 +153,16 @@
 }
 
 @betaHeaderEnable = @{
-false
+    false
 }
 
 @article = @{
 
-if(mainTemplateParams.articleEnabled) {
-      layouts.article(contentWithTitle, false, mainTemplateParams.articleClasses)
-} else {
-      contentWithTitle
-}
+    if(mainTemplateParams.articleEnabled) {
+          layouts.article(contentWithTitle, false, mainTemplateParams.articleClasses)
+    } else {
+          contentWithTitle
+    }
 
 }
 
@@ -195,6 +199,12 @@ if(mainTemplateParams.articleEnabled) {
     }
     else {
         false
+    }
+}
+
+@printable = @{
+    if(mainTemplateParams.printableDocument) {
+        "printable"
     }
 }
 
@@ -243,5 +253,8 @@ if(mainTemplateParams.articleEnabled) {
 
         "optimizelyProjectId" -> "8451981545",
         "isWelsh" -> isWelsh
-    ) ++ urBanner)
+    ) ++ urBanner
+      ++ Map[String,Any](
+        "bodyClass" -> printable)
+      )
 }

@@ -7,10 +7,10 @@
       $('.accordion > dt.expandable').click(function() {
          var taxYear = $(this).find(".ni-years").text()
          var showDetailsEnglish = 'View <span class="visuallyhidden">'+taxYear+'</span>details'
-         var showDetailsWelsh = 'Edrychwch ar <span class="visuallyhidden">'+taxYear+'</span>fanylion'
+         var showDetailsWelsh = 'Gweld y manylion<span class="visuallyhidden">'+taxYear+'</span>'
 
          var hideDetailsEnglish ='Hide <span class="visuallyhidden">'+taxYear+'</span>details'
-         var hideDetailsWelsh = 'Cuddio <span class="visuallyhidden">'+taxYear+'</span>manylion'
+         var hideDetailsWelsh = 'Cuddio manylion<span class="visuallyhidden">'+taxYear+'</span>'
 
         if(!$(this).hasClass('active')) {
           $(this)

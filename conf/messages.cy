@@ -59,6 +59,9 @@ nisp.main.inflation = nid yw’n cynnwys unrhyw gynnydd o ganlyniad i chwyddiant
 nisp.main.psod = nid yw’n cynnwys y gorchymun rhannu pensiwn sydd gennych yn weithredol
 nisp.main.after = Ar ôl oedran Pensiwn y Wladwriaeth, <span class="nowrap">{0}</span>, nid oes yn rhaid i chi dalu cyfraniadau Yswiriant Gwladol.
 nisp.main.basedOn = Gallwch gael eich Pensiwn y Wladwriaeth ar
+nisp.national.insurance.number = Rhif Yswiriant Gwladol
+nisp.print.this.ni.record = Argraffu’r cofnod Yswiriant Gwladol hwn
+nisp.show.nino = Dangos eich rhif Yswiriant Gwladol
 
 nisp.main.puttingOff = Oedi gwneud cais
 nisp.main.puttingOff.line1 = Gallwch oedi gwneud cais am eich Pensiwn y Wladwriaeth o’r {0}. Gallai gwneud hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan fyddwch yn dod i wneud cais amdano. Mae’r swm ychwanegol, gyda’ch Pensiwn y Wladwriaeth, yn ffurfio rhan o’ch incwm trethadwy.
@@ -161,6 +164,7 @@ nisp.excluded.niRecordIntro = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol s
 nisp.excluded.niRecordIntroUK = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol y DU sy’n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
 nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
+nisp.nirecord.summary.youhave = Mae gennych:
 
 #***********************
 # Thank you messages
@@ -188,12 +192,11 @@ nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd n
 nisp.nirecord.title = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
-nisp.nirecord.yournirecordgapyears = Blynyddoedd sydd ddim yn llawn.
 nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
 
-nisp.nirecord.showgaps = Edrych ar fylchau’n unig
-nisp.nirecord.showfull = Edrych ar yr holl flynyddoedd
+nisp.nirecord.showgaps = Gweld blynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
+nisp.nirecord.showfull = Gweld pob blwyddyn y gwnaed cyfraniadau ynddi
 
 nisp.nirecord.fullyear = Blwyddyn lawn
 
@@ -226,12 +229,12 @@ nisp.nirecord.youdidnotmakeanycontrib = Ni wnaethoch chi wneud unrhyw gyfraniada
 
 nisp.nirecord.summary.yourrecord = Crynodeb
 nisp.nirecord.summary.yourrecord.mobile = Crynodeb
-nisp.nirecord.summary.fullContributions = o flynyddoedd o gyfraniadau llawn
-nisp.nirecord.summary.fullContributions.single = blwyddyn o gyfraniadau llawn
-nisp.nirecord.summary.gaps = o flynyddoedd pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.gaps.single = blwyddyn pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.yearsRemaining = o flynyddoedd i gyfrannu cyn 5 Ebrill {0}
-nisp.nirecord.summary.yearsRemaining.single = blwyddyn i gyfrannu cyn 5 Ebrill {0}
+nisp.nirecord.summary.fullContributions = {0} o flynyddoedd o gyfraniadau llawn
+nisp.nirecord.summary.fullContributions.single = {0} blwyddyn o gyfraniadau llawn
+nisp.nirecord.summary.gaps = {0} o flynyddoedd pan na wnaethoch gyfrannu digon
+nisp.nirecord.summary.gaps.single = {0} blwyddyn pan na wnaethoch gyfrannu digon
+nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i gyfrannu cyn 5 Ebrill {1}
+nisp.nirecord.summary.yearsRemaining.single = {0} blwyddyn i gyfrannu cyn 5 Ebrill {1}
 
 nisp.nirecord.pre75Years = Hyd at 1975
 nisp.nirecord.pre75QualifyingYears = Mae ein cofnodion yn dangos bod gennych {0} o flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
@@ -255,8 +258,8 @@ nisp.nirecord.gapsinyourrecord.line2 = yn ddi-waith a ddim yn hawlio budd-dal
 nisp.nirecord.gapsinyourrecord.line3 = yn hunangyflogedig ond ddim yn talu cyfraniadau oherwydd elw bychan
 nisp.nirecord.gapsinyourrecord.line4 = yn byw dramor
 nisp.nirecord.gapsinyourrecord.line5 = yn byw neu weithio yn Ynys Manaw
-nisp.nirecord.gap.viewdetails = Edrychwch ar <span class="visuallyhidden">{0} </span>fanylion
-nisp.nirecord.gap.hidedetails = Cuddio <span class="visuallyhidden">{0} </span>manylion
+nisp.nirecord.gap.viewdetails = Gweld y manylion<span class="visuallyhidden"> {0}</span>
+nisp.nirecord.gap.hidedetails = Cuddio manylion<span class="visuallyhidden"> {0}</span>
 nisp.nirecord.gapsinyourrecord.howtocheckrecord= Sut i wirio eich cofnod
 nisp.nirecord.gapsinyourrecord.paidemployment.title = Gwaith â thâl
 nisp.nirecord.gapsinyourrecord.paidemployment.desc = Gwiriwch y cyfraniadau rydych wedi’u gwneud yn erbyn P60 gan eich cyflogwyr.

@@ -66,7 +66,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return gaps page for user with gaps" in {
       val result = MockNIRecordController.showGaps(authenticatedFakeRequest(mockUserId))
-      contentAsString(result) should include("Years which are not full")
+      contentAsString(result) should include("View all years of contributions")
     }
 
     "return full page for user without gaps" in {
@@ -103,7 +103,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
     "return gaps page for user with gaps" in {
       val result = MockNIRecordController.showFull(authenticatedFakeRequest(mockUserId))
-      contentAsString(result) should include("All years.")
+      contentAsString(result) should include("View years only showing gaps in your contributions")
     }
 
     "return full page for user without gaps" in {
