@@ -155,7 +155,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
 
     "render page with national insurence number " in {
-      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.national.insurance.number")
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>details>summary>span", "nisp.show.nino")
     }
 
     "render page with link 'View gaps only'" in {
@@ -286,10 +286,10 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
 
     "render page with national insurence number " in {
-      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>p:nth-child(3)", "nisp.national.insurance.number")
+      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>details>summary>span", "nisp.show.nino")
     }
 
-      "render page with link 'View all years'" in {
+    "render page with link 'View all years'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p.panel-indent>a", "nisp.nirecord.showfull")
     }
 
