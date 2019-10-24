@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.config
 import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
 import play.api.Mode.Mode
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.{Application, Configuration, Play}
 import play.twirl.api.Html
@@ -38,9 +38,6 @@ object ApplicationGlobal extends ApplicationGlobalTrait {
 }
 
 trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController with I18nSupport {
-
-  private def lang(implicit request: Request[_]): Lang =
-    Lang(request.cookies.get("PLAY_LANG").map(_.value).getOrElse("en"))
 
   implicit lazy val app:Application = Play.current
 
