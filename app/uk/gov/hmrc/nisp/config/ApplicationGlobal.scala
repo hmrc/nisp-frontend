@@ -19,9 +19,7 @@ package uk.gov.hmrc.nisp.config
 import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
 import play.api.Mode.Mode
-import play.api.Play.current
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.{Application, Configuration, Play}
 import play.twirl.api.Html
@@ -32,17 +30,19 @@ import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport}
-import play.api.i18n.Lang
 
 object ApplicationGlobal extends ApplicationGlobalTrait {
   override protected def mode: Mode = Play.current.mode
   override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override def messagesApi = Play.current.injector.instanceOf[MessagesApi]
 }
 
-trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController {
+trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController with I18nSupport {
 
   private def lang(implicit request: Request[_]): Lang =
     Lang(request.cookies.get("PLAY_LANG").map(_.value).getOrElse("en"))
+
+  implicit lazy val app:Application = Play.current
 
   override val auditConnector = NispAuditConnector
   override val loggingFilter = NispLoggingFilter
