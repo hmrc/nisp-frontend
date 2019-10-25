@@ -77,6 +77,7 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         showUrBanner =  true,
         browserTitle = Some(Messages("nisp.main.title")),
         pageInfo = Some(user.name.getOrElse("")),
+        printableDocument = true,
         pageTitle = Some(Messages("nisp.main.h1.title")),
         h1Class = Some("titleWithPageInfo"),
         sidebarLinks = Some(sidebar),
@@ -194,5 +195,8 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     @if(isPertaxUrl) {
         <div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>
     }
+
+    <p class="print-ni-link"><a href="javascript:window.print();" data-journey-click="link - click:Your State Pension summary:Print your State Pension summary">@Messages("nisp.print.your.state.pension.summary")</a></p>
+
   }
 }

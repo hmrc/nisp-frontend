@@ -83,6 +83,7 @@ nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="check
 nisp.legal.forecastChanges = Gallai eich rhagolwg fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y
 nisp.legal.termsAndCondition = telerau ac amodau
 nisp.legal.mqp.forecastChanges = Gallai’r manylion fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y
+nisp.print.your.state.pension.summary = Argraffu crynodeb o’ch Pensiwn y Wladwriaeth
 
 #*********************
 # Scenario messages
