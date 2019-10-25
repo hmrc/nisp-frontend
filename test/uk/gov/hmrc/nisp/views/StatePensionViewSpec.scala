@@ -306,7 +306,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
 
         }
@@ -392,7 +392,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -588,7 +588,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -672,7 +672,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(21)", "https://www.gov.uk/deferring-state-pension")
           }
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -845,7 +845,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(19)", "https://www.gov.uk/deferring-state-pension")
           }
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -929,7 +929,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(21)", "https://www.gov.uk/deferring-state-pension")
           }
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -1092,7 +1092,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
           }
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -1175,7 +1175,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -1331,7 +1331,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(18)", "https://www.gov.uk/deferring-state-pension")
           }
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
 
         }
@@ -1415,7 +1415,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(20)", "https://www.gov.uk/deferring-state-pension")
           }
           "render page with print link" in {
-            assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
       }
@@ -1558,7 +1558,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
         }
         "render page with print link" in {
-          assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+          assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
         }
 
       }
@@ -1643,7 +1643,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
         }
         "render page with print link" in {
-          assertEqualsMessage(htmlAccountDoc, ".print-link a", "nisp.print.your.state.pension.summary")
+          assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
         }
       }
     }

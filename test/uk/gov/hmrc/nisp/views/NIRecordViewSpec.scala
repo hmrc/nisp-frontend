@@ -240,6 +240,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     "render page with href link  'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
     }
+    "render page with print link" in {
+      assertEqualsMessage(htmlAccountDoc, "#print-ni-link a", "nisp.print.this.ni.record")
+    }
   }
 
   "Render Ni Record view Gaps Only" should {
@@ -351,6 +354,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
     "render page with href link  'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
+    }
+    "render page with print link" in {
+      assertEqualsMessage(htmlAccountDoc, "#print-ni-link a", "nisp.print.this.ni.record")
     }
   }
 
@@ -599,6 +605,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     "render page with href link  'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
     }
+    "render page with print link" in {
+      assertEqualsMessage(htmlAccountDoc, "#print-ni-link a", "nisp.print.this.ni.record")
+    }
   }
 
 
@@ -681,6 +690,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
     "render page with href link 'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
+    }
+    "render page with print link" in {
+      assertEqualsMessage(htmlAccountDoc, "#print-ni-link a", "nisp.print.this.ni.record")
     }
   }
 
@@ -792,6 +804,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     "render page with href link 'back'" in {
       assertLinkHasValue(htmlAccountDoc, "article.content__body>p.backlink>a", "javascript:window.history.back();")
     }
+    "render page with print link" in {
+      assertEqualsMessage(htmlAccountDoc, "#print-ni-link a", "nisp.print.this.ni.record")
+    }
   }
 
 
@@ -886,6 +901,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
     }
     "render page with text 'These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(8)", "nisp.nirecord.gap.whenyouareclaiming.info.singular")
+    }
+    "render page with print link" in {
+      assertEqualsMessage(htmlAccountDoc, "#print-ni-link a", "nisp.print.this.ni.record")
     }
   }
 
