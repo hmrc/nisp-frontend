@@ -164,7 +164,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
           "render page with text  'Your forecast is' " in {
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            println(htmlAccountDoc)
             assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
           }
 
@@ -306,6 +305,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
 
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
+          }
+
         }
 
         "State Pension view with NON-MQP :  Personal Max: With State Pension age under consideration message" should {
@@ -386,6 +389,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(21)", "https://www.gov.uk/deferring-state-pension")
+          }
+
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -580,7 +587,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           "render page with text 'Monday to Friday: 8am to 6pm'" in {
             assertEqualsMessage(htmlAccountDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
-
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
+          }
         }
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65: With State Pension age under consideration message" should {
@@ -661,6 +670,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(21)", "https://www.gov.uk/deferring-state-pension")
+          }
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -832,6 +844,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(19)", "https://www.gov.uk/deferring-state-pension")
           }
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
+          }
         }
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps: With State Pension age under consideration message" should {
@@ -912,6 +927,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(21)", "https://www.gov.uk/deferring-state-pension")
+          }
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
 
@@ -1073,7 +1091,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
           }
-
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
+          }
         }
 
         "State Pension view with NON-MQP :  No Gapss || Full Rate & Personal Max: With State Pension age under consideration message" should {
@@ -1154,6 +1174,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(19)", "https://www.gov.uk/deferring-state-pension")
           }
 
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
+          }
         }
 
         "State Pension view with NON-MQP :  No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
@@ -1307,6 +1330,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(18)", "https://www.gov.uk/deferring-state-pension")
           }
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
+          }
 
         }
 
@@ -1387,6 +1413,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(20)", "https://www.gov.uk/deferring-state-pension")
+          }
+          "render page with print link" in {
+            assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
           }
         }
       }
@@ -1528,6 +1557,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
         "render page with href link 'More on putting off claiming (opens in new tab)'" in {
           assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
         }
+        "render page with print link" in {
+          assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
+        }
 
       }
 
@@ -1610,7 +1642,9 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
         "render page with href link 'More on putting off claiming (opens in new tab)'" in {
           assertLinkHasValue(htmlAccountDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
         }
-
+        "render page with print link" in {
+          assertEqualsMessage(htmlAccountDoc, "#print-sp-link a", "nisp.print.your.state.pension.summary")
+        }
       }
     }
   }

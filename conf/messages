@@ -84,6 +84,7 @@ nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="check
 nisp.legal.forecastChanges = Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the
 nisp.legal.termsAndCondition = terms and conditions
 nisp.legal.mqp.forecastChanges = These details may be different if there are any changes to your National Insurance information. There is more about this in the
+nisp.print.your.state.pension.summary = Print your State Pension summary
 
 #*********************
 # Scenario messages
