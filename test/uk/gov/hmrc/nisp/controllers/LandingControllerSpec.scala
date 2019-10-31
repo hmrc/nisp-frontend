@@ -18,31 +18,28 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
-import org.mockito.Mockito
-import org.scalatest.mock.MockitoSugar
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http._
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import play.api.i18n.Lang
 import play.api.i18n.Messages.Implicits._
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.auth.core.MissingBearerToken
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
-import uk.gov.hmrc.nisp.helpers.{MockAuthAction, MockAuthConnector, MockCachedStaticHtmlPartialRetriever, MockCitizenDetailsService, MockIdentityVerificationConnector, TestAccountBuilder}
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
-import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.time.DateTimeUtils._
-import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
+import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthConnector, VerifyAuthActionImpl}
+import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.time.DateTimeUtils._
 
 import scala.concurrent.Future
 

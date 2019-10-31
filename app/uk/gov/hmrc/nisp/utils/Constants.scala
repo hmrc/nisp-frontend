@@ -18,6 +18,10 @@ package uk.gov.hmrc.nisp.utils
 
 object Constants {
 
+  val GovernmentGatewayId = "GGW"
+  val AnyAuthenticationProviderId = "IDAorGGW"
+  val VerifyProviderId = "IDA"
+
   // scalastyle:off magic.number
   val baseUrl = "/check-your-state-pension"
 

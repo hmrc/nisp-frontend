@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.LocalDate
+import org.joda.time.{DateTime, LocalDate}
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, NispAuthedUser}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
@@ -39,13 +40,6 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
- // val mockUserNino = TestAccountBuilder.urBannerNino
-  //val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
-
-  //val mockUsername = "mockuser"
-  //val mockUserId = "/auth/oid/" + mockUsername
-
-  //implicit lazy val fakeRequest = FakeRequest()
 
 
   "Exclusion Dead" should {
@@ -235,7 +229,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Manual Correspondence Indicator(MCI)" should {
 
-    implicit val authDetails = AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"))
+    implicit val authDetails = AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))
 
     lazy val sResult = html.excluded_mci(Exclusion.ManualCorrespondenceIndicator, Some(40))
 

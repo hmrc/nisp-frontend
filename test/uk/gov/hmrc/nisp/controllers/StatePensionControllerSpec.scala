@@ -30,12 +30,12 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.StatePensionAmountRegular
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService}
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.utils.Constants
 
 class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppPerSuite {
 
@@ -64,7 +64,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
     SessionKeys.userId -> userId,
-    SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+    SessionKeys.authProvider -> Constants.VerifyProviderId
   )
 
   def testAccountController(testNow: LocalDateTime, nino: Nino): StatePensionController = new MockStatePensionController {
@@ -101,7 +101,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> mockUserIdExcluded,
-          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+          SessionKeys.authProvider -> Constants.VerifyProviderId
         ))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }

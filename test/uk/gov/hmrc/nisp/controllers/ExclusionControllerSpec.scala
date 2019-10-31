@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
 
@@ -72,7 +72,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
         SessionKeys.userId -> mockUserId,
-        SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+        SessionKeys.authProvider -> Constants.VerifyProviderId
       ))
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
@@ -85,7 +85,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> userId,
-          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+          SessionKeys.authProvider -> Constants.VerifyProviderId
         ))
       }
 
@@ -94,7 +94,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> userId,
-          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+          SessionKeys.authProvider -> Constants.VerifyProviderId
         ))
       }
 
@@ -245,7 +245,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
               SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
               SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
               SessionKeys.userId -> mockUserIdExcludedMwrre,
-              SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+              SessionKeys.authProvider -> Constants.VerifyProviderId
             ))
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging

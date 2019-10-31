@@ -33,7 +33,6 @@ import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
@@ -58,7 +57,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
     SessionKeys.userId -> userId,
-    SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+    SessionKeys.authProvider -> Constants.VerifyProviderId
   )
 
   def createStatePensionController = {

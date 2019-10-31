@@ -16,8 +16,10 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import org.joda.time.DateTime
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction, ExcludedAuthenticatedRequest}
 
@@ -28,6 +30,6 @@ class MockExcludedAuthAction(nino: Nino) extends ExcludedAuthAction {
   override def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = ""
 
   override def invokeBlock[A](request: Request[A], block: ExcludedAuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(ExcludedAuthenticatedRequest(request, nino, AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"))))
+    block(ExcludedAuthenticatedRequest(request, nino, AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))))
   }
 }

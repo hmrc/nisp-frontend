@@ -19,14 +19,10 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L500
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, Authority, CredentialStrength, PayeAccount}
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, UserId}
+import uk.gov.hmrc.http.{HeaderCarrier, UserId}
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthConnector
+
+import scala.concurrent.{ExecutionContext, Future}
 
 object MockAuthConnector extends NispAuthConnector {
   val mockUserId: UserId = userID("mockuser")
@@ -69,9 +65,6 @@ object MockAuthConnector extends NispAuthConnector {
     userID("mockexcludedmwrre") -> TestAccountBuilder.excludedMwrre,
     userID("mockexcludedabroad") -> TestAccountBuilder.excludedAbroad
   )
-
-  private def testCredentialStrength(nino: Nino): CredentialStrength =
-    if (nino == TestAccountBuilder.weakNino) CredentialStrength.Weak else CredentialStrength.Strong
 
   override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] = {
     ???

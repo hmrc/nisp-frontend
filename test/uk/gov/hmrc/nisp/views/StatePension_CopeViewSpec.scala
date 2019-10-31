@@ -17,19 +17,20 @@
 package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.lang3.StringEscapeUtils
-import org.joda.time.LocalDate
+import org.joda.time.{DateTime, LocalDate}
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import uk.gov.hmrc.auth.core.retrieve.Name
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.nisp.builders.ApplicationConfigBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
@@ -45,26 +46,14 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded = TestAccountBuilder.excludedAll
   val mockUserNinoNotFound = TestAccountBuilder.blankNino
-  val json = s"test/resources/$mockUserNino.json"
-  val mockUsername = "mockuser"
-  val mockUserId = "/auth/oid/" + mockUsername
-  val mockUserIdExcluded = "/auth/oid/mockexcludedall"
-  val mockUserIdContractedOut = "/auth/oid/mockcontractedout"
-  val mockUserIdBlank = "/auth/oid/mockblank"
-  val mockUserIdMQP = "/auth/oid/mockmqp"
-  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
-  val mockUserIdWeak = "/auth/oid/mockweak"
-  val mockUserIdAbroad = "/auth/oid/mockabroad"
-  val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
-  val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
-  val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
 
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
-  implicit val user: NispAuthedUser = NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None)
+  implicit val user: NispAuthedUser = NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, false)
+  val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
 
-  lazy val fakeRequest = FakeRequest()
+  implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
@@ -78,7 +67,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
   }
 
   "Render State Pension view with Contracted out User" should {
-    lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdContractedOut).withCookies(lanCookie))
+    lazy val result = controller.show()(AuthenticatedRequest(FakeRequest().withCookies(lanCookie), user, authDetails))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     "render with correct page title" in {

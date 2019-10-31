@@ -23,19 +23,17 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService}
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
-import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 
 class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
   val mockUserId = "/auth/oid/mockuser"
@@ -56,7 +54,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
     SessionKeys.userId -> userId,
-    SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+    SessionKeys.authProvider -> Constants.VerifyProviderId
   )
 
   "GET /account/nirecord/gaps (gaps)" should {
@@ -85,7 +83,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> mockUserIdExcluded,
-          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+          SessionKeys.authProvider -> Constants.VerifyProviderId
         ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
@@ -110,7 +108,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> mockUserIdExcluded,
-          SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId
+          SessionKeys.authProvider -> Constants.VerifyProviderId
         ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }

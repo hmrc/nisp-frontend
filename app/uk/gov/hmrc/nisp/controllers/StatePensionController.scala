@@ -51,7 +51,6 @@ object StatePensionController extends StatePensionController {
 
 trait StatePensionController extends NispFrontendController with PertaxHelper with PartialRetriever {
 
-
   def authenticate: AuthAction
 
   def statePensionService: StatePensionService
