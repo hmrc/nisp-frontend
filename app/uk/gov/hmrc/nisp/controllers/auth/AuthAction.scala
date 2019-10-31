@@ -28,7 +28,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
 import uk.gov.hmrc.domain.{Nino, SaUtr}
-import uk.gov.hmrc.http.{CorePost, HeaderCarrier, InternalServerException}
+import uk.gov.hmrc.http.{CorePost, HeaderCarrier, InternalServerException, SessionKeys}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
 import uk.gov.hmrc.nisp.controllers.routes
@@ -141,7 +141,10 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
           }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case _: NoActiveSession => Redirect(ApplicationConfig.verifySignIn, parameters)
+      case _: NoActiveSession => Redirect(ApplicationConfig.verifySignIn, parameters).withSession(
+        SessionKeys.redirect -> ApplicationConfig.postSignInRedirectUrl,
+        SessionKeys.loginOrigin -> "YSP"
+      )
     }
   }
 
