@@ -19,9 +19,10 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(showBackLink : Boolean)(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@main(MainTemplateParams(
+@unauthenticatedMain(MainTemplateParams(
  browserTitle = Some(Messages("nisp.tandcs.title")),
  pageTitle = Some(messages("nisp.tandcs.title")),
  sidebarLinks = None,

@@ -27,6 +27,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 @import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
 
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(
     statePension: StatePension,
     numberOfGaps: Int,
@@ -39,7 +40,7 @@
     customerAge: Int,
     isAbroad: Boolean,
     yearsToContributeUntilPensionAge: Int
-)(implicit request: Request[_], user: NispAuthedUser, authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {

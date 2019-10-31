@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.nisp.models.enums.Exclusion._
 @import uk.gov.hmrc.nisp.models.ExclusionsModel
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.nisp.models.SPAgeModel
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import exclusions.viewExclusions
@@ -24,6 +23,7 @@
 @import uk.gov.hmrc.nisp.views.viewParams._
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(exclusion: Exclusion, statePensionAge: Option[Int])(implicit messages: Messages, request: Request[_],
   partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
@@ -34,7 +34,7 @@
     )
 }
 
-@main(MainTemplateParams(
+@unauthenticatedMain(MainTemplateParams(
     Some(Messages("nisp.main.title")),
     userLoggedIn = true,
     pageTitle = Some(Messages("nisp.excluded.title")),

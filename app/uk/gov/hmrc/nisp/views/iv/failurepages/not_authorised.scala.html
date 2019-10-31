@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nisp.auth._
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_],
 partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
@@ -28,7 +29,7 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     ga('send', 'pageview', '/check-your-state-pension/unauthorised-confirm-identity');
 }
 
-@main(MainTemplateParams(
+@unauthenticatedMain(MainTemplateParams(
  articleClasses = Some("mainpage"),
  analyticsAdditionalJs = Some(analyticsAdditionalJs),
  pageTitle= Some(messages("nisp.iv.failure.general.title")), h1Class = Some("heading-xlarge")

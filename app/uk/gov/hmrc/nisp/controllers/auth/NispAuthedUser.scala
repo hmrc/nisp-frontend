@@ -25,7 +25,8 @@ import uk.gov.hmrc.nisp.utils.Country
 case class NispAuthedUser(nino: Nino,
                           dateOfBirth: LocalDate,
                           name: UserName,
-                          address: Option[Address]) {
+                          address: Option[Address],
+                          isSa: Boolean) {
 
   lazy val livesAbroad: Boolean = address.fold(false)( co => co.country.exists(Country.isAbroad))
 

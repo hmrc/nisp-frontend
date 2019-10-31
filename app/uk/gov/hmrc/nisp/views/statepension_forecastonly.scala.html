@@ -26,8 +26,9 @@
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
-isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispAuthedUser,
+isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser,
 authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
@@ -45,7 +46,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRe
 </div>
 }
 
-@analyticsAdditionalJs(implicit request: Request[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever) = @{
+@analyticsAdditionalJs(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever) = @{
     Map[String, Any](
         "scenarioType" -> statePension.forecastScenario,
         "forecastValue" -> statePension.amounts.forecast.annualAmount,

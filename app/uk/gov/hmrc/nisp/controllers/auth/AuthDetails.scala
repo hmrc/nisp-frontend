@@ -17,7 +17,9 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 
 case class AuthDetails(confidenceLevel: ConfidenceLevel,
-                       authProvider: Option[String]
+                       authProvider: Option[String],
+                       loginTimes: LoginTimes
                       )

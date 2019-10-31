@@ -27,7 +27,7 @@ import uk.gov.hmrc.auth.core.AuthProvider.Verify
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
-import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.domain.{Nino, SaUtr}
 import uk.gov.hmrc.http.{CorePost, HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.WSHttp
@@ -51,22 +51,29 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(ConfidenceLevel.L200 and Enrolment("HMRC-NI"))
-      .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials) {
-        case Some(nino) ~ confidenceLevel ~ credentials => {
-          cds.retrievePerson(Nino(nino)).flatMap {
-            case Right(cdr) => {
-              block(AuthenticatedRequest(request,
-                NispAuthedUser(Nino(nino),
-                  cdr.person.dateOfBirth,
-                  UserName(Name(cdr.person.firstName, cdr.person.lastName)),
-                  cdr.address),
-                AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType))))
+      .retrieve(
+        Retrievals.nino and
+        Retrievals.confidenceLevel and
+        Retrievals.credentials and
+        Retrievals.loginTimes and
+        Retrievals.allEnrolments) {
+          case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) => {
+            cds.retrievePerson(Nino(nino)).flatMap {
+              case Right(cdr) => {
+                val saEnrolment = enrolments.find(_.key == "IR-SA")
+                block(AuthenticatedRequest(request,
+                  NispAuthedUser(Nino(nino),
+                    cdr.person.dateOfBirth,
+                    UserName(Name(cdr.person.firstName, cdr.person.lastName)),
+                    cdr.address,
+                    saEnrolment.isDefined),
+                  AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
+              }
+              case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
+              case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))
             }
-            case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
-            case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))
-          }
 
-        }
+          }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
       case _: NoActiveSession => Redirect(ApplicationConfig.ggSignInUrl, Map("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl),
@@ -110,21 +117,28 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(ConfidenceLevel.L500 and Enrolment("HMRC-NI")and AuthProviders(Verify))
-      .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials) {
-        case Some(nino) ~ confidenceLevel ~ credentials => {
-          cds.retrievePerson(Nino(nino)).flatMap {
-            case Right(cdr) => {
-              block(AuthenticatedRequest(request,
-                NispAuthedUser(Nino(nino),
-                  cdr.person.dateOfBirth,
-                  UserName(Name(cdr.person.firstName, cdr.person.lastName)),
-                  cdr.address),
-                AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType))))
+      .retrieve(
+        Retrievals.nino and
+        Retrievals.confidenceLevel and
+        Retrievals.credentials and
+        Retrievals.loginTimes and
+        Retrievals.allEnrolments) {
+          case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) => {
+            cds.retrievePerson(Nino(nino)).flatMap {
+              case Right(cdr) => {
+                val saEnrolment = enrolments.find(_.key == "IR-SA")
+                block(AuthenticatedRequest(request,
+                  NispAuthedUser(Nino(nino),
+                    cdr.person.dateOfBirth,
+                    UserName(Name(cdr.person.firstName, cdr.person.lastName)),
+                    cdr.address,
+                    saEnrolment.isDefined),
+                  AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
+              }
+              case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
+              case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))
             }
-            case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
-            case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))
           }
-        }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
       case _: NoActiveSession => Redirect(ApplicationConfig.verifySignIn, parameters)

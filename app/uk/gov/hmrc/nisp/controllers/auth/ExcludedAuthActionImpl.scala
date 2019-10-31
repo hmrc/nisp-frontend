@@ -43,11 +43,11 @@ class ExcludedAuthActionImpl @Inject()(override val authConnector: NispAuthConne
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(ConfidenceLevel.L200 and Enrolment("HMRC-NI"))
-      .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials) {
-        case Some(nino) ~ confidenceLevel ~ credentials =>
+      .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials and Retrievals.loginTimes) {
+        case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes =>
           block(ExcludedAuthenticatedRequest(request,
             Nino(nino),
-            AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType)))
+            AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes))
           )
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {

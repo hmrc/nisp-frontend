@@ -15,12 +15,12 @@
  *@
 
 @import uk.gov.hmrc.nisp.models.enums.Exclusion._
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(exclusion: Exclusion)(implicit messages: Messages, request: Request[_],
 partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
@@ -34,7 +34,7 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     showUrBannerOn ==  PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
-@main(MainTemplateParams(
+@unauthenticatedMain(MainTemplateParams(
     browserTitle=Some(Messages("nisp.main.title")),
     pageTitle = Some(Messages("nisp.nirecord.heading")),
     userLoggedIn = true,
