@@ -19,7 +19,7 @@ object AppDependencies {
       "org.jsoup" % "jsoup" % "1.10.2",
       "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1",
       "uk.gov.hmrc" %% "hmrctest" % "2.4.0",
-      "org.mockito" % "mockito-core" % "2.6.3"
+      "org.mockito" % "mockito-core" % "3.1.0"
   ).map(_ % "test")
 
   
