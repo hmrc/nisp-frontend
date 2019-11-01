@@ -50,7 +50,7 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L200 and Enrolment("HMRC-NI"))
+    authorised(ConfidenceLevel.L200)
       .retrieve(
         Retrievals.nino and
         Retrievals.confidenceLevel and
@@ -116,7 +116,7 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L500 and Enrolment("HMRC-NI")and AuthProviders(Verify))
+    authorised(ConfidenceLevel.L500 and AuthProviders(Verify))
       .retrieve(
         Retrievals.nino and
         Retrievals.confidenceLevel and

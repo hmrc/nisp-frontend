@@ -42,7 +42,7 @@ class ExcludedAuthActionImpl @Inject()(override val authConnector: NispAuthConne
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L200 and Enrolment("HMRC-NI"))
+    authorised(ConfidenceLevel.L200)
       .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials and Retrievals.loginTimes) {
         case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes =>
           block(ExcludedAuthenticatedRequest(request,
