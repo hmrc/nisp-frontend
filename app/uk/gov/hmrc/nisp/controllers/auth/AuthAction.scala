@@ -70,7 +70,13 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
                   AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
               }
               case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
-              case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))
+              case Left(MCI_EXCLUSION) => {
+                if(request.path.contains("nirecord")){
+                  Future.successful(Redirect(routes.ExclusionController.showNI))
+                }else{
+                  Future.successful(Redirect(routes.ExclusionController.showSP))
+                }
+              }
             }
 
           }

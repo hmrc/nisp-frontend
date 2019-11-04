@@ -44,6 +44,5 @@ lazy val microservice = Project(appName, file("."))
     ),
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     routesGenerator := StaticRoutesGenerator,
-    fork in Test := false
+    majorVersion := 9
   )
-  .settings(majorVersion := 9)
