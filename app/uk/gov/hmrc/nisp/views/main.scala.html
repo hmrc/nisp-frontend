@@ -138,9 +138,11 @@
 
 }
 
+
 @urBanner = @{
+    val fullTitle = Messages("nisp.home.banner.recruitment.title")
     if(mainTemplateParams.showUrBanner && ApplicationConfig.showUrBanner && checkForUrCookie){
-        Map("fullWidthBannerTitle" -> messages("nisp.home.banner.recruitment.title"),
+        Map("fullWidthBannerTitle" -> fullTitle, 
             "fullWidthBannerText" -> messages("nisp.home.banner.recruitment.link"),
             "fullWidthBannerLink" -> messages("nisp.home.banner.recruitment.linkURL"),
             "fullWidthBannerDismissText" -> messages("nisp.home.banner.recruitment.reject"),

@@ -62,7 +62,7 @@ nisp.main.basedOn = Gallwch gael eich Pensiwn y Wladwriaeth ar
 
 nisp.main.puttingOff = Oedi gwneud cais
 nisp.main.puttingOff.line1 = Gallwch oedi gwneud cais am eich Pensiwn y Wladwriaeth o’r {0}. Gallai gwneud hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan fyddwch yn dod i wneud cais amdano. Mae’r swm ychwanegol, gyda’ch Pensiwn y Wladwriaeth, yn ffurfio rhan o’ch incwm trethadwy.
-nisp.main.puttingOff.linkTitle = Mwy am oedi gwneud cais (agor mewn tab newydd)
+nisp.main.puttingOff.linkTitle = Mwy am oedi gwneud cais (yn agor tab newydd)
 
 nisp.main.showyourrecord = Gweld eich cofnod Yswiriant Gwladol
 nisp.main.showyourrecordUK = Gweld eich cofnod Yswiriant Gwladol y DU
@@ -238,8 +238,8 @@ nisp.nirecord.pre75QualifyingYears = Mae ein cofnodion yn dangos bod gennych {0}
 nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gennych unrhyw flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
 
 nisp.nirecord.helpline.getHelp = Cael help
-nisp.nirecord.helpline.number = Llinell gymorth 0800 731 0181
-nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 0176
+nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
+nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
 
 #****************************
@@ -427,7 +427,8 @@ error.email = Rhowch gyfeiriad e-bost dilys
 #***********************
 nisp.home.banner.recruitment.link = Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor ffenestr newydd)
 nisp.home.banner.recruitment.reject = Dim diolch
-nisp.home.banner.recruitment.title = Helpwch gwella gov.uk
+nisp.home.banner.recruitment.title = Helpwch gwella
+nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
 
 
 global.error.InternalServerError500.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
