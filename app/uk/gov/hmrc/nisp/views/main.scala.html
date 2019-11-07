@@ -138,9 +138,16 @@
 
 }
 
+@anchor(valueOf: String, serviceName: String, url: String ) = {
+    @valueOf
+    <a href="@url" target="_blank">@serviceName</a>
+}
+
 @urBanner = @{
     if(mainTemplateParams.showUrBanner && ApplicationConfig.showUrBanner && checkForUrCookie){
-        Map("fullWidthBannerTitle" -> messages("nisp.home.banner.recruitment.title"),
+        Map("fullWidthBannerTitle" -> anchor(Messages("nisp.home.banner.recruitment.title"), Messages("nisp.home.banner.recruitment.gov"), Messages("nisp.home.banner.recruitment.url")),
+            "fullWidthBannerGovLink" -> messages("nisp.home.banner.recruitment.gov"),
+            "fulllWidthGovLabel" -> messages("nisp.home.banner.recruitment.gov"),
             "fullWidthBannerText" -> messages("nisp.home.banner.recruitment.link"),
             "fullWidthBannerLink" -> messages("nisp.home.banner.recruitment.linkURL"),
             "fullWidthBannerDismissText" -> messages("nisp.home.banner.recruitment.reject"),
