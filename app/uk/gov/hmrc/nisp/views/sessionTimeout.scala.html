@@ -24,10 +24,10 @@
 @()(implicit partialRetriever: CachedStaticHtmlPartialRetriever, request: Request[_], messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @unauthenticatedMain(MainTemplateParams(
- browserTitle = Some(Messages("nisp.timeout.title")),
- pageTitle = Some(Messages("nisp.timeout.heading")),
+ browserTitle = Some(messages("nisp.timeout.title")),
+ pageTitle = Some(messages("nisp.timeout.heading")),
  showTitleHeaderNav = false
 )) {
-    <p>@Messages("nisp.timeout.body")</p>
-    <p>@Html(Messages("nisp.useagain", routes.LandingController.show.url))</p>
+    <p>@messages("nisp.timeout.body")</p>
+    <p>@Html(messages("nisp.useagain", routes.LandingController.show.url))</p>
 }

@@ -79,7 +79,7 @@
 
 @links = @{
     if(mainTemplateParams.articleEnabled) {
-       Map("url" -> routes.StatePensionController.signOut , "text" -> Messages("nisp.signOut"))
+       Map("url" -> routes.StatePensionController.signOut , "text" -> messages("nisp.signOut"))
     }
 }
 
@@ -95,7 +95,7 @@
 
 @navTitle = @{
     if(mainTemplateParams.showTitleHeaderNav) {
-         Messages("nisp.title")
+         messages("nisp.title")
     } else {
         None
     }
@@ -185,7 +185,7 @@
 }
 
 @termsAndConditionFooterLink = @{
-     Map("url" -> routes.TermsConditionsController.show.url , "text" -> Messages("nisp.tandcs.title"))
+     Map("url" -> routes.TermsConditionsController.show.url , "text" -> messages("nisp.tandcs.title"))
 }
 
 @isWelsh = @{

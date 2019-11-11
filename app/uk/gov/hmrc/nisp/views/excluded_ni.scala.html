@@ -31,12 +31,12 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
 }
 
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
-    showUrBannerOn ==  PostStatePensionAge | showUrBannerOn == IsleOfMan
+    showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
 @unauthenticatedMain(MainTemplateParams(
-    browserTitle=Some(Messages("nisp.main.title")),
-    pageTitle = Some(Messages("nisp.nirecord.heading")),
+    browserTitle=Some(messages("nisp.main.title")),
+    pageTitle = Some(messages("nisp.nirecord.heading")),
     userLoggedIn = true,
     gaDimensions = Some(analyticsAdditionalJs),
     showUrBanner = excludeUrPanel(exclusion)

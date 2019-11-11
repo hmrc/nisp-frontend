@@ -23,29 +23,29 @@
 @(showBackLink : Boolean)(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @unauthenticatedMain(MainTemplateParams(
- browserTitle = Some(Messages("nisp.tandcs.title")),
+ browserTitle = Some(messages("nisp.tandcs.title")),
  pageTitle = Some(messages("nisp.tandcs.title")),
  sidebarLinks = None,
  hideNavBar = true
 )) {
 
-<h2 class="heading-medium">@Messages("nisp.tandcs.heading")</h2>
-<p>@Html(Messages("nisp.tandcs.use"))</p>
-<p>@Html(Messages("nisp.tandcs.information"))</p>
-<p>@Html(Messages("nisp.tandcs.service"))</p>
-<p>@Html(Messages("nisp.tandcs.rely"))</p>
-<p>@Html(Messages("nisp.tandcs.responsibility"))</p>
-<p>@Html(Messages("nisp.tandcs.licence")) <a
+<h2 class="heading-medium">@messages("nisp.tandcs.heading")</h2>
+<p>@Html(messages("nisp.tandcs.use"))</p>
+<p>@Html(messages("nisp.tandcs.information"))</p>
+<p>@Html(messages("nisp.tandcs.service"))</p>
+<p>@Html(messages("nisp.tandcs.rely"))</p>
+<p>@Html(messages("nisp.tandcs.responsibility"))</p>
+<p>@Html(messages("nisp.tandcs.licence")) <a
         href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/"
-        target="_blank" rel="external" data-journey-click="checkmystatepension:external:crowncopyright">@Messages("nisp.tandcs.crownCopyright")</a>.
+        target="_blank" rel="external" data-journey-click="checkmystatepension:external:crowncopyright">@messages("nisp.tandcs.crownCopyright")</a>.
 </p>
-<p>@Html(Messages("nisp.tandcs.liability"))</p>
-<p>@Html(Messages("nisp.tandcs.links"))</p>
-<p>@Html(Messages("nisp.tandcs.law"))</p>
-<p>@Html(Messages("nisp.tandcs.operated"))</p>
-<p>@Html(Messages("nisp.tandcs.thanks"))</p>
+<p>@Html(messages("nisp.tandcs.liability"))</p>
+<p>@Html(messages("nisp.tandcs.links"))</p>
+<p>@Html(messages("nisp.tandcs.law"))</p>
+<p>@Html(messages("nisp.tandcs.operated"))</p>
+<p>@Html(messages("nisp.tandcs.thanks"))</p>
 
 @if(showBackLink){
-   <p class="backlink"><a href="@{routes.StatePensionController.show().url}">@Messages("nisp.back")</a></p>
+   <p class="backlink"><a href="@{routes.StatePensionController.show().url}">@messages("nisp.back")</a></p>
 }
 }

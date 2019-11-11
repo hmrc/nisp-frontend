@@ -41,26 +41,26 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
 
 @unauthenticatedMain(MainTemplateParams(
         userLoggedIn = true,
-        browserTitle = Some(Messages("nisp.main.title")),
+        browserTitle = Some(messages("nisp.main.title")),
         pageTitle = Some(messages("nisp.excluded.mci.title")),
         articleClasses = Some("mainpage"),
         gaDimensions = Some(analyticsAdditionalJs),
         hideBreadcrumb = true
 )) {
-    <p class="lede">@Html(Messages("nisp.excluded.mci.info"))</p>
-    <h2 class="heading-medium">@Html(Messages("nisp.excluded.mci.howToFix"))</h2>
+    <p class="lede">@Html(messages("nisp.excluded.mci.info"))</p>
+    <h2 class="heading-medium">@Html(messages("nisp.excluded.mci.howToFix"))</h2>
     <ul class="list-bullet">
-        <li>@Messages("nisp.excluded.mci.howToFix.message1")</li>
-        <li>@Html(Messages("nisp.excluded.mci.howToFix.message2"))</li>
-        <li>@Html(Messages("nisp.excluded.mci.howToFix.message3"))</li>
+        <li>@messages("nisp.excluded.mci.howToFix.message1")</li>
+        <li>@Html(messages("nisp.excluded.mci.howToFix.message2"))</li>
+        <li>@Html(messages("nisp.excluded.mci.howToFix.message3"))</li>
     </ul>
-    <p>@Messages("nisp.excluded.mci.howToContact")</p>
+    <p>@messages("nisp.excluded.mci.howToContact")</p>
     <ul class="list-bullet">
-        <li>@Html(Messages("nisp.excluded.mci.howToContact.weekdays"))</li>
-        <li>@Html(Messages("nisp.excluded.mci.howToContact.saturday"))</li>
-        <li>@Html(Messages("nisp.excluded.mci.howToContact.sunday"))</li>
+        <li>@Html(messages("nisp.excluded.mci.howToContact.weekdays"))</li>
+        <li>@Html(messages("nisp.excluded.mci.howToContact.saturday"))</li>
+        <li>@Html(messages("nisp.excluded.mci.howToContact.sunday"))</li>
 
     </ul>
-    <p>@Html(Messages("nisp.excluded.mci.howToContact.bankholiday"))</p>
-    <p>@Html(Messages("nisp.excluded.mci.howToContact.link"))</p>
+    <p>@Html(messages("nisp.excluded.mci.howToContact.bankholiday"))</p>
+    <p>@Html(messages("nisp.excluded.mci.howToContact.link"))</p>
 }

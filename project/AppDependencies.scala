@@ -9,7 +9,6 @@ object AppDependencies {
     "uk.gov.hmrc" %% "tax-year" % "0.6.0",
     "uk.gov.hmrc" %% "csp-client" % "4.1.0-play-25",
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "1.2.0-play-25",
-//    "uk.gov.hmrc" %% "local-template-renderer"  % "2.3.0",
     "uk.gov.hmrc" %% "local-template-renderer"  % "2.8.0-play-25",
     "uk.gov.hmrc" %% "play-breadcrumb"  % "1.0.0",
     "uk.gov.hmrc" %% "auth-client"  %  "2.31.0-play-25"

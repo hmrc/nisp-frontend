@@ -29,6 +29,6 @@ cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, application:
 
 @unauthenticatedMain(MainTemplateParams(showBetaBanner = false)) {
     @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
-    <a id="Start" href='@redirectUrl' role="button" tabindex="0" data-journey-click="checkmystatepension:feedback:return" class="button">@Messages("nisp.goback")</a>
+    <a id="Start" href='@redirectUrl' role="button" tabindex="0" data-journey-click="checkmystatepension:feedback:return" class="button">@messages("nisp.goback")</a>
 }
 

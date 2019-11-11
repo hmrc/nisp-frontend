@@ -35,12 +35,12 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
  pageTitle= Some(messages("nisp.iv.failure.general.title")), h1Class = Some("heading-xlarge")
 )) {
 
-<p class="margin-bottom">@Messages("nisp.iv.failure.general.youcan")</p>
+<p class="margin-bottom">@messages("nisp.iv.failure.general.youcan")</p>
 
 <ul class="list list-bullet">
- <li><a href=@ApplicationConfig.postSignInRedirectUrl>@Messages("nisp.iv.failure.general.confirmIdentityAgain")</a></li>
- <li><a href="https://www.gov.uk/contact-hmrc" data-journey-click=checkmystatepension:external:helpline>@Messages("nisp.iv.failure.general.contactHMRC")</a></li>
- <li><a href="https://www.gov.uk/future-pension-centre" data-journey-click=checkmystatepension:external:pensioncentre>@Messages("nisp.iv.failure.general.contactFuturePension")</a></li>
+ <li><a href=@ApplicationConfig.postSignInRedirectUrl>@messages("nisp.iv.failure.general.confirmIdentityAgain")</a></li>
+ <li><a href="https://www.gov.uk/contact-hmrc" data-journey-click=checkmystatepension:external:helpline>@messages("nisp.iv.failure.general.contactHMRC")</a></li>
+ <li><a href="https://www.gov.uk/future-pension-centre" data-journey-click=checkmystatepension:external:pensioncentre>@messages("nisp.iv.failure.general.contactFuturePension")</a></li>
 </ul>
 
 }

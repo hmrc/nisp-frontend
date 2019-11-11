@@ -49,18 +49,18 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 }
 
     @main(MainTemplateParams(
-        browserTitle = Some(Messages("nisp.nirecord.title")),
+        browserTitle = Some(messages("nisp.nirecord.title")),
         userLoggedIn = true,
         pageInfo = Some(user.name.getOrElse("")),
         printableDocument = true,
-        pageTitle = Some(Messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
+        pageTitle = Some(messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
         h1Class = Some("titleWithPageInfo"),
         gaDimensions = Some(analyticsAdditionalJs),
         showUrBanner = true
     )) {
 
 <details id="nino">
-    <summary data-journey-click="accordion - click:Your National Insurance record:Show your National Insurance number"><span class="summary">@Messages("nisp.show.nino")</span></summary>
+    <summary data-journey-click="accordion - click:Your National Insurance record:Show your National Insurance number"><span class="summary">@messages("nisp.show.nino")</span></summary>
     <div class="panel">
         <p class="bold">@user.nino</p>
     </div>
@@ -70,21 +70,21 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
 
-<p>@Messages("nisp.nirecord.summary.youhave")</p>
+<p>@messages("nisp.nirecord.summary.youhave")</p>
 <ul class="list-bullet">
     <li>
     @if(niRecord.qualifyingYears != 1) {
-        @Messages("nisp.nirecord.summary.fullContributions", niRecord.qualifyingYears)
+        @messages("nisp.nirecord.summary.fullContributions", niRecord.qualifyingYears)
     } else {
-        @Messages("nisp.nirecord.summary.fullContributions.single", niRecord.qualifyingYears)
+        @messages("nisp.nirecord.summary.fullContributions.single", niRecord.qualifyingYears)
     }
     </li>
 
     @if(!recordHasEnded) {
         <li>@if(yearsToContribute != 1) {
-                @Messages("nisp.nirecord.summary.yearsRemaining", yearsToContribute, finalRelevantEndYear.toString)
+                @messages("nisp.nirecord.summary.yearsRemaining", yearsToContribute, finalRelevantEndYear.toString)
             } else {
-                @Messages("nisp.nirecord.summary.yearsRemaining.single", yearsToContribute, finalRelevantEndYear.toString)
+                @messages("nisp.nirecord.summary.yearsRemaining.single", yearsToContribute, finalRelevantEndYear.toString)
             }
         </li>
     }
@@ -92,9 +92,9 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
     @if(niRecord.numberOfGaps > 0) {
         <li>
         @if(niRecord.numberOfGaps != 1) {
-            @Messages("nisp.nirecord.summary.gaps", niRecord.numberOfGaps)
+            @messages("nisp.nirecord.summary.gaps", niRecord.numberOfGaps)
         } else {
-            @Messages("nisp.nirecord.summary.gaps.single", niRecord.numberOfGaps)
+            @messages("nisp.nirecord.summary.gaps.single", niRecord.numberOfGaps)
         }
         </li>
     }
@@ -104,13 +104,13 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @if(!gapsOnlyView){
     @if(niRecord.numberOfGaps == 0) {
-        <p>@Messages("nisp.nirecord.youdonothaveanygaps")</p>
+        <p>@messages("nisp.nirecord.youdonothaveanygaps")</p>
     }
     @if(niRecord.numberOfGaps > 0){
-        <p class="panel-indent panel-border-wide panel-info"><a href="@routes.NIRecordController.showGaps.url">@Html(Messages("nisp.nirecord.showgaps",niRecord.numberOfGaps))</a></p>
+        <p class="panel-indent panel-border-wide panel-info"><a href="@routes.NIRecordController.showGaps.url">@Html(messages("nisp.nirecord.showgaps",niRecord.numberOfGaps))</a></p>
     }
 } else {
-    <p class="panel-indent panel-border-wide panel-info"><a href="@routes.NIRecordController.showFull.url">@Html(Messages("nisp.nirecord.showfull"))</a></p>
+    <p class="panel-indent panel-border-wide panel-info"><a href="@routes.NIRecordController.showFull.url">@Html(messages("nisp.nirecord.showfull"))</a></p>
 }
 
 <dl class="accordion">
@@ -120,7 +120,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
             <dt>
                 <div class="ni-wrapper">
                     <div class="ni-years"> @tableList.head </div>
-                    <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
+                    <div class="inactive">@messages("nisp.nirecord.unavailableyear")</div>
                 </div>
             </dt>
         }
@@ -132,7 +132,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
             <dt>
                 <div class="ni-wrapper">
                     <div class="ni-years"> @tableList.head </div>
-                    <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
+                    <div class="inactive">@messages("nisp.nirecord.unavailableyear")</div>
                 </div>
             </dt>
         } else {
@@ -151,7 +151,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
                     <dt>
                         <div class="ni-wrapper">
                             <div class="ni-years"> @tableYear </div>
-                            <div class="inactive">@Messages("nisp.nirecord.unavailableyear")</div>
+                            <div class="inactive">@messages("nisp.nirecord.unavailableyear")</div>
                         </div>
                     </dt>
                 }
@@ -161,11 +161,11 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
             @if(showPre1975Years) {
                 <dt>
                     <div class="ni-wrapper">
-                        <div class="ni-years">@Messages("nisp.nirecord.pre75Years")</div>
+                        <div class="ni-years">@messages("nisp.nirecord.pre75Years")</div>
                         @if(niRecord.qualifyingYearsPriorTo1975 > 0) {
-                            <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))</div>
+                            <div class="ni-full">@Html(messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))</div>
                         } else {
-                            <div class="ni-full">@Html(Messages("nisp.nirecord.pre75QualifyingYearsZero"))</div>
+                            <div class="ni-full">@Html(messages("nisp.nirecord.pre75QualifyingYearsZero"))</div>
                         }
                     </div>
                 </dt>
@@ -176,8 +176,8 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 <span id="current-language" class="visuallyhidden" aria-hidden="true">@{messages.lang.code}</span>
 
-<p id="print-ni-link"><a href="javascript:window.print();" data-journey-click="link - click:Your National Insurance record:Print this National Insurance record">@Messages("nisp.print.this.ni.record")</a></p>
+<p id="print-ni-link"><a href="javascript:window.print();" data-journey-click="link - click:Your National Insurance record:Print this National Insurance record">@messages("nisp.print.this.ni.record")</a></p>
 
-<p class="backlink"><a href="javascript:window.history.back();">@Messages("nisp.back")</a></p>
+<p class="backlink"><a href="javascript:window.history.back();">@messages("nisp.back")</a></p>
 
 }
