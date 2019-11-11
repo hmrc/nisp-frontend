@@ -14,21 +14,22 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.nisp.models.enums.Exclusion
-@import uk.gov.hmrc.nisp.models.SPAgeModel
-@import uk.gov.hmrc.nisp.models.enums.Exclusion._
+@import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 @import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 
-@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(exclusion: Exclusion,
-statePensionAge: Option[Int])(implicit messages: Messages, request: Request[_],
-authDetails: AuthDetails,
-application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+statePensionAge: Option[Int])(
+        implicit messages: Messages,
+        request: Request[_],
+        authDetails: AuthDetails,
+        application: Application,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
+)
 
 @analyticsAdditionalJs = @{
     Map[String, Any](
