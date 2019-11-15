@@ -429,8 +429,6 @@ nisp.home.banner.recruitment.link = Helpwch i wella gwasanaethau digidol drwy ym
 nisp.home.banner.recruitment.reject = Dim diolch
 nisp.home.banner.recruitment.title = Helpwch i wella gov.uk
 
-nisp.home.banner.recruitment.gov = gov.uk
-
 global.error.InternalServerError500.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.message = Rhowch gynnig arall arni yn nes ymlaen.
