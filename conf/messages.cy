@@ -238,8 +238,8 @@ nisp.nirecord.pre75QualifyingYears = Mae ein cofnodion yn dangos bod gennych {0}
 nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gennych unrhyw flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
 
 nisp.nirecord.helpline.getHelp = Cael help
-nisp.nirecord.helpline.number = Llinell gymorth 0800 731 0181
-nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 0176
+nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
+nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
 
 #****************************
