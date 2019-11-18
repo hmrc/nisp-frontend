@@ -17,7 +17,10 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import akka.util.Timeout
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
 import play.api.http.Status._
@@ -26,20 +29,16 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, Controller}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.redirectLocation
-import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
+import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.auth.core.{AuthConnector, MissingBearerToken, SessionRecordNotFound}
+import uk.gov.hmrc.auth.core.{MissingBearerToken, PlayAuthConnector, SessionRecordNotFound}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
-import uk.gov.hmrc.nisp.helpers.{MockAuthConnector, MockCachedStaticHtmlPartialRetriever, MockCitizenDetailsConnector, MockCitizenDetailsService, MockStatePensionController}
+import uk.gov.hmrc.nisp.helpers.{MockCitizenDetailsConnector, MockCitizenDetailsService}
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.duration._
@@ -49,7 +48,7 @@ import scala.language.postfixOps
 class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with ScalaFutures with MockitoSugar {
 
   override implicit lazy val app: Application = GuiceApplicationBuilder()
-    .overrides(bind[NispAuthConnector].toInstance(mockAuthConnector))
+    .overrides(bind[PlayAuthConnector].toInstance(mockAuthConnector))
     .overrides(bind[CitizenDetailsService].toInstance(MockCitizenDetailsService))
     .overrides(bind[CitizenDetailsConnector].toInstance(MockCitizenDetailsConnector))
     .build()

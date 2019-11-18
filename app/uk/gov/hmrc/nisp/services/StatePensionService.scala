@@ -16,18 +16,18 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.joda.time.{DateTime, LocalDate}
+import org.joda.time.LocalDate
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion._
-
-import scala.concurrent.Future
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.time.CurrentTaxYear
-import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
+
+import scala.concurrent.Future
 
 
 trait StatePensionService extends CurrentTaxYear {
@@ -81,9 +81,4 @@ trait StatePensionConnection extends StatePensionService {
         Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
     }
   }
-}
-
-object StatePensionService extends StatePensionService with StatePensionConnection {
-  override def now: () => DateTime = () => DateTime.now(ukTime)
-  override val statePensionConnector: StatePensionConnector = StatePensionConnector
 }

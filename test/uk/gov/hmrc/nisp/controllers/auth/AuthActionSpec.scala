@@ -28,13 +28,13 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, Controller}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.redirectLocation
-import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
+import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.auth.core.{AuthConnector, SessionRecordNotFound}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.models.citizen.{CitizenDetailsError, NOT_FOUND}
+import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
 import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.models.citizen.NOT_FOUND
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.test.UnitSpec
 

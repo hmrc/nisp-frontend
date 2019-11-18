@@ -18,11 +18,13 @@ package uk.gov.hmrc.nisp.config
 
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
+import uk.gov.hmrc.nisp.config.wiring.{CitizenDetailsConnector, NispAuthConnector}
 
 class NispModule extends Module {
 
     override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
-    bind[CitizenDetailsConnector].to(CitizenDetailsConnector))
-
+    bind[CitizenDetailsConnector].to(CitizenDetailsConnector),
+    bind[PlayAuthConnector].to(NispAuthConnector))
 }

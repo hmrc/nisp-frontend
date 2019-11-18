@@ -20,7 +20,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UserId}
-import uk.gov.hmrc.nisp.controllers.auth.NispAuthConnector
+import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 

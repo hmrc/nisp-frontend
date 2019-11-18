@@ -20,7 +20,8 @@ import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import play.api.{Logger, Play}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, ExcludedAuthAction, ExcludedAuthActionImpl}
+import uk.gov.hmrc.nisp.config.wiring.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction, ExcludedAuthActionImpl}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services._
@@ -40,7 +41,7 @@ trait ExclusionController extends NispFrontendController {
 
   def showSP: Action[AnyContent] = authenticate.async {
     implicit request =>
-      implicit val authDetails = request.authDetails
+      implicit val authDetails: AuthDetails = request.authDetails
 
       val statePensionF = statePensionService.getSummary(request.nino)
       val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
@@ -69,7 +70,7 @@ trait ExclusionController extends NispFrontendController {
 
   def showNI: Action[AnyContent] = authenticate.async {
     implicit request =>
-      implicit val authDetails = request.authDetails
+      implicit val authDetails: AuthDetails = request.authDetails
       nationalInsuranceService.getSummary(request.nino).map {
         case Left(exclusion) =>
           if (exclusion == Exclusion.Dead) {

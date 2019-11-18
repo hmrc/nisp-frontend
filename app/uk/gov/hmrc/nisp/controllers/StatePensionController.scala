@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent, Request, Session}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
+import uk.gov.hmrc.nisp.config.wiring.{CustomAuditConnector, NationalInsuranceService, NispSessionCache, StatePensionService}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, AuthDetails, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
@@ -31,17 +31,17 @@ import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.services._
+import uk.gov.hmrc.nisp.utils.Calculate._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.time.DateTimeUtils
-import uk.gov.hmrc.nisp.utils.Calculate._
 
 object StatePensionController extends StatePensionController {
 
   override val sessionCache: SessionCache = NispSessionCache
-  override val customAuditConnector = CustomAuditConnector
+  override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val metricsService: MetricsService = MetricsService
   override val statePensionService: StatePensionService = StatePensionService
@@ -67,18 +67,17 @@ trait StatePensionController extends NispFrontendController with PertaxHelper wi
       isFromPertax.flatMap { isPertax =>
 
         statePensionService.getSummary(user.nino) map {
-          case Right(statePension) if statePension.contractedOut => {
+          case Right(statePension) if statePension.contractedOut =>
             Ok(statepension_cope(
               statePension.amounts.cope.weeklyAmount,
               isPertax
             ))
-          }
           case _ => Redirect(routes.StatePensionController.show())
         }
       }
   }
 
-  private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser, authDetails: AuthDetails)(implicit hc: HeaderCarrier) = {
+  private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser, authDetails: AuthDetails)(implicit hc: HeaderCarrier): Unit = {
     customAuditConnector.sendEvent(AccountAccessEvent(
       user.nino.nino,
       statePension.pensionDate,
@@ -95,8 +94,8 @@ trait StatePensionController extends NispFrontendController with PertaxHelper wi
 
   def show: Action[AnyContent] = authenticate.async {
     implicit request =>
-      implicit val user = request.nispAuthedUser
-      implicit val authDetails = request.authDetails
+      implicit val user: NispAuthedUser = request.nispAuthedUser
+      implicit val authDetails: AuthDetails = request.authDetails
       isFromPertax.flatMap { isPertax =>
 
         val statePensionResponseF = statePensionService.getSummary(user.nino)

@@ -24,8 +24,8 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector}
+import uk.gov.hmrc.nisp.config.wiring.{CustomAuditConnector, NationalInsuranceService, NispSessionCache, StatePensionService}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
@@ -69,7 +69,7 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
       Redirect(routes.NIRecordController.showFull())
   }
 
-  private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit hc: HeaderCarrier) = {
+  private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit hc: HeaderCarrier): Unit = {
     customAuditConnector.sendEvent(NIRecordEvent(
       nino.nino,
       yearsToContribute,
@@ -109,7 +109,7 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
 
   private def show(gapsOnlyView: Boolean): Action[AnyContent] = authenticate.async {
     implicit request =>
-      implicit val user = request.nispAuthedUser
+      implicit val user: NispAuthedUser = request.nispAuthedUser
       val nino = user.nino
 
       val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
@@ -166,7 +166,7 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
 
   def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async {
     implicit request =>
-      implicit val user = request.nispAuthedUser
+      implicit val user: NispAuthedUser = request.nispAuthedUser
       nationalInsuranceService.getSummary(user.nino) map {
         case Right(niRecord) =>
           Ok(nirecordGapsAndHowToCheckThem(niRecord.homeResponsibilitiesProtection))
@@ -177,7 +177,7 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
 
   def showVoluntaryContributions: Action[AnyContent] = authenticate {
     implicit request =>
-      implicit val user = request.nispAuthedUser
+      implicit val user: NispAuthedUser = request.nispAuthedUser
       Ok(nirecordVoluntaryContributions())
   }
 

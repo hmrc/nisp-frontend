@@ -27,16 +27,12 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ExcludedAuthActionImpl @Inject()(override val authConnector: NispAuthConnector)
+class ExcludedAuthActionImpl @Inject()(override val authConnector: PlayAuthConnector)
                                       (implicit ec: ExecutionContext) extends ExcludedAuthAction with AuthorisedFunctions {
-  override def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = {
-    if (confidenceLevel.level == 500) Constants.verify else Constants.iv
-  }
 
   override def invokeBlock[A](request: Request[A], block: ExcludedAuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -66,6 +62,4 @@ class ExcludedAuthActionImpl @Inject()(override val authConnector: NispAuthConne
 }
 
 @ImplementedBy(classOf[ExcludedAuthActionImpl])
-trait ExcludedAuthAction extends ActionBuilder[ExcludedAuthenticatedRequest] with ActionFunction[Request, ExcludedAuthenticatedRequest] {
-  def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String
-}
+trait ExcludedAuthAction extends ActionBuilder[ExcludedAuthenticatedRequest] with ActionFunction[Request, ExcludedAuthenticatedRequest]

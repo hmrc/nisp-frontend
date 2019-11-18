@@ -19,25 +19,23 @@ package uk.gov.hmrc.nisp.controllers.auth
 import java.net.{URI, URLEncoder}
 
 import com.google.inject.{ImplementedBy, Inject}
-import play.api.Mode.Mode
+import play.api.Application
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Application, Configuration, Play}
 import uk.gov.hmrc.auth.core.AuthProvider.Verify
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
-import uk.gov.hmrc.domain.{Nino, SaUtr}
-import uk.gov.hmrc.http.{CorePost, HeaderCarrier, InternalServerException, SessionKeys}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException, SessionKeys}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.WSHttp
+import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
@@ -88,10 +86,6 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
     }
   }
 
-  def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = {
-    if (confidenceLevel.level == 500) Constants.verify else Constants.iv
-  }
-
   private val ivUpliftURI: URI =
   new URI(s"${ApplicationConfig.ivUpliftUrl}?origin=NISP&" +
     s"completionURL=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
@@ -100,19 +94,7 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
 }
 
 @ImplementedBy(classOf[AuthActionImpl])
-trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest] {
-  def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String
-}
-
-class NispAuthConnector extends PlayAuthConnector with ServicesConfig {
-  override lazy val serviceUrl: String = baseUrl("auth")
-
-  override def http: CorePost = WSHttp
-
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-}
+trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
 
 class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
                                      cds: CitizenDetailsService)
@@ -161,10 +143,6 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
     if (ApplicationConfig.verifySignInContinue) {
       continueUrl + ("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl))
     } else continueUrl
-  }
-
-  def getAuthenticationProvider(confidenceLevel: ConfidenceLevel): String = {
-    if (confidenceLevel.level == 500) Constants.verify else Constants.iv
   }
 }
 

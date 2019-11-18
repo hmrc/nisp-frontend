@@ -31,9 +31,9 @@ import uk.gov.hmrc.auth.core.MissingBearerToken
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
+import uk.gov.hmrc.nisp.config.wiring.{NispAuthConnector, NispFormPartialRetriever}
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthConnector, VerifyAuthActionImpl}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, VerifyAuthActionImpl}
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
