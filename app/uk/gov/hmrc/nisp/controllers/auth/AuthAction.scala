@@ -124,8 +124,15 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
                     saEnrolment.isDefined),
                   AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
               }
-              case Left(TECHNICAL_DIFFICULTIES) | Left(NOT_FOUND) => throw new InternalServerException("")
-              case Left(MCI_EXCLUSION) => Future.successful(Redirect(routes.ExclusionController.showSP))
+              case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
+              case Left(NOT_FOUND) => throw new InternalServerException("User not found")
+              case Left(MCI_EXCLUSION) => {
+                if(request.path.contains("nirecord")){
+                  Future.successful(Redirect(routes.ExclusionController.showNI))
+                }else{
+                  Future.successful(Redirect(routes.ExclusionController.showSP))
+                }
+              }
             }
           }
         case _ => throw new RuntimeException("Can't find credentials for user")

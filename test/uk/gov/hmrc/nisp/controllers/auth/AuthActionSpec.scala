@@ -28,15 +28,16 @@ import play.api.mvc.Results._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.redirectLocation
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, LoginTimes, Name, Retrieval, ~}
-import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, Enrolments, InsufficientConfidenceLevel, SessionRecordNotFound}
+import uk.gov.hmrc.auth.core.retrieve._
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps._
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.UserName
-import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsResponse, MCI_EXCLUSION, NOT_FOUND, TECHNICAL_DIFFICULTIES}
+import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.test.UnitSpec
 
