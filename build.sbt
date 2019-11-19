@@ -12,6 +12,7 @@ lazy val playSettings: Seq[Setting[_]] = Seq(
 val excludedPackages = Seq[String](
   "<empty>;Reverse.*",
   "app.*",
+  "prod.*",
   "uk.gov.hmrc.nisp.auth.*",
   "uk.gov.hmrc.nisp.views.*",
   "uk.gov.hmrc.nisp.config.*",
