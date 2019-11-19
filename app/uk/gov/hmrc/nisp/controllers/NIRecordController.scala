@@ -24,7 +24,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{CustomAuditConnector, NationalInsuranceService, NispSessionCache, StatePensionService}
+import uk.gov.hmrc.nisp.config.wiring.{CustomAuditConnector, MetricsService, NationalInsuranceService, NispSessionCache, StatePensionService}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
