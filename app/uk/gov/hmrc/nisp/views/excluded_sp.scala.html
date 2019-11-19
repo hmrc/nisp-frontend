@@ -40,7 +40,7 @@ application: Application,  formPartialRetriever: uk.gov.hmrc.play.partials.FormP
         "nispExclusionType" -> exclusion.toString,
         "statePensionAge" -> statePensionAge,
         "authProvider" -> request.authDetails.authProvider,
-        "authProvider" -> request.authDetails.confidenceLevel
+        "confidenceLevel" -> request.authDetails.confidenceLevel
     )
 }
 
