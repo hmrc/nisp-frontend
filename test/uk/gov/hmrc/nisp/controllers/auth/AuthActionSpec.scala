@@ -17,24 +17,24 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import akka.util.Timeout
+import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.when
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
-import play.api.Application
 import play.api.http.Status.SEE_OTHER
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, Controller}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.redirectLocation
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.auth.core.{AuthConnector, SessionRecordNotFound}
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, LoginTimes, Retrieval, ~}
+import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolments, SessionRecordNotFound}
+import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
+import uk.gov.hmrc.nisp.common.RetrievalOps._
 import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.citizen.NOT_FOUND
+import uk.gov.hmrc.nisp.models.citizen.{NOT_FOUND, TECHNICAL_DIFFICULTIES}
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -45,17 +45,15 @@ import scala.language.postfixOps
 
 class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
 
-  override implicit lazy val app: Application = GuiceApplicationBuilder()
-    .overrides(bind[AuthConnector].toInstance(MockAuthConnector))
-    .overrides(bind[CitizenDetailsService].toInstance(MockCitizenDetailsService))
-    .build()
-
   class BrokenAuthConnector(exception: Throwable) extends NispAuthConnector {
     override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
       Future.failed(exception)
   }
 
-  val mockAuthConnector: NispAuthConnector = mock[NispAuthConnector]
+  private val mockAuthConnector: NispAuthConnector = mock[NispAuthConnector]
+
+  private val nino: String = new Generator().nextNino.nino
+  private val fakeLoginTimes = LoginTimes(DateTime.now(), None)
 
   class Harness(authAction: AuthAction) extends Controller {
     def onPageLoad(): Action[AnyContent] = authAction { request => Ok }
@@ -78,10 +76,34 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
 
     "return error for not found user" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+      val retrievalResults: Future[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments] =
+        Future.successful(Some(nino) ~ ConfidenceLevel.L200 ~ None ~ fakeLoginTimes ~ Enrolments(Set.empty))
+
+      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+        .thenReturn(retrievalResults)
+
       when(mockCitizenDetailsService.retrievePerson(any())(any()))
         .thenReturn(Future.successful(Left(NOT_FOUND)))
-      when(mockAuthConnector.authorise(any(), any())(any(), any()))
-        .thenReturn(Future.failed(new InternalServerException("")))
+
+      val authAction: AuthActionImpl = new AuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+      val controller = new Harness(authAction)
+      val result = controller.onPageLoad()(FakeRequest("", ""))
+      an[InternalServerException] should be thrownBy await(result)
+    }
+
+    "return error for technical difficulties" in {
+      val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+      val retrievalResults: Future[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments] =
+        Future.successful(Some(nino) ~ ConfidenceLevel.L200 ~ None ~ fakeLoginTimes ~ Enrolments(Set.empty))
+
+      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+        .thenReturn(retrievalResults)
+
+      when(mockCitizenDetailsService.retrievePerson(any())(any()))
+        .thenReturn(Future.successful(Left(TECHNICAL_DIFFICULTIES)))
+
       val authAction: AuthActionImpl = new AuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
       val controller = new Harness(authAction)
       val result = controller.onPageLoad()(FakeRequest("", ""))
