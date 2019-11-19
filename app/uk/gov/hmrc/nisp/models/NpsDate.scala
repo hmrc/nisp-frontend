@@ -47,7 +47,7 @@ object NpsDate {
   implicit val writes = new Writes[NpsDate] {
     override def writes(date: NpsDate): JsValue = JsString(date.toNpsString)
   }
-  def taxYearEndDate(taxYear: Int): NpsDate = NpsDate(taxYear + 1, Constants.taxYearsStartEndMonth, Constants.taxYearEndDate)
+  def taxYearEndDate(taxYear: Int): NpsDate = NpsDate(taxYear + 1, Constants.taxYearsStartEndMonth, Constants.taxYearEndDay)
   def taxYearStartDate(taxYear: Int): NpsDate = NpsDate(taxYear, Constants.taxYearsStartEndMonth, Constants.taxYearStartDay)
   def apply(year: Int, month: Int, day: Int): NpsDate = NpsDate(new LocalDate(year,month,day))
 }

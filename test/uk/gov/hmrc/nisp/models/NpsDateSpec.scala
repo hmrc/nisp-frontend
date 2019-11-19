@@ -15,8 +15,9 @@
  */
 
 import org.joda.time.LocalDate
-import play.api.libs.json.{JsString, Json, JsError, JsNull}
+import play.api.libs.json.{JsError, JsNull, JsString, Json}
 import uk.gov.hmrc.nisp.models.NpsDate
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.test.UnitSpec
 
 class NpsDateSpec extends UnitSpec {
@@ -30,6 +31,18 @@ class NpsDateSpec extends UnitSpec {
     "JSON serialisation" should {
       "return JSString in correct format" in {
         Json.toJson(NpsDate(new LocalDate(2015,1,1))) shouldBe JsString("01/01/2015")
+      }
+    }
+
+    "taxYearEndDate" should {
+      "return tax year end date" in {
+        NpsDate.taxYearEndDate(2015) shouldBe NpsDate(2016, Constants.taxYearsStartEndMonth, Constants.taxYearEndDay)
+      }
+    }
+
+    "taxYearStartDate" should {
+      "return tax year start date" in {
+        NpsDate.taxYearStartDate(2015) shouldBe NpsDate(2015, Constants.taxYearsStartEndMonth, Constants.taxYearStartDay)
       }
     }
   }

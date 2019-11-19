@@ -32,7 +32,7 @@ object Constants {
   val finishedPageUrl = s"$baseUrl/finished"
 
   val taxYearStartDay = 6
-  val taxYearEndDate = 5
+  val taxYearEndDay = 5
   val taxYearsStartEndMonth = 4
 
   val minimumQualifyingYearsNSP = 10
