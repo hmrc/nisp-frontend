@@ -23,7 +23,7 @@ import play.api.libs.json._
 import uk.gov.hmrc.nisp.utils.Constants
 
 case class NpsDate (localDate: LocalDate) {
-  val toNpsString = NpsDate.dateFormat.print(localDate)
+  val toNpsString: String = NpsDate.dateFormat.print(localDate)
 
   val taxYear: Int = {
     val year = localDate.year.get
