@@ -21,8 +21,4 @@ import play.api.mvc.{Request, WrappedRequest}
 case class AuthenticatedRequest[A](request: Request[A],
                                    nispAuthedUser: NispAuthedUser,
                                    authDetails: AuthDetails
-                                  ) extends WrappedRequest[A](request) {
-  override def toString(): String = {
-    s"AuthenticatedRequest { request: $request, nispAuthedUser: $nispAuthedUser, authDetails: $authDetails"
-  }
-}
+                                  ) extends WrappedRequest[A](request)
