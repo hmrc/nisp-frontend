@@ -20,9 +20,6 @@ import Exclusion.Exclusion
 import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.play.test.UnitSpec
 
-/**
- * Created by callum on 02/03/15.
- */
 class SPExclusionSpec extends UnitSpec {
 
   "SP Exclusion" when {

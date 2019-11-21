@@ -14,30 +14,30 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.views.html.main
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @analyticsAdditionalJs = {
     ga('send', 'pageview', '/check-your-state-pension/unauthorised-timeout');
 }
 
-@main(MainTemplateParams(
+@unauthenticatedMain(MainTemplateParams(
  articleClasses = Some("mainpage"),
  analyticsAdditionalJs = Some(analyticsAdditionalJs),
  pageTitle = Some(messages("nisp.iv.failure.timeout.title")),
  h1Class = Some("heading-xlarge")
 )) {
 
-<p class="lede">@Messages("nisp.iv.failure.timeout.message")</p>
+<p class="lede">@messages("nisp.iv.failure.timeout.message")</p>
 
-<p>@Html(Messages("nisp.iv.failure.timeout.data"))</p>
+<p>@Html(messages("nisp.iv.failure.timeout.data"))</p>
 
-<a href="@routes.StatePensionController.show.url" class="button">@Messages("nisp.iv.failure.timeout.button")</a>
+<a href="@routes.StatePensionController.show.url" class="button">@messages("nisp.iv.failure.timeout.button")</a>
 
 }

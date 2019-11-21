@@ -22,34 +22,34 @@
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@main(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")))) {
+@unauthenticatedMain(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")))) {
 
 
 
 <div class="grid-wrapper">
     <div class="grid-2-3">
-        <div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>
+        <div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>
     </div>
 </div>
 
 <div class="grid-wrapper sign-in-grid">
-    <h2 class="heading-medium">@Messages("nisp.landing.signin.heading")</h2>
+    <h2 class="heading-medium">@messages("nisp.landing.signin.heading")</h2>
 
     <div class="grid grid-1-2 left">
         <div class="inner-block">
-            <p>@Html(Messages("nisp.landing.signin.gg"))</p>
-            <a id="continue" href='@routes.StatePensionController.show.url' data-journey-click="checkmystatepension:landing:ivcontinue" role="button" tabindex="0" class="button">@Messages("nisp.continue")</a>
+            <p>@Html(messages("nisp.landing.signin.gg"))</p>
+            <a id="continue" href='@routes.StatePensionController.show.url' data-journey-click="checkmystatepension:landing:ivcontinue" role="button" tabindex="0" class="button">@messages("nisp.continue")</a>
         </div>
     </div>
 
     <div class="grid grid-1-2">
         <div class="inner-block">
-            <p>@Html(Messages("nisp.landing.signin.verify",routes.LandingController.verifySignIn.url))</p>
+            <p>@Html(messages("nisp.landing.signin.verify",routes.LandingController.verifySignIn.url))</p>
             <div class="verify-block">
-                <img src='@controllers.routes.Assets.versioned("images/verify-logo-inline.png")' class="verify-logo" alt='@Messages("nisp.gov-uk-verify")' />
-                <strong>@Messages("nisp.gov-uk")</strong>
+                <img src='@controllers.routes.Assets.versioned("images/verify-logo-inline.png")' class="verify-logo" alt='@messages("nisp.gov-uk-verify")' />
+                <strong>@messages("nisp.gov-uk")</strong>
                 <br/>
-                @Messages("nisp.verify")
+                @messages("nisp.verify")
             </div>
         </div>
     </div>

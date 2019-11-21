@@ -14,54 +14,54 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.nisp.models.enums.Exclusion
-@import uk.gov.hmrc.nisp.models.SPAgeModel
-@import uk.gov.hmrc.nisp.models.enums.Exclusion._
+@import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@(exclusion: Exclusion,
-statePensionAge: Option[Int])(implicit messages: Messages, request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 
+@(exclusion: Exclusion,
+statePensionAge: Option[Int])(
+        implicit messages: Messages,
+        request: Request[_],
+        authDetails: AuthDetails,
+        application: Application,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
+)
 
 @analyticsAdditionalJs = @{
     Map[String, Any](
     "nispExclusionType" -> exclusion.toString,
     "statePensionAge" -> statePensionAge,
-    "authProvider" -> user.authProvider,
-    "authProvider" -> user.confidenceLevel
+    "authProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+    "confidenceLevel" -> authDetails.confidenceLevel
     )
 }
 
+@unauthenticatedMain(MainTemplateParams(
+        userLoggedIn = true,
+        browserTitle = Some(messages("nisp.main.title")),
+        pageTitle = Some(messages("nisp.excluded.mci.title")),
+        articleClasses = Some("mainpage"),
+        gaDimensions = Some(analyticsAdditionalJs),
+        hideBreadcrumb = true
+)) {
+    <p class="lede">@Html(messages("nisp.excluded.mci.info"))</p>
+    <h2 class="heading-medium">@Html(messages("nisp.excluded.mci.howToFix"))</h2>
+    <ul class="list-bullet">
+        <li>@messages("nisp.excluded.mci.howToFix.message1")</li>
+        <li>@Html(messages("nisp.excluded.mci.howToFix.message2"))</li>
+        <li>@Html(messages("nisp.excluded.mci.howToFix.message3"))</li>
+    </ul>
+    <p>@messages("nisp.excluded.mci.howToContact")</p>
+    <ul class="list-bullet">
+        <li>@Html(messages("nisp.excluded.mci.howToContact.weekdays"))</li>
+        <li>@Html(messages("nisp.excluded.mci.howToContact.saturday"))</li>
+        <li>@Html(messages("nisp.excluded.mci.howToContact.sunday"))</li>
 
-@defining(Some(user)) { implicit userOption =>
-    @main(MainTemplateParams(
-            userLoggedIn = true,
-            browserTitle = Some(Messages("nisp.main.title")),
-            pageTitle = Some(messages("nisp.excluded.mci.title")),
-            articleClasses = Some("mainpage"),
-            gaDimensions = Some(analyticsAdditionalJs),
-            hideBreadcrumb = true
-    )) {
-        <p class="lede">@Html(Messages("nisp.excluded.mci.info"))</p>
-        <h2 class="heading-medium">@Html(Messages("nisp.excluded.mci.howToFix"))</h2>
-        <ul class="list-bullet">
-            <li>@Messages("nisp.excluded.mci.howToFix.message1")</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToFix.message2"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToFix.message3"))</li>
-        </ul>
-        <p>@Messages("nisp.excluded.mci.howToContact")</p>
-        <ul class="list-bullet">
-            <li>@Html(Messages("nisp.excluded.mci.howToContact.weekdays"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToContact.saturday"))</li>
-            <li>@Html(Messages("nisp.excluded.mci.howToContact.sunday"))</li>
-
-        </ul>
-        <p>@Html(Messages("nisp.excluded.mci.howToContact.bankholiday"))</p>
-        <p>@Html(Messages("nisp.excluded.mci.howToContact.link"))</p>
-    }
-
+    </ul>
+    <p>@Html(messages("nisp.excluded.mci.howToContact.bankholiday"))</p>
+    <p>@Html(messages("nisp.excluded.mci.howToContact.link"))</p>
 }

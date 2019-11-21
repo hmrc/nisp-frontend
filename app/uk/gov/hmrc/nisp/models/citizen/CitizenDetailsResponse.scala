@@ -23,3 +23,8 @@ case class CitizenDetailsResponse(person: Citizen, address: Option[Address])
 object CitizenDetailsResponse{
   implicit val formats: Format[CitizenDetailsResponse] = Json.format[CitizenDetailsResponse]
 }
+
+sealed trait CitizenDetailsError
+case object MCI_EXCLUSION extends CitizenDetailsError
+case object TECHNICAL_DIFFICULTIES extends CitizenDetailsError
+case object NOT_FOUND extends CitizenDetailsError

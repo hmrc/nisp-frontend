@@ -14,79 +14,81 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@()(implicit messages: Messages, request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever,
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@()(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @defining(Some(user)) { implicit userOption =>
 @main(MainTemplateParams(
-    browserTitle = Some(Messages("nisp.nirecord.voluntarycontributions.title")),
-    pageTitle = Some(Messages("nisp.nirecord.voluntarycontributions.heading")),
+    browserTitle = Some(messages("nisp.nirecord.voluntarycontributions.title")),
+    pageTitle = Some(messages("nisp.nirecord.voluntarycontributions.heading")),
     userLoggedIn = true,
     sidebarLinks = None)
 ) {
 
-<p class="lede">@Messages("nisp.nirecord.voluntarycontributions.title.message")</p>
+<p class="lede">@messages("nisp.nirecord.voluntarycontributions.title.message")</p>
 
 
-<h2 class="heading-medium">@Messages("nisp.nirecord.voluntarycontributions.h2title.1") </h2>
-<p>@Messages("nisp.nirecord.voluntarycontributions.h2title.1.message")&nbsp;<a href="@routes.StatePensionController.show.url">@Messages("nisp.nirecord.voluntarycontributions.h2title.1.link1")</a>.</p>
+<h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.1") </h2>
+<p>@messages("nisp.nirecord.voluntarycontributions.h2title.1.message")&nbsp;<a href="@routes.StatePensionController.show.url">@messages("nisp.nirecord.voluntarycontributions.h2title.1.link1")</a>.</p>
 
-<h2 class="heading-medium">@Messages("nisp.nirecord.voluntarycontributions.h2title.2")</h2>
-<p>@Messages("nisp.nirecord.voluntarycontributions.h2title.2.message")</p>
+<h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.2")</h2>
+<p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.message")</p>
 <details class="helptext">
     <summary class="summary-list-item">
-        <span class="summary">@Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.title")</span>
+        <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.title")</span>
     </summary>
     <div class="panel-indent">
-        <p>@Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
+        <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
         <ul class="list-bullet">
-            <li>@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3"))</li>
-            <li>@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1"))</li>
-            <li>@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2"))</a>&nbsp;@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message"))</li>
+            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3"))</li>
+            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1"))</li>
+            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2"))</a>&nbsp;@Html(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message"))</li>
 
         </ul>
     </div>
 </details>
 
-<h2 class="heading-medium">@Messages("nisp.nirecord.voluntarycontributions.h2title.3")</h2>
+<h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.3")</h2>
 <details class="helptext">
     <summary class="summary-list-item">
-        <span class="summary">@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1"))</span>
+        <span class="summary">@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1"))</span>
     </summary>
     <div class="panel-indent">
-        <p>@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading"))</p>
+        <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading"))</p>
         <ul class="list-bullet">
-            <li>@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1"))</li>
-            <li>@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2"))</li>
+            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1"))</li>
+            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2"))</li>
         </ul>
     </div>
 </details>
 <details class="helptext">
     <summary class="summary-list-item">
-        <span class="summary">@Messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2")</span>
+        <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2")</span>
     </summary>
     <div class="panel-indent">
-        <p>@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message"))</p>
+        <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message"))</p>
     </div>
 </details>
 
 <details class="helptext">
     <summary class="summary-list-item">
-        <span class="summary">@Messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")</span>
+        <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")</span>
     </summary>
     <div class="panel-indent">
-        <p>@Html(Messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1") )</p>
+        <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1") )</p>
     </div>
 </details>
 
 
-<div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@Messages("nisp.back")</a>
+<div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@messages("nisp.back")</a>
 </div>
 
 }

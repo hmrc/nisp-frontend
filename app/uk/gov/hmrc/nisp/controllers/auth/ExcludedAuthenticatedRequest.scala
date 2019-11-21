@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.events
+package uk.gov.hmrc.nisp.controllers.auth
 
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.domain.Nino
 
-object FeedbackPageEvent {
-  def apply(referrer: String)(implicit hc: HeaderCarrier): FeedbackPageEvent = new FeedbackPageEvent(referrer)
-}
-
-class FeedbackPageEvent(referrer: String)(implicit hc: HeaderCarrier) extends NispBusinessEvent("FeedbackPage", Map("referrer" -> referrer))
+case class ExcludedAuthenticatedRequest[A](request: Request[A],
+                                           nino: Nino,
+                                           authDetails: AuthDetails) extends WrappedRequest[A](request)

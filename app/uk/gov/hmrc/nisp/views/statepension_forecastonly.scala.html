@@ -18,31 +18,35 @@
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
+
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Option[Int], isAbroad: Boolean,
-isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Request[_], user: NispUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
+isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser,
+authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar" >
 
-    <h2>@Messages("nisp.nirecord.helpline.getHelp")</h2>
+    <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
 
-    <p>@Messages("nisp.nirecord.helpline.number")</p>
+    <p>@messages("nisp.nirecord.helpline.number")</p>
 
-    <p>@Messages("nisp.nirecord.helpline.textNumber")</p>
+    <p>@messages("nisp.nirecord.helpline.textNumber")</p>
 
-    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.openTimes")</p>
+    <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
 
 </div>
 }
 
-@analyticsAdditionalJs(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever) = @{
+@analyticsAdditionalJs(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever) = @{
     Map[String, Any](
         "scenarioType" -> statePension.forecastScenario,
         "forecastValue" -> statePension.amounts.forecast.annualAmount,
@@ -54,47 +58,47 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
         "contractedOut" -> statePension.contractedOut,
         "statePensionAge" -> statePension.pensionAge,
         "copeAmount" -> statePension.amounts.cope.weeklyAmount,
-        "authenticationProvider" -> user.authProviderOld,
-        "authProvider" -> user.authProvider,
-        "confidenceLevel" -> user.confidenceLevel,
+        "authenticationProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+        "authProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+        "confidenceLevel" -> authDetails.confidenceLevel,
         "ageOnVisit" -> customerAge
     )
 }
 
 
-@pageTitle = { @Messages("nisp.main.h1.title") }
+@pageTitle = { @messages("nisp.main.h1.title") }
 
 @defining(Some(user)) { implicit userOption =>
 @main(MainTemplateParams(
     userLoggedIn = true,
-    browserTitle = Some(Messages("nisp.main.title")),
+    browserTitle = Some(messages("nisp.main.title")),
     pageInfo = Some(user.name.getOrElse("")),
-    pageTitle = Some(Messages("nisp.main.h1.title")),
+    pageTitle = Some(messages("nisp.main.h1.title")),
     h1Class = Some("titleWithPAgeInfo"),
     gaDimensions = Some(analyticsAdditionalJs),
     sidebarLinks = Some(sidebar),
     showUrBanner = true
 )) {
 
-    <p>@Messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
+    <p>@messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
 
     <div class="highlighted-event govuk-box-highlight">
-        <p>@Messages("nisp.main.basedOn") <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@Messages("nisp.main.caveats") @Messages("nisp.is")</span></p>
-        <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.week")</em></p>
-        <p>@NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @Messages("nisp.main.month"),
-        @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @Messages("nisp.main.year")</p>
+        <p>@messages("nisp.main.basedOn") <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@messages("nisp.main.caveats") @messages("nisp.is")</span></p>
+        <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")</em></p>
+        <p>@NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
+        @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")</p>
     </div>
-    <p>@Messages("nisp.main.caveats")</p>
+    <p>@messages("nisp.main.caveats")</p>
     <ul class="list-bullet">
-        <li>@Html(Messages("nisp.main.notAGuarantee"))</li>
-        <li>@Html(Messages("nisp.main.isBased", LanguageHelper.langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
-        <li>@Html(Messages("nisp.main.inflation"))</li>
-        @if(statePension.pensionSharingOrder) {<li>@Html(Messages("nisp.main.psod"))</li>}
+        <li>@Html(messages("nisp.main.notAGuarantee"))</li>
+        <li>@Html(messages("nisp.main.isBased", LanguageHelper.langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
+        <li>@Html(messages("nisp.main.inflation"))</li>
+        @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
     </ul>
-    <h2 class="heading-medium">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(Messages("nisp.main.mostYouCanGet"))</h2>
-    <p>@Html(Messages("nisp.main.cantImprove"))</p>
-    <p>@Html(Messages("nisp.main.context.reachMax.needToPay", (LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
-    <a href='@routes.NIRecordController.showFull.url'>@Html(Messages("nisp.main.showyourrecord"))</a>
+    <h2 class="heading-medium">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
+    <p>@Html(messages("nisp.main.cantImprove"))</p>
+    <p>@Html(messages("nisp.main.context.reachMax.needToPay", (LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
+    <a href='@routes.NIRecordController.showFull.url'>@Html(messages("nisp.main.showyourrecord"))</a>
 
     @if(isAbroad) {
         @includes.abroad()
@@ -108,13 +112,11 @@ partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, applicat
         @includes.contractedOut()
     }
 
-    @for(age <- customerAge) {
-        @if(age > Constants.deferralCutOffAge) {
-            @includes.deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
-        }
+    @if(customerAge > Constants.deferralCutOffAge) {
+        @includes.deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
-    @if(isPertaxUrl){<div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>}
+    @if(isPertaxUrl){<div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>}
 
   }
 }

@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.connectors
+package uk.gov.hmrc.nisp.common
 
-import uk.gov.hmrc.nisp.config.wiring.{NispAuditConnector, NispAuthConnector}
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.retrieve.~
 
-trait AuthenticationConnectors {
-
-  def auditConnector = NispAuditConnector
-
-  def authConnector: AuthConnector = NispAuthConnector
-
+object RetrievalOps {
+  implicit class Ops[A](a: A) {
+    def ~[B](b: B): A ~ B = new ~(a, b)
+  }
 }
