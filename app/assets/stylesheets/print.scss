@@ -28,4 +28,19 @@
      display: block;
   }
 
+  .printable .mainpage a {
+    display: block;
+  }
+
+  .printable .mainpage .govuk-box-highlight p {
+    color: #000;
+  }
+
+  .printable .mainpage #print-sp-link {
+    display: none;
+  }
+
+  .printable .mainpage .amount {
+    text-align: left;
+  }
 }
