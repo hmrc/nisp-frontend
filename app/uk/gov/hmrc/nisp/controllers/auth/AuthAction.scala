@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers.auth
 
-import java.net.{URI, URLEncoder}
+import java.net.URLEncoder
 
 import com.google.inject.{ImplementedBy, Inject}
 import play.api.Application
@@ -34,7 +34,6 @@ import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
-import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.ExecutionContext.Implicits._
@@ -51,47 +50,52 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
     authorised(ConfidenceLevel.L200)
       .retrieve(
         Retrievals.nino and
-        Retrievals.confidenceLevel and
-        Retrievals.credentials and
-        Retrievals.loginTimes and
-        Retrievals.allEnrolments) {
-          case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) => {
-            cds.retrievePerson(Nino(nino)).flatMap {
-              case Right(cdr) => {
-                val saEnrolment = enrolments.find(_.key == "IR-SA")
-                block(AuthenticatedRequest(request,
-                  NispAuthedUser(Nino(nino),
-                    cdr.person.dateOfBirth,
-                    UserName(Name(cdr.person.firstName, cdr.person.lastName)),
-                    cdr.address,
-                    saEnrolment.isDefined),
-                  AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
-              }
-              case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
-              case Left(NOT_FOUND) => throw new InternalServerException("User not found")
-              case Left(MCI_EXCLUSION) => {
-                if(request.path.contains("nirecord")){
-                  Future.successful(Redirect(routes.ExclusionController.showNI))
-                }else{
-                  Future.successful(Redirect(routes.ExclusionController.showSP))
-                }
+          Retrievals.confidenceLevel and
+          Retrievals.credentials and
+          Retrievals.loginTimes and
+          Retrievals.allEnrolments) {
+        case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) => {
+          cds.retrievePerson(Nino(nino)).flatMap {
+            case Right(cdr) => {
+              val saEnrolment = enrolments.find(_.key == "IR-SA")
+              block(AuthenticatedRequest(request,
+                NispAuthedUser(Nino(nino),
+                  cdr.person.dateOfBirth,
+                  UserName(Name(cdr.person.firstName, cdr.person.lastName)),
+                  cdr.address,
+                  saEnrolment.isDefined),
+                AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
+            }
+            case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
+            case Left(NOT_FOUND) => throw new InternalServerException("User not found")
+            case Left(MCI_EXCLUSION) => {
+              if (request.path.contains("nirecord")) {
+                Future.successful(Redirect(routes.ExclusionController.showNI))
+              } else {
+                Future.successful(Redirect(routes.ExclusionController.showSP))
               }
             }
-
           }
+
+        }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case _: NoActiveSession => Redirect(ApplicationConfig.ggSignInUrl, Map("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl),
-        "origin" -> Seq("nisp-frontend"), "accountType" -> Seq("individual")))
-      case _:InsufficientConfidenceLevel => Redirect(ivUpliftURI.toURL.toString)
+      case _: NoActiveSession => Redirect(
+        ApplicationConfig.ggSignInUrl,
+        Map(
+          "continue" -> Seq(ApplicationConfig.postSignInRedirectUrl),
+          "origin" -> Seq("nisp-frontend"),
+          "accountType" -> Seq("individual")
+        ))
+      case _: InsufficientConfidenceLevel => Redirect(
+        ApplicationConfig.ivUpliftUrl + "?origin=NISP",
+        Map(
+          "completionURL" -> Seq(ApplicationConfig.postSignInRedirectUrl),
+          "failureURL" -> Seq(ApplicationConfig.notAuthorisedRedirectUrl),
+          "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
+        ))
     }
   }
-
-  private val ivUpliftURI: URI =
-  new URI(s"${ApplicationConfig.ivUpliftUrl}?origin=NISP&" +
-    s"completionURL=${URLEncoder.encode(ApplicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
-    s"failureURL=${URLEncoder.encode(ApplicationConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
-    s"&confidenceLevel=200")
 }
 
 @ImplementedBy(classOf[AuthActionImpl])
@@ -108,33 +112,33 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
     authorised(ConfidenceLevel.L500 and AuthProviders(Verify))
       .retrieve(
         Retrievals.nino and
-        Retrievals.confidenceLevel and
-        Retrievals.credentials and
-        Retrievals.loginTimes and
-        Retrievals.allEnrolments) {
-          case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) => {
-            cds.retrievePerson(Nino(nino)).flatMap {
-              case Right(cdr) => {
-                val saEnrolment = enrolments.find(_.key == "IR-SA")
-                block(AuthenticatedRequest(request,
-                  NispAuthedUser(Nino(nino),
-                    cdr.person.dateOfBirth,
-                    UserName(Name(cdr.person.firstName, cdr.person.lastName)),
-                    cdr.address,
-                    saEnrolment.isDefined),
-                  AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
-              }
-              case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
-              case Left(NOT_FOUND) => throw new InternalServerException("User not found")
-              case Left(MCI_EXCLUSION) => {
-                if(request.path.contains("nirecord")){
-                  Future.successful(Redirect(routes.ExclusionController.showNI))
-                }else{
-                  Future.successful(Redirect(routes.ExclusionController.showSP))
-                }
+          Retrievals.confidenceLevel and
+          Retrievals.credentials and
+          Retrievals.loginTimes and
+          Retrievals.allEnrolments) {
+        case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) => {
+          cds.retrievePerson(Nino(nino)).flatMap {
+            case Right(cdr) => {
+              val saEnrolment = enrolments.find(_.key == "IR-SA")
+              block(AuthenticatedRequest(request,
+                NispAuthedUser(Nino(nino),
+                  cdr.person.dateOfBirth,
+                  UserName(Name(cdr.person.firstName, cdr.person.lastName)),
+                  cdr.address,
+                  saEnrolment.isDefined),
+                AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
+            }
+            case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
+            case Left(NOT_FOUND) => throw new InternalServerException("User not found")
+            case Left(MCI_EXCLUSION) => {
+              if (request.path.contains("nirecord")) {
+                Future.successful(Redirect(routes.ExclusionController.showNI))
+              } else {
+                Future.successful(Redirect(routes.ExclusionController.showSP))
               }
             }
           }
+        }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
       case _: NoActiveSession => Redirect(ApplicationConfig.verifySignIn, parameters).withSession(
