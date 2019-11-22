@@ -54,7 +54,7 @@ nisp.main.week = yr wythnos
 nisp.main.month = y mis
 nisp.main.year = y flwyddyn
 nisp.main.notAGuarantee = nid yw’n cael ei warantu ac mae’n seiliedig ar y gyfraith bresennol
-nisp.main.isBased = mae‘n seiliedig ar eich cofnod Yswiriant Gwladol hyd at <span class="nowrap">{0}</span>
+nisp.main.isBased = mae’n seiliedig ar eich cofnod Yswiriant Gwladol hyd at <span class="nowrap">{0}</span>
 nisp.main.inflation = nid yw’n cynnwys unrhyw gynnydd o ganlyniad i chwyddiant
 nisp.main.psod = nid yw’n cynnwys y gorchymun rhannu pensiwn sydd gennych yn weithredol
 nisp.main.after = Ar ôl oedran Pensiwn y Wladwriaeth, <span class="nowrap">{0}</span>, nid oes yn rhaid i chi dalu cyfraniadau Yswiriant Gwladol.
@@ -427,7 +427,7 @@ error.email = Rhowch gyfeiriad e-bost dilys
 #***********************
 nisp.home.banner.recruitment.link = Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor ffenestr newydd)
 nisp.home.banner.recruitment.reject = Dim diolch
-nisp.home.banner.recruitment.title = Helpwch i wella gov.uk
+nisp.home.banner.recruitment.title = Helpwch i wella GOV.UK
 
 global.error.InternalServerError500.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
