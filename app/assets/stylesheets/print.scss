@@ -25,7 +25,22 @@
   }
 
   .printable .content__body .accordion a {
-     display: block;
+     display: inline;
   }
 
+  .printable .mainpage a {
+    display: inline;
+  }
+
+  .printable .mainpage .govuk-box-highlight p {
+    color: #000;
+  }
+
+  .printable .mainpage #print-sp-link {
+    display: none;
+  }
+
+  .printable .mainpage .amount {
+    text-align: left;
+  }
 }
