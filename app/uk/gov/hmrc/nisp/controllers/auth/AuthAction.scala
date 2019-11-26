@@ -133,7 +133,7 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
           }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case _: NoActiveSession => Redirect(ApplicationConfig.verifySignIn, parameters).withSession(
+      case _: NoActiveSession | _: InsufficientConfidenceLevel => Redirect(ApplicationConfig.verifySignIn, parameters).withSession(
         SessionKeys.redirect -> ApplicationConfig.postSignInRedirectUrl,
         SessionKeys.loginOrigin -> "YSP"
       )

@@ -136,6 +136,17 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
       redirectLocation(result).get should startWith(verifyUrl)
     }
 
+    "redirect to Verify when insufficient confidence level" in {
+      when(mockAuthConnector.authorise(any(), any())(any(), any()))
+        .thenReturn(Future.failed(new InsufficientConfidenceLevel()))
+      val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
+      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).get should startWith(verifyUrl)
+    }
+
+
     "return error for not found user" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
