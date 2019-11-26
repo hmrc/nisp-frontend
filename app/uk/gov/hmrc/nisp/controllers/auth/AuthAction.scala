@@ -104,7 +104,7 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L500 and AuthProviders(Verify))
+    authorised(AuthProviders(Verify) and ConfidenceLevel.L500)
       .retrieve(
         Retrievals.nino and
           Retrievals.confidenceLevel and
@@ -133,7 +133,9 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
           }
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case _: NoActiveSession => Redirect(ApplicationConfig.verifySignIn, parameters).withSession(
+      case _: NoActiveSession |
+           _: InsufficientConfidenceLevel |
+           _: UnsupportedAuthProvider => Redirect(ApplicationConfig.verifySignIn, parameters).withSession(
         SessionKeys.redirect -> ApplicationConfig.postSignInRedirectUrl,
         SessionKeys.loginOrigin -> "YSP"
       )

@@ -128,7 +128,27 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
 
     "redirect to Verify when no session" in {
       when(mockAuthConnector.authorise(any(), any())(any(), any()))
-        .thenReturn(Future.failed(new SessionRecordNotFound))
+        .thenReturn(Future.failed(SessionRecordNotFound()))
+      val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
+      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).get should startWith(verifyUrl)
+    }
+
+    "redirect to Verify when insufficient confidence level" in {
+      when(mockAuthConnector.authorise(any(), any())(any(), any()))
+        .thenReturn(Future.failed(InsufficientConfidenceLevel()))
+      val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
+      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).get should startWith(verifyUrl)
+    }
+
+    "redirect to Verify sign in when auth provider is not Verify" in {
+      when(mockAuthConnector.authorise(any(), any())(any(), any()))
+        .thenReturn(Future.failed(UnsupportedAuthProvider()))
       val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
       val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
       val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
