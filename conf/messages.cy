@@ -65,7 +65,7 @@ nisp.show.nino = Dangos eich rhif Yswiriant Gwladol
 
 nisp.main.puttingOff = Oedi gwneud cais
 nisp.main.puttingOff.line1 = Gallwch oedi gwneud cais am eich Pensiwn y Wladwriaeth o’r {0}. Gallai gwneud hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan fyddwch yn dod i wneud cais amdano. Mae’r swm ychwanegol, gyda’ch Pensiwn y Wladwriaeth, yn ffurfio rhan o’ch incwm trethadwy.
-nisp.main.puttingOff.linkTitle = Mwy am oedi gwneud cais (agor mewn tab newydd)
+nisp.main.puttingOff.linkTitle = Mwy am oedi gwneud cais (yn agor tab newydd)
 
 nisp.main.showyourrecord = Gweld eich cofnod Yswiriant Gwladol
 nisp.main.showyourrecordUK = Gweld eich cofnod Yswiriant Gwladol y DU
@@ -196,7 +196,7 @@ nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
 
-nisp.nirecord.showgaps = Gweld blynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
+nisp.nirecord.showgaps = Bwrw golwg dros flynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
 nisp.nirecord.showfull = Gweld pob blwyddyn y gwnaed cyfraniadau ynddi
 
 nisp.nirecord.fullyear = Blwyddyn lawn
@@ -230,11 +230,12 @@ nisp.nirecord.youdidnotmakeanycontrib = Ni wnaethoch chi wneud unrhyw gyfraniada
 
 nisp.nirecord.summary.yourrecord = Crynodeb
 nisp.nirecord.summary.yourrecord.mobile = Crynodeb
+
 nisp.nirecord.summary.fullContributions = {0} o flynyddoedd o gyfraniadau llawn
 nisp.nirecord.summary.fullContributions.single = {0} blwyddyn o gyfraniadau llawn
 nisp.nirecord.summary.gaps = {0} o flynyddoedd pan na wnaethoch gyfrannu digon
 nisp.nirecord.summary.gaps.single = {0} blwyddyn pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i gyfrannu cyn 5 Ebrill {1}
+nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i’w cyfrannu cyn 5 Ebrill {1}
 nisp.nirecord.summary.yearsRemaining.single = {0} blwyddyn i gyfrannu cyn 5 Ebrill {1}
 
 nisp.nirecord.pre75Years = Hyd at 1975
@@ -242,8 +243,8 @@ nisp.nirecord.pre75QualifyingYears = Mae ein cofnodion yn dangos bod gennych {0}
 nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gennych unrhyw flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
 
 nisp.nirecord.helpline.getHelp = Cael help
-nisp.nirecord.helpline.number = Llinell gymorth 0800 731 0181
-nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 0176
+nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
+nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
 
 #****************************
@@ -431,7 +432,8 @@ error.email = Rhowch gyfeiriad e-bost dilys
 #***********************
 nisp.home.banner.recruitment.link = Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor ffenestr newydd)
 nisp.home.banner.recruitment.reject = Dim diolch
-nisp.home.banner.recruitment.title = Helpwch gwella gov.uk
+nisp.home.banner.recruitment.title = Helpwch gwella
+nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
 
 
 global.error.InternalServerError500.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth

@@ -435,7 +435,8 @@ language.day.plural = days
 #***********************
 nisp.home.banner.recruitment.link = Help improve digital services by joining the HMRC user panel (opens in new window)
 nisp.home.banner.recruitment.reject = No thanks
-nisp.home.banner.recruitment.title = Help improve GOV.UK
+nisp.home.banner.recruitment.title = Help improve 
+nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
 nisp.home.banner.recruitment.linkURL = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183
 
 
