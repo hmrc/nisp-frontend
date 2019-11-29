@@ -27,7 +27,7 @@ formPartialRetriever: FormPartialRetriever, partialRetriever: CachedStaticHtmlPa
         document.title = "@messages("nisp.feedback.title")"
 </script>
 
-@main(MainTemplateParams(showBetaBanner = false)) {
+@unauthenticatedMain(MainTemplateParams(showBetaBanner = false)) {
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
 }
 

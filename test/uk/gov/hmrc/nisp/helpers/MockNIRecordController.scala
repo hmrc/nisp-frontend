@@ -17,58 +17,30 @@
 package uk.gov.hmrc.nisp.helpers
 
 import org.joda.time.LocalDate
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.{ApplicationConfig, ApplicationGlobalTrait}
+import uk.gov.hmrc.nisp.config.ApplicationGlobalTrait
 import uk.gov.hmrc.nisp.controllers.NIRecordController
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-object MockNIRecordController extends MockNIRecordController {
-  override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
+class MockNIRecordControllerImpl(nino: Nino) extends MockNIRecordController {
   override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
   override val sessionCache: SessionCache = MockSessionCache
-  override val showFullNI: Boolean = true
+  override lazy val showFullNI: Boolean = true
   override val currentDate = new LocalDate(2016,9,9)
   override val metricsService: MetricsService = MockMetricsService
+  override val authenticate: AuthAction = new MockAuthAction(nino)
 }
 
 trait MockNIRecordController extends NIRecordController {
-  override protected def authConnector: AuthConnector = MockAuthConnector
   override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
   override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
 
-  override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-    override val assetsPrefix: String = ""
-    override val reportAProblemNonJSUrl: String = ""
-    override val ssoUrl: Option[String] = None
-    override val betaFeedbackUnauthenticatedUrl: String = ""
-    override val contactFrontendPartialBaseUrl: String = ""
-    override val analyticsHost: String = ""
-    override val analyticsToken: Option[String] = None
-    override val betaFeedbackUrl: String = ""
-    override val reportAProblemPartialUrl: String = ""
-    override val showGovUkDonePage: Boolean = true
-    override val govUkFinishedPageUrl: String = "govukdone"
-    override val verifySignIn: String = ""
-    override val verifySignInContinue: Boolean = false
-    override val postSignInRedirectUrl: String = ""
-    override val notAuthorisedRedirectUrl: String = ""
-    override val identityVerification: Boolean = true
-    override val ivUpliftUrl: String = "ivuplift"
-    override val ggSignInUrl: String = "ggsignin"
-    override val pertaxFrontendUrl: String = ""
-    override val contactFormServiceIdentifier: String = ""
-    override val breadcrumbPartialUrl: String = ""
-    override val showFullNI: Boolean = true
-    override val futureProofPersonalMax: Boolean = false
-    override val isWelshEnabled = true
-    override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
-    override val feedbackFrontendUrl: String = "/foo"
-  }
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   override val applicationGlobal:ApplicationGlobalTrait = MockApplicationGlobal

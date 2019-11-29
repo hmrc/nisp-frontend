@@ -17,7 +17,6 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
@@ -25,6 +24,10 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
+
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(
     statePension: StatePension,
     numberOfGaps: Int,
@@ -34,21 +37,21 @@
     personalMaximumChart: SPChartModel,
     isPertaxUrl:Boolean,
     hidePersonalMaxYears: Boolean,
-    customerAge: Option[Int],
+    customerAge: Int,
     isAbroad: Boolean,
     yearsToContributeUntilPensionAge: Int
-)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar" >
-    <h2>@Messages("nisp.nirecord.helpline.getHelp")</h2>
+    <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
 
-    <p>@Messages("nisp.nirecord.helpline.number")</p>
+    <p>@messages("nisp.nirecord.helpline.number")</p>
 
-    <p>@Messages("nisp.nirecord.helpline.textNumber")</p>
+    <p>@messages("nisp.nirecord.helpline.textNumber")</p>
 
-    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.openTimes")</p>
+    <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
 
 </div>
 }
@@ -64,9 +67,9 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     "contractedOut" -> statePension.contractedOut,
     "statePensionAge" -> statePension.pensionAge,
     "copeAmount" -> statePension.amounts.cope.weeklyAmount,
-    "authenticationProvider" -> user.authProviderOld,
-    "authProvider" -> user.authProvider,
-    "confidenceLevel" -> user.confidenceLevel,
+    "authenticationProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+    "authProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+    "confidenceLevel" -> authDetails.confidenceLevel,
     "ageOnVisit" -> customerAge
     )
 }
@@ -75,43 +78,54 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     @main(MainTemplateParams(
         userLoggedIn = true,
         showUrBanner =  true,
-        browserTitle = Some(Messages("nisp.main.title")),
-        pageTitle = Some(Messages("nisp.main.h1.title")),
+        browserTitle = Some(messages("nisp.main.title")),
+        pageInfo = Some(user.name.getOrElse("")),
+        printableDocument = true,
+        pageTitle = Some(messages("nisp.main.h1.title")),
+        h1Class = Some("titleWithPageInfo"),
         sidebarLinks = Some(sidebar),
         articleClasses = Some("mainpage"),
         gaDimensions = Some(analyticsAdditionalJs)
     )) {
 
+
+    <details id="nino">
+        <summary data-journey-click="accordion - click:Your State Pension summary:Show your National Insurance number"><span class="summary">@messages("nisp.show.nino")</span></summary>
+        <div class="panel">
+            <p class="bold">@user.nino</p>
+        </div>
+    </details>
+
     <div class="highlighted-event govuk-box-highlight">
-        <p>@Messages("nisp.main.basedOn") <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span>
-           <span class="nowrap">@Messages("nisp.main.caveats")
-            @Messages("nisp.is")</span>
+        <p>@messages("nisp.main.basedOn") <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span>
+           <span class="nowrap">@messages("nisp.main.caveats")
+            @messages("nisp.is")</span>
         </p>
-        <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Messages("nisp.main.week")</em></p>
-        <p> @NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @Messages("nisp.main.month"),
-            @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @Messages("nisp.main.year")
+        <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")</em></p>
+        <p> @NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
+            @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")
         </p>
     </div>
 
     @if(statePension.mqpScenario.isDefined)  {
 
-        <p>@Messages("nisp.main.caveats")</p>
+        <p>@messages("nisp.main.caveats")</p>
         <ul class="list-bullet">
-            <li>@Html(Messages("nisp.main.notAGuarantee"))</li>
-            <li>@Html(Messages("nisp.main.isBased", LanguageHelper.langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
-            <li>@Html(Messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)))</li>
-            <li>@Html(Messages("nisp.main.inflation"))</li>
-            @if(statePension.pensionSharingOrder) {<li>@Html(Messages("nisp.main.psod"))</li>}
+            <li>@Html(messages("nisp.main.notAGuarantee"))</li>
+            <li>@Html(messages("nisp.main.isBased", LanguageHelper.langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
+            <li>@Html(messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)))</li>
+            <li>@Html(messages("nisp.main.inflation"))</li>
+            @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
         </ul>
         @if(statePension.numberOfQualifyingYears > 0) {
-            <p>@Messages("nisp.mqp.youCurrentlyHave", Time.years(statePension.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
+            <p>@messages("nisp.mqp.youCurrentlyHave", Time.years(statePension.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)</p>
         } else {
-            <p>@Messages("nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP)
+            <p>@messages("nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP)
         }
 
         @if(!isAbroad) {
             <div class="panel-indent">
-                <p>@Html(Messages("nisp.mqp.overseas"))</p>
+                <p>@Html(messages("nisp.mqp.overseas"))</p>
             </div>
         }
 
@@ -137,19 +151,19 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         }
 
         @if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
-            <p>@Html(Messages("nisp.main.caveats"))</p>
+            <p>@Html(messages("nisp.main.caveats"))</p>
             <ul class="list-bullet">
-                <li>@Html(Messages("nisp.main.notAGuarantee"))</li>
-                <li>@Html(Messages("nisp.main.inflation"))</li>
-                @if(statePension.pensionSharingOrder) {<li>@Html(Messages("nisp.main.psod"))</li>}
+                <li>@Html(messages("nisp.main.notAGuarantee"))</li>
+                <li>@Html(messages("nisp.main.inflation"))</li>
+                @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
             </ul>
-            <h2 class="heading-medium">@Html(Messages("nisp.main.continueContribute"))</h2>
+            <h2 class="heading-medium">@Html(messages("nisp.main.continueContribute"))</h2>
 
-            @includes.spChart(Html(Messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
+            @includes.spChart(Html(messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
             @if(statePension.amounts.protectedPayment) {
-                @includes.spChart(Html(Messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart)
+                @includes.spChart(Html(messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart)
             } else {
-                @includes.spChart(Html(Messages("nisp.main.chart.spa.title",(statePension.finalRelevantEndYear).toString())), forecastChart)
+                @includes.spChart(Html(messages("nisp.main.chart.spa.title",(statePension.finalRelevantEndYear).toString())), forecastChart)
             }
 
             @if(hidePersonalMaxYears) {
@@ -160,7 +174,7 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         }
 
     }
-    <p>@Messages("nisp.legal.forecastChanges") <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
+    <p>@messages("nisp.legal.forecastChanges") <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>@messages("nisp.legal.termsAndCondition")</a>.</p>
 
 
     @if(isAbroad) {
@@ -175,14 +189,15 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         @includes.contractedOut()
     }
 
-    @for(age <- customerAge) {
-        @if(age > Constants.deferralCutOffAge) {
-            @includes.deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
-        }
+    @if(customerAge > Constants.deferralCutOffAge) {
+        @includes.deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
     @if(isPertaxUrl) {
-        <div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>
+        <div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>
     }
+
+    <p id="print-sp-link"><a href="javascript:window.print();" data-journey-click="link - click:Your State Pension summary:Print your State Pension summary">@messages("nisp.print.your.state.pension.summary")</a></p>
+
   }
 }

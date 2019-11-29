@@ -16,9 +16,6 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 
-object MockCitizenDetailsService extends CitizenDetailsService {
-  override val citizenDetailsConnector: CitizenDetailsConnector = MockCitizenDetailsConnector
-}
+object MockCitizenDetailsService extends CitizenDetailsService(MockCitizenDetailsConnector)

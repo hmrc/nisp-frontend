@@ -21,14 +21,14 @@
 
 @(statePension: StatePension)(implicit messages: Messages )
 
-<p>@Messages("nisp.main.caveats")</p>
+<p>@messages("nisp.main.caveats")</p>
 <ul class="list-bullet">
-    <li>@Html(Messages("nisp.main.notAGuarantee"))</li>
-    <li>@Html(Messages("nisp.main.isBased",LanguageHelper.langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
-    <li>@Html(Messages("nisp.main.inflation"))</li>
-    @if(statePension.pensionSharingOrder) {<li>@Html(Messages("nisp.main.psod"))</li>}
+    <li>@Html(messages("nisp.main.notAGuarantee"))</li>
+    <li>@Html(messages("nisp.main.isBased",LanguageHelper.langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
+    <li>@Html(messages("nisp.main.inflation"))</li>
+    @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
 </ul>
-<h3 class="heading-medium"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(Messages("nisp.main.mostYouCanGet"))</h3>
-<p>@Messages("nisp.main.cantImprove")</p>
-<p>@Html(Messages("nisp.main.context.reachMax.needToPay", (LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
-<a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+<h3 class="heading-medium"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h3>
+<p>@messages("nisp.main.cantImprove")</p>
+<p>@Html(messages("nisp.main.context.reachMax.needToPay", (LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
+<a href='@routes.NIRecordController.showFull.url'>@messages("nisp.main.showyourrecord")</a>

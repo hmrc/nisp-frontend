@@ -16,35 +16,35 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import play.api.{Logger, Play}
+import uk.gov.hmrc.nisp.config.wiring.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction, ExcludedAuthActionImpl}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
 
-object ExclusionController extends ExclusionController with AuthenticationConnectors with PartialRetriever with NispFrontendController {
-  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
+object ExclusionController extends ExclusionController with PartialRetriever with NispFrontendController {
   override val statePensionService: StatePensionService = StatePensionService
+  override val authenticate: ExcludedAuthActionImpl = Play.current.injector.instanceOf[ExcludedAuthActionImpl]
   override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
 }
 
-trait ExclusionController extends NispFrontendController with AuthorisedForNisp {
+trait ExclusionController extends NispFrontendController {
 
   val statePensionService: StatePensionService
   val nationalInsuranceService: NationalInsuranceService
+  val authenticate: ExcludedAuthAction
 
-  def showSP: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+  def showSP: Action[AnyContent] = authenticate.async {
     implicit request =>
+      implicit val authDetails: AuthDetails = request.authDetails
 
-      val statePensionF = statePensionService.getSummary(user.nino)
-      val nationalInsuranceF = nationalInsuranceService.getSummary(user.nino)
+      val statePensionF = statePensionService.getSummary(request.nino)
+      val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
 
       for (
         statePension <- statePensionF;
@@ -68,9 +68,10 @@ trait ExclusionController extends NispFrontendController with AuthorisedForNisp 
       }
   }
 
-  def showNI: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+  def showNI: Action[AnyContent] = authenticate.async {
     implicit request =>
-      nationalInsuranceService.getSummary(user.nino).map {
+      implicit val authDetails: AuthDetails = request.authDetails
+      nationalInsuranceService.getSummary(request.nino).map {
         case Left(exclusion) =>
           if (exclusion == Exclusion.Dead) {
             Ok(excluded_dead(Exclusion.Dead, None))

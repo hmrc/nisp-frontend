@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.play.views.html.layouts
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
 @import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 @import play.twirl.api.Html
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
@@ -32,15 +31,15 @@
 @import scala.util.Random
 @import java.util.NoSuchElementException
 @import uk.gov.hmrc.domain.Nino
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(
     mainTemplateParams: MainTemplateParams
 )(
     mainContent: Html
 )(
     implicit
-        request: Request[_],
+        request: AuthenticatedRequest[_],
         messages: Messages,
-        user: Option[NispUser] = None,
         application: Application,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
         templateRenderer: TemplateRenderer
@@ -55,12 +54,16 @@
     Seq(
         Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),
         Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js")),
-        Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js"))
+        Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js")),
+        Map("url" -> controllers.routes.Assets.versioned("javascript/polyfill.js"))
       )
 }
 
 
 @contentWithTitle =  {
+    @mainTemplateParams.pageInfo.map { pageInfo =>
+    <div class="page-info">@Html(pageInfo)</div>
+}
     @mainTemplateParams.pageTitle.map { title =>
     <h1 class=@headerClass> @Html(title) </h1>
 }
@@ -76,19 +79,15 @@
 
 @links = @{
     if(mainTemplateParams.articleEnabled) {
-       Map("url" -> routes.StatePensionController.signOut , "text" -> Messages("nisp.signOut"))
+       Map("url" -> routes.StatePensionController.signOut , "text" -> messages("nisp.signOut"))
     }
 }
 
 @ninoChanceGenerator = @{
     try{
-        val hash = user.get.nino.nino.hashCode()
+        val hash = request.nispAuthedUser.nino.nino.hashCode()
         val rand = new Random(hash)
-        if(rand.nextFloat() * 100 > 80){
-            true
-        }else{
-            false
-        }
+        (rand.nextFloat() * 100 > 80)
     }catch{
         case _ => true
     }
@@ -96,7 +95,7 @@
 
 @navTitle = @{
     if(mainTemplateParams.showTitleHeaderNav) {
-         Messages("nisp.title")
+         messages("nisp.title")
     } else {
         None
     }
@@ -151,21 +150,21 @@
 }
 
 @betaHeaderEnable = @{
-false
+    false
 }
 
 @article = @{
 
-if(mainTemplateParams.articleEnabled) {
-      layouts.article(contentWithTitle, false, mainTemplateParams.articleClasses)
-} else {
-      contentWithTitle
-}
+    if(mainTemplateParams.articleEnabled) {
+          layouts.article(contentWithTitle, false, mainTemplateParams.articleClasses)
+    } else {
+          contentWithTitle
+    }
 
 }
 
 @previouslyLoggedInAt = @{
-    val msg = user.fold("") { nispUser => LanguageHelper.langUtils.Dates.formatEasyReadingTimestamp(nispUser.authContext.user.previouslyLoggedInAt, "") }
+    val msg =  LanguageHelper.langUtils.Dates.formatEasyReadingTimestamp(request.authDetails.loginTimes.previousLogin, "")
     mustacheCheck(msg)
 }
 
@@ -184,11 +183,11 @@ if(mainTemplateParams.articleEnabled) {
 }
 
 @userDisplayName = @{
-     mustacheCheck( user.fold("")(_.name.getOrElse("")) )
+     mustacheCheck( request.nispAuthedUser.name.name.name.getOrElse("") )
 }
 
 @termsAndConditionFooterLink = @{
-     Map("url" -> routes.TermsConditionsController.show.url , "text" -> Messages("nisp.tandcs.title"))
+     Map("url" -> routes.TermsConditionsController.show.url , "text" -> messages("nisp.tandcs.title"))
 }
 
 @isWelsh = @{
@@ -197,6 +196,12 @@ if(mainTemplateParams.articleEnabled) {
     }
     else {
         false
+    }
+}
+
+@printable = @{
+    if(mainTemplateParams.printableDocument) {
+        "printable"
     }
 }
 
@@ -219,7 +224,7 @@ if(mainTemplateParams.articleEnabled) {
 
         "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
         "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
-        "isSa" -> (for(nu <- user; sa <- nu.authContext.principal.accounts.sa) yield sa.utr).isDefined,
+        "isSa" -> request.nispAuthedUser.isSa,
         "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
         "hideAccountMenu" -> mainTemplateParams.hideNavBar,
 
@@ -245,5 +250,8 @@ if(mainTemplateParams.articleEnabled) {
 
         "optimizelyProjectId" -> "8451981545",
         "isWelsh" -> isWelsh
-    ) ++ urBanner)
+    ) ++ urBanner
+      ++ Map[String,Any](
+        "bodyClass" -> printable)
+      )
 }

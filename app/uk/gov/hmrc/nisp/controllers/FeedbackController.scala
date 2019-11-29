@@ -24,22 +24,18 @@ import play.api.http.{Status => HttpStatus}
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent, Request}
 import play.twirl.api.Html
+import uk.gov.hmrc.http.{HeaderCarrier, HttpPost, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, NispHeaderCarrierForPartialsConverter, WSHttp}
-import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
-import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpPost, HttpReads, HttpResponse }
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-object FeedbackController extends FeedbackController with AuthenticationConnectors with PartialRetriever {
+object FeedbackController extends FeedbackController with PartialRetriever {
 
   override implicit val formPartialRetriever: FormPartialRetriever = NispFormPartialRetriever
 
@@ -49,12 +45,13 @@ object FeedbackController extends FeedbackController with AuthenticationConnecto
 
   override def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
 
-  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
   override val applicationConfig: ApplicationConfig = ApplicationConfig
 }
 
-trait FeedbackController extends NispFrontendController with Actions with AuthorisedForNisp {
+trait FeedbackController extends NispFrontendController {
   implicit val formPartialRetriever: FormPartialRetriever
+
+  def applicationConfig: ApplicationConfig
 
   def httpPost: HttpPost
 
@@ -87,7 +84,7 @@ trait FeedbackController extends NispFrontendController with Actions with Author
   def submit: Action[AnyContent] = UnauthorisedAction.async {
     implicit request =>
       request.body.asFormUrlEncoded.map { formData =>
-        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier,ec=global).map {
+        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = global).map {
           resp =>
             resp.status match {
               case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))
