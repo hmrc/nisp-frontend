@@ -196,7 +196,7 @@ nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
 
-nisp.nirecord.showgaps = Gweld Bwrw golwg dros flynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
+nisp.nirecord.showgaps = Bwrw golwg dros flynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
 nisp.nirecord.showfull = Gweld pob blwyddyn y gwnaed cyfraniadau ynddi
 
 nisp.nirecord.fullyear = Blwyddyn lawn
@@ -235,7 +235,7 @@ nisp.nirecord.summary.fullContributions = {0} o flynyddoedd o gyfraniadau llawn
 nisp.nirecord.summary.fullContributions.single = {0} blwyddyn o gyfraniadau llawn
 nisp.nirecord.summary.gaps = {0} o flynyddoedd pan na wnaethoch gyfrannu digon
 nisp.nirecord.summary.gaps.single = {0} blwyddyn pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i‘w cyfrannu cyn 5 Ebrill {1}
+nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i’w cyfrannu cyn 5 Ebrill {1}
 nisp.nirecord.summary.yearsRemaining.single = {0} blwyddyn i gyfrannu cyn 5 Ebrill {1}
 
 nisp.nirecord.pre75Years = Hyd at 1975
