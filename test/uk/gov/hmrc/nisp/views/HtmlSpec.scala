@@ -23,10 +23,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength, PayeAccount}
-import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 
 trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
@@ -35,20 +32,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
   implicit val lanCookie = LanguageToggle.getLanguageCookie()
   implicit val messagesApi = app.injector.instanceOf[MessagesApi]
   implicit def messages = new Messages(lang, messagesApi)
-
-  implicit val authContext = {
-    val user = LoggedInUser("", None, None, None, CredentialStrength.None, ConfidenceLevel.L500, "test oid")
-    val principal = Principal(None, accounts = Accounts(paye = Some(PayeAccount("", TestAccountBuilder.regularNino))))
-    AuthContext(user, principal, None, None, None, None)
-  }
-
-  implicit val nispUser = NispUser(
-    authContext = authContext,
-    Some("First Last"),
-    "",
-    None,
-    None
-  )
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
@@ -59,7 +42,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
@@ -70,7 +52,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) != StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey)).toString())
   }
 
@@ -79,7 +60,6 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(StringEscapeUtils.unescapeHtml4(elements.first().text().replace("\n", "")) == expectedValue)
   }
 

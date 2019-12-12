@@ -22,10 +22,6 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.http.HeaderCarrier
 
-object CustomAuditConnector extends CustomAuditConnector {
-  override lazy val auditConnector = NispAuditConnector
-}
-
 trait CustomAuditConnector {
 
   val auditConnector: AuditConnector

@@ -1,0 +1,46 @@
+@media print {
+
+  .printable {
+    visibility: hidden;
+  }
+
+  .printable .content__body * {
+    visibility: visible;
+  }
+
+  .printable .content__body {
+    width: 100%;
+    float: none;
+  }
+
+  .printable #skipto {
+    left: 0px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .printable .content__body a, .printable .panel-indent {
+     display: none;
+  }
+
+  .printable .content__body .accordion a {
+     display: inline;
+  }
+
+  .printable .mainpage a {
+    display: inline;
+  }
+
+  .printable .mainpage .govuk-box-highlight p {
+    color: #000;
+  }
+
+  .printable .mainpage #print-sp-link {
+    display: none;
+  }
+
+  .printable .mainpage .amount {
+    text-align: left;
+  }
+}

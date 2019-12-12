@@ -21,23 +21,23 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 
 @(statePension: StatePension, numberOfGaps: Int, personalMaximumChart: SPChartModel)(implicit messages: Messages)
-<h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
+<h2 class="heading-medium">@messages("nisp.main.context.fillGaps.improve.title")</h2>
     @if(numberOfGaps == 1) {
-        <p>@Messages("nisp.main.context.fillgaps.para1.singular")</p>
-        @spChart(Html(Messages("nisp.main.context.fillgaps.chart.onlyone")), personalMaximumChart)
+        <p>@messages("nisp.main.context.fillgaps.para1.singular")</p>
+        @spChart(Html(messages("nisp.main.context.fillgaps.chart.onlyone")), personalMaximumChart)
         } else {
-        <p>@Messages("nisp.main.context.fillgaps.para1.plural")</p>
+        <p>@messages("nisp.main.context.fillgaps.para1.plural")</p>
         <ul class="list-bullet">
-            <li>@Messages("nisp.main.context.fillgaps.bullet1")</li>
+            <li>@messages("nisp.main.context.fillgaps.bullet1")</li>
 
             @if(statePension.amounts.maximum.gapsToFill == 1) {
-            <li>@Messages("nisp.main.context.fillgaps.bullet2.singular")</li>
+            <li>@messages("nisp.main.context.fillgaps.bullet2.singular")</li>
         </ul>
-        @spChart(Html(Messages("nisp.main.context.fillgaps.chart.singular")), personalMaximumChart)
+        @spChart(Html(messages("nisp.main.context.fillgaps.chart.singular")), personalMaximumChart)
     } else {
-        <li>@Messages("nisp.main.context.fillgaps.bullet2.plural", statePension.amounts.maximum.gapsToFill )</li>
+        <li>@messages("nisp.main.context.fillgaps.bullet2.plural", statePension.amounts.maximum.gapsToFill )</li>
         </ul>
-        @spChart(Html(Messages("nisp.main.context.fillgaps.chart.plural", statePension.amounts.maximum.gapsToFill)), personalMaximumChart)
+        @spChart(Html(messages("nisp.main.context.fillgaps.chart.plural", statePension.amounts.maximum.gapsToFill)), personalMaximumChart)
     }
     }
-<a href='@routes.NIRecordController.showGaps.url'>@Html(Messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
+<a href='@routes.NIRecordController.showGaps.url'>@Html(messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>

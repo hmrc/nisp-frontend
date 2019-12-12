@@ -18,9 +18,6 @@ package uk.gov.hmrc.nisp.models
 
 import play.api.libs.json.Json
 
-/**
- * Created by andrew on 16/02/15.
- */
 case class SPAgeModel (age: Int, date: NpsDate)
 
 object SPAgeModel {
