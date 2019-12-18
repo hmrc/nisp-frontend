@@ -25,7 +25,7 @@
 @anchor(text: String, url: String) = {<a href="@url" target="_blank">@text</a>}
 
 
-@main(MainTemplateParams(pageTitle = Some(Messages("global.page.not.found.error.title")))) {
+@unauthenticatedMain(MainTemplateParams(pageTitle = Some(Messages("global.page.not.found.error.title")))) {
 
 <p>@Messages("global.page.not.found.error.check.web.address.correct")</p>
 <p>@Messages("global.page.not.found.error.check.web.address.full")</p>

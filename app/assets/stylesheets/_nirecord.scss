@@ -95,47 +95,6 @@ aside {
   }
 }
 
-
-
-.sidebar-border {
-  border-top: 10px solid $govuk-blue;
-  @media only screen and (max-width:640px){
-    display: none;
-  }
-}
-
-.form-label{
-  font-size: 17px;
-  font-weight: bold;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.sidebar-mobile {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-  @media only screen and (max-width: 640px){
-
-    position: inherit;
-    width: inherit;
-    height: inherit;
-    padding: inherit;
-    margin: inherit;
-    overflow: inherit;
-    clip: inherit;
-    border: inherit;
-  }
-
-}
-
 ul.listbullets {
   list-style-type: disc;
   padding-left: 20px;
@@ -166,4 +125,34 @@ ul.listbullets {
 
 .nirecord-taxyear {
   white-space: nowrap;
+}
+
+
+.page-info {
+    color: $grey-1;
+    font-size: 18px;
+}
+
+@media only screen and (min-width: 641px) {
+    .page-info {
+        font-size: 27px;
+        margin-bottom: 5px;
+    }
+}
+
+.titleWithPageInfo {
+    margin-top: 0;
+    margin-bottom: 1.5em;
+}
+
+#print-sp-link, #print-ni-link {
+    background: transparent no-repeat 0 50%;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASAgMAAAAvVbb5AAAACVBMVEX///////8KDAwmYEUdAAAAAXRSTlMAQObYZgAAADBJREFUCFtjYOBa1cDAoBkKJFYCCSYwEYpCrAICZCI0FEhkrURmQRRnrYRpW7WqAQAlGR86Ip1rwwAAAABJRU5ErkJggg==");
+    padding: 0.5em 0 0.5em 28px;
+    zoom:1;
+    margin-top: 1em;
+}
+
+.panel-indent {
+    margin: 2em 0;
 }

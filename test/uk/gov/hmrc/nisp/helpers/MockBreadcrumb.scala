@@ -43,7 +43,7 @@ object MockBreadcrumb extends NispBreadcrumb {
     override val pertaxFrontendUrl: String = "http://localhost:9232/account"
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = "http://localhost:9232/account"
-    override val showFullNI: Boolean = false
+    override lazy val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
     override val isWelshEnabled = true
     override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"

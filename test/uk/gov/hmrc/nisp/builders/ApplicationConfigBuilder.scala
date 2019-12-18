@@ -53,7 +53,7 @@ object ApplicationConfigBuilder {
     override val ggSignInUrl: String = ggSignInUrl
     override val pertaxFrontendUrl: String = pertaxFrontendUrl
     override val breadcrumbPartialUrl: String = breadcrumbPartialUrl
-    override val showFullNI: Boolean = showFullNI
+    override lazy val showFullNI: Boolean = showFullNI
     override val futureProofPersonalMax: Boolean = futureProofPersonalMax
     override val isWelshEnabled: Boolean = isWelshEnabled
     override val frontendTemplatePath: String = frontendTemplatePath

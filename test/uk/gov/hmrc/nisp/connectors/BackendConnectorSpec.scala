@@ -54,7 +54,6 @@ class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures 
   "connectToMicroservice" should {
     "should return depersonalised JSON" in {
       val json = Json.obj(
-        //"qualifyingYears" -> 28,
         "qualifyingYearsPriorTo1975" -> 0,
         "numberOfGaps" -> 6,
         "numberOfGapsPayable" -> 4,

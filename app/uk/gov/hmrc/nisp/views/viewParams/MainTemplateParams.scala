@@ -21,8 +21,10 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 case class MainTemplateParams(
   browserTitle: Option[String] = None,
+  pageInfo: Option[String] = None,
   pageTitle: Option[String] = None,
   h1Class: Option[String] = None,
+  printableDocument: Boolean = false,
   sidebarLinks: Option[Html] = None,
   sidebarClasses: Option[String] = None,
   userLoggedIn: Boolean = false,
