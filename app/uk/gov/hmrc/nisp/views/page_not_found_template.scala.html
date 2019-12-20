@@ -27,14 +27,14 @@
 
 @unauthenticatedMain(MainTemplateParams(pageTitle = Some(Messages("global.page.not.found.error.title")))) {
 
-<p>@Messages("global.page.not.found.error.check.web.address.correct")</p>
-<p>@Messages("global.page.not.found.error.check.web.address.full")</p>
-<p>@Messages("global.page.not.found.error.your.options")</p>
+<p>@messages("global.page.not.found.error.check.web.address.correct")</p>
+<p>@messages("global.page.not.found.error.check.web.address.full")</p>
+<p>@messages("global.page.not.found.error.your.options")</p>
 <ul class="list list-bullet">
- <li>@Html(Messages("global.page.not.found.error.contact.future.pension.centre.text",
-  anchor(Messages("global.page.not.found.error.contact.future.pension.centre.link.text"), Messages("global.page.not.found.error.contact.future.pension.centre.link"))))</li>
- <li>@Html(Messages("global.page.not.found.error.contact.ni.helpline.text",
-  anchor(Messages("global.page.not.found.error.contact.ni.helpline.link.text"), Messages("global.page.not.found.error.contact.ni.helpline.link"))))</li>
+ <li>@Html(messages("global.page.not.found.error.contact.future.pension.centre.text",
+  anchor(messages("global.page.not.found.error.contact.future.pension.centre.link.text"), messages("global.page.not.found.error.contact.future.pension.centre.link"))))</li>
+ <li>@Html(messages("global.page.not.found.error.contact.ni.helpline.text",
+  anchor(messages("global.page.not.found.error.contact.ni.helpline.link.text"), messages("global.page.not.found.error.contact.ni.helpline.link"))))</li>
 </ul>
 
 
