@@ -440,7 +440,18 @@ nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
 nisp.home.banner.recruitment.linkURL = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183
 
 
-
 global.error.InternalServerError500.title = Sorry, there is a problem with the service
 global.error.InternalServerError500.heading = Sorry, there is a problem with the service
 global.error.InternalServerError500.message = Try again later.
+
+
+global.page.not.found.error.title=Page not found
+global.page.not.found.error.check.web.address.correct=If you typed the web address, check it is correct.
+global.page.not.found.error.check.web.address.full=If you pasted the web address, check you copied the entire address.
+global.page.not.found.error.your.options=If the web address is correct or you selected a link or button, you can:
+global.page.not.found.error.contact.future.pension.centre.link=https://www.gov.uk/future-pension-centre
+global.page.not.found.error.contact.future.pension.centre.link.text=contact the Future Pension Centre
+global.page.not.found.error.contact.future.pension.centre.text={0} if you need to speak to someone about your State Pension.
+global.page.not.found.error.contact.ni.helpline.link.text=contact the National Insurance helpline
+global.page.not.found.error.contact.ni.helpline.text={0} if you need to speak to someone about your National Insurance record.
+global.page.not.found.error.contact.ni.helpline.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals

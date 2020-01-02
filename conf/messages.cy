@@ -438,3 +438,15 @@ nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
 global.error.InternalServerError500.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.message = Rhowch gynnig arall arni yn nes ymlaen.
+
+global.page.not.found.error.title=Heb ddod o hyd i’r dudalen
+global.page.not.found.error.check.web.address.correct=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
+global.page.not.found.error.check.web.address.full=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+global.page.not.found.error.your.options=Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, gallwch wneud y canlynol:
+global.page.not.found.error.contact.future.pension.centre.link.text=cysylltu â Chanolfan Bensiwn y Dyfodol
+global.page.not.found.error.contact.future.pension.centre.link=https://www.gov.uk/cysylltwch-gwasanaeth-pensiwn
+global.page.not.found.error.contact.future.pension.centre.text={0} os ydych am siarad â rhywun am eich Pensiwn y Wladwriaeth.
+global.page.not.found.error.contact.ni.helpline.link.text=cysylltu â Gwasanaeth Cwsmeriaid Cymraeg CThEM
+global.page.not.found.error.contact.ni.helpline.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines
+global.page.not.found.error.contact.ni.helpline.text={0} os ydych am siarad â rhywun am eich cofnod Yswiriant Gwladol.
+

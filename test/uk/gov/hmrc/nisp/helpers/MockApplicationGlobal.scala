@@ -18,12 +18,14 @@ package uk.gov.hmrc.nisp.helpers
 
 import play.api.{Configuration, Play}
 import play.api.Mode.Mode
+import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.nisp.config.ApplicationGlobalTrait
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-object MockApplicationGlobal extends ApplicationGlobalTrait {
+object MockApplicationGlobal extends ApplicationGlobalTrait with I18nSupport {
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   override protected def mode: Mode = Play.current.mode
   override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override def messagesApi = Play.current.injector.instanceOf[MessagesApi]
 }
