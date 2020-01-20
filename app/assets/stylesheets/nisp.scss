@@ -325,23 +325,71 @@ input[name="email"] {
 }
 
 .section-border {
-    border-bottom: 5px solid #005ea5;
-    margin-bottom: 20px;
+  border-bottom: 5px solid #005ea5;
+  margin-bottom: 20px;
 }
+
 .align-right{
-text-align : right;
+  text-align : right;
 }
- .summary-list-item{
-     display : list-item
- }
+
+.summary-list-item{
+   display : list-item;
+}
+
 .lang-select{
-    border-bottom: 0px;
-    float: right;
-    padding: 0.65em 0px;
-    text-align: right;
-    width: 100%;
-    line-height: 1.25;
-    font-weight: 300;
-    text-transform: none;
-    }
+  border-bottom: 0px;
+  float: right;
+  padding: 0.65em 0px;
+  text-align: right;
+  width: 100%;
+  line-height: 1.25;
+  font-weight: 300;
+  text-transform: none;
+}
+
+input:focus {
+    outline: 3px solid #ffdd00;
+}
+
+a:focus {
+    background-color: #ffdd00;
+    outline: 3px solid #ffdd00;
+    color: #0b0c0c !important;
+}
+
+.button:focus {
+  border-bottom-color: black;
+  color: #0b0c0c;
+  background-color: #fd0;
+  -webkit-box-shadow: 0 2px 0 #0b0c0c;
+  box-shadow: 0 2px 0 #0b0c0c;
+  outline: none;
+}
+
+.error-summary {
+    border: 5px solid #d4351c;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 20px 15px 15px
+}
+
+.common-error {q
+    color: #d4351c;
+    font-weight: bold;
+}
+
+.form-group-error {
+    border-left: 4px solid #d4351c;
+}
+
+input.form-control-error[type="text"] {
+    border: 4px solid #d4351c;
+}
+
+.error-summary .error-summary-list a {
+    color: #d4351c;
+    font-weight: bold;
+    text-decoration: underline;
+}
 
