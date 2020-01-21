@@ -160,6 +160,14 @@ div.panel-indent{
 /*------------------------------------*\
     #Amount Box
 \*------------------------------------*/
+.govuk-box-highlight {
+  color: #fff;
+  background: #00703c;
+}
+
+.account-menu__link:focus {
+  border-bottom-color: white;
+}
 
 .highlighted-event, .govuk-box-highlight {
   padding:1.75em 0.75em 1.25em 0.75em;
@@ -169,9 +177,9 @@ div.panel-indent{
     padding: 0.5em 0.5em 0.25em 0.75em;
     margin: 0 -15px;
    }
-    
-  p {        
-    color: $page-colour;            
+
+  p {
+    color: $page-colour;
     font-weight: 800;
     line-height: 1.25;
     margin: 0;
@@ -180,7 +188,7 @@ div.panel-indent{
     @media only screen and (max-width: 640px) {
       font-size: 20px;
     }
-    em { 
+    em {
       padding: 0.2em 0px 0.1em;
       display: block;
       font-size: 80px;
@@ -199,9 +207,9 @@ div.panel-indent{
       @media only screen and (max-width: 320px) {
         font-size: 33px;
         margin: 0;
-      }        
+      }
     }
- } 
+ }
 }
 
 /*----------------------------------*\
@@ -228,13 +236,13 @@ div.panel-indent{
 
 .graph
 {
-  float: left; 
+  float: left;
   width: 100%;
   margin-top: -2px;
-  
+
   div {
     position: relative;
-    display: block;   
+    display: block;
     background: $light-bg-chart-bar;
     height: 37px;
     @media only screen and (max-width: 640px) {
@@ -243,9 +251,9 @@ div.panel-indent{
     }
     .amount
     {
-      display: block;   
-      height: 100%; 
-      background: $turquoise;   
+      display: block;
+      height: 100%;
+      background: $turquoise;
       line-height: 1.6em;
       color: $page-colour;
       text-align: right;
@@ -281,11 +289,11 @@ div.panel-indent{
       }
       & > * {
         padding-right: 10px;
-      }      
+      }
     }
   }
 }
-  
+
 /*----------------------------------*\
     # Cope Page
 \*----------------------------------*/
@@ -309,7 +317,7 @@ fieldset {
 }
 
 .email {
-  padding-left: 0.78em;  
+  padding-left: 0.78em;
 }
 
 input[name="email"] {
@@ -335,6 +343,15 @@ input[name="email"] {
 
 .summary-list-item{
    display : list-item;
+}
+
+.summary-list-item:focus {
+  outline: 3px solid transparent;
+  color: #0b0c0c;
+  background-color: #fd0;
+  -webkit-box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+  box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+  text-decoration: none;
 }
 
 .lang-select{
@@ -374,7 +391,7 @@ a:focus {
     padding: 20px 15px 15px
 }
 
-.common-error {q
+.common-error {
     color: #d4351c;
     font-weight: bold;
 }
