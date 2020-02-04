@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,10 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import javax.inject.Inject
-
-import org.joda.time.LocalDate
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
-import play.i18n.MessagesApi
-import uk.gov.hmrc.nisp.controllers.auth.NispUser
 import uk.gov.hmrc.nisp.helpers.MockBreadcrumb
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel, CredentialStrength}
-import uk.gov.hmrc.play.frontend.auth.{AuthContext, LoggedInUser, Principal}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
@@ -36,38 +29,28 @@ class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
   val fakeRequestHowToImproveGaps = FakeRequest("GET", "/account/nirecord/gapsandhowtocheck")
   val messages = applicationMessages
 
-  val authContext = new AuthContext(LoggedInUser("testName", None, None, None, CredentialStrength.Strong, ConfidenceLevel.L200, "test oid"),
-    principal = Principal(None, Accounts()), None, None, None, None)
+  "Breadcrumb utils" should {
+    "return a item text as Account Home and State Pension" in {
+      val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestSP, messages)
+      bc.lastItem.map(_.text) shouldBe Some("State Pension")
+    }
 
-  val nispUser: NispUser = {
-    new NispUser(authContext, Some("testName"), "testAuthProvider", Some(new LocalDate(1999, 12, 31)), None)
-  }
-  val emptyNispUser: NispUser = {
-    new NispUser(authContext, None, "testAuthProvider", Some(new LocalDate(1999, 12, 31)), None)
-  }
+    "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gaps" in {
+      val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestNI, messages)
+      val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), lastItem: Some(BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord))"
+      bc.toString() shouldBe breadcrumbItem
+    }
 
-        "Breadcrumb utils" should {
-          "return a item text as Account Home and State Pension" in {
-           val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestSP, messages)
-            bc.lastItem.map(_.text) shouldBe Some("State Pension")
-          }
+    "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/voluntarycontribs" in {
+      val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestVolContribution, messages)
+      val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Voluntary contributions,/check-your-state-pension/account/nirecord/voluntarycontribs))"
+      bc.toString() shouldBe breadcrumbItem
+    }
 
-        "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gaps" in {
-          val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestNI, messages)
-          val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), lastItem: Some(BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord))"
-          bc.toString() shouldBe breadcrumbItem
-        }
-
-        "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/voluntarycontribs" in {
-          val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestVolContribution, messages)
-          val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Voluntary contributions,/check-your-state-pension/account/nirecord/voluntarycontribs))"
-          bc.toString() shouldBe breadcrumbItem
-        }
-
-        "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gapsandhowtocheck" in {
-          val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestHowToImproveGaps, messages)
-          val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Gaps in your record and how to check them,/check-your-state-pension/account/nirecord/gapsandhowtocheck))"
-          bc.toString() shouldBe breadcrumbItem
-        }
+    "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gapsandhowtocheck" in {
+      val bc = MockBreadcrumb.buildBreadCrumb(fakeRequestHowToImproveGaps, messages)
+      val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Gaps in your record and how to check them,/check-your-state-pension/account/nirecord/gapsandhowtocheck))"
+      bc.toString() shouldBe breadcrumbItem
+    }
   }
 }

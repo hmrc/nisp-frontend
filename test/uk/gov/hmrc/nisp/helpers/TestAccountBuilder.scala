@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import scala.io.Source
 import scala.util.Random
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 
 object TestAccountBuilder {
 
@@ -113,11 +114,16 @@ object TestAccountBuilder {
     excludedAbroad -> "excluded-abroad"
   )
 
+  def directJsonResponse(nino: Nino, api: String): CitizenDetailsResponse = {
+    val string  = Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json").mkString
+    Json.parse(string.replace("<NINO>", nino.nino)).as[CitizenDetailsResponse]
+  }
+
+  private def fileContents(filename: String): Future[String] = Future { Source.fromFile(filename).mkString }
+
   def jsonResponse(nino: Nino, api: String): Future[HttpResponse] = {
     fileContents(s"test/resources/${mappedTestAccounts(nino)}/$api.json").map { string: String =>
       HttpResponse(Status.OK, Some(Json.parse(string.replace("<NINO>", nino.nino))))
     }
   }
-
-  private def fileContents(filename: String): Future[String] = Future { Source.fromFile(filename).mkString }
 }

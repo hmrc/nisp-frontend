@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,17 @@
 
 package uk.gov.hmrc.nisp.views
 
+import org.joda.time.DateTime
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest}
+import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, TestAccountBuilder}
 import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -31,12 +36,13 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendControlle
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
-  val mockUserNino = TestAccountBuilder.regularNino;
-  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
-  val mockUsername = "mockuser"
-  val mockUserId = "/auth/oid/" + mockUsername
+  val mockUserNino = TestAccountBuilder.regularNino
 
-  lazy val fakeRequest = FakeRequest();
+  implicit val user = NispAuthedUserFixture.user(mockUserNino)
+  val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
+
+  implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
+
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
 
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"

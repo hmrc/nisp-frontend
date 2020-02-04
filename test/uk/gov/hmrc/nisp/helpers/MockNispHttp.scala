@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,6 @@ object MockNispHttp extends MockitoSugar {
       reportAs = 500
     )))
 
-  // State Pension
   val spNinos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.urBannerNino,
@@ -116,7 +115,6 @@ object MockNispHttp extends MockitoSugar {
       reportAs = 500
     )))
 
-  // National Insurance
   val niNinos = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.fullUserNino,
@@ -132,7 +130,6 @@ object MockNispHttp extends MockitoSugar {
     TestAccountBuilder.excludedAbroad,
     TestAccountBuilder.urBannerNino,
     TestAccountBuilder.noUrBannerNino,
-    //TestAccountBuilder.excludedMwrre,
     TestAccountBuilder.excludedDissonanceIomMwrreAbroad,
     TestAccountBuilder.spaUnderConsiderationNino,
     TestAccountBuilder.spaUnderConsiderationNoFlagNino,

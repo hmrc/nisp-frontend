@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,10 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 case class MainTemplateParams(
   browserTitle: Option[String] = None,
+  pageInfo: Option[String] = None,
   pageTitle: Option[String] = None,
   h1Class: Option[String] = None,
+  printableDocument: Boolean = false,
   sidebarLinks: Option[Html] = None,
   sidebarClasses: Option[String] = None,
   userLoggedIn: Boolean = false,

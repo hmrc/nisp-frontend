@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,10 @@ package uk.gov.hmrc.nisp.utils
 
 object Constants {
 
+  val GovernmentGatewayId = "GGW"
+  val AnyAuthenticationProviderId = "IDAorGGW"
+  val VerifyProviderId = "IDA"
+
   // scalastyle:off magic.number
   val baseUrl = "/check-your-state-pension"
 
@@ -28,7 +32,7 @@ object Constants {
   val finishedPageUrl = s"$baseUrl/finished"
 
   val taxYearStartDay = 6
-  val taxYearEndDate = 5
+  val taxYearEndDay = 5
   val taxYearsStartEndMonth = 4
 
   val minimumQualifyingYearsNSP = 10

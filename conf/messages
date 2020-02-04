@@ -60,6 +60,9 @@ nisp.main.inflation = does not include any increase due to inflation
 nisp.main.psod = does not include the pension sharing order you have in effect
 nisp.main.after = After State Pension age, <span class="nowrap">{0}</span>, you no longer pay National Insurance contributions.
 nisp.main.basedOn = You can get your State Pension on
+nisp.national.insurance.number = National Insurance number
+nisp.print.this.ni.record = Print this National Insurance record
+nisp.show.nino = Show your National Insurance number
 
 nisp.main.puttingOff = Putting off claiming
 nisp.main.puttingOff.line1 = You can put off claiming your State Pension from {0}. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.
@@ -81,6 +84,7 @@ nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="check
 nisp.legal.forecastChanges = Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the
 nisp.legal.termsAndCondition = terms and conditions
 nisp.legal.mqp.forecastChanges = These details may be different if there are any changes to your National Insurance information. There is more about this in the
+nisp.print.your.state.pension.summary = Print your State Pension summary
 
 #*********************
 # Scenario messages
@@ -192,11 +196,10 @@ nisp.timeout.body = For your security we signed you out because you did not use 
 nisp.nirecord.title = Your National Insurance record
 nisp.nirecord.heading = Your National Insurance record
 nisp.nirecord.heading.uk = Your UK National Insurance record
-nisp.nirecord.yournirecordgapyears = Years which are not full.
 nisp.nirecord.yournirecordallyears = All years.
 nisp.nirecord.youdonothaveanygaps = You do not have any gaps in your record.
-nisp.nirecord.showgaps = View gaps only
-nisp.nirecord.showfull = View all years
+nisp.nirecord.showgaps = View years only showing gaps in your contributions
+nisp.nirecord.showfull = View all years of contributions
 nisp.nirecord.fullyear = Full year
 
 nisp.nirecord.gap = Year is not full
@@ -225,12 +228,12 @@ nisp.nirecord.youdidnotmakeanycontrib = You did not make any contributions this 
 
 nisp.nirecord.summary.yourrecord = Summary
 nisp.nirecord.summary.yourrecord.mobile = Summary
-nisp.nirecord.summary.fullContributions = years of full contributions
-nisp.nirecord.summary.fullContributions.single = year of full contributions
-nisp.nirecord.summary.gaps = years when you did not contribute enough
-nisp.nirecord.summary.gaps.single = year when you did not contribute enough
-nisp.nirecord.summary.yearsRemaining = years to contribute before 5 April {0}
-nisp.nirecord.summary.yearsRemaining.single = year to contribute before 5 April {0}
+nisp.nirecord.summary.fullContributions = {0} years of full contributions
+nisp.nirecord.summary.fullContributions.single = {0} year of full contributions
+nisp.nirecord.summary.gaps = {0} years when you did not contribute enough
+nisp.nirecord.summary.gaps.single = {0} year when you did not contribute enough
+nisp.nirecord.summary.yearsRemaining = {0} years to contribute before 5 April {1}
+nisp.nirecord.summary.yearsRemaining.single = {0} year to contribute before 5 April {1}
 
 nisp.nirecord.pre75Years = Up to 1975
 nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
@@ -432,11 +435,23 @@ language.day.plural = days
 #***********************
 nisp.home.banner.recruitment.link = Help improve digital services by joining the HMRC user panel (opens in new window)
 nisp.home.banner.recruitment.reject = No thanks
-nisp.home.banner.recruitment.title = Help improve GOV.UK
+nisp.home.banner.recruitment.title = Help improve 
+nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
 nisp.home.banner.recruitment.linkURL = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183
-
 
 
 global.error.InternalServerError500.title = Sorry, there is a problem with the service
 global.error.InternalServerError500.heading = Sorry, there is a problem with the service
 global.error.InternalServerError500.message = Try again later.
+
+
+global.page.not.found.error.title=Page not found
+global.page.not.found.error.check.web.address.correct=If you typed the web address, check it is correct.
+global.page.not.found.error.check.web.address.full=If you pasted the web address, check you copied the entire address.
+global.page.not.found.error.your.options=If the web address is correct or you selected a link or button, you can:
+global.page.not.found.error.contact.future.pension.centre.link=https://www.gov.uk/future-pension-centre
+global.page.not.found.error.contact.future.pension.centre.link.text=contact the Future Pension Centre
+global.page.not.found.error.contact.future.pension.centre.text={0} if you need to speak to someone about your State Pension.
+global.page.not.found.error.contact.ni.helpline.link.text=contact the National Insurance helpline
+global.page.not.found.error.contact.ni.helpline.text={0} if you need to speak to someone about your National Insurance record.
+global.page.not.found.error.contact.ni.helpline.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals

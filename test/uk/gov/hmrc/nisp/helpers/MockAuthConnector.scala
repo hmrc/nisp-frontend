@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,20 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import uk.gov.hmrc.auth.core.authorise.Predicate
+import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L500
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, Authority, CredentialStrength, PayeAccount}
+import uk.gov.hmrc.http.{HeaderCarrier, UserId}
+import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, UserId}
 
-object MockAuthConnector extends AuthConnector {
-  override val serviceUrl: String = ""
-
-  override def http: HttpGet = ???
-
-  val mockUserId = userID("mockuser")
+object MockAuthConnector extends NispAuthConnector {
+  val mockUserId: UserId = userID("mockuser")
 
   def userID(username: String): UserId = UserId(s"/auth/oid/$username")
 
-  val usernameToNino = Map(
+  val usernameToNino: Map[UserId, Nino] = Map(
     userID("mockuser") -> TestAccountBuilder.regularNino,
     userID("mockfulluser") -> TestAccountBuilder.fullUserNino,
     userID("mockblank") -> TestAccountBuilder.blankNino,
@@ -71,13 +66,7 @@ object MockAuthConnector extends AuthConnector {
     userID("mockexcludedabroad") -> TestAccountBuilder.excludedAbroad
   )
 
-  private def payeAuthority(id: String, nino: Nino): Option[Authority] =
-    Some(Authority(id, Accounts(paye = Some(PayeAccount(s"/paye/$nino", nino))), None, None,
-      testCredentialStrength(nino), L500, None, None, None, "test oid"))
-
-  private def testCredentialStrength(nino: Nino): CredentialStrength =
-    if (nino == TestAccountBuilder.weakNino) CredentialStrength.Weak else CredentialStrength.Strong
-
-  override def currentAuthority(implicit hc: HeaderCarrier,ec:ExecutionContext): Future[Option[Authority]] =
-    Future(payeAuthority(hc.userId.getOrElse(mockUserId).value, usernameToNino(hc.userId.getOrElse(mockUserId))))
+  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] = {
+    ???
+  }
 }

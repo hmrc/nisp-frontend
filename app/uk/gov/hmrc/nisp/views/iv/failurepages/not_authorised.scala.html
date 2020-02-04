@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import play.api.Application
-@import uk.gov.hmrc.nisp.auth._
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_],
 partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
@@ -28,18 +29,18 @@ partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, fo
     ga('send', 'pageview', '/check-your-state-pension/unauthorised-confirm-identity');
 }
 
-@main(MainTemplateParams(
+@unauthenticatedMain(MainTemplateParams(
  articleClasses = Some("mainpage"),
  analyticsAdditionalJs = Some(analyticsAdditionalJs),
  pageTitle= Some(messages("nisp.iv.failure.general.title")), h1Class = Some("heading-xlarge")
 )) {
 
-<p class="margin-bottom">@Messages("nisp.iv.failure.general.youcan")</p>
+<p class="margin-bottom">@messages("nisp.iv.failure.general.youcan")</p>
 
 <ul class="list list-bullet">
- <li><a href=@GovernmentGatewayProvider.continueURL>@Messages("nisp.iv.failure.general.confirmIdentityAgain")</a></li>
- <li><a href="https://www.gov.uk/contact-hmrc" data-journey-click=checkmystatepension:external:helpline>@Messages("nisp.iv.failure.general.contactHMRC")</a></li>
- <li><a href="https://www.gov.uk/future-pension-centre" data-journey-click=checkmystatepension:external:pensioncentre>@Messages("nisp.iv.failure.general.contactFuturePension")</a></li>
+ <li><a href=@ApplicationConfig.postSignInRedirectUrl>@messages("nisp.iv.failure.general.confirmIdentityAgain")</a></li>
+ <li><a href="https://www.gov.uk/contact-hmrc" data-journey-click=checkmystatepension:external:helpline>@messages("nisp.iv.failure.general.contactHMRC")</a></li>
+ <li><a href="https://www.gov.uk/future-pension-centre" data-journey-click=checkmystatepension:external:pensioncentre>@messages("nisp.iv.failure.general.contactFuturePension")</a></li>
 </ul>
 
 }

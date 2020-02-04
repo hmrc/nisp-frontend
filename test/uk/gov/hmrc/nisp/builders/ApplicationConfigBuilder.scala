@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ object ApplicationConfigBuilder {
     override val ggSignInUrl: String = ggSignInUrl
     override val pertaxFrontendUrl: String = pertaxFrontendUrl
     override val breadcrumbPartialUrl: String = breadcrumbPartialUrl
-    override val showFullNI: Boolean = showFullNI
+    override lazy val showFullNI: Boolean = showFullNI
     override val futureProofPersonalMax: Boolean = futureProofPersonalMax
     override val isWelshEnabled: Boolean = isWelshEnabled
     override val frontendTemplatePath: String = frontendTemplatePath

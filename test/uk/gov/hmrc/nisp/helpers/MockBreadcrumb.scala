@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ object MockBreadcrumb extends NispBreadcrumb {
     override val pertaxFrontendUrl: String = "http://localhost:9232/account"
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = "http://localhost:9232/account"
-    override val showFullNI: Boolean = false
+    override lazy val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
     override val isWelshEnabled = true
     override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"

@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@
 
 @(statePension: StatePension, personalMaximumChart: SPChartModel)(implicit messages: Messages)
 
-<h2 class="heading-medium">@Messages("nisp.main.context.fillGaps.improve.title")</h2>
+<h2 class="heading-medium">@messages("nisp.main.context.fillGaps.improve.title")</h2>
 
-<p>@Messages("nisp.main.context.fillgaps.para1.futurePersonalMax")</p>
-@spChart(Html(Messages("nisp.main.context.fillgaps.chart.maxamount")), personalMaximumChart)
+<p>@messages("nisp.main.context.fillgaps.para1.futurePersonalMax")</p>
+@spChart(Html(messages("nisp.main.context.fillgaps.chart.maxamount")), personalMaximumChart)
 
-<a href='@routes.NIRecordController.showGaps.url'>@Html(Messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
+<a href='@routes.NIRecordController.showGaps.url'>@Html(messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>

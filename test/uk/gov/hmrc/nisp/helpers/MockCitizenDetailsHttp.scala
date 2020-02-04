@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,8 +66,7 @@ object MockCitizenDetailsHttp extends UnitSpec with MockitoSugar {
   def createMockedURL(nino: Nino, response: Future[HttpResponse]): Unit =
     when(mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(s"citizen-details/$nino/designatory-details"))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(response)
 
-  private def setupCitizenDetailsMocking(nino: Nino) =
-    createMockedURL(nino, TestAccountBuilder.jsonResponse(nino, "citizen-details"))
+  private def setupCitizenDetailsMocking(nino: Nino) = createMockedURL(nino, TestAccountBuilder.jsonResponse(nino, "citizen-details"))
 
   ninos.foreach(setupCitizenDetailsMocking)
 

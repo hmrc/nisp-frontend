@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+package uk.gov.hmrc.nisp.models
+
 import org.joda.time.LocalDate
-import play.api.libs.json.{JsString, Json, JsError, JsNull}
-import uk.gov.hmrc.nisp.models.NpsDate
+import play.api.libs.json.{JsNull, JsString, Json}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.test.UnitSpec
 
 class NpsDateSpec extends UnitSpec {
@@ -30,6 +32,21 @@ class NpsDateSpec extends UnitSpec {
     "JSON serialisation" should {
       "return JSString in correct format" in {
         Json.toJson(NpsDate(new LocalDate(2015,1,1))) shouldBe JsString("01/01/2015")
+      }
+      "deserialise works" in {
+        Json.fromJson[NpsDate](JsString("01/01/2015")).get shouldBe NpsDate(new LocalDate(2015,1,1))
+      }
+    }
+
+    "taxYearEndDate" should {
+      "return tax year end date" in {
+        NpsDate.taxYearEndDate(2015) shouldBe NpsDate(2016, Constants.taxYearsStartEndMonth, Constants.taxYearEndDay)
+      }
+    }
+
+    "taxYearStartDate" should {
+      "return tax year start date" in {
+        NpsDate.taxYearStartDate(2015) shouldBe NpsDate(2015, Constants.taxYearsStartEndMonth, Constants.taxYearStartDay)
       }
     }
   }

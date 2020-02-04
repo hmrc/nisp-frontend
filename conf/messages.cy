@@ -54,15 +54,18 @@ nisp.main.week = yr wythnos
 nisp.main.month = y mis
 nisp.main.year = y flwyddyn
 nisp.main.notAGuarantee = nid yw’n cael ei warantu ac mae’n seiliedig ar y gyfraith bresennol
-nisp.main.isBased = yn seiliedig ar eich cofnod Yswiriant Gwladol hyd at <span class="nowrap">{0}</span>
+nisp.main.isBased = mae’n seiliedig ar eich cofnod Yswiriant Gwladol hyd at <span class="nowrap">{0}</span>
 nisp.main.inflation = nid yw’n cynnwys unrhyw gynnydd o ganlyniad i chwyddiant
 nisp.main.psod = nid yw’n cynnwys y gorchymun rhannu pensiwn sydd gennych yn weithredol
 nisp.main.after = Ar ôl oedran Pensiwn y Wladwriaeth, <span class="nowrap">{0}</span>, nid oes yn rhaid i chi dalu cyfraniadau Yswiriant Gwladol.
 nisp.main.basedOn = Gallwch gael eich Pensiwn y Wladwriaeth ar
+nisp.national.insurance.number = Rhif Yswiriant Gwladol
+nisp.print.this.ni.record = Argraffu’r cofnod Yswiriant Gwladol hwn
+nisp.show.nino = Dangos eich rhif Yswiriant Gwladol
 
 nisp.main.puttingOff = Oedi gwneud cais
 nisp.main.puttingOff.line1 = Gallwch oedi gwneud cais am eich Pensiwn y Wladwriaeth o’r {0}. Gallai gwneud hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan fyddwch yn dod i wneud cais amdano. Mae’r swm ychwanegol, gyda’ch Pensiwn y Wladwriaeth, yn ffurfio rhan o’ch incwm trethadwy.
-nisp.main.puttingOff.linkTitle = Mwy am oedi gwneud cais (agor mewn tab newydd)
+nisp.main.puttingOff.linkTitle = Mwy am oedi gwneud cais (yn agor tab newydd)
 
 nisp.main.showyourrecord = Gweld eich cofnod Yswiriant Gwladol
 nisp.main.showyourrecordUK = Gweld eich cofnod Yswiriant Gwladol y DU
@@ -80,6 +83,7 @@ nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="check
 nisp.legal.forecastChanges = Gallai eich rhagolwg fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y
 nisp.legal.termsAndCondition = telerau ac amodau
 nisp.legal.mqp.forecastChanges = Gallai’r manylion fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y
+nisp.print.your.state.pension.summary = Argraffu crynodeb o’ch Pensiwn y Wladwriaeth
 
 #*********************
 # Scenario messages
@@ -161,6 +165,7 @@ nisp.excluded.niRecordIntro = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol s
 nisp.excluded.niRecordIntroUK = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol y DU sy’n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
 nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
+nisp.nirecord.summary.youhave = Mae gennych:
 
 #***********************
 # Thank you messages
@@ -188,12 +193,11 @@ nisp.timeout.body = Er mwyn eich diogelwch rydym wedi eich allgofnodi oherwydd n
 nisp.nirecord.title = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
-nisp.nirecord.yournirecordgapyears = Blynyddoedd sydd ddim yn llawn.
 nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
 
-nisp.nirecord.showgaps = Edrych ar fylchau’n unig
-nisp.nirecord.showfull = Edrych ar yr holl flynyddoedd
+nisp.nirecord.showgaps = Bwrw golwg dros flynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
+nisp.nirecord.showfull = Gweld pob blwyddyn y gwnaed cyfraniadau ynddi
 
 nisp.nirecord.fullyear = Blwyddyn lawn
 
@@ -226,20 +230,21 @@ nisp.nirecord.youdidnotmakeanycontrib = Ni wnaethoch chi wneud unrhyw gyfraniada
 
 nisp.nirecord.summary.yourrecord = Crynodeb
 nisp.nirecord.summary.yourrecord.mobile = Crynodeb
-nisp.nirecord.summary.fullContributions = o flynyddoedd o gyfraniadau llawn
-nisp.nirecord.summary.fullContributions.single = blwyddyn o gyfraniadau llawn
-nisp.nirecord.summary.gaps = o flynyddoedd pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.gaps.single = blwyddyn pan na wnaethoch gyfrannu digon
-nisp.nirecord.summary.yearsRemaining = o flynyddoedd i gyfrannu cyn 5 Ebrill {0}
-nisp.nirecord.summary.yearsRemaining.single = blwyddyn i gyfrannu cyn 5 Ebrill {0}
+
+nisp.nirecord.summary.fullContributions = {0} o flynyddoedd o gyfraniadau llawn
+nisp.nirecord.summary.fullContributions.single = {0} blwyddyn o gyfraniadau llawn
+nisp.nirecord.summary.gaps = {0} o flynyddoedd pan na wnaethoch gyfrannu digon
+nisp.nirecord.summary.gaps.single = {0} blwyddyn pan na wnaethoch gyfrannu digon
+nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i’w cyfrannu cyn 5 Ebrill {1}
+nisp.nirecord.summary.yearsRemaining.single = {0} blwyddyn i gyfrannu cyn 5 Ebrill {1}
 
 nisp.nirecord.pre75Years = Hyd at 1975
 nisp.nirecord.pre75QualifyingYears = Mae ein cofnodion yn dangos bod gennych {0} o flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
 nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gennych unrhyw flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
 
 nisp.nirecord.helpline.getHelp = Cael help
-nisp.nirecord.helpline.number = Llinell gymorth 0800 731 0181
-nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 0176
+nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
+nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
 
 #****************************
@@ -255,8 +260,8 @@ nisp.nirecord.gapsinyourrecord.line2 = yn ddi-waith a ddim yn hawlio budd-dal
 nisp.nirecord.gapsinyourrecord.line3 = yn hunangyflogedig ond ddim yn talu cyfraniadau oherwydd elw bychan
 nisp.nirecord.gapsinyourrecord.line4 = yn byw dramor
 nisp.nirecord.gapsinyourrecord.line5 = yn byw neu weithio yn Ynys Manaw
-nisp.nirecord.gap.viewdetails = Edrychwch ar <span class="visuallyhidden">{0} </span>fanylion
-nisp.nirecord.gap.hidedetails = Cuddio <span class="visuallyhidden">{0} </span>manylion
+nisp.nirecord.gap.viewdetails = Gweld y manylion<span class="visuallyhidden"> {0}</span>
+nisp.nirecord.gap.hidedetails = Cuddio manylion<span class="visuallyhidden"> {0}</span>
 nisp.nirecord.gapsinyourrecord.howtocheckrecord= Sut i wirio eich cofnod
 nisp.nirecord.gapsinyourrecord.paidemployment.title = Gwaith â thâl
 nisp.nirecord.gapsinyourrecord.paidemployment.desc = Gwiriwch y cyfraniadau rydych wedi’u gwneud yn erbyn P60 gan eich cyflogwyr.
@@ -427,9 +432,21 @@ error.email = Rhowch gyfeiriad e-bost dilys
 #***********************
 nisp.home.banner.recruitment.link = Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor ffenestr newydd)
 nisp.home.banner.recruitment.reject = Dim diolch
-nisp.home.banner.recruitment.title = Helpwch gwella gov.uk
-
+nisp.home.banner.recruitment.title = Helpwch i wella GOV.UK
+nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
 
 global.error.InternalServerError500.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.message = Rhowch gynnig arall arni yn nes ymlaen.
+
+global.page.not.found.error.title=Heb ddod o hyd i’r dudalen
+global.page.not.found.error.check.web.address.correct=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
+global.page.not.found.error.check.web.address.full=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+global.page.not.found.error.your.options=Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, gallwch wneud y canlynol:
+global.page.not.found.error.contact.future.pension.centre.link.text=cysylltu â Chanolfan Bensiwn y Dyfodol
+global.page.not.found.error.contact.future.pension.centre.link=https://www.gov.uk/cysylltwch-gwasanaeth-pensiwn
+global.page.not.found.error.contact.future.pension.centre.text={0} os ydych am siarad â rhywun am eich Pensiwn y Wladwriaeth.
+global.page.not.found.error.contact.ni.helpline.link.text=cysylltu â Gwasanaeth Cwsmeriaid Cymraeg CThEM
+global.page.not.found.error.contact.ni.helpline.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines
+global.page.not.found.error.contact.ni.helpline.text={0} os ydych am siarad â rhywun am eich cofnod Yswiriant Gwladol.
+

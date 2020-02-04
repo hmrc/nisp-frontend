@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,6 @@ import Exclusion.Exclusion
 import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.play.test.UnitSpec
 
-/**
- * Created by callum on 02/03/15.
- */
 class SPExclusionSpec extends UnitSpec {
 
   "SP Exclusion" when {

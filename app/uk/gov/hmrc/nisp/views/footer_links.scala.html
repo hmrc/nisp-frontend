@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 
 <ul class="platform-help-links">
-    <li><a href='@Messages("footer.links.cookies.url")' target="_blank" data-sso="false" data-journey-click="footer:Click:Cookies">@Messages("footer.links.cookies.text")</a></li>
-    <li><a href='@Messages("footer.links.privacy_policy.url")' target="_blank" data-sso="false" data-journey-click="footer:Click:Privacy policy">@Messages("footer.links.privacy_policy.text")</a></li>
-    <li><a href='@{routes.TermsConditionsController.show.url}' target="_blank" data-sso="false" data-journey-click="footer:Click:Terms and conditions">@Messages("nisp.tandcs.title")</a></li>
-    <li><a href='@Messages("footer.links.help_page.url")' target="_blank" data-sso="false" data-journey-click="footer:Click:Help">@Messages("footer.links.help_page.text")</a></li>
+    <li><a href='@messages("footer.links.cookies.url")' target="_blank" data-sso="false" data-journey-click="footer:Click:Cookies">@messages("footer.links.cookies.text")</a></li>
+    <li><a href='@messages("footer.links.privacy_policy.url")' target="_blank" data-sso="false" data-journey-click="footer:Click:Privacy policy">@messages("footer.links.privacy_policy.text")</a></li>
+    <li><a href='@{routes.TermsConditionsController.show.url}' target="_blank" data-sso="false" data-journey-click="footer:Click:Terms and conditions">@messages("nisp.tandcs.title")</a></li>
+    <li><a href='@messages("footer.links.help_page.url")' target="_blank" data-sso="false" data-journey-click="footer:Click:Help">@messages("footer.links.help_page.text")</a></li>
     @if(additionalLinks.isDefined) {
         @additionalLinks
     }

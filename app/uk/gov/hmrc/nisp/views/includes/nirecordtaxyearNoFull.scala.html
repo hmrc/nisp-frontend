@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@
 <div class="ni-wrapper">
     <div class="ni-years"> @niTaxYear.taxYear</div>
     @if(niTaxYear.qualifying){
-        <div class="inactive">@Messages("nisp.nirecord.fullyear")</div>
+        <div class="inactive">@messages("nisp.nirecord.fullyear")</div>
     } else {
-        <div class="ni-notfull">@Messages("nisp.nirecord.gap")</div>
-        <div class="ni-action"><a href="#">@Html(Messages("nisp.nirecord.gap.viewdetails", niTaxYear.taxYear))</a>
-            <a href="#" class="hide-details">@Html(Messages("nisp.nirecord.gap.hidedetails", niTaxYear.taxYear))</a>
+        <div class="ni-notfull">@messages("nisp.nirecord.gap")</div>
+        <div class="ni-action"><a href="#">@Html(messages("nisp.nirecord.gap.viewdetails", niTaxYear.taxYear))</a>
+            <a href="#" class="hide-details">@Html(messages("nisp.nirecord.gap.hidedetails", niTaxYear.taxYear))</a>
 
         </div>
     }
@@ -47,65 +47,65 @@
     <dd id="tax-year-@niTaxYear.taxYear">
         @if(niTaxYear.underInvestigation) {
         <div class="contributions-wrapper">
-            <p>@Html(Messages("nisp.nirecord.gap.underInvestigation"))</p>
+            <p>@Html(messages("nisp.nirecord.gap.underInvestigation"))</p>
         </div>
         } else {
         <div class="contributions-wrapper">
             @if(niTaxYear.classOneContributions > 0 || niTaxYear.otherCredits > 0 || niTaxYear.classThreeCredits > 0 || niTaxYear.classTwoCredits > 0){
-            <p class="contributions-header">@Messages("nisp.nirecord.yourcontributionfrom")</p>
+            <p class="contributions-header">@messages("nisp.nirecord.yourcontributionfrom")</p>
             }
             @if(niTaxYear.classOneContributions > 0 || niTaxYear.classThreeCredits > 0 || niTaxYear.classTwoCredits > 0){
             <p>
                 @if(niTaxYear.classOneContributions > 0){
-                    <p>@Html(Messages("nisp.nirecord.gap.paidemployment", NispMoney.pounds(niTaxYear.classOneContributions)))</p>
+                    <p>@Html(messages("nisp.nirecord.gap.paidemployment", NispMoney.pounds(niTaxYear.classOneContributions)))</p>
                 }
                 @if(niTaxYear.classTwoCredits > 0){
                     @if(niTaxYear.classTwoCredits == 1){
-                        <p>@Html(Messages("nisp.nirecord.gap.selfemployed.singular", niTaxYear.classTwoCredits))</p>
+                        <p>@Html(messages("nisp.nirecord.gap.selfemployed.singular", niTaxYear.classTwoCredits))</p>
                     }else{
-                        <p>@Html(Messages("nisp.nirecord.gap.selfemployed.plural", niTaxYear.classTwoCredits))</p>
+                        <p>@Html(messages("nisp.nirecord.gap.selfemployed.plural", niTaxYear.classTwoCredits))</p>
                     }
                 }
                 @if(niTaxYear.classThreeCredits > 0){
                     @if(niTaxYear.classThreeCredits == 1){
-                        <p>@Html(Messages("nisp.nirecord.gap.voluntary.singular", niTaxYear.classThreeCredits))</p>
+                        <p>@Html(messages("nisp.nirecord.gap.voluntary.singular", niTaxYear.classThreeCredits))</p>
                     } else {
-                        <p>@Html(Messages("nisp.nirecord.gap.voluntary.plural", niTaxYear.classThreeCredits))</p>
+                        <p>@Html(messages("nisp.nirecord.gap.voluntary.plural", niTaxYear.classThreeCredits))</p>
                     }
                 }
             </p>
             }
             @if(niTaxYear.otherCredits > 0){
                 @if(niTaxYear.otherCredits == 1){
-                    <p>@Html(Messages("nisp.nirecord.gap.whenyouareclaiming.singular",niTaxYear.otherCredits))</p>
-                    <p>@Html(Messages("nisp.nirecord.gap.whenyouareclaiming.info.singular"))</p>
+                    <p>@Html(messages("nisp.nirecord.gap.whenyouareclaiming.singular",niTaxYear.otherCredits))</p>
+                    <p>@Html(messages("nisp.nirecord.gap.whenyouareclaiming.info.singular"))</p>
                 } else {
-                    <p>@Html(Messages("nisp.nirecord.gap.whenyouareclaiming.plural",niTaxYear.otherCredits))</p>
-                    <p>@Html(Messages("nisp.nirecord.gap.whenyouareclaiming.info.plural"))</p>
+                    <p>@Html(messages("nisp.nirecord.gap.whenyouareclaiming.plural",niTaxYear.otherCredits))</p>
+                    <p>@Html(messages("nisp.nirecord.gap.whenyouareclaiming.info.plural"))</p>
                 }
             }
             @if(niTaxYear.classOneContributions <= 0 && niTaxYear.otherCredits <= 0 && niTaxYear.classThreeCredits <= 0 && niTaxYear.classTwoCredits <= 0){
-                <p class="contributions-header">@Messages("nisp.nirecord.youdidnotmakeanycontrib")</p>
+                <p class="contributions-header">@messages("nisp.nirecord.youdidnotmakeanycontrib")</p>
             }
-            <p>@Html(Messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem().url))</p>
+            <p>@Html(messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem().url))</p>
 
             @if(niTaxYear.payable && niTaxYear.classThreePayableBy.isDefined) {
                 @for(
                     classThreePayableByDate <- niTaxYear.classThreePayableBy;
                     classThreePayableWithPenalty <- niTaxYear.classThreePayableByPenalty
                 ){
-                    <p class="contributions-header">@Html(Messages("nisp.nirecord.gap.youcanmakeupshortfall"))</p>
+                    <p class="contributions-header">@Html(messages("nisp.nirecord.gap.youcanmakeupshortfall"))</p>
 
                     @if(niTaxYear.currentDateAfterCutOff(currentDate)) {
-                        <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontribaftercutoff",NispMoney.pounds(niTaxYear.classThreePayable),LanguageHelper.langUtils.Dates.formatDate(classThreePayableWithPenalty)))</p>
+                        <p>@Html(messages("nisp.nirecord.gap.payvoluntarycontribaftercutoff",NispMoney.pounds(niTaxYear.classThreePayable),LanguageHelper.langUtils.Dates.formatDate(classThreePayableWithPenalty)))</p>
                     } else {
-                        <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niTaxYear.classThreePayable),LanguageHelper.langUtils.Dates.formatDate(classThreePayableWithPenalty),LanguageHelper.langUtils.Dates.formatDate(classThreePayableByDate)))</p>
+                        <p>@Html(messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niTaxYear.classThreePayable),LanguageHelper.langUtils.Dates.formatDate(classThreePayableWithPenalty),LanguageHelper.langUtils.Dates.formatDate(classThreePayableByDate)))</p>
                     }
 
-                    <p>@Html(Messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
+                    <p>@Html(messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
                 }
             } else {
-                <p class="panel-indent">@Html(Messages("nisp.nirecord.gap.latePaymentMessage"))</p>
+                <p class="panel-indent">@Html(messages("nisp.nirecord.gap.latePaymentMessage"))</p>
             }
         </div>
         }

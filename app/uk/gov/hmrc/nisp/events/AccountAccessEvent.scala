@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 object AccountAccessEvent {
   def apply(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,
-            statePensionForecast: BigDecimal, dateOfBirth: Option[LocalDate], name: Option[String],
+            statePensionForecast: BigDecimal, dateOfBirth: LocalDate, name: String,
             contractedOutFlag: Boolean = false, forecastScenario: Scenario, copeAmount: BigDecimal,
             authenticationProvider: String)(implicit hc: HeaderCarrier): AccountAccessEvent =
     new AccountAccessEvent(
@@ -32,7 +32,7 @@ object AccountAccessEvent {
       statePensionAmount,
       statePensionForecast,
       dateOfBirth,
-      name.getOrElse("N/A"),
+      name,
       contractedOutFlag,
       forecastScenario,
       copeAmount,
@@ -40,7 +40,7 @@ object AccountAccessEvent {
     )
 }
 class AccountAccessEvent(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,
-                         statePensionForecast: BigDecimal, dateOfBirth: Option[LocalDate], name: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
+                         statePensionForecast: BigDecimal, dateOfBirth: LocalDate, name: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
                          copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier)
   extends NispBusinessEvent("AccountPage",
     Map(
@@ -48,7 +48,7 @@ class AccountAccessEvent(nino: String, statePensionAge: LocalDate, statePensionA
       "StatePensionAge" -> DateTimeFormat.forPattern("dd/MM/yyyy").print(statePensionAge),
       "StatePensionAmount" -> statePensionAmount.toString(),
       "StatePensionForecast" -> statePensionForecast.toString(),
-      "DateOfBirth" -> dateOfBirth.map(date => DateTimeFormat.forPattern("dd/MM/yyyy").print(date)).getOrElse(""),
+      "DateOfBirth" -> DateTimeFormat.forPattern("dd/MM/yyyy").print(dateOfBirth),
       "Name" -> name,
       "ContractedOut" -> contractedOutFlag.toString,
       "ForecastScenario" -> forecastScenario.toString,

@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,37 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.models.enums.Exclusion._
-@import uk.gov.hmrc.nisp.models.ExclusionsModel
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
-@import uk.gov.hmrc.nisp.models.SPAgeModel
+@import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import exclusions.viewExclusions
 @import play.api.Application
-@import uk.gov.hmrc.nisp.views.viewParams._
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
+@import uk.gov.hmrc.nisp.views.html.exclusions
+@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
 
-@(exclusion: Exclusion, statePensionAge: Option[Int])(implicit messages: Messages, request: Request[_], user: NispUser,
-  partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(exclusion: Exclusion, statePensionAge: Option[Int])(
+        implicit messages: Messages,
+        request: ExcludedAuthenticatedRequest[_],
+        partialRetriever: CachedStaticHtmlPartialRetriever,
+        application: Application,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
+)
 
 @analyticsAdditionalJs = @{
     Map[String, Any](
     "nispExclusionType" -> exclusion.toString,
     "statePensionAge" -> statePensionAge,
-    "authProvider" -> user.authProvider,
-    "authProvider" -> user.confidenceLevel
+    "authProvider" -> request.authDetails.authProvider,
+    "confidenceLevel" -> request.authDetails.confidenceLevel
     )
 }
 
-@defining(Some(user)) { implicit userOption =>
-    @main(MainTemplateParams(
-        Some(Messages("nisp.main.title")),
-        userLoggedIn = true,
-        pageTitle = Some(Messages("nisp.excluded.title")),
-        gaDimensions = Some(analyticsAdditionalJs)
-    )) {
-        @exclusions.dead()
-    }
+@unauthenticatedMain(MainTemplateParams(
+    Some(messages("nisp.main.title")),
+    userLoggedIn = true,
+    pageTitle = Some(messages("nisp.excluded.title")),
+    gaDimensions = Some(analyticsAdditionalJs)
+)) {
+    @exclusions.dead()
 }

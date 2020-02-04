@@ -25,6 +25,8 @@ $breadcrumb: '/check-your-state-pension/assets/images/icons/breadcrumb-separator
 
 @import 'urBanner.css';
 
+@import 'print';
+
 $light-bg-chart-bar:#C1DFE4;
 
 
@@ -410,3 +412,6 @@ input.form-control-error[type="text"] {
     text-decoration: underline;
 }
 
+#nino {
+    margin-bottom: 3rem;
+}

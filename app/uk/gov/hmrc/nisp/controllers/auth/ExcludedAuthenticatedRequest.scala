@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.connectors
+package uk.gov.hmrc.nisp.controllers.auth
 
-import uk.gov.hmrc.nisp.config.wiring.{NispAuditConnector, NispAuthConnector}
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.domain.Nino
 
-trait AuthenticationConnectors {
-
-  def auditConnector = NispAuditConnector
-
-  def authConnector: AuthConnector = NispAuthConnector
-
-}
+case class ExcludedAuthenticatedRequest[A](request: Request[A],
+                                           nino: Nino,
+                                           authDetails: AuthDetails) extends WrappedRequest[A](request)

@@ -1,0 +1,248 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.play.views.html.layouts
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
+@import uk.gov.hmrc.nisp.utils.NispBreadcrumb
+@import play.twirl.api.Html
+@import uk.gov.hmrc.nisp.controllers.CustomLanguageController
+@import play.api.Application
+@import uk.gov.hmrc.renderer.TemplateRenderer
+@import uk.gov.hmrc.nisp.utils.LanguageHelper
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.http.SessionKeys
+@import uk.gov.hmrc.nisp.utils.Constants
+
+
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import scala.util.Random
+@import java.util.NoSuchElementException
+@import uk.gov.hmrc.domain.Nino
+@(
+    mainTemplateParams: MainTemplateParams
+)(
+    mainContent: Html
+)(
+    implicit
+        request: Request[_],
+        messages: Messages,
+        application: Application,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
+        templateRenderer: TemplateRenderer
+)
+
+@mustacheCheck(str: String) = @{
+    if(str.trim=="") false else str
+}
+
+
+@scriptElement = @{
+    Seq(
+        Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),
+        Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js")),
+        Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js")),
+        Map("url" -> controllers.routes.Assets.versioned("javascript/polyfill.js"))
+      )
+}
+
+
+@contentWithTitle =  {
+    @mainTemplateParams.pageInfo.map { pageInfo =>
+    <div class="page-info">@Html(pageInfo)</div>
+}
+    @mainTemplateParams.pageTitle.map { title =>
+    <h1 class=@headerClass> @Html(title) </h1>
+}
+@mainContent
+
+}
+
+
+@linkElems = @{
+    Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
+}
+
+
+@links = @{
+    if(mainTemplateParams.articleEnabled) {
+       Map("url" -> routes.StatePensionController.signOut , "text" -> messages("nisp.signOut"))
+    }
+}
+
+@ninoChanceGenerator = @{
+    true
+}
+
+@navTitle = @{
+    if(mainTemplateParams.showTitleHeaderNav) {
+         messages("nisp.title")
+    } else {
+        None
+    }
+}
+
+@actingAttorneyBanner = {
+}
+
+@checkForUrCookie = @{
+    !request.cookies.exists(x => x.name == "cysp-nisp-urBannerHide")
+}
+
+
+@generateChanceOnNino = @{
+
+}
+
+@getHelpForm = {
+    @formPartialRetriever.getPartialContent(s"${mainTemplateParams.applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
+}
+
+@sidebar = {
+    @if(mainTemplateParams.sidebarLinks.isDefined) {
+        @if(mainTemplateParams.sidebarClasses.isDefined) {
+            @layouts.sidebar(mainTemplateParams.sidebarLinks.get, Some(s"sidebar ${mainTemplateParams.sidebarClasses.get}"))
+        } else {
+            @layouts.sidebar(mainTemplateParams.sidebarLinks.get, Some("sidebar"))
+        }
+    }
+}
+
+@clc = @{ Application.instanceCache[CustomLanguageController].apply(application) }
+
+
+@mainContentHeader = {
+ @if(mainTemplateParams.applicationConfig.isWelshEnabled){
+     @language_selection(clc.languageMap, clc.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
+    }
+
+}
+
+@urBanner = @{
+    if(mainTemplateParams.showUrBanner && ApplicationConfig.showUrBanner && checkForUrCookie){
+        Map("fullWidthBannerTitle" -> messages("nisp.home.banner.recruitment.title"),
+            "fullWidthBannerText" -> messages("nisp.home.banner.recruitment.link"),
+            "fullWidthBannerLink" -> messages("nisp.home.banner.recruitment.linkURL"),
+            "fullWidthBannerDismissText" -> messages("nisp.home.banner.recruitment.reject"),
+            "fullWidthBannerGaAction" -> ApplicationConfig.GaEventAction)
+    }else{Map()}
+}
+
+@betaHeaderEnable = @{
+    false
+}
+
+@article = @{
+
+    if(mainTemplateParams.articleEnabled) {
+          layouts.article(contentWithTitle, false, mainTemplateParams.articleClasses)
+    } else {
+          contentWithTitle
+    }
+
+}
+
+@previouslyLoggedInAt = @{
+    val msg =  LanguageHelper.langUtils.Dates.formatEasyReadingTimestamp(None, "")
+    mustacheCheck(msg)
+}
+
+@googleAnalytics = @{
+    Map[String, Any](
+        "trackingId" -> mainTemplateParams.applicationConfig.analyticsToken,
+        "cookieDomain" -> mainTemplateParams.applicationConfig.analyticsHost
+    ) ++ mainTemplateParams.gaDimensions.getOrElse(Map.empty)
+}
+@showLastLogInStatus = @{
+    if(mainTemplateParams.articleEnabled) {
+        true
+    } else {
+        false
+    }
+}
+
+@userDisplayName = @{
+     mustacheCheck("")
+}
+
+@termsAndConditionFooterLink = @{
+     Map("url" -> routes.TermsConditionsController.show.url , "text" -> messages("nisp.tandcs.title"))
+}
+
+@isWelsh = @{
+    if(messages.lang.code == "cy"){
+        true
+    }
+    else {
+        false
+    }
+}
+
+@printable = @{
+    if(mainTemplateParams.printableDocument) {
+        "printable"
+    }
+}
+
+@headerClass = @{
+    if (mainTemplateParams.h1Class.isDefined){
+        mainTemplateParams.h1Class.get + " top-title-heading heading-bottom-margin"
+    }else{
+        "heading-large top-title-heading heading-bottom-margin"
+    }
+}
+
+@{
+    templateRenderer.renderDefaultTemplate(ApplicationConfig.frontendTemplatePath, article, Map[String, Any](
+        "pageTitle" -> mainTemplateParams.pageTitle.map{x => x + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")},
+        "linkElems" -> linkElems,
+        "scriptElems" -> scriptElement,
+        "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
+
+        "mainContentHeader" -> mainContentHeader,
+
+        "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
+        "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
+        "isSa" -> false,
+        "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
+        "hideAccountMenu" -> mainTemplateParams.hideNavBar,
+
+        "googleAnalytics" -> googleAnalytics,
+        "ssoUrl" -> mainTemplateParams.applicationConfig.ssoUrl,
+
+        "betaBanner" -> betaHeaderEnable,
+        "feedbackIdentifier" -> mainTemplateParams.applicationConfig.contactFormServiceIdentifier,
+        "includeHMRCBranding" -> true,
+
+        "showLastLogInStatus" ->  showLastLogInStatus,
+        "userDisplayName" ->      userDisplayName,
+        "previouslyLoggedInAt" -> previouslyLoggedInAt,
+
+        "getHelpForm" -> getHelpForm,
+        "actingAttorneyBanner" -> actingAttorneyBanner,
+
+        "navTitle" -> navTitle,
+        "navLinks" -> links,
+        "hasNavLinks" -> mainTemplateParams.showTitleHeaderNav,
+        "sidebar" -> sidebar,
+        "termsAndConditionFooterLink" -> termsAndConditionFooterLink,
+
+        "optimizelyProjectId" -> "8451981545",
+        "isWelsh" -> isWelsh
+    ) ++ urBanner
+      ++ Map[String,Any](
+        "bodyClass" -> printable)
+      )
+}

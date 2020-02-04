@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.events
+package uk.gov.hmrc.nisp.common
 
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.auth.core.retrieve.~
 
-object FeedbackPageEvent {
-  def apply(referrer: String)(implicit hc: HeaderCarrier): FeedbackPageEvent = new FeedbackPageEvent(referrer)
+object RetrievalOps {
+  implicit class Ops[A](a: A) {
+    def ~[B](b: B): A ~ B = new ~(a, b)
+  }
 }
-
-class FeedbackPageEvent(referrer: String)(implicit hc: HeaderCarrier) extends NispBusinessEvent("FeedbackPage", Map("referrer" -> referrer))

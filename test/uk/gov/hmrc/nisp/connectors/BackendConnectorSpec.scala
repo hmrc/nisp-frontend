@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,6 @@ class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures 
   "connectToMicroservice" should {
     "should return depersonalised JSON" in {
       val json = Json.obj(
-        //"qualifyingYears" -> 28,
         "qualifyingYearsPriorTo1975" -> 0,
         "numberOfGaps" -> 6,
         "numberOfGapsPayable" -> 4,

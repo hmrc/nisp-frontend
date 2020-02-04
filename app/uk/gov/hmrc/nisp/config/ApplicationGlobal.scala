@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,7 @@ package uk.gov.hmrc.nisp.config
 import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
 import play.api.Mode.Mode
-import play.api.Play.current
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.{Application, Configuration, Play}
 import play.twirl.api.Html
@@ -36,16 +34,20 @@ import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFi
 object ApplicationGlobal extends ApplicationGlobalTrait {
   override protected def mode: Mode = Play.current.mode
   override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override def messagesApi = Play.current.injector.instanceOf[MessagesApi]
 }
 
-trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController {
+trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with PartialRetriever with NispFrontendController with I18nSupport {
+
+  implicit lazy val app:Application = Play.current
+
   override val auditConnector = NispAuditConnector
   override val loggingFilter = NispLoggingFilter
   override val frontendAuditFilter = NispFrontendAuditFilter
 
   override def onStart(app: Application) {
     super.onStart(app)
-    new ApplicationCrypto (Play.current.configuration.underlying).verifyConfiguration()
+    new ApplicationCrypto(Play.current.configuration.underlying).verifyConfiguration()
   }
 
   override def internalServerErrorTemplate(implicit request: Request[_]): Html =
@@ -57,6 +59,10 @@ trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with Par
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     uk.gov.hmrc.nisp.views.html.global_error(pageTitle, heading, message)
+
+  override def notFoundTemplate(implicit request: Request[_]): Html = {
+    uk.gov.hmrc.nisp.views.html.page_not_found_template()
+  }
 
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig(s"microservice.metrics")
 }

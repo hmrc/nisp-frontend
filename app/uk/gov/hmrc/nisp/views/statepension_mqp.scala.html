@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@
 @import uk.gov.hmrc.nisp.views.formatting.Time
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.models.enums.MQPScenario._
-@import uk.gov.hmrc.nisp.controllers.auth.NispUser
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
 @import play.api.Logger
 @import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
@@ -27,27 +28,28 @@
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(
   statePension: StatePension,
   numberOfGaps: Int,
   numberOfPayableGaps: Int,
   numberOfYearsMissing: Int,
   isAbroad: Boolean,
-  customerAge: Option[Int],
+  customerAge: Int,
   isPertaxUrl: Boolean,
   yearsToContributeUntilPensionAge: Int
-)(implicit request: Request[_], user: NispUser, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar" >
-    <h2>@Messages("nisp.nirecord.helpline.getHelp")</h2>
+    <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
 
-    <p>@Messages("nisp.nirecord.helpline.number")</p>
+    <p>@messages("nisp.nirecord.helpline.number")</p>
 
-    <p>@Messages("nisp.nirecord.helpline.textNumber")</p>
+    <p>@messages("nisp.nirecord.helpline.textNumber")</p>
 
-    <p class="font-xsmall">@Messages("nisp.nirecord.helpline.openTimes")</p>
+    <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
 
 </div>
 }
@@ -63,9 +65,9 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         "contractedOut" -> statePension.contractedOut,
         "statePensionAge" -> statePension.pensionAge,
         "copeAmount" -> statePension.amounts.cope.weeklyAmount,
-        "authenticationProvider" -> user.authProviderOld,
-        "authProvider" -> user.authProvider,
-        "confidenceLevel" -> user.confidenceLevel,
+        "authenticationProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+        "authProvider" -> authDetails.authProvider.getOrElse("N/A").toLowerCase(),
+        "confidenceLevel" -> authDetails.confidenceLevel,
         "ageOnVisit" -> customerAge
     )
 }
@@ -73,44 +75,44 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
 @defining(Some(user)) { implicit userOption =>
 @main(MainTemplateParams(
     userLoggedIn = true,
-    browserTitle = Some(Messages("nisp.main.title")),
-    pageTitle = Some(Messages("nisp.main.h1.title")),
+    browserTitle = Some(messages("nisp.main.title")),
+    pageTitle = Some(messages("nisp.main.h1.title")),
     sidebarLinks = Some(sidebar),
     gaDimensions = Some(analyticsAdditionalJs)
 )) {
 
     <div class="panel-indent panel-border-wide panel-indent--info">
-        <p>@Html(Messages("nisp.main.description.mqp")) <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span></p>
+        <p>@Html(messages("nisp.main.description.mqp")) <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span></p>
 
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
-                <p>@Messages("nisp.mqp.possible")</p>
+                <p>@messages("nisp.mqp.possible")</p>
             }
             @if(mqp == CantGet) {
-                <p>@Html(Messages("nisp.mqp.notPossible"))</p>
+                <p>@Html(messages("nisp.mqp.notPossible"))</p>
             }
         }
     </div>
 
     <!-- WHAT YOU CAN DO NEXT -->
 
-    <h2 class="heading-medium">@Messages("nisp.mqp.doNext")</h2>
+    <h2 class="heading-medium">@messages("nisp.mqp.doNext")</h2>
     <p>
         @if(isAbroad) {
-            @Html(Messages("nisp.main.overseas"))
+            @Html(messages("nisp.main.overseas"))
         } else {
-            @Html(Messages("nisp.mqp.overseas"))
+            @Html(messages("nisp.mqp.overseas"))
         }
     </p>
 
     <p>
         @if(numberOfPayableGaps > 1) {
-            @Messages("nisp.mqp.years.dontCount.plural", Time.years(numberOfPayableGaps))
+            @messages("nisp.mqp.years.dontCount.plural", Time.years(numberOfPayableGaps))
         } else {
             @if(numberOfPayableGaps < 1) {
-                @Messages("nisp.mqp.years.dontCount.zero")
+                @messages("nisp.mqp.years.dontCount.zero")
             } else {
-                @Messages("nisp.mqp.years.dontCount.single")
+                @messages("nisp.mqp.years.dontCount.single")
             }
         }
         
@@ -118,16 +120,16 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
             @statePension.mqpScenario.map { mqp =>
                 @if(mqp == CanGetWithGaps) {
                     @if(numberOfPayableGaps > 1) {
-                        @Html(Messages("nisp.mqp.filling.may.plural"))
+                        @Html(messages("nisp.mqp.filling.may.plural"))
                     } else {
-                        @Messages("nisp.mqp.filling.may.single")
+                        @messages("nisp.mqp.filling.may.single")
                     }
                 }
                 @if(mqp == CantGet) {
                     @if(numberOfPayableGaps > 1) {
-                        @Messages("nisp.mqp.filling.never.plural")
+                        @messages("nisp.mqp.filling.never.plural")
                     } else {
-                        @Messages("nisp.mqp.filling.never.single") 
+                        @messages("nisp.mqp.filling.never.single")
                     }
                 }
             }
@@ -138,24 +140,24 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     <p>
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
-                <a href='@routes.NIRecordController.showGaps.url'>@Html(Messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
+                <a href='@routes.NIRecordController.showGaps.url'>@Html(messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
             }
             @if(mqp == CantGet) {
-                <a href='@routes.NIRecordController.showFull.url'>@Messages("nisp.main.showyourrecord")</a>
+                <a href='@routes.NIRecordController.showFull.url'>@messages("nisp.main.showyourrecord")</a>
             }
         }
     </p>    
    
-    <p>@Html(Messages("nisp.mqp.afterSpa", LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)))</p>
-    <p>@Messages("nisp.legal.mqp.forecastChanges") <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>@Messages("nisp.legal.termsAndCondition")</a>.</p>
+    <p>@Html(messages("nisp.mqp.afterSpa", LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)))</p>
+    <p>@messages("nisp.legal.mqp.forecastChanges") <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>@messages("nisp.legal.termsAndCondition")</a>.</p>
 
     <!-- WHAT ELSE YOU CAN DO -->
 
-    <h2 class="heading-medium">@Messages("nisp.mqp.whatElse")</h2>
-    <p>@Html(Messages("nisp.mqp.pensionCredit"))</p>
-    <p>@Html(Messages("nisp.mqp.moneyAdvice"))</p>
+    <h2 class="heading-medium">@messages("nisp.mqp.whatElse")</h2>
+    <p>@Html(messages("nisp.mqp.pensionCredit"))</p>
+    <p>@Html(messages("nisp.mqp.moneyAdvice"))</p>
 
-    @if(isPertaxUrl) {<div class="panel-indent">@Html(Messages("nisp.landing.estimateprovided"))</div>}
+    @if(isPertaxUrl) {<div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>}
 
 
     @if(statePension.statePensionAgeUnderConsideration) {

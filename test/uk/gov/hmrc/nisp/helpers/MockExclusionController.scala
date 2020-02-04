@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,46 +16,16 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.controllers.ExclusionController
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, ExcludedAuthAction}
+import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-object MockExclusionController extends ExclusionController {
-  override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
-
-  override protected def authConnector: AuthConnector = MockAuthConnector
-  override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-    override val ggSignInUrl: String = ""
-    override val verifySignIn: String = ""
-    override val verifySignInContinue: Boolean = false
-    override val assetsPrefix: String = ""
-    override val reportAProblemNonJSUrl: String = ""
-    override val ssoUrl: Option[String] = None
-    override val identityVerification: Boolean = true
-    override val betaFeedbackUnauthenticatedUrl: String = ""
-    override val notAuthorisedRedirectUrl: String = ""
-    override val contactFrontendPartialBaseUrl: String = ""
-    override val govUkFinishedPageUrl: String = ""
-    override val showGovUkDonePage: Boolean = true
-    override val analyticsHost: String = ""
-    override val betaFeedbackUrl: String = ""
-    override val analyticsToken: Option[String] = None
-    override val reportAProblemPartialUrl: String = ""
-    override val contactFormServiceIdentifier: String = ""
-    override val postSignInRedirectUrl: String = ""
-    override val ivUpliftUrl: String = ""
-    override val pertaxFrontendUrl: String = ""
-    override val breadcrumbPartialUrl: String = ""
-    override val showFullNI: Boolean = false
-    override val futureProofPersonalMax: Boolean = false
-    override val isWelshEnabled = true
-    override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
-    override val feedbackFrontendUrl: String = "/foo"
-  }
+class MockExclusionController(nino: Nino) extends ExclusionController {
+  override val authenticate: ExcludedAuthAction = new MockExcludedAuthAction(nino)
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
   override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance

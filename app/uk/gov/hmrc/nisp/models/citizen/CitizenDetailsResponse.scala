@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,3 +23,8 @@ case class CitizenDetailsResponse(person: Citizen, address: Option[Address])
 object CitizenDetailsResponse{
   implicit val formats: Format[CitizenDetailsResponse] = Json.format[CitizenDetailsResponse]
 }
+
+sealed trait CitizenDetailsError
+case object MCI_EXCLUSION extends CitizenDetailsError
+case object TECHNICAL_DIFFICULTIES extends CitizenDetailsError
+case object NOT_FOUND extends CitizenDetailsError

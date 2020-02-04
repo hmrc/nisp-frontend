@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,26 +21,30 @@ import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.config.wiring.{CitizenDetailsConnector, IdentityVerificationConnector, NispAuthConnector}
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.AuthorisedForNisp
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, VerifyAuthActionImpl}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
-import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
+import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
 
-object LandingController extends LandingController with AuthenticationConnectors with PartialRetriever {
-  override val citizenDetailsService: CitizenDetailsService = CitizenDetailsService
+object LandingController extends LandingController with PartialRetriever {
   override val applicationConfig: ApplicationConfig = ApplicationConfig
   override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
+  override val verifyAuthAction: AuthAction = new VerifyAuthActionImpl(
+    new NispAuthConnector,
+    new CitizenDetailsService(CitizenDetailsConnector))
 }
 
-trait LandingController extends NispFrontendController with Actions with AuthorisedForNisp {
+trait LandingController extends NispFrontendController {
   val identityVerificationConnector: IdentityVerificationConnector
+  val applicationConfig: ApplicationConfig
+  val verifyAuthAction: AuthAction
 
   def show: Action[AnyContent] = UnauthorisedAction(
     implicit request =>
@@ -51,7 +55,7 @@ trait LandingController extends NispFrontendController with Actions with Authori
       }
   )
 
-  def verifySignIn: Action[AnyContent] = AuthorisedByVerify { implicit user =>
+  def verifySignIn: Action[AnyContent] = verifyAuthAction {
     implicit request =>
       Redirect(routes.StatePensionController.show())
   }
@@ -74,7 +78,7 @@ trait LandingController extends NispFrontendController with Actions with Authori
         case IdentityVerificationSuccessResponse(FailedIV) => not_authorised()
         case response => Logger.warn(s"Unhandled Response from Identity Verification: $response"); technical_issue()
       }
-    } getOrElse Future.successful(not_authorised(showFirstParagraph = false)) // 2FA returns no journeyId
+    } getOrElse Future.successful(not_authorised(showFirstParagraph = false))
 
     result.map {
       Ok(_).withNewSession

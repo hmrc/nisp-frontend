@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,9 @@ import play.api.http.Status
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.{HttpPost, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.connectors.AuthenticationConnectors
+import uk.gov.hmrc.nisp.config.wiring.WSHttp
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
@@ -33,15 +34,13 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HttpPost, HttpResponse}
-import uk.gov.hmrc.nisp.config.wiring.WSHttp
 
 class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
   val fakeRequest = FakeRequest("GET", "/")
 
   val mockHttp = mock[WSHttp]
 
-  val testFeedbackController = new FeedbackController with AuthenticationConnectors {
+  val testFeedbackController = new FeedbackController {
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
     override implicit val formPartialRetriever: FormPartialRetriever = MockFormPartialRetriever
 
@@ -53,7 +52,6 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
     override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
 
-    override val citizenDetailsService: CitizenDetailsService = MockCitizenDetailsService
     override val applicationConfig: ApplicationConfig = new ApplicationConfig {
       override val ggSignInUrl: String = ""
       override val verifySignIn: String = ""
@@ -76,7 +74,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       override val ivUpliftUrl: String = ""
       override val pertaxFrontendUrl: String = ""
       override val breadcrumbPartialUrl: String = ""
-      override val showFullNI: Boolean = false
+      override lazy val showFullNI: Boolean = false
       override val futureProofPersonalMax: Boolean = false
       override val isWelshEnabled = false
       override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"

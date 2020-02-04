@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,4 +20,4 @@
 @(chartTitle: Html, spChartModel: SPChartModel)(implicit messages: Messages )
 
 @chart(chartTitle, spChartModel.width,
-Html(s"${NispMoney.pounds(spChartModel.amountModel.weeklyAmount)} ${Messages("nisp.main.chart.week")}"))
+Html(s"${NispMoney.pounds(spChartModel.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"))

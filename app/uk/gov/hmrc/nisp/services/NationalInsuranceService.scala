@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,14 @@
 package uk.gov.hmrc.nisp.services
 
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
+import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear}
-import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 
 trait NationalInsuranceService {
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]]
@@ -66,8 +64,4 @@ trait NationalInsuranceConnection {
           Left(Exclusion.MarriedWomenReducedRateElection)
       }
   }
-}
-
-object NationalInsuranceService extends NationalInsuranceService with NationalInsuranceConnection {
-  override val nationalInsuranceConnector: NationalInsuranceConnector = NationalInsuranceConnector
 }
