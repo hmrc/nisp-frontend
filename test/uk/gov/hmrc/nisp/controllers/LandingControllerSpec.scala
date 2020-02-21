@@ -25,6 +25,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http._
 import play.api.i18n.Lang
 import play.api.i18n.Messages.Implicits._
+import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.auth.core.MissingBearerToken
@@ -109,8 +110,10 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSui
 
     "return IVLanding page" in {
       when(testLandingController.applicationConfig.isWelshEnabled).thenReturn(false)
-      val result = testLandingController.show(fakeRequest)
-      contentAsString(result) must include(contentAsString(landing()))
+      val result: Future[Result] = testLandingController.show(fakeRequest)
+      val current: String = contentAsString(result)
+      val expected = contentAsString(landing())
+      current must include(expected)
     }
 
     "return non-IV landing page when switched on" in {
