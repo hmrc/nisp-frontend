@@ -20,19 +20,18 @@ import org.scalatest.mock.MockitoSugar
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import play.twirl.api.Html
-import uk.gov.hmrc.http.{HttpPost}
+import uk.gov.hmrc.http.HttpPost
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, WSHttp}
 import uk.gov.hmrc.nisp.controllers.FeedbackController
-import uk.gov.hmrc.nisp.controllers.auth.{NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.utils.{MockTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class FeedbackViewSpec extends HtmlSpec with MockitoSugar {
+class TimeoutViewSpec extends HtmlSpec with MockitoSugar {
 
   val fakeRequest = FakeRequest("GET", "/")
 
@@ -86,16 +85,43 @@ class FeedbackViewSpec extends HtmlSpec with MockitoSugar {
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"
+  lazy val html = uk.gov.hmrc.nisp.views.html.iv.failurepages.timeout()
+  lazy val source = asDocument(contentAsString(html))
 
+  "TimeoutView" when {
 
-  //fix this test (ref mock template renderer
-  "Feedback page" when {
-    "feedback title is" in {
-      val html = uk.gov.hmrc.nisp.views.html.feedback(feedbackFrontendUrl, Some(Html("sdfgh")))
-      val source = asDocument(contentAsString(html))
-      val row = source.getElementsByTag("script").get(0).toString
-      val expected = messagesApi("nisp.feedback.title")
-      row must include(s"document.title = \042$expected\042")
+    "assert correct page title" in {
+      val title = source.title()
+      val expected = "Some(" + messages("nisp.iv.failure.timeout.title") + Constants.titleSplitter +
+        messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk") + ")"
+      title must include(expected)
     }
+
+    "assert correct heading title on page" in {
+      val title = source.getElementsByTag("h1").get(0).toString
+      val messageKey = "nisp.iv.failure.timeout.title"
+      val expected = "> " + messages(messageKey) + " <"
+      title must include(expected)
+    }
+
+    "assert correct paragraph one text on page" in {
+      val title = source.getElementsByTag("p").get(1).toString
+      val messageKey = "nisp.iv.failure.timeout.message"
+      val expected = ">" + messages(messageKey) + "<"
+      title must include(expected)
+    }
+
+    "assert correct paragraph two text on page" in {
+      val title = source.getElementsByTag("p").get(2).toString
+      val messageKey = "nisp.iv.failure.timeout.data"
+      val expected = ">" + messages(messageKey) + "<"
+      title must include(expected)
+    }
+
+    "assert correct paragraph two text on page" in {
+      val title = source.getElementsByTag("p").get(2).toString
+      val messageKey = "nisp.iv.failure.timeout.data"
+      val expected = ">" + messages(messageKey) + "<"
+      title must include(expected)
   }
 }
