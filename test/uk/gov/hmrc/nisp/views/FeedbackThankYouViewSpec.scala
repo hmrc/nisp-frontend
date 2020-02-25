@@ -16,11 +16,10 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import play.twirl.api.Html
 import uk.gov.hmrc.http.HttpPost
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, WSHttp}
@@ -28,7 +27,7 @@ import uk.gov.hmrc.nisp.controllers.FeedbackController
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.{Constants, FakeApplicationConfig, MockTemplateRenderer}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -50,34 +49,8 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar {
 
     override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
 
-    override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-      override val ggSignInUrl: String = ""
-      override val verifySignIn: String = ""
-      override val verifySignInContinue: Boolean = false
-      override val assetsPrefix: String = ""
-      override val reportAProblemNonJSUrl: String = ""
-      override val ssoUrl: Option[String] = None
-      override val identityVerification: Boolean = false
-      override val betaFeedbackUnauthenticatedUrl: String = ""
-      override val notAuthorisedRedirectUrl: String = ""
-      override val contactFrontendPartialBaseUrl: String = ""
-      override val govUkFinishedPageUrl: String = ""
-      override val showGovUkDonePage: Boolean = false
-      override val analyticsHost: String = ""
-      override val betaFeedbackUrl: String = ""
-      override val analyticsToken: Option[String] = None
-      override val reportAProblemPartialUrl: String = ""
-      override val contactFormServiceIdentifier: String = "NISP"
-      override val postSignInRedirectUrl: String = ""
-      override val ivUpliftUrl: String = ""
-      override val pertaxFrontendUrl: String = ""
-      override val breadcrumbPartialUrl: String = ""
-      override lazy val showFullNI: Boolean = false
-      override val futureProofPersonalMax: Boolean = false
-      override val isWelshEnabled = false
-      override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
-      override val feedbackFrontendUrl: String = "/foo"
-    }
+    override val applicationConfig: ApplicationConfig = new FakeApplicationConfig {}
+
   }
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -86,23 +59,14 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar {
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"
-  lazy val html = uk.gov.hmrc.nisp.views.html.feedback_thankyou(partialUrl = "any", redirectUrl = "anyText")
+  lazy val html = uk.gov.hmrc.nisp.views.html.feedback_thankyou()
   lazy val source = asDocument(contentAsString(html))
 
-//  "FeedbackThankYou" when {
-//    "feedbackThankYou page title is" in {
-//      val html = uk.gov.hmrc.nisp.views.html.feedback_thankyou(feedbackFrontendUrl, "sdfgh")
-//      val source = asDocument(contentAsString(html))
-//      val row = source.getElementsByTag("script").get(0).toString
-//      val expected = messagesApi("nisp.feedback.title")
-//      row must include(s"document.title = \042$expected\042")
-//    }
+    "FeedbackThankYou" should {
 
-    "FeedbackThankYou" when {
-      "asserting correct page title" in {
+      "assert correct page title" in {
         val title = source.title()
-        val expected = messages("nisp.feedback.title") + Constants.titleSplitter +
-          messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")
+        val expected = messages("nisp.feedback.title")
         title must include(expected)
       }
   }

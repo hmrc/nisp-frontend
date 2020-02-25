@@ -16,19 +16,19 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import play.twirl.api.Html
-import uk.gov.hmrc.http.{HttpPost}
+import uk.gov.hmrc.http.HttpPost
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, WSHttp}
 import uk.gov.hmrc.nisp.controllers.FeedbackController
-import uk.gov.hmrc.nisp.controllers.auth.{NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.utils.{MockTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.{FakeApplicationConfig, MockTemplateRenderer}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -50,34 +50,8 @@ class FeedbackViewSpec extends HtmlSpec with MockitoSugar {
 
     override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
 
-    override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-      override val ggSignInUrl: String = ""
-      override val verifySignIn: String = ""
-      override val verifySignInContinue: Boolean = false
-      override val assetsPrefix: String = ""
-      override val reportAProblemNonJSUrl: String = ""
-      override val ssoUrl: Option[String] = None
-      override val identityVerification: Boolean = false
-      override val betaFeedbackUnauthenticatedUrl: String = ""
-      override val notAuthorisedRedirectUrl: String = ""
-      override val contactFrontendPartialBaseUrl: String = ""
-      override val govUkFinishedPageUrl: String = ""
-      override val showGovUkDonePage: Boolean = false
-      override val analyticsHost: String = ""
-      override val betaFeedbackUrl: String = ""
-      override val analyticsToken: Option[String] = None
-      override val reportAProblemPartialUrl: String = ""
-      override val contactFormServiceIdentifier: String = "NISP"
-      override val postSignInRedirectUrl: String = ""
-      override val ivUpliftUrl: String = ""
-      override val pertaxFrontendUrl: String = ""
-      override val breadcrumbPartialUrl: String = ""
-      override lazy val showFullNI: Boolean = false
-      override val futureProofPersonalMax: Boolean = false
-      override val isWelshEnabled = false
-      override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
-      override val feedbackFrontendUrl: String = "/foo"
-    }
+    override val applicationConfig: ApplicationConfig = new FakeApplicationConfig {}
+
   }
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -87,10 +61,8 @@ class FeedbackViewSpec extends HtmlSpec with MockitoSugar {
 
   val feedbackFrontendUrl: String = "/foo"
 
-
-  //fix this test (ref mock template renderer
-  "Feedback page" when {
-    "feedback title is" in {
+  "Feedback page" should {
+    "assert correct feedback title" in {
       val html = uk.gov.hmrc.nisp.views.html.feedback(feedbackFrontendUrl, Some(Html("sdfgh")))
       val source = asDocument(contentAsString(html))
       val row = source.getElementsByTag("script").get(0).toString
