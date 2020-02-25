@@ -23,7 +23,7 @@ import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.http.HttpPost
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, WSHttp}
-import uk.gov.hmrc.nisp.controllers.FeedbackController
+import uk.gov.hmrc.nisp.controllers.{FeedbackController, routes}
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
@@ -88,7 +88,7 @@ class TimeoutViewSpec extends HtmlSpec with MockitoSugar {
   lazy val html = uk.gov.hmrc.nisp.views.html.iv.failurepages.timeout()
   lazy val source = asDocument(contentAsString(html))
 
-  "TimeoutView" when {
+  "TimeoutView" should {
 
     "assert correct page title" in {
       val title = source.title()
@@ -118,10 +118,17 @@ class TimeoutViewSpec extends HtmlSpec with MockitoSugar {
       title must include(expected)
     }
 
-    "assert correct paragraph two text on page" in {
-      val title = source.getElementsByTag("p").get(2).toString
-      val messageKey = "nisp.iv.failure.timeout.data"
+    "assert correct button text on page" in {
+      val title = source.getElementsByTag("a").get(1).toString
+      val messageKey = "nisp.iv.failure.timeout.button"
       val expected = ">" + messages(messageKey) + "<"
       title must include(expected)
+    }
+
+    "assert correct href on the start again button" in {
+      val redirect = source.getElementsByTag("a").get(1).attr("href")
+      val expected = "/check-your-state-pension/account"
+      redirect must include(expected)
+    }
   }
 }
