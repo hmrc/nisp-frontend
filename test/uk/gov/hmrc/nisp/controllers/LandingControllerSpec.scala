@@ -144,6 +144,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSui
   }
 
   "GET /not-authorised" must {
+
+
     "show not authorised page" in {
       val result = testLandingController.showNotAuthorised(None)(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")

@@ -31,7 +31,7 @@ import uk.gov.hmrc.nisp.utils.{Constants, FakeApplicationConfig, MockTemplateRen
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar {
+class not_authorisedViewSpec extends HtmlSpec with MockitoSugar {
 
   val fakeRequest = FakeRequest("GET", "/")
 
@@ -58,16 +58,42 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar {
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
-//  val feedbackFrontendUrl: String = "/foo"
-//  lazy val html = uk.gov.hmrc.nisp.views.html.feedback_thankyou()
-//  lazy val source = asDocument(contentAsString(html))
+  val feedbackFrontendUrl: String = "/foo"
+  lazy val html = uk.gov.hmrc.nisp.views.html.iv.failurepages.not_authorised()
+  lazy val source = asDocument(contentAsString(html))
 
-//    "FeedbackThankYou" should {
-//
-//      "assert correct page title" in {
-//        val title = source.title()
-//        val expected = messages("nisp.feedback.title")
-//        title must include(expected)
-//      }
-//  }
+  "NotAuthorised View" should {
+
+    "assert correct page title" in {
+      val title = source.title()
+      val expected = messages("nisp.iv.failure.general.title") + Constants.titleSplitter +
+                     messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")
+      title must include(expected)
+    }
+
+    "assert correct paragraph text on page" in {
+      val title = source.getElementsByTag("p").get(1).toString
+      val messageKey = "nisp.iv.failure.general.youcan"
+      val expected = ">" + messages(messageKey) + "<"
+      title must include(expected)
+    }
+
+    "assert correct href for redirect link one on page" in {
+      val redirect = source.getElementsByTag("a").get(1).attr("href")
+      val expected = "/check-your-state-pension/account"
+      redirect must include(expected)
+    }
+
+    "assert correct href for redirect link two on page" in {
+      val redirect = source.getElementsByTag("a").get(2).attr("href")
+      val expected = "/contact-hmrc"
+      redirect must include(expected)
+    }
+
+    "assert correct href for redirect link three on page" in {
+      val redirect = source.getElementsByTag("a").get(3).attr("href")
+      val expected = "/future-pension-centre"
+      redirect must include(expected)
+    }
+  }
 }
