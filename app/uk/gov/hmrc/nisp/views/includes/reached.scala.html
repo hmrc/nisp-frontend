@@ -28,7 +28,7 @@
     <li>@Html(messages("nisp.main.inflation"))</li>
     @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
 </ul>
-<h2 class="heading-medium"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
+<h2 class="heading-medium" id="mostYouCanGet"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
 <p>@messages("nisp.main.cantImprove")</p>
 <p>@Html(messages("nisp.main.context.reachMax.needToPay", (LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
 <a href='@routes.NIRecordController.showFull.url'>@messages("nisp.main.showyourrecord")</a>

@@ -651,8 +651,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           }
 
           "render page with Heading  '£155.65 is the most you can get'" in {
-            val sMessgae = "£155.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
-            assertEqualsValue(htmlAccountDoc, "article.content__body>h3:nth-child(8)", sMessgae)
+            val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
+            assertEqualsValue(htmlAccountDoc, "#mostYouCanGet", sMessage)
           }
 
           "render page with text  'You cannot improve your forecast any further.'" in {
@@ -875,8 +875,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           }
 
           "render page with Heading  '£155.65 is the most you can get'" in {
-            val sMessgae = "£155.65 " + Messages("nisp.main.mostYouCanGet")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>h3:nth-child(8)", sMessgae)
+            val sMessage = "£155.65 " + Messages("nisp.main.mostYouCanGet")
+            assertEqualsValue(htmlAccountDoc, "#mostYouCanGet", sMessage)
           }
 
           "render page with text  'You cannot improve your forecast any further, unless you choose to put off claimimg'" in {
@@ -1101,8 +1101,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
           }
 
           "render page with Heading  '£155.65 is the most you can get'" in {
-            val sMessgae = "£155.65 " + Messages("nisp.main.mostYouCanGet")
-            assertEqualsValue(htmlAccountDoc, "article.content__body>h3:nth-child(8)", sMessgae)
+            val sMessage = "£155.65 " + Messages("nisp.main.mostYouCanGet")
+            assertEqualsValue(htmlAccountDoc, "#mostYouCanGet", sMessage)
           }
 
           "render page with text  'You cannot improve your forecast any further, unless you choose to put off claimimg'" in {

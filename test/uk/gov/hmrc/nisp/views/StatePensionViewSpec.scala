@@ -1501,7 +1501,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "render page with text  '£155.65 is the most you can get'" in {
           val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
-          assertEqualsValue(htmlAccountDoc, "article.content__body>h3:nth-child(7)", sMessage)
+          assertEqualsValue(htmlAccountDoc, "#mostYouCanGet", sMessage)
         }
         "render page with text  'You cannot improve your forecast any more'" in {
           assertEqualsMessage(htmlAccountDoc, "article.content__body>p:nth-child(8)", "nisp.main.cantImprove")
