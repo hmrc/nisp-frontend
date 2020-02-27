@@ -58,18 +58,17 @@
       )
 }
 
-
 @contentWithTitle =  {
     @mainTemplateParams.pageInfo.map { pageInfo =>
     <div class="page-info">@Html(pageInfo)</div>
 }
     @mainTemplateParams.pageTitle.map { title =>
-    <h1 class=@headerClass> @Html(title) </h1>
+    <h1 class="@headerClass"> @Html(title) </h1>
 }
+
 @mainContent
 
 }
-
 
 @linkElems = @{
     Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
@@ -200,7 +199,7 @@
     if (mainTemplateParams.h1Class.isDefined){
         mainTemplateParams.h1Class.get
     }else{
-        "heading-large top-title-heading heading-bottom-margin"
+        mainTemplateParams.h1Class.getOrElse("heading-large top-title-heading heading-bottom-margin")
     }
 }
 
