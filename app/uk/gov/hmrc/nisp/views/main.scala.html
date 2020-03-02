@@ -209,7 +209,7 @@
     if (mainTemplateParams.h1Class.isDefined){
         mainTemplateParams.h1Class.get
     } else {
-        "heading-large top-title-heading heading-bottom-margin"
+        mainTemplateParams.h1Class.getOrElse("heading-large top-title-heading heading-bottom-margin")
     }
 }
 
