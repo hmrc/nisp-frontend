@@ -27,7 +27,8 @@ $breadcrumb: '/check-your-state-pension/assets/images/icons/breadcrumb-separator
 
 @import 'print';
 
-$light-bg-chart-bar:#C1DFE4;
+$bg-amount:#00703c;
+$light-bg-chart-bar:#8FBDA8;
 
 
 /*------------------------------------*\
@@ -164,7 +165,7 @@ div.panel-indent{
 \*------------------------------------*/
 .govuk-box-highlight {
   color: #fff;
-  background: #00703c;
+  background: $bg-amount;
 }
 
 .account-menu__link:focus {
