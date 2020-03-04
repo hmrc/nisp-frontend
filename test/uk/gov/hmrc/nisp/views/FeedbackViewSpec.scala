@@ -16,58 +16,53 @@
 
 package uk.gov.hmrc.nisp.views
 
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.mockito.MockitoSugar
-import play.api.mvc.{AnyContent, Request}
-import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import play.twirl.api.Html
-import uk.gov.hmrc.http.HttpPost
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, WSHttp}
-import uk.gov.hmrc.nisp.controllers.FeedbackController
-import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
-import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.utils.{FakeApplicationConfig, MockTemplateRenderer}
+import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.views.html.feedback
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class FeedbackViewSpec extends HtmlSpec with MockitoSugar {
 
-  val fakeRequest = FakeRequest("GET", "/")
-
-  val mockHttp = mock[WSHttp]
-
-  val testFeedbackController = new FeedbackController {
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override implicit val formPartialRetriever: FormPartialRetriever = MockFormPartialRetriever
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    override def httpPost: HttpPost = mockHttp
-
-    override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
-
-    override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
-
-    override val applicationConfig: ApplicationConfig = new FakeApplicationConfig {}
-
-  }
-
-  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val cachedStaticHtmlPartialRetriever  = mock[CachedStaticHtmlPartialRetriever]
+  implicit val formPartialRetriever: FormPartialRetriever = mock[FormPartialRetriever]
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-  implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
-  val feedbackFrontendUrl: String = "/foo"
+  val partialUrl = "partialUrl"
 
   "Feedback page" should {
-    "assert correct feedback title" in {
-      val html = uk.gov.hmrc.nisp.views.html.feedback(feedbackFrontendUrl, Some(Html("sdfgh")))
+    "assert correct feedback title page" in {
+      val html = feedback(partialUrl, Some(Html("sdfgh")))
       val source = asDocument(contentAsString(html))
       val row = source.getElementsByTag("script").get(0).toString
       val expected = messagesApi("nisp.feedback.title")
       row must include(s"document.title = \042$expected\042")
+    }
+
+    "assert passed in formBody is displayed" in {
+      val testHtml = "<p> test html </p>"
+      val html = feedback(partialUrl, Some(Html(testHtml)))
+      contentAsString(html) must include (testHtml)
+      verify(formPartialRetriever, times(0)).getPartialContent(
+        ArgumentMatchers.eq(partialUrl), any(), any())(any())
+    }
+
+    "assert correct html displayed from partialURL call when formBody is not provided" in {
+      reset(formPartialRetriever)
+      val expected = "<p> Mock partial content </p>"
+      when(formPartialRetriever.getPartialContent(any(), any(), any())(any()))
+        .thenReturn(Html(expected))
+      val html = feedback(partialUrl, None)
+      val content = contentAsString(html)
+      content must include(expected)
+      verify(formPartialRetriever, times(1)).getPartialContent(
+        url = ArgumentMatchers.eq(partialUrl), any(), any())(any())
     }
   }
 }

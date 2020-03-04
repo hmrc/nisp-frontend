@@ -100,6 +100,8 @@ class TimeoutViewSpec extends HtmlSpec with MockitoSugar {
       val redirect = source.getElementsByTag("a").get(1).attr("href")
       val expected = "/check-your-state-pension/account"
       redirect must include(expected)
+      println(redirect)
+      println(expected)
     }
   }
 }

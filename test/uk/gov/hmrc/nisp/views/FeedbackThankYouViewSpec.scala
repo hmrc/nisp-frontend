@@ -16,58 +16,54 @@
 
 package uk.gov.hmrc.nisp.views
 
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
-import play.api.mvc.{AnyContent, Request}
-import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
-import uk.gov.hmrc.http.HttpPost
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, WSHttp}
-import uk.gov.hmrc.nisp.controllers.FeedbackController
-import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
-import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.utils.{Constants, FakeApplicationConfig, MockTemplateRenderer}
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import play.twirl.api.Html
+import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
+import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar {
 
-  val fakeRequest = FakeRequest("GET", "/")
-
-  val mockHttp = mock[WSHttp]
-
-  val testFeedbackController = new FeedbackController {
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override implicit val formPartialRetriever: FormPartialRetriever = MockFormPartialRetriever
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    override def httpPost: HttpPost = mockHttp
-
-    override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
-
-    override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
-
-    override val applicationConfig: ApplicationConfig = new FakeApplicationConfig {}
-
-  }
-
-  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  implicit val cachedStaticHtmlPartialRetriever = mock[CachedStaticHtmlPartialRetriever]
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-  implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
-//  val feedbackFrontendUrl: String = "/foo"
-//  lazy val html = uk.gov.hmrc.nisp.views.html.feedback_thankyou()
-//  lazy val source = asDocument(contentAsString(html))
+  val partialUrl = "partialUrl"
+  def html = uk.gov.hmrc.nisp.views.html.feedback_thankyou(partialUrl, "/check-your-state-pension/account")
+  def source = asDocument(contentAsString(html))
 
-//    "FeedbackThankYou" should {
-//
-//      "assert correct page title" in {
-//        val title = source.title()
-//        val expected = messages("nisp.feedback.title")
-//        title must include(expected)
-//      }
-//  }
+  "FeedbackThankYou" should {
+
+    "assert correct page title" in {
+      val title = contentAsString(html)
+      val expected =  messages("nisp.feedback.title")
+      title must include(expected)
+    }
+
+    "assert correct html displayed from partialURL call" in {
+      reset(cachedStaticHtmlPartialRetriever)
+      when(cachedStaticHtmlPartialRetriever.getPartialContent(ArgumentMatchers.anyString(), any(), any())(any()))
+        .thenReturn(Html("<p> Mock partial content </p>"))
+      val content = contentAsString(html)
+      val expected = "<p> Mock partial content </p>"
+      content must include(expected)
+      verify(cachedStaticHtmlPartialRetriever, times(1)).getPartialContent(
+        url = ArgumentMatchers.eq(partialUrl),
+        any(), any())(any())
+    }
+
+    "assert correct href on the start again button" in {
+      when(cachedStaticHtmlPartialRetriever.getPartialContent(ArgumentMatchers.anyString(), any(), any())(any()))
+      .thenReturn(Html("<p> Mock partial content </p>"))
+      val expected = "/check-your-state-pension/account"
+      val redirect = source.getElementById("Start").attr("href")
+
+      redirect must include(expected)
+    }
+  }
 }

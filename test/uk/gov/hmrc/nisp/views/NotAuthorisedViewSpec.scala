@@ -31,7 +31,7 @@ import uk.gov.hmrc.nisp.utils.{Constants, FakeApplicationConfig, MockTemplateRen
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class not_authorisedViewSpec extends HtmlSpec with MockitoSugar {
+class NotAuthorisedViewSpec extends HtmlSpec with MockitoSugar {
 
   val fakeRequest = FakeRequest("GET", "/")
 
