@@ -23,7 +23,6 @@ nisp.breadcrumb.nirecord.gapsandhowtocheck = Gaps in your record and how to chec
 nisp.breadcrumb.excluded = Excluded
 nisp.breadcrumb.cope = Cope Page
 nisp.title.extension = Check your State Pension
-
 #*************************
 # Landing page messages
 #*************************
@@ -149,11 +148,10 @@ nisp.excluded.dead.openingtime.weekdays = 8am to 8pm, Monday to Friday
 nisp.excluded.dead.openingtime.saturday = 8am to 4pm, Saturday
 nisp.excluded.dead.openingtime.holidays = Closed Sundays and bank holidays
 
-
 nisp.excluded.isleOfMan.sp.line1 = We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.
 nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
 nisp.excluded.isleOfMan.ni = We’re unable to show your National Insurance record as you have contributions from the Isle of Man.
-
+key2 = TEST KEYss
 nisp.excluded.mwrre.sp = We’re unable to calculate your State Pension forecast as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
 nisp.excluded.mwrre.ni = We’re currently unable to show your National Insurance Record as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
 nisp.excluded.mwrre.improve = Help us improve this service

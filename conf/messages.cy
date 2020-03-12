@@ -7,6 +7,8 @@ nisp.submit = Anfon
 nisp.year = blwyddyn
 nisp.years = o flynyddoedd
 nisp.is = yw
+my.key = TEST KEY
+
 nisp.goback = Ewch yn ôl
 nisp.textentry.warning =  Peidiwch â chynnwys unrhyw wybodaeth bersonol neu ariannol, er enghraifft eich rhif Yswiriant Gwladol neu gerdyn credyd.
 nisp.textentry.charlimit =  Y terfyn yw 1,200 nod.
