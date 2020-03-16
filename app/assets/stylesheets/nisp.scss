@@ -164,7 +164,7 @@ div.panel-indent{
 \*------------------------------------*/
 .govuk-box-highlight {
   color: #fff;
-  background: #00703c;
+  background: $panel-green;
 }
 
 .account-menu__link:focus {
@@ -255,7 +255,7 @@ div.panel-indent{
     {
       display: block;
       height: 100%;
-      background: $turquoise;
+      background: $panel-green;
       line-height: 1.6em;
       color: $page-colour;
       text-align: right;
