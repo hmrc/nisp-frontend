@@ -7,7 +7,6 @@ nisp.submit = Anfon
 nisp.year = blwyddyn
 nisp.years = o flynyddoedd
 nisp.is = yw
-my.key = TEST KEY
 
 nisp.goback = Ewch yn ôl
 nisp.textentry.warning =  Peidiwch â chynnwys unrhyw wybodaeth bersonol neu ariannol, er enghraifft eich rhif Yswiriant Gwladol neu gerdyn credyd.
@@ -25,6 +24,7 @@ nisp.breadcrumb.nirecord.gapsandhowtocheck = Bylchau yn eich cofnod a sut i’w 
 nisp.breadcrumb.excluded = Wedi’i eithrio
 nisp.breadcrumb.cope = Tudalen Cope
 nisp.title.extension = Gwirio eich Pensiwn y Wladwriaeth
+
 #*************************
 # Landing page messages
 #*************************
@@ -179,7 +179,6 @@ nisp.finishpage.title = Rydym wedi derbyn eich adborth: Gwirio eich Pensiwn y Wl
 nisp.feedback.title = Anfon eich adborth - Gwirio eich Pensiwn y Wladwriaeth - GOV.UK
 nisp.feedback.finished.title = Eich adborth - Gwirio eich Pensiwn y Wladwriaeth - GOV.UK
 
-
 #*******************
 # Session timeout
 #*******************
@@ -303,7 +302,6 @@ nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = <a href="https://www
 nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - cyngor ar bensiynau preifat i’r rhai sydd dros 50 oed
 nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = <a href="https://www.citizensadvice.org.uk/cymraeg/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">Cyngor ar Bopeth (agor mewn tab newydd)</a>
 
-
 nisp.nirecord.voluntarycontributions.h2title.3 = 3. Edrych os gallech gael incwm pensiwn ychwanegol oherwydd eich bod yn
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle1 = etifeddu neu ei wella gan bartner
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading = Gallai eich swm newid os ydych:
@@ -313,8 +311,6 @@ nisp.nirecord.voluntarycontributions.h2title.3.linktitle2 = wedi byw neu weithio
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message = Efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o’r wlad rydych wedi byw neu weithio ynddi. Cysylltwch â gwasanaeth pensiwn y wlad roeddech ynddi i ddarganfod os ydych yn gymwys.
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3 = wedi byw neu weithio yn Ynys Manaw
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)</a>.
-
-
 
 #*****************************
 # Minimum qualifying period
@@ -350,7 +346,6 @@ nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydy
 nisp.spa.under.consideration.title = Newid arfaethedig i’ch oedran Pensiwn y Wladwriaeth
 nisp.spa.under.consideration.detail = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>. O dan gynigion gan y Llywodraeth, gall hwn godi gan hyd at flwyddyn.
 
-
 #*****************
 # COPE messages
 #*****************
@@ -373,7 +368,6 @@ nisp.cope.workplace = Bydd cyfanswm y pensiwn a delir gan eich cynlluniau pensiw
 nisp.cope.table.estimate.title = Eich amcangyfrif COPE yw
 
 nisp.main.cope.linkTitle =  Darganfyddwch fwy am <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE ac eithrio allan (agor mewn tab newydd)</a>.
-
 
 #******************************
 # Not authorised IV messages
@@ -432,10 +426,12 @@ error.email = Rhowch gyfeiriad e-bost dilys
 #***********************
 # UR banner
 #***********************
+
 nisp.home.banner.recruitment.link = Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor ffenestr newydd)
 nisp.home.banner.recruitment.reject = Dim diolch
 nisp.home.banner.recruitment.title = Helpwch i wella GOV.UK
 nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
+nisp.home.banner.recruitment.linkURL = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183
 
 global.error.InternalServerError500.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
