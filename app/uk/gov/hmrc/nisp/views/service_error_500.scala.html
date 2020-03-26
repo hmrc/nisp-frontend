@@ -14,14 +14,11 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.views.html.main
-@import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import play.api.Application
-
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
-@import uk.gov.hmrc.nisp.config.ApplicationConfig
+
 @(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_],
         partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
@@ -29,14 +26,10 @@
   ga('send', 'pageview', '/check-your-state-pension/unauthorised-confirm-identity');
 }
 
-@anchor(text: String, url: String) = {<a href="@url" target="_blank">@text</a>}
-
 @unauthenticatedMain(MainTemplateParams(
   articleClasses = Some("mainpage"),
   analyticsAdditionalJs = Some(analyticsAdditionalJs),
   pageTitle= Some(messages("global.error.InternalServerError500.title")), h1Class = Some("heading-xlarge")
 )) {
   <p>@messages("global.error.InternalServerError500.message")</p>
-  
-
 }
