@@ -245,7 +245,7 @@ nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gen
 nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
 nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
-nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8am i 6pm
+nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 9.30am i 3.30pm
 
 #****************************
 # Gaps in your record page
