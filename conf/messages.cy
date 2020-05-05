@@ -311,7 +311,7 @@ nisp.nirecord.voluntarycontributions.h2title.3.linktitle2 = wedi byw neu weithio
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message = Efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o’r wlad rydych wedi byw neu weithio ynddi. Cysylltwch â gwasanaeth pensiwn y wlad roeddech ynddi i ddarganfod os ydych yn gymwys.
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3 = wedi byw neu weithio yn Ynys Manaw
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol,
-
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.link = ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)
 
 
 #*****************************
