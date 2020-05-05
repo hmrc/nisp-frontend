@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
-
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 
@@ -48,9 +48,16 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     <div class="panel-indent">
         <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
         <ul class="list-bullet">
-            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3"))</li>
-            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1"))</li>
-            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2"))</a>&nbsp;@Html(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message"))</li>
+            <li>
+              <a href="@{ApplicationConfig.citizenAdviceLink}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
+            </li>
+            <li>
+              <a href="@{ApplicationConfig.moneyAdviceLink}" id="moneyAdviceLink"rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
+            </li>
+            <li>
+              <a href="@{ApplicationConfig.pensionWiseLink}" id="pensionWiseLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2")</a>
+              &nbsp;@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")
+            </li>
 
         </ul>
     </div>
@@ -83,7 +90,11 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
         <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")</span>
     </summary>
     <div class="panel-indent">
-        <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1") )</p>
+        <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1"))
+          <a href="@{ApplicationConfig.isleManLink}" tabindex="-1" rel="external" target="_blank" id="nir-external-link" data-journey-click="checkmystatepension:external:iom">
+            @messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")
+          </a>
+        </p>
     </div>
 </details>
 

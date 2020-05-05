@@ -83,6 +83,10 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   val showUrBanner:Boolean = configuration.getBoolean("urBannerToggle").getOrElse(false)
   val GaEventAction: String = "home page UR"
+  val isleManLink = runModeConfiguration.getString("isle-man-link.url")
+  val citizenAdviceLink = runModeConfiguration.getString("citizen-advice-link.url")
+  val moneyAdviceLink = runModeConfiguration.getString("money-advice-link.url")
+  val pensionWiseLink = runModeConfiguration.getString("pension-wise-link.url")
 
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
