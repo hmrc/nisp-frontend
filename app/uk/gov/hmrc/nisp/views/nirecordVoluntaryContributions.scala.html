@@ -33,74 +33,79 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
     sidebarLinks = None)
 ) {
 
-<p class="lede">@messages("nisp.nirecord.voluntarycontributions.title.message")</p>
+  <p class="lede">@messages("nisp.nirecord.voluntarycontributions.title.message")</p>
+  <h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.1") </h2>
+  <p>@messages("nisp.nirecord.voluntarycontributions.h2title.1.message")&nbsp;<a href="@routes.StatePensionController.show.url">@messages("nisp.nirecord.voluntarycontributions.h2title.1.link1")</a>.</p>
 
+  <h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.2")</h2>
+  <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.message")</p>
+  <details class="helptext">
+      <summary class="summary-list-item">
+          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.title")</span>
+      </summary>
+      <div class="panel-indent">
+          <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
+          <ul class="list-bullet">
+              <li>
+                @if(messages.lang == "en") {
+                <a href="@{ApplicationConfig.citizenAdviceLinkEn}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
+              } else {
+                <a href="@{ApplicationConfig.citizenAdviceLinkCy}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
+              }
+              </li>
+              <li>
+                @if(messages.lang == "en"){
+                  <a href="@{ApplicationConfig.moneyAdviceLinkEn}" id="moneyAdviceLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
+                } else {
+                  <a href="@{ApplicationConfig.moneyAdviceLinkCy}" id="moneyAdviceLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
+                }
+              </li>
+              <li>
+                <a href="@{ApplicationConfig.pensionWiseLink}" id="pensionWiseLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2")</a>
+                &nbsp;<span id="pensionAdviceText">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")</span>
+              </li>
 
-<h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.1") </h2>
-<p>@messages("nisp.nirecord.voluntarycontributions.h2title.1.message")&nbsp;<a href="@routes.StatePensionController.show.url">@messages("nisp.nirecord.voluntarycontributions.h2title.1.link1")</a>.</p>
+          </ul>
+      </div>
+  </details>
 
-<h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.2")</h2>
-<p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.message")</p>
-<details class="helptext">
-    <summary class="summary-list-item">
-        <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.title")</span>
-    </summary>
-    <div class="panel-indent">
-        <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
-        <ul class="list-bullet">
-            <li>
-              <a href="@{ApplicationConfig.citizenAdviceLink}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
-            </li>
-            <li>
-              <a href="@{ApplicationConfig.moneyAdviceLink}" id="moneyAdviceLink"rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
-            </li>
-            <li>
-              <a href="@{ApplicationConfig.pensionWiseLink}" id="pensionWiseLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2")</a>
-              &nbsp;@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")
-            </li>
+  <h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.3")</h2>
+  <details class="helptext">
+      <summary class="summary-list-item">
+          <span class="summary">@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1"))</span>
+      </summary>
+      <div class="panel-indent">
+          <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading"))</p>
+          <ul class="list-bullet">
+              <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1"))</li>
+              <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2"))</li>
+          </ul>
+      </div>
+  </details>
+  <details class="helptext">
+      <summary class="summary-list-item">
+          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2")</span>
+      </summary>
+      <div class="panel-indent">
+          <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message"))</p>
+      </div>
+  </details>
 
-        </ul>
-    </div>
-</details>
-
-<h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.3")</h2>
-<details class="helptext">
-    <summary class="summary-list-item">
-        <span class="summary">@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1"))</span>
-    </summary>
-    <div class="panel-indent">
-        <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading"))</p>
-        <ul class="list-bullet">
-            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1"))</li>
-            <li>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2"))</li>
-        </ul>
-    </div>
-</details>
-<details class="helptext">
-    <summary class="summary-list-item">
-        <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2")</span>
-    </summary>
-    <div class="panel-indent">
-        <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message"))</p>
-    </div>
-</details>
-
-<details class="helptext">
-    <summary class="summary-list-item">
-        <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")</span>
-    </summary>
-    <div class="panel-indent">
-        <p>@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1"))
+  <details class="helptext">
+      <summary class="summary-list-item">
+          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")</span>
+      </summary>
+      <div class="panel-indent">
+          <p id="IOM-message">@Html(messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1"))</p>
           <a href="@{ApplicationConfig.isleManLink}" tabindex="-1" rel="external" target="_blank" id="nir-external-link" data-journey-click="checkmystatepension:external:iom">
             @messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.link")
           </a>
-        </p>
-    </div>
-</details>
+      </div>
+  </details>
 
 
-<div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@messages("nisp.back")</a>
-</div>
+  <div class="backlink"><a href="@{routes.NIRecordController.showGaps().url}">@messages("nisp.back")</a>
+  </div>
 
 }
 }
