@@ -89,16 +89,16 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendControlle
       assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>p", "nisp.nirecord.voluntarycontributions.h2title.2.help.message")
     }
     "render page with text  'Money Advice Service (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(2)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link1")
+      assertEqualsMessage(htmlAccountDoc, "#moneyAdviceLink", "nisp.nirecord.voluntarycontributions.h2title.2.help.link1")
     }
     "render page with text ' Pension wise (opens in new tab)'" in {
-      assertElemetsOwnMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")
+      assertElemetsOwnMessage(htmlAccountDoc, "#pensionWiseLink", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2")
     }
     "render page with link  'Pension wise (opens in new tab)'' " in {
-      assertContainsMessageBetweenTags(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message", "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)>a")
+      assertContainsMessageBetweenTags(htmlAccountDoc, "#pensionAdviceText", "nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message", "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)>a")
     }
     "render page with text  'Citizens Advice (opens in new tab)'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(1)", "nisp.nirecord.voluntarycontributions.h2title.2.help.link3")
+      assertEqualsMessage(htmlAccountDoc, "#citizenAdviceLink", "nisp.nirecord.voluntarycontributions.h2title.2.help.link3")
     }
 
 
@@ -129,7 +129,7 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendControlle
       assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(11)>summary>span.summary", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")
     }
     "render page with text  'You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme, ' " in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body > details:nth-child(11)>div.panel-indent>p", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1")
+      assertEqualsMessage(htmlAccountDoc, "#IOM-message", "nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1")
     }
 
     "render page with text  'back' " in {
@@ -137,18 +137,18 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendControlle
     }
 
     "render page with href value of link 'GOV.IM – Retirement Pension (opens in new window)'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(11)>div.panel-indent>p>a", "https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/")
+      assertLinkHasValue(htmlAccountDoc, "#nir-external-link", "https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/")
     }
 
     "render page with href value of link 'Money advice service'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(2)>a", expectedMoneyServiceLink)
+      assertLinkHasValue(htmlAccountDoc, "#moneyAdviceLink", expectedMoneyServiceLink)
 
     }
     "render page with href value of link 'Pension wise'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(3)>a", "https://www.pensionwise.gov.uk/")
+      assertLinkHasValue(htmlAccountDoc, "#pensionWiseLink", "https://www.pensionwise.gov.uk/")
     }
     "render page with href value of link 'Citizen advice'" in {
-      assertLinkHasValue(htmlAccountDoc, "article.content__body > details:nth-child(7)>div>ul.list-bullet>li:nth-child(1)>a", expectedCitizensAdviceLink)
+      assertLinkHasValue(htmlAccountDoc, "#citizenAdviceLink", expectedCitizensAdviceLink)
 
     }
 

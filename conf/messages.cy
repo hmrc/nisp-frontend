@@ -296,10 +296,10 @@ nisp.nirecord.voluntarycontributions.h2title.2 = 2. Chwiliwch am arweiniad neu g
 nisp.nirecord.voluntarycontributions.h2title.2.message = Efallai nad talu cyfraniadau gwirfoddol fydd eich opsiwn gorau wrth gynllunio am eich ymddeoliad.
 nisp.nirecord.voluntarycontributions.h2title.2.help.title = Ble allwch chi gael arweiniad neu gyngor
 nisp.nirecord.voluntarycontributions.h2title.2.help.message = Gallwch chwilio am gyngor ariannol proffesiynol. Am arweiniad di-duedd am ddim (ddim ar GOV.UK):
-nisp.nirecord.voluntarycontributions.h2title.2.help.link1 = <a href="https://www.moneyadviceservice.org.uk/cy" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Y Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)</a>
-nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = <a href="https://www.pensionwise.gov.uk/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">Pension wise (agor mewn tab newydd)</a>
-nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message =  - cyngor ar bensiynau preifat i’r rhai sydd dros 50 oed
-nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = <a href="https://www.citizensadvice.org.uk/cymraeg/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">Cyngor ar Bopeth (agor mewn tab newydd)</a>
+nisp.nirecord.voluntarycontributions.h2title.2.help.link1 = Y Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)
+nisp.nirecord.voluntarycontributions.h2title.2.help.link2 = Pension wise (agor mewn tab newydd)
+nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message = - cyngor ar bensiynau preifat i’r rhai sydd dros 50 oed
+nisp.nirecord.voluntarycontributions.h2title.2.help.link3 = Cyngor ar Bopeth (agor mewn tab newydd)
 
 
 nisp.nirecord.voluntarycontributions.h2title.3 = 3. Edrych os gallech gael incwm pensiwn ychwanegol oherwydd eich bod yn
@@ -310,8 +310,8 @@ nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2 = wedi talu c
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle2 = wedi byw neu weithio dramor
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message = Efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o’r wlad rydych wedi byw neu weithio ynddi. Cysylltwch â gwasanaeth pensiwn y wlad roeddech ynddi i ddarganfod os ydych yn gymwys.
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3 = wedi byw neu weithio yn Ynys Manaw
-nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol, <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)</a>.
-
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol,
+nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.link = ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)
 
 
 #*****************************

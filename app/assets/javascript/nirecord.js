@@ -1,8 +1,33 @@
     $(document).ready(function(){
-      var allPanels = $('.accordion > dd').hide();
-      var allHeaders = $('.accordion > dt');
-      var currentLanguage = $('#current-language').text()
+
+        var summary = $(".summary-list-item");
+
+        $(summary).on("click enter", function(){
+            var nirLink = document.getElementById("nir-external-link");
+            var citizenLink = document.getElementById("citizenAdviceLink");
+            var moneyAdviceLink = document.getElementById("moneyAdviceLink");
+            var pensionLink = document.getElementById("pensionWiseLink");
+            var professionalAdvice = document.getElementById("details-content-0").attributes[2].value
+            var nirSection = document.getElementById("details-content-3").attributes[2].value
+            if (professionalAdvice === "true" || nirSection === "true") {
+                nirLink.tabIndex = "1";
+                citizenLink.tabIndex = "1";
+                moneyAdviceLink.tabIndex = "1 ";
+                pensionLink.tabIndex = "1";
+            } else {
+                nirLink.tabIndex = "-1";
+                citizenLink.tabIndex = "-1";
+                moneyAdviceLink.tabIndex = "-1";
+                pensionLink.tabIndex = "-1";
+            }
+        });
+
+        var allPanels = $('.accordion > dd').hide();
+        var allHeaders = $('.accordion > dt');
+        var currentLanguage = $('#current-language').text()
+
       $(".hide-details").hide();
+
 
       $('.accordion > dt.expandable').click(function() {
          var taxYear = $(this).find(".ni-years").text()
