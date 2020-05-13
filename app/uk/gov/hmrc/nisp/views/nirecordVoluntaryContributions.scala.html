@@ -24,7 +24,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @()(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever,
 application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
-
+<script>console.log(@messages.lang.language)</script>
 @defining(Some(user)) { implicit userOption =>
 @main(MainTemplateParams(
     browserTitle = Some(messages("nisp.nirecord.voluntarycontributions.title")),
@@ -47,17 +47,18 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
           <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
           <ul class="list-bullet">
               <li>
-                @if(messages.lang == "en") {
-                <a href="@{ApplicationConfig.citizenAdviceLinkEn}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
-              } else {
+
+                @if(messages.lang.language == "cy") {
                 <a href="@{ApplicationConfig.citizenAdviceLinkCy}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
+              } else {
+                <a href="@{ApplicationConfig.citizenAdviceLinkEn}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
               }
               </li>
               <li>
-                @if(messages.lang == "en"){
-                  <a href="@{ApplicationConfig.moneyAdviceLinkEn}" id="moneyAdviceLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
-                } else {
+                @if(messages.lang.language == "cy"){
                   <a href="@{ApplicationConfig.moneyAdviceLinkCy}" id="moneyAdviceLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
+                } else {
+                  <a href="@{ApplicationConfig.moneyAdviceLinkEn}" id="moneyAdviceLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
                 }
               </li>
               <li>
@@ -71,7 +72,7 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
   <h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.3")</h2>
   <details class="helptext">
       <summary class="summary-list-item">
-          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1")F</span>
+          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1")</span>
       </summary>
       <div class="panel-indent">
           <p>@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading")</p>

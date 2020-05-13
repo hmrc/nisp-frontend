@@ -53,8 +53,6 @@ trait ApplicationGlobalTrait extends DefaultFrontendGlobal with RunMode with Par
   override def internalServerErrorTemplate(implicit request: Request[_]): Html =
     uk.gov.hmrc.nisp.views.html.service_error_500()
 
-
-
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     uk.gov.hmrc.nisp.views.html.global_error(pageTitle, heading, message)
 
