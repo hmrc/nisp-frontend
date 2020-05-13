@@ -47,6 +47,7 @@ application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPa
           <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
           <ul class="list-bullet">
               <li>
+
                 @if(messages.lang.language == "cy") {
                 <a href="@{ApplicationConfig.citizenAdviceLinkCy}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
               } else {
