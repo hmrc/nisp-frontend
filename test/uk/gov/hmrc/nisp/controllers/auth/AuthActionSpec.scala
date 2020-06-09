@@ -30,6 +30,7 @@ import play.api.test.Helpers.redirectLocation
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
+import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps._
@@ -64,7 +65,7 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
   private val citizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 
   private def makeRetrievalResults(ninoOption: Option[String] = Some(nino), enrolments: Enrolments = Enrolments(Set.empty)) =
-    Future.successful(ninoOption ~ ConfidenceLevel.L200 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments)
+    Future.successful(ninoOption ~ ConfidenceLevel.L200 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ None)
 
   private object Stubs {
     def successBlock(request: AuthenticatedRequest[_]): Future[Result] = Future.successful(Ok)
@@ -74,11 +75,13 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
   val upliftUrlTail = "/mdtp/uplift?origin=NISP&completionURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failureURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised&confidenceLevel=200"
   implicit val timeout: Timeout = 5 seconds
 
+  type retType = Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
+
   "GET /statepension" should {
     "invoke the block when the user details can be retrieved without SA enrolment" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments]
+      when(mockAuthConnector.authorise[retType]
         (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(makeRetrievalResults())
 
@@ -97,7 +100,8 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
           citizen.dateOfBirth,
           UserName(Name(citizen.firstName, citizen.lastName)),
           citizenDetailsResponse.address,
-          isSa = false),
+          isSa = false,
+          None),
         AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
       verify(stubs).successBlock(
         argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
@@ -106,7 +110,7 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
     "invoke the block when the user details can be retrieved withSA enrolment" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments]
+      when(mockAuthConnector.authorise[retType]
         (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(makeRetrievalResults(enrolments = Enrolments(Set(Enrolment("IR-SA")))))
 
@@ -125,7 +129,8 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
           citizen.dateOfBirth,
           UserName(Name(citizen.firstName, citizen.lastName)),
           citizenDetailsResponse.address,
-          isSa = true),
+          isSa = true,
+          None),
         AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
       verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
     }
@@ -153,7 +158,7 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
     "return error for not found user" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments]
+      when(mockAuthConnector.authorise[retType]
         (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(makeRetrievalResults())
 
@@ -168,7 +173,7 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
     "return error for user without nino" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments]
+      when(mockAuthConnector.authorise[retType]
         (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(makeRetrievalResults(ninoOption = None))
 
@@ -180,7 +185,7 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
     "return error for technical difficulties" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments]
+      when(mockAuthConnector.authorise[retType]
         (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(makeRetrievalResults())
 
@@ -195,7 +200,7 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
     "return redirect for exclusion when NI" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments]
+      when(mockAuthConnector.authorise[retType]
         (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(makeRetrievalResults())
 
@@ -212,7 +217,7 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
   "return redirect for exclusion when not NI" in {
     val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-    when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments]
+    when(mockAuthConnector.authorise[retType]
       (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
       .thenReturn(makeRetrievalResults())
 

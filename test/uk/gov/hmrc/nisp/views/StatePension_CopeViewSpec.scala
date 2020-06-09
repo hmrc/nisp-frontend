@@ -50,7 +50,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
   val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
-  implicit val user: NispAuthedUser = NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, false)
+  implicit val user: NispAuthedUser = NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, false, None)
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)

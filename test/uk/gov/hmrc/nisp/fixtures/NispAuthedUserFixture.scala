@@ -34,7 +34,8 @@ object NispAuthedUserFixture {
       name = UserName(Name(citizenDetailsResponse.person.firstName,
                       citizenDetailsResponse.person.lastName)),
       address = citizenDetailsResponse.address,
-      isSa = false)
+      isSa = false,
+      None)
   }
 
 }

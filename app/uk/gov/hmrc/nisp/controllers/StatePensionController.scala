@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.controllers
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent, Request, Session}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -98,8 +99,9 @@ trait StatePensionController extends NispFrontendController with PertaxHelper wi
       implicit val authDetails: AuthDetails = request.authDetails
       isFromPertax.flatMap { isPertax =>
 
-        val statePensionResponseF = statePensionService.getSummary(user.nino)
-        val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
+        val nino: Nino = user.trustedHelper.fold(user.nino)(th => Nino(th.principalNino))
+        val statePensionResponseF = statePensionService.getSummary(nino)
+        val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
 
         (for (
           statePensionResponse <- statePensionResponseF;
