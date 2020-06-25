@@ -105,25 +105,18 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(AuthProviders(Verify) and ConfidenceLevel.L500)
-      .retrieve(
-        Retrievals.nino and
-          Retrievals.confidenceLevel and
-          Retrievals.credentials and
-          Retrievals.loginTimes and
-          Retrievals.allEnrolments and
-          Retrievals.trustedHelper
-      ) {
+      .retrieve(nino and confidenceLevel and credentials and loginTimes and allEnrolments and trustedHelper) {
         case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) ~ optTrustedHelper =>
           val useNino = optTrustedHelper.fold(nino)(_.principalNino)
           cds.retrievePerson(Nino(useNino)).flatMap {
             case Right(cdr) =>
-              val saEnrolment = enrolments.find(_.key == "IR-SA")
+              val hasSaEnrolment = enrolments.exists(_.key == "IR-SA")
               block(AuthenticatedRequest(request,
                 NispAuthedUser(cdr.person.nino,
                   cdr.person.dateOfBirth,
                   UserName(Name(cdr.person.firstName, cdr.person.lastName)),
                   cdr.address,
-                  saEnrolment.isDefined),
+                  hasSaEnrolment),
                 AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
             case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
             case Left(NOT_FOUND) => throw new InternalServerException("User not found")
