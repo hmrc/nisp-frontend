@@ -30,8 +30,3 @@ case class UserName(name: Name) {
     }
   }
 }
-object UserName {
-
-  def apply(name: String): UserName = new UserName(Name(None, Some(name)))
-
-}

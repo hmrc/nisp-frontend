@@ -30,6 +30,7 @@ import play.api.test.Helpers.redirectLocation
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
+import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps._
@@ -46,38 +47,39 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
-
   class BrokenAuthConnector(exception: Throwable) extends NispAuthConnector {
     override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
       Future.failed(exception)
   }
 
-  private val mockAuthConnector: NispAuthConnector = mock[NispAuthConnector]
+  type AuthRetrievalType = Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
 
+  private val mockAuthConnector: NispAuthConnector = mock[NispAuthConnector]
   private val nino: String = new Generator().nextNino.nino
   private val fakeLoginTimes = LoginTimes(DateTime.now(), None)
-  private val credentials = Credentials("providerId", "providerType")
 
+  private val credentials = Credentials("providerId", "providerType")
   private val citizen: Citizen = Citizen(Nino(nino), Some("John"), Some("Smith"), new LocalDate(1983, 1, 2))
   private val address: Address = Address(Some("Country"))
+
   private val citizenDetailsResponse: CitizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 
-  private def makeRetrievalResults(ninoOption: Option[String] = Some(nino), enrolments: Enrolments = Enrolments(Set.empty)): Future[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments] =
-    Future.successful(ninoOption ~ ConfidenceLevel.L500 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments)
+  private def makeRetrievalResults(ninoOption: Option[String] = Some(nino), enrolments: Enrolments = Enrolments(Set.empty), trustedHelper: Option[TrustedHelper] = None): Future[AuthRetrievalType] =
+    Future.successful(ninoOption ~ ConfidenceLevel.L500 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper)
 
   private object Stubs {
     def successBlock(request: AuthenticatedRequest[_]): Future[Result] = Future.successful(Ok)
   }
-
   val verifyUrl = "http://localhost:9949/auth-login-stub/verify-sign-in"
   val upliftUrlTail = "/uplift?origin=NISP&completionURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failureURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised&confidenceLevel=200"
+
   implicit val timeout: Timeout = 5 seconds
 
-  "GET /signin/verify" ignore {
+  "GET /signin/verify" should {
     "invoke the block when the user details can be retrieved without SA enrolment" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any())(any()))
@@ -103,7 +105,7 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
     "invoke the block when the user details can be retrieved withSA enrolment" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
         .thenReturn(makeRetrievalResults(enrolments = Enrolments(Set(Enrolment("IR-SA")))))
 
       when(mockCitizenDetailsService.retrievePerson(any())(any()))
@@ -159,7 +161,7 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
     "return error for not found user" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any())(any()))
@@ -173,7 +175,7 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
     "return error for user without nino" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
         .thenReturn(makeRetrievalResults(ninoOption = None))
 
       val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
@@ -184,7 +186,7 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
     "return error for technical difficulties" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any())(any()))
@@ -198,7 +200,7 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
     "return redirect for exclusion when NI" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any())(any()))
@@ -213,7 +215,7 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
     "return redirect for exclusion when not NI" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments](any(), any())(any(), any()))
+      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any())(any()))

@@ -22,7 +22,6 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthProvider.Verify
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
 import uk.gov.hmrc.domain.Nino
@@ -54,8 +53,8 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
           val useNino = optTrustedHelper.fold(nino)(_.principalNino)
           cds.retrievePerson(Nino(useNino)).flatMap {
             case Right(cdr) =>
-              val hasSa = optTrustedHelper.fold(enrolments.exists(_.key == "IR-SA"))(_ => false)
-              val name: UserName = optTrustedHelper.fold(UserName(Name(cdr.person.firstName, cdr.person.lastName)))(th => UserName(th.principalName))
+              val hasSa: Boolean = optTrustedHelper.fold(enrolments.exists(_.key == "IR-SA"))(_ => false)
+              val name: UserName = UserName(Name(cdr.person.firstName, cdr.person.lastName))
               block(AuthenticatedRequest(request,
                 NispAuthedUser(Nino(useNino),
                   cdr.person.dateOfBirth,
@@ -110,14 +109,15 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
           val useNino = optTrustedHelper.fold(nino)(_.principalNino)
           cds.retrievePerson(Nino(useNino)).flatMap {
             case Right(cdr) =>
-              val hasSaEnrolment = enrolments.exists(_.key == "IR-SA")
+              val hasSa: Boolean = optTrustedHelper.fold(enrolments.exists(_.key == "IR-SA"))(_ => false)
+              val name: UserName = UserName(Name(cdr.person.firstName, cdr.person.lastName))
               block(AuthenticatedRequest(request,
-                NispAuthedUser(cdr.person.nino,
+                NispAuthedUser(Nino(useNino),
                   cdr.person.dateOfBirth,
-                  UserName(Name(cdr.person.firstName, cdr.person.lastName)),
+                  name,
                   cdr.address,
-                  hasSaEnrolment),
-                AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)))
+                  hasSa),
+                AuthDetails(confidenceLevel, credentials.map(_.providerType), loginTimes)))
             case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
             case Left(NOT_FOUND) => throw new InternalServerException("User not found")
             case Left(MCI_EXCLUSION) =>
