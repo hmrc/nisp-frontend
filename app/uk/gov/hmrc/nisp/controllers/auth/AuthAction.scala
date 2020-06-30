@@ -60,6 +60,7 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
                   cdr.person.dateOfBirth,
                   name,
                   cdr.address,
+                  optTrustedHelper,
                   hasSa),
                 AuthDetails(confidenceLevel, credentials.map(_.providerType), loginTimes)))
             case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
@@ -116,6 +117,7 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
                   cdr.person.dateOfBirth,
                   name,
                   cdr.address,
+                  optTrustedHelper,
                   hasSa),
                 AuthDetails(confidenceLevel, credentials.map(_.providerType), loginTimes)))
             case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")

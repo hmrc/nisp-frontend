@@ -66,7 +66,10 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
   private val address = Address(Some("Country"))
   private val citizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 
-  private def makeRetrievalResults(ninoOption: Option[String] = Some(nino), enrolments: Enrolments = Enrolments(Set.empty), trustedHelper: Option[TrustedHelper] = None) =
+  private def makeRetrievalResults(ninoOption: Option[String] = Some(nino),
+                                   enrolments: Enrolments = Enrolments(Set.empty),
+                                   trustedHelper: Option[TrustedHelper] = None
+                                  ): Future[AuthRetrievalType] =
     Future.successful(ninoOption ~ ConfidenceLevel.L200 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper)
 
   private object Stubs {
@@ -78,61 +81,94 @@ class AuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
   implicit val timeout: Timeout = 5 seconds
 
   "GET /statepension" should {
-    "invoke the block when the user details can be retrieved without SA enrolment" in {
-      val mockCitizenDetailsService = mock[CitizenDetailsService]
+    "invoke the block" when {
+      "the user details can be retrieved without SA enrolment" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[AuthRetrievalType]
-        (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(makeRetrievalResults())
+        when(mockAuthConnector.authorise[AuthRetrievalType]
+          (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+          .thenReturn(makeRetrievalResults())
 
-      when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+        when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
+          .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-      val stubs = spy(Stubs)
+        val stubs = spy(Stubs)
 
-      val authAction = new AuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
-      val request = FakeRequest("", "")
-      val result = authAction.invokeBlock(request, stubs.successBlock)
-      status(result) shouldBe OK
+        val authAction = new AuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val request = FakeRequest("", "")
+        val result = authAction.invokeBlock(request, stubs.successBlock)
+        status(result) shouldBe OK
 
-      val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-        NispAuthedUser(Nino(nino),
-          citizen.dateOfBirth,
-          UserName(Name(citizen.firstName, citizen.lastName)),
-          citizenDetailsResponse.address,
-          isSa = false),
-        AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
-      verify(stubs).successBlock(
-        argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
+        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
+          NispAuthedUser(Nino(nino),
+            citizen.dateOfBirth,
+            UserName(Name(citizen.firstName, citizen.lastName)),
+            citizenDetailsResponse.address,
+            None,
+            isSa = false),
+          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
+        verify(stubs).successBlock(
+          argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
+      }
+
+      "the user details can be retrieved withSA enrolment" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+        when(mockAuthConnector.authorise[AuthRetrievalType]
+          (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+          .thenReturn(makeRetrievalResults(enrolments = Enrolments(Set(Enrolment("IR-SA")))))
+
+        when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
+          .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+
+        val stubs = spy(Stubs)
+
+        val authAction = new AuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val request = FakeRequest("", "")
+        val result = authAction.invokeBlock(request, stubs.successBlock)
+        status(result) shouldBe OK
+
+        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
+          NispAuthedUser(Nino(nino),
+            citizen.dateOfBirth,
+            UserName(Name(citizen.firstName, citizen.lastName)),
+            citizenDetailsResponse.address,
+            None,
+            isSa = true),
+          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
+        verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
+      }
+
+      "the user details is a trusted helper" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+        val trustedHelperNino = new Generator().nextNino.nino
+        val trustedHelper = TrustedHelper("pName", "aName", "link", trustedHelperNino)
+
+        when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
+          .thenReturn(makeRetrievalResults(trustedHelper = Some(trustedHelper)))
+
+        when(mockCitizenDetailsService.retrievePerson(any())(any()))
+          .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+
+        val stubs = spy(Stubs)
+
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val request = FakeRequest("", "")
+        val result = authAction.invokeBlock(request, stubs.successBlock)
+        status(result) shouldBe OK
+
+        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
+          NispAuthedUser(Nino(trustedHelperNino),
+            citizen.dateOfBirth,
+            UserName(Name(citizen.firstName, citizen.lastName)),
+            citizenDetailsResponse.address,
+            Some(trustedHelper),
+            isSa = false),
+          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
+        verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
+      }
     }
-
-    "invoke the block when the user details can be retrieved withSA enrolment" in {
-      val mockCitizenDetailsService = mock[CitizenDetailsService]
-
-      when(mockAuthConnector.authorise[AuthRetrievalType]
-        (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(makeRetrievalResults(enrolments = Enrolments(Set(Enrolment("IR-SA")))))
-
-      when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Right(citizenDetailsResponse)))
-
-      val stubs = spy(Stubs)
-
-      val authAction = new AuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
-      val request = FakeRequest("", "")
-      val result = authAction.invokeBlock(request, stubs.successBlock)
-      status(result) shouldBe OK
-
-      val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-        NispAuthedUser(Nino(nino),
-          citizen.dateOfBirth,
-          UserName(Name(citizen.firstName, citizen.lastName)),
-          citizenDetailsResponse.address,
-          isSa = true),
-        AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
-      verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
-    }
-
     "redirect to sign in page when no session" in {
       when(mockAuthConnector.authorise(any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.failed(new SessionRecordNotFound))

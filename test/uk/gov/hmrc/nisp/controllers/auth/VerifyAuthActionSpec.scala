@@ -76,143 +76,181 @@ class VerifyAuthActionSpec extends UnitSpec with OneAppPerSuite with MockitoSuga
   implicit val timeout: Timeout = 5 seconds
 
   "GET /signin/verify" should {
-    "invoke the block when the user details can be retrieved without SA enrolment" in {
-      val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
-        .thenReturn(makeRetrievalResults())
+    "invoke the block" when {
+      "the user details can be retrieved without SA enrolment" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockCitizenDetailsService.retrievePerson(any())(any()))
-        .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+        when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
+          .thenReturn(makeRetrievalResults())
 
-      val stubs = spy(Stubs)
+        when(mockCitizenDetailsService.retrievePerson(any())(any()))
+          .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
-      val request = FakeRequest("", "")
-      val result = authAction.invokeBlock(request, stubs.successBlock)
-      status(result) shouldBe OK
+        val stubs = spy(Stubs)
 
-      val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-        NispAuthedUser(Nino(nino),
-          citizen.dateOfBirth,
-          UserName(Name(citizen.firstName, citizen.lastName)),
-          citizenDetailsResponse.address,
-          isSa = false),
-        AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes))
-      verify(stubs).successBlock(expectedAuthenticatedRequest)
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val request = FakeRequest("", "")
+        val result = authAction.invokeBlock(request, stubs.successBlock)
+        status(result) shouldBe OK
+
+        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
+          NispAuthedUser(Nino(nino),
+            citizen.dateOfBirth,
+            UserName(Name(citizen.firstName, citizen.lastName)),
+            citizenDetailsResponse.address,
+            None,
+            isSa = false),
+          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes))
+        verify(stubs).successBlock(expectedAuthenticatedRequest)
+      }
+
+      "the user details can be retrieved withSA enrolment" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+        when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
+          .thenReturn(makeRetrievalResults(enrolments = Enrolments(Set(Enrolment("IR-SA")))))
+
+        when(mockCitizenDetailsService.retrievePerson(any())(any()))
+          .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+
+        val stubs = spy(Stubs)
+
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val request = FakeRequest("", "")
+        val result = authAction.invokeBlock(request, stubs.successBlock)
+        status(result) shouldBe OK
+
+        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
+          NispAuthedUser(Nino(nino),
+            citizen.dateOfBirth,
+            UserName(Name(citizen.firstName, citizen.lastName)),
+            citizenDetailsResponse.address,
+            None,
+            isSa = true),
+          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes))
+        verify(stubs).successBlock(expectedAuthenticatedRequest)
+      }
+
+      "the user details is a trusted helper" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+        val trustedHelperNino = new Generator().nextNino.nino
+        val trustedHelper = TrustedHelper("pName", "aName", "link", trustedHelperNino)
+
+        when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
+          .thenReturn(makeRetrievalResults(trustedHelper = Some(trustedHelper)))
+
+        when(mockCitizenDetailsService.retrievePerson(any())(any()))
+          .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+
+        val stubs = spy(Stubs)
+
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val request = FakeRequest("", "")
+        val result = authAction.invokeBlock(request, stubs.successBlock)
+        status(result) shouldBe OK
+
+        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
+          NispAuthedUser(Nino(trustedHelperNino),
+            citizen.dateOfBirth,
+            UserName(Name(citizen.firstName, citizen.lastName)),
+            citizenDetailsResponse.address,
+            Some(trustedHelper),
+            isSa = false),
+          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes))
+        verify(stubs).successBlock(expectedAuthenticatedRequest)
+      }
     }
 
-    "invoke the block when the user details can be retrieved withSA enrolment" in {
-      val mockCitizenDetailsService = mock[CitizenDetailsService]
+    "redirect to Verify" when {
+      "no session" in {
+        when(mockAuthConnector.authorise(any(), any())(any(), any()))
+          .thenReturn(Future.failed(SessionRecordNotFound()))
+        val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
+        val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).get should startWith(verifyUrl)
+      }
 
-      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
-        .thenReturn(makeRetrievalResults(enrolments = Enrolments(Set(Enrolment("IR-SA")))))
-
-      when(mockCitizenDetailsService.retrievePerson(any())(any()))
-        .thenReturn(Future.successful(Right(citizenDetailsResponse)))
-
-      val stubs = spy(Stubs)
-
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
-      val request = FakeRequest("", "")
-      val result = authAction.invokeBlock(request, stubs.successBlock)
-      status(result) shouldBe OK
-
-      val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-        NispAuthedUser(Nino(nino),
-          citizen.dateOfBirth,
-          UserName(Name(citizen.firstName, citizen.lastName)),
-          citizenDetailsResponse.address,
-          isSa = true),
-        AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes))
-      verify(stubs).successBlock(expectedAuthenticatedRequest)
-    }
-
-    "redirect to Verify when no session" in {
-      when(mockAuthConnector.authorise(any(), any())(any(), any()))
-        .thenReturn(Future.failed(SessionRecordNotFound()))
-      val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get should startWith(verifyUrl)
-    }
-
-    "redirect to Verify when insufficient confidence level" in {
-      when(mockAuthConnector.authorise(any(), any())(any(), any()))
-        .thenReturn(Future.failed(InsufficientConfidenceLevel()))
-      val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get should startWith(verifyUrl)
-    }
-
-    "redirect to Verify sign in when auth provider is not Verify" in {
-      when(mockAuthConnector.authorise(any(), any())(any(), any()))
+      "insufficient confidence level" in {
+        when(mockAuthConnector.authorise(any(), any())(any(), any()))
+          .thenReturn(Future.failed(InsufficientConfidenceLevel()))
+        val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
+        val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).get should startWith(verifyUrl)
+      }
+      "auth provider is not Verify" in {
+        when(mockAuthConnector.authorise(any(), any())(any(), any()))
         .thenReturn(Future.failed(UnsupportedAuthProvider()))
-      val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get should startWith(verifyUrl)
+        val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds)
+        val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).get should startWith(verifyUrl)
+      }
     }
 
-    "return error for not found user" in {
-      val mockCitizenDetailsService = mock[CitizenDetailsService]
+    "return error" when {
+      "not found user" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
-        .thenReturn(makeRetrievalResults())
+        when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
+          .thenReturn(makeRetrievalResults())
 
-      when(mockCitizenDetailsService.retrievePerson(any())(any()))
-        .thenReturn(Future.successful(Left(NOT_FOUND)))
+        when(mockCitizenDetailsService.retrievePerson(any())(any()))
+          .thenReturn(Future.successful(Left(NOT_FOUND)))
 
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      an[InternalServerException] should be thrownBy await(result)
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+        an[InternalServerException] should be thrownBy await(result)
+      }
+
+      "user without nino" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+        when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
+          .thenReturn(makeRetrievalResults(ninoOption = None))
+
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+        an[RuntimeException] should be thrownBy await(result)
+      }
+
+      "technical difficulties" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+        when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
+          .thenReturn(makeRetrievalResults())
+
+        when(mockCitizenDetailsService.retrievePerson(any())(any()))
+          .thenReturn(Future.successful(Left(TECHNICAL_DIFFICULTIES)))
+
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+        an[InternalServerException] should be thrownBy await(result)
+      }
+
+      "exclusion when NI" in {
+        val mockCitizenDetailsService = mock[CitizenDetailsService]
+
+        when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
+          .thenReturn(makeRetrievalResults())
+
+        when(mockCitizenDetailsService.retrievePerson(any())(any()))
+          .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
+
+        val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
+        val result = authAction.invokeBlock(FakeRequest("", "a-uri-with-nirecord"), Stubs.successBlock)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
+      }
     }
 
-    "return error for user without nino" in {
-      val mockCitizenDetailsService = mock[CitizenDetailsService]
-
-      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
-        .thenReturn(makeRetrievalResults(ninoOption = None))
-
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      an[RuntimeException] should be thrownBy await(result)
-    }
-
-    "return error for technical difficulties" in {
-      val mockCitizenDetailsService = mock[CitizenDetailsService]
-
-      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
-        .thenReturn(makeRetrievalResults())
-
-      when(mockCitizenDetailsService.retrievePerson(any())(any()))
-        .thenReturn(Future.successful(Left(TECHNICAL_DIFFICULTIES)))
-
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      an[InternalServerException] should be thrownBy await(result)
-    }
-
-    "return redirect for exclusion when NI" in {
-      val mockCitizenDetailsService = mock[CitizenDetailsService]
-
-      when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
-        .thenReturn(makeRetrievalResults())
-
-      when(mockCitizenDetailsService.retrievePerson(any())(any()))
-        .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
-
-      val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, mockCitizenDetailsService)
-      val result = authAction.invokeBlock(FakeRequest("", "a-uri-with-nirecord"), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
-    }
-
-    "return redirect for exclusion when not NI" in {
+    "redirect for exclusion when not NI" in {
       val mockCitizenDetailsService = mock[CitizenDetailsService]
 
       when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
