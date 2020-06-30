@@ -47,7 +47,6 @@
                 <p class="contributions-header">@messages("nisp.nirecord.yourcontributionfrom")</p>
             }
             @if(niTaxYear.classOneContributions > 0 || niTaxYear.classThreeCredits > 0 || niTaxYear.classTwoCredits > 0){
-                <p>
                 @if(niTaxYear.classOneContributions > 0){
                     <p>@Html(messages("nisp.nirecord.gap.paidemployment", NispMoney.pounds(niTaxYear.classOneContributions)))</p>
                 }
@@ -65,7 +64,6 @@
                         <p>@Html(messages("nisp.nirecord.gap.voluntary.plural", niTaxYear.classThreeCredits))</p>
                     }
                 }
-                </p>
             }
             @if(niTaxYear.otherCredits > 0){
                 @if(niTaxYear.otherCredits == 1){
