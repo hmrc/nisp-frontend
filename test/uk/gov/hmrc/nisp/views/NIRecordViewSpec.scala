@@ -184,8 +184,8 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(11)>div.contributions-wrapper>p.contributions-header", "nisp.nirecord.yourcontributionfrom")
     }
 
-    "render page with text 'Paid employment £ 4,259.60'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", "£4,259.60")
+    "render page with text 'Paid employment £ 1,149.98'" in {
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "payment-message", "nisp.nirecord.gap.paidemployment", "£1,149.98")
     }
 
     "render page with text  'full year'" in {
@@ -755,23 +755,22 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
     }
 
     "render page with text 'paid employment : £12,345.67'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(3)", "nisp.nirecord.gap.paidemployment", "£12,345.67")
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "payment-message", "nisp.nirecord.gap.paidemployment", "£12,345.67")
     }
     "render page with text 'self- employment : 10 weeks'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.selfemployed.plural", "10")
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "national-insurance-gap-self-employed", "nisp.nirecord.gap.selfemployed.plural", "10")
     }
     "render page with text 'Voluntary: : 8 weeks'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.voluntary.plural", "8")
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "national-insurance-voluntary-plural", "nisp.nirecord.gap.voluntary.plural", "8")
     }
 
     "render page with text 'National Insurance credits: : 12 weeks'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(7)", "nisp.nirecord.gap.whenyouareclaiming.plural", "12")
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "other-credits", "nisp.nirecord.gap.whenyouareclaiming.plural", "12")
     }
     "render page with text 'These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(8)", "nisp.nirecord.gap.whenyouareclaiming.info.plural")
-
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "other-credits-reason", "nisp.nirecord.gap.whenyouareclaiming.info.plural")
     }
-    "render page with link  'back'" in {
+    "render page with link 'back'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>p.backlink>a", "nisp.back")
     }
     "render page with href link 'back'" in {
@@ -861,18 +860,18 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       assertEqualsMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(1)", "nisp.nirecord.yourcontributionfrom")
     }
 
-    "render page with text 'self- employment : 1 week'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.selfemployed.singular", "1")
+    "render page with text 'self-employment : 1 week'" in {
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "national-insurance-gap-self-employed", "nisp.nirecord.gap.selfemployed.singular", "1")
     }
     "render page with text 'Voluntary: : 1 week'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.voluntary.singular", "1")
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "national-insurance-voluntary", "nisp.nirecord.gap.voluntary.singular", "1")
     }
 
     "render page with text 'National Insurance credits: : 1 week'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(7)", "nisp.nirecord.gap.whenyouareclaiming.singular", "1")
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "other-credits", "nisp.nirecord.gap.whenyouareclaiming.singular", "1")
     }
     "render page with text 'These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.'" in {
-      assertEqualsMessage(htmlAccountDoc, "article.content__body>dl>dd:nth-child(6)>div.contributions-wrapper>p:nth-child(8)", "nisp.nirecord.gap.whenyouareclaiming.info.singular")
+      assertContainsDynamicMessageUsingClass(htmlAccountDoc, "other-reasons", "nisp.nirecord.gap.whenyouareclaiming.info.singular")
     }
     "render page with print link" in {
       assertEqualsMessage(htmlAccountDoc, "#print-ni-link a", "nisp.print.this.ni.record")

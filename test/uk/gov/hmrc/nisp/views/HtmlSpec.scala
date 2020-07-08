@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.views
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.scalatest.selenium.WebBrowser.ClassNameQuery
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
@@ -78,6 +79,18 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
   }
 
+  def assertContainsDynamicMessageUsingClass(doc: Document, className: String, expectedMessageKey: String, args: String*) = {
+    val elements = doc.getElementsByClass(className)
+
+    if (elements === null) throw new IllegalArgumentException(s"Class Selector $className wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
+  }
+
+
   def assertDoesNotContainDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: String*) = {
     val elements = doc.select(cssSelector)
 
@@ -87,6 +100,17 @@ trait HtmlSpec extends PlaySpec with OneAppPerSuite {
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) != expectedString)
+  }
+
+  def assertDoesNotContainDynamicMessageUsingId(doc: Document, id: String, expectedMessageKey: String, args: String*) = {
+    val elements = doc.getElementById(id)
+
+    if (elements === null) throw new IllegalArgumentException(s"id Selector $id wasn't rendered.")
+
+    assertMessageKeyHasValue(expectedMessageKey)
+
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    assert(StringEscapeUtils.unescapeHtml4(elements.html().replace("\n", "")) != expectedString)
   }
 
   def assertPageContainsDynamicMessage(doc: Document, expectedMessageKey: String, args: String*) = {
