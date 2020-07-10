@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.play.views.html.layouts
+@import uk.gov.hmrc.play.views.helpers.AttorneyRegime
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 @import play.twirl.api.Html
@@ -25,7 +26,6 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.http.SessionKeys
 @import uk.gov.hmrc.nisp.utils.Constants
-
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import scala.util.Random
@@ -49,6 +49,11 @@
     if(str.trim=="") false else str
 }
 
+@attorneyBanner = @{
+  request.nispAuthedUser.trustedHelper.map{ helper =>
+    layouts.attorney_banner(Some(helper.principalName), helper.returnLinkUrl, AttorneyRegime.standAlone)
+  }
+}
 
 @scriptElement = @{
     Seq(
@@ -245,7 +250,8 @@
         "termsAndConditionFooterLink" -> termsAndConditionFooterLink,
 
         "optimizelyProjectId" -> "8451981545",
-        "isWelsh" -> isWelsh
+        "isWelsh" -> isWelsh,
+        "actingAttorneyBanner" -> attorneyBanner
     ) ++ urBanner
       ++ Map[String,Any](
         "bodyClass" -> printable)

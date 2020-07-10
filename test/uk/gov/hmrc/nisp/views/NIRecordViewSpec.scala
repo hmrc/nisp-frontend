@@ -51,7 +51,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
-  val user: NispAuthedUser = NispAuthedUser(TestAccountBuilder.regularNino, LocalDate.now(), UserName(Name(None, None)), None, false)
+  val user: NispAuthedUser = NispAuthedUser(TestAccountBuilder.regularNino, LocalDate.now(), UserName(Name(None, None)), None, None, false)
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
