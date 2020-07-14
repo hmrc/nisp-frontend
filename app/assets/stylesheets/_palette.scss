@@ -263,3 +263,8 @@ input.form-control-error[type="password"],
 .govuk-box-highlight {
   background-color: #00703c;
 }
+
+// faded text in banner (eg lang toggle)
+.header__menu__proposition-links .faded-text--small {
+  color: #A7A7A7
+}
