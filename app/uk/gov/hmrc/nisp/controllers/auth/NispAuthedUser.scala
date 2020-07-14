@@ -17,15 +17,17 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import org.joda.time.LocalDate
+import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen.Address
 import uk.gov.hmrc.nisp.utils.Country
 
-case class NispAuthedUser(nino: Nino,
+final case class NispAuthedUser(nino: Nino,
                           dateOfBirth: LocalDate,
                           name: UserName,
                           address: Option[Address],
+                          trustedHelper: Option[TrustedHelper],
                           isSa: Boolean) {
 
   lazy val livesAbroad: Boolean = address.fold(false)( co => co.country.exists(Country.isAbroad))
