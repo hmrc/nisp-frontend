@@ -20,7 +20,6 @@
 @import uk.gov.hmrc.play.views.formatting.Dates
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import java.time._
-@import java.util.Date._
 
 @(niRecordTaxYear: NIRecordTaxYear, timePoint: LocalDate = LocalDate.now())
 
@@ -86,18 +85,24 @@
                     <p>@Html(Messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem().url))</p>
 
                     @if(niRecordTaxYear.payable && niRecordTaxYear.classThreePayableBy.isDefined) {
-                         @{timePoint; }
-
-
+                        
 
                         @for(
                             classThreePayableByDate <- niRecordTaxYear.classThreePayableBy;
                             classThreePayableWithPenalty <- niRecordTaxYear.classThreePayableByPenalty
                         ){
                                
-                       
+                        
                                 <p class="contributions-header">@Messages("nisp.nirecord.gap.youcanmakeupshortfall")</p>
-                                <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate),Dates.formatDate(classThreePayableByDate.localDate)))</p>
+                                @if(timePoint.toString < Dates.shortDate(classThreePayableByDate.localDate)) {                                       
+                                    <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate),Dates.formatDate(classThreePayableByDate.localDate)))</p> 
+                                       
+                                } else {
+
+                                    <p>@Html(Messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niRecordTaxYear.classThreePayable.getOrElse(0)),Dates.formatDate(classThreePayableWithPenalty.localDate)))</p> 
+                                }
+                                
+                                 
                                 <p>@Html(Messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
                         }
                     } else {
