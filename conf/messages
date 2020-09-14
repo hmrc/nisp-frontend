@@ -28,7 +28,7 @@ nisp.title.extension = Check your State Pension
 # Landing page messages
 #*************************
 
-nisp.title = Check your State Pension
+nisp.title = Check your State Pension forecast
 nisp.continue = Continue
 nisp.landing.title = Check your State Pension
 nisp.landing.signin.heading = You need to confirm your identity

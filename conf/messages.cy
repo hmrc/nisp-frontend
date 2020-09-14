@@ -27,7 +27,7 @@ nisp.title.extension = Gwirio eich Pensiwn y Wladwriaeth
 # Landing page messages
 #*************************
 
-nisp.title = Gwirio’ch Pensiwn y Wladwriaeth
+nisp.title = Gwirio rhagolwg o’ch Pensiwn y Wladwriaeth
 nisp.continue = Parhau
 nisp.landing.title = Gwirio eich Pensiwn y Wladwriaeth
 nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych chi
