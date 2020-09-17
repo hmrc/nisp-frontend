@@ -93,7 +93,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val moneyAdviceLinkCy = runModeConfiguration.getString("money-advice-link-cy.url")
   val pensionWiseLink = runModeConfiguration.getString("pension-wise-link.url")
   val frontendHost = loadConfig("nisp-frontend.host")
-  val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement" //TODO: change statement to NISP
+  val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
   override def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + SafeRedirectUrl(frontendHost + relativeReferrerPath).encodedUrl
 
