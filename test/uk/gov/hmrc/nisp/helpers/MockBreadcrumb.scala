@@ -48,5 +48,6 @@ object MockBreadcrumb extends NispBreadcrumb {
     override val isWelshEnabled = true
     override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
     override val feedbackFrontendUrl: String = "/foo"
+    override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
   }
 }

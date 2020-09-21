@@ -21,6 +21,7 @@ import play.api.Mode.Mode
 import play.api.Play._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.frontend.binders.SafeRedirectUrl
 
 trait ApplicationConfig {
   val assetsPrefix: String
@@ -49,11 +50,13 @@ trait ApplicationConfig {
   val isWelshEnabled: Boolean
   val feedbackFrontendUrl: String
   val frontendTemplatePath: String
+  def accessibilityStatementUrl(relativeReferrerPath: String): String
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
+
 
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
@@ -89,6 +92,10 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val moneyAdviceLinkEn = runModeConfiguration.getString("money-advice-link-en.url")
   val moneyAdviceLinkCy = runModeConfiguration.getString("money-advice-link-cy.url")
   val pensionWiseLink = runModeConfiguration.getString("pension-wise-link.url")
+  val frontendHost = loadConfig("nisp-frontend.host")
+  val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
+  override def accessibilityStatementUrl(relativeReferrerPath: String): String =
+    accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + SafeRedirectUrl(frontendHost + relativeReferrerPath).encodedUrl
 
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   override lazy val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
