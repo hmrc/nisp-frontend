@@ -58,5 +58,6 @@ object ApplicationConfigBuilder {
     override val isWelshEnabled: Boolean = isWelshEnabled
     override val frontendTemplatePath: String = frontendTemplatePath
     override val feedbackFrontendUrl: String = "/foo"
+    override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
   }
 }
