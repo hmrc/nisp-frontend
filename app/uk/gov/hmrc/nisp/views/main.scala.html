@@ -227,7 +227,7 @@
         "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
-
+        "accessibilityFooterUrl" -> mainTemplateParams.applicationConfig.accessibilityStatementUrl(request.uri),
         "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
         "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
         "isSa" -> request.nispAuthedUser.isSa,

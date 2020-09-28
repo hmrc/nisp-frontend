@@ -81,6 +81,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       override val feedbackFrontendUrl: String = "/foo"
       override val googleTagManagerId: String = ""
       override val isGtmEnabled: Boolean = false
+      override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
     }
   }
 

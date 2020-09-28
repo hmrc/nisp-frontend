@@ -208,6 +208,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val feedbackFrontendUrl: String = "/foo"
             override val googleTagManagerId: String = ""
             override val isGtmEnabled: Boolean = false
+            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -252,6 +253,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val feedbackFrontendUrl: String = "/foo"
             override val googleTagManagerId: String = ""
             override val isGtmEnabled: Boolean = false
+            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -291,6 +293,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val feedbackFrontendUrl: String = "/foo"
             override val googleTagManagerId: String = ""
             override val isGtmEnabled: Boolean = false
+            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
