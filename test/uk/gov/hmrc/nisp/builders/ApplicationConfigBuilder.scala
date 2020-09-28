@@ -58,6 +58,8 @@ object ApplicationConfigBuilder {
     override val isWelshEnabled: Boolean = isWelshEnabled
     override val frontendTemplatePath: String = frontendTemplatePath
     override val feedbackFrontendUrl: String = "/foo"
+    override val googleTagManagerId: String = ""
+    override val isGtmEnabled: Boolean = false
     override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
   }
 }

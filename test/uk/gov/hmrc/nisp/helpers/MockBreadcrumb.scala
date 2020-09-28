@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import play.api.Play.configuration
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 
@@ -48,6 +47,8 @@ object MockBreadcrumb extends NispBreadcrumb {
     override val isWelshEnabled = true
     override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
     override val feedbackFrontendUrl: String = "/foo"
+    override val googleTagManagerId: String = ""
+    override val isGtmEnabled: Boolean = false
     override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
   }
 }
