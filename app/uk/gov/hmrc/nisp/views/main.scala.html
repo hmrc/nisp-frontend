@@ -33,6 +33,8 @@
 @import java.util.NoSuchElementException
 @import uk.gov.hmrc.domain.Nino
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
+
 @(
     mainTemplateParams: MainTemplateParams
 )(
@@ -42,7 +44,6 @@
         request: AuthenticatedRequest[_],
         messages: Messages,
         application: Application,
-        appConfig: ApplicationConfig,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
         templateRenderer: TemplateRenderer
 )
@@ -58,8 +59,8 @@
 }
 
 @scriptElement = {
-  @if(appConfig.isGtmEnabled == "true") {
-    @views.html.google_tag_manager(appConfig.googleTagManagerId)
+  @if(ApplicationConfig.isGtmEnabled) {
+    @views.html.google_tag_manager(ApplicationConfig.googleTagManagerId)
   }
     Seq(
     Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),

@@ -71,5 +71,7 @@ trait MockStatePensionController extends StatePensionController {
     override val isWelshEnabled = true
     override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
     override val feedbackFrontendUrl: String = "/foo"
+    override val googleTagManagerId: String = ""
+    override val isGtmEnabled: Boolean = false
   }
 }

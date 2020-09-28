@@ -206,6 +206,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
             override val feedbackFrontendUrl: String = "/foo"
+            override val googleTagManagerId: String = ""
+            override val isGtmEnabled: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -248,6 +250,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
             override val feedbackFrontendUrl: String = "/foo"
+            override val googleTagManagerId: String = ""
+            override val isGtmEnabled: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
@@ -285,6 +289,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
             override val feedbackFrontendUrl: String = "/foo"
+            override val googleTagManagerId: String = ""
+            override val isGtmEnabled: Boolean = false
           }
           override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
         }
