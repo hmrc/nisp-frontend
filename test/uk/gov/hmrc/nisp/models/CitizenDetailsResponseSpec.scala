@@ -43,7 +43,6 @@ class CitizenDetailsResponseSpec extends UnitSpec {
         Json.parse(
           s"""
             |{
-            |  "etag":"1",
             |  "person":{
             |    "sex":"M",
             |    "dateOfBirth":-499132800000,
@@ -73,7 +72,6 @@ class CitizenDetailsResponseSpec extends UnitSpec {
         Json.parse(
           s"""
              |{
-             |  "etag":"1",
              |  "person":{
              |    "sex":"M",
              |    "dateOfBirth":"1954-03-09",
