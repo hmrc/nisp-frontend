@@ -59,9 +59,6 @@
 }
 
 @scriptElement = {
-  @if(ApplicationConfig.isGtmEnabled) {
-    @views.html.google_tag_manager(ApplicationConfig.googleTagManagerId)
-  }
   Seq(
     Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),
     Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js")),
@@ -70,6 +67,11 @@
   )
 }
 
+@inlineScript = {
+    @if(ApplicationConfig.isGtmEnabled) {
+        @views.html.google_tag_manager(ApplicationConfig.googleTagManagerId)
+    }
+}
 
 
 @contentWithTitle =  {
@@ -226,6 +228,7 @@
         "pageTitle" -> mainTemplateParams.pageTitle.map{x => x + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")},
         "linkElems" -> linkElems,
         "scriptElems" -> scriptElement,
+        "inlineScript" -> inlineScript,
         "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
