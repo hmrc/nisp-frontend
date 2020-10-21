@@ -58,18 +58,6 @@
   }
 }
 
-@scriptElement = {
-  @if(ApplicationConfig.isGtmEnabled) {
-    @views.html.google_tag_manager(ApplicationConfig.googleTagManagerId)
-  }
-  Seq(
-    Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),
-    Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js")),
-    Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js")),
-    Map("url" -> controllers.routes.Assets.versioned("javascript/polyfill.js"))
-  )
-}
-
 @contentWithTitle =  {
     @mainTemplateParams.pageInfo.map { pageInfo =>
     <div class="page-info">@Html(pageInfo)</div>
@@ -223,7 +211,12 @@
     templateRenderer.renderDefaultTemplate(ApplicationConfig.frontendTemplatePath, article, Map[String, Any](
         "pageTitle" -> mainTemplateParams.pageTitle.map{x => x + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")},
         "linkElems" -> linkElems,
-        "scriptElems" -> scriptElement,
+        "scriptElems" -> Seq(
+            Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),
+            Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js")),
+            Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js")),
+            Map("url" -> controllers.routes.Assets.versioned("javascript/polyfill.js"))
+        ),
         "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
