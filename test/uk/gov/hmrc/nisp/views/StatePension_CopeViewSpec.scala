@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,8 +56,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
-
-  def authenticatedFakeRequest(userId: String) = fakeRequest
 
   lazy val controller = new MockStatePensionController {
     override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.contractedOutBTestNino)

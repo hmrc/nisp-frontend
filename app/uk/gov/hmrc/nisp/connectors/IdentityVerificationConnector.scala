@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ trait IdentityVerificationConnector {
       val result = (httpResponse.json \ "result").as[String]
       IdentityVerificationSuccessResponse(result)
     } recover {
-       case e: NotFoundException =>
+       case _: NotFoundException =>
         metricsService.identityVerificationFailedCounter.inc()
         IdentityVerificationNotFoundResponse
        case Upstream4xxResponse(_, FORBIDDEN, _, _) =>

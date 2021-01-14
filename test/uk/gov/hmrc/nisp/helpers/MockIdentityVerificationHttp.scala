@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ object MockIdentityVerificationHttp extends MockitoSugar {
   )
 
   def mockJourneyId(journeyId: String): Unit = {
+    //TODO source is not closed
     val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
     when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).
       thenReturn(Future.successful(HttpResponse(Status.OK, responseJson = Some(Json.parse(fileContents)))))

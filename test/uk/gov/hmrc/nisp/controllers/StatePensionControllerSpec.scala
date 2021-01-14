@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,12 +66,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
     SessionKeys.userId -> userId,
     SessionKeys.authProvider -> Constants.VerifyProviderId
   )
-
-  def testAccountController(testNow: LocalDateTime, nino: Nino): StatePensionController = new MockStatePensionController {
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
-    override val authenticate: AuthAction = new MockAuthAction(nino)
-  }
 
   def mockStatePensionController(nino: Nino): StatePensionController = new MockStatePensionController {
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever

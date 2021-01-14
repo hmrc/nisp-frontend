@@ -36,6 +36,7 @@ lazy val microservice = Project(appName, file("."))
     PlayKeys.playDefaultPort := 9234,
     scalaVersion := "2.11.11",
     libraryDependencies ++= AppDependencies.all,
+    //TODO will this be required after 2.6
     dependencyOverrides += "uk.gov.hmrc" %% "play-config" % "7.3.0",
     retrieveManaged := true,
     resolvers ++= Seq(
