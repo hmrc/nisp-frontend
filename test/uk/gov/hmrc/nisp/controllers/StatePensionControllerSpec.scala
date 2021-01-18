@@ -18,26 +18,23 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
-import org.joda.time.{LocalDate, LocalDateTime}
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Play.configuration
-import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.StatePensionAmountRegular
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService}
+import uk.gov.hmrc.nisp.services.NationalInsuranceService
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
-import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
-import uk.gov.hmrc.nisp.utils.Constants
 
-class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppPerSuite {
+class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite {
 
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
@@ -171,9 +168,10 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       }
 
       "the future proof config is set to true" should {
-        val controller = new MockStatePensionController {
+        //TODO override config or mock
+        lazy val controller = new MockStatePensionController {
           override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
             override val assetsPrefix: String = ""
             override val reportAProblemNonJSUrl: String = ""
             override val ssoUrl: Option[String] = None
@@ -195,7 +193,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
-            override lazy val showFullNI: Boolean = false
+            override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = true
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
@@ -216,9 +214,10 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
 
     "GET /signout" should {
       "redirect to the questionnaire page when govuk done page is disabled" in {
+        //TODO override config or mock
         val controller = new MockStatePensionController {
           override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
             override val assetsPrefix: String = ""
             override val reportAProblemNonJSUrl: String = ""
             override val ssoUrl: Option[String] = None
@@ -240,7 +239,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
-            override lazy val showFullNI: Boolean = false
+            override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
@@ -256,9 +255,10 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
       }
 
       "redirect to the feedback questionnaire page when govuk done page is enabled" in {
+        //TODO override config or mock
         val controller = new MockStatePensionController {
           override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+          override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
             override val assetsPrefix: String = ""
             override val reportAProblemNonJSUrl: String = ""
             override val ssoUrl: Option[String] = None
@@ -280,7 +280,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
             override val pertaxFrontendUrl: String = ""
             override val contactFormServiceIdentifier: String = ""
             override val breadcrumbPartialUrl: String = ""
-            override lazy val showFullNI: Boolean = false
+            override val showFullNI: Boolean = false
             override val futureProofPersonalMax: Boolean = false
             override val isWelshEnabled = false
             override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")

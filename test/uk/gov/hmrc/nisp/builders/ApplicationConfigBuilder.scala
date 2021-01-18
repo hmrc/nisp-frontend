@@ -16,8 +16,10 @@
 
 package uk.gov.hmrc.nisp.builders
 
+import play.api.Configuration
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 
+//TODO this could be removed and configure overridden using the fakeapp or injector
 object ApplicationConfigBuilder {
   def apply(assetsPrefix: String = "", betaFeedbackUrl: String = "", betaFeedbackUnauthenticatedUrl: String = "",
             analyticsToken: Option[String] = None, analyticsHost: String = "", ssoUrl: Option[String] = None,
@@ -30,8 +32,9 @@ object ApplicationConfigBuilder {
             futureProofPersonalMax: Boolean = false,
             isWelshEnabled: Boolean = true,
             frontendTemplatePath: String = "",
-            feedbackFrontendUrl: String = "/foo"
-           ): ApplicationConfig = new ApplicationConfig {
+            feedbackFrontendUrl: String = "/foo",
+            configuration: Configuration
+           ): ApplicationConfig = new ApplicationConfig(configuration) {
     override val assetsPrefix: String = assetsPrefix
     override val betaFeedbackUrl: String = betaFeedbackUrl
     override val betaFeedbackUnauthenticatedUrl: String = betaFeedbackUnauthenticatedUrl
@@ -53,7 +56,7 @@ object ApplicationConfigBuilder {
     override val ggSignInUrl: String = ggSignInUrl
     override val pertaxFrontendUrl: String = pertaxFrontendUrl
     override val breadcrumbPartialUrl: String = breadcrumbPartialUrl
-    override lazy val showFullNI: Boolean = showFullNI
+    override val showFullNI: Boolean = showFullNI
     override val futureProofPersonalMax: Boolean = futureProofPersonalMax
     override val isWelshEnabled: Boolean = isWelshEnabled
     override val frontendTemplatePath: String = frontendTemplatePath

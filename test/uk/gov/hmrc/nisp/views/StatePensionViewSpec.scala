@@ -24,6 +24,7 @@ import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest.mock.MockitoSugar
+import play.api.Configuration
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
@@ -52,6 +53,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
   val urMockUserId = "/auth/oid/" + urMockUsername
 
   lazy val fakeRequest = FakeRequest()
+  lazy val appConfig = app.injector.instanceOf[Configuration]
 
   def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -63,7 +65,8 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
   def createStatePensionController = {
     new MockStatePensionController {
       override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.forecastOnlyNino)
-      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
+      //TODO remove the need for this
+      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val statePensionService: StatePensionService = mock[StatePensionService]
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]

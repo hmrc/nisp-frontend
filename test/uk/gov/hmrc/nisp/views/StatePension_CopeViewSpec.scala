@@ -21,6 +21,7 @@ import org.joda.time.{DateTime, LocalDate}
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
+import play.api.Configuration
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
@@ -42,7 +43,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded = TestAccountBuilder.excludedAll
   val mockUserNinoNotFound = TestAccountBuilder.blankNino
@@ -56,10 +56,13 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
   override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  lazy val appConfig = app.injector.instanceOf[Configuration]
 
   lazy val controller = new MockStatePensionController {
     override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.contractedOutBTestNino)
-    override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
+
+    //TODO remove the need for this
+    override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
     override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }

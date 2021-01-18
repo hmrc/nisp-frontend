@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import play.api.Play
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 
 object MockBreadcrumb extends NispBreadcrumb {
-  override lazy val applicationConfig: ApplicationConfig = new ApplicationConfig {
+  //TODO remove the need for this
+  override lazy val applicationConfig: ApplicationConfig = new ApplicationConfig(Play.current.configuration) {
     override val ggSignInUrl: String = ""
     override val verifySignIn: String = ""
     override val verifySignInContinue: Boolean = false
@@ -42,7 +44,7 @@ object MockBreadcrumb extends NispBreadcrumb {
     override val pertaxFrontendUrl: String = "http://localhost:9232/account"
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = "http://localhost:9232/account"
-    override lazy val showFullNI: Boolean = false
+    override val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
     override val isWelshEnabled = true
     override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"

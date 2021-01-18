@@ -24,6 +24,8 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Configuration
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
@@ -44,7 +46,7 @@ import scala.concurrent.Future
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 
-class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
+class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter with GuiceOneAppPerSuite {
 
   implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
   lazy val fakeRequest = FakeRequest()
@@ -71,6 +73,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"
   val expectedPensionCreditOverviewLink = "https://www.gov.uk/pension-credit/overview"
 
+  lazy val appConfig = app.injector.instanceOf[Configuration]
+
   def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
@@ -81,7 +85,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
   def createStatePensionController = {
     new MockStatePensionController {
       override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.forecastOnlyNino)
-      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
+      //TODO remove the need for this
+      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
       override val statePensionService: StatePensionService = mock[StatePensionService]
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]

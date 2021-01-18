@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import play.api.Play
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.{ApplicationConfig, ApplicationGlobalTrait}
@@ -44,7 +45,8 @@ trait MockStatePensionController extends StatePensionController {
 
   override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
   override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
-  override val applicationConfig: ApplicationConfig = new ApplicationConfig {
+  //TODO remove the need for this
+  override val applicationConfig: ApplicationConfig = new ApplicationConfig(Play.current.configuration) {
     override val assetsPrefix: String = ""
     override val reportAProblemNonJSUrl: String = ""
     override val ssoUrl: Option[String] = None
@@ -66,7 +68,7 @@ trait MockStatePensionController extends StatePensionController {
     override val pertaxFrontendUrl: String = ""
     override val contactFormServiceIdentifier: String = ""
     override val breadcrumbPartialUrl: String = ""
-    override lazy val showFullNI: Boolean = false
+    override val showFullNI: Boolean = false
     override val futureProofPersonalMax: Boolean = false
     override val isWelshEnabled = true
     override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"

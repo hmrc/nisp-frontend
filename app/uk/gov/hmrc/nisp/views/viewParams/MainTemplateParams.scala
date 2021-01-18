@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.views.viewParams
 
+import play.api.Play
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 
@@ -28,7 +29,7 @@ case class MainTemplateParams(
   sidebarLinks: Option[Html] = None,
   sidebarClasses: Option[String] = None,
   userLoggedIn: Boolean = false,
-  applicationConfig: ApplicationConfig = ApplicationConfig,
+  applicationConfig: ApplicationConfig = Play.current.injector.instanceOf[ApplicationConfig],  //TODO this will need updating once views are injected
   showTitleHeaderNav: Boolean = true,
   showBetaBanner: Boolean = false,
   pageScripts: Option[Html] = None,
