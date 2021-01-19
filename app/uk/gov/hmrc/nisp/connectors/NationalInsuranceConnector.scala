@@ -18,15 +18,17 @@ package uk.gov.hmrc.nisp.connectors
 
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
+
 import scala.concurrent.Future
 
-class NationalInsuranceConnector @Inject()(val http: HttpGet,
+class NationalInsuranceConnector @Inject()(val http: HttpClient,
                                            val sessionCache: SessionCache,
                                            appConfig: ApplicationConfig,
                                            val metricsService: MetricsService

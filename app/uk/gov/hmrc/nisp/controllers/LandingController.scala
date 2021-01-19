@@ -17,16 +17,16 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.{Application, Logger}
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent}
+import play.api.{Application, Logger}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 import scala.concurrent.Future

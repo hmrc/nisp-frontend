@@ -19,8 +19,7 @@ package uk.gov.hmrc.nisp.controllers
 import play.api.mvc.{Request, Result}
 import play.api.{Logger, PlayException}
 import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.config.{ApplicationGlobal, ApplicationGlobalTrait, LocalTemplateRenderer}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -31,7 +30,6 @@ trait NispFrontendController extends FrontendController {
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
   implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
 
-  val applicationGlobal: ApplicationGlobalTrait = ApplicationGlobal
 
   def onError(ex: Exception)(implicit request: Request[_]): Result = {
     logger.error(
@@ -44,6 +42,7 @@ trait NispFrontendController extends FrontendController {
       }, request.method, request.uri),
       ex
     )
+    //TODO does bootstrap deal with this
     InternalServerError(applicationGlobal.internalServerErrorTemplate)
   }
 

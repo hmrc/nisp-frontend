@@ -35,7 +35,7 @@ import uk.gov.hmrc.nisp.utils.Calculate._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 import uk.gov.hmrc.time.DateTimeUtils
 
 class StatePensionController @Inject()(authenticate: AuthAction,

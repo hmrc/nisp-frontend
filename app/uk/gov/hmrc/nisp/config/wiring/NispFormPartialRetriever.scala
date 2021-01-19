@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.nisp.config.wiring
 
+import com.google.inject.Inject
+import uk.gov.hmrc.http.CoreGet
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.http.HttpGet
 
-object NispFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
-  override def httpGet: HttpGet = WSHttp
+//TODO verify CoreGet is correct
+class NispFormPartialRetriever @Inject()(val httpGet: CoreGet) extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
   override val crypto = encryptCookieString _
 }

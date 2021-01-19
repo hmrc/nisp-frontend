@@ -21,6 +21,7 @@ import play.api.http.Status._
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,7 +44,7 @@ object IdentityVerificationSuccessResponse {
   val FailedIV = "FailedIV"
 }
 
-class IdentityVerificationConnector @Inject()(http: HttpGet,
+class IdentityVerificationConnector @Inject()(http: HttpClient,
                                               metricsService: MetricsService,
                                               appConfig: ApplicationConfig)
                                              (implicit ec: ExecutionContext) {

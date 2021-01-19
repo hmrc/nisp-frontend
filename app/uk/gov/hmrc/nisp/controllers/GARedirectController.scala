@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 
 class GARedirectController extends NispFrontendController with PartialRetriever {
 

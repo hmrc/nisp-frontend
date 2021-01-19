@@ -17,15 +17,17 @@
 package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.domain.Nino
+
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CitizenDetailsConnector @Inject()(http: HttpGet,
+class CitizenDetailsConnector @Inject()(http: HttpClient,
                                         metricsService: MetricsService,
                                         appConfig: ApplicationConfig
                                         )(implicit executionContext: ExecutionContext) {

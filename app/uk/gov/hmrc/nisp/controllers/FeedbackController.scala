@@ -19,27 +19,25 @@ package uk.gov.hmrc.nisp.controllers
 import java.net.URLEncoder
 
 import com.google.inject.Inject
-import play.api.Logger
-import play.api.Play.current
 import play.api.http.{Status => HttpStatus}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, Request}
+import play.api.{Application, Logger}
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpPost, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispHeaderCarrierForPartialsConverter
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-//TODO remove and check for others
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-//TODO sort out implicit messages
 class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
-                                   httpPost: HttpPost)
-                                   (override implicit val formPartialRetriever: FormPartialRetriever) extends NispFrontendController with PartialRetriever {
+                                   httpPost: HttpPost,
+                                   executionContext: ExecutionContext)
+                                   (override implicit val formPartialRetriever: FormPartialRetriever,
+                                    val messages: Messages, application: Application) extends NispFrontendController with PartialRetriever {
 
 
   def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
@@ -70,7 +68,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
   def submit: Action[AnyContent] = UnauthorisedAction.async {
     implicit request =>
       request.body.asFormUrlEncoded.map { formData =>
-        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = global).map {
+        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = executionContext).map {
           resp =>
             resp.status match {
               case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))

@@ -26,16 +26,16 @@ import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException, SessionKeys}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.NispAuthConnector
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.HeaderCarrierConverter
+
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
+class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                cds: CitizenDetailsService)
                               (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
@@ -94,7 +94,7 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
 @ImplementedBy(classOf[AuthActionImpl])
 trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
 
-class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
+class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                      cds: CitizenDetailsService)
                                     (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 

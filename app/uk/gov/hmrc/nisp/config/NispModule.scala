@@ -18,27 +18,19 @@ package uk.gov.hmrc.nisp.config
 
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.http.{CorePost, HttpGet}
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.wiring.{MetricsService, NispAuditConnector, NispFormPartialRetriever, NispSessionCache, WSHttp}
-import uk.gov.hmrc.nisp.connectors.NispAuthConnector
+import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, NispSessionCache}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl, VerifyAuthActionImpl}
-import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class NispModule extends Module {
     override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
         //TODO Bootstrap should allow most of these to go
         //TODO look at the toInstance for further DI
-        bind[PlayAuthConnector].to[NispAuthConnector],
-        bind[HttpGet].to[WSHttp],
-        bind[CorePost].to[WSHttp],
-        bind[MetricsService].toInstance(MetricsService),
         bind[SessionCache].to[NispSessionCache],
-        bind[AuditConnector].toInstance(NispAuditConnector),
         bind[FormPartialRetriever].toInstance(NispFormPartialRetriever),
+        bind[TemplateRenderer].to[LocalTemplateRenderer],
         //TODO test
         if(configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)){
             bind[AuthAction].to[AuthActionImpl]

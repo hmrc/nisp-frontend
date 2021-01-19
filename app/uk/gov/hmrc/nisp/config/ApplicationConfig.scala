@@ -20,26 +20,32 @@ import com.google.inject.Inject
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.frontend.binders.SafeRedirectUrl
+
 
 //TODO temp object until views are injected
 object ApplicationConfig extends ApplicationConfig(Play.current.configuration)
 
 class ApplicationConfig @Inject()(configuration: Configuration) extends ServicesConfig {
 
+
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
   private val contactFrontendService = baseUrl("contact-frontend")
-  private val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
+  private val contactHost = configuration.getString("contact-frontend.host").getOrElse("")
 
-  val assetsPrefix: String = loadConfig(s"assets.url") + loadConfig(s"assets.version") + "/"
+  //TODO use @Named for 2.6
+  val appName: String = configuration.getString("appName").getOrElse("APP NAME NOT SET")
+  val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version") + "/"
   val betaFeedbackUrl = s"${Constants.baseUrl}/feedback"
   val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
   val analyticsToken: Option[String] = configuration.getString(s"google-analytics.token")
   val analyticsHost: String = configuration.getString(s"google-analytics.host").getOrElse("auto")
   val ssoUrl: Option[String] = configuration.getString(s"portal.ssoUrl")
+
   val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+  val frontEndTemplateProviderBaseUrl = baseUrl("frontend-template-provider")
 
   val googleTagManagerId = loadConfig("google-tag-manager.id")
   val isGtmEnabled = configuration.getBoolean("google-tag-manager.enabled").getOrElse(false)
@@ -55,8 +61,8 @@ class ApplicationConfig @Inject()(configuration: Configuration) extends Services
   val verifySignInContinue: Boolean = configuration.getBoolean("verify-sign-in.submit-continue-url").getOrElse(false)
   val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse("")
   val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
-  val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
-  val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
+  val ivUpliftUrl: String = configuration.getString("identity-verification-uplift.host").getOrElse("")
+  val ggSignInUrl: String = configuration.getString("government-gateway-sign-in.host").getOrElse("")
 
   val showUrBanner:Boolean = configuration.getBoolean("urBannerToggle").getOrElse(false)
   val GaEventAction: String = "home page UR"
@@ -70,7 +76,7 @@ class ApplicationConfig @Inject()(configuration: Configuration) extends Services
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
 
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
-  val pertaxFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
+  val pertaxFrontendUrl: String = configuration.getString("breadcrumb-service.url").getOrElse("")
   val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"
   val showFullNI: Boolean = configuration.getBoolean("microservice.services.features.fullNIrecord").getOrElse(false)
   val futureProofPersonalMax: Boolean = configuration.getBoolean("microservice.services.features.future-proof.personalMax").getOrElse(false)
@@ -82,6 +88,9 @@ class ApplicationConfig @Inject()(configuration: Configuration) extends Services
   val nationalInsuranceServiceUrl: String = baseUrl("national-insurance")
   val statePensionServiceUrl: String = baseUrl("state-pension")
   val authServiceUrl =  baseUrl("auth")
+
+  val sessionCacheURL: String = baseUrl("cachable.session-cache")
+  val sessionCacheDomain: String = getConfString("cachable.session-cache.domain", throw new Exception("Could not find config 'cachable.session-cache.domain'"))
 
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + SafeRedirectUrl(frontendHost + relativeReferrerPath).encodedUrl
