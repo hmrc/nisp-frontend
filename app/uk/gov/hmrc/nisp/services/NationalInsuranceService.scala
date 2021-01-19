@@ -16,31 +16,23 @@
 
 package uk.gov.hmrc.nisp.services
 
+import com.google.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import scala.concurrent.{ExecutionContext, Future}
 
-import scala.concurrent.Future
-
-trait NationalInsuranceService {
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]]
-}
-
-
-trait NationalInsuranceConnection {
+class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnector)
+                                        (implicit executor: ExecutionContext){
 
   final val ExclusionCodeDead = "EXCLUSION_DEAD"
   final val ExclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
   final val ExclusionCodeIsleOfMan = "EXCLUSION_ISLE_OF_MAN"
   final val ExclusionCodeMarriedWomen = "EXCLUSION_MARRIED_WOMENS_REDUCED_RATE"
-
   final val ExclusionErrorCode = 403
-
-  val nationalInsuranceConnector: NationalInsuranceConnector
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
     nationalInsuranceConnector.getNationalInsurance(nino)

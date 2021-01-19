@@ -16,18 +16,21 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import com.google.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-trait CitizenDetailsConnector {
-  val serviceUrl: String
-  val metricsService: MetricsService
-  def http: HttpGet
+class CitizenDetailsConnector @Inject()(http: HttpGet,
+                                        metricsService: MetricsService,
+                                        appConfig: ApplicationConfig
+                                        )(implicit executionContext: ExecutionContext) {
+
+  val serviceUrl: String = appConfig.citizenDetailsServiceUrl
 
   def connectToGetPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
 

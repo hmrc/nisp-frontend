@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.nisp.controllers.redirect
 
+import com.google.inject.Inject
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
-
 import scala.concurrent.Future
 
-object RedirectController extends FrontendController  {
+class RedirectController @Inject extends FrontendController  {
   def redirectToHome(path: String): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
     val newPath = path match {
       case "" => ""

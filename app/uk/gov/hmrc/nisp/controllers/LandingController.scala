@@ -16,35 +16,28 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import com.google.inject.Inject
+import play.api.{Application, Logger}
+import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{CitizenDetailsConnector, IdentityVerificationConnector, NispAuthConnector}
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, VerifyAuthActionImpl}
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
 
-object LandingController extends LandingController with PartialRetriever {
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
-  override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
-  override val verifyAuthAction: AuthAction = new VerifyAuthActionImpl(
-    new NispAuthConnector,
-    new CitizenDetailsService(CitizenDetailsConnector))
-}
-
-trait LandingController extends NispFrontendController {
-  val identityVerificationConnector: IdentityVerificationConnector
-  val applicationConfig: ApplicationConfig
-  val verifyAuthAction: AuthAction
+class LandingController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
+                                  applicationConfig: ApplicationConfig,
+                                  verifyAuthAction: AuthAction)
+                                 (implicit override val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                  messages: Messages,
+                                  application: Application)
+  extends NispFrontendController with PartialRetriever { //TODO remove the PartialRetriever at Bootstrap change
 
   def show: Action[AnyContent] = UnauthorisedAction(
     implicit request =>

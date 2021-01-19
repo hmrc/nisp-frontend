@@ -16,15 +16,23 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
-
+import uk.gov.hmrc.nisp.services.MetricsService
 import scala.concurrent.Future
 
-trait NationalInsuranceConnector extends BackendConnector {
+class NationalInsuranceConnector @Inject()(val http: HttpGet,
+                                           val sessionCache: SessionCache,
+                                           appConfig: ApplicationConfig,
+                                           val metricsService: MetricsService
+                                          ) extends BackendConnector {
 
+  val serviceUrl = appConfig.nationalInsuranceServiceUrl
   private val apiHeader = "Accept" -> "application/vnd.hmrc.1.0+json"
 
   def getNationalInsurance(nino: Nino)(implicit hc: HeaderCarrier): Future[NationalInsuranceRecord] = {

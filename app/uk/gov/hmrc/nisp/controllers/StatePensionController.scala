@@ -16,14 +16,14 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import com.google.inject.Inject
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent, Request, Session}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{CustomAuditConnector, MetricsService, NationalInsuranceService, NispSessionCache, StatePensionService}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, AuthDetails, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
@@ -38,33 +38,19 @@ import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.time.DateTimeUtils
 
-object StatePensionController extends StatePensionController {
-
-  override val sessionCache: SessionCache = NispSessionCache
-  override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
-  override val metricsService: MetricsService = MetricsService
-  override val statePensionService: StatePensionService = StatePensionService
-  override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
-  override val authenticate: AuthAction = AuthActionSelector.decide(applicationConfig)
-}
-
-trait StatePensionController extends NispFrontendController with PertaxHelper with PartialRetriever {
-
-  def authenticate: AuthAction
-
-  def statePensionService: StatePensionService
-
-  def nationalInsuranceService: NationalInsuranceService
-
-  val customAuditConnector: CustomAuditConnector
-
-  val applicationConfig: ApplicationConfig
+class StatePensionController @Inject()(authenticate: AuthAction,
+                                       statePensionService: StatePensionService,
+                                       nationalInsuranceService: NationalInsuranceService,
+                                       customAuditConnector: CustomAuditConnector,
+                                       applicationConfig: ApplicationConfig,
+                                       pertaxHelper: PertaxHelper,
+                                       val sessionCache: SessionCache,
+                                       val metricsService: MetricsService) extends NispFrontendController with PartialRetriever {
 
   def showCope: Action[AnyContent] = authenticate.async {
     implicit request =>
       implicit val user: NispAuthedUser = request.nispAuthedUser
-      isFromPertax.flatMap { isPertax =>
+      pertaxHelper.isFromPertax.flatMap { isPertax =>
 
         statePensionService.getSummary(user.nino) map {
           case Right(statePension) if statePension.contractedOut =>
@@ -96,7 +82,7 @@ trait StatePensionController extends NispFrontendController with PertaxHelper wi
     implicit request =>
       implicit val user: NispAuthedUser = request.nispAuthedUser
       implicit val authDetails: AuthDetails = request.authDetails
-      isFromPertax.flatMap { isPertax =>
+      pertaxHelper.isFromPertax.flatMap { isPertax =>
 
         val statePensionResponseF = statePensionService.getSummary(user.nino)
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
@@ -186,7 +172,7 @@ trait StatePensionController extends NispFrontendController with PertaxHelper wi
 
   def pta(): Action[AnyContent] = authenticate {
     implicit request =>
-      setFromPertax
+      pertaxHelper.setFromPertax
       Redirect(routes.StatePensionController.show())
   }
 

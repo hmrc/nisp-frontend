@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.nisp.config.wiring
 
-import play.api.{Configuration, Play}
+import com.google.inject.Inject
 import play.api.Mode.Mode
-import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
 
-object NispSessionCache extends SessionCache with AppName with ServicesConfig {
+//TODO inject or allow bootstrap to deal with this
+class NispSessionCache @Inject extends SessionCache with AppName with ServicesConfig {
   override lazy val http = WSHttp
   override lazy val defaultSource = appName
   override lazy val baseUri = baseUrl("cachable.session-cache")

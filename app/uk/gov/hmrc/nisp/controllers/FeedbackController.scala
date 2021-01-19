@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.net.URLEncoder
 
+import com.google.inject.Inject
 import play.api.Logger
 import play.api.Play.current
 import play.api.http.{Status => HttpStatus}
@@ -26,38 +27,23 @@ import play.api.mvc.{Action, AnyContent, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpPost, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, NispHeaderCarrierForPartialsConverter, WSHttp}
+import uk.gov.hmrc.nisp.config.wiring.NispHeaderCarrierForPartialsConverter
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-
+//TODO remove and check for others
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object FeedbackController extends FeedbackController with PartialRetriever {
+//TODO sort out implicit messages
+class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
+                                   httpPost: HttpPost)
+                                   (override implicit val formPartialRetriever: FormPartialRetriever) extends NispFrontendController with PartialRetriever {
 
-  override implicit val formPartialRetriever: FormPartialRetriever = NispFormPartialRetriever
 
-  override val httpPost = WSHttp
-
-  override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
-
-  override def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
-
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
-}
-
-trait FeedbackController extends NispFrontendController {
-  implicit val formPartialRetriever: FormPartialRetriever
-
-  def applicationConfig: ApplicationConfig
-
-  def httpPost: HttpPost
-
-  def contactFormReferer(implicit request: Request[AnyContent]): String
-
-  def localSubmitUrl(implicit request: Request[AnyContent]): String
+  def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
+  def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
 
   private val TICKET_ID = "ticketId"
 

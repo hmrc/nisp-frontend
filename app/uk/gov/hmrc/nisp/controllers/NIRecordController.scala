@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import com.google.inject.Inject
 import org.joda.time.{DateTimeZone, LocalDate}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
@@ -24,8 +25,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{CustomAuditConnector, MetricsService, NationalInsuranceService, NispSessionCache, StatePensionService}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
@@ -36,27 +36,17 @@ import uk.gov.hmrc.nisp.utils.{Constants, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.time.TaxYear
 
-object NIRecordController extends NIRecordController with PartialRetriever {
-  val applicationConfig: ApplicationConfig = ApplicationConfig
-  override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
-  override val sessionCache: SessionCache = NispSessionCache
-  override lazy val showFullNI: Boolean = ApplicationConfig.showFullNI
-  override val currentDate = new LocalDate(DateTimeZone.forID("Europe/London"))
-  override val metricsService: MetricsService = MetricsService
-  override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
-  override val statePensionService: StatePensionService = StatePensionService
-  override val authenticate: AuthAction = AuthActionSelector.decide(applicationConfig)
-}
+class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
+                                   authenticate: AuthAction,
+                                   nationalInsuranceService: NationalInsuranceService,
+                                   statePensionService: StatePensionService,
+                                   appConfig: ApplicationConfig,
+                                   pertaxHelper: PertaxHelper,
+                                   val metricsService: MetricsService,
+                                   val sessionCache: SessionCache
+                                  ) extends NispFrontendController with PartialRetriever {
 
-trait NIRecordController extends NispFrontendController with PertaxHelper {
-  val customAuditConnector: CustomAuditConnector
-  val authenticate: AuthAction
-
-  def nationalInsuranceService: NationalInsuranceService
-
-  def statePensionService: StatePensionService
-
-  lazy val showFullNI: Boolean = ApplicationConfig.showFullNI
+  val showFullNI: Boolean = appConfig.showFullNI
   val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
 
   def showFull: Action[AnyContent] = show(gapsOnlyView = false)
@@ -65,7 +55,7 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
 
   def pta: Action[AnyContent] = authenticate {
     implicit request =>
-      setFromPertax
+      pertaxHelper.setFromPertax
       Redirect(routes.NIRecordController.showFull())
   }
 

@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.connectors
+package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.model.DataEvent
-import scala.concurrent.ExecutionContext
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.http.CorePost
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 
-class CustomAuditConnector @Inject()(auditConnector: AuditConnector) {
-  def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit =
-    auditConnector.sendEvent(event)
+class NispAuthConnector @Inject()(val http: CorePost,
+                                  appConfig: ApplicationConfig) extends PlayAuthConnector {
+  val serviceUrl: String = appConfig.authServiceUrl
 }

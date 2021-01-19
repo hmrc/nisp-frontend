@@ -16,28 +16,22 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import com.google.inject.Inject
+import play.api.Logger
+//TODO remove these as part of bootstrap
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
-import play.api.{Logger, Play}
-import uk.gov.hmrc.nisp.config.wiring.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction, ExcludedAuthActionImpl}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}
 import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
 
-object ExclusionController extends ExclusionController with PartialRetriever with NispFrontendController {
-  override val statePensionService: StatePensionService = StatePensionService
-  override val authenticate: ExcludedAuthActionImpl = Play.current.injector.instanceOf[ExcludedAuthActionImpl]
-  override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
-}
-
-trait ExclusionController extends NispFrontendController {
-
-  val statePensionService: StatePensionService
-  val nationalInsuranceService: NationalInsuranceService
-  val authenticate: ExcludedAuthAction
+class ExclusionController @Inject()(statePensionService: StatePensionService,
+                                    nationalInsuranceService: NationalInsuranceService,
+                                    authenticate: ExcludedAuthAction)
+  extends NispFrontendController with PartialRetriever {
 
   def showSP: Action[AnyContent] = authenticate.async {
     implicit request =>

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import com.google.inject.{ImplementedBy, Inject}
-import play.api.Application
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthProvider.Verify
@@ -27,13 +26,12 @@ import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException, SessionKeys}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
+import uk.gov.hmrc.nisp.connectors.NispAuthConnector
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.HeaderCarrierConverter
-
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -147,15 +145,5 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
     if (ApplicationConfig.verifySignInContinue) {
       continueUrl + ("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl))
     } else continueUrl
-  }
-}
-
-object AuthActionSelector {
-  def decide(applicationConfig: ApplicationConfig)(implicit app: Application): AuthAction = {
-    if (applicationConfig.identityVerification) {
-      app.injector.instanceOf[AuthActionImpl]
-    } else {
-      app.injector.instanceOf[VerifyAuthActionImpl]
-    }
   }
 }

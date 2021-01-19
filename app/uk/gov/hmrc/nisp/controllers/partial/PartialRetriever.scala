@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.controllers.partial
 import uk.gov.hmrc.nisp.config.wiring.NispCachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
+//TODO DI
 trait PartialRetriever {
   implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = NispCachedStaticHtmlPartialRetriever
 }

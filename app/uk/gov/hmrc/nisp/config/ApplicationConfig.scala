@@ -74,8 +74,14 @@ class ApplicationConfig @Inject()(configuration: Configuration) extends Services
   val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"
   val showFullNI: Boolean = configuration.getBoolean("microservice.services.features.fullNIrecord").getOrElse(false)
   val futureProofPersonalMax: Boolean = configuration.getBoolean("microservice.services.features.future-proof.personalMax").getOrElse(false)
-  val isWelshEnabled = configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
+  val isWelshEnabled: Boolean = configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
   val feedbackFrontendUrl: String = loadConfig("feedback-frontend.url")
+
+  val citizenDetailsServiceUrl: String = baseUrl("citizen-details")
+  val identityVerificationServiceUrl: String = baseUrl("identity-verification")
+  val nationalInsuranceServiceUrl: String = baseUrl("national-insurance")
+  val statePensionServiceUrl: String = baseUrl("state-pension")
+  val authServiceUrl =  baseUrl("auth")
 
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + SafeRedirectUrl(frontendHost + relativeReferrerPath).encodedUrl

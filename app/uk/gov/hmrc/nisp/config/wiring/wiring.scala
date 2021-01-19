@@ -17,71 +17,10 @@
 package uk.gov.hmrc.nisp.config.wiring
 
 import com.codahale.metrics.Timer.Context
-import org.joda.time.DateTime
-import play.api.Mode.Mode
-import play.api.{Configuration, Play}
-import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.{CorePost, HttpGet}
-import uk.gov.hmrc.nisp.connectors.{CitizenDetailsConnector, IdentityVerificationConnector, NationalInsuranceConnector, StatePensionConnector}
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.enums.APIType.APIType
-import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceConnection, NationalInsuranceService, StatePensionConnection, StatePensionService}
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.graphite.MicroserviceMetrics
-
-object ServicesConfigToBeDId extends ServicesConfig {
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-}
-
-class NispAuthConnector extends PlayAuthConnector {
-  override lazy val serviceUrl: String = ServicesConfigToBeDId.baseUrl("auth")
-
-  override def http: CorePost = WSHttp
-}
-
-object NispAuthConnector extends NispAuthConnector
-
-object CustomAuditConnector extends CustomAuditConnector {
-  override lazy val auditConnector: NispAuditConnector.type = NispAuditConnector
-}
-
-object CitizenDetailsConnector extends CitizenDetailsConnector {
-  override lazy val serviceUrl: String = ServicesConfigToBeDId.baseUrl("citizen-details")
-  override val metricsService: MetricsService = MetricsService
-  override def http: HttpGet = WSHttp
-}
-
-object IdentityVerificationConnector extends IdentityVerificationConnector {
-  override val serviceUrl: String = ServicesConfigToBeDId.baseUrl("identity-verification")
-  override def http: HttpGet = WSHttp
-  override val metricsService: MetricsService = MetricsService
-}
-
-object NationalInsuranceConnector extends NationalInsuranceConnector {
-  override val serviceUrl: String = ServicesConfigToBeDId.baseUrl("national-insurance")
-  override def http: HttpGet = WSHttp
-  override def sessionCache: SessionCache = NispSessionCache
-  override val metricsService: MetricsService = MetricsService
-}
-
-object NationalInsuranceService extends NationalInsuranceService with NationalInsuranceConnection {
-  override val nationalInsuranceConnector: NationalInsuranceConnector = NationalInsuranceConnector
-}
-
-object StatePensionConnector extends StatePensionConnector {
-  override val serviceUrl: String = ServicesConfigToBeDId.baseUrl("state-pension")
-  override def http: HttpGet = WSHttp
-  override def sessionCache: SessionCache = NispSessionCache
-  override val metricsService: MetricsService = MetricsService
-}
-
-object StatePensionService extends StatePensionService with StatePensionConnection {
-  override def now: () => DateTime = () => DateTime.now(ukTime)
-  override val statePensionConnector: StatePensionConnector = StatePensionConnector
-}
 
 object MetricsService extends MetricsService with MicroserviceMetrics {
 
