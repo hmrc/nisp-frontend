@@ -27,13 +27,14 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
 
 class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
@@ -44,7 +45,10 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
                                    pertaxHelper: PertaxHelper,
                                    val metricsService: MetricsService,
                                    val sessionCache: SessionCache
-                                  ) extends NispFrontendController with PartialRetriever {
+                                  )(implicit val formPartialRetriever: FormPartialRetriever,
+                                    val templateRenderer: TemplateRenderer,
+                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
+  extends NispFrontendController {
 
   val showFullNI: Boolean = appConfig.showFullNI
   val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
@@ -149,9 +153,7 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
             ))
             Redirect(routes.ExclusionController.showNI())
         }
-      }).recover {
-        case ex: Exception => onError(ex)
-      }
+      })
   }
 
   def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async {

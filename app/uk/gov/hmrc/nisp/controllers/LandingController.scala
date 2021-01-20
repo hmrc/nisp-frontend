@@ -23,21 +23,21 @@ import play.api.{Application, Logger}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.concurrent.Future
 
 class LandingController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
                                   applicationConfig: ApplicationConfig,
                                   verifyAuthAction: AuthAction)
-                                 (implicit override val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                 (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                  val formPartialRetriever: FormPartialRetriever,
+                                  val templateRenderer: TemplateRenderer,
                                   messages: Messages,
-                                  application: Application)
-  extends NispFrontendController with PartialRetriever { //TODO remove the PartialRetriever at Bootstrap change
+                                  application: Application) extends NispFrontendController {
 
   def show: Action[AnyContent] = UnauthorisedAction(
     implicit request =>

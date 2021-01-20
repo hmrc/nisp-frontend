@@ -20,11 +20,16 @@ import com.google.inject.Inject
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.views.html.termsAndConditions
 import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-class TermsConditionsController @Inject()(implicit val messages: Messages, application: Application) extends NispFrontendController with PartialRetriever {
+class TermsConditionsController @Inject()(implicit val messages: Messages,
+                                          application: Application,
+                                          val formPartialRetriever: FormPartialRetriever,
+                                          val templateRenderer: TemplateRenderer,
+                                          val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever) extends NispFrontendController {
 
   def show: Action[AnyContent] = UnauthorisedAction{
     implicit request =>

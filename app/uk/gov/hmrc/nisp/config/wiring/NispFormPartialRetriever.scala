@@ -17,10 +17,13 @@
 package uk.gov.hmrc.nisp.config.wiring
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.CoreGet
+import uk.gov.hmrc.crypto.PlainText
+import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-//TODO verify CoreGet is correct
-class NispFormPartialRetriever @Inject()(val httpGet: CoreGet) extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
-  override val crypto = encryptCookieString _
+class NispFormPartialRetriever @Inject()(val httpGet: HttpClient,
+                                         sessionCookieCrypto: SessionCookieCrypto) extends FormPartialRetriever {
+  //TODO 2.6 may make this redundant. Make sure it is tested if not
+  override def crypto: String => String = cookie => sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
 }

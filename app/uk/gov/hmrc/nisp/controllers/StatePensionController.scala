@@ -25,7 +25,6 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
@@ -36,6 +35,8 @@ import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils
 
 class StatePensionController @Inject()(authenticate: AuthAction,
@@ -45,7 +46,10 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                                        applicationConfig: ApplicationConfig,
                                        pertaxHelper: PertaxHelper,
                                        val sessionCache: SessionCache,
-                                       val metricsService: MetricsService) extends NispFrontendController with PartialRetriever {
+                                       val metricsService: MetricsService)
+                                      (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                       val formPartialRetriever: FormPartialRetriever,
+                                       val templateRenderer: TemplateRenderer) extends NispFrontendController {
 
   def showCope: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -164,9 +168,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
               Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
             case _ => throw new RuntimeException("StatePensionController: SP and NIR are unmatchable. This is probably a logic error.")
           }
-        }).recover {
-          case ex: Exception => onError(ex)
-        }
+        }) //TODO verify Bootstrap catches errors
       }
   }
 

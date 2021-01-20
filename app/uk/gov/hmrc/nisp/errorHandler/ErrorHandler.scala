@@ -20,15 +20,22 @@ import com.google.inject.Inject
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
+import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 //TODO test
 class ErrorHandler @Inject()(applicationConfig: ApplicationConfig)
                             (implicit templateRenderer: TemplateRenderer,
-                             formPartialRetriever: FormPartialRetriever, application: Application, val messagesApi: MessagesApi) extends FrontendErrorHandler {
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) =
+                             formPartialRetriever: FormPartialRetriever,
+                             application: Application,
+                             val partialRetriever: CachedStaticHtmlPartialRetriever,
+                             val messagesApi: MessagesApi) extends FrontendErrorHandler {
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
   uk.gov.hmrc.nisp.views.html.global_error(pageTitle, heading, message, applicationConfig)
+
+  //TODO should bootstrap be dealing with this, test this
+  override def internalServerErrorTemplate(implicit request: Request[_]): Html = uk.gov.hmrc.nisp.views.html.service_error_500()
 }

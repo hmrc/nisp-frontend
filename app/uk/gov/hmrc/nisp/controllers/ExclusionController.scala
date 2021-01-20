@@ -18,12 +18,13 @@ package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
 import play.api.Logger
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 //TODO remove these as part of bootstrap
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
@@ -31,7 +32,11 @@ import uk.gov.hmrc.nisp.views.html._
 class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     nationalInsuranceService: NationalInsuranceService,
                                     authenticate: ExcludedAuthAction)
-  extends NispFrontendController with PartialRetriever {
+                                   (implicit val formPartialRetriever: FormPartialRetriever,
+                                    val templateRenderer: TemplateRenderer,
+                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
+
+  extends NispFrontendController {
 
   def showSP: Action[AnyContent] = authenticate.async {
     implicit request =>

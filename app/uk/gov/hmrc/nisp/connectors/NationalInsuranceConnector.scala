@@ -25,14 +25,13 @@ import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class NationalInsuranceConnector @Inject()(val http: HttpClient,
                                            val sessionCache: SessionCache,
                                            appConfig: ApplicationConfig,
-                                           val metricsService: MetricsService
-                                          ) extends BackendConnector {
+                                           val metricsService: MetricsService,
+                                           val executionContext: ExecutionContext) extends BackendConnector {
 
   val serviceUrl = appConfig.nationalInsuranceServiceUrl
   private val apiHeader = "Accept" -> "application/vnd.hmrc.1.0+json"

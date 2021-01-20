@@ -27,11 +27,13 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.domain.Nino
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class StatePensionConnector @Inject()(val http: HttpClient,
                                       val sessionCache: SessionCache,
                                       val metricsService: MetricsService,
+                                      val executionContext: ExecutionContext,
                                       appConfig: ApplicationConfig
                                      ) extends BackendConnector {
 

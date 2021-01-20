@@ -27,17 +27,21 @@ import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpPost, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispHeaderCarrierForPartialsConverter
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
                                    httpPost: HttpPost,
-                                   executionContext: ExecutionContext)
-                                   (override implicit val formPartialRetriever: FormPartialRetriever,
-                                    val messages: Messages, application: Application) extends NispFrontendController with PartialRetriever {
+                                   executionContext: ExecutionContext,
+                                   nispHeaderCarrierForPartialsConverter: NispHeaderCarrierForPartialsConverter)
+                                   (implicit val formPartialRetriever: FormPartialRetriever,
+                                    val templateRenderer: TemplateRenderer,
+                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                    val messages: Messages, application: Application) extends NispFrontendController {
 
 
   def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
@@ -92,8 +96,8 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
   private def urlEncode(value: String) = URLEncoder.encode(value, "UTF-8")
 
   private def partialsReadyHeaderCarrier(implicit request: Request[_]): HeaderCarrier = {
-    val hc1 = NispHeaderCarrierForPartialsConverter.headerCarrierEncryptingSessionCookieFromRequest(request)
-    NispHeaderCarrierForPartialsConverter.headerCarrierForPartialsToHeaderCarrier(hc1)
+    val hc1 = nispHeaderCarrierForPartialsConverter.headerCarrierEncryptingSessionCookieFromRequest(request)
+    nispHeaderCarrierForPartialsConverter.headerCarrierForPartialsToHeaderCarrier(hc1)
   }
 
 }

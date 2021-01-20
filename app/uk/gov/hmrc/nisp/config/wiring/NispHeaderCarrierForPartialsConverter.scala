@@ -16,8 +16,11 @@
 
 package uk.gov.hmrc.nisp.config.wiring
 
+import com.google.inject.Inject
+import uk.gov.hmrc.crypto.PlainText
+import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
 
-object NispHeaderCarrierForPartialsConverter extends HeaderCarrierForPartialsConverter with SessionCookieCryptoFilterWrapper {
-  override val crypto = encryptCookieString _
+class NispHeaderCarrierForPartialsConverter @Inject()(sessionCookieCrypto: SessionCookieCrypto) extends HeaderCarrierForPartialsConverter {
+  override def crypto: String => String = cookie => sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
 }

@@ -19,9 +19,9 @@ package uk.gov.hmrc.nisp.config
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.wiring.{NispFormPartialRetriever, NispSessionCache}
+import uk.gov.hmrc.nisp.config.wiring.{NispCachedStaticHtmlPartialRetriever, NispFormPartialRetriever, NispSessionCache}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl, VerifyAuthActionImpl}
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class NispModule extends Module {
@@ -29,7 +29,8 @@ class NispModule extends Module {
         //TODO Bootstrap should allow most of these to go
         //TODO look at the toInstance for further DI
         bind[SessionCache].to[NispSessionCache],
-        bind[FormPartialRetriever].toInstance(NispFormPartialRetriever),
+        bind[CachedStaticHtmlPartialRetriever].to[NispCachedStaticHtmlPartialRetriever],
+        bind[FormPartialRetriever].to[NispFormPartialRetriever],
         bind[TemplateRenderer].to[LocalTemplateRenderer],
         //TODO test
         if(configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)){

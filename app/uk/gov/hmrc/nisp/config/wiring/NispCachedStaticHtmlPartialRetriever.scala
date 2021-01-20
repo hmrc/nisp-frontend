@@ -17,8 +17,7 @@
 package uk.gov.hmrc.nisp.config.wiring
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.CoreGet
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-//TODO does CoreGet need to be bound
-class NispCachedStaticHtmlPartialRetriever @Inject()(val httpGet: CoreGet) extends CachedStaticHtmlPartialRetriever
+class NispCachedStaticHtmlPartialRetriever @Inject()(val httpGet: HttpClient) extends CachedStaticHtmlPartialRetriever
