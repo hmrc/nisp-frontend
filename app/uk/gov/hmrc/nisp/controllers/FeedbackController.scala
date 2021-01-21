@@ -21,14 +21,13 @@ import java.net.URLEncoder
 import com.google.inject.Inject
 import play.api.http.{Status => HttpStatus}
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent, Request}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.api.{Application, Logger}
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpPost, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.config.wiring.NispHeaderCarrierForPartialsConverter
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
-import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -37,11 +36,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
                                    httpPost: HttpPost,
                                    executionContext: ExecutionContext,
-                                   nispHeaderCarrierForPartialsConverter: NispHeaderCarrierForPartialsConverter)
+                                   nispHeaderCarrierForPartialsConverter: NispHeaderCarrierForPartialsConverter,
+                                   mcc: MessagesControllerComponents)
                                    (implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
-                                    val messages: Messages, application: Application) extends NispFrontendController {
+                                    val messages: Messages, application: Application,
+                                    executor: ExecutionContext) extends NispFrontendController(mcc) {
 
 
   def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
@@ -59,7 +60,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
   private def feedbackThankYouPartialUrl(ticketId: String)(implicit request: Request[AnyContent]) =
     s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/beta-feedback/form/confirmation?ticketId=${urlEncode(ticketId)}"
 
-  def show: Action[AnyContent] = UnauthorisedAction {
+  def show: Action[AnyContent] = Action {
     implicit request =>
       (request.session.get(REFERER), request.headers.get(REFERER)) match {
         case (None, Some(ref)) =>
@@ -69,7 +70,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
       }
   }
 
-  def submit: Action[AnyContent] = UnauthorisedAction.async {
+  def submit: Action[AnyContent] = Action.async {
     implicit request =>
       request.body.asFormUrlEncoded.map { formData =>
         httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = executionContext).map {
@@ -86,7 +87,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
       }
   }
 
-  def showThankYou: Action[AnyContent] = UnauthorisedAction {
+  def showThankYou: Action[AnyContent] = Action {
     implicit request =>
       val ticketId = request.session.get(TICKET_ID).getOrElse("N/A")
       val referer = request.session.get(REFERER).getOrElse("/")

@@ -16,14 +16,13 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{Format, JsPath}
+import play.api.libs.json.{Format, JsPath, JsonValidationError}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.nisp.models.enums.APIType._
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
@@ -93,7 +92,7 @@ trait BackendConnector {
     a
   }
 
-  private def formatJsonErrors(errors: Seq[(JsPath, Seq[ValidationError])]): String = {
+  private def formatJsonErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): String = {
     errors.map(p => p._1 + " - " + p._2.map(e => removeJson(e.message)).mkString(",")).mkString(" | ")
   }
 

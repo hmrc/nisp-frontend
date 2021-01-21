@@ -44,6 +44,5 @@ lazy val microservice = Project(appName, file("."))
       "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
     ),
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    routesGenerator := InjectedRoutesGenerator,
     majorVersion := 9
   )

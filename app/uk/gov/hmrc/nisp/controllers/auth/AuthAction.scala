@@ -36,8 +36,11 @@ import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
-                               cds: CitizenDetailsService)
-                              (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
+                               cds: CitizenDetailsService,
+                               val parser: BodyParsers.Default,
+                               val executionContext: ExecutionContext,
+                               applicationConfig: ApplicationConfig)
+                               extends AuthAction with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -73,18 +76,18 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
       case _: NoActiveSession => Redirect(
-        ApplicationConfig.ggSignInUrl,
+        applicationConfig.ggSignInUrl,
         Map(
-          "continue" -> Seq(ApplicationConfig.postSignInRedirectUrl),
+          "continue" -> Seq(applicationConfig.postSignInRedirectUrl),
           "origin" -> Seq("nisp-frontend"),
           "accountType" -> Seq("individual")
         ))
       case _: InsufficientConfidenceLevel => Redirect(
-        ApplicationConfig.ivUpliftUrl,
+        applicationConfig.ivUpliftUrl,
         Map(
           "origin" -> Seq("NISP"),
-          "completionURL" -> Seq(ApplicationConfig.postSignInRedirectUrl),
-          "failureURL" -> Seq(ApplicationConfig.notAuthorisedRedirectUrl),
+          "completionURL" -> Seq(applicationConfig.postSignInRedirectUrl),
+          "failureURL" -> Seq(applicationConfig.notAuthorisedRedirectUrl),
           "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
         ))
     }
@@ -92,11 +95,13 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
 }
 
 @ImplementedBy(classOf[AuthActionImpl])
-trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
+trait AuthAction extends ActionBuilder[AuthenticatedRequest, AnyContent] with ActionFunction[Request, AuthenticatedRequest]
 
 class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
-                                     cds: CitizenDetailsService)
-                                    (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
+                                     cds: CitizenDetailsService,
+                                     val parser: BodyParsers.Default,
+                                     val executionContext: ExecutionContext,
+                                     applicationConfig: ApplicationConfig) extends AuthAction with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -131,8 +136,8 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
       } recover {
       case _: NoActiveSession |
            _: InsufficientConfidenceLevel |
-           _: UnsupportedAuthProvider => Redirect(ApplicationConfig.verifySignIn, parameters).withSession(
-        SessionKeys.redirect -> ApplicationConfig.postSignInRedirectUrl,
+           _: UnsupportedAuthProvider => Redirect(applicationConfig.verifySignIn, parameters).withSession(
+        SessionKeys.redirect -> applicationConfig.postSignInRedirectUrl,
         SessionKeys.loginOrigin -> "YSP"
       )
     }
@@ -142,8 +147,8 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
 
     val continueUrl = Map[String, Seq[String]]()
 
-    if (ApplicationConfig.verifySignInContinue) {
-      continueUrl + ("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl))
+    if (applicationConfig.verifySignInContinue) {
+      continueUrl + ("continue" -> Seq(applicationConfig.postSignInRedirectUrl))
     } else continueUrl
   }
 }

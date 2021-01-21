@@ -39,7 +39,7 @@ object NpsDate {
     override def reads(json:JsValue): JsResult[NpsDate] = {
       json match {
         case JsString(npsDateRegex(d,m,y)) => JsSuccess(NpsDate(new LocalDate(y.toInt, m.toInt, d.toInt)))
-        case JsNull => JsError(ValidationError("Null date cannot convert to NpsDate"))
+        case JsNull => JsError(JsonValidationError("Null date cannot convert to NpsDate"))
       }
     }
   }

@@ -18,9 +18,9 @@ package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
 import org.joda.time.{DateTimeZone, LocalDate}
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.{Action, AnyContent}
+import play.api.Application
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
@@ -37,18 +37,23 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
 
+import scala.concurrent.ExecutionContext
+
 class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
                                    authenticate: AuthAction,
                                    nationalInsuranceService: NationalInsuranceService,
                                    statePensionService: StatePensionService,
                                    appConfig: ApplicationConfig,
                                    pertaxHelper: PertaxHelper,
+                                   mcc: MessagesControllerComponents,
                                    val metricsService: MetricsService,
                                    val sessionCache: SessionCache
                                   )(implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
-                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
-  extends NispFrontendController {
+                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                    ec: ExecutionContext,
+                                    application: Application)
+  extends NispFrontendController(mcc) with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI
   val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))

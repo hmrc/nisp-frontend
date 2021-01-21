@@ -18,28 +18,29 @@ package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Application, Logger}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
-import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class LandingController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
                                   applicationConfig: ApplicationConfig,
-                                  verifyAuthAction: AuthAction)
+                                  verifyAuthAction: AuthAction,
+                                  mcc: MessagesControllerComponents)
                                  (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                   val formPartialRetriever: FormPartialRetriever,
                                   val templateRenderer: TemplateRenderer,
+                                  val executor: ExecutionContext,
                                   messages: Messages,
-                                  application: Application) extends NispFrontendController {
+                                  application: Application) extends NispFrontendController(mcc) {
 
-  def show: Action[AnyContent] = UnauthorisedAction(
+  def show: Action[AnyContent] = Action(
     implicit request =>
       if (applicationConfig.identityVerification) {
         Ok(identity_verification_landing()).withNewSession
@@ -53,7 +54,7 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
       Redirect(routes.StatePensionController.show())
   }
 
-  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
+  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     val result = journeyId map { id =>
 
       import IdentityVerificationSuccessResponse._

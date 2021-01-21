@@ -23,6 +23,8 @@ import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
 import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 import uk.gov.hmrc.nisp.utils.Constants
 import play.api.libs.functional.syntax._
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 sealed trait StatePensionAmount {
   val weeklyAmount: BigDecimal

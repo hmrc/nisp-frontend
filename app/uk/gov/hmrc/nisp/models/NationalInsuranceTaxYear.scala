@@ -18,6 +18,8 @@ package uk.gov.hmrc.nisp.models
 
 import org.joda.time.LocalDate
 import play.api.libs.json.{Format, Json}
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 case class NationalInsuranceTaxYear(
                                      taxYear: String,
@@ -41,8 +43,6 @@ case class NationalInsuranceTaxYear(
   }
 
 }
-
-
 
 object NationalInsuranceTaxYear {
   implicit val formats: Format[NationalInsuranceTaxYear] = Json.format[NationalInsuranceTaxYear]

@@ -17,9 +17,12 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.{Action, AnyContent, Request, Session}
+import play.api.Application
+import play.api.i18n.I18nSupport
+import uk.gov.hmrc.time.DateTimeUtils
+
+import scala.concurrent.ExecutionContext
+import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -34,10 +37,8 @@ import uk.gov.hmrc.nisp.utils.Calculate._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
-import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils
 
 class StatePensionController @Inject()(authenticate: AuthAction,
                                        statePensionService: StatePensionService,
@@ -45,11 +46,14 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                                        customAuditConnector: CustomAuditConnector,
                                        applicationConfig: ApplicationConfig,
                                        pertaxHelper: PertaxHelper,
+                                       mcc: MessagesControllerComponents,
                                        val sessionCache: SessionCache,
                                        val metricsService: MetricsService)
                                       (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                        val formPartialRetriever: FormPartialRetriever,
-                                       val templateRenderer: TemplateRenderer) extends NispFrontendController {
+                                       val templateRenderer: TemplateRenderer,
+                                       executor: ExecutionContext,
+                                       application: Application) extends NispFrontendController(mcc) with I18nSupport {
 
   def showCope: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -185,11 +189,11 @@ class StatePensionController @Inject()(authenticate: AuthAction,
       (CONTRACTEDOUT -> contractedOut.toString)
   }
 
-  def signOut: Action[AnyContent] = UnauthorisedAction { implicit request =>
+  def signOut: Action[AnyContent] = Action { implicit request =>
     Redirect(applicationConfig.feedbackFrontendUrl).withNewSession
   }
 
-  def timeout = UnauthorisedAction { implicit request =>
+  def timeout = Action { implicit request =>
     Ok(sessionTimeout())
   }
 }

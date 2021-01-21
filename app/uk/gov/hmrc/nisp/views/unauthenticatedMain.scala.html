@@ -207,9 +207,9 @@
         "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
-
-        "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
-        "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
+        //TODO this needs verifying, also check other SessionKeys
+        "isGovernmentGateway" -> false,
+        "isVerify" -> false,
         "isSa" -> false,
         "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
         "hideAccountMenu" -> mainTemplateParams.hideNavBar,

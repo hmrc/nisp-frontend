@@ -19,19 +19,20 @@ package uk.gov.hmrc.nisp.controllers
 import com.google.inject.Inject
 import play.api.Application
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.views.html.termsAndConditions
-import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class TermsConditionsController @Inject()(implicit val messages: Messages,
+class TermsConditionsController @Inject()(mcc: MessagesControllerComponents)
+                                         (implicit val messages: Messages,
                                           application: Application,
                                           val formPartialRetriever: FormPartialRetriever,
                                           val templateRenderer: TemplateRenderer,
-                                          val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever) extends NispFrontendController {
+                                          val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever) extends NispFrontendController(mcc) {
 
-  def show: Action[AnyContent] = UnauthorisedAction{
+  //TODO is it ok to use a standard Action here?
+  def show: Action[AnyContent] = Action{
     implicit request =>
       val showBackLink = request.queryString.get("showBackLink").fold(false)(_.head.toBoolean)
       Ok(termsAndConditions(showBackLink))

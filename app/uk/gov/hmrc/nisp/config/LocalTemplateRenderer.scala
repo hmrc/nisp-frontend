@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.config
 
 import com.google.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}

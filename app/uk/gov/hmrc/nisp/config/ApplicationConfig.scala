@@ -15,72 +15,69 @@
  */
 
 package uk.gov.hmrc.nisp.config
-
 import com.google.inject.Inject
-import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
-import uk.gov.hmrc.play.config.ServicesConfig
-
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 //TODO temp object until views are injected
-object ApplicationConfig extends ApplicationConfig(Play.current.configuration)
+object ApplicationConfig extends ApplicationConfig(Play.current.configuration, new ServicesConfig(Play.current.configuration))
 
-class ApplicationConfig @Inject()(configuration: Configuration) extends ServicesConfig {
+class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig){
+ import servicesConfig._
 
-
-  private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
+  private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
   private val contactFrontendService = baseUrl("contact-frontend")
-  private val contactHost = configuration.getString("contact-frontend.host").getOrElse("")
+  //TODO this appears twice in app-config-prod
+  private val contactHost = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
 
-  //TODO use @Named for 2.6
-  val appName: String = configuration.getString("appName").getOrElse("APP NAME NOT SET")
+  val appName: String = getConfString("appName", "APP NAME NOT SET")
   val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version") + "/"
   val betaFeedbackUrl = s"${Constants.baseUrl}/feedback"
   val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
-  val analyticsToken: Option[String] = configuration.getString(s"google-analytics.token")
-  val analyticsHost: String = configuration.getString(s"google-analytics.host").getOrElse("auto")
-  val ssoUrl: Option[String] = configuration.getString(s"portal.ssoUrl")
+  val analyticsToken: Option[String] = configuration.getOptional[String](s"google-analytics.token")
+  val analyticsHost: String = configuration.getOptional[String]("google-analytics.host").getOrElse("auto")
+  val ssoUrl: Option[String] = configuration.getOptional[String]("portal.ssoUrl")
 
-  val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+  val frontendTemplatePath: String = getConfString("frontend-template-provider.path", "/template/mustache")
   val frontEndTemplateProviderBaseUrl = baseUrl("frontend-template-provider")
 
   val googleTagManagerId = loadConfig("google-tag-manager.id")
-  val isGtmEnabled = configuration.getBoolean("google-tag-manager.enabled").getOrElse(false)
+  val isGtmEnabled = configuration.getOptional[Boolean]("google-tag-manager.enabled").getOrElse(false)
   val contactFormServiceIdentifier = "NISP"
   val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-  val showGovUkDonePage: Boolean = configuration.getBoolean("govuk-done-page.enabled").getOrElse(true)
+  val showGovUkDonePage: Boolean = configuration.getOptional[Boolean]("govuk-done-page.enabled").getOrElse(true)
   val govUkFinishedPageUrl: String = loadConfig("govuk-done-page.url")
-  val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
+  val identityVerification: Boolean = getConfBool("features.identityVerification", false)
 
-  val verifySignIn: String = configuration.getString("verify-sign-in.url").getOrElse("")
-  val verifySignInContinue: Boolean = configuration.getBoolean("verify-sign-in.submit-continue-url").getOrElse(false)
-  val postSignInRedirectUrl = configuration.getString("login-callback.url").getOrElse("")
-  val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
-  val ivUpliftUrl: String = configuration.getString("identity-verification-uplift.host").getOrElse("")
-  val ggSignInUrl: String = configuration.getString("government-gateway-sign-in.host").getOrElse("")
+  val verifySignIn: String = configuration.getOptional[String]("verify-sign-in.url").getOrElse("")
+  val verifySignInContinue: Boolean = configuration.getOptional[Boolean]("verify-sign-in.submit-continue-url").getOrElse(false)
+  val postSignInRedirectUrl = configuration.getOptional[String]("login-callback.url").getOrElse("")
+  val notAuthorisedRedirectUrl = configuration.getOptional[String]("not-authorised-callback.url").getOrElse("")
+  val ivUpliftUrl: String = configuration.getOptional[String]("identity-verification-uplift.host").getOrElse("")
+  val ggSignInUrl: String = configuration.getOptional[String]("government-gateway-sign-in.host").getOrElse("")
 
-  val showUrBanner:Boolean = configuration.getBoolean("urBannerToggle").getOrElse(false)
+  val showUrBanner: Boolean = configuration.getOptional[Boolean]("urBannerToggle").getOrElse(false)
   val GaEventAction: String = "home page UR"
-  val isleManLink = runModeConfiguration.getString("isle-man-link.url")
-  val citizenAdviceLinkEn = runModeConfiguration.getString("citizens-advice-link-en.url")
-  val citizenAdviceLinkCy = runModeConfiguration.getString("citizens-advice-link-cy.url")
-  val moneyAdviceLinkEn = runModeConfiguration.getString("money-advice-link-en.url")
-  val moneyAdviceLinkCy = runModeConfiguration.getString("money-advice-link-cy.url")
-  val pensionWiseLink = runModeConfiguration.getString("pension-wise-link.url")
+  val isleManLink = configuration.get[String]("isle-man-link.url")
+  val citizenAdviceLinkEn = configuration.get[String]("citizens-advice-link-en.url")
+  val citizenAdviceLinkCy = configuration.get[String]("citizens-advice-link-cy.url")
+  val moneyAdviceLinkEn = configuration.get[String]("money-advice-link-en.url")
+  val moneyAdviceLinkCy = configuration.get[String]("money-advice-link-cy.url")
+  val pensionWiseLink = configuration.get[String]("pension-wise-link.url")
   val frontendHost = loadConfig("nisp-frontend.host")
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
 
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
-  val pertaxFrontendUrl: String = configuration.getString("breadcrumb-service.url").getOrElse("")
+  val pertaxFrontendUrl: String = configuration.getOptional[String]("breadcrumb-service.url").getOrElse("")
   val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"
-  val showFullNI: Boolean = configuration.getBoolean("microservice.services.features.fullNIrecord").getOrElse(false)
-  val futureProofPersonalMax: Boolean = configuration.getBoolean("microservice.services.features.future-proof.personalMax").getOrElse(false)
-  val isWelshEnabled: Boolean = configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
+  val showFullNI: Boolean = getConfBool("features.fullNIrecord", false)
+  val futureProofPersonalMax: Boolean = getConfBool("features.future-proof.personalMax", false)
+  val isWelshEnabled: Boolean = getConfBool("features.welsh-translation", false)
   val feedbackFrontendUrl: String = loadConfig("feedback-frontend.url")
 
   val citizenDetailsServiceUrl: String = baseUrl("citizen-details")
@@ -95,6 +92,4 @@ class ApplicationConfig @Inject()(configuration: Configuration) extends Services
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + SafeRedirectUrl(frontendHost + relativeReferrerPath).encodedUrl
 
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

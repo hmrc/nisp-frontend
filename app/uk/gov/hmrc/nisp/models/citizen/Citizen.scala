@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nisp.models.citizen
 
-import org.joda.time.{DateTime, LocalDate}
-import uk.gov.hmrc.domain.Nino
-import play.api.libs.functional.syntax._
+import org.joda.time.LocalDate
 import play.api.libs.json._
+import uk.gov.hmrc.domain.Nino
+import play.api.libs.json.JodaWrites._
 
 case class Citizen(nino: Nino, firstName: Option[String] = None, lastName: Option[String] = None,
                    dateOfBirth: LocalDate) {

@@ -19,8 +19,9 @@ package uk.gov.hmrc.nisp.models
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.utils.Formatting
 import uk.gov.hmrc.time.TaxYear
+import play.api.libs.json.JodaReads._
+import play.api.libs.json.JodaWrites._
 
 case class StatePensionExclusionFiltered(exclusion: Exclusion.Exclusion,
                                  pensionAge: Option[Int] = None,

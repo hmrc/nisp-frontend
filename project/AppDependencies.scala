@@ -2,20 +2,21 @@ import sbt._
 
 object AppDependencies {
 
-  //TODO can these be increased to the latest
   val compile = Seq(
-    "uk.gov.hmrc" %% "bootstrap-play-25" % "5.6.0",
-    "uk.gov.hmrc" %% "govuk-template" % "5.60.0-play-25",
-    "uk.gov.hmrc" %% "play-ui" % "8.19.0-play-25",
-    "uk.gov.hmrc" %% "domain" % "5.10.0-play-25",
-    "uk.gov.hmrc" %% "http-caching-client" % "9.2.0-play-25",
-    "uk.gov.hmrc" %% "play-language" % "4.5.0-play-25",
+    "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % "3.3.0",
+    "uk.gov.hmrc" %% "govuk-template" % "5.61.0-play-26",
+    "uk.gov.hmrc" %% "play-ui" % "8.21.0-play-26",
+    "uk.gov.hmrc" %% "domain" % "5.10.0-play-26",
+    "uk.gov.hmrc" %% "time" % "3.2.0",
+    "uk.gov.hmrc" %% "http-caching-client" % "9.2.0-play-26",
+    "uk.gov.hmrc" %% "play-language" % "4.7.0-play-26",
     "uk.gov.hmrc" %% "tax-year" % "0.6.0",
-    "uk.gov.hmrc" %% "csp-client" % "4.2.0-play-25",
-    "uk.gov.hmrc" %% "play-conditional-form-mapping" % "1.5.0-play-25",
-    "uk.gov.hmrc" %% "local-template-renderer"  % "2.10.0-play-25",
+    "uk.gov.hmrc" %% "csp-client" % "4.2.0-play-26",
+    "uk.gov.hmrc" %% "play-conditional-form-mapping" % "1.5.0-play-26",
+    "uk.gov.hmrc" %% "local-template-renderer"  % "2.10.0-play-26",
     "uk.gov.hmrc" %% "play-breadcrumb"  % "1.0.0",
-    "uk.gov.hmrc" %% "auth-client"  %  "3.2.0-play-25"
+    "uk.gov.hmrc" %% "auth-client"  %  "3.2.0-play-26",
+    "com.typesafe.play" %% "play-json-joda" % "2.6.10"
   )
 
   val test = Seq(
