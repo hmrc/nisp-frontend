@@ -18,26 +18,49 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
 
 import scala.concurrent.Future
 
-class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
-  val fakeRequest = FakeRequest()
+class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting {
 
-  private def authId(username: String): String = s"/auth/oid/$username"
+  val fakeRequest = FakeRequest()
+  val mockStatePensionService = mock[StatePensionService]
+  val mockNationalInsuranceService = mock[NationalInsuranceService]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[StatePensionService].toInstance(mockStatePensionService),
+      bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+      bind[ExcludedAuthAction].to[FakeExcludedAuthAction],
+      bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
+      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+      bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter)
+    ).build()
+
+  def authId(username: String): String = s"/auth/oid/$username"
+
+  val testExclusionController = inject[ExclusionController]
 
   val mockUserId = authId("mockuser")
-
   val mockUserIdExcludedAll = authId("mockexcludedall")
   val mockUserIdExcludedAllButDead = authId("mockexcludedallbutdead")
   val mockUserIdExcludedAllButDeadMCI = authId("mockexcludedallbutdeadmci")
@@ -67,12 +90,12 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /exclusion" should {
 
+    //TODO SessionKeys need to be removed
     "return redirect to account page for non-excluded user" in {
-      val result = new MockExclusionController(TestAccountBuilder.regularNino).showSP()(fakeRequest.withSession(
+      val result = testExclusionController.showSP()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString
         SessionKeys.userId -> mockUserId,
-        SessionKeys.authProvider -> Constants.VerifyProviderId
       ))
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
@@ -81,7 +104,7 @@ class ExclusionControllerSpec extends UnitSpec with OneAppPerSuite {
     "Exclusion Controller" when {
 
       def generateSPRequest(userId: String, nino: Nino): Future[Result] = {
-        new MockExclusionController(nino).showSP()(fakeRequest.withSession(
+        test.showSP()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
           SessionKeys.userId -> userId,

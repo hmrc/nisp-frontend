@@ -20,7 +20,7 @@ import org.joda.time.LocalDate
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
 import uk.gov.hmrc.nisp.helpers.{MockCitizenDetailsService, TestAccountBuilder}
@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
-class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfter with ScalaFutures with OneAppPerSuite {
+class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfter with ScalaFutures with GuiceOneAppPerSuite {
   val nino: Nino = TestAccountBuilder.regularNino
   val noNameNino: Nino = TestAccountBuilder.noNameNino
   val nonExistentNino: Nino = TestAccountBuilder.nonExistentNino

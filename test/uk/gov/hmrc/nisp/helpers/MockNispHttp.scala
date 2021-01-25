@@ -18,14 +18,15 @@ package uk.gov.hmrc.nisp.helpers
 
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.domain.Nino
-
+import uk.gov.hmrc.http.{BadRequestException, HttpClient, HttpResponse, Upstream4xxResponse}
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{BadRequestException, HttpGet, HttpResponse, Upstream4xxResponse}
 
-object MockNispHttp extends MockitoSugar {
-  val mockHttp = mock[HttpGet]
+trait MockNispHttp {
+  self: MockitoSugar =>
+
+  val mockHttp = mock[HttpClient]
 
   val noDataNinos = List(
     TestAccountBuilder.backendNotFound

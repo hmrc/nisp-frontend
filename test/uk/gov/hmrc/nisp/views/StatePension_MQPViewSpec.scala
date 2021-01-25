@@ -48,7 +48,7 @@ import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 
 class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter with GuiceOneAppPerSuite {
 
-  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   lazy val fakeRequest = FakeRequest()
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded = TestAccountBuilder.excludedAll
@@ -87,7 +87,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with NispFrontendController with
       override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.forecastOnlyNino)
       //TODO remove the need for this
       override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override val statePensionService: StatePensionService = mock[StatePensionService]
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
     }

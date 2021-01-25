@@ -19,14 +19,14 @@ package uk.gov.hmrc.nisp.views
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.selenium.WebBrowser.ClassNameQuery
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.helpers._
 
-trait HtmlSpec extends PlaySpec with OneAppPerSuite {
+trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   implicit val request = FakeRequest()
   implicit val lang = LanguageToggle.getLanguageCode()

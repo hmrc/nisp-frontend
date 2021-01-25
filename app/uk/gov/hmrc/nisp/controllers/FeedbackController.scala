@@ -17,26 +17,24 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.net.URLEncoder
-
 import com.google.inject.Inject
 import play.api.http.{Status => HttpStatus}
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.api.{Application, Logger}
 import play.twirl.api.Html
-import uk.gov.hmrc.http.{HeaderCarrier, HttpPost, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispHeaderCarrierForPartialsConverter
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
-                                   httpPost: HttpPost,
+                                   httpClient: HttpClient,
                                    executionContext: ExecutionContext,
-                                   nispHeaderCarrierForPartialsConverter: NispHeaderCarrierForPartialsConverter,
+                                   nispHeaderCarrierForPartialsConverter: HeaderCarrierForPartialsConverter,
                                    mcc: MessagesControllerComponents)
                                    (implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
@@ -73,7 +71,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
   def submit: Action[AnyContent] = Action.async {
     implicit request =>
       request.body.asFormUrlEncoded.map { formData =>
-        httpPost.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = executionContext).map {
+        httpClient.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = executionContext).map {
           resp =>
             resp.status match {
               case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))

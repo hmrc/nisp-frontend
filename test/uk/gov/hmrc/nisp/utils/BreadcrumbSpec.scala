@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nisp.helpers.MockBreadcrumb
 import uk.gov.hmrc.play.test.UnitSpec
 
-class BreadcrumbSpec extends UnitSpec with OneAppPerSuite {
+class BreadcrumbSpec extends UnitSpec with GuiceOneAppPerSuite {
   val fakeRequestSP = FakeRequest("GET", "/account")
   val fakeRequestNI = FakeRequest("GET", "/account/nirecord/gaps")
   val fakeRequestVolContribution = FakeRequest("GET", "/account/nirecord/voluntarycontribs")

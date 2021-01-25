@@ -16,64 +16,122 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.play.OneAppPerSuite
-import uk.gov.hmrc.nisp.helpers.MockIdentityVerificationConnector
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.http.Status
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
+import play.api.test.Injecting
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.http.HeaderCarrier
+import scala.concurrent.Future
+import scala.io.Source
 
-class IdentityVerificationConnectorSpec extends UnitSpec with OneAppPerSuite with ScalaFutures {
+class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with ScalaFutures
+  with Injecting with BeforeAndAfterEach {
+
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
+  import IdentityVerificationSuccessResponse._
 
+  val mockHttpClient = mock[HttpClient]
+  val mockMetricService = mock[MetricsService]
+  val mockApplicationConfig = mock[ApplicationConfig]
 
-   import IdentityVerificationSuccessResponse._
+  //TODO metrics??
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockHttpClient, mockMetricService, mockApplicationConfig)
+  }
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[HttpClient].toInstance(mockHttpClient),
+      bind[MetricsService].toInstance(mockMetricService),
+      bind[ApplicationConfig].toInstance(mockApplicationConfig)
+    ).build()
+
+  val identityVerificationConnector = inject[IdentityVerificationConnector]
+
+  val possibleJournies = Map(
+    "success-journey-id" -> "test/resources/identity-verification/success.json",
+    "incomplete-journey-id" -> "test/resources/identity-verification/incomplete.json",
+    "failed-matching-journey-id" -> "test/resources/identity-verification/failed-matching.json",
+    "insufficient-evidence-journey-id" -> "test/resources/identity-verification/insufficient-evidence.json",
+    "locked-out-journey-id" -> "test/resources/identity-verification/locked-out.json",
+    "user-aborted-journey-id" -> "test/resources/identity-verification/user-aborted.json",
+    "timeout-journey-id" -> "test/resources/identity-verification/timeout.json",
+    "technical-issue-journey-id" -> "test/resources/identity-verification/technical-issue.json",
+    "precondition-failed-journey-id" -> "test/resources/identity-verification/precondition-failed.json",
+    "invalid-journey-id" -> "test/resources/identity-verification/invalid-result.json",
+    "invalid-fields-journey-id" -> "test/resources/identity-verification/invalid-fields.json",
+    "failed-iv-journey-id" -> "test/resources/identity-verification/failed-iv.json"
+  )
+
+  def mockJourneyId(journeyId: String): Unit = {
+    val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
+    when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).
+      thenReturn(Future.successful(HttpResponse(Status.OK, Json.parse(fileContents), Map.empty[String, Seq[String]])))
+  }
+
+  def identityVerificationResponse(journeyId: String, ivResponse: String): Assertion = {
+    mockJourneyId(journeyId)
+    identityVerificationConnector.identityVerificationResponse(journeyId).futureValue shouldBe IdentityVerificationSuccessResponse(ivResponse)
+  }
 
   "return success when identityVerification returns success" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("success-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(Success)
+    behave like identityVerificationResponse("success-journey-id", Success)
   }
 
   "return incomplete when identityVerification returns incomplete" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("incomplete-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(Incomplete)
+    behave like identityVerificationResponse("incomplete-journey-id", Incomplete)
   }
 
   "return failed matching when identityVerification returns failed matching" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("failed-matching-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(FailedMatching)
+    behave like identityVerificationResponse("failed-matching-journey-id", FailedMatching)
   }
 
   "return failed iv when identityVerification returns failed matching" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("failed-iv-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(FailedIV)
+    behave like identityVerificationResponse("failed-iv-journey-id", FailedIV)
   }
 
   "return insufficient evidence when identityVerification returns insufficient evidence" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("insufficient-evidence-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(InsufficientEvidence)
+    behave like identityVerificationResponse("insufficient-evidence-journey-id", InsufficientEvidence)
   }
 
   "return locked out when identityVerification returns locked out" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("locked-out-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(LockedOut)
+    behave like identityVerificationResponse("locked-out-journey-id", LockedOut)
   }
 
   "return user aborted when identityVerification returns user aborted" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("user-aborted-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(UserAborted)
+    behave like identityVerificationResponse("user-aborted-journey-id", UserAborted)
   }
 
   "return timeout when identityVerification returns timeout" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("timeout-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(Timeout)
+    behave like identityVerificationResponse("timeout-journey-id", Timeout)
   }
 
   "return technical issue when identityVerification returns technical issue" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("technical-issue-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(TechnicalIssue)
+    behave like identityVerificationResponse("technical-issue-journey-id", TechnicalIssue)
   }
 
   "return precondition failed when identityVerification returns precondition failed" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("precondition-failed-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse(PreconditionFailed)
+    behave like identityVerificationResponse("precondition-failed-journey-id", PreconditionFailed)
   }
 
   "return no failure when identityVerification returns non-existant result type" in {
-    MockIdentityVerificationConnector.identityVerificationResponse("invalid-journey-id").futureValue shouldBe IdentityVerificationSuccessResponse("ABCDEFG")
+    behave like identityVerificationResponse("invalid-journey-id", "ABCDEFG")
   }
 
   "return failed future for invalid json fields" in {
-    val result = MockIdentityVerificationConnector.identityVerificationResponse("invalid-fields-journey-id")
+    val result = identityVerificationConnector.identityVerificationResponse("invalid-fields-journey-id")
     ScalaFutures.whenReady(result) { e =>
       e shouldBe a [IdentityVerificationErrorResponse]
     }

@@ -21,70 +21,82 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http.Status
-import play.api.mvc.{AnyContent, Request}
-import play.api.test.FakeRequest
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HttpPost, HttpResponse}
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.WSHttp
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever, FakeTemplateRenderer}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
-class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
+class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite with Injecting {
   val fakeRequest = FakeRequest("GET", "/")
+  val mockApplicationConfig = mock[ApplicationConfig]
+  val mockHttp = mock[HttpClient]
 
-  val mockHttp = mock[WSHttp]
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[HttpClient].toInstance(mockHttp),
+      bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
+      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+      bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter)
+    ).build()
 
-  lazy val testFeedbackController = new FeedbackController {
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override implicit val formPartialRetriever: FormPartialRetriever = MockFormPartialRetriever
 
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  val testFeedbackController = inject[FeedbackController]
 
-    override def httpPost: HttpPost = mockHttp
+  //TODO remove all this once th test is passing
+//    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+//    override implicit val formPartialRetriever: FormPartialRetriever = MockFormPartialRetriever
+//
+//    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+//
+//    override def httpPost: HttpPost = mockHttp
+//
+//    override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
+//
+//    override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
 
-    override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
 
-    override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
-
-    //TODO remove this
-    override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
-      override val ggSignInUrl: String = ""
-      override val verifySignIn: String = ""
-      override val verifySignInContinue: Boolean = false
-      override val assetsPrefix: String = ""
-      override val reportAProblemNonJSUrl: String = ""
-      override val ssoUrl: Option[String] = None
-      override val identityVerification: Boolean = false
-      override val betaFeedbackUnauthenticatedUrl: String = ""
-      override val notAuthorisedRedirectUrl: String = ""
-      override val contactFrontendPartialBaseUrl: String = ""
-      override val govUkFinishedPageUrl: String = ""
-      override val showGovUkDonePage: Boolean = false
-      override val analyticsHost: String = ""
-      override val betaFeedbackUrl: String = ""
-      override val analyticsToken: Option[String] = None
-      override val reportAProblemPartialUrl: String = ""
-      override val contactFormServiceIdentifier: String = "NISP"
-      override val postSignInRedirectUrl: String = ""
-      override val ivUpliftUrl: String = ""
-      override val pertaxFrontendUrl: String = ""
-      override val breadcrumbPartialUrl: String = ""
-      override val showFullNI: Boolean = false
-      override val futureProofPersonalMax: Boolean = false
-      override val isWelshEnabled = false
-      override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
-      override val feedbackFrontendUrl: String = "/foo"
-      override val googleTagManagerId: String = ""
-      override val isGtmEnabled: Boolean = false
-      override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
-    }
-  }
+//    override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
+//      override val ggSignInUrl: String = ""
+//      override val verifySignIn: String = ""
+//      override val verifySignInContinue: Boolean = false
+//      override val assetsPrefix: String = ""
+//      override val reportAProblemNonJSUrl: String = ""
+//      override val ssoUrl: Option[String] = None
+//      override val identityVerification: Boolean = false
+//      override val betaFeedbackUnauthenticatedUrl: String = ""
+//      override val notAuthorisedRedirectUrl: String = ""
+//      override val contactFrontendPartialBaseUrl: String = ""
+//      override val govUkFinishedPageUrl: String = ""
+//      override val showGovUkDonePage: Boolean = false
+//      override val analyticsHost: String = ""
+//      override val betaFeedbackUrl: String = ""
+//      override val analyticsToken: Option[String] = None
+//      override val reportAProblemPartialUrl: String = ""
+//      override val contactFormServiceIdentifier: String = "NISP"
+//      override val postSignInRedirectUrl: String = ""
+//      override val ivUpliftUrl: String = ""
+//      override val pertaxFrontendUrl: String = ""
+//      override val breadcrumbPartialUrl: String = ""
+//      override val showFullNI: Boolean = false
+//      override val futureProofPersonalMax: Boolean = false
+//      override val isWelshEnabled = false
+//      override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
+//      override val feedbackFrontendUrl: String = "/foo"
+//      override val googleTagManagerId: String = ""
+//      override val isGtmEnabled: Boolean = false
+//      override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
+//    }
 
   "GET /feedback" should {
     "return feedback page" in {
@@ -118,7 +130,6 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
     "return error for other http code back from contact-frontend" in {
       when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
         Future.successful(HttpResponse(418)))
-      // 418 - I'm a teapot
       val result = testFeedbackController.submit(fakePostRequest)
       status(result) mustBe Status.INTERNAL_SERVER_ERROR
     }

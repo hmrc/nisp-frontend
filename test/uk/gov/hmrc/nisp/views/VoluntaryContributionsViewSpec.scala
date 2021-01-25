@@ -27,14 +27,14 @@ import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
-import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, TestAccountBuilder}
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
+import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, FakeCachedStaticHtmlPartialRetriever, TestAccountBuilder}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
 
-  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   val mockUserNino = TestAccountBuilder.regularNino
 

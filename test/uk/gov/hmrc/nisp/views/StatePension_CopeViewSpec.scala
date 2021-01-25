@@ -35,14 +35,14 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, Authenticated
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter with ScalaFutures {
 
-  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded = TestAccountBuilder.excludedAll
   val mockUserNinoNotFound = TestAccountBuilder.blankNino
@@ -63,8 +63,8 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
 
     //TODO remove the need for this
     override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+    override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   }
 
   "Render State Pension view with Contracted out User" should {

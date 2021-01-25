@@ -19,21 +19,19 @@ package uk.gov.hmrc.nisp.config
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.wiring.{NispCachedStaticHtmlPartialRetriever, NispFormPartialRetriever, NispSessionCache}
+import uk.gov.hmrc.nisp.config.wiring.{NispCachedStaticHtmlPartialRetriever, NispFormPartialRetriever, NispHeaderCarrierForPartialsConverter, NispSessionCache}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl, VerifyAuthActionImpl}
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class NispModule extends Module {
     override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
-        //TODO Bootstrap should allow most of these to go
-        //TODO look at the toInstance for further DI
         bind[SessionCache].to[NispSessionCache],
         bind[CachedStaticHtmlPartialRetriever].to[NispCachedStaticHtmlPartialRetriever],
         bind[FormPartialRetriever].to[NispFormPartialRetriever],
         bind[TemplateRenderer].to[LocalTemplateRenderer],
-        //TODO test
-        if(configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)){
+        bind[HeaderCarrierForPartialsConverter].to[NispHeaderCarrierForPartialsConverter],
+        if(configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)){
             bind[AuthAction].to[AuthActionImpl]
         }else{
             bind[AuthAction].to[VerifyAuthActionImpl]

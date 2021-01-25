@@ -16,14 +16,14 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
-import uk.gov.hmrc.nisp.services.MetricsService
+import play.api.mvc.RequestHeader
+import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.http.HttpGet
 
-object MockNationalInsuranceConnector extends NationalInsuranceConnector {
-  override def http: HttpGet = MockNispHttp.mockHttp
-  override def sessionCache: SessionCache = MockSessionCache
-  override def serviceUrl: String = "national-insurance"
-  override val metricsService: MetricsService = MockMetricsService
+object FakeCachedStaticHtmlPartialRetriever extends CachedStaticHtmlPartialRetriever {
+  override def httpGet: HttpGet = ???
+
+  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html =
+    Html("")
 }

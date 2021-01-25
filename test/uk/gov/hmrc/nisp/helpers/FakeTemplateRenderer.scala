@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.utils
+package uk.gov.hmrc.nisp.helpers
 
-import org.scalatest.mock.MockitoSugar
-import play.api.Mode.Mode
 import play.api.i18n.Messages
-import play.api.{Configuration, Play}
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.config.{LocalTemplateRenderer, WsAllMethods}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-import scala.concurrent.duration._
+import scala.concurrent.Future
 
-object MockTemplateRenderer extends LocalTemplateRenderer {
+object FakeTemplateRenderer extends TemplateRenderer {
+
   override lazy val templateServiceBaseUrl = "http://example.com/template/mustache"
   override val refreshAfter = 10 minutes
-  override val wsHttp = MockitoSugar.mock[WsAllMethods]
 
-  override def renderDefaultTemplate(path:String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages) = {
+  override def renderDefaultTemplate(path:String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages): Html = {
     Html(
       "<title>" + extraArgs("pageTitle") + "</title>"
         + "<sidebar>"+extraArgs("sidebar")+"</sidebar>"
@@ -47,6 +44,5 @@ object MockTemplateRenderer extends LocalTemplateRenderer {
       else ""
     }
 
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override def fetchTemplate(path: String): Future[String] = ???
 }

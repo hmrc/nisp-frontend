@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 
-class CustomLanguageControllerSpec extends UnitSpec with OneAppPerSuite {
+class CustomLanguageControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   val testLanguageController = app.injector.instanceOf[CustomLanguageController]
 

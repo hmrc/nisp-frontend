@@ -29,7 +29,7 @@ import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -47,7 +47,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
   val ggSignInUrl = s"http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
 
-  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   lazy val fakeRequest = FakeRequest()
 
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
@@ -151,7 +151,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override lazy val showFullNI = true
         override val currentDate = new LocalDate(2016, 9, 9)
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         override val metricsService: MetricsService = MockMetricsService
         override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fullUserNino)
       }
@@ -167,7 +167,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override val currentDate = new LocalDate(2016, 9, 9)
 
         override lazy val showFullNI = false
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         override val metricsService: MetricsService = MockMetricsService
         override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fullUserNino)
       }
@@ -183,7 +183,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override lazy val showFullNI = true
         override val currentDate = new LocalDate(2016, 9, 9)
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         override val metricsService: MetricsService = MockMetricsService
         override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.noQualifyingYears)
       }
@@ -200,7 +200,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override lazy val showFullNI = false
         override val currentDate = new LocalDate(2019, 4, 6)
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         override val metricsService: MetricsService = MockMetricsService
         override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
       }
@@ -216,7 +216,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override lazy val showFullNI = false
         override val currentDate = new LocalDate(2019, 4, 4)
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         override val metricsService: MetricsService = MockMetricsService
         override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
       }
@@ -232,7 +232,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
         override lazy val showFullNI = false
         override val currentDate = new LocalDate(2019, 4, 5)
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         override val metricsService: MetricsService = MockMetricsService
         override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
       }

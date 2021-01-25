@@ -16,18 +16,18 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+//TODO remove this once tests are passing
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.controllers.ExclusionController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, ExcludedAuthAction}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class MockExclusionController(nino: Nino) extends ExclusionController {
-  override val authenticate: ExcludedAuthAction = new MockExcludedAuthAction(nino)
-  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
-  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-}
+//class MockExclusionController(nino: Nino) extends ExclusionController {
+//  override val authenticate: ExcludedAuthAction = new FakeExcludedAuthAction(nino)
+//  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//  override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension
+//  override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
+//  override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+//}

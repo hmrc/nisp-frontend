@@ -21,7 +21,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
@@ -30,7 +30,6 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
@@ -38,18 +37,18 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusionFiltered, UserName}
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
-class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter with OneAppPerSuite {
+class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter with GuiceOneAppPerSuite {
 
-  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   val user: NispAuthedUser = NispAuthedUser(TestAccountBuilder.regularNino, LocalDate.now(), UserName(Name(None, None)), None, None, false)
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
@@ -62,13 +61,14 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val sessionCache: SessionCache = MockSessionCache
       override lazy val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
       override val metricsService: MetricsService = MockMetricsService
       override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.urBannerNino)
     }
 
     implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.urBannerNino)
+    // TODO look at updating
     lazy val urResult = controller.showFull(AuthenticatedRequest(FakeRequest().withCookies(lanCookie), user, authDetails))
     lazy val urHtmlAccountDoc = asDocument(contentAsString(urResult))
 
@@ -97,8 +97,8 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val sessionCache: SessionCache = MockSessionCache
       override lazy val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
       override val metricsService: MetricsService = MockMetricsService
       override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.urBannerNino)
     }
@@ -227,7 +227,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val sessionCache: SessionCache = MockSessionCache
       override lazy val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
       override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
     }
@@ -515,7 +515,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val sessionCache: SessionCache = MockSessionCache
       override lazy val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -592,7 +592,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val sessionCache: SessionCache = MockSessionCache
       override lazy val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -677,7 +677,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val sessionCache: SessionCache = MockSessionCache
       override lazy val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
@@ -788,7 +788,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val sessionCache: SessionCache = MockSessionCache
       override lazy val showFullNI = true
       override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]

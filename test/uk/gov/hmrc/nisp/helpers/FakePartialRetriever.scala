@@ -16,12 +16,15 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
-import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.http.HttpGet
+import play.api.mvc.RequestHeader
+import play.twirl.api.Html
+import uk.gov.hmrc.http.CoreGet
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-object MockIdentityVerificationConnector extends IdentityVerificationConnector {
-  override val serviceUrl: String = ""
-  override def http: HttpGet = MockIdentityVerificationHttp.mockHttp
-  override val metricsService: MetricsService = MockMetricsService
+object FakePartialRetriever extends FormPartialRetriever {
+  override def crypto: String => String = ???
+
+  override def httpGet: CoreGet = ???
+
+  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html = Html("")
 }

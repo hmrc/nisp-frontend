@@ -20,8 +20,8 @@ import play.api.Play
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 
+//TODO remove the need for this
 object MockBreadcrumb extends NispBreadcrumb {
-  //TODO remove the need for this
   override lazy val applicationConfig: ApplicationConfig = new ApplicationConfig(Play.current.configuration) {
     override val ggSignInUrl: String = ""
     override val verifySignIn: String = ""

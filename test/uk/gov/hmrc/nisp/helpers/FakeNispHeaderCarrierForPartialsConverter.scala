@@ -16,14 +16,8 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import play.api.mvc.RequestHeader
-import play.twirl.api.Html
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.http.HttpGet
+import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
 
-object MockCachedStaticHtmlPartialRetriever extends CachedStaticHtmlPartialRetriever {
-  override def httpGet: HttpGet = ???
-
-  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html =
-    Html("")
+object FakeNispHeaderCarrierForPartialsConverter extends HeaderCarrierForPartialsConverter {
+  override def crypto: String => String = ???
 }

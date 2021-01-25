@@ -16,15 +16,11 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
-import javax.inject.Inject
-
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import uk.gov.hmrc.play.test.UnitSpec
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 
-class TimeSpec extends UnitSpec with OneAppPerSuite {
+class TimeSpec extends UnitSpec with GuiceOneAppPerSuite {
   val messagesApi = app.injector.instanceOf[MessagesApi]
   implicit val messages = new Messages(new Lang("en"), messagesApi)
 

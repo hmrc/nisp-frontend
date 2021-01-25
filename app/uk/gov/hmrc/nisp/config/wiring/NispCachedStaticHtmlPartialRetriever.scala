@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.config.wiring
 
 import com.google.inject.Inject
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 class NispCachedStaticHtmlPartialRetriever @Inject()(val httpGet: HttpClient) extends CachedStaticHtmlPartialRetriever

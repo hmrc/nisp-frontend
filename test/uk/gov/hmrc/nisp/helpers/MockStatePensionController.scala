@@ -24,13 +24,12 @@ import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class MockStatePensionControllerImpl(nino: Nino) extends MockStatePensionController {
-  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   override val authenticate: AuthAction = new MockAuthAction(nino)
 }
 
@@ -40,7 +39,7 @@ trait MockStatePensionController extends StatePensionController {
   override val sessionCache: SessionCache = MockSessionCache
   override val metricsService: MetricsService = MockMetricsService
 
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   override val applicationGlobal:ApplicationGlobalTrait = MockApplicationGlobal
 
   override val statePensionService: StatePensionService = MockStatePensionServiceViaStatePension

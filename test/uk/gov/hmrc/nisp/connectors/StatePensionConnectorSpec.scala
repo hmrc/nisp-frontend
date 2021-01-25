@@ -17,25 +17,55 @@
 package uk.gov.hmrc.nisp.connectors
 
 import org.joda.time.LocalDate
+import org.mockito.Mockito.reset
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
-import uk.gov.hmrc.nisp.helpers.{MockStatePensionConnector, TestAccountBuilder}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Injecting
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, Upstream4xxResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.helpers.{MockNispHttp, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
 
-class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
+class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
+  Injecting with BeforeAndAfterEach with MockNispHttp {
 
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
+  val mockMetricService = mock[MetricsService]
+  val mockApplicationConfig = mock[ApplicationConfig]
+  val mockSessionCache = mock[SessionCache]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[HttpClient].toInstance(mockHttp),
+      bind[MetricsService].toInstance(mockMetricService),
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[SessionCache].toInstance(mockSessionCache)
+    ).build()
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockHttp, mockMetricService, mockApplicationConfig, mockSessionCache)
+  }
+
+  val statePensionConnector = inject[StatePensionConnector]
+
   "getStatePension" should {
     "return the correct response for the regular test user" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.regularNino)) { statePension =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
           StatePensionAmounts(
@@ -53,7 +83,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return a failed Future 403 with a Dead message for all exclusion" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.excludedAll).failed) {
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAll).failed) {
         case ex: Upstream4xxResponse =>
           ex.upstreamResponseCode shouldBe 403
           ex.message.contains("EXCLUSION_DEAD") shouldBe true
@@ -61,7 +91,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return a failed Future 403 with a MCI message for all exclusion but dead" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead).failed) {
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead).failed) {
         case ex: Upstream4xxResponse =>
           ex.upstreamResponseCode shouldBe 403
           ex.message.contains("EXCLUSION_MANUAL_CORRESPONDENCE") shouldBe true
@@ -69,7 +99,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the correct list of exclusions for the the user with all but dead and MCI" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDeadMCI)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDeadMCI)) { result =>
         result shouldBe Left(StatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge,
@@ -85,7 +115,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the state pension age flag as true for a user with Amount Dis exclusion with a true flag for incoming State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)) { result =>
         result shouldBe Left(StatePensionExclusion(
           List(
             Exclusion.AmountDissonance
@@ -98,7 +128,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the state pension age flag as true for a user with IOM exclusion with a true flag for incoming State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { result =>
         result shouldBe Left(StatePensionExclusion(
           List(
             Exclusion.IsleOfMan
@@ -111,7 +141,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the state pension age flag as true for a user with MWRRE exclusion with a true flag for incoming State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)) { result =>
         result shouldBe Left(StatePensionExclusion(
           List(
             Exclusion.MarriedWomenReducedRateElection
@@ -124,7 +154,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the state pension age flag as true for a user with Over SPA exclusion with a true flag for incoming State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)) { result =>
         result shouldBe Left(StatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge
@@ -137,7 +167,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the state pension age flag as true for a user with Multiple exclusions with a true flag for incoming State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)) { result =>
         result shouldBe Left(StatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge,
@@ -153,7 +183,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the state pension age flag as none for a user with exclusion with no flag for incoming State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { result =>
         result shouldBe Left(StatePensionExclusion(
           List(
             Exclusion.IsleOfMan
@@ -165,5 +195,4 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures {
       }
     }
   }
-
 }

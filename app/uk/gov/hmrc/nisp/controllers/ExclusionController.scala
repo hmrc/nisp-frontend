@@ -22,7 +22,6 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-
 import scala.concurrent.ExecutionContext
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}

@@ -22,8 +22,8 @@ object AppDependencies {
   val test = Seq(
       "org.pegdown" % "pegdown" % "1.6.0",
       "org.jsoup" % "jsoup" % "1.10.2",
-      "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1",
-      "uk.gov.hmrc" %% "hmrctest" % "2.4.0",
+      "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.0",
+      "uk.gov.hmrc" %% "hmrctest" % "3.10.0-play-26",
       "org.mockito" % "mockito-core" % "3.1.0"
   ).map(_ % "test")
 

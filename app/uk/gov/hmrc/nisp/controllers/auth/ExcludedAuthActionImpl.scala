@@ -20,7 +20,7 @@ import java.net.{URI, URLEncoder}
 
 import com.google.inject.{ImplementedBy, Inject}
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{ActionBuilder, ActionFunction, AnyContent, BodyParsers, Request, Result}
+import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ExcludedAuthActionImpl @Inject()(val parser: BodyParsers.Default,
                                        val executionContext: ExecutionContext)
-                                      (override val authConnector: PlayAuthConnector)
+                                      (override val authConnector: AuthConnector)
                                       (implicit ec: ExecutionContext) extends ExcludedAuthAction with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: ExcludedAuthenticatedRequest[A] => Future[Result]): Future[Result] = {

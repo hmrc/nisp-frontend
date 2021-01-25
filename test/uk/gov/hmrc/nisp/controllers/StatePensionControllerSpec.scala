@@ -20,7 +20,6 @@ import java.util.UUID
 
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Play.configuration
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Nino
@@ -65,7 +64,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
   )
 
   def mockStatePensionController(nino: Nino): StatePensionController = new MockStatePensionController {
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
     override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
     override val authenticate: AuthAction = new MockAuthAction(nino)
   }
@@ -202,7 +201,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
             override val isGtmEnabled: Boolean = false
             override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
           }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         }
           "show new personal max text when there are multiple/single year" in {
           val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
@@ -248,7 +247,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
             override val isGtmEnabled: Boolean = false
             override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
           }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         }
         val result = controller.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "/foo"
@@ -289,7 +288,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
             override val isGtmEnabled: Boolean = false
             override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
           }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
         }
         val result = controller.signOut(fakeRequest)
 

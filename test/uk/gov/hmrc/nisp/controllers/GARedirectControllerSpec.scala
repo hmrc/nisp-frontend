@@ -16,38 +16,36 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http._
-import play.api.i18n.Lang
-import play.api.test.FakeRequest
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.helpers.MockCachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class GARedirectControllerSpec  extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class GARedirectControllerSpec  extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite with Injecting{
 
   private implicit val fakeRequest = FakeRequest("GET", "/redirect")
-  private implicit val lang = Lang("en")
-  private implicit val retriever = MockCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
-  val testGARedirectController = new GARedirectController {
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
+      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+    ).build()
 
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-  }
+  val testGARedirectController = inject[GARedirectController]
 
   "GET /redirect" should {
     "return 200" in {
       val result = testGARedirectController.show(fakeRequest)
       status(result) mustBe Status.OK
     }
-
   }
 }

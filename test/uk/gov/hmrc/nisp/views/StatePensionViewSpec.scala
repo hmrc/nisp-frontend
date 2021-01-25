@@ -37,7 +37,7 @@ import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceServic
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.time.DateTimeUtils.now
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
@@ -67,10 +67,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
       override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.forecastOnlyNino)
       //TODO remove the need for this
       override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
+      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override val statePensionService: StatePensionService = mock[StatePensionService]
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
     }
   }
 

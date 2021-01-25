@@ -20,73 +20,85 @@ import java.util.UUID
 
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http._
 import play.api.i18n.Lang
-import play.api.i18n.Messages.Implicits._
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.auth.core.MissingBearerToken
+import uk.gov.hmrc.auth.core.{AuthConnector, MissingBearerToken}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.{HttpClient, SessionKeys}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{NispAuthConnector, NispFormPartialRetriever}
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, VerifyAuthActionImpl}
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.utils.MockTemplateRenderer
+import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
 
 import scala.concurrent.Future
 
-class LandingControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class LandingControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
 
-  private implicit val fakeRequest = FakeRequest("GET", "/")
-  private implicit val lang = Lang("en")
+  implicit val fakeRequest = FakeRequest("GET", "/")
   val fakeRequestWelsh = FakeRequest("GET", "/cymraeg")
-  private implicit val retriever = MockCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  val mockApplicationConfig = mock[ApplicationConfig]
 
-  def testLandingControllerByNino(nino: Nino): LandingController = new LandingController {
+//  private implicit val retriever = FakeCachedStaticHtmlPartialRetriever
+//  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+//  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-    override val applicationConfig: ApplicationConfig = mock[ApplicationConfig]
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
+      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+      bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter)
+    ).build()
 
-    override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
+//  def testLandingControllerByNino(nino: Nino): LandingController = new LandingController {
+//
+//    override val applicationConfig: ApplicationConfig = mock[ApplicationConfig]
+//
+//    override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
+//
+//    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
+//
+//    override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+//
+//    override val verifyAuthAction: AuthAction = new MockAuthAction(nino)
+//  }
 
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
+  val brokenAuthConnector = mock[AuthConnector]
 
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+//  val brokenLandingController: LandingController = new LandingController {
+//
+//    override val applicationConfig: ApplicationConfig = mock[ApplicationConfig]
+//
+//    override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
+//
+//    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
+//
+//    override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+//
+//    override val verifyAuthAction: AuthAction = new VerifyAuthActionImpl(
+//      authConnector = brokenAuthConnector,
+//      cds = MockCitizenDetailsService)
+//  }
 
-    override val verifyAuthAction: AuthAction = new MockAuthAction(nino)
-  }
-
-  val brokenAuthConnector = mock[NispAuthConnector]
-
-  val brokenLandingController: LandingController = new LandingController {
-
-    override val applicationConfig: ApplicationConfig = mock[ApplicationConfig]
-
-    override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
-
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = retriever
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    override val verifyAuthAction: AuthAction = new VerifyAuthActionImpl(
-      authConnector = brokenAuthConnector,
-      cds = MockCitizenDetailsService)
-  }
-
-  lazy val testLandingController = testLandingControllerByNino(TestAccountBuilder.regularNino)
+  //lazy val testLandingController = testLandingControllerByNino(TestAccountBuilder.regularNino)
+  val landingController = app.asInstanceOf[LandingController]
 
   "GET /" should {
     "return 200" in {
-      val result = testLandingController.show(fakeRequest)
+      val result = landingController.show(fakeRequest)
       status(result) mustBe Status.OK
     }
 

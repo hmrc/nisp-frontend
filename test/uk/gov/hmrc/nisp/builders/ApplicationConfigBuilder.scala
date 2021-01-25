@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.builders
 
 import play.api.Configuration
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 //TODO this could be removed and configure overridden using the fakeapp or injector
 object ApplicationConfigBuilder {
@@ -34,7 +35,7 @@ object ApplicationConfigBuilder {
             frontendTemplatePath: String = "",
             feedbackFrontendUrl: String = "/foo",
             configuration: Configuration
-           ): ApplicationConfig = new ApplicationConfig(configuration) {
+           ): ApplicationConfig = new ApplicationConfig(configuration, new ServicesConfig(configuration)){
     override val assetsPrefix: String = assetsPrefix
     override val betaFeedbackUrl: String = betaFeedbackUrl
     override val betaFeedbackUnauthenticatedUrl: String = betaFeedbackUnauthenticatedUrl
