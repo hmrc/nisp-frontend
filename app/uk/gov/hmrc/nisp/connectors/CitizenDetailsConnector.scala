@@ -27,6 +27,7 @@ import uk.gov.hmrc.domain.Nino
 
 import scala.concurrent.{ExecutionContext, Future}
 
+//TODO test this class
 class CitizenDetailsConnector @Inject()(http: HttpClient,
                                         metricsService: MetricsService,
                                         appConfig: ApplicationConfig

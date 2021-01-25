@@ -16,51 +16,65 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.joda.time.LocalDate
+import org.joda.time.{DateTime, LocalDate}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
-import uk.gov.hmrc.nisp.helpers.{MockStatePensionServiceViaStatePension, TestAccountBuilder}
+import play.api.inject.guice.GuiceApplicationBuilder
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.nisp.connectors.StatePensionConnector
+import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.http.HeaderCarrier
 
-class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
+import scala.concurrent.ExecutionContext
+
+class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures with BeforeAndAfterEach {
 
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
+  val mockStatePensionConnector = mock[StatePensionConnector]
+  val injector = GuiceApplicationBuilder().injector()
+  val executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
+
+  val statePensionService = new StatePensionService(mockStatePensionConnector)(executionContext){
+    override def now: () => DateTime = () => new DateTime(new LocalDate(2016, 11, 1))
+  }
+
   "yearsToContributeUntilPensionAge" should {
     "shouldBe 2 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2016-4-5" in {
-      MockStatePensionServiceViaStatePension.yearsToContributeUntilPensionAge(
+      statePensionService.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2016, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 2
     }
 
     "shouldBe 3 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2015-4-5" in {
-      MockStatePensionServiceViaStatePension.yearsToContributeUntilPensionAge(
+      statePensionService.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2015, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 3
     }
 
     "shouldBe 1 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2017-4-5" in {
-      MockStatePensionServiceViaStatePension.yearsToContributeUntilPensionAge(
+      statePensionService.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2017, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 1
     }
 
     "shouldBe 0 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2018-4-5" in {
-      MockStatePensionServiceViaStatePension.yearsToContributeUntilPensionAge(
+      statePensionService.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2018, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 0
     }
 
     "shouldBe 0 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2017-4-6" in {
-      MockStatePensionServiceViaStatePension.yearsToContributeUntilPensionAge(
+      statePensionService.yearsToContributeUntilPensionAge(
         earningsIncludedUpTo = new LocalDate(2017, 4, 6),
         finalRelevantYearStart = 2017
       ) shouldBe 0
@@ -72,19 +86,19 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
     "transform the Dead 403 into a Left(StatePensionExclusion(Dead))" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAll)) { exclusion =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.excludedAll)) { exclusion =>
         exclusion shouldBe Left(StatePensionExclusionFiltered(Exclusion.Dead))
       }
     }
 
     "transform the MCI 403 into a Left(StatePensionExclusion(MCI))" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAllButDead)) { exclusion =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.excludedAllButDead)) { exclusion =>
         exclusion shouldBe Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
       }
     }
 
     "return the connector response for a regular user" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.regularNino)) { statePension =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.regularNino)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
           StatePensionAmounts(
@@ -100,7 +114,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the connector response for a RRE user" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedMwrre)) { statePension =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.excludedMwrre)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
           StatePensionAmounts(
@@ -116,7 +130,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the connector response for a Abroad user" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAbroad)) { statePension =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.excludedAbroad)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
           StatePensionAmounts(
@@ -132,7 +146,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the connector response with PostStatePensionAge exclusion for all the exclusions except MCI and Dead" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.excludedAllButDeadMCI)) { statePension =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.excludedAllButDeadMCI)) { statePension =>
         statePension shouldBe Left(StatePensionExclusionFiltered(
           Exclusion.PostStatePensionAge,
           pensionAge = Some(65),
@@ -143,7 +157,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the connector response for a user with a true flag for State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.spaUnderConsiderationNino)) { statePension =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.spaUnderConsiderationNino)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
           StatePensionAmounts(
@@ -159,7 +173,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the connector response for a user with no flag for State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.spaUnderConsiderationNoFlagNino)) { statePension =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.spaUnderConsiderationNoFlagNino)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),
           StatePensionAmounts(
@@ -175,7 +189,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the connector response for a user with exclusion with a true flag for State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { statePension =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { statePension =>
         statePension shouldBe Left(StatePensionExclusionFiltered(
           Exclusion.IsleOfMan,
           pensionAge = Some(65),
@@ -186,7 +200,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
     }
 
     "return the connector response for a user with exclusion with no flag for State Pension Age Under Consideration" in {
-      whenReady(MockStatePensionServiceViaStatePension.getSummary(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { statePension =>
+      whenReady(statePensionService.getSummary(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { statePension =>
         statePension shouldBe Left(StatePensionExclusionFiltered(
           Exclusion.IsleOfMan,
           pensionAge = Some(65),
@@ -195,7 +209,5 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures {
         ))
       }
     }
-
   }
-
 }

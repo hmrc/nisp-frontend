@@ -19,24 +19,43 @@ package uk.gov.hmrc.nisp.services
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 import uk.gov.hmrc.play.test.UnitSpec
-
 import scala.concurrent.Future
 import scala.util.Random
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
-import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
 
-class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures {
+class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures with GuiceOneAppPerSuite
+with BeforeAndAfterEach with Injecting {
 
   def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
 
   implicit val headerCarrier = HeaderCarrier()
+  val mockNationalInsuranceConnector = mock[NationalInsuranceConnector]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[NationalInsuranceConnector].toInstance(mockNationalInsuranceConnector)
+    ).build()
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockNationalInsuranceConnector)
+  }
+
+  val nationalInsuranceService = inject[NationalInsuranceService]
 
   "NationalInsuranceConnection" when {
 
@@ -94,19 +113,17 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         reducedRateElection = false
       )
 
-      val service = new NationalInsuranceService with NationalInsuranceConnection {
-        override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
-      }
-      when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      // TODO this could cause issues with mock resetting
+      when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful(mockNationalInsuranceRecord))
 
       "return a Right(NationalInsuranceRecord)" in {
-        service.getSummary(generateNino).isRight shouldBe true
-        service.getSummary(generateNino).right.get shouldBe a[NationalInsuranceRecord]
+        nationalInsuranceService.getSummary(generateNino).isRight shouldBe true
+        nationalInsuranceService.getSummary(generateNino).right.get shouldBe a[NationalInsuranceRecord]
       }
 
       "return unmodified data" in {
-        whenReady(service.getSummary(generateNino)) { record =>
+        whenReady(nationalInsuranceService.getSummary(generateNino)) { record =>
           record shouldBe Right(mockNationalInsuranceRecord)
         }
       }
@@ -155,10 +172,10 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
           )
         ))
 
-        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(jumbledRecord))
 
-        whenReady(service.getSummary(generateNino)) { result =>
+        whenReady(nationalInsuranceService.getSummary(generateNino)) { result =>
           result.right.get.taxYears shouldBe mockNationalInsuranceRecord.taxYears
         }
 
@@ -168,17 +185,15 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
     "There is failed future from a Dead exclusion" should {
       "return a Left Dead Exclusion" in {
-        val service = new NationalInsuranceService with NationalInsuranceConnection {
-          override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
-        }
-        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
             message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
             upstreamResponseCode = 403,
             reportAs = 500
           )))
 
-        whenReady(service.getSummary(generateNino)) { ex =>
+        whenReady(nationalInsuranceService.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.Dead)
         }
       }
@@ -186,17 +201,15 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
     "There is failed future from a MCI exclusion" should {
       "return a Left MCI Exclusion" in {
-        val service = new NationalInsuranceService with NationalInsuranceConnection {
-          override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
-        }
-        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
             message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
             upstreamResponseCode = 403,
             reportAs = 500
           )))
 
-        whenReady(service.getSummary(generateNino)) { ex =>
+        whenReady(nationalInsuranceService.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.ManualCorrespondenceIndicator)
         }
       }
@@ -204,17 +217,15 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
     "There is failed future from a Isle of Man exclusion" should {
       "return a Left Isle of Man Exclusion" in {
-        val service = new NationalInsuranceService with NationalInsuranceConnection {
-          override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
-        }
-        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
             message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
             upstreamResponseCode = 403,
             reportAs = 500
           )))
 
-        whenReady(service.getSummary(generateNino)) { ex =>
+        whenReady(nationalInsuranceService.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.IsleOfMan)
         }
       }
@@ -222,17 +233,15 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
 
     "There is failed future from a MWRRE exclusion" should {
       "return a Left MWRRE Exclusion" in {
-        val service = new NationalInsuranceService with NationalInsuranceConnection {
-          override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
-        }
-        when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.failed(new Upstream4xxResponse(
             message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
             upstreamResponseCode = 403,
             reportAs = 500
           )))
 
-        whenReady(service.getSummary(generateNino)) { ex =>
+        whenReady(nationalInsuranceService.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.MarriedWomenReducedRateElection)
         }
       }
@@ -266,14 +275,11 @@ class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with Scala
         reducedRateElection = true
       )
 
-      val service = new NationalInsuranceService with NationalInsuranceConnection {
-        override val nationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
-      }
-      when(service.nationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful(mockNationalInsuranceRecord))
 
       "return a Left(Excelution)" in {
-        val niSummary = service.getSummary(generateNino)
+        val niSummary = nationalInsuranceService.getSummary(generateNino)
         niSummary.isLeft shouldBe true
         niSummary.left.get shouldBe a[Exclusion]
       }

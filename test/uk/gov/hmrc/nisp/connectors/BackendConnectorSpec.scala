@@ -24,7 +24,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
-import uk.gov.hmrc.nisp.helpers.{MockMetricsService, MockSessionCache}
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -36,14 +35,16 @@ import scala.util.{Failure, Success}
 class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
   val mockHttp: HttpClient = mock[HttpClient]
+  val mockSessionCache = mock[SessionCache]
+  val mockMetricsService = mock[MetricsService]
   val injector: Injector = GuiceApplicationBuilder().injector()
   implicit val executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
 
   object BackendConnectorImpl extends BackendConnector {
     override def http: HttpClient = mockHttp
-    override def sessionCache: SessionCache = MockSessionCache
+    override def sessionCache: SessionCache = mockSessionCache
     override def serviceUrl: String = "national-insurance"
-    override val metricsService: MetricsService = MockMetricsService
+    override val metricsService: MetricsService = mockMetricsService
     override implicit val executionContext: ExecutionContext = executionContext
 
     def getNationalInsurance()(implicit headerCarrier: HeaderCarrier): Future[NationalInsuranceRecord] = {
