@@ -20,20 +20,27 @@ import java.util.UUID
 
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.test.FakeRequest
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.NationalInsuranceService
+import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils.now
 
-class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite {
+class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting {
 
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
@@ -54,95 +61,118 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
   val ggSignInUrl = "http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
   val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
-  lazy val fakeRequest = FakeRequest()
+  val fakeRequest = FakeRequest()
+
+  val mockCustomAuditConnector: CustomAuditConnector = mock[CustomAuditConnector]
+  val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
+  val mockMetricsService: MetricsService = mock[MetricsService]
+  val mockSessionCache: SessionCache = mock[SessionCache]
+
+  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-    SessionKeys.userId -> userId,
-    SessionKeys.authProvider -> Constants.VerifyProviderId
+    "userId" -> userId,
+    "ap" -> Constants.VerifyProviderId
   )
 
-  def mockStatePensionController(nino: Nino): StatePensionController = new MockStatePensionController {
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
-    override val authenticate: AuthAction = new FakeAuthAction(nino)
-  }
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[AuthAction].to[FakeAuthAction],
+      bind[StatePensionService].toInstance(mockStatePensionService),
+      bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[MetricsService].toInstance(mockMetricsService),
+      bind[SessionCache].toInstance(mockSessionCache),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[TemplateRenderer].toInstance(templateRenderer)
+    ).build()
+
+  val statePensionController = inject[StatePensionController]
 
   "State Pension controller" should {
 
     "GET /statepension" should {
 
       "return 500 when backend 404" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.backendNotFound)
+        val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdBackendNotFound))
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
       "return the forecast only page for a user with a forecast lower than current amount" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.forecastOnlyNino)
+        val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdForecastOnly))
         contentAsString(result) should not include ("£80.38")
       }
 
       "return 200, with exclusion message for excluded user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.excludedAll)
+        val result = statePensionController
           .show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> mockUserIdExcluded,
-          SessionKeys.authProvider -> Constants.VerifyProviderId
+          "userId" -> mockUserIdExcluded,
+          "ap" -> Constants.VerifyProviderId
         ))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
       "return content about COPE for contracted out (B) user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.contractedOutBTestNino)
+        val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdContractedOut))
         contentAsString(result) should include("You’ve been in a contracted-out pension scheme")
       }
 
       "return COPE page for contracted out (B) user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.contractedOutBTestNino)
+        val result = statePensionController
           .showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
         contentAsString(result) should include("You were contracted out")
       }
 
       "return abroad message for abroad user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.abroadNino)
+        val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdAbroad))
         contentAsString(result) should include("As you are living or working overseas")
       }
 
       "return /exclusion for MWRRE user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.excludedMwrreAbroad)
+        val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdMwrre))
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
       "return abroad message for forecast only user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.forecastOnlyNino)
+        val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdForecastOnly))
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "£80.38"
       }
 
       "return abroad message for an mqp user instead of standard mqp overseas message" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.mqpAbroadNino)
+        val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "If you have lived or worked overseas"
       }
 
       "redirect to statepension page for non contracted out user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.mqpNino)
+        val result = statePensionController
           .showCope()(authenticatedFakeRequest(mockUserIdMQP))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
       }
 
       "return page with MQP messaging for MQP user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.mqpNino)
+        val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdMQP))
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
@@ -151,7 +181,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
     "when there is a Fill Gaps Scenario" when {
       "the future config is set to off" should {
         "show year information when there is multiple years" in {
-          val result = mockStatePensionController(TestAccountBuilder.fillGapsMultiple)
+          val result = statePensionController
             .show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
           contentAsString(result) should include("filling years can improve your forecast")
@@ -167,44 +197,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       }
 
       "the future proof config is set to true" should {
-        //TODO override config or mock
-        lazy val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fillGapsMultiple)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = true
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = true
-            override val isWelshEnabled = false
-            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendUrl: String = "/foo"
-            override val googleTagManagerId: String = ""
-            override val isGtmEnabled: Boolean = false
-            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        }
           "show new personal max text when there are multiple/single year" in {
-          val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
+          val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")
         }
@@ -213,85 +207,12 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
 
     "GET /signout" should {
       "redirect to the questionnaire page when govuk done page is disabled" in {
-        //TODO override config or mock
-        val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = false
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val isWelshEnabled = false
-            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendUrl: String = "/foo"
-            override val googleTagManagerId: String = ""
-            override val isGtmEnabled: Boolean = false
-            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        }
-        val result = controller.signOut(fakeRequest)
+        val result = statePensionController.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "/foo"
       }
 
       "redirect to the feedback questionnaire page when govuk done page is enabled" in {
-        //TODO override config or mock
-        val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = true
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val isWelshEnabled = false
-            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendUrl: String = "/foo"
-            override val googleTagManagerId: String = ""
-            override val isGtmEnabled: Boolean = false
-            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        }
-        val result = controller.signOut(fakeRequest)
-
+        val result = statePensionController.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "/foo"
       }
     }

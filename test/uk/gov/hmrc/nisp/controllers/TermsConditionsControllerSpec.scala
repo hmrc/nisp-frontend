@@ -41,12 +41,6 @@ class TermsConditionsControllerSpec extends PlaySpec with GuiceOneAppPerSuite wi
 
   val termsConditionController = inject[TermsConditionsController]
 
-//  val MockTermsConditionsController = new TermsConditionsController {
-//    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-//
-//    override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-//  }
-
   "GET /" should {
 
     "return 200" in {
