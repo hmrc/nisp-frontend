@@ -59,7 +59,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
   lazy val appConfig = app.injector.instanceOf[Configuration]
 
   lazy val controller = new MockStatePensionController {
-    override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.contractedOutBTestNino)
+    override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.contractedOutBTestNino)
 
     //TODO remove the need for this
     override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)

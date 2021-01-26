@@ -66,7 +66,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
   def mockStatePensionController(nino: Nino): StatePensionController = new MockStatePensionController {
     override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
     override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
-    override val authenticate: AuthAction = new MockAuthAction(nino)
+    override val authenticate: AuthAction = new FakeAuthAction(nino)
   }
 
   "State Pension controller" should {
@@ -169,7 +169,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       "the future proof config is set to true" should {
         //TODO override config or mock
         lazy val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
+          override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fillGapsMultiple)
           override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
             override val assetsPrefix: String = ""
             override val reportAProblemNonJSUrl: String = ""
@@ -215,7 +215,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       "redirect to the questionnaire page when govuk done page is disabled" in {
         //TODO override config or mock
         val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
+          override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
           override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
             override val assetsPrefix: String = ""
             override val reportAProblemNonJSUrl: String = ""
@@ -256,7 +256,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       "redirect to the feedback questionnaire page when govuk done page is enabled" in {
         //TODO override config or mock
         val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
+          override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
           override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
             override val assetsPrefix: String = ""
             override val reportAProblemNonJSUrl: String = ""

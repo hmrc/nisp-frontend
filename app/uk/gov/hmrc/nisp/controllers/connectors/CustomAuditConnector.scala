@@ -22,6 +22,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import scala.concurrent.ExecutionContext
 
+//TODO Can this be removed and AuditConnector used instead
 class CustomAuditConnector @Inject()(auditConnector: AuditConnector) {
   def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit =
     auditConnector.sendEvent(event)

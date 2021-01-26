@@ -33,7 +33,7 @@ class MockNIRecordControllerImpl(nino: Nino) extends MockNIRecordController {
   override lazy val showFullNI: Boolean = true
   override val currentDate = new LocalDate(2016,9,9)
   override val metricsService: MetricsService = MockMetricsService
-  override val authenticate: AuthAction = new MockAuthAction(nino)
+  override val authenticate: AuthAction = new FakeAuthAction(nino)
 }
 
 trait MockNIRecordController extends NIRecordController {

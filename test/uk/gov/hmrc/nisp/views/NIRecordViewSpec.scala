@@ -64,7 +64,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
       override val metricsService: MetricsService = MockMetricsService
-      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.urBannerNino)
+      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.urBannerNino)
     }
 
     implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.urBannerNino)
@@ -100,7 +100,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
       override val metricsService: MetricsService = MockMetricsService
-      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.urBannerNino)
+      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.urBannerNino)
     }
 
     implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
@@ -229,7 +229,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val currentDate = new LocalDate(2016, 9, 9)
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
       override val metricsService: MetricsService = MockMetricsService
-      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
+      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
     }
 
     implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
@@ -519,7 +519,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val metricsService: MetricsService = MockMetricsService
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
+      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
     }
 
     when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
@@ -596,7 +596,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val metricsService: MetricsService = MockMetricsService
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
+      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
     }
 
     when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
@@ -681,7 +681,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val metricsService: MetricsService = MockMetricsService
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
+      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
     }
 
     when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
@@ -792,7 +792,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       override val metricsService: MetricsService = MockMetricsService
       override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
       override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.abroadNino)
+      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.abroadNino)
     }
 
     when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))

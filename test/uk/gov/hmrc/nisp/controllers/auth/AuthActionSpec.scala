@@ -36,14 +36,12 @@ import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.EqualsAuthenticatedRequest
 import uk.gov.hmrc.play.test.UnitSpec
-
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -59,9 +57,10 @@ class AuthActionSpec extends UnitSpec with MockitoSugar {
 
   val injector = GuiceApplicationBuilder().injector()
   val defaultBodyParser: Default = injector.instanceOf[Default]
-  val executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
+  implicit val executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
   val mockAuthConnector = mock[AuthConnector]
   val mockApplicationConfig = mock[ApplicationConfig]
+  val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
   val nino = new Generator().nextNino.nino
   val fakeLoginTimes = LoginTimes(DateTime.now(), None)
   val credentials = Credentials("providerId", "providerType")
@@ -175,7 +174,7 @@ class AuthActionSpec extends UnitSpec with MockitoSugar {
     "redirect to sign in page when no session" in {
       when(mockAuthConnector.authorise(any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.failed(new SessionRecordNotFound))
-      val cds = new CitizenDetailsService(MockCitizenDetailsConnector)
+      val cds = new CitizenDetailsService(mockCitizenDetailsConnector)
       val authAction = new AuthActionImpl(mockAuthConnector, cds, defaultBodyParser, executionContext, mockApplicationConfig)
       val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
       status(result) shouldBe SEE_OTHER
@@ -185,7 +184,7 @@ class AuthActionSpec extends UnitSpec with MockitoSugar {
     "redirect to uplift when insufficient confidence level" in {
       when(mockAuthConnector.authorise(any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.failed(new InsufficientConfidenceLevel))
-      val cds = new CitizenDetailsService(MockCitizenDetailsConnector)
+      val cds = new CitizenDetailsService(mockCitizenDetailsConnector)
       val authAction = new AuthActionImpl(mockAuthConnector, cds, defaultBodyParser, executionContext, mockApplicationConfig)
       val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
       status(result) shouldBe SEE_OTHER

@@ -24,6 +24,6 @@ case class AuthDetails(confidenceLevel: ConfidenceLevel,
                        authProvider: Option[String],
                        loginTimes: LoginTimes
                       ){
-  val isGG: Boolean = authProvider.contains(Constants.GovernmentGatewayId) //TODO test
+  val isGG: Boolean = authProvider.contains(Constants.GovernmentGatewayId) //TODO test and check if these are correct
   val isVerify: Boolean = authProvider.contains(Constants.VerifyProviderId)
 }

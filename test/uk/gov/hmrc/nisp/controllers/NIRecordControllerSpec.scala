@@ -19,23 +19,29 @@ package uk.gov.hmrc.nisp.controllers
 import java.util.UUID
 
 import org.joda.time.LocalDate
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http.Status
-import play.api.test.FakeRequest
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
+import play.api.inject.bind
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 
-class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
+class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting {
   val mockUserId = "/auth/oid/mockuser"
   val mockFullUserId = "/auth/oid/mockfulluser"
   val mockBlankUserId = "/auth/oid/mockblank"
@@ -47,43 +53,71 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
   val ggSignInUrl = s"http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
 
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-  lazy val fakeRequest = FakeRequest()
+  val mockCustomAuditConnector: CustomAuditConnector = mock[CustomAuditConnector]
+  val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
+  val mockMetricsService: MetricsService = mock[MetricsService]
+  val mockSessionCache: SessionCache = mock[SessionCache]
 
+  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[AuthAction].to[FakeAuthAction],
+      bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+      bind[StatePensionService].toInstance(mockStatePensionService),
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[MetricsService].toInstance(mockMetricsService),
+      bind[SessionCache].toInstance(mockSessionCache),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[TemplateRenderer].toInstance(templateRenderer)
+    ).build()
+
+  val fakeRequest = FakeRequest()
+  val niRecordController = inject[NIRecordController]
+
+  // TODO userId and authProvider is now redundant
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-    SessionKeys.userId -> userId,
-    SessionKeys.authProvider -> Constants.VerifyProviderId
+    "userId" -> userId,
+    "ap" -> Constants.VerifyProviderId
   )
 
   "GET /account/nirecord/gaps (gaps)" should {
 
     "return gaps page for user with gaps" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.regularNino)
-        .showGaps(authenticatedFakeRequest(mockUserId))
+      val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should include("View all years of contributions")
     }
 
     "return full page for user without gaps" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.fullUserNino)
-        .showGaps(authenticatedFakeRequest(mockFullUserId))
+      //this is using TestAccountBuilder.fullUserNino
+      val result = niRecordController.showGaps(authenticatedFakeRequest(mockFullUserId))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord")
     }
 
     "return 500 when backend 404" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.backendNotFound)
-        .showGaps(authenticatedFakeRequest(mockBackendNotFoundUserId))
+      //This is using TestAccountBuilder.backendNotFound
+      val result = niRecordController.showGaps(authenticatedFakeRequest(mockBackendNotFoundUserId))
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
     "redirect to exclusion for excluded user" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.excludedAll)
+      //This is using TestAccountBuilder.excludedAll
+      val result = niRecordController
         .showGaps(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> mockUserIdExcluded,
-          SessionKeys.authProvider -> Constants.VerifyProviderId
+          "userId" -> mockUserIdExcluded,
+          "ap" -> Constants.VerifyProviderId
         ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
@@ -91,24 +125,26 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /account/nirecord (full)" should {
     "return gaps page for user with gaps" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.regularNino)
+      val result = niRecordController
         .showFull(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should include("View years only showing gaps in your contributions")
     }
 
     "return full page for user without gaps" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.fullUserNino)
+      // TestAccountBuilder.fullUserNino
+      val result = niRecordController
         .showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) should include("You do not have any gaps in your record.")
     }
 
     "redirect to exclusion for excluded user" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.excludedAll)
+      //TestAccountBuilder.excludedAll
+      val result = niRecordController
         .showFull(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> mockUserIdExcluded,
-          SessionKeys.authProvider -> Constants.VerifyProviderId
+          "userId" -> mockUserIdExcluded,
+          "ap" -> Constants.VerifyProviderId
         ))
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
@@ -116,19 +152,21 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /account/nirecord/gapsandhowtocheck" should {
     "return how to check page for authenticated user" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.regularNino)
+      val result = niRecordController
         .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should include("Gaps in your record and how to check them")
     }
 
     "return hrp message for hrp user" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.hrpNino)
+      //TestAccountBuilder.hrpNino
+      val result = niRecordController
         .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserIdHRP))
       contentAsString(result) should include("Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010.")
     }
 
     "do not return hrp message for non hrp user" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.regularNino)
+      //TestAccountBuilder.regularNino
+      val result = niRecordController
         .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should not include
         "Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010."
@@ -137,7 +175,7 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /account/nirecord/voluntarycontribs" should {
     "return how to check page for authenticated user" in {
-      val result = new MockNIRecordControllerImpl(TestAccountBuilder.regularNino)
+      val result = niRecordController
         .showVoluntaryContributions(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should include("Voluntary contributions")
     }
@@ -145,99 +183,99 @@ class NIRecordControllerSpec extends UnitSpec with OneAppPerSuite {
 
   "GET /account/nirecord (full)" should {
     "return NI record page with details for full years - when showFullNI is true" in {
-      val controller = new MockNIRecordController {
-        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-        override val sessionCache: SessionCache = MockSessionCache
-        override lazy val showFullNI = true
-        override val currentDate = new LocalDate(2016, 9, 9)
+//      val controller = new MockNIRecordController {
+//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//        override val sessionCache: SessionCache = MockSessionCache
+//        override lazy val showFullNI = true
+//        override val currentDate = new LocalDate(2016, 9, 9)
+//
+//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//        override val metricsService: MetricsService = MockMetricsService
+//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fullUserNino)
+//      }
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        override val metricsService: MetricsService = MockMetricsService
-        override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fullUserNino)
-      }
-
-      val result = controller.showFull(authenticatedFakeRequest(mockFullUserId))
+      val result = niRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) should include("52 weeks")
     }
 
     "return NI record page with no details for full years - when showFullNI is false" in {
-      val controller = new MockNIRecordController {
-        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-        override val sessionCache: SessionCache = MockSessionCache
-        override val currentDate = new LocalDate(2016, 9, 9)
+//      val controller = new MockNIRecordController {
+//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//        override val sessionCache: SessionCache = MockSessionCache
+//        override val currentDate = new LocalDate(2016, 9, 9)
+//
+//        override lazy val showFullNI = false
+//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//        override val metricsService: MetricsService = MockMetricsService
+//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fullUserNino)
+//      }
 
-        override lazy val showFullNI = false
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        override val metricsService: MetricsService = MockMetricsService
-        override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fullUserNino)
-      }
-
-      val result = controller.showFull(authenticatedFakeRequest(mockFullUserId))
+      val result = niRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) shouldNot include("52 weeks")
     }
 
     "return NI record when number of qualifying years is 0" in {
-      val controller = new MockNIRecordController {
-        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-        override val sessionCache: SessionCache = MockSessionCache
-        override lazy val showFullNI = true
-        override val currentDate = new LocalDate(2016, 9, 9)
-
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        override val metricsService: MetricsService = MockMetricsService
-        override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.noQualifyingYears)
-      }
-      val result = controller.showFull(authenticatedFakeRequest(mockNoQualifyingYearsUserId))
+//      val controller = new MockNIRecordController {
+//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//        override val sessionCache: SessionCache = MockSessionCache
+//        override lazy val showFullNI = true
+//        override val currentDate = new LocalDate(2016, 9, 9)
+//
+//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//        override val metricsService: MetricsService = MockMetricsService
+//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.noQualifyingYears)
+//      }
+      val result = niRecordController.showFull(authenticatedFakeRequest(mockNoQualifyingYearsUserId))
       result.header.status shouldBe 200
     }
   }
 
   "GET /account/nirecord (Gaps)" should {
     "return NI record page - gap details should not show shortfall may increase messages - if current date is after 5 April 2019" in {
-      val controller = new MockNIRecordController {
-        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-        override val sessionCache: SessionCache = MockSessionCache
-        override lazy val showFullNI = false
-        override val currentDate = new LocalDate(2019, 4, 6)
+//      val controller = new MockNIRecordController {
+//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//        override val sessionCache: SessionCache = MockSessionCache
+//        override lazy val showFullNI = false
+//        override val currentDate = new LocalDate(2019, 4, 6)
+//
+//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//        override val metricsService: MetricsService = MockMetricsService
+//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fillGapsMultiple)
+//      }
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        override val metricsService: MetricsService = MockMetricsService
-        override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
-      }
-
-      val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should not include ("shortfall may increase")
     }
 
     "return NI record page - gap details should show shortfall may increase messages - if current date is before 5 April 2019" in {
-      val controller = new MockNIRecordController {
-        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-        override val sessionCache: SessionCache = MockSessionCache
-        override lazy val showFullNI = false
-        override val currentDate = new LocalDate(2019, 4, 4)
+//      val controller = new MockNIRecordController {
+//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//        override val sessionCache: SessionCache = MockSessionCache
+//        override lazy val showFullNI = false
+//        override val currentDate = new LocalDate(2019, 4, 4)
+//
+//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//        override val metricsService: MetricsService = MockMetricsService
+//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fillGapsMultiple)
+//      }
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        override val metricsService: MetricsService = MockMetricsService
-        override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
-      }
-
-      val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should include("shortfall may increase")
     }
 
     "return NI record page - gap details should show shortfall may increase messages - if current date is same 5 April 2019" in {
-      val controller = new MockNIRecordController {
-        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-        override val sessionCache: SessionCache = MockSessionCache
-        override lazy val showFullNI = false
-        override val currentDate = new LocalDate(2019, 4, 5)
+//      val controller = new MockNIRecordController {
+//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//        override val sessionCache: SessionCache = MockSessionCache
+//        override lazy val showFullNI = false
+//        override val currentDate = new LocalDate(2019, 4, 5)
+//
+//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//        override val metricsService: MetricsService = MockMetricsService
+//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fillGapsMultiple)
+//      }
 
-        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-        override val metricsService: MetricsService = MockMetricsService
-        override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
-      }
-
-      val result = controller.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should include("shortfall may increase")
     }
   }

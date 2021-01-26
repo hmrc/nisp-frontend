@@ -64,7 +64,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
   def createStatePensionController = {
     new MockStatePensionController {
-      override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.forecastOnlyNino)
+      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.forecastOnlyNino)
       //TODO remove the need for this
       override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
       override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever

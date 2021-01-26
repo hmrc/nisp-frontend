@@ -17,13 +17,13 @@
 package uk.gov.hmrc.nisp.controllers
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 
-class CustomLanguageControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
+class CustomLanguageControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 
-  val testLanguageController = app.injector.instanceOf[CustomLanguageController]
+  val testLanguageController = inject[CustomLanguageController]
 
   "Hitting language selection endpoint" should {
 

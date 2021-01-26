@@ -30,7 +30,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class MockStatePensionControllerImpl(nino: Nino) extends MockStatePensionController {
   override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-  override val authenticate: AuthAction = new MockAuthAction(nino)
+  override val authenticate: AuthAction = new FakeAuthAction(nino)
 }
 
 trait MockStatePensionController extends StatePensionController {

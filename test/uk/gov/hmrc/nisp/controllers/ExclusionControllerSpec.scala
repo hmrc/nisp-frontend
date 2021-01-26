@@ -36,7 +36,6 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
-
 import scala.concurrent.Future
 
 class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting {
@@ -94,8 +93,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
     "return redirect to account page for non-excluded user" in {
       val result = testExclusionController.showSP()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> now.getMillis.toString
-        SessionKeys.userId -> mockUserId,
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+        "userId" -> mockUserId
       ))
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
@@ -104,20 +103,20 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
     "Exclusion Controller" when {
 
       def generateSPRequest(userId: String, nino: Nino): Future[Result] = {
-        test.showSP()(fakeRequest.withSession(
+        testExclusionController.showSP()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> userId,
-          SessionKeys.authProvider -> Constants.VerifyProviderId
+          "userId" -> userId,
+          "ap" -> Constants.VerifyProviderId
         ))
       }
 
       def generateNIRequest(userId: String, nino: Nino): Future[Result] = {
-        new MockExclusionController(nino).showNI()(fakeRequest.withSession(
+        testExclusionController.showNI()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> userId,
-          SessionKeys.authProvider -> Constants.VerifyProviderId
+          "userId" -> userId,
+          "ap" -> Constants.VerifyProviderId
         ))
       }
 
@@ -264,12 +263,13 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
         "return only the MWRRE Exclusion on /exclusion" in {
 
-          val result = new MockExclusionController(TestAccountBuilder.excludedMwrre).showSP()(fakeRequest.withSession(
+          val result = testExclusionController.showSP()(fakeRequest.withSession(
               SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
               SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-              SessionKeys.userId -> mockUserIdExcludedMwrre,
-              SessionKeys.authProvider -> Constants.VerifyProviderId
+              "userId" -> mockUserIdExcludedMwrre,
+              "ap" -> Constants.VerifyProviderId
             ))
+
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging

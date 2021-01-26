@@ -36,6 +36,7 @@ import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
@@ -60,6 +61,7 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar {
   val executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockApplicationConfig = mock[ApplicationConfig]
+  val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
   val nino: String = new Generator().nextNino.nino
   val fakeLoginTimes = LoginTimes(DateTime.now(), None)
   val credentials = Credentials("providerId", "providerType")
@@ -170,17 +172,18 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar {
       "no session" in {
         when(mockAuthConnector.authorise(any(), any())(any(), any()))
           .thenReturn(Future.failed(SessionRecordNotFound()))
-        val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+        val cds: CitizenDetailsService = new CitizenDetailsService(mockCitizenDetailsConnector)
         val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds, defaultBodyParser, executionContext, mockApplicationConfig)
         val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result).get should startWith(verifyUrl)
       }
 
+      // MockCitizenDetailsHttp to assist with testing
       "insufficient confidence level" in {
         when(mockAuthConnector.authorise(any(), any())(any(), any()))
           .thenReturn(Future.failed(InsufficientConfidenceLevel()))
-        val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+        val cds: CitizenDetailsService = new CitizenDetailsService(mockCitizenDetailsConnector)
         val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds, defaultBodyParser,
           executionContext, mockApplicationConfig)
         val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
@@ -190,7 +193,7 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar {
       "auth provider is not Verify" in {
         when(mockAuthConnector.authorise(any(), any())(any(), any()))
         .thenReturn(Future.failed(UnsupportedAuthProvider()))
-        val cds: CitizenDetailsService = new CitizenDetailsService(MockCitizenDetailsConnector)
+        val cds: CitizenDetailsService = new CitizenDetailsService(mockCitizenDetailsConnector)
         val authAction: VerifyAuthActionImpl = new VerifyAuthActionImpl(mockAuthConnector, cds, defaultBodyParser,
           executionContext, mockApplicationConfig)
         val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
