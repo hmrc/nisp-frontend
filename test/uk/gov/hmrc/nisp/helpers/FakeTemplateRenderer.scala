@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.helpers
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.renderer.TemplateRenderer
-
+import scala.concurrent.duration._
 import scala.concurrent.Future
 
 object FakeTemplateRenderer extends TemplateRenderer {

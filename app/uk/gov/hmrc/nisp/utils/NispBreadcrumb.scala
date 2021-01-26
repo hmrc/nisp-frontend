@@ -16,19 +16,14 @@
 
 package uk.gov.hmrc.nisp.utils
 
+import com.google.inject.Inject
 import play.api.i18n.Messages
 import play.api.mvc.Request
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.play.breadcrumb.model.{Breadcrumb, BreadcrumbItem}
 
-object NispBreadcrumb extends NispBreadcrumb {
-  override lazy val applicationConfig = ApplicationConfig
-}
-
-trait NispBreadcrumb{
-
-  val applicationConfig: ApplicationConfig
+class NispBreadcrumb @Inject()(applicationConfig: ApplicationConfig){
 
   def initialBreadCrumbList(implicit messages: Messages) = List((messages("nisp.breadcrumb.account"), applicationConfig.pertaxFrontendUrl))
 
