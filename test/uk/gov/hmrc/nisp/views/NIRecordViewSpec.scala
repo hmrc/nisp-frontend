@@ -20,18 +20,24 @@ import org.joda.time.{DateTime, LocalDate}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.scalatest._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.i18n.Messages
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Cookie
-import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.controllers.NIRecordController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
@@ -39,33 +45,61 @@ import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusionFi
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-
 import scala.concurrent.Future
 
-class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter with GuiceOneAppPerSuite {
-
-  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+//TODO reset mocks
+class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter with GuiceOneAppPerSuite with Injecting
+  with BeforeAndAfterEach {
 
   val user: NispAuthedUser = NispAuthedUser(TestAccountBuilder.regularNino, LocalDate.now(), UserName(Name(None, None)), None, None, false)
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
+  val mockCustomAuditConnector: CustomAuditConnector = mock[CustomAuditConnector]
+  val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
+  val mockMetricsService: MetricsService = mock[MetricsService]
+  val mockSessionCache: SessionCache = mock[SessionCache]
+
+  //TODO look to see what dependencies can be removed
+  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[AuthAction].to[FakeAuthAction],
+      bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+      bind[StatePensionService].toInstance(mockStatePensionService),
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[MetricsService].toInstance(mockMetricsService),
+      bind[SessionCache].toInstance(mockSessionCache),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[TemplateRenderer].toInstance(templateRenderer)
+    ).build()
+
+  val controller = inject[NIRecordController]
+
+
   "Render Ni Record UR banner" should {
-    lazy val controller = new MockNIRecordController {
-      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-      override val sessionCache: SessionCache = MockSessionCache
-      override lazy val showFullNI = true
-      override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-      override val metricsService: MetricsService = MockMetricsService
-      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.urBannerNino)
-    }
+//    lazy val controller = new MockNIRecordController {
+//      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//      override val sessionCache: SessionCache = MockSessionCache
+//      override lazy val showFullNI = true
+//      override val currentDate = new LocalDate(2016, 9, 9)
+//      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+//      override val metricsService: MetricsService = MockMetricsService
+//      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.urBannerNino)
+//    }
 
     implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.urBannerNino)
     // TODO look at updating
@@ -92,16 +126,16 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
   }
 
   "Render Ni Record to view all the years" should {
-    lazy val controller = new MockNIRecordController {
-      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-      override val sessionCache: SessionCache = MockSessionCache
-      override lazy val showFullNI = true
-      override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-      override val metricsService: MetricsService = MockMetricsService
-      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.urBannerNino)
-    }
+//    lazy val controller = new MockNIRecordController {
+//      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//      override val sessionCache: SessionCache = MockSessionCache
+//      override lazy val showFullNI = true
+//      override val currentDate = new LocalDate(2016, 9, 9)
+//      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+//      override val metricsService: MetricsService = MockMetricsService
+//      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.urBannerNino)
+//    }
 
     implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
     lazy val result = controller.showFull(AuthenticatedRequest(FakeRequest().withCookies(lanCookie), user, authDetails))
@@ -222,16 +256,16 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
 
   "Render Ni Record view Gaps Only" should {
 
-    lazy val controller = new MockNIRecordController {
-      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-      override val sessionCache: SessionCache = MockSessionCache
-      override lazy val showFullNI = true
-      override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-      override val metricsService: MetricsService = MockMetricsService
-      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
-    }
-
+//    lazy val controller = new MockNIRecordController {
+//      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//      override val sessionCache: SessionCache = MockSessionCache
+//      override lazy val showFullNI = true
+//      override val currentDate = new LocalDate(2016, 9, 9)
+//      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//      override val metricsService: MetricsService = MockMetricsService
+//      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
+//    }
+//
     implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
     lazy val result = controller.showGaps(AuthenticatedRequest(FakeRequest().withCookies(lanCookie), user, authDetails))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
@@ -510,19 +544,19 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
 
 
   "Render Ni Record without gap and has pre75years" should {
-    lazy val controller = new MockNIRecordController {
-      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-      override val sessionCache: SessionCache = MockSessionCache
-      override lazy val showFullNI = true
-      override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-      override val metricsService: MetricsService = MockMetricsService
-      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-      override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
-    }
+//    lazy val controller = new MockNIRecordController {
+//      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//      override val sessionCache: SessionCache = MockSessionCache
+//      override lazy val showFullNI = true
+//      override val currentDate = new LocalDate(2016, 9, 9)
+//      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//      override val metricsService: MetricsService = MockMetricsService
+//      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+//      override val statePensionService: StatePensionService = mock[StatePensionService]
+//      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
+//    }
 
-    when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 1,
         qualifyingYearsPriorTo1975 = 5,
@@ -540,7 +574,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       )
       )))
 
-    when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
         Exclusion.AmountDissonance,
         Some(66),
@@ -587,19 +621,19 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
 
 
   "Render Ni Record without gap and has gaps pre75years" should {
-    lazy val controller = new MockNIRecordController {
-      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-      override val sessionCache: SessionCache = MockSessionCache
-      override lazy val showFullNI = true
-      override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-      override val metricsService: MetricsService = MockMetricsService
-      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-      override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
-    }
+//    lazy val controller = new MockNIRecordController {
+//      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//      override val sessionCache: SessionCache = MockSessionCache
+//      override lazy val showFullNI = true
+//      override val currentDate = new LocalDate(2016, 9, 9)
+//      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//      override val metricsService: MetricsService = MockMetricsService
+//      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+//      override val statePensionService: StatePensionService = mock[StatePensionService]
+//      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
+//    }
 
-    when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 2,
         qualifyingYearsPriorTo1975 = 0,
@@ -617,7 +651,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       )
       )))
 
-    when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
         Exclusion.AmountDissonance,
         Some(66),
@@ -672,19 +706,19 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
 
 
   "Render Ni Record without gap and has gaps pre75years with Years to contribute " should {
-    lazy val controller = new MockNIRecordController {
-      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-      override val sessionCache: SessionCache = MockSessionCache
-      override lazy val showFullNI = true
-      override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-      override val metricsService: MetricsService = MockMetricsService
-      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-      override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
-    }
+//    lazy val controller = new MockNIRecordController {
+//      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//      override val sessionCache: SessionCache = MockSessionCache
+//      override lazy val showFullNI = true
+//      override val currentDate = new LocalDate(2016, 9, 9)
+//      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//      override val metricsService: MetricsService = MockMetricsService
+//      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+//      override val statePensionService: StatePensionService = mock[StatePensionService]
+//      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.regularNino)
+//    }
 
-    when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 2,
         qualifyingYearsPriorTo1975 = 0,
@@ -702,10 +736,10 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       )
       )))
 
-    when(controller.statePensionService.yearsToContributeUntilPensionAge(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockStatePensionService.yearsToContributeUntilPensionAge(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(1)
 
-    when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
         Exclusion.AmountDissonance,
         Some(66),
@@ -783,19 +817,19 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
 
 
   "Render Ni Record with Single weeks in self ,contribution and paid -and a abroad User" should {
-    lazy val controller = new MockNIRecordController {
-      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-      override val sessionCache: SessionCache = MockSessionCache
-      override lazy val showFullNI = true
-      override val currentDate = new LocalDate(2016, 9, 9)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-      override val metricsService: MetricsService = MockMetricsService
-      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-      override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.abroadNino)
-    }
+//    lazy val controller = new MockNIRecordController {
+//      override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
+//      override val sessionCache: SessionCache = MockSessionCache
+//      override lazy val showFullNI = true
+//      override val currentDate = new LocalDate(2016, 9, 9)
+//      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//      override val metricsService: MetricsService = MockMetricsService
+//      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+//      override val statePensionService: StatePensionService = mock[StatePensionService]
+//      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.abroadNino)
+//    }
 
-    when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(NationalInsuranceRecord(
         qualifyingYears = 2,
         qualifyingYearsPriorTo1975 = 0,
@@ -813,10 +847,10 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter wi
       )
       )))
 
-    when(controller.statePensionService.yearsToContributeUntilPensionAge(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockStatePensionService.yearsToContributeUntilPensionAge(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(1)
 
-    when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
         Exclusion.AmountDissonance,
         Some(66),

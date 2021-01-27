@@ -18,23 +18,22 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.DateTime
 import org.scalatest._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
-import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, FakeCachedStaticHtmlPartialRetriever, TestAccountBuilder}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
+class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   val mockUserNino = TestAccountBuilder.regularNino
 
@@ -43,7 +42,7 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendControlle
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
-  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
 
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"
   val expectedCitizensAdviceLink = "https://www.citizensadvice.org.uk/"

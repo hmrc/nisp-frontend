@@ -17,12 +17,11 @@
 package uk.gov.hmrc.nisp.views.formatting
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class TimeSpec extends UnitSpec with GuiceOneAppPerSuite {
-  val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val messages = new Messages(new Lang("en"), messagesApi)
+  val messages = app.injector.instanceOf[Messages]
 
   "years" should {
     "return 1 year when there is 1 year"  in {

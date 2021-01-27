@@ -20,29 +20,32 @@ import org.apache.commons.lang3.StringEscapeUtils
 import org.joda.time.{DateTime, LocalDate}
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
-import play.api.Configuration
+import org.scalatest.mockito.MockitoSugar
+import play.api.Application
 import play.api.i18n.Messages
-import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, _}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Helpers.contentAsString
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
-import uk.gov.hmrc.nisp.builders.ApplicationConfigBuilder
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.UserName
-import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
+import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter with ScalaFutures {
+class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter with
+  ScalaFutures with Injecting {
 
-  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded = TestAccountBuilder.excludedAll
   val mockUserNinoNotFound = TestAccountBuilder.blankNino
@@ -55,20 +58,48 @@ class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController wit
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
-  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
-  lazy val appConfig = app.injector.instanceOf[Configuration]
+  val mockCustomAuditConnector: CustomAuditConnector = mock[CustomAuditConnector]
+  val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
+  val mockMetricsService: MetricsService = mock[MetricsService]
+  val mockSessionCache: SessionCache = mock[SessionCache]
 
-  lazy val controller = new MockStatePensionController {
-    override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.contractedOutBTestNino)
+  //TODO might be able to remove some these
+  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-    //TODO remove the need for this
-    override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-    override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-  }
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[AuthAction].to[FakeAuthAction],
+      bind[StatePensionService].toInstance(mockStatePensionService),
+      bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[MetricsService].toInstance(mockMetricsService),
+      bind[SessionCache].toInstance(mockSessionCache),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[TemplateRenderer].toInstance(templateRenderer)
+    ).build()
+
+  val statePensionController = inject[StatePensionController]
+
+
+//  lazy val controller = new MockStatePensionController {
+//    override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.contractedOutBTestNino)
+//
+//    //TODO remove the need for this
+//    override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
+//    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//    override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+//  }
 
   "Render State Pension view with Contracted out User" should {
-    lazy val result = controller.show()(AuthenticatedRequest(FakeRequest().withCookies(lanCookie), user, authDetails))
+    lazy val result = statePensionController.show()(AuthenticatedRequest(FakeRequest().withCookies(lanCookie), user, authDetails))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     "render with correct page title" in {

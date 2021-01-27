@@ -16,23 +16,25 @@
 
 package uk.gov.hmrc.nisp.views
 
+import akka.util.Timeout
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.helpers._
+import scala.concurrent.duration._
 
 trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   implicit val request = FakeRequest()
   implicit val lang = LanguageToggle.getLanguageCode()
   implicit val lanCookie = LanguageToggle.getLanguageCookie()
-  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit def messages = new Messages(lang, messagesApi)
+  implicit val messages = app.injector.instanceOf[Messages]
+  implicit val defaultAwaitTimeout: Timeout = 5.seconds
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 

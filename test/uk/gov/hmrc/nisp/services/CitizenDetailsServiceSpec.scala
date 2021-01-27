@@ -95,7 +95,7 @@ class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAn
     }
 
     "return formatted name of None if Citizen returns without a name" in {
-      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = MockCitizenDetailsService.retrievePerson(noNameNino)(new HeaderCarrier())
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(noNameNino)(new HeaderCarrier())
       whenReady(person) {p =>
         p shouldBe Right(CitizenDetailsResponse(Citizen(noNameNino, None, None, new LocalDate(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
         p.right.get.person.getNameFormatted shouldBe None

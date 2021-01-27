@@ -19,35 +19,41 @@ package uk.gov.hmrc.nisp.views
 import java.util.UUID
 
 import org.apache.commons.lang3.StringEscapeUtils
-import play.api.mvc.Cookie
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
-import org.scalatest.mock.MockitoSugar
-import play.api.Configuration
+import org.scalatest.mockito.MockitoSugar
 import play.api.i18n.Messages
-import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, _}
-import uk.gov.hmrc.nisp.builders.{ApplicationConfigBuilder, NationalInsuranceTaxYearBuilder}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Cookie
+import play.api.test.Helpers.contentAsString
+import play.api.test.{FakeRequest, Injecting}
+import play.api.{Application, Configuration}
+import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
+import uk.gov.hmrc.nisp.controllers.StatePensionController
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.time.DateTimeUtils.now
+import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.renderer.TemplateRenderer
-
+import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.time.DateTimeUtils.now
 import scala.concurrent.Future
-import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import play.api.test.Helpers.defaultAwaitTimeout
 
-class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
+//TODO reset mocks
+class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+
 
   private val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
 
   val urMockUsername = "showurbanner"
   val urMockUserId = "/auth/oid/" + urMockUsername
@@ -55,24 +61,47 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
   lazy val fakeRequest = FakeRequest()
   lazy val appConfig = app.injector.instanceOf[Configuration]
 
+  val mockCustomAuditConnector: CustomAuditConnector = mock[CustomAuditConnector]
+  val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
+  val mockMetricsService: MetricsService = mock[MetricsService]
+  val mockSessionCache: SessionCache = mock[SessionCache]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[AuthAction].to[FakeAuthAction],
+      bind[StatePensionService].toInstance(mockStatePensionService),
+      bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[MetricsService].toInstance(mockMetricsService),
+      bind[SessionCache].toInstance(mockSessionCache),
+      bind[FormPartialRetriever].toInstance(formPartialRetriever)
+    ).build()
+
+  val statePensionController = inject[StatePensionController]
+
   def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-    SessionKeys.userId -> userId,
-    SessionKeys.authProvider -> Constants.VerifyProviderId
+    "userId" -> userId,
+    "ap" -> Constants.VerifyProviderId
   )
 
-  def createStatePensionController = {
-    new MockStatePensionController {
-      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.forecastOnlyNino)
-      //TODO remove the need for this
-      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
-      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-      override val statePensionService: StatePensionService = mock[StatePensionService]
-      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-    }
-  }
+//  def createStatePensionController = {
+//    new MockStatePensionController {
+//      override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.forecastOnlyNino)
+//      //TODO remove the need for this
+//      override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder(configuration = appConfig)
+//      override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+//      override val statePensionService: StatePensionService = mock[StatePensionService]
+//      override val nationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+//      override implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+//    }
+//  }
 
 
   "The State Pension page" when {
@@ -83,9 +112,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP :  Personal Max" should {
 
-          lazy val controller = createStatePensionController
-
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -106,7 +133,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -125,7 +152,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
           "render with correct page title" in {
@@ -136,7 +163,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page with UR banner" in {
-            val request = controller.show()(authenticatedFakeRequest(urMockUserId).withCookies(lanCookie))
+            val request = statePensionController.show()(authenticatedFakeRequest(urMockUserId).withCookies(lanCookie))
 
             val source = asDocument(contentAsString(request))
 
@@ -150,7 +177,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           }
 
           "render page without UR banner if ur banner hide cookie is set" in {
-            val request = controller.show()(authenticatedFakeRequest(urMockUserId).withCookies(lanCookie, new Cookie("cysp-nisp-urBannerHide", "9999")))
+            val request = statePensionController.show()(authenticatedFakeRequest(urMockUserId).withCookies(lanCookie, new Cookie("cysp-nisp-urBannerHide", "9999")))
 
             val source = asDocument(contentAsString(request))
 
@@ -311,9 +338,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP :  Personal Max: With State Pension age under consideration message" should {
 
-          lazy val controller = createStatePensionController
-
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -334,7 +359,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -353,7 +378,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -394,9 +419,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65" should {
 
-          lazy val controller = createStatePensionController
-
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -417,7 +440,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -436,7 +459,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -587,9 +610,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65: With State Pension age under consideration message" should {
 
-          lazy val controller = createStatePensionController
-
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -610,7 +631,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -629,7 +650,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -671,9 +692,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps" should {
 
-          lazy val controller = createStatePensionController
-
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -694,7 +713,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -713,7 +732,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -844,9 +863,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps: With State Pension age under consideration message" should {
 
-          lazy val controller = createStatePensionController
-
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -867,7 +884,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -886,7 +903,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -932,8 +949,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP :  No Gaps || Full Rate & Personal Max" should {
 
-          lazy val controller = createStatePensionController
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -954,7 +970,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -973,7 +989,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
 
@@ -1091,8 +1107,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP :  No Gapss || Full Rate & Personal Max: With State Pension age under consideration message" should {
 
-          lazy val controller = createStatePensionController
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -1113,7 +1128,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -1132,7 +1147,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
           //overseas message
@@ -1174,8 +1189,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP :  No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
 
-          lazy val controller = createStatePensionController
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -1196,7 +1210,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -1215,7 +1229,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -1331,8 +1345,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
         "State Pension view with NON-MQP :  No need to fill gaps || Full Rate and Personal Max: when some one has more years left: With State Pension age under consideration message" should {
 
-          lazy val controller = createStatePensionController
-          when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
               new LocalDate(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -1353,7 +1366,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -1372,7 +1385,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
             )
             )))
 
-          lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+          lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
           lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -1415,9 +1428,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
       "State Pension view with NON-MQP :  Reached || No Gapss || Full Rate and Personal Max" should {
 
-        lazy val controller = createStatePensionController
-
-        when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Right(StatePension(
             new LocalDate(2016, 4, 5),
             amounts = StatePensionAmounts(
@@ -1438,7 +1449,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           )
           )))
 
-        when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Right(NationalInsuranceRecord(
             qualifyingYears = 11,
             qualifyingYearsPriorTo1975 = 0,
@@ -1457,7 +1468,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           )
           )))
 
-        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+        lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
         lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
@@ -1558,9 +1569,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
 
       "State Pension view with NON-MQP :  Reached || No Gapss || Full Rate and Personal Max: With State Pension age under consideration message" should {
 
-        lazy val controller = createStatePensionController
-
-        when(controller.statePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Right(StatePension(
             new LocalDate(2016, 4, 5),
             amounts = StatePensionAmounts(
@@ -1581,7 +1590,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           )
           )))
 
-        when(controller.nationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Right(NationalInsuranceRecord(
             qualifyingYears = 11,
             qualifyingYearsPriorTo1975 = 0,
@@ -1600,7 +1609,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar {
           )
           )))
 
-        lazy val result = controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
+        lazy val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))
 
         lazy val htmlAccountDoc = asDocument(contentAsString(result))
 

@@ -189,7 +189,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
           contentAsString(result) should include("The most you can get by filling any 7 years in your record is")
         }
         "show specific text when is only one payable gap" in {
-          val result = mockStatePensionController(TestAccountBuilder.fillGapSingle)
+          val result = statePensionController
             .show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
           contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
           contentAsString(result) should include("The most you can get by filling this year in your record is")

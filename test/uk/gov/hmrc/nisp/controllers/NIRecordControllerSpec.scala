@@ -284,12 +284,12 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
     "the date of entry is the sixteenth birthday" should {
       "return true for 5th April 1975" in {
         val date = new LocalDate(1975, 4, 5)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(Some(date), date.minusYears(16), 0) shouldBe true
+        niRecordController.showPre1975Years(Some(date), date.minusYears(16), 0) shouldBe true
       }
 
       "return false for 6th April 1975" in {
         val date = new LocalDate(1975, 4, 6)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(Some(date), date.minusYears(16), 0) shouldBe false
+        niRecordController.showPre1975Years(Some(date), date.minusYears(16), 0) shouldBe false
       }
     }
 
@@ -297,31 +297,31 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       "return true for 16th: 5th April 1970, Date of entry: 5th April 1975" in {
         val dob = new LocalDate(1970, 4, 5).minusYears(16)
         val entry = new LocalDate(1975, 4, 5)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(Some(entry), dob, 0) shouldBe true
+        niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe true
       }
 
       "return true for 16th: 5th April 1970, Date of entry: 6th April 1975" in {
         val dob = new LocalDate(1970, 4, 5).minusYears(16)
         val entry = new LocalDate(1975, 4, 6)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(Some(entry), dob, 0) shouldBe false
+        niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe false
       }
 
       "return true for 16th: 5th April 1975, Date of entry: 5th April 1970" in {
         val dob = new LocalDate(1975, 4, 5).minusYears(16)
         val entry = new LocalDate(1970, 4, 5)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(Some(entry), dob, 0) shouldBe true
+        niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe true
       }
 
       "return true for 16th: 6th April 1975, Date of entry: 5th April 1970" in {
         val dob = new LocalDate(1975, 4, 6).minusYears(16)
         val entry = new LocalDate(1970, 4, 5)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(Some(entry), dob, 0) shouldBe false
+        niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe false
       }
 
       "return false for 16th: 10th July 1983, Date of Entry: 16th October 1977" in {
         val dob = new LocalDate(1983, 7, 10).minusYears(16)
         val entry = new LocalDate(1977, 10, 16)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(Some(entry), dob, 0) shouldBe false
+        niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe false
       }
 
     }
@@ -329,12 +329,12 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
     "there is no date of entry" should {
       "return false for 16th birthday: 6th April 1975" in {
         val dob = new LocalDate(1975, 4, 6).minusYears(16)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(None, dob, 0) shouldBe false
+        niRecordController.showPre1975Years(None, dob, 0) shouldBe false
       }
       
       "return true for 16th birthday: 5th April 1975" in {
         val dob = new LocalDate(1975, 4, 5).minusYears(16)
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).showPre1975Years(None, dob, 0) shouldBe true
+        niRecordController.showPre1975Years(None, dob, 0) shouldBe true
       }
     }
 
@@ -345,7 +345,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       "return a list wuith one string of that year" in {
         val start = "2015-16"
         val end = "2015-16"
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).generateTableList(start, end) shouldBe List("2015-16")
+        niRecordController.generateTableList(start, end) shouldBe List("2015-16")
       }
     }
 
@@ -354,7 +354,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         val start = "2014-15"
         val end = "2015-16"
         val caught = intercept[IllegalArgumentException] {
-          new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).generateTableList(start, end)
+          niRecordController.generateTableList(start, end)
         }
         caught shouldBe a[IllegalArgumentException]
       }
@@ -365,7 +365,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         val start = "hello"
         val end = "2014-15"
         val caught = intercept[IllegalArgumentException] {
-          new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).generateTableList(start, end)
+          niRecordController.generateTableList(start, end)
         }
         caught shouldBe a[IllegalArgumentException]
       }
@@ -374,7 +374,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         val start = "2015-16"
         val end = "hello"
         val caught = intercept[IllegalArgumentException] {
-          new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).generateTableList(start, end)
+          niRecordController.generateTableList(start, end)
         }
         caught shouldBe a[IllegalArgumentException]
       }
@@ -385,19 +385,19 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       "return a list of two adjacent dates" in {
         val start = "2016-17"
         val end = "2015-16"
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).generateTableList(start, end) shouldBe Seq("2016-17", "2015-16")
+        niRecordController.generateTableList(start, end) shouldBe Seq("2016-17", "2015-16")
       }
 
       "return a list of three dates" in {
         val start = "2016-17"
         val end = "2014-15"
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).generateTableList(start, end) shouldBe Seq("2016-17", "2015-16", "2014-15")
+        niRecordController.generateTableList(start, end) shouldBe Seq("2016-17", "2015-16", "2014-15")
       }
 
       "return a full NI Record" in {
         val start = "2016-17"
         val end = "1975-76"
-        new MockNIRecordControllerImpl(TestAccountBuilder.regularNino).generateTableList(start, end) shouldBe Seq(
+        niRecordController.generateTableList(start, end) shouldBe Seq(
           "2016-17",
           "2015-16",
           "2014-15",
