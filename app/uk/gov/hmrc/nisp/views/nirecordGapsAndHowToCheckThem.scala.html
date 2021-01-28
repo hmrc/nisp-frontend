@@ -23,7 +23,7 @@
 
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(homeResponsibilitiesProtection: Boolean)(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+partialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @defining(Some(user)) { implicit userOption =>
 @main(MainTemplateParams(

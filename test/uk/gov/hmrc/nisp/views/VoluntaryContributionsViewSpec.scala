@@ -19,8 +19,8 @@ package uk.gov.hmrc.nisp.views
 import org.joda.time.DateTime
 import org.scalatest._
 import org.scalatest.mockito.MockitoSugar
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest}
@@ -34,10 +34,8 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with Bef
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+  implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
-  val mockUserNino = TestAccountBuilder.regularNino
-
-  implicit val user = NispAuthedUserFixture.user(mockUserNino)
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
@@ -52,7 +50,7 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with Bef
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render with correct page title" in {
-      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.voluntarycontributions.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+      assertElementContainsText(htmlAccountDoc, "head>title" , messages("nisp.nirecord.voluntarycontributions.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
     "render page with heading  Voluntary contributions " in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.voluntarycontributions.heading")

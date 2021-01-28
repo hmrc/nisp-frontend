@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Application, Logger}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -27,6 +27,7 @@ import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, 
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class LandingController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
@@ -36,9 +37,7 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
                                  (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                   val formPartialRetriever: FormPartialRetriever,
                                   val templateRenderer: TemplateRenderer,
-                                  val executor: ExecutionContext,
-                                  messages: Messages,
-                                  application: Application) extends NispFrontendController(mcc) {
+                                  val executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
 
   def show: Action[AnyContent] = Action(
     implicit request =>

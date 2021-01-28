@@ -30,7 +30,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class ErrorHandler @Inject()(applicationConfig: ApplicationConfig)
                             (implicit templateRenderer: TemplateRenderer,
                              formPartialRetriever: FormPartialRetriever,
-                             application: Application,
                              val partialRetriever: CachedStaticHtmlPartialRetriever,
                              val messagesApi: MessagesApi) extends FrontendErrorHandler {
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =

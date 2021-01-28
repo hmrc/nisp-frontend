@@ -51,8 +51,7 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
                                   )(implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
-                                    ec: ExecutionContext,
-                                    application: Application)
+                                    ec: ExecutionContext)
   extends NispFrontendController(mcc) with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI

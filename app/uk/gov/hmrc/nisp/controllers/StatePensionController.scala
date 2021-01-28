@@ -52,8 +52,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                                       (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                        val formPartialRetriever: FormPartialRetriever,
                                        val templateRenderer: TemplateRenderer,
-                                       executor: ExecutionContext,
-                                       application: Application) extends NispFrontendController(mcc) with I18nSupport {
+                                       executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
 
   def showCope: Action[AnyContent] = authenticate.async {
     implicit request =>

@@ -35,7 +35,7 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.test.UnitSpec
 
 class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
-  Injecting with BeforeAndAfterEach with MockNispHttp {
+  Injecting with BeforeAndAfterEach {
 
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
@@ -45,6 +45,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Moc
   val mockMetricService = mock[MetricsService]
   val mockApplicationConfig = mock[ApplicationConfig]
   val mockSessionCache = mock[SessionCache]
+  val mockHttp = MockNispHttp.mockHttp
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(

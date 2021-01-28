@@ -36,8 +36,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                    (implicit val executor: ExecutionContext,
                                     val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
-                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
-                                    application: Application)
+                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
   extends NispFrontendController(mcc) with I18nSupport{
 
   def showSP: Action[AnyContent] = authenticate.async {

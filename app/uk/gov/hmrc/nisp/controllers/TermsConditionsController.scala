@@ -18,18 +18,17 @@ package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
 import play.api.Application
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.views.html.termsAndConditions
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class TermsConditionsController @Inject()(mcc: MessagesControllerComponents)
-                                         (implicit val messages: Messages,
-                                          application: Application,
-                                          val formPartialRetriever: FormPartialRetriever,
+                                         (implicit val formPartialRetriever: FormPartialRetriever,
                                           val templateRenderer: TemplateRenderer,
-                                          val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever) extends NispFrontendController(mcc) {
+                                          val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
+  extends NispFrontendController(mcc) with I18nSupport {
 
   //TODO is it ok to use a standard Action here?
   def show: Action[AnyContent] = Action{

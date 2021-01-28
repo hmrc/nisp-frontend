@@ -17,11 +17,12 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.net.URLEncoder
+
 import com.google.inject.Inject
+import play.api.Logger
 import play.api.http.{Status => HttpStatus}
-import play.api.i18n.Messages
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
-import play.api.{Application, Logger}
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -39,8 +40,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
                                    (implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
-                                    val messages: Messages, application: Application,
-                                    executor: ExecutionContext) extends NispFrontendController(mcc) {
+                                    executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
 
 
   def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")

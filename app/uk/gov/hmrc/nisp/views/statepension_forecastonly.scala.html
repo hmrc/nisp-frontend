@@ -29,7 +29,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
 isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser,
-authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, application: Application,
+authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {

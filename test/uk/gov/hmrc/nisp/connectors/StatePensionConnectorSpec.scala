@@ -17,7 +17,8 @@
 package uk.gov.hmrc.nisp.connectors
 
 import org.joda.time.LocalDate
-import org.mockito.Mockito.reset
+import org.mockito.Mockito
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
@@ -30,41 +31,45 @@ import play.api.test.Injecting
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers.{MockNispHttp, TestAccountBuilder}
+import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, MockNispHttp, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.test.UnitSpec
 
 class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
-  Injecting with BeforeAndAfterEach with MockNispHttp {
+  Injecting with BeforeAndAfterEach {
 
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
-  val mockMetricService = mock[MetricsService]
+  val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
   val mockApplicationConfig = mock[ApplicationConfig]
-  val mockSessionCache = mock[SessionCache]
+  val mockHttp = MockNispHttp.mockHttp
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[HttpClient].toInstance(mockHttp),
       bind[MetricsService].toInstance(mockMetricService),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[SessionCache].toInstance(mockSessionCache)
+      bind[SessionCache].toInstance(FakeSessionCache)
     ).build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockHttp, mockMetricService, mockApplicationConfig, mockSessionCache)
+    reset(mockMetricService, mockApplicationConfig)
+    when(mockApplicationConfig.statePensionServiceUrl).thenReturn("state-pension")
   }
 
-  val statePensionConnector = inject[StatePensionConnector]
+  //TODO can this not be lazy
+  lazy val statePensionConnector = inject[StatePensionConnector]
 
   "getStatePension" should {
     "return the correct response for the regular test user" in {
+      when(mockApplicationConfig.statePensionServiceUrl).thenReturn("state-pension")
+
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),

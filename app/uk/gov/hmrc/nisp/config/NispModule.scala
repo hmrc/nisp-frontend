@@ -20,12 +20,13 @@ import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.wiring.{NispCachedStaticHtmlPartialRetriever, NispFormPartialRetriever, NispHeaderCarrierForPartialsConverter, NispSessionCache}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl, VerifyAuthActionImpl}
+import uk.gov.hmrc.nisp.controllers.auth._
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class NispModule extends Module {
     override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
+        bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
         bind[SessionCache].to[NispSessionCache],
         bind[CachedStaticHtmlPartialRetriever].to[NispCachedStaticHtmlPartialRetriever],
         bind[FormPartialRetriever].to[NispFormPartialRetriever],
