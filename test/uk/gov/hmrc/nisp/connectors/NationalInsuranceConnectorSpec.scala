@@ -17,7 +17,8 @@
 package uk.gov.hmrc.nisp.connectors
 
 import org.joda.time.LocalDate
-import org.mockito.Mockito.reset
+import org.mockito.Mockito
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
@@ -30,7 +31,7 @@ import play.api.test.Injecting
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers.{MockNispHttp, TestAccountBuilder}
+import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, MockNispHttp, TestAccountBuilder}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -42,9 +43,8 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Moc
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
-  val mockMetricService = mock[MetricsService]
+  val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
   val mockApplicationConfig = mock[ApplicationConfig]
-  val mockSessionCache = mock[SessionCache]
   val mockHttp = MockNispHttp.mockHttp
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -52,21 +52,22 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Moc
       bind[HttpClient].toInstance(mockHttp),
       bind[MetricsService].toInstance(mockMetricService),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[SessionCache].toInstance(mockSessionCache)
+      bind[SessionCache].toInstance(FakeSessionCache)
     ).build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockHttp, mockMetricService, mockApplicationConfig, mockSessionCache)
+    reset(mockMetricService, mockApplicationConfig)
   }
 
-  val nationalInsuranceConnector = inject[NationalInsuranceConnector]
+  lazy val nationalInsuranceConnector = inject[NationalInsuranceConnector]
 
   "getNationalInsuranceRecord" when {
 
     "there is a regular user" should {
-
-      val nationalInsuranceRecord = nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier)
+      when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
+      //TODO can when ready be used here
+      val nationalInsuranceRecord = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
 
       "return a National Insurance Record with 28 qualifying years" in {
         nationalInsuranceRecord.qualifyingYears shouldBe 28
@@ -198,6 +199,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Moc
 
     "there is a Dead Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
+        when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
         whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll).failed) {
           case ex: Upstream4xxResponse =>
             ex.upstreamResponseCode shouldBe 403
@@ -208,6 +210,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Moc
 
     "there is a MCI Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
+        when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
         whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead).failed) {
           case ex: Upstream4xxResponse =>
             ex.upstreamResponseCode shouldBe 403
@@ -218,6 +221,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Moc
 
     "there is a IOM Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
+        when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
         whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI).failed) {
           case ex: Upstream4xxResponse =>
             ex.upstreamResponseCode shouldBe 403
@@ -228,6 +232,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Moc
 
     "there is a MWRRE Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
+        when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
         whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedIomMwrreAbroad).failed) {
           case ex: Upstream4xxResponse =>
             ex.upstreamResponseCode shouldBe 403

@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
@@ -24,6 +25,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.nisp.helpers.FakeSessionCache
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -31,21 +33,19 @@ import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
 import uk.gov.hmrc.play.test.UnitSpec
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
   val mockHttp: HttpClient = mock[HttpClient]
-  val mockSessionCache = mock[SessionCache]
-  val mockMetricsService = mock[MetricsService]
-  val injector: Injector = GuiceApplicationBuilder().injector()
-  implicit val executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
+  val mockMetricsService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
 
   object BackendConnectorImpl extends BackendConnector {
     override def http: HttpClient = mockHttp
-    override def sessionCache: SessionCache = mockSessionCache
+    override def sessionCache: SessionCache = FakeSessionCache
     override def serviceUrl: String = "national-insurance"
     override val metricsService: MetricsService = mockMetricsService
-    override implicit val executionContext: ExecutionContext = executionContext
+    override implicit val executionContext: ExecutionContext = global
 
     def getNationalInsurance()(implicit headerCarrier: HeaderCarrier): Future[NationalInsuranceRecord] = {
       val urlToRead = s"$serviceUrl/ni"

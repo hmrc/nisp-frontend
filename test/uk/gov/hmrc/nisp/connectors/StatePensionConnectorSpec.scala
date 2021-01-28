@@ -63,13 +63,10 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with MockitoS
     when(mockApplicationConfig.statePensionServiceUrl).thenReturn("state-pension")
   }
 
-  //TODO can this not be lazy
   lazy val statePensionConnector = inject[StatePensionConnector]
 
   "getStatePension" should {
     "return the correct response for the regular test user" in {
-      when(mockApplicationConfig.statePensionServiceUrl).thenReturn("state-pension")
-
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino)) { statePension =>
         statePension shouldBe Right(StatePension(
           new LocalDate(2015, 4, 5),

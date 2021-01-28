@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
-import org.scalatest.{Assertion, BeforeAndAfterEach}
+import org.mockito.{ArgumentMatchers, Mockito}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.Status
@@ -42,10 +42,9 @@ class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with 
   import IdentityVerificationSuccessResponse._
 
   val mockHttpClient = mock[HttpClient]
-  val mockMetricService = mock[MetricsService]
+  val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
   val mockApplicationConfig = mock[ApplicationConfig]
 
-  //TODO metrics??
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockHttpClient, mockMetricService, mockApplicationConfig)
@@ -58,7 +57,7 @@ class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with 
       bind[ApplicationConfig].toInstance(mockApplicationConfig)
     ).build()
 
-  val identityVerificationConnector = inject[IdentityVerificationConnector]
+  lazy val identityVerificationConnector = inject[IdentityVerificationConnector]
 
   val possibleJournies = Map(
     "success-journey-id" -> "test/resources/identity-verification/success.json",
@@ -78,7 +77,7 @@ class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with 
   def mockJourneyId(journeyId: String): Unit = {
     val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
     when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).
-      thenReturn(Future.successful(HttpResponse(Status.OK, Json.parse(fileContents), Map.empty[String, Seq[String]])))
+      thenReturn(Future.successful(HttpResponse(Status.OK, Json.parse(fileContents).toString())))
   }
 
   def identityVerificationResponse(journeyId: String, ivResponse: String): Assertion = {
@@ -131,7 +130,9 @@ class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with 
   }
 
   "return failed future for invalid json fields" in {
-    val result = identityVerificationConnector.identityVerificationResponse("invalid-fields-journey-id")
+    val journeyId = "invalid-fields-journey-id"
+    mockJourneyId(journeyId)
+    val result = identityVerificationConnector.identityVerificationResponse(journeyId)
     ScalaFutures.whenReady(result) { e =>
       e shouldBe a [IdentityVerificationErrorResponse]
     }
