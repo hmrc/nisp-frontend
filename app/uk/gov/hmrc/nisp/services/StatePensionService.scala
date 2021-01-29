@@ -28,7 +28,6 @@ import uk.gov.hmrc.nisp.models.enums.Exclusion._
 import uk.gov.hmrc.time.CurrentTaxYear
 import scala.concurrent.{ExecutionContext, Future}
 
-//TODO look to remove the extension and prefer delegation
 class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
                                    (implicit executor: ExecutionContext) extends CurrentTaxYear {
 

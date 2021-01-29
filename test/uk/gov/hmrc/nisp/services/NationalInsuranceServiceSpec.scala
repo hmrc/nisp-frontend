@@ -113,16 +113,19 @@ with BeforeAndAfterEach with Injecting {
         reducedRateElection = false
       )
 
-      // TODO this could cause issues with mock resetting
-      when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
-        .thenReturn(Future.successful(mockNationalInsuranceRecord))
-
       "return a Right(NationalInsuranceRecord)" in {
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(mockNationalInsuranceRecord))
+
         nationalInsuranceService.getSummary(generateNino).isRight shouldBe true
         nationalInsuranceService.getSummary(generateNino).right.get shouldBe a[NationalInsuranceRecord]
       }
 
       "return unmodified data" in {
+
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(mockNationalInsuranceRecord))
+
         whenReady(nationalInsuranceService.getSummary(generateNino)) { record =>
           record shouldBe Right(mockNationalInsuranceRecord)
         }
@@ -275,10 +278,12 @@ with BeforeAndAfterEach with Injecting {
         reducedRateElection = true
       )
 
-      when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
-        .thenReturn(Future.successful(mockNationalInsuranceRecord))
+
 
       "return a Left(Excelution)" in {
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(mockNationalInsuranceRecord))
+
         val niSummary = nationalInsuranceService.getSummary(generateNino)
         niSummary.isLeft shouldBe true
         niSummary.left.get shouldBe a[Exclusion]
