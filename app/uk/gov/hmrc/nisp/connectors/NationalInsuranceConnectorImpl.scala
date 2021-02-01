@@ -27,11 +27,11 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.http.HttpClient
 import scala.concurrent.{ExecutionContext, Future}
 
-class NationalInsuranceConnector @Inject()(val http: HttpClient,
-                                           val sessionCache: SessionCache,
-                                           appConfig: ApplicationConfig,
-                                           val metricsService: MetricsService,
-                                           val executionContext: ExecutionContext) extends BackendConnector {
+class NationalInsuranceConnectorImpl @Inject()(val http: HttpClient,
+                                               val sessionCache: SessionCache,
+                                               val appConfig: ApplicationConfig,
+                                               val metricsService: MetricsService,
+                                               val executionContext: ExecutionContext) extends BackendConnector{
 
   val serviceUrl = appConfig.nationalInsuranceServiceUrl
   private val apiHeader = "Accept" -> "application/vnd.hmrc.1.0+json"

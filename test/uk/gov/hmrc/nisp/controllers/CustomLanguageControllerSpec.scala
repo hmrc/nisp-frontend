@@ -29,14 +29,16 @@ class CustomLanguageControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
-      val result = testLanguageController.switchToLanguage("english")(request)
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en; Path=/; HTTPOnly;;PLAY_FLASH=switching-language=true; Path=/; HTTPOnly")
+      val result = testLanguageController.switchToLanguage("english")(request.withHeaders("Referer" -> "myUrl"))
+      cookies(result).get("PLAY_LANG").map(_.value) shouldBe Some("en")
+      redirectLocation(result).get shouldBe "myUrl"
     }
 
     "redirect to Welsh translated start page if Welsh language is selected" in {
       val request = FakeRequest()
-      val result = testLanguageController.switchToLanguage("cymraeg")(request)
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy; Path=/; HTTPOnly;;PLAY_FLASH=switching-language=true; Path=/; HTTPOnly")
+      val result = testLanguageController.switchToLanguage("cymraeg")(request.withHeaders("Referer" -> "myUrl"))
+      cookies(result).get("PLAY_LANG").map(_.value) shouldBe Some("cy")
+      redirectLocation(result).get shouldBe "myUrl"
     }
 
   }

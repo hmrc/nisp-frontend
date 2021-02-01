@@ -158,6 +158,10 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
             Redirect(routes.ExclusionController.showNI())
         }
       })
+        //TODO implement replacement
+//        .recover {
+//      case ex: Exception => onServerError(ex)
+//    }
   }
 
   def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async {

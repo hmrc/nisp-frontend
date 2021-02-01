@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -35,7 +36,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
-class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite with Injecting {
+class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
   val fakeRequest = FakeRequest("GET", "/")
   val mockApplicationConfig = mock[ApplicationConfig]
   val mockHttp = mock[HttpClient]
@@ -50,8 +51,13 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter)
     ).build()
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockApplicationConfig, mockHttp)
+  }
 
-  val testFeedbackController = inject[FeedbackController]
+ //TODO does this need to be lazy
+  lazy val testFeedbackController = inject[FeedbackController]
 
   //TODO remove all this once th test is passing
 //    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
@@ -100,11 +106,17 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
 
   "GET /feedback" should {
     "return feedback page" in {
+      when(mockApplicationConfig.contactFrontendPartialBaseUrl).thenReturn("baseUrl")
+      when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("serviceIdentifier")
+
       val result = testFeedbackController.show(fakeRequest)
       status(result) mustBe Status.OK
     }
 
     "capture the referer in the session on initial session on the feedback load" in {
+      when(mockApplicationConfig.contactFrontendPartialBaseUrl).thenReturn("baseUrl")
+      when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("serviceIdentifier")
+
       val result = testFeedbackController.show(fakeRequest.withHeaders("Referer" -> "Blah"))
       status(result) mustBe Status.OK
     }
@@ -113,30 +125,38 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
   "POST /feedback" should {
     val fakePostRequest = FakeRequest("POST", "/check-your-state-pension/feedback").withFormUrlEncodedBody("test" -> "test")
     "return form with thank you for valid selections" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
-        Future.successful(HttpResponse(Status.OK, responseString = Some("1234"))))
+      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
+        Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakePostRequest)
       redirectLocation(result) mustBe Some(routes.FeedbackController.showThankYou().url)
     }
 
     "return form with errors for invalid selections" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
-        Future.successful(HttpResponse(Status.BAD_REQUEST, responseString = Some("<p>:^(</p>"))))
+      when(mockApplicationConfig.contactFrontendPartialBaseUrl).thenReturn("baseUrl")
+      when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("serviceIdentifier")
+
+      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
+        Future.successful(HttpResponse(Status.BAD_REQUEST, "<p>:^(</p>")))
+
       val result = testFeedbackController.submit(fakePostRequest)
       status(result) mustBe Status.BAD_REQUEST
     }
 
     "return error for other http code back from contact-frontend" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
-        Future.successful(HttpResponse(418)))
+      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
+        Future.successful(HttpResponse(418, "")))
       val result = testFeedbackController.submit(fakePostRequest)
       status(result) mustBe Status.INTERNAL_SERVER_ERROR
     }
 
     "return internal server error when there is an empty form" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
-        Future.successful(HttpResponse(Status.OK, responseString = Some("1234"))))
+      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
+        Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakeRequest)
       status(result) mustBe Status.INTERNAL_SERVER_ERROR

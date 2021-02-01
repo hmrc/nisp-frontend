@@ -29,7 +29,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
-import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
+import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
@@ -43,11 +43,11 @@ with BeforeAndAfterEach with Injecting {
   def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
 
   implicit val headerCarrier = HeaderCarrier()
-  val mockNationalInsuranceConnector = mock[NationalInsuranceConnector]
+  val mockNationalInsuranceConnector = mock[NationalInsuranceConnectorImpl]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[NationalInsuranceConnector].toInstance(mockNationalInsuranceConnector)
+      bind[NationalInsuranceConnectorImpl].toInstance(mockNationalInsuranceConnector)
     ).build()
 
   override def beforeEach(): Unit = {

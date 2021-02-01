@@ -35,7 +35,7 @@ import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, MockNispHttp, TestAccountBuil
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.test.UnitSpec
 
-class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
+class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
   Injecting with BeforeAndAfterEach {
 
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
@@ -60,7 +60,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Moc
     reset(mockMetricService, mockApplicationConfig)
   }
 
-  lazy val nationalInsuranceConnector = inject[NationalInsuranceConnector]
+  lazy val nationalInsuranceConnector = inject[NationalInsuranceConnectorImpl]
 
   "getNationalInsuranceRecord" when {
 
