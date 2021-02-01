@@ -44,7 +44,7 @@ import play.api.inject.bind
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear, StatePension, StatePensionAmountForecast, StatePensionAmountMaximum, StatePensionAmountRegular, StatePensionAmounts}
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear, StatePension, StatePensionAmountForecast, StatePensionAmountMaximum, StatePensionAmountRegular, StatePensionAmounts, StatePensionExclusionFiltered}
 
 import scala.concurrent.Future
 
@@ -104,19 +104,19 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
     "ap" -> Constants.VerifyProviderId
   )
 
-  val statePensionResponse = StatePension(
-    new LocalDate(2015, 4, 5),
-    StatePensionAmounts(
-      false,
-      StatePensionAmountRegular(133.41, 580.1, 6961.14),
-      StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
-      StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-      StatePensionAmountRegular(0, 0, 0))
-    ,64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
-
   "GET /account/nirecord/gaps (gaps)" should {
 
     "return gaps page for user with gaps" in {
+
+      val statePensionResponse = StatePension(
+        new LocalDate(2015, 4, 5),
+        StatePensionAmounts(
+          false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0))
+        ,64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
 
       val expectedNationalInsuranceRecord = NationalInsuranceRecord(40, 39, 2, 1, Some(new LocalDate(1973, 7, 7)),
         false, new LocalDate(2016, 4, 5),
@@ -196,7 +196,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(statePensionResponse))
+        Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
       )
 
       val result = niRecordController
@@ -277,7 +277,13 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
 
     "redirect to exclusion for excluded user" in {
 
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Left(Exclusion.Dead))
+      )
 
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
+      )
 
       val result = niRecordController
         .showFull(fakeRequest.withSession(
@@ -285,27 +291,61 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString
         ))
 
-
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
   }
 
   "GET /account/nirecord/gapsandhowtocheck" should {
     "return how to check page for authenticated user" in {
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 10, 4, Some(new LocalDate(1975, 8, 1)),
+      false, new LocalDate(2014, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60, Some(new LocalDate(2019, 4, 5)),
+          Some(new LocalDate(2023, 4, 5)), true, false)
+        )
+        ,false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceRecord))
+      )
+
       val result = niRecordController
         .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should include("Gaps in your record and how to check them")
     }
 
     "return hrp message for hrp user" in {
-      //TestAccountBuilder.hrpNino
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 6, 4, Some(new LocalDate(1975,8 , 1)),
+        true, new LocalDate(2016, 4,5),
+        List(
+          NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
+        ),
+        false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceRecord))
+      )
+
       val result = niRecordController
         .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserIdHRP))
       contentAsString(result) should include("Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010.")
     }
 
     "do not return hrp message for non hrp user" in {
-      //TestAccountBuilder.regularNino
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 10, 4, Some(new LocalDate(1975,8 ,1)),
+      false, new LocalDate(2014, 4, 5),
+      List(
+        NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60, Some(new LocalDate(2019, 4, 5)),
+        Some(new LocalDate(2023, 4, 5)), true, false)
+      ),
+      false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceRecord))
+      )
+
       val result = niRecordController
         .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should not include
@@ -323,16 +363,30 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
 
   "GET /account/nirecord (full)" should {
     "return NI record page with details for full years - when showFullNI is true" in {
-//      val controller = new MockNIRecordController {
-//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-//        override val sessionCache: SessionCache = MockSessionCache
-//        override lazy val showFullNI = true
-//        override val currentDate = new LocalDate(2016, 9, 9)
-//
-//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-//        override val metricsService: MetricsService = MockMetricsService
-//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fullUserNino)
-//      }
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, -8, 0, 0, Some(new LocalDate(1975, 8, 1)),
+        false, new LocalDate(2016, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
+        ),
+        false)
+
+      val expectedStatePension = StatePension(
+        new LocalDate(2016, 4, 5),
+        StatePensionAmounts(false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0,0,0)
+        ),
+        64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceResponse))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedStatePension))
+      )
 
       val result = niRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) should include("52 weeks")

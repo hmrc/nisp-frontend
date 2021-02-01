@@ -16,8 +16,12 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import java.util.UUID
 
+import org.mockito.Mockito.{reset, when}
+import org.joda.time.LocalDate
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -30,15 +34,18 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear, StatePension, StatePensionAmountForecast, StatePensionAmountMaximum, StatePensionAmountRegular, StatePensionAmounts, StatePensionExclusion, StatePensionExclusionFiltered}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
+
 import scala.concurrent.Future
 
-class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting {
+class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting with BeforeAndAfterEach {
 
   val fakeRequest = FakeRequest()
   val mockStatePensionService = mock[StatePensionService]
@@ -54,6 +61,11 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter)
     ).build()
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockStatePensionService, mockNationalInsuranceService)
+  }
 
   def authId(username: String): String = s"/auth/oid/$username"
 
@@ -89,12 +101,38 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
   "GET /exclusion" should {
 
-    //TODO SessionKeys need to be removed
     "return redirect to account page for non-excluded user" in {
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 10, 4, Some(new LocalDate(1975, 8, 1)),
+        false, new LocalDate(2014, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60, Some(new LocalDate(2019, 4, 5)),
+            Some(new LocalDate(2023, 4, 5)),true,false),
+          NationalInsuranceTaxYear("2012-13", true, 0,0,0,52,689, Some(new LocalDate(2019, 4, 5)),
+            Some(new LocalDate(2023, 4, 5)),true,false)
+        ),
+        false)
+
+      val expectedStatePensionResponse = StatePension(new LocalDate(2015, 4,5),
+        StatePensionAmounts(false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0,0,0)
+        ), 64, new LocalDate(2018, 7, 6),
+        "2017-18", 30, false, 155.65, false, false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceRecord))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedStatePensionResponse))
+      )
+
       val result = testExclusionController.showSP()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-        "userId" -> mockUserId
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString
       ))
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
@@ -102,27 +140,34 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
     "Exclusion Controller" when {
 
-      def generateSPRequest(userId: String, nino: Nino): Future[Result] = {
+      //TODO get rid of nino
+      def generateSPRequest(userId: String, nino: Nino = TestAccountBuilder.regularNino): Future[Result] = {
         testExclusionController.showSP()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          "userId" -> userId,
-          "ap" -> Constants.VerifyProviderId
+          SessionKeys.lastRequestTimestamp -> now.getMillis.toString
         ))
       }
 
-      def generateNIRequest(userId: String, nino: Nino): Future[Result] = {
+      //TODO get rid of nino
+      def generateNIRequest(userId: String, nino: Nino = TestAccountBuilder.regularNino): Future[Result] = {
         testExclusionController.showNI()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          "userId" -> userId,
-          "ap" -> Constants.VerifyProviderId
+          SessionKeys.lastRequestTimestamp -> now.getMillis.toString
         ))
       }
 
       "The User has every exclusion" should {
         "return only the Dead Exclusion on /exclusion" in {
-          val result = generateSPRequest(mockUserIdExcludedAll, TestAccountBuilder.excludedAll)
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.Dead))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
+          )
+
+          val result = generateSPRequest(mockUserIdExcludedAll)
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (deadMessaging)
           contentAsString(result) should not include mciMessaging
@@ -134,7 +179,11 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         }
 
         "return only the Dead Exclusion on /exclusionni" in {
-          val result = generateNIRequest(mockUserIdExcludedAll, TestAccountBuilder.excludedAll)
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.Dead))
+          )
+
+          val result = generateNIRequest(mockUserIdExcludedAll)
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (deadMessaging)
           contentAsString(result) should not include mciMessaging
@@ -145,6 +194,14 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has every exclusion except Dead" should {
         "return only the MCI Exclusion on /exclusion" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.ManualCorrespondenceIndicator))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful( Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator)))
+          )
+
           val result = generateSPRequest(mockUserIdExcludedAllButDead, TestAccountBuilder.excludedAllButDead)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -157,6 +214,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         }
 
         "return only the MCI Exclusion on /exclusionni" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.ManualCorrespondenceIndicator))
+          )
+
           val result = generateNIRequest(mockUserIdExcludedAllButDead, TestAccountBuilder.excludedAllButDead)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -168,6 +229,15 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has every exclusion except Dead and MCI" should {
         "return only the Post SPA Exclusion on /exclusion" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.IsleOfMan))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(StatePensionExclusionFiltered(Exclusion.PostStatePensionAge, Some(65),
+              Some(new LocalDate(2017, 7, 18)), Some(false))))
+          )
+
           val result = generateSPRequest(mockUserIdExcludedAllButDeadMCI, TestAccountBuilder.excludedAllButDeadMCI)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -180,6 +250,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         }
 
         "return only the Isle of Man Exclusion on /exclusionni" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.IsleOfMan))
+          )
+
           val result = generateNIRequest(mockUserIdExcludedAllButDeadMCI, TestAccountBuilder.excludedAllButDeadMCI)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -191,6 +265,15 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has every exclusion except Dead, MCI and Post SPA" should {
         "return only the Amount Dissonance Exclusion on /exclusion" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.IsleOfMan))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(StatePensionExclusionFiltered(Exclusion.AmountDissonance, Some(65),
+              Some(new LocalDate(2017, 7, 18)), Some(true))))
+          )
+
           val result = generateSPRequest(mockUserIdExcludedDissonanceIomMwrreAbroad, TestAccountBuilder.excludedDissonanceIomMwrreAbroad)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -203,6 +286,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         }
 
         "return only the Isle of Man Exclusion on /exclusionni" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.IsleOfMan))
+          )
+
           val result = generateNIRequest(mockUserIdExcludedDissonanceIomMwrreAbroad, TestAccountBuilder.excludedDissonanceIomMwrreAbroad)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -214,6 +301,15 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has the Isle of Man, MWRRE and Abroad exclusions" should {
         "return only the Isle of Man Exclusion on /exclusion" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.IsleOfMan))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(new LocalDate(2017, 7, 18))
+              ,Some(true))))
+          )
+
           val result = generateSPRequest(mockUserIdExcludedIomMwrreAbroad, TestAccountBuilder.excludedIomMwrreAbroad)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -226,6 +322,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         }
 
         "return only the Isle of Man Exclusion on /exclusionni" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.IsleOfMan))
+          )
+
           val result = generateNIRequest(mockUserIdExcludedIomMwrreAbroad, TestAccountBuilder.excludedIomMwrreAbroad)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -237,6 +337,22 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has MWRRE and Abroad exclusions" should {
         "return only the MWREE Exclusion on /exclusion" in {
+          val expectedStatePension = StatePension(new LocalDate(2014, 4, 5),
+            StatePensionAmounts(false,
+              StatePensionAmountRegular(133.41, 580.1, 6961.14),
+              StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
+              StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
+              StatePensionAmountRegular(0, 0, 0)),64, new LocalDate(2050, 7, 6),
+            "2050-51", 25, false, 155.65, true, false)
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(expectedStatePension))
+          )
+
           val result = generateSPRequest(mockUserIdExcludedMwrreAbroad, TestAccountBuilder.excludedMwrreAbroad)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -249,6 +365,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         }
 
         "return only the MWRRE Exclusion on /exclusionni" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
+          )
+
           val result = generateNIRequest(mockUserIdExcludedMwrreAbroad, TestAccountBuilder.excludedMwrreAbroad)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -256,7 +376,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           contentAsString(result) should not include isleOfManMessagingNI
           contentAsString(result) should include (mwrreMessagingNI)
         }
-
       }
 
       "The User has MWRRE exclusion" should {
@@ -265,9 +384,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           val result = testExclusionController.showSP()(fakeRequest.withSession(
               SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-              SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-              "userId" -> mockUserIdExcludedMwrre,
-              "ap" -> Constants.VerifyProviderId
+              SessionKeys.lastRequestTimestamp -> now.getMillis.toString
             ))
 
           redirectLocation(result) shouldBe None
