@@ -119,9 +119,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
         val result = statePensionController
           .show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          "userId" -> mockUserIdExcluded,
-          "ap" -> Constants.VerifyProviderId
+          SessionKeys.lastRequestTimestamp -> now.getMillis.toString
         ))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }

@@ -25,17 +25,18 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class NispModule extends Module {
-    override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
-        bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
-        bind[SessionCache].to[NispSessionCache],
-        bind[CachedStaticHtmlPartialRetriever].to[NispCachedStaticHtmlPartialRetriever],
-        bind[FormPartialRetriever].to[NispFormPartialRetriever],
-        bind[TemplateRenderer].to[LocalTemplateRenderer],
-        bind[HeaderCarrierForPartialsConverter].to[NispHeaderCarrierForPartialsConverter],
-        if(configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)){
-            bind[AuthAction].to[AuthActionImpl]
-        }else{
-            bind[AuthAction].to[VerifyAuthActionImpl]
-        }
-    )
+    override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
+        Seq(bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
+            bind[SessionCache].to[NispSessionCache],
+            bind[CachedStaticHtmlPartialRetriever].to[NispCachedStaticHtmlPartialRetriever],
+            bind[FormPartialRetriever].to[NispFormPartialRetriever],
+            bind[TemplateRenderer].to[LocalTemplateRenderer],
+            bind[HeaderCarrierForPartialsConverter].to[NispHeaderCarrierForPartialsConverter],
+            if(configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)){
+                bind[AuthAction].to[AuthActionImpl]
+            }else{
+                bind[AuthAction].to[VerifyAuthActionImpl]
+            }
+        )
+    }
 }

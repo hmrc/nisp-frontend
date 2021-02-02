@@ -17,13 +17,11 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import org.joda.time.{DateTimeZone, LocalDate}
-import play.api.Application
+import org.joda.time.LocalDate
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
@@ -31,7 +29,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services._
-import uk.gov.hmrc.nisp.utils.{Constants, Formatting}
+import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -46,8 +44,7 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
                                    appConfig: ApplicationConfig,
                                    pertaxHelper: PertaxHelper,
                                    mcc: MessagesControllerComponents,
-                                   val metricsService: MetricsService,
-                                   val sessionCache: SessionCache
+                                   dateProvider: DateProvider
                                   )(implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
@@ -55,7 +52,7 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
   extends NispFrontendController(mcc) with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI
-  val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
+
 
   def showFull: Action[AnyContent] = show(gapsOnlyView = false)
 
@@ -147,7 +144,7 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
                 showPre1975Years = showPre1975Years(niRecord.dateOfEntry, request.nispAuthedUser.dateOfBirth, niRecord.qualifyingYearsPriorTo1975),
                 authenticationProvider = request.authDetails.authProvider.getOrElse("N/A"),
                 showFullNI = showFullNI,
-                currentDate = currentDate))
+                currentDate = dateProvider.currentDate))
             }
           case Left(exclusion) =>
             customAuditConnector.sendEvent(AccountExclusionEvent(

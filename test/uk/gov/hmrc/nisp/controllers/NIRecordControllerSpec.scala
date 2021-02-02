@@ -20,31 +20,31 @@ import java.util.UUID
 
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito.{RETURNS_DEEP_STUBS, reset, when}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.Status
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{SessionKeys, Upstream4xxResponse}
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.{SessionKeys, Upstream4xxResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
-import play.api.inject.bind
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear, StatePension, StatePensionAmountForecast, StatePensionAmountMaximum, StatePensionAmountRegular, StatePensionAmounts, StatePensionExclusionFiltered}
 
 import scala.concurrent.Future
 
@@ -67,6 +67,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
   val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
   val mockMetricsService: MetricsService = mock[MetricsService](RETURNS_DEEP_STUBS)
   val mockSessionCache: SessionCache = mock[SessionCache]
+  val mockDateProvider: DateProvider = mock[DateProvider]
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
@@ -75,7 +76,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper, mockMetricsService,
-      mockCustomAuditConnector)
+      mockCustomAuditConnector, mockDateProvider)
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -90,11 +91,12 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       bind[SessionCache].toInstance(mockSessionCache),
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[FormPartialRetriever].toInstance(formPartialRetriever),
-      bind[TemplateRenderer].toInstance(templateRenderer)
+      bind[TemplateRenderer].toInstance(templateRenderer),
+      bind[DateProvider].toInstance(mockDateProvider)
     ).build()
 
   val fakeRequest = FakeRequest()
-  val niRecordController = inject[NIRecordController]
+  lazy val niRecordController = inject[NIRecordController]
 
   // TODO userId and authProvider is now redundant
   def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
@@ -137,6 +139,8 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(statePensionResponse))
       )
+
+      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
 
       val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserId))
       contentAsString(result) should include("View all years of contributions")
@@ -240,6 +244,8 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedStatePensionResponse))
       )
+
+      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
 
       val result = niRecordController
         .showFull(authenticatedFakeRequest(mockUserId))
@@ -366,6 +372,40 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, -8, 0, 0, Some(new LocalDate(1975, 8, 1)),
         false, new LocalDate(2016, 4, 5),
         List(
+          NationalInsuranceTaxYear("2015-16", false, 2430.24, 0, 0, 52, 0, None, None, false, false)
+        ),
+        false)
+
+      val expectedStatePension = StatePension(
+        new LocalDate(2016, 4, 5),
+        StatePensionAmounts(false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0,0,0)
+        ),
+        64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceResponse))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedStatePension))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
+      when(mockAppConfig.showFullNI).thenReturn(true)
+
+      val result = niRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
+      contentAsString(result) should include("52 weeks")
+    }
+
+    "return NI record page with no details for full years - when showFullNI is false" in {
+
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, -8, 0, 0, Some(new LocalDate(1975, 8, 1)),
+        false, new LocalDate(2016, 4, 5),
+        List(
           NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
         ),
         false)
@@ -388,37 +428,38 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         Future.successful(Right(expectedStatePension))
       )
 
-      val result = niRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
-      contentAsString(result) should include("52 weeks")
-    }
-
-    "return NI record page with no details for full years - when showFullNI is false" in {
-//      val controller = new MockNIRecordController {
-//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-//        override val sessionCache: SessionCache = MockSessionCache
-//        override val currentDate = new LocalDate(2016, 9, 9)
-//
-//        override lazy val showFullNI = false
-//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-//        override val metricsService: MetricsService = MockMetricsService
-//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fullUserNino)
-//      }
+      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
+      when(mockAppConfig.showFullNI).thenReturn(false)
 
       val result = niRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
       contentAsString(result) shouldNot include("52 weeks")
     }
 
     "return NI record when number of qualifying years is 0" in {
-//      val controller = new MockNIRecordController {
-//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-//        override val sessionCache: SessionCache = MockSessionCache
-//        override lazy val showFullNI = true
-//        override val currentDate = new LocalDate(2016, 9, 9)
-//
-//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-//        override val metricsService: MetricsService = MockMetricsService
-//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.noQualifyingYears)
-//      }
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(0, 0, 0, 0, Some(new LocalDate(1975, 8, 1)),
+        false, new LocalDate(2016, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+      val expectedStatePension = StatePension(
+        new LocalDate(2016, 4, 5),
+        StatePensionAmounts(false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0,0,0)
+        ),
+        64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceResponse))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedStatePension))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
+      when(mockAppConfig.showFullNI).thenReturn(true)
+
       val result = niRecordController.showFull(authenticatedFakeRequest(mockNoQualifyingYearsUserId))
       result.header.status shouldBe 200
     }
@@ -426,48 +467,107 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
 
   "GET /account/nirecord (Gaps)" should {
     "return NI record page - gap details should not show shortfall may increase messages - if current date is after 5 April 2019" in {
-//      val controller = new MockNIRecordController {
-//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-//        override val sessionCache: SessionCache = MockSessionCache
-//        override lazy val showFullNI = false
-//        override val currentDate = new LocalDate(2019, 4, 6)
-//
-//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-//        override val metricsService: MetricsService = MockMetricsService
-//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fillGapsMultiple)
-//      }
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 6, 4, Some(new LocalDate(1975, 8, 1)),
+        true, new LocalDate(2014, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 0, Some(new LocalDate(2019, 4, 5))
+            ,Some(new LocalDate(2024, 4, 5)), true, false),
+          NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5))
+            ,Some(new LocalDate(2023, 4, 5)), true, false)
+        ), false)
+
+      val expectedStatePension = StatePension(
+        new LocalDate(2014, 4, 5),
+        StatePensionAmounts(false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0,0,0)
+        ),
+        64, new LocalDate(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceResponse))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedStatePension))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2019, 4, 6))
+      when(mockAppConfig.showFullNI).thenReturn(false)
 
       val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should not include ("shortfall may increase")
     }
 
     "return NI record page - gap details should show shortfall may increase messages - if current date is before 5 April 2019" in {
-//      val controller = new MockNIRecordController {
-//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-//        override val sessionCache: SessionCache = MockSessionCache
-//        override lazy val showFullNI = false
-//        override val currentDate = new LocalDate(2019, 4, 4)
-//
-//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-//        override val metricsService: MetricsService = MockMetricsService
-//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fillGapsMultiple)
-//      }
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 6, 4, Some(new LocalDate(1975, 8, 1)),
+        true, new LocalDate(2014, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2019, 4, 5))
+            ,Some(new LocalDate(2024, 4, 5)), true, false),
+          NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5))
+            ,Some(new LocalDate(2023, 4, 5)), true, false)
+        ), false)
+
+      val expectedStatePension = StatePension(
+        new LocalDate(2014, 4, 5),
+        StatePensionAmounts(false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0,0,0)
+        ),
+        64, new LocalDate(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceResponse))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedStatePension))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2019, 4, 4))
+      when(mockAppConfig.showFullNI).thenReturn(false)
 
       val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+
       contentAsString(result) should include("shortfall may increase")
     }
 
     "return NI record page - gap details should show shortfall may increase messages - if current date is same 5 April 2019" in {
-//      val controller = new MockNIRecordController {
-//        override val customAuditConnector: CustomAuditConnector = MockCustomAuditConnector
-//        override val sessionCache: SessionCache = MockSessionCache
-//        override lazy val showFullNI = false
-//        override val currentDate = new LocalDate(2019, 4, 5)
-//
-//        override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-//        override val metricsService: MetricsService = MockMetricsService
-//        override val authenticate: AuthAction = new FakeAuthAction(TestAccountBuilder.fillGapsMultiple)
-//      }
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 6, 4, Some(new LocalDate(1975, 8, 1)),
+        true, new LocalDate(2014, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2019, 4, 5))
+            ,Some(new LocalDate(2024, 4, 5)), true, false),
+          NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5))
+            ,Some(new LocalDate(2023, 4, 5)), true, false)
+        ), false)
+
+      val expectedStatePension = StatePension(
+        new LocalDate(2014, 4, 5),
+        StatePensionAmounts(false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0,0,0)
+        ),
+        64, new LocalDate(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedNationalInsuranceResponse))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(expectedStatePension))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2019, 4, 5))
+      when(mockAppConfig.showFullNI).thenReturn(false)
+
 
       val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
       contentAsString(result) should include("shortfall may increase")

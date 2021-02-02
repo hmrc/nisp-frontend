@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import java.util.UUID
 
-import org.mockito.Mockito.{reset, when}
 import org.joda.time.LocalDate
+import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -28,16 +28,14 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.Nino
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear, StatePension, StatePensionAmountForecast, StatePensionAmountMaximum, StatePensionAmountRegular, StatePensionAmounts, StatePensionExclusion, StatePensionExclusionFiltered}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -71,23 +69,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
   def authId(username: String): String = s"/auth/oid/$username"
 
   val testExclusionController = inject[ExclusionController]
-
-  val mockUserId = authId("mockuser")
-  val mockUserIdExcludedAll = authId("mockexcludedall")
-  val mockUserIdExcludedAllButDead = authId("mockexcludedallbutdead")
-  val mockUserIdExcludedAllButDeadMCI = authId("mockexcludedallbutdeadmci")
-  val mockUserIdExcludedDissonanceIomMwrreAbroad = authId("mockexcludeddissonanceiommwrreabroad")
-  val mockUserIdExcludedIomMwrreAbroad = authId("mockexcludediommwrreabroad")
-  val mockUserIdExcludedMwrreAbroad = authId("mockexcludedmwrreabroad")
-  val mockUserIdExcludedMwrre = authId("mockexcludedmwrre")
-  val mockUserIdExcludedAbroad = authId("mockexcludedabroad")
-
-  val mockUserIdSPAUnderConsiderationExcludedAmountDis = authId("mockspaunderconsiderationexclusionamountdis")
-  val mockUserIdSPAUnderConsiderationExcludedIoM = authId("mockspaunderconsiderationexclusioniom")
-  val mockUserIdSPAUnderConsiderationExcludedMwrre = authId("mockspaunderconsiderationexclusionmwree")
-  val mockUserIdSPAUnderConsiderationExcludedOverSpa = authId("mockspaunderconsiderationexclusionoverspa")
-  val mockUserIdSPAUnderConsiderationExcludedMultiple = authId("mockspaunderconsiderationexclusionmultiple")
-  val mockUserIdSPAUnderConsiderationExcludedNoFlag = authId("mockspaunderconsiderationexclusionnoflag")
 
   val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
   val mciMessaging = "We need to talk to you about an MCI error before you sign in."
@@ -141,8 +122,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
     "Exclusion Controller" when {
 
-      //TODO get rid of nino
-      def generateSPRequest(userId: String, nino: Nino = TestAccountBuilder.regularNino): Future[Result] = {
+      def generateSPRequest: Future[Result] = {
         testExclusionController.showSP()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString
@@ -150,7 +130,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       }
 
       //TODO get rid of nino
-      def generateNIRequest(userId: String, nino: Nino = TestAccountBuilder.regularNino): Future[Result] = {
+      def generateNIRequest: Future[Result] = {
         testExclusionController.showNI()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
           SessionKeys.lastRequestTimestamp -> now.getMillis.toString
@@ -168,7 +148,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
           )
 
-          val result = generateSPRequest(mockUserIdExcludedAll)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (deadMessaging)
           contentAsString(result) should not include mciMessaging
@@ -184,7 +164,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Left(Exclusion.Dead))
           )
 
-          val result = generateNIRequest(mockUserIdExcludedAll)
+          val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (deadMessaging)
           contentAsString(result) should not include mciMessaging
@@ -203,7 +183,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful( Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator)))
           )
 
-          val result = generateSPRequest(mockUserIdExcludedAllButDead, TestAccountBuilder.excludedAllButDead)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should include (mciMessaging)
@@ -219,7 +199,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Left(Exclusion.ManualCorrespondenceIndicator))
           )
 
-          val result = generateNIRequest(mockUserIdExcludedAllButDead, TestAccountBuilder.excludedAllButDead)
+          val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should include (mciMessaging)
@@ -239,7 +219,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
               Some(new LocalDate(2017, 7, 18)), Some(false))))
           )
 
-          val result = generateSPRequest(mockUserIdExcludedAllButDeadMCI, TestAccountBuilder.excludedAllButDeadMCI)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -255,7 +235,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Left(Exclusion.IsleOfMan))
           )
 
-          val result = generateNIRequest(mockUserIdExcludedAllButDeadMCI, TestAccountBuilder.excludedAllButDeadMCI)
+          val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -275,7 +255,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
               Some(new LocalDate(2017, 7, 18)), Some(true))))
           )
 
-          val result = generateSPRequest(mockUserIdExcludedDissonanceIomMwrreAbroad, TestAccountBuilder.excludedDissonanceIomMwrreAbroad)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -291,7 +271,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Left(Exclusion.IsleOfMan))
           )
 
-          val result = generateNIRequest(mockUserIdExcludedDissonanceIomMwrreAbroad, TestAccountBuilder.excludedDissonanceIomMwrreAbroad)
+          val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -311,7 +291,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
               ,Some(true))))
           )
 
-          val result = generateSPRequest(mockUserIdExcludedIomMwrreAbroad, TestAccountBuilder.excludedIomMwrreAbroad)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -327,7 +307,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Left(Exclusion.IsleOfMan))
           )
 
-          val result = generateNIRequest(mockUserIdExcludedIomMwrreAbroad, TestAccountBuilder.excludedIomMwrreAbroad)
+          val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -354,7 +334,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Right(expectedStatePension))
           )
 
-          val result = generateSPRequest(mockUserIdExcludedMwrreAbroad, TestAccountBuilder.excludedMwrreAbroad)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -370,7 +350,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
           )
 
-          val result = generateNIRequest(mockUserIdExcludedMwrreAbroad, TestAccountBuilder.excludedMwrreAbroad)
+          val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -415,7 +395,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
           )
 
-          val result = generateNIRequest(mockUserIdExcludedMwrre, TestAccountBuilder.excludedMwrre)
+          val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
@@ -440,7 +420,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Right(expectedNationalInsuranceResponse))
           )
 
-          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedAmountDis, TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (spaUnderConsiderationMessaging)
         }
@@ -463,7 +443,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Right(expectedNationalInsuranceResponse))
           )
 
-          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedIoM, TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (spaUnderConsiderationMessaging)
         }
@@ -486,7 +466,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Right(expectedNationalInsuranceRecord))
           )
 
-          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedMwrre, TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
         }
@@ -509,7 +489,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Right(nationalInsuranceRecord))
           )
 
-          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedOverSpa, TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
         }
@@ -531,7 +511,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Right(nationalInsuranceRecord))
           )
 
-          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedMultiple, TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
         }
@@ -553,7 +533,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             Future.successful(Right(nationalInsuranceRecord))
           )
 
-          val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedNoFlag, TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)
+          val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
         }
