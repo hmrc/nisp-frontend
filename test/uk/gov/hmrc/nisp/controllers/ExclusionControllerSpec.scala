@@ -45,6 +45,7 @@ import uk.gov.hmrc.time.DateTimeUtils._
 
 import scala.concurrent.Future
 
+//TODO some tests have repeating data
 class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting with BeforeAndAfterEach {
 
   val fakeRequest = FakeRequest()
@@ -381,6 +382,21 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       "The User has MWRRE exclusion" should {
 
         "return only the MWRRE Exclusion on /exclusion" in {
+          val expectedStatePension = StatePension(new LocalDate(2015, 4, 5),
+            StatePensionAmounts(false,
+              StatePensionAmountRegular(133.41, 580.1, 6961.14),
+              StatePensionAmountForecast(3,146.76, 638.14, 7657.73),
+              StatePensionAmountMaximum(3,2, 155.65, 676.8, 8121.59),
+              StatePensionAmountRegular(0,0,0)),
+            64, new LocalDate(2018, 7,6), "2017-18", 30, false, 155.65, true, false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(expectedStatePension))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
+          )
 
           val result = testExclusionController.showSP()(fakeRequest.withSession(
               SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -395,6 +411,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         }
 
         "return only the MWRRE Exclusion on /exclusionni" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
+          )
+
           val result = generateNIRequest(mockUserIdExcludedMwrre, TestAccountBuilder.excludedMwrre)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
@@ -406,6 +426,20 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has SPA under consideration flag and Amount Dis exclusion" should {
         "return with SPA under consideration message" in {
+          val expectedStatePensionResponse = StatePensionExclusionFiltered(Exclusion.AmountDissonance, Some(65),
+            Some(new LocalDate(2017, 7, 18)), Some(true))
+
+          val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(expectedStatePensionResponse))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(expectedNationalInsuranceResponse))
+          )
+
           val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedAmountDis, TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (spaUnderConsiderationMessaging)
@@ -414,6 +448,21 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has SPA under consideration flag and IoM exclusion" should {
         "return with SPA under consideration message" in {
+
+          val statePensionResponse = StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(new LocalDate(2017, 7, 18)),
+            Some(true))
+
+          val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8,1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(statePensionResponse))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(expectedNationalInsuranceResponse))
+          )
+
           val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedIoM, TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)
           redirectLocation(result) shouldBe None
           contentAsString(result) should include (spaUnderConsiderationMessaging)
@@ -422,6 +471,21 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has SPA under consideration flag and Mwrre exclusion" should {
         "return with no SPA under consideration message" in {
+
+          val statePensionResponse = StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection, Some(65),
+            Some(new LocalDate(2017, 7, 18)), Some(true))
+
+          val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(statePensionResponse))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(expectedNationalInsuranceRecord))
+          )
+
           val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedMwrre, TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
@@ -430,6 +494,21 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has SPA under consideration flag and Over Spa exclusion" should {
         "return with no SPA under consideration message" in {
+
+          val statePensionResponse = StatePensionExclusionFiltered(Exclusion.PostStatePensionAge, Some(65),
+            Some(new LocalDate(2017, 7, 18)), Some(true))
+
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(statePensionResponse))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationalInsuranceRecord))
+          )
+
           val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedOverSpa, TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
@@ -438,6 +517,20 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has SPA under consideration flag and Multiple exclusions with Over SPA first" should {
         "return with no SPA under consideration message" in {
+          val statePensionResponse = StatePensionExclusionFiltered(Exclusion.PostStatePensionAge, Some(65),
+            Some(new LocalDate(2017, 7, 18)), Some(true))
+
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(statePensionResponse))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationalInsuranceRecord))
+          )
+
           val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedMultiple, TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
@@ -446,6 +539,20 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has no SPA under consideration flag and exclusion" should {
         "return with no SPA under consideration message" in {
+          val statePensionResponse = StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65),
+            Some(new LocalDate(2017, 7, 18)), None)
+
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(statePensionResponse))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationalInsuranceRecord))
+          )
+
           val result = generateSPRequest(mockUserIdSPAUnderConsiderationExcludedNoFlag, TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
