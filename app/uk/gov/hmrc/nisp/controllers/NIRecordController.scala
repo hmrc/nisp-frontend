@@ -34,7 +34,6 @@ import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVolun
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
-
 import scala.concurrent.ExecutionContext
 
 class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,

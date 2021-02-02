@@ -17,14 +17,9 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.Application
 import play.api.i18n.I18nSupport
-import uk.gov.hmrc.time.DateTimeUtils
-
-import scala.concurrent.ExecutionContext
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
@@ -39,16 +34,18 @@ import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.time.DateTimeUtils
 
+import scala.concurrent.ExecutionContext
+
+//TODO place holder here to check the dependencies of all classes as some are not being used now
 class StatePensionController @Inject()(authenticate: AuthAction,
                                        statePensionService: StatePensionService,
                                        nationalInsuranceService: NationalInsuranceService,
                                        customAuditConnector: CustomAuditConnector,
                                        applicationConfig: ApplicationConfig,
                                        pertaxHelper: PertaxHelper,
-                                       mcc: MessagesControllerComponents,
-                                       val sessionCache: SessionCache,
-                                       val metricsService: MetricsService)
+                                       mcc: MessagesControllerComponents)
                                       (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                        val formPartialRetriever: FormPartialRetriever,
                                        val templateRenderer: TemplateRenderer,

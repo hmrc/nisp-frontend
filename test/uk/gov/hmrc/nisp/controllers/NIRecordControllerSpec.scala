@@ -20,7 +20,7 @@ import java.util.UUID
 
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{RETURNS_DEEP_STUBS, reset, when}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -30,16 +30,15 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{SessionKeys, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -65,8 +64,6 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
   val mockStatePensionService: StatePensionService = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
-  val mockMetricsService: MetricsService = mock[MetricsService](RETURNS_DEEP_STUBS)
-  val mockSessionCache: SessionCache = mock[SessionCache]
   val mockDateProvider: DateProvider = mock[DateProvider]
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
@@ -75,7 +72,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper, mockMetricsService,
+    reset(mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper,
       mockCustomAuditConnector, mockDateProvider)
   }
 
@@ -87,8 +84,6 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[MetricsService].toInstance(mockMetricsService),
-      bind[SessionCache].toInstance(mockSessionCache),
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[FormPartialRetriever].toInstance(formPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
