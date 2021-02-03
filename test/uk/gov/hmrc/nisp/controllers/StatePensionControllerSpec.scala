@@ -45,7 +45,7 @@ import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
 
-class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach{
+class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
 
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
@@ -83,14 +83,28 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
     reset(mockCustomAuditConnector, mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper)
   }
 
+  //TODO remove userId
   private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString
   )
 
-  override def fakeApplication(): Application = GuiceApplicationBuilder()
+  val standardInjector = GuiceApplicationBuilder()
+  .overrides(
+    bind[StatePensionService].toInstance(mockStatePensionService),
+    bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+    bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+    bind[ApplicationConfig].toInstance(mockAppConfig),
+    bind[PertaxHelper].toInstance(mockPertaxHelper),
+    bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+    bind[FormPartialRetriever].toInstance(formPartialRetriever),
+    bind[TemplateRenderer].toInstance(templateRenderer),
+    bind[AuthAction].to[FakeAuthAction])
+    .build()
+    .injector
+
+  val foreignAddressInjector = GuiceApplicationBuilder()
     .overrides(
-      bind[AuthAction].to[FakeAuthAction],
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
@@ -98,10 +112,18 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[FormPartialRetriever].toInstance(formPartialRetriever),
-      bind[TemplateRenderer].toInstance(templateRenderer)
-    ).build()
+      bind[TemplateRenderer].toInstance(templateRenderer),
+      bind[AuthAction].to[FakeAuthActionWithNino],
+      bind[NinoContainer].toInstance(AbroadNinoContainer)
+    )
+    .build()
+    .injector
 
-  val statePensionController = inject[StatePensionController]
+  val standardNino = TestAccountBuilder.regularNino
+  val foreignNino = TestAccountBuilder.abroadNino
+
+  //val statePensionController = inject[StatePensionController]
+  val statePensionController = standardInjector.instanceOf[StatePensionController]
 
   val statePensionCopeResponse = StatePension(
     new LocalDate(2014, 4, 5),
@@ -112,6 +134,58 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
       StatePensionAmountRegular(50, 217.41, 2608.93))
     ,64, new LocalDate(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
+
+  val statePensionResponse = StatePension(
+    new LocalDate(2015, 4, 5),
+    StatePensionAmounts(
+      false,
+      StatePensionAmountRegular(133.41, 580.1, 6961.14),
+      StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+      StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+      StatePensionAmountRegular(0, 0, 0))
+    ,64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+
+  val statePensionVariation2 = StatePension(
+    new LocalDate(2015, 4, 5),
+    StatePensionAmounts(
+      false,
+      StatePensionAmountRegular(0, 0, 0),
+      StatePensionAmountForecast(1, 0, 0, 0),
+      StatePensionAmountMaximum(1, 6, 155.65, 676.8, 8121.59),
+      StatePensionAmountRegular(0, 0, 0))
+    ,64, new LocalDate(2016, 7, 6),
+    "2034-35", 30, false, 0, true, false)
+
+  val statePensionResponseVariation3 = StatePension(
+    new LocalDate(2014, 4, 5),
+    StatePensionAmounts(
+      false,
+      StatePensionAmountRegular(133.41, 580.1, 6961.14),
+      StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
+      StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
+      StatePensionAmountRegular(0, 0, 0))
+    ,64, new LocalDate(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+
+
+  val nationalInsuranceRecord = NationalInsuranceRecord(28, -3, 6, 4, Some(new LocalDate(1975, 8, 1)),
+    true, new LocalDate(2016, 4, 5),
+    List(
+      NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false),
+      NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 0, None, None, false, false)
+    ),
+    false
+  )
+
+  val nationaInsuranceRecordVariant2 = NationalInsuranceRecord(28, 28, 6, 4, Some(new LocalDate(1975, 8, 1)),
+    true, new LocalDate(2014, 4, 5),
+    List(
+      NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2019, 4, 5)),
+        Some(new LocalDate(2024, 4, 5)), true, false),
+      NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5)),
+        Some(new LocalDate(2023, 4, 5)), true, false)
+    ),
+    false
+  )
 
   "State Pension controller" should {
 
@@ -127,30 +201,11 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       "return the forecast only page for a user with a forecast lower than current amount" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-        val statePensionResponse = StatePension(
-          new LocalDate(2015, 4, 5),
-          StatePensionAmounts(
-            false,
-            StatePensionAmountRegular(133.41, 580.1, 6961.14),
-            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
-            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-            StatePensionAmountRegular(0, 0, 0))
-          ,64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
-
-        val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 6, 4, Some(new LocalDate(1975, 8, 1)),
-          true, new LocalDate(2016, 4, 5),
-          List(
-            NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false),
-            NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 0, None, None, false, false)
-          ),
-          false
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord))
         )
 
-        when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-          Future.successful(Right(expectedNationalInsuranceRecord))
-        )
-
-        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(statePensionResponse))
         )
 
@@ -162,11 +217,11 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       "return 200, with exclusion message for excluded user" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-        when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Left(Exclusion.Dead))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
         )
 
@@ -181,8 +236,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       "return content about COPE for contracted out (B) user" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-
-
         val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -8, 0, 0, Some(new LocalDate(1975, 8, 1)),
           true, new LocalDate(2016, 4, 5),
           List(
@@ -192,11 +245,11 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
           false
         )
 
-        when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(expectedNationalInsuranceRecord))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(statePensionCopeResponse))
         )
 
@@ -208,7 +261,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       "return COPE page for contracted out (B) user" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(statePensionCopeResponse))
         )
 
@@ -218,12 +271,34 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       }
 
       "return abroad message for abroad user" in {
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionResponse))
+        )
+
+        val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
+
         val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdAbroad))
         contentAsString(result) should include("As you are living or working overseas")
       }
 
       "return /exclusion for MWRRE user" in {
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
+        )
+
         val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdMwrre))
         status(result) shouldBe SEE_OTHER
@@ -231,6 +306,18 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       }
 
       "return abroad message for forecast only user" in {
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionResponse))
+        )
+
+        val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
+
         val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdForecastOnly))
         contentAsString(result) should include("As you are living or working overseas")
@@ -238,6 +325,18 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       }
 
       "return abroad message for an mqp user instead of standard mqp overseas message" in {
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionResponse))
+        )
+
+        val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
+
         val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
         contentAsString(result) should include("As you are living or working overseas")
@@ -245,12 +344,34 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       }
 
       "redirect to statepension page for non contracted out user" in {
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionVariation2))
+        )
+
         val result = statePensionController
           .showCope()(authenticatedFakeRequest(mockUserIdMQP))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
       }
 
       "return page with MQP messaging for MQP user" in {
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        val expectedNationalInsuranceRecord = NationalInsuranceRecord(3, 3, 19, 7, Some(new LocalDate(1975, 8, 1)),
+          false, new LocalDate(2014, 4, 5),
+          List.empty[NationalInsuranceTaxYear],
+          false
+        )
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(expectedNationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionVariation2))
+        )
+
         val result = statePensionController
           .show()(authenticatedFakeRequest(mockUserIdMQP))
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
@@ -260,6 +381,16 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
     "when there is a Fill Gaps Scenario" when {
       "the future config is set to off" should {
         "show year information when there is multiple years" in {
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationaInsuranceRecordVariant2))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(statePensionResponseVariation3))
+          )
+
           val result = statePensionController
             .show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
@@ -268,6 +399,27 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
           contentAsString(result) should include("The most you can get by filling any 7 years in your record is")
         }
         "show specific text when is only one payable gap" in {
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+          val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, 28, 1, 1, Some(new LocalDate(1975, 8, 1)),
+            true, new LocalDate(2014, 4, 5),
+            List(
+              NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2019, 4, 5)),
+                Some(new LocalDate(2024, 4, 5)), true, false),
+              NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5)),
+                Some(new LocalDate(2023, 4, 5)), true, false)
+            ),
+            false
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(expectedNationalInsuranceRecord))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(statePensionResponseVariation3))
+          )
+
           val result = statePensionController
             .show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
           contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
@@ -276,7 +428,18 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
       }
 
       "the future proof config is set to true" should {
-          "show new personal max text when there are multiple/single year" in {
+        "show new personal max text when there are multiple/single year" in {
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+          when(mockAppConfig.futureProofPersonalMax).thenReturn(true)
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationaInsuranceRecordVariant2))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(statePensionResponseVariation3))
+          )
+
           val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")
@@ -286,11 +449,15 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with GuiceOn
 
     "GET /signout" should {
       "redirect to the questionnaire page when govuk done page is disabled" in {
+        when(mockAppConfig.feedbackFrontendUrl).thenReturn("/foo")
+
         val result = statePensionController.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "/foo"
       }
 
       "redirect to the feedback questionnaire page when govuk done page is enabled" in {
+        when(mockAppConfig.feedbackFrontendUrl).thenReturn("/foo")
+
         val result = statePensionController.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "/foo"
       }

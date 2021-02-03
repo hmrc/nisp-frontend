@@ -23,12 +23,14 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
+
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeAuthAction @Inject()(val parser: BodyParsers.Default,
-                               val executionContext: ExecutionContext) extends AuthAction {
+class FakeAuthActionWithNino @Inject()(val parser: BodyParsers.Default,
+                                       val executionContext: ExecutionContext,
+                                       ninoContainer: NinoContainer) extends AuthAction {
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(AuthenticatedRequest(request, NispAuthedUserFixture.user(TestAccountBuilder.regularNino),
+    block(AuthenticatedRequest(request, NispAuthedUserFixture.user(ninoContainer.nino),
       AuthDetails(ConfidenceLevel.L200, Some("GGW"), LoginTimes(DateTime.now, None))))
   }
 }
