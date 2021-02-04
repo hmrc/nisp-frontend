@@ -27,9 +27,7 @@ class NispBreadcrumb @Inject()(applicationConfig: ApplicationConfig){
 
   def initialBreadCrumbList(implicit messages: Messages) = List((messages("nisp.breadcrumb.account"), applicationConfig.pertaxFrontendUrl))
 
-  lazy val mainContentHeaderPartialUrl = applicationConfig.breadcrumbPartialUrl
-
-   def buildBreadCrumb(implicit request: Request[_], messages: Messages): Breadcrumb = {
+  def buildBreadCrumb(implicit request: Request[_], messages: Messages): Breadcrumb = {
     val links = Map(
       "account" -> (Messages("nisp.breadcrumb.pension"), routes.StatePensionController.show().url),
       "nirecord" -> (Messages("nisp.breadcrumb.nirecord"), routes.NIRecordController.showFull().url),
@@ -41,9 +39,9 @@ class NispBreadcrumb @Inject()(applicationConfig: ApplicationConfig){
     )
 
     val items: List[Option[(String, String)]] = request.path.split("/").filter(!_.isEmpty).map(links.get).toList
-    val breacrumList = initialBreadCrumbList ::: items.flatten
+    val breadCrumbList = initialBreadCrumbList ::: items.flatten
 
-    val bcItems: Seq[BreadcrumbItem] = breacrumList.map( { case(label, url) => BreadcrumbItem(label, url) })
+    val bcItems: Seq[BreadcrumbItem] = breadCrumbList.map( { case(label, url) => BreadcrumbItem(label, url) })
     Breadcrumb(bcItems.toVector)
   }
 

@@ -22,6 +22,7 @@ import akka.util.Timeout
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
@@ -31,14 +32,14 @@ import uk.gov.hmrc.nisp.helpers._
 
 import scala.concurrent.duration._
 
-trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting {
+trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   //TODO remove LanguageToggle
   implicit val request = FakeRequest()
   implicit val lang = LanguageToggle.getLanguageCode()
   implicit val lanCookie = LanguageToggle.getLanguageCookie()
   implicit val defaultAwaitTimeout: Timeout = 5.seconds
-  implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+  implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 

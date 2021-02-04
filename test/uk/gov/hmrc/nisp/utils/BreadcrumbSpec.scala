@@ -16,18 +16,21 @@
 
 package uk.gov.hmrc.nisp.utils
 
+import java.util.Locale
+
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Injecting
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.play.test.UnitSpec
+import org.mockito.Mockito.{when, reset}
+import org.scalatest.BeforeAndAfterEach
 
-class BreadcrumbSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting {
+class BreadcrumbSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting with BeforeAndAfterEach {
 
   val fakeRequestSP = FakeRequest("GET", "/account")
   val fakeRequestNI = FakeRequest("GET", "/account/nirecord/gaps")
@@ -35,13 +38,21 @@ class BreadcrumbSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar
   val fakeRequestHowToImproveGaps = FakeRequest("GET", "/account/nirecord/gapsandhowtocheck")
   val mockApplicationConfig = mock[ApplicationConfig]
 
+  val pertaxFrontendUrl = "pertaxFrontendUrl"
+
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[ApplicationConfig].toInstance(mockApplicationConfig)
     ).build()
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockApplicationConfig)
+    when(mockApplicationConfig.pertaxFrontendUrl).thenReturn(pertaxFrontendUrl)
+  }
+
+  val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
   val breadCrumb = inject[NispBreadcrumb]
-  val messages: Messages = inject[Messages]
 
   "Breadcrumb utils" should {
     "return a item text as Account Home and State Pension" in {
@@ -51,19 +62,19 @@ class BreadcrumbSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar
 
     "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gaps" in {
       val bc = breadCrumb.buildBreadCrumb(fakeRequestNI, messages)
-      val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), lastItem: Some(BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord))"
+      val breadcrumbItem = s"Breadcrumb: BreadcrumbItem(Account home,$pertaxFrontendUrl), BreadcrumbItem(State Pension,/check-your-state-pension/account), lastItem: Some(BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord))"
       bc.toString() shouldBe breadcrumbItem
     }
 
     "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/voluntarycontribs" in {
       val bc = breadCrumb.buildBreadCrumb(fakeRequestVolContribution, messages)
-      val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Voluntary contributions,/check-your-state-pension/account/nirecord/voluntarycontribs))"
+      val breadcrumbItem = s"Breadcrumb: BreadcrumbItem(Account home,$pertaxFrontendUrl), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Voluntary contributions,/check-your-state-pension/account/nirecord/voluntarycontribs))"
       bc.toString() shouldBe breadcrumbItem
     }
 
     "return a item text as Account Home, State Pension and NI Record when URL is /account/nirecord/gapsandhowtocheck" in {
       val bc = breadCrumb.buildBreadCrumb(fakeRequestHowToImproveGaps, messages)
-      val breadcrumbItem = "Breadcrumb: BreadcrumbItem(Account home,http://localhost:9232/account), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Gaps in your record and how to check them,/check-your-state-pension/account/nirecord/gapsandhowtocheck))"
+      val breadcrumbItem = s"Breadcrumb: BreadcrumbItem(Account home,$pertaxFrontendUrl), BreadcrumbItem(State Pension,/check-your-state-pension/account), BreadcrumbItem(NI record,/check-your-state-pension/account/nirecord), lastItem: Some(BreadcrumbItem(Gaps in your record and how to check them,/check-your-state-pension/account/nirecord/gapsandhowtocheck))"
       bc.toString() shouldBe breadcrumbItem
     }
   }
