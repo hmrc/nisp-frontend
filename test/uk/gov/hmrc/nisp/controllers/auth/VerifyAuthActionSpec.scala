@@ -26,11 +26,10 @@ import play.api.Application
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.BodyParsers.Default
 import play.api.mvc.Result
 import play.api.mvc.Results._
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers.redirectLocation
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
@@ -39,14 +38,11 @@ import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
-import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.test.UnitSpec
 
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -83,8 +79,6 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPe
   object Stubs {
     def successBlock(request: AuthenticatedRequest[_]): Future[Result] = Future.successful(Ok)
   }
-  val verifyUrl = "http://localhost:9949/auth-login-stub/verify-sign-in"
-  val upliftUrlTail = "/uplift?origin=NISP&completionURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failureURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised&confidenceLevel=200"
 
   implicit val timeout: Timeout = 5 seconds
 
