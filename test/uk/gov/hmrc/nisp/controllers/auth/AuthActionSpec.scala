@@ -19,7 +19,8 @@ package uk.gov.hmrc.nisp.controllers.auth
 import akka.util.Timeout
 import org.joda.time.{DateTime, LocalDate}
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.{spy, verify, when}
+import org.mockito.Mockito.{reset, spy, verify, when}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -48,7 +49,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class AuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting {
+class AuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   class BrokenAuthConnector(exception: Throwable) extends AuthConnector {
     override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
@@ -74,6 +75,11 @@ class AuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
       bind[CitizenDetailsService].toInstance(mockCitizenDetailsService)
     ).build()
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockAuthConnector, mockApplicationConfig, mockCitizenDetailsService)
+  }
 
   def makeRetrievalResults(ninoOption: Option[String] = Some(nino),
                                    enrolments: Enrolments = Enrolments(Set.empty),

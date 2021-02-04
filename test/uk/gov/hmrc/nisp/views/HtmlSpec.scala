@@ -33,7 +33,7 @@ import scala.concurrent.duration._
 
 trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting {
 
-  //implicit val messages: Messages
+  //TODO remove LanguageToggle
   implicit val request = FakeRequest()
   implicit val lang = LanguageToggle.getLanguageCode()
   implicit val lanCookie = LanguageToggle.getLanguageCookie()

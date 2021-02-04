@@ -19,7 +19,8 @@ package uk.gov.hmrc.nisp.controllers.auth
 import akka.util.Timeout
 import org.joda.time.{DateTime, LocalDate}
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.{spy, verify, when}
+import org.mockito.Mockito.{spy, verify, when, reset}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -47,7 +48,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
-class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting {
+class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
   class BrokenAuthConnector(exception: Throwable) extends AuthConnector {
     override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
       Future.failed(exception)
@@ -73,6 +74,11 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPe
       bind[CitizenDetailsService].toInstance(mockCitizenDetailsService)
     ).build()
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockAuthConnector, mockApplicationConfig, mockCitizenDetailsService)
+  }
+
   def makeRetrievalResults(ninoOption: Option[String] = Some(nino), enrolments: Enrolments = Enrolments(Set.empty), trustedHelper: Option[TrustedHelper] = None): Future[AuthRetrievalType] =
     Future.successful(ninoOption ~ ConfidenceLevel.L500 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper)
 
@@ -82,7 +88,7 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPe
 
   implicit val timeout: Timeout = 5 seconds
 
-  val authAction = inject[VerifyAuthActionImpl]
+  lazy val authAction = inject[VerifyAuthActionImpl]
 
   "GET /signin/verify" should {
 
@@ -169,7 +175,6 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPe
 
       "no session" when {
         "verifySigninContinue is true" in {
-
           when(mockAuthConnector.authorise(any(), any())(any(), any()))
             .thenReturn(Future.failed(SessionRecordNotFound()))
 
@@ -197,18 +202,18 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPe
       }
 
       "insufficient confidence level" in {
-
         when(mockAuthConnector.authorise(any(), any())(any(), any()))
           .thenReturn(Future.failed(InsufficientConfidenceLevel()))
-        val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
 
         when(mockApplicationConfig.verifySignIn).thenReturn(verifyUrl)
         when(mockApplicationConfig.postSignInRedirectUrl).thenReturn(redirectUrl)
         when(mockApplicationConfig.verifySignInContinue).thenReturn(false)
 
+        val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result).get should startWith(verifyUrl)
       }
+
       "auth provider is not Verify" in {
         when(mockAuthConnector.authorise(any(), any())(any(), any()))
         .thenReturn(Future.failed(UnsupportedAuthProvider()))
@@ -244,8 +249,6 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPe
       }
 
       "technical difficulties" in {
-        val mockCitizenDetailsService = mock[CitizenDetailsService]
-
         when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
           .thenReturn(makeRetrievalResults())
 
