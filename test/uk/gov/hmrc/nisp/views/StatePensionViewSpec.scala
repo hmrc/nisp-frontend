@@ -93,7 +93,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    // TODO reset mocks
     reset(mockStatePensionService, mockNationalInsuranceService, mockCustomAuditConnector, mockAppConfig, mockPertaxHelper)
     when(mockPertaxHelper.isFromPertax(ArgumentMatchers.any())).thenReturn(Future.successful(false))
   }
