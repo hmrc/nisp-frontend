@@ -22,7 +22,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-//TODO is this class needed now?
 abstract class NispFrontendController(mcc: MessagesControllerComponents) extends FrontendController(mcc) {
   val logger: Logger = Logger(this.getClass)
 

@@ -17,8 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.Application
-import play.api.i18n.{I18nSupport, Messages}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.views.html.termsAndConditions
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
@@ -30,7 +29,6 @@ class TermsConditionsController @Inject()(mcc: MessagesControllerComponents)
                                           val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
   extends NispFrontendController(mcc) with I18nSupport {
 
-  //TODO is it ok to use a standard Action here?
   def show: Action[AnyContent] = Action{
     implicit request =>
       val showBackLink = request.queryString.get("showBackLink").fold(false)(_.head.toBoolean)

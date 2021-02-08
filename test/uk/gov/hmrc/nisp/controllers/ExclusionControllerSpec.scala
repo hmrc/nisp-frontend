@@ -43,7 +43,6 @@ import uk.gov.hmrc.time.DateTimeUtils._
 
 import scala.concurrent.Future
 
-//TODO some tests have repeating data
 class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting with BeforeAndAfterEach {
 
   val fakeRequest = FakeRequest()
@@ -129,7 +128,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         ))
       }
 
-      //TODO get rid of nino
       def generateNIRequest: Future[Result] = {
         testExclusionController.showNI()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",

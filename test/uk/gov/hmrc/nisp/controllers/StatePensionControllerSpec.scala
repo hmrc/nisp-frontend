@@ -41,25 +41,9 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils.now
-
 import scala.concurrent.Future
 
 class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
-
-  val mockUsername = "mockuser"
-  val mockUserId = "/auth/oid/" + mockUsername
-  val mockUserIdExcluded = "/auth/oid/mockexcludedall"
-  val mockUserIdContractedOut = "/auth/oid/mockcontractedout"
-  val mockUserIdBlank = "/auth/oid/mockblank"
-  val mockUserIdMQP = "/auth/oid/mockmqp"
-  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
-  val mockUserIdWeak = "/auth/oid/mockweak"
-  val mockUserIdAbroad = "/auth/oid/mockabroad"
-  val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
-  val mockUserIdMwrre = "/auth/oid/mockexcludedmwrre"
-  val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
-  val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
-  val mockUserIdBackendNotFound = "/auth/oid/mockbackendnotfound"
 
   val fakeRequest = FakeRequest()
 
@@ -78,8 +62,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     reset(mockAuditConnector, mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper)
   }
 
-  //TODO remove userId
-  private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
+  def authenticatedFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString
   )
@@ -187,8 +170,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
       //TODO fix
       "return 500 when backend 404" ignore {
-        val result = statePensionController
-          .show()(authenticatedFakeRequest(mockUserIdBackendNotFound))
+        val result = statePensionController.show()(authenticatedFakeRequest)
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
@@ -203,8 +185,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionResponse))
         )
 
-        val result = statePensionController
-          .show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        val result = statePensionController.show()(authenticatedFakeRequest)
         contentAsString(result) should not include ("£80.38")
       }
 
@@ -247,8 +228,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionCopeResponse))
         )
 
-        val result = statePensionController
-          .show()(authenticatedFakeRequest(mockUserIdContractedOut))
+        val result = statePensionController.show()(authenticatedFakeRequest)
         contentAsString(result) should include("You’ve been in a contracted-out pension scheme")
       }
 
@@ -259,8 +239,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionCopeResponse))
         )
 
-        val result = statePensionController
-          .showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
+        val result = statePensionController.showCope()(authenticatedFakeRequest)
         contentAsString(result) should include("You were contracted out")
       }
 
@@ -277,8 +256,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
         val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
 
-        val result = statePensionController
-          .show()(authenticatedFakeRequest(mockUserIdAbroad))
+        val result = statePensionController.show()(authenticatedFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
       }
 
@@ -293,8 +271,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
         )
 
-        val result = statePensionController
-          .show()(authenticatedFakeRequest(mockUserIdMwrre))
+        val result = statePensionController.show()(authenticatedFakeRequest)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
@@ -312,8 +289,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
         val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
 
-        val result = statePensionController
-          .show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        val result = statePensionController.show()(authenticatedFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "£80.38"
       }
@@ -331,8 +307,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
         val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
 
-        val result = statePensionController
-          .show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
+        val result = statePensionController.show()(authenticatedFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "If you have lived or worked overseas"
       }
@@ -344,8 +319,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionVariation2))
         )
 
-        val result = statePensionController
-          .showCope()(authenticatedFakeRequest(mockUserIdMQP))
+        val result = statePensionController.showCope()(authenticatedFakeRequest)
         redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
       }
 
@@ -366,8 +340,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionVariation2))
         )
 
-        val result = statePensionController
-          .show()(authenticatedFakeRequest(mockUserIdMQP))
+        val result = statePensionController.show()(authenticatedFakeRequest)
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
     }
@@ -385,8 +358,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             Future.successful(Right(statePensionResponseVariation3))
           )
 
-          val result = statePensionController
-            .show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
+          val result = statePensionController.show()(authenticatedFakeRequest)
           contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
           contentAsString(result) should include("filling years can improve your forecast")
           contentAsString(result) should include("you only need to fill 7 years to get the most you can")
@@ -414,8 +386,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             Future.successful(Right(statePensionResponseVariation3))
           )
 
-          val result = statePensionController
-            .show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
+          val result = statePensionController.show()(authenticatedFakeRequest)
           contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
           contentAsString(result) should include("The most you can get by filling this year in your record is")
         }
@@ -434,7 +405,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             Future.successful(Right(statePensionResponseVariation3))
           )
 
-          val result = statePensionController.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
+          val result = statePensionController.show()(authenticatedFakeRequest)
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")
         }

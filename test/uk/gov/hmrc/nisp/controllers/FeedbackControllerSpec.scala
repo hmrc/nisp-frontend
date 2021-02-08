@@ -56,53 +56,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
     reset(mockApplicationConfig, mockHttp)
   }
 
- //TODO does this need to be lazy
-  lazy val testFeedbackController = inject[FeedbackController]
-
-  //TODO remove all this once th test is passing
-//    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-//    override implicit val formPartialRetriever: FormPartialRetriever = MockFormPartialRetriever
-//
-//    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-//
-//    override def httpPost: HttpPost = mockHttp
-//
-//    override def localSubmitUrl(implicit request: Request[AnyContent]): String = ""
-//
-//    override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
-
-
-//    override val applicationConfig: ApplicationConfig = new ApplicationConfig(app.configuration) {
-//      override val ggSignInUrl: String = ""
-//      override val verifySignIn: String = ""
-//      override val verifySignInContinue: Boolean = false
-//      override val assetsPrefix: String = ""
-//      override val reportAProblemNonJSUrl: String = ""
-//      override val ssoUrl: Option[String] = None
-//      override val identityVerification: Boolean = false
-//      override val betaFeedbackUnauthenticatedUrl: String = ""
-//      override val notAuthorisedRedirectUrl: String = ""
-//      override val contactFrontendPartialBaseUrl: String = ""
-//      override val govUkFinishedPageUrl: String = ""
-//      override val showGovUkDonePage: Boolean = false
-//      override val analyticsHost: String = ""
-//      override val betaFeedbackUrl: String = ""
-//      override val analyticsToken: Option[String] = None
-//      override val reportAProblemPartialUrl: String = ""
-//      override val contactFormServiceIdentifier: String = "NISP"
-//      override val postSignInRedirectUrl: String = ""
-//      override val ivUpliftUrl: String = ""
-//      override val pertaxFrontendUrl: String = ""
-//      override val breadcrumbPartialUrl: String = ""
-//      override val showFullNI: Boolean = false
-//      override val futureProofPersonalMax: Boolean = false
-//      override val isWelshEnabled = false
-//      override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
-//      override val feedbackFrontendUrl: String = "/foo"
-//      override val googleTagManagerId: String = ""
-//      override val isGtmEnabled: Boolean = false
-//      override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
-//    }
+  val testFeedbackController = inject[FeedbackController]
 
   "GET /feedback" should {
     "return feedback page" in {

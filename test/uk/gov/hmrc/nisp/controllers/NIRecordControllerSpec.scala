@@ -38,7 +38,7 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
+import uk.gov.hmrc.nisp.utils.DateProvider
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -48,14 +48,6 @@ import uk.gov.hmrc.time.DateTimeUtils._
 import scala.concurrent.Future
 
 class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
-  val mockUserId = "/auth/oid/mockuser"
-  val mockFullUserId = "/auth/oid/mockfulluser"
-  val mockBlankUserId = "/auth/oid/mockblank"
-  val mockUserIdExcluded = "/auth/oid/mockexcludedall"
-  val mockUserIdHRP = "/auth/oid/mockhomeresponsibilitiesprotection"
-  val mockUserWithGaps = "/auth/oid/mockfillgapsmultiple"
-  val mockNoQualifyingYearsUserId = "/auth/oid/mocknoqualifyingyears"
-  val mockBackendNotFoundUserId = "/auth/oid/mockbackendnotfound"
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService = mock[StatePensionService]
@@ -88,14 +80,11 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
     ).build()
 
   val fakeRequest = FakeRequest()
-  lazy val niRecordController = inject[NIRecordController]
+  val niRecordController = inject[NIRecordController]
 
-  // TODO userId and authProvider is now redundant
-  def authenticatedFakeRequest(userId: String) = FakeRequest().withSession(
+  def authenticatedFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-    SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-    "userId" -> userId,
-    "ap" -> Constants.VerifyProviderId
+    SessionKeys.lastRequestTimestamp -> now.getMillis.toString
   )
 
   "GET /account/nirecord/gaps (gaps)" should {
@@ -134,7 +123,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
 
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserId))
+      val result = niRecordController.showGaps(authenticatedFakeRequest)
       contentAsString(result) should include("View all years of contributions")
     }
 
@@ -166,7 +155,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         Future.successful(Right(expectedStatePensionResponse))
       )
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest(mockFullUserId))
+      val result = niRecordController.showGaps(authenticatedFakeRequest)
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord")
     }
 
@@ -181,7 +170,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         ))
       )
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest(mockBackendNotFoundUserId))
+      val result = niRecordController.showGaps(authenticatedFakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
@@ -239,8 +228,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
 
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
 
-      val result = niRecordController
-        .showFull(authenticatedFakeRequest(mockUserId))
+      val result = niRecordController.showFull(authenticatedFakeRequest)
       contentAsString(result) should include("View years only showing gaps in your contributions")
     }
 
@@ -268,8 +256,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         Future.successful(Right(expectedStatePension))
       )
 
-      val result = niRecordController
-        .showFull(authenticatedFakeRequest(mockFullUserId))
+      val result = niRecordController.showFull(authenticatedFakeRequest)
       contentAsString(result) should include("You do not have any gaps in your record.")
     }
 
@@ -309,7 +296,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       )
 
       val result = niRecordController
-        .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserId))
+        .showGapsAndHowToCheckThem(authenticatedFakeRequest)
       contentAsString(result) should include("Gaps in your record and how to check them")
     }
 
@@ -325,8 +312,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         Future.successful(Right(expectedNationalInsuranceRecord))
       )
 
-      val result = niRecordController
-        .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserIdHRP))
+      val result = niRecordController.showGapsAndHowToCheckThem(authenticatedFakeRequest)
       contentAsString(result) should include("Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010.")
     }
 
@@ -344,8 +330,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         Future.successful(Right(expectedNationalInsuranceRecord))
       )
 
-      val result = niRecordController
-        .showGapsAndHowToCheckThem(authenticatedFakeRequest(mockUserId))
+      val result = niRecordController.showGapsAndHowToCheckThem(authenticatedFakeRequest)
       contentAsString(result) should not include
         "Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010."
     }
@@ -353,8 +338,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
 
   "GET /account/nirecord/voluntarycontribs" should {
     "return how to check page for authenticated user" in {
-      val result = niRecordController
-        .showVoluntaryContributions(authenticatedFakeRequest(mockUserId))
+      val result = niRecordController.showVoluntaryContributions(authenticatedFakeRequest)
       contentAsString(result) should include("Voluntary contributions")
     }
   }
@@ -389,7 +373,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
-      val result = niRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
+      val result = niRecordController.showFull(authenticatedFakeRequest)
       contentAsString(result) should include("52 weeks")
     }
 
@@ -423,7 +407,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(false)
 
-      val result = niRecordController.showFull(authenticatedFakeRequest(mockFullUserId))
+      val result = niRecordController.showFull(authenticatedFakeRequest)
       contentAsString(result) shouldNot include("52 weeks")
     }
 
@@ -452,7 +436,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
-      val result = niRecordController.showFull(authenticatedFakeRequest(mockNoQualifyingYearsUserId))
+      val result = niRecordController.showFull(authenticatedFakeRequest)
       result.header.status shouldBe 200
     }
   }
@@ -489,7 +473,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2019, 4, 6))
       when(mockAppConfig.showFullNI).thenReturn(false)
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      val result = niRecordController.showGaps(authenticatedFakeRequest)
       contentAsString(result) should not include ("shortfall may increase")
     }
 
@@ -524,7 +508,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2019, 4, 4))
       when(mockAppConfig.showFullNI).thenReturn(false)
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      val result = niRecordController.showGaps(authenticatedFakeRequest)
 
       contentAsString(result) should include("shortfall may increase")
     }
@@ -561,7 +545,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       when(mockAppConfig.showFullNI).thenReturn(false)
 
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest(mockUserWithGaps))
+      val result = niRecordController.showGaps(authenticatedFakeRequest)
       contentAsString(result) should include("shortfall may increase")
     }
   }
