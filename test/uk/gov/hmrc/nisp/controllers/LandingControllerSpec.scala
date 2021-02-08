@@ -16,22 +16,24 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.util.UUID
+import java.util.{Locale, UUID}
 
+import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http._
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.{FakeRequest, Helpers, Injecting}
+import play.twirl.api.Html
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
+import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
@@ -39,7 +41,9 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
 
-class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAfterEach {
+import scala.concurrent.Future
+
+class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
 
   implicit val fakeRequest = FakeRequest("GET", "/")
   val fakeRequestWelsh = FakeRequest("GET", "/cymraeg")
@@ -51,6 +55,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   //TODO can the bindings be shared
+  //TODO may not need two
   val authBasedInjector = GuiceApplicationBuilder().
     overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
@@ -79,8 +84,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   val landingController = authBasedInjector.instanceOf[LandingController]
   val verifyLandingController = verifyAuthBasedInjector.instanceOf[LandingController]
 
-  implicit val messages = authBasedInjector.instanceOf[Messages]
-  implicit val application = authBasedInjector.instanceOf[Application]
+  implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   "GET /" should {
     "return 200" in {
@@ -107,33 +111,29 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
 
     "return IVLanding page" in {
       when(mockApplicationConfig.isWelshEnabled).thenReturn(false)
+      when(mockApplicationConfig.identityVerification).thenReturn(true)
+      val expectedView: Html = identity_verification_landing()
+
       val result = landingController.show(fakeRequest)
-      contentAsString(result) must include(contentAsString(landing()))
+      contentAsString(result) mustBe expectedView.toString()
     }
 
     "return non-IV landing page when switched on" in {
-
       when(mockApplicationConfig.isWelshEnabled).thenReturn(false)
       when(mockApplicationConfig.identityVerification).thenReturn(true)
+      val expectedView: Html = landing()
+
       val result = landingController.show(fakeRequest)
-      contentAsString(result) must include(contentAsString(identity_verification_landing()))
+      val x = contentAsString(result)
+      x mustBe expectedView.toString()
     }
   }
 
   "GET /signin/verify" must {
-    "redirect to verify" in {
-      //when(brokenAuthConnector.authorise(any(), any())(any(), any()))
-      //  .thenReturn(Future.failed(MissingBearerToken("Missing Bearer Token!")))
-      val result = verifyLandingController.verifySignIn(fakeRequest)
-      redirectLocation(result) mustBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
-    }
-
-    //TODO userId may now be redundant
     "redirect to account page when signed in" in {
-      val result = landingController.verifySignIn(FakeRequest().withSession(
+      val result = verifyLandingController.verifySignIn(FakeRequest().withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-        "userId" -> "/auth/oid/mockuser"
+        SessionKeys.lastRequestTimestamp -> now.getMillis.toString
       ))
       redirectLocation(result) mustBe Some("/check-your-state-pension/account")
     }
@@ -146,42 +146,90 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
     }
 
     "show generic not_authorised template for FailedMatching journey" in {
-      val result = landingController.showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
+      val journeyId = "failed-matching-journey-id"
+
+      when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+        Future.successful(IdentityVerificationSuccessResponse("FailedMatching"))
+      )
+
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for InsufficientEvidence journey" in {
-      val result = landingController.showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
+      val journeyId = "insufficient-evidence-journey-id"
+
+      when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+        Future.successful(IdentityVerificationSuccessResponse("InsufficientEvidence"))
+      )
+
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for Incomplete journey" in {
-      val result = landingController.showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
+      val journeyId = "incomplete-journey-id"
+
+      when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+        Future.successful(IdentityVerificationSuccessResponse("Incomplete"))
+      )
+
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for PreconditionFailed journey" in {
-      val result = landingController.showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
+      val journeyId = "precondition-failed-journey-id"
+
+      when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+        Future.successful(IdentityVerificationSuccessResponse("PreconditionFailed"))
+      )
+
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show generic not_authorised template for UserAborted journey" in {
-      val result = landingController.showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
+      val journeyId = "user-aborted-journey-id"
+
+      when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+        Future.successful(IdentityVerificationSuccessResponse("UserAborted"))
+      )
+
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
     "show technical_issue template for TechnicalIssue journey" in {
-      val result = landingController.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+      val journeyId = "technical-issue-journey-id"
+
+      when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+        Future.successful(IdentityVerificationSuccessResponse("TechnicalIssue"))
+      )
+
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("This online service is experiencing technical difficulties.")
     }
 
     "show locked_out template for LockedOut journey" in {
-      val result = landingController.showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
+      val journeyId = "locked-out-journey-id"
+
+      when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+        Future.successful(IdentityVerificationSuccessResponse("LockedOut"))
+      )
+
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("You have reached the maximum number of attempts to confirm your identity.")
     }
 
     "show timeout template for Timeout journey" in {
-      val result = landingController.showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
+      val journeyId = "timeout-journey-id"
+
+      when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+        Future.successful(IdentityVerificationSuccessResponse("Timeout"))
+      )
+
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("Your session has ended because you have not done anything for 15 minutes.")
     }
 
