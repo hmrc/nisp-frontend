@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.{Locale, UUID}
 
+import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -110,22 +111,19 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
     }
 
     "return IVLanding page" in {
-      when(mockApplicationConfig.isWelshEnabled).thenReturn(false)
       when(mockApplicationConfig.identityVerification).thenReturn(true)
-      val expectedView: Html = identity_verification_landing()
 
       val result = landingController.show(fakeRequest)
-      contentAsString(result) mustBe expectedView.toString()
+      val doc = Jsoup.parse( contentAsString(result))
+      doc.getElementById("landing-signin-heading").text mustBe messages("nisp.landing.signin.heading")
     }
 
     "return non-IV landing page when switched on" in {
-      when(mockApplicationConfig.isWelshEnabled).thenReturn(false)
-      when(mockApplicationConfig.identityVerification).thenReturn(true)
-      val expectedView: Html = landing()
+      when(mockApplicationConfig.identityVerification).thenReturn(false)
 
       val result = landingController.show(fakeRequest)
-      val x = contentAsString(result)
-      x mustBe expectedView.toString()
+      val doc = Jsoup.parse( contentAsString(result))
+      doc.getElementById("eligibility-heading").text mustBe messages("nisp.landing.eligibility.heading")
     }
   }
 
