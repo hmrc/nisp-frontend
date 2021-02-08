@@ -31,12 +31,12 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -57,17 +57,13 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
   val mockUserIdAbroad = "/auth/oid/mockabroad"
   val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
   val mockUserIdMwrre = "/auth/oid/mockexcludedmwrre"
-
   val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
   val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
   val mockUserIdBackendNotFound = "/auth/oid/mockbackendnotfound"
 
-  val ggSignInUrl = "http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
-  val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
-
   val fakeRequest = FakeRequest()
 
-  val mockCustomAuditConnector: CustomAuditConnector = mock[CustomAuditConnector]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
@@ -79,7 +75,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockCustomAuditConnector, mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper)
+    reset(mockAuditConnector, mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper)
   }
 
   //TODO remove userId
@@ -92,7 +88,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
   .overrides(
     bind[StatePensionService].toInstance(mockStatePensionService),
     bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-    bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+    bind[AuditConnector].toInstance(mockAuditConnector),
     bind[ApplicationConfig].toInstance(mockAppConfig),
     bind[PertaxHelper].toInstance(mockPertaxHelper),
     bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
@@ -106,7 +102,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     .overrides(
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
@@ -121,7 +117,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
   val standardNino = TestAccountBuilder.regularNino
   val foreignNino = TestAccountBuilder.abroadNino
 
-  //val statePensionController = inject[StatePensionController]
   val statePensionController = standardInjector.instanceOf[StatePensionController]
 
   val statePensionCopeResponse = StatePension(

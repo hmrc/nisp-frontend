@@ -2,7 +2,6 @@ import sbt._
 
 object AppDependencies {
 
-  //TODO tidy dependencies
   val compile = Seq(
     "uk.gov.hmrc" %% "play-partials" % "7.1.0-play-26",
     "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % "3.3.0",
@@ -30,7 +29,6 @@ object AppDependencies {
       "org.mockito" % "mockito-core" % "3.1.0"
   ).map(_ % "test")
 
-  
   val all: Seq[ModuleID] = compile ++ test
 }
 

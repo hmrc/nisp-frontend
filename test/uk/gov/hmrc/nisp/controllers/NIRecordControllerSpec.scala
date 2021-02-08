@@ -33,13 +33,13 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.{SessionKeys, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -56,10 +56,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
   val mockUserWithGaps = "/auth/oid/mockfillgapsmultiple"
   val mockNoQualifyingYearsUserId = "/auth/oid/mocknoqualifyingyears"
   val mockBackendNotFoundUserId = "/auth/oid/mockbackendnotfound"
-
-  val ggSignInUrl = s"http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
-
-  val mockCustomAuditConnector: CustomAuditConnector = mock[CustomAuditConnector]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
@@ -73,12 +70,12 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper,
-      mockCustomAuditConnector, mockDateProvider)
+      mockAuditConnector, mockDateProvider)
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[AuditConnector].toInstance(mockAuditConnector),
       bind[AuthAction].to[FakeAuthAction],
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[StatePensionService].toInstance(mockStatePensionService),

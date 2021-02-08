@@ -22,7 +22,6 @@ import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, NispAuthedUser}
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
@@ -32,6 +31,7 @@ import uk.gov.hmrc.nisp.utils.Calculate._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils
@@ -42,7 +42,7 @@ import scala.concurrent.ExecutionContext
 class StatePensionController @Inject()(authenticate: AuthAction,
                                        statePensionService: StatePensionService,
                                        nationalInsuranceService: NationalInsuranceService,
-                                       customAuditConnector: CustomAuditConnector,
+                                       auditConnector: AuditConnector,
                                        applicationConfig: ApplicationConfig,
                                        pertaxHelper: PertaxHelper,
                                        mcc: MessagesControllerComponents)
@@ -68,7 +68,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
   }
 
   private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser, authDetails: AuthDetails)(implicit hc: HeaderCarrier): Unit = {
-    customAuditConnector.sendEvent(AccountAccessEvent(
+    auditConnector.sendEvent(AccountAccessEvent(
       user.nino.nino,
       statePension.pensionDate,
       statePension.amounts.current.weeklyAmount,
@@ -97,7 +97,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
         ) yield {
           (statePensionResponse, nationalInsuranceResponse) match {
             case (Right(statePension), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
-              customAuditConnector.sendEvent(AccountExclusionEvent(
+              auditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
                 nationalInsuranceExclusion
@@ -160,7 +160,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
               }
 
             case (Left(statePensionExclusion), _) =>
-              customAuditConnector.sendEvent(AccountExclusionEvent(
+              auditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
                 statePensionExclusion.exclusion

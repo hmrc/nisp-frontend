@@ -55,9 +55,7 @@ class ExcludedAuthActionImpl @Inject()(val parser: BodyParsers.Default,
     }
   }
 
-  //TODO can this be a val again, it was somehow breaking tests
-  private lazy val ivUpliftURI: URI =
-  new URI(s"${applicationConfig.ivUpliftUrl}?origin=NISP&" +
+  def ivUpliftURI: URI = new URI(s"${applicationConfig.ivUpliftUrl}?origin=NISP&" +
     s"completionURL=${URLEncoder.encode(applicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
     s"failureURL=${URLEncoder.encode(applicationConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
     s"&confidenceLevel=200")

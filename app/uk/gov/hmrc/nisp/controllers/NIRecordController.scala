@@ -24,19 +24,20 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
+
 import scala.concurrent.ExecutionContext
 
-class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
+class NIRecordController @Inject()(auditConnector: AuditConnector,
                                    authenticate: AuthAction,
                                    nationalInsuranceService: NationalInsuranceService,
                                    statePensionService: StatePensionService,
@@ -64,7 +65,7 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
   }
 
   private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit hc: HeaderCarrier): Unit = {
-    customAuditConnector.sendEvent(NIRecordEvent(
+    auditConnector.sendEvent(NIRecordEvent(
       nino.nino,
       yearsToContribute,
       niRecord.qualifyingYears,
@@ -146,7 +147,7 @@ class NIRecordController @Inject()(customAuditConnector: CustomAuditConnector,
                 currentDate = dateProvider.currentDate))
             }
           case Left(exclusion) =>
-            customAuditConnector.sendEvent(AccountExclusionEvent(
+            auditConnector.sendEvent(AccountExclusionEvent(
               nino.nino,
               request.nispAuthedUser.name,
               exclusion

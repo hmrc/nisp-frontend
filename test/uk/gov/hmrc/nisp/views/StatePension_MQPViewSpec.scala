@@ -22,29 +22,25 @@ import org.apache.commons.lang3.StringEscapeUtils
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
-import org.scalatest._
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers.contentAsString
-import play.api.{Application, Configuration}
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.controllers.{NispFrontendController, StatePensionController}
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.nisp.views.formatting.Time
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils.now
@@ -81,7 +77,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
   )
 
-  val mockCustomAuditConnector: CustomAuditConnector = mock[CustomAuditConnector]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
@@ -92,7 +88,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
       bind[AuthAction].to[FakeAuthAction],
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
@@ -106,7 +102,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
     .overrides(
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-      bind[CustomAuditConnector].toInstance(mockCustomAuditConnector),
+      bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
@@ -120,7 +116,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockStatePensionService, mockNationalInsuranceService, mockCustomAuditConnector, mockAppConfig, mockPertaxHelper)
+    reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
     when(mockPertaxHelper.isFromPertax(ArgumentMatchers.any())).thenReturn(Future.successful(false))
   }
 

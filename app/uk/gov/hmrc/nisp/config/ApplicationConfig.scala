@@ -30,7 +30,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
   private val contactFrontendService = baseUrl("contact-frontend")
-  //TODO this appears twice in app-config-prod
   private val contactHost = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
 
   val appName: String = getConfString("appName", "APP NAME NOT SET")

@@ -66,7 +66,6 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
     "there is a regular user" should {
       when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
-      //TODO can when ready be used here
       val nationalInsuranceRecord = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
 
       "return a National Insurance Record with 28 qualifying years" in {
