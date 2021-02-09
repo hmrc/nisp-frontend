@@ -21,6 +21,6 @@ import javax.inject.Singleton
 
 @Singleton
 class DateProvider{
-  //TODO should this be a def
+  //TODO should this be a def needs investigating
   val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
 }

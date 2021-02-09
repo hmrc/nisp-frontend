@@ -31,13 +31,11 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers, Injecting}
-import play.twirl.api.Html
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
-import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils._
@@ -55,8 +53,6 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-  //TODO can the bindings be shared
-  //TODO may not need two
   val authBasedInjector = GuiceApplicationBuilder().
     overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),

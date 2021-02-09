@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.utils
 
 import uk.gov.hmrc.play.language.LanguageUtils
 
-//TODO inject once the views are injected
+//TODO remove once the views are injected
 object LanguageHelper {
   val langUtils = play.api.Play.current.injector.instanceOf[LanguageUtils]
 }

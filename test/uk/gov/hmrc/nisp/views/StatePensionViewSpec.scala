@@ -100,12 +100,13 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   lazy val statePensionController = standardInjector.instanceOf[StatePensionController]
   lazy val foreignStatePensionController = foreignAddressInjector.instanceOf[StatePensionController]
 
+  //TODO this is not an auth request
   def authenticatedFakeRequest(userId: String) = fakeRequest.withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString
   )
 
-  def nonForeignDoc() =
+  def nonForeignDoc =
     asDocument(contentAsString(statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
 
   def foreignDoc =
@@ -196,24 +197,24 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
           "render page with text  'You can get your State Pension on' " in {
             mockSetup
-            assertElemetsOwnMessage(nonForeignDoc(), "article.content__body>div:nth-child(4)>p", "nisp.main.basedOn")
+            assertElemetsOwnMessage(nonForeignDoc, "article.content__body>div:nth-child(4)>p", "nisp.main.basedOn")
           }
 
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc(), "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
           }
 
           "render page with text  'Your forecast is' " in {
             mockSetup
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(nonForeignDoc(), "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
+            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£148.71  a week" in {
             mockSetup
             val sWeek = "£148.71 " + Messages("nisp.main.week")
-            assertEqualsValue(nonForeignDoc(), "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
+            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
           }
 
           "render page with text  ' £590.10 a month, £7,081.15 a year '" in {

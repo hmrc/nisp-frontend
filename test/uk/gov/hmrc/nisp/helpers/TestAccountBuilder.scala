@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.helpers
 
 import play.api.http.Status
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.domain.{Generator, Nino}
 
 import scala.concurrent.Future
@@ -118,6 +118,11 @@ object TestAccountBuilder {
     //TODO close resource
     val string  = Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json").mkString
     Json.parse(string.replace("<NINO>", nino.nino)).as[CitizenDetailsResponse]
+  }
+
+  def jsonResponseByType[A](nino: Nino, api: String)(implicit fjs: Reads[A]): A = {
+    val string  = Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json").mkString
+    Json.parse(string.replace("<NINO>", nino.nino)).as[A]
   }
 
   private def fileContents(filename: String): Future[String] = Future { Source.fromFile(filename).mkString }

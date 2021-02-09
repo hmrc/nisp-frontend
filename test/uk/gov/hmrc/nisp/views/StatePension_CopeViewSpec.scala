@@ -67,7 +67,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
   val mockMetricsService: MetricsService = mock[MetricsService]
   val mockSessionCache: SessionCache = mock[SessionCache]
 
-  //TODO might be able to remove some these
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
@@ -86,9 +85,9 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
-      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
-      bind[TemplateRenderer].toInstance(FakeTemplateRenderer)
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[TemplateRenderer].toInstance(templateRenderer)
     ).build()
 
   val statePensionController = inject[StatePensionController]
