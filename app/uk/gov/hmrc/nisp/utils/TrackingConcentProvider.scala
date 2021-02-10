@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.helpers
+package utils
 
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
-import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.http.HttpGet
+import play.api.Play
+import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
 
-object MockNationalInsuranceConnector extends NationalInsuranceConnector {
-  override def http: HttpGet = MockNispHttp.mockHttp
-  override def sessionCache: SessionCache = MockSessionCache
-  override def serviceUrl: String = "national-insurance"
-  override val metricsService: MetricsService = MockMetricsService
+object TrackingConsentSnippetProvider {
+  lazy val get =
+    Play.current.injector.instanceOf[TrackingConsentSnippet]
 }

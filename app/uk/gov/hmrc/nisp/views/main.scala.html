@@ -26,7 +26,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.http.SessionKeys
 @import uk.gov.hmrc.nisp.utils.Constants
-
+@import utils.TrackingConsentSnippetProvider
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.views
 @import scala.util.Random
@@ -75,9 +75,7 @@
 }
 
 @inlineScript = {
-    @if(ApplicationConfig.isGtmEnabled) {
-        @views.html.google_tag_manager(ApplicationConfig.googleTagManagerId)
-    }
+  @TrackingConsentSnippetProvider.get(None)
 }
 
 @scriptElement = @{
