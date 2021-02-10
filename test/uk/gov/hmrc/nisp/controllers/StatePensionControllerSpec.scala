@@ -62,12 +62,12 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     reset(mockAuditConnector, mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper)
   }
 
-  def authenticatedFakeRequest = FakeRequest().withSession(
+  def generateFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString
   )
 
-  val standardInjector = GuiceApplicationBuilder()
+  val injector = GuiceApplicationBuilder()
   .overrides(
     bind[StatePensionService].toInstance(mockStatePensionService),
     bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
@@ -81,7 +81,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     .build()
     .injector
 
-  val foreignAddressInjector = GuiceApplicationBuilder()
+  val abroadUserInjector = GuiceApplicationBuilder()
     .overrides(
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
@@ -100,7 +100,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
   val standardNino = TestAccountBuilder.regularNino
   val foreignNino = TestAccountBuilder.abroadNino
 
-  val statePensionController = standardInjector.instanceOf[StatePensionController]
+  val statePensionController = injector.instanceOf[StatePensionController]
 
   val statePensionCopeResponse = StatePension(
     new LocalDate(2014, 4, 5),
@@ -170,7 +170,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
       //TODO fix
       "return 500 when backend 404" ignore {
-        val result = statePensionController.show()(authenticatedFakeRequest)
+        val result = statePensionController.show()(generateFakeRequest)
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
@@ -185,7 +185,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionResponse))
         )
 
-        val result = statePensionController.show()(authenticatedFakeRequest)
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should not include ("£80.38")
       }
 
@@ -228,7 +228,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionCopeResponse))
         )
 
-        val result = statePensionController.show()(authenticatedFakeRequest)
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("You’ve been in a contracted-out pension scheme")
       }
 
@@ -239,7 +239,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionCopeResponse))
         )
 
-        val result = statePensionController.showCope()(authenticatedFakeRequest)
+        val result = statePensionController.showCope()(generateFakeRequest)
         contentAsString(result) should include("You were contracted out")
       }
 
@@ -254,9 +254,9 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionResponse))
         )
 
-        val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
+        val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
-        val result = statePensionController.show()(authenticatedFakeRequest)
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
       }
 
@@ -271,7 +271,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
         )
 
-        val result = statePensionController.show()(authenticatedFakeRequest)
+        val result = statePensionController.show()(generateFakeRequest)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
@@ -287,9 +287,9 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionResponse))
         )
 
-        val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
+        val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
-        val result = statePensionController.show()(authenticatedFakeRequest)
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "£80.38"
       }
@@ -305,9 +305,9 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionResponse))
         )
 
-        val statePensionController = foreignAddressInjector.instanceOf[StatePensionController]
+        val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
-        val result = statePensionController.show()(authenticatedFakeRequest)
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "If you have lived or worked overseas"
       }
@@ -319,7 +319,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionVariation2))
         )
 
-        val result = statePensionController.showCope()(authenticatedFakeRequest)
+        val result = statePensionController.showCope()(generateFakeRequest)
         redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
       }
 
@@ -340,7 +340,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
           Future.successful(Right(statePensionVariation2))
         )
 
-        val result = statePensionController.show()(authenticatedFakeRequest)
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
     }
@@ -358,7 +358,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             Future.successful(Right(statePensionResponseVariation3))
           )
 
-          val result = statePensionController.show()(authenticatedFakeRequest)
+          val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
           contentAsString(result) should include("filling years can improve your forecast")
           contentAsString(result) should include("you only need to fill 7 years to get the most you can")
@@ -386,7 +386,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             Future.successful(Right(statePensionResponseVariation3))
           )
 
-          val result = statePensionController.show()(authenticatedFakeRequest)
+          val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
           contentAsString(result) should include("The most you can get by filling this year in your record is")
         }
@@ -405,7 +405,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
             Future.successful(Right(statePensionResponseVariation3))
           )
 
-          val result = statePensionController.show()(authenticatedFakeRequest)
+          val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")
         }

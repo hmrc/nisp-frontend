@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import scala.concurrent.Future
 
 class RedirectController @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc)  {
-  //TODO can we lose Action.async
+
   def redirectToHome(path: String): Action[AnyContent] = Action.async { implicit request =>
     val newPath = path match {
       case "" => ""

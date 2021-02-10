@@ -82,8 +82,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
   val fakeRequest = FakeRequest()
   val niRecordController = inject[NIRecordController]
 
-  //TODO is this needed
-  def authenticatedFakeRequest = FakeRequest().withSession(
+  def generateFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString
   )
@@ -124,7 +123,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
 
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest)
+      val result = niRecordController.showGaps(generateFakeRequest)
       contentAsString(result) should include("View all years of contributions")
     }
 
@@ -156,7 +155,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         Future.successful(Right(expectedStatePensionResponse))
       )
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest)
+      val result = niRecordController.showGaps(generateFakeRequest)
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord")
     }
 
@@ -171,7 +170,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
         ))
       )
 
-      val result = niRecordController.showGaps(authenticatedFakeRequest)
+      val result = niRecordController.showGaps(generateFakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 

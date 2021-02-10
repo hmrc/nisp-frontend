@@ -98,7 +98,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
     .build()
     .injector
 
-  val foreignAddressInjector = GuiceApplicationBuilder()
+  val abroadUserInjector = GuiceApplicationBuilder()
     .overrides(
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
@@ -120,20 +120,20 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
     when(mockPertaxHelper.isFromPertax(ArgumentMatchers.any())).thenReturn(Future.successful(false))
   }
 
-  lazy val statePensionController = standardInjector.instanceOf[StatePensionController]
-  lazy val foreignStatePensionController = foreignAddressInjector.instanceOf[StatePensionController]
-
-  def nonForeignDoc() =
-    asDocument(contentAsString(statePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
-
-  def foreignDoc =
-    asDocument(contentAsString(foreignStatePensionController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+  lazy val controller = standardInjector.instanceOf[StatePensionController]
+  lazy val abroadUserController = abroadUserInjector.instanceOf[StatePensionController]
 
   "The State Pension page" when {
 
     "the user is a MQP" when {
 
       "State Pension page with forecast only" should {
+
+        lazy val nonForeignDoc =
+          asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+        lazy val foreignDoc =
+          asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
 
         def mockSetup = {
           when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
@@ -350,6 +350,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
             )
             )))
         }
+
+        lazy val nonForeignDoc =
+          asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+        lazy val foreignDoc =
+          asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
         
         "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
           "State Pension from the country you are living or working in.'" in {
@@ -433,6 +439,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           "render with correct page title" in {
             mockSetup
@@ -618,6 +630,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -701,6 +719,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           "render with correct page title" in {
             mockSetup
@@ -870,6 +894,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -951,6 +981,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           "render with correct page title" in {
             mockSetup
@@ -1123,6 +1159,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -1203,6 +1245,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
 
           "render with correct page title" in {
             mockSetup
@@ -1374,6 +1422,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -1458,6 +1512,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           "render with correct page title" in {
             mockSetup
@@ -1608,6 +1668,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )))
 
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
@@ -1673,6 +1739,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
           
           "render with correct page title" in {
             mockSetup
@@ -1815,6 +1887,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               )
               )))
           }
+
+          lazy val nonForeignDoc =
+            asDocument(contentAsString(controller.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
+
+          lazy val foreignDoc =
+            asDocument(contentAsString(abroadUserController.show()(authenticatedFakeRequest(mockUserIdForecastOnly).withCookies(lanCookie))))
 
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup

@@ -38,7 +38,6 @@ import uk.gov.hmrc.time.DateTimeUtils
 
 import scala.concurrent.ExecutionContext
 
-//TODO place holder here to check the dependencies of all classes as some are not being used now
 class StatePensionController @Inject()(authenticate: AuthAction,
                                        statePensionService: StatePensionService,
                                        nationalInsuranceService: NationalInsuranceService,

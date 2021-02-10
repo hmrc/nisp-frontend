@@ -116,7 +116,6 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   val nIRecordRegular = TestAccountBuilder.jsonResponseByType[NationalInsuranceRecord](TestAccountBuilder.regularNino,
     "national-insurance-record")
 
-  //TODO move
   def mockSetup = {
     when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
     when(mockAppConfig.showFullNI).thenReturn(true)
