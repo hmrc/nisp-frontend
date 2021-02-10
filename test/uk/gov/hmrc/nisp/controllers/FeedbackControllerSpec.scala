@@ -79,8 +79,6 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       override val isWelshEnabled = false
       override val frontendTemplatePath: String = "microservice.services.frontend-template-provider.path"
       override val feedbackFrontendUrl: String = "/foo"
-      override val googleTagManagerId: String = ""
-      override val isGtmEnabled: Boolean = false
       override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
     }
   }
