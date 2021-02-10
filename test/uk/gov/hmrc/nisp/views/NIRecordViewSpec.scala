@@ -43,8 +43,8 @@ import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Cookie
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers.contentAsString
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.http.SessionKeys
@@ -152,7 +152,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   "Render Ni Record UR banner" should {
 
-    def doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
     "render UR banner on page before no thanks is clicked" in {
       val urBanner =  doc.getElementsByClass("full-width-banner__title")
@@ -175,7 +175,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   "Render Ni Record to view all the years" should {
     /*Check side border :summary */
 
-    def doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
     "render page with qualifying years text '4 years of full contributions'" in {
       assertContainsDynamicMessage(doc, "ul.list-bullet li:nth-child(1)", "nisp.nirecord.summary.fullContributions", "28")
@@ -287,7 +287,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   "Render Ni Record view Gaps Only" should {
 
-    def doc = asDocument(contentAsString(controller.showGaps(generateFakeRequest)))
+    lazy val doc = asDocument(contentAsString(controller.showGaps(generateFakeRequest)))
 
     /*Check side border :summary */
 
@@ -560,7 +560,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   "Render Ni Record without gap and has pre75years" should {
 
-    def doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
     def mockSetup = {
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
@@ -638,7 +638,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
 
   "Render Ni Record without gap and has gaps pre75years" should {
-    def doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
     def mockSetup = {
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
@@ -727,7 +727,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
 
   "Render Ni Record without gap and has gaps pre75years with Years to contribute " should {
-    def doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
     def mockSetup = {
       when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
@@ -846,7 +846,28 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
 
   "Render Ni Record with Single weeks in self ,contribution and paid -and a abroad User" should {
-    def doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+
+    val abroadUserInjector = GuiceApplicationBuilder()
+      .overrides(
+        bind[StatePensionService].toInstance(mockStatePensionService),
+        bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+        bind[AuditConnector].toInstance(mockAuditConnector),
+        bind[ApplicationConfig].toInstance(mockAppConfig),
+        bind[PertaxHelper].toInstance(mockPertaxHelper),
+        bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+        bind[FormPartialRetriever].toInstance(formPartialRetriever),
+        bind[TemplateRenderer].toInstance(templateRenderer),
+        bind[AuthAction].to[FakeAuthActionWithNino],
+        bind[NinoContainer].toInstance(AbroadNinoContainer),
+        bind[DateProvider].toInstance(mockDateProvider)
+      )
+      .build()
+      .injector
+
+    val abroadUserController = abroadUserInjector.instanceOf[NIRecordController]
+
+    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+    lazy val abroadUserDoc = asDocument(contentAsString(abroadUserController.showFull(generateFakeRequest)))
 
     def mockSetup = {
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
@@ -881,11 +902,11 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     "render with correct page title" in {
       mockSetup
-      assertElementContainsText(doc, "head>title" ,messages("nisp.nirecord.heading.uk") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+      assertElementContainsText(abroadUserDoc, "head>title" ,messages("nisp.nirecord.heading.uk") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
     "render page with heading your UK National Insurance Record " in {
       mockSetup
-      assertEqualsMessage(doc, "article.content__body>h1", "nisp.nirecord.heading.uk")
+      assertEqualsMessage(abroadUserDoc, "article.content__body>h1", "nisp.nirecord.heading.uk")
     }
 
     /*Check side border :summary */
