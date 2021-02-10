@@ -34,7 +34,7 @@ object FakeTemplateRenderer extends TemplateRenderer {
         + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"
         + displayUrBanner(extraArgs) +
         "<mainContentHeader>" +extraArgs("mainContentHeader")+ "</mainContentHeader>"
-        + content)
+        + "<mainContent>" + content + "</mainContent>")
   }
 
     def displayUrBanner(extraArgs: Map[String, Any]): String ={

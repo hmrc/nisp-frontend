@@ -168,12 +168,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
     "GET /statepension" should {
 
-      //TODO fix
-      "return 500 when backend 404" ignore {
-        val result = statePensionController.show()(generateFakeRequest)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-
       "return the forecast only page for a user with a forecast lower than current amount" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 

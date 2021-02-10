@@ -90,7 +90,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
         val statePensionResponseF = statePensionService.getSummary(user.nino)
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
 
-        (for (
+        for (
           statePensionResponse <- statePensionResponseF;
           nationalInsuranceResponse <- nationalInsuranceResponseF
         ) yield {
@@ -167,7 +167,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
               Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
             case _ => throw new RuntimeException("StatePensionController: SP and NIR are unmatchable. This is probably a logic error.")
           }
-        }) //TODO verify Bootstrap catches errors
+        }
       }
   }
 

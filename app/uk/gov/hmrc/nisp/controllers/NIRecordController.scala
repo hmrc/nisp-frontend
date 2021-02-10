@@ -109,7 +109,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
 
       val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
       val statePensionResponseF = statePensionService.getSummary(nino)
-      (for (
+      for (
         nationalInsuranceRecordResponse <- nationalInsuranceResponseF;
         statePensionResponse <- statePensionResponseF
       ) yield {
@@ -154,11 +154,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
             ))
             Redirect(routes.ExclusionController.showNI())
         }
-      })
-        //TODO implement replacement
-//        .recover {
-//      case ex: Exception => onServerError(ex)
-//    }
+      }
   }
 
   def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async {

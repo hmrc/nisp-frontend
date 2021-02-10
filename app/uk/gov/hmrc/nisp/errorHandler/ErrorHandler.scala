@@ -17,24 +17,25 @@
 package uk.gov.hmrc.nisp.errorHandler
 
 import com.google.inject.Inject
-import play.api.Application
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.views.html.{global_error, page_not_found_template, service_error_500}
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-//TODO test
 class ErrorHandler @Inject()(applicationConfig: ApplicationConfig)
                             (implicit templateRenderer: TemplateRenderer,
                              formPartialRetriever: FormPartialRetriever,
                              val partialRetriever: CachedStaticHtmlPartialRetriever,
                              val messagesApi: MessagesApi) extends FrontendErrorHandler {
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-  uk.gov.hmrc.nisp.views.html.global_error(pageTitle, heading, message, applicationConfig)
 
-  //TODO should bootstrap be dealing with this, test this
-  override def internalServerErrorTemplate(implicit request: Request[_]): Html = uk.gov.hmrc.nisp.views.html.service_error_500()
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
+  global_error(pageTitle, heading, message, applicationConfig)
+
+  override def internalServerErrorTemplate(implicit request: Request[_]): Html = service_error_500()
+
+  override def notFoundTemplate(implicit request: Request[_]): Html = page_not_found_template()
 }

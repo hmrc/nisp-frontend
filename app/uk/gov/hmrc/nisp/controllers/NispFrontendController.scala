@@ -16,15 +16,12 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 abstract class NispFrontendController(mcc: MessagesControllerComponents) extends FrontendController(mcc) {
-  val logger: Logger = Logger(this.getClass)
-
   implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: FormPartialRetriever
   implicit val templateRenderer: TemplateRenderer

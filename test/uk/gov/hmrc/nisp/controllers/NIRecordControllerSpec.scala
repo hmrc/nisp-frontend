@@ -159,21 +159,6 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord")
     }
 
-    //TODO correctly implement the error handler or remove this test
-    "return 500 when backend 404" ignore {
-
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.failed(new Upstream4xxResponse(
-          message = """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
-          upstreamResponseCode = 404,
-          reportAs = 500
-        ))
-      )
-
-      val result = niRecordController.showGaps(generateFakeRequest)
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-    }
-
     "redirect to exclusion for excluded user" in {
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(

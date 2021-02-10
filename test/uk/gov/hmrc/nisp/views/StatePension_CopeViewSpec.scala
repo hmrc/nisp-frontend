@@ -129,7 +129,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
 
     }
 
-    lazy val result = statePensionController.show()(AuthenticatedRequest(FakeRequest().withCookies(lanCookie), user, authDetails))
+    lazy val result = statePensionController.show()(AuthenticatedRequest(FakeRequest(), user, authDetails))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     "render with correct page title" in {

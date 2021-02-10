@@ -156,10 +156,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           "render with correct page title" in {
             mockSetup
@@ -172,7 +172,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
           "render page with UR banner" in {
             mockSetup
-            val request = statePensionController.show()(generateFakeRequest.withCookies(lanCookie))
+            val request = statePensionController.show()(generateFakeRequest)
 
             val source = asDocument(contentAsString(request))
 
@@ -187,7 +187,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
           "render page without UR banner if ur banner hide cookie is set" in {
             mockSetup
-            val request = statePensionController.show()(generateFakeRequest.withCookies(lanCookie, new Cookie("cysp-nisp-urBannerHide", "9999")))
+            val request = statePensionController.show()(generateFakeRequest.withCookies(new Cookie("cysp-nisp-urBannerHide", "9999")))
 
             val source = asDocument(contentAsString(request))
 
@@ -427,10 +427,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -520,10 +520,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           "render with correct page title" in {
             mockSetup
@@ -750,10 +750,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -844,10 +844,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
           
           "render with correct page title" in {
             mockSetup
@@ -1051,10 +1051,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -1150,10 +1150,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           "render with correct page title" in {
             mockSetup
@@ -1340,10 +1340,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -1435,10 +1435,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           "render with correct page title" in {
             mockSetup
@@ -1624,10 +1624,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           //overseas message
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
@@ -1719,10 +1719,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         }
 
         lazy val doc =
-          asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+          asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
         lazy val abroadUserDoc =
-          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
         "render with correct page title" in {
           mockSetup
@@ -1888,10 +1888,10 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         }
 
         lazy val doc =
-          asDocument(contentAsString(statePensionController.show()(generateFakeRequest.withCookies(lanCookie))))
+          asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
         lazy val abroadUserDoc =
-          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest.withCookies(lanCookie))))
+          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
         //overseas message
         "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +

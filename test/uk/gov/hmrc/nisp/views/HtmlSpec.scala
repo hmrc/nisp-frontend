@@ -34,10 +34,7 @@ import scala.concurrent.duration._
 
 trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
-  //TODO remove LanguageToggle
   implicit val request = FakeRequest()
-  implicit val lang = LanguageToggle.getLanguageCode()
-  implicit val lanCookie = LanguageToggle.getLanguageCookie()
   implicit val defaultAwaitTimeout: Timeout = 5.seconds
   implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 

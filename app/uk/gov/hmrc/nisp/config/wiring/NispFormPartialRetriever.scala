@@ -24,6 +24,5 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 class NispFormPartialRetriever @Inject()(val httpGet: HttpClient,
                                          sessionCookieCrypto: SessionCookieCrypto) extends FormPartialRetriever {
-  //TODO 2.6 may make this redundant. Make sure it is tested if not
   override def crypto: String => String = cookie => sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
 }
