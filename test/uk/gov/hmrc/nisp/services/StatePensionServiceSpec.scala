@@ -23,35 +23,30 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
-import play.api.libs.json.{JsValue, Json, Reads}
+import play.api.libs.json.Reads
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
-import uk.gov.hmrc.nisp.helpers.TestAccountBuilder.mappedTestAccounts
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.io.Source
 
 class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures with BeforeAndAfterEach {
 
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
-
   val mockStatePensionConnector = mock[StatePensionConnector]
 
   val statePensionService = new StatePensionService(mockStatePensionConnector)(global){
     override def now: () => DateTime = () => new DateTime(new LocalDate(2016, 11, 1))
   }
 
-  def statePensionResponse[A](nino: Nino, ninoType: String)(implicit fjs: Reads[A]): A = {
-    val string  = Source.fromFile(s"test/resources/$ninoType/state-pension.json").mkString
-    Json.parse(string.replace("<NINO>", nino.nino)).as[A]
+  def statePensionResponse[A](nino: Nino)(implicit fjs: Reads[A]): A = {
+    TestAccountBuilder.jsonResponseByType(nino, "state-pension")
   }
 
   "yearsToContributeUntilPensionAge" should {
@@ -126,7 +121,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "return the connector response for a regular user" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.regularNino, "regular")))
+        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.regularNino)))
       )
 
       whenReady(statePensionService.getSummary(TestAccountBuilder.regularNino)) { statePension =>
@@ -146,7 +141,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "return the connector response for a RRE user" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.excludedMwrre))(mockAny())).thenReturn(
-        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.excludedMwrre, "excluded-mwrre")))
+        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.excludedMwrre)))
       )
 
       whenReady(statePensionService.getSummary(TestAccountBuilder.excludedMwrre)) { statePension =>
@@ -166,7 +161,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "return the connector response for a Abroad user" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.excludedAbroad))(mockAny())).thenReturn(
-        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.excludedAbroad, "excluded-abroad")))
+        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.excludedAbroad)))
       )
 
       whenReady(statePensionService.getSummary(TestAccountBuilder.excludedAbroad)) { statePension =>
@@ -186,7 +181,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "return the connector response with PostStatePensionAge exclusion for all the exclusions except MCI and Dead" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.excludedAllButDeadMCI))(mockAny())).thenReturn(
-        Future.successful(Left(statePensionResponse[StatePensionExclusion](TestAccountBuilder.excludedAllButDeadMCI, "excluded-all-but-dead-mci")))
+        Future.successful(Left(statePensionResponse[StatePensionExclusion](TestAccountBuilder.excludedAllButDeadMCI)))
       )
 
       whenReady(statePensionService.getSummary(TestAccountBuilder.excludedAllButDeadMCI)) { statePension =>
@@ -201,7 +196,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "return the connector response for a user with a true flag for State Pension Age Under Consideration" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.spaUnderConsiderationNino))(mockAny())).thenReturn(
-        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.spaUnderConsiderationNino, "spa-under-consideration")))
+        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.spaUnderConsiderationNino)))
       )
 
       whenReady(statePensionService.getSummary(TestAccountBuilder.spaUnderConsiderationNino)) { statePension =>
@@ -221,7 +216,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "return the connector response for a user with no flag for State Pension Age Under Consideration" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.spaUnderConsiderationNoFlagNino))(mockAny())).thenReturn(
-        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.spaUnderConsiderationNoFlagNino, "spa-under-consideration-no-flag")))
+        Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.spaUnderConsiderationNoFlagNino)))
       )
 
       whenReady(statePensionService.getSummary(TestAccountBuilder.spaUnderConsiderationNoFlagNino)) { statePension =>
@@ -241,7 +236,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "return the connector response for a user with exclusion with a true flag for State Pension Age Under Consideration" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino))(mockAny())).thenReturn(
-        Future.successful(Left(statePensionResponse[StatePensionExclusion](TestAccountBuilder.spaUnderConsiderationExclusionIoMNino, "spa-under-consideration-exclusion-iom")))
+        Future.successful(Left(statePensionResponse[StatePensionExclusion](TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)))
       )
 
       whenReady(statePensionService.getSummary(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { statePension =>
@@ -256,7 +251,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "return the connector response for a user with exclusion with no flag for State Pension Age Under Consideration" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino))(mockAny())).thenReturn(
-        Future.successful(Left(statePensionResponse[StatePensionExclusion](TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino, "spa-under-consideration-exclusion-no-flag")))
+        Future.successful(Left(statePensionResponse[StatePensionExclusion](TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)))
       )
 
       whenReady(statePensionService.getSummary(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { statePension =>

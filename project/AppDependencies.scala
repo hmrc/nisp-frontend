@@ -12,13 +12,12 @@ object AppDependencies {
     "uk.gov.hmrc" %% "http-caching-client" % "9.2.0-play-26",
     "uk.gov.hmrc" %% "play-language" % "4.7.0-play-26",
     "uk.gov.hmrc" %% "tax-year" % "0.6.0",
-    //TODO remove this
-    "uk.gov.hmrc" %% "csp-client" % "4.2.0-play-26",
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "1.5.0-play-26",
     "uk.gov.hmrc" %% "local-template-renderer"  % "2.10.0-play-26",
     "uk.gov.hmrc" %% "play-breadcrumb"  % "1.0.0",
     "uk.gov.hmrc" %% "auth-client"  %  "3.2.0-play-26",
-    "com.typesafe.play" %% "play-json-joda" % "2.6.10"
+    "com.typesafe.play" %% "play-json-joda" % "2.6.10",
+    "com.jsuereth" %% "scala-arm" % "2.0"
   )
 
   val test = Seq(
