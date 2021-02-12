@@ -419,17 +419,8 @@ nisp.tandcs.thanks = Thank you for visiting the site.
 # Error messages
 #******************
 
-nisp.validation.summary.heading = Error summary
 nisp.validation.summary.error.max = Maximum length is 1,200
 error.email = Enter a valid email address
-
-#***********************
-# Welsh language Support
-#***********************
-
-language.to = to
-language.day.singular = day
-language.day.plural = days
 
 #***********************
 # UR banner
