@@ -31,8 +31,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
                                    (implicit executor: ExecutionContext) extends CurrentTaxYear {
 
-  final val exclusionCodeDead = "EXCLUSION_DEAD"
-  final val exclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
+  val exclusionCodeDead = "EXCLUSION_DEAD"
+  val exclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
 
   override def now: () => DateTime = () => DateTime.now(ukTime)
 
