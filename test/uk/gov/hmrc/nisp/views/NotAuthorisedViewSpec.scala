@@ -49,26 +49,26 @@ class NotAuthorisedViewSpec extends HtmlSpec with MockitoSugar {
     }
 
     "assert correct paragraph text on page" in {
-      val title = source.getElementsByTag("p").get(1).toString
+      val paragraph = source.getElementsByTag("p").get(1).toString
       val messageKey = "nisp.iv.failure.general.youcan"
       val expected = messages(messageKey)
-      title must include(expected)
+      paragraph must include(expected)
     }
 
     "assert correct href for redirect link one on page" in {
-      val redirect = source.getElementsByTag("a").get(1).attr("href")
+      val redirect = source.getElementById("confirm-identity-link").attr("href")
       val expected = "/check-your-state-pension/account"
       redirect must include(expected)
     }
 
     "assert correct href for redirect link two on page" in {
-      val redirect = source.getElementsByTag("a").get(2).attr("href")
+      val redirect = source.getElementById("contact-HMRC-link").attr("href")
       val expected = "/contact-hmrc"
       redirect must include(expected)
     }
 
     "assert correct href for redirect link three on page" in {
-      val redirect = source.getElementsByTag("a").get(3).attr("href")
+      val redirect = source.getElementById("contact-pension-link").attr("href")
       val expected = "/future-pension-centre"
       redirect must include(expected)
     }
