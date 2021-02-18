@@ -17,53 +17,63 @@
 package uk.gov.hmrc.nisp.messages
 
 import java.io.{File, FileNotFoundException}
-import java.util.Properties
-
+import java.util.{Locale, Properties}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
+import play.api.test.Injecting
 import resource._
 import uk.gov.hmrc.play.test.UnitSpec
-
 import scala.collection.JavaConversions._
 import scala.io.{BufferedSource, Source}
 
-class MessagesSpec extends UnitSpec {
+class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 
-  val propertiesEnglish: Properties = new Properties()
-  val propertiesWelsh: Properties = new Properties()
+  val englishMessages: Set[String] = createMessageSet(new File(".", "conf/messages"))
+  val welshMessages: Set[String] = createMessageSet(new File(".", "conf/messages.cy"))
+  lazy val messagesApi: MessagesApi = inject[MessagesApi]
+  lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), messagesApi)
 
-  def loadProperties(file: File, properties: Properties) = {
+  def createMessageSet(file: File): Set[String] = {
     if (file.exists()) {
+      val properties = new Properties()
       val managedResource: ManagedResource[BufferedSource] = managed(Source.fromURI(file.toURI))
       managedResource.acquireAndGet(bufferedSource => properties.load(bufferedSource.bufferedReader()))
+      properties.stringPropertyNames().toSet
     }
     else {
       throw new FileNotFoundException("Messages file cannot be loaded")
     }
   }
 
-  //TODO fix message files and output key differences
-  "Messages" should {
+  def listMissingMessageKeys(header: String, missingKeys: Set[String]) =
+    missingKeys.toList.sorted.mkString(s"$header\n", "\n", "\n"*2)
 
-    loadProperties(new File(".", "conf/messages"), propertiesEnglish)
-    loadProperties(new File(".", "conf/messages.cy"), propertiesWelsh)
-
-    "assert equal messages key for English" ignore {
-      propertiesEnglish.stringPropertyNames().size() should be(propertiesWelsh.stringPropertyNames().size())
-      propertiesEnglish.stringPropertyNames().foreach(key => {
-        val englishContent = propertiesEnglish.getProperty(key, key)
-        val welshContent = propertiesWelsh.getProperty(key, key)
-        englishContent should not be key
-        welshContent should not be key
-      })
+  "Application" should {
+    "have the correct message configs" in {
+      messagesApi.messages.size shouldBe 4
+      messagesApi.messages.keys should contain theSameElementsAs Vector("en", "cy", "default", "default.play")
     }
+  }
 
-    "assert equal messages key for Welsh" ignore {
-      propertiesEnglish.stringPropertyNames().size() should be(propertiesWelsh.stringPropertyNames().size())
-      propertiesWelsh.stringPropertyNames().foreach(key => {
-        val englishContent = propertiesEnglish.getProperty(key, key)
-        val welshContent = propertiesWelsh.getProperty(key, key)
-        englishContent should not be key
-        welshContent should not be key
-      })
+  "All message files" should {
+    "have the same set of keys" in {
+      englishMessages.size shouldBe welshMessages.size
+    }
+  }
+
+  "English messages" should {
+    "have the same keys as the welsh messages" in {
+      withClue(listMissingMessageKeys("The following message keys are missing from English Set:", welshMessages.diff(englishMessages))) {
+        assert(englishMessages equals welshMessages)
+      }
+    }
+  }
+
+  "Welsh message" should {
+    "have the same keys as the english messages" in {
+      withClue(listMissingMessageKeys("The following message keys are missing from Welsh Set:", englishMessages.diff(welshMessages))) {
+        assert(welshMessages equals englishMessages)
+      }
     }
   }
 }
