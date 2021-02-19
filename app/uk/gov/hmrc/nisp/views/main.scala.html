@@ -25,12 +25,13 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-
+@import uk.gov.hmrc.nisp.views
 @import scala.util.Random
+@import java.util.NoSuchElementException
+@import uk.gov.hmrc.domain.Nino
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import play.api.Play
-@import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
 
 @(
     mainTemplateParams: MainTemplateParams
@@ -70,9 +71,10 @@
     Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
 }
 
-@inlineScript = @{
-  val trackingCodeSnippet = Play.current.injector.instanceOf[TrackingConsentSnippet]
-  trackingCodeSnippet()
+@inlineScript = {
+    @if(ApplicationConfig.isGtmEnabled) {
+        @views.html.google_tag_manager(ApplicationConfig.googleTagManagerId)
+    }
 }
 
 @scriptElement = @{
@@ -178,7 +180,12 @@
     mustacheCheck(msg)
 }
 
-
+@googleAnalytics = @{
+    Map[String, Any](
+        "trackingId" -> mainTemplateParams.applicationConfig.analyticsToken,
+        "cookieDomain" -> mainTemplateParams.applicationConfig.analyticsHost
+    ) ++ mainTemplateParams.gaDimensions.getOrElse(Map.empty)
+}
 @showLastLogInStatus = @{
     if(mainTemplateParams.articleEnabled) {
         true
@@ -230,6 +237,7 @@
         "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
         "hideAccountMenu" -> mainTemplateParams.hideNavBar,
 
+        "googleAnalytics" -> googleAnalytics,
         "ssoUrl" -> mainTemplateParams.applicationConfig.ssoUrl,
 
         "betaBanner" -> betaHeaderEnable,
