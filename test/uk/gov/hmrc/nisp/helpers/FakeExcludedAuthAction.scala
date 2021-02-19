@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,18 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import com.google.inject.Inject
 import org.joda.time.DateTime
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{BodyParsers, Request, Result}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction, ExcludedAuthenticatedRequest}
+import scala.concurrent.{ExecutionContext, Future}
 
-import scala.concurrent.Future
-
-class MockExcludedAuthAction(nino: Nino) extends ExcludedAuthAction {
+class FakeExcludedAuthAction @Inject()(val parser: BodyParsers.Default,
+                                       val executionContext: ExecutionContext) extends ExcludedAuthAction  {
   override def invokeBlock[A](request: Request[A], block: ExcludedAuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(ExcludedAuthenticatedRequest(request, nino, AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))))
+    block(ExcludedAuthenticatedRequest(request, TestAccountBuilder.regularNino,
+      AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))))
   }
 }

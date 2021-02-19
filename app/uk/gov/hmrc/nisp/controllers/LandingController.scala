@@ -16,37 +16,30 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.{Action, AnyContent}
+import com.google.inject.Inject
+import play.api.i18n.{I18nSupport, Messages}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.{Application, Logger}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{CitizenDetailsConnector, IdentityVerificationConnector, NispAuthConnector}
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, VerifyAuthActionImpl}
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-import scala.concurrent.ExecutionContext.Implicits._
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-object LandingController extends LandingController with PartialRetriever {
-  override val applicationConfig: ApplicationConfig = ApplicationConfig
-  override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
-  override val verifyAuthAction: AuthAction = new VerifyAuthActionImpl(
-    new NispAuthConnector,
-    new CitizenDetailsService(CitizenDetailsConnector))
-}
+class LandingController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
+                                  applicationConfig: ApplicationConfig,
+                                  verifyAuthAction: AuthAction,
+                                  mcc: MessagesControllerComponents)
+                                 (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                  val formPartialRetriever: FormPartialRetriever,
+                                  val templateRenderer: TemplateRenderer,
+                                  val executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
 
-trait LandingController extends NispFrontendController {
-  val identityVerificationConnector: IdentityVerificationConnector
-  val applicationConfig: ApplicationConfig
-  val verifyAuthAction: AuthAction
-
-  def show: Action[AnyContent] = UnauthorisedAction(
+  def show: Action[AnyContent] = Action(
     implicit request =>
       if (applicationConfig.identityVerification) {
         Ok(identity_verification_landing()).withNewSession
@@ -60,7 +53,7 @@ trait LandingController extends NispFrontendController {
       Redirect(routes.StatePensionController.show())
   }
 
-  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
+  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     val result = journeyId map { id =>
 
       import IdentityVerificationSuccessResponse._

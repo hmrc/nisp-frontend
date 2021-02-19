@@ -18,8 +18,12 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
+import uk.gov.hmrc.nisp.utils.Constants
 
 case class AuthDetails(confidenceLevel: ConfidenceLevel,
                        authProvider: Option[String],
                        loginTimes: LoginTimes
-                      )
+                      ){
+  val isGG: Boolean = authProvider.contains(Constants.GovernmentGatewayId)
+  val isVerify: Boolean = authProvider.contains(Constants.VerifyProviderId)
+}

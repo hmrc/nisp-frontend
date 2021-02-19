@@ -16,16 +16,28 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import com.google.inject.Inject
 import play.api.libs.json.{Format, Json, Writes}
-import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.{StatePension, StatePensionExclusion}
+import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
+import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.domain.Nino
+import scala.concurrent.{ExecutionContext, Future}
 
-import scala.concurrent.Future
+class StatePensionConnector @Inject()(val http: HttpClient,
+                                      val sessionCache: SessionCache,
+                                      val metricsService: MetricsService,
+                                      val executionContext: ExecutionContext,
+                                      appConfig: ApplicationConfig
+                                     ) extends BackendConnector {
 
-trait StatePensionConnector extends BackendConnector {
+  val serviceUrl: String = appConfig.statePensionServiceUrl
+
   implicit val reads = eitherReads[StatePensionExclusion, StatePension]
 
   implicit val writes = Writes[Either[StatePensionExclusion, StatePension]] {

@@ -16,35 +16,13 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.mvc.{Request, Result}
-import play.api.{Logger, PlayException}
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.config.{ApplicationGlobal, ApplicationGlobalTrait, LocalTemplateRenderer}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import play.api.mvc.MessagesControllerComponents
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-trait NispFrontendController extends FrontendController {
-  val logger: Logger = Logger(this.getClass)
-
+abstract class NispFrontendController(mcc: MessagesControllerComponents) extends FrontendController(mcc) {
   implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
-
-  val applicationGlobal: ApplicationGlobalTrait = ApplicationGlobal
-
-  def onError(ex: Exception)(implicit request: Request[_]): Result = {
-    logger.error(
-      """
-        |
-        |! %sInternal server error, for (%s) [%s] ->
-        | """.stripMargin.format(ex match {
-        case p: PlayException => "@" + p.id + " - "
-        case _ => ""
-      }, request.method, request.uri),
-      ex
-    )
-    InternalServerError(applicationGlobal.internalServerErrorTemplate)
-  }
-
+  implicit val formPartialRetriever: FormPartialRetriever
+  implicit val templateRenderer: TemplateRenderer
 }

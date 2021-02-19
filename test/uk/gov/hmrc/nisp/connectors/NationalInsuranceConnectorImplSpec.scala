@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,56 @@
 package uk.gov.hmrc.nisp.connectors
 
 import org.joda.time.LocalDate
-import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.nisp.helpers.MockNationalInsuranceConnector
-import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
+import org.mockito.Mockito
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
-import uk.gov.hmrc.nisp.models
-import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Injecting
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, Upstream4xxResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, MockNispHttp, TestAccountBuilder}
+import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.play.test.UnitSpec
 
-class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
+class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
+  Injecting with BeforeAndAfterEach {
 
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
+  val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
+  val mockApplicationConfig = mock[ApplicationConfig]
+  val mockHttp = MockNispHttp.mockHttp
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[HttpClient].toInstance(mockHttp),
+      bind[MetricsService].toInstance(mockMetricService),
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[SessionCache].toInstance(FakeSessionCache)
+    ).build()
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockMetricService, mockApplicationConfig)
+  }
+
+  lazy val nationalInsuranceConnector = inject[NationalInsuranceConnectorImpl]
+
   "getNationalInsuranceRecord" when {
 
     "there is a regular user" should {
-
-      val nationalInsuranceRecord = MockNationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier)
+      when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
+      val nationalInsuranceRecord = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
 
       "return a National Insurance Record with 28 qualifying years" in {
         nationalInsuranceRecord.qualifyingYears shouldBe 28
@@ -169,7 +198,8 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
 
     "there is a Dead Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
-        whenReady(MockNationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll).failed) {
+        when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
+        whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll).failed) {
           case ex: Upstream4xxResponse =>
             ex.upstreamResponseCode shouldBe 403
             ex.message.contains("EXCLUSION_DEAD") shouldBe true
@@ -179,7 +209,8 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
 
     "there is a MCI Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
-        whenReady(MockNationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead).failed) {
+        when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
+        whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead).failed) {
           case ex: Upstream4xxResponse =>
             ex.upstreamResponseCode shouldBe 403
             ex.message.contains("EXCLUSION_MANUAL_CORRESPONDENCE") shouldBe true
@@ -189,7 +220,8 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
 
     "there is a IOM Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
-        whenReady(MockNationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI).failed) {
+        when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
+        whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI).failed) {
           case ex: Upstream4xxResponse =>
             ex.upstreamResponseCode shouldBe 403
             ex.message.contains("EXCLUSION_ISLE_OF_MAN") shouldBe true
@@ -199,14 +231,13 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures {
 
     "there is a MWRRE Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
-        whenReady(MockNationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedIomMwrreAbroad).failed) {
+        when(mockApplicationConfig.nationalInsuranceServiceUrl).thenReturn("national-insurance")
+        whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedIomMwrreAbroad).failed) {
           case ex: Upstream4xxResponse =>
             ex.upstreamResponseCode shouldBe 403
             ex.message.contains("EXCLUSION_MARRIED_WOMENS_REDUCED_RATE") shouldBe true
         }
       }
     }
-
   }
-
 }

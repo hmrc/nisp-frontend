@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.joda.time.LocalDate
+import com.google.inject.Inject
+import org.joda.time.{DateTime, LocalDate}
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
@@ -24,14 +25,36 @@ import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.nisp.models.enums.Exclusion._
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.time.CurrentTaxYear
+import scala.concurrent.{ExecutionContext, Future}
 
-import scala.concurrent.Future
+class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
+                                   (implicit executor: ExecutionContext) extends CurrentTaxYear {
 
+  val exclusionCodeDead = "EXCLUSION_DEAD"
+  val exclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
 
-trait StatePensionService extends CurrentTaxYear {
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFiltered, StatePension]]
+  override def now: () => DateTime = () => DateTime.now(ukTime)
+
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFiltered, StatePension]] = {
+    statePensionConnector.getStatePension(nino)
+      .map {
+        case Right(statePension) => Right(statePension)
+
+        case Left(spExclusion) => Left(StatePensionExclusionFiltered(
+          filterExclusions(spExclusion.exclusionReasons),
+          spExclusion.pensionAge,
+          spExclusion.pensionDate,
+          spExclusion.statePensionAgeUnderConsideration
+        ))
+      }
+      .recover {
+        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeDead) =>
+          Left(StatePensionExclusionFiltered(Exclusion.Dead))
+        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeManualCorrespondence) =>
+          Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
+      }
+  }
 
   def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int = {
     finalRelevantYearStart - taxYearFor(earningsIncludedUpTo).startYear
@@ -52,33 +75,6 @@ trait StatePensionService extends CurrentTaxYear {
       Exclusion.MarriedWomenReducedRateElection
     } else {
       throw new RuntimeException(s"Un-accounted for exclusion in NispConnectionNI: $exclusions")
-    }
-  }
-}
-
-trait StatePensionConnection extends StatePensionService {
-  val statePensionConnector: StatePensionConnector
-
-  final val exclusionCodeDead = "EXCLUSION_DEAD"
-  final val exclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
-
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFiltered, StatePension]] = {
-    statePensionConnector.getStatePension(nino)
-      .map {
-        case Right(statePension) => Right(statePension)
-
-        case Left(spExclusion) => Left(StatePensionExclusionFiltered(
-            filterExclusions(spExclusion.exclusionReasons),
-            spExclusion.pensionAge,
-            spExclusion.pensionDate,
-            spExclusion.statePensionAgeUnderConsideration
-          ))
-      }
-      .recover {
-      case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeDead) =>
-        Left(StatePensionExclusionFiltered(Exclusion.Dead))
-      case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeManualCorrespondence) =>
-        Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
     }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
-import uk.gov.hmrc.nisp.common.FakePlayApplication
 import uk.gov.hmrc.play.test.UnitSpec
 
-class NispMoneySpec extends UnitSpec with FakePlayApplication {
+class NispMoneySpec extends UnitSpec{
   "pounds" should {
     "return HTML with £100 for value 100" in {
       NispMoney.pounds(100).toString().endsWith("&pound;100") shouldBe true

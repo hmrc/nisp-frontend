@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import com.google.inject.{ImplementedBy, Inject}
-import play.api.Application
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthProvider.Verify
@@ -27,7 +26,6 @@ import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException, SessionKeys}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispAuthConnector
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
@@ -37,9 +35,12 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
-                               cds: CitizenDetailsService)
-                              (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
+class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
+                               cds: CitizenDetailsService,
+                               val parser: BodyParsers.Default,
+                               val executionContext: ExecutionContext,
+                               applicationConfig: ApplicationConfig)
+                               extends AuthAction with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -75,18 +76,18 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
       case _: NoActiveSession => Redirect(
-        ApplicationConfig.ggSignInUrl,
+        applicationConfig.ggSignInUrl,
         Map(
-          "continue" -> Seq(ApplicationConfig.postSignInRedirectUrl),
+          "continue" -> Seq(applicationConfig.postSignInRedirectUrl),
           "origin" -> Seq("nisp-frontend"),
           "accountType" -> Seq("individual")
         ))
       case _: InsufficientConfidenceLevel => Redirect(
-        ApplicationConfig.ivUpliftUrl,
+        applicationConfig.ivUpliftUrl,
         Map(
           "origin" -> Seq("NISP"),
-          "completionURL" -> Seq(ApplicationConfig.postSignInRedirectUrl),
-          "failureURL" -> Seq(ApplicationConfig.notAuthorisedRedirectUrl),
+          "completionURL" -> Seq(applicationConfig.postSignInRedirectUrl),
+          "failureURL" -> Seq(applicationConfig.notAuthorisedRedirectUrl),
           "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
         ))
     }
@@ -94,11 +95,13 @@ class AuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
 }
 
 @ImplementedBy(classOf[AuthActionImpl])
-trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
+trait AuthAction extends ActionBuilder[AuthenticatedRequest, AnyContent] with ActionFunction[Request, AuthenticatedRequest]
 
-class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnector,
-                                     cds: CitizenDetailsService)
-                                    (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
+class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
+                                     cds: CitizenDetailsService,
+                                     val parser: BodyParsers.Default,
+                                     val executionContext: ExecutionContext,
+                                     applicationConfig: ApplicationConfig) extends AuthAction with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -133,8 +136,8 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
       } recover {
       case _: NoActiveSession |
            _: InsufficientConfidenceLevel |
-           _: UnsupportedAuthProvider => Redirect(ApplicationConfig.verifySignIn, parameters).withSession(
-        SessionKeys.redirect -> ApplicationConfig.postSignInRedirectUrl,
+           _: UnsupportedAuthProvider => Redirect(applicationConfig.verifySignIn, parameters).withSession(
+        SessionKeys.redirect -> applicationConfig.postSignInRedirectUrl,
         SessionKeys.loginOrigin -> "YSP"
       )
     }
@@ -144,18 +147,8 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: NispAuthConnect
 
     val continueUrl = Map[String, Seq[String]]()
 
-    if (ApplicationConfig.verifySignInContinue) {
-      continueUrl + ("continue" -> Seq(ApplicationConfig.postSignInRedirectUrl))
+    if (applicationConfig.verifySignInContinue) {
+      continueUrl + ("continue" -> Seq(applicationConfig.postSignInRedirectUrl))
     } else continueUrl
-  }
-}
-
-object AuthActionSelector {
-  def decide(applicationConfig: ApplicationConfig)(implicit app: Application): AuthAction = {
-    if (applicationConfig.identityVerification) {
-      app.injector.instanceOf[AuthActionImpl]
-    } else {
-      app.injector.instanceOf[VerifyAuthActionImpl]
-    }
   }
 }

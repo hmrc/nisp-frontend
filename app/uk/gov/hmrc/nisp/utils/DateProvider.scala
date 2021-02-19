@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.helpers
+package uk.gov.hmrc.nisp.utils
 
-import uk.gov.hmrc.nisp.connectors.IdentityVerificationConnector
-import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.http.HttpGet
+import org.joda.time.{DateTimeZone, LocalDate}
+import javax.inject.Singleton
 
-object MockIdentityVerificationConnector extends IdentityVerificationConnector {
-  override val serviceUrl: String = ""
-  override def http: HttpGet = MockIdentityVerificationHttp.mockHttp
-  override val metricsService: MetricsService = MockMetricsService
+@Singleton
+class DateProvider{
+  val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
 }

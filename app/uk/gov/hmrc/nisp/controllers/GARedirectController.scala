@@ -16,13 +16,18 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import com.google.inject.Inject
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-class GARedirectController extends NispFrontendController with PartialRetriever {
+class GARedirectController @Inject()(mcc: MessagesControllerComponents)
+                                    (implicit val formPartialRetriever: FormPartialRetriever,
+                                    val templateRenderer: TemplateRenderer,
+                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
+  extends NispFrontendController(mcc) {
 
-  def show: Action[AnyContent] = UnauthorisedAction(
+  def show: Action[AnyContent] = Action(
     implicit request =>
     Ok(uk.gov.hmrc.nisp.views.html.gaRedirect()).withNewSession
   )

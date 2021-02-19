@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,17 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 
-class RedirectControllerSpec extends PlaySpec with OneAppPerSuite {
+class RedirectControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "GET /checkmystatepension" should {
     "redirect to /check-your-state-pension" in {
       val request = FakeRequest("GET", "/checkmystatepension")
-      val result = Helpers.route(request).get
+      val result = Helpers.route(app ,request).get
       redirectLocation(result) mustBe Some("/check-your-state-pension")
     }
   }
@@ -33,7 +34,7 @@ class RedirectControllerSpec extends PlaySpec with OneAppPerSuite {
   "GET /checkmystatepension + query string" should {
     "redirect to /check-your-state-pension + query string" in {
       val request = FakeRequest("GET", "/checkmystatepension?p=123&q=456")
-      val result = Helpers.route(request).get
+      val result = Helpers.route(app, request).get
       redirectLocation(result) mustBe Some("/check-your-state-pension?p=123&q=456")
     }
   }
@@ -41,7 +42,7 @@ class RedirectControllerSpec extends PlaySpec with OneAppPerSuite {
   "GET /checkmystatepension/account" should {
     "redirect to /check-your-state-pension/account" in {
       val request = FakeRequest("GET", "/checkmystatepension/account")
-      val result = Helpers.route(request).get
+      val result = Helpers.route(app, request).get
       redirectLocation(result) mustBe Some("/check-your-state-pension/account")
     }
   }
@@ -49,7 +50,7 @@ class RedirectControllerSpec extends PlaySpec with OneAppPerSuite {
   "GET /checkmystatepension/account + query string" should {
     "redirect to /check-your-state-pension/account" in {
       val request = FakeRequest("GET", "/checkmystatepension/account?p=123&q=456")
-      val result = Helpers.route(request).get
+      val result = Helpers.route(app, request).get
       redirectLocation(result) mustBe Some("/check-your-state-pension/account?p=123&q=456")
     }
   }
@@ -57,7 +58,7 @@ class RedirectControllerSpec extends PlaySpec with OneAppPerSuite {
   "GET /checkmystatepension//account" should {
     "redirect to /check-your-state-pension/account" in {
       val request = FakeRequest("GET", "/checkmystatepension//account")
-      val result = Helpers.route(request).get
+      val result = Helpers.route(app, request).get
       redirectLocation(result) mustBe Some("/check-your-state-pension/account")
     }
   }

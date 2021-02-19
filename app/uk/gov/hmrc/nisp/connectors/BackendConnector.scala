@@ -16,24 +16,23 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{Format, JsObject, JsPath}
+import play.api.libs.json.{Format, JsPath, JsonValidationError}
 import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.nisp.models.enums.APIType._
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import scala.concurrent.Future
+import uk.gov.hmrc.http.HttpClient
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
 
 trait BackendConnector {
 
-  def http: HttpGet
+  def http: HttpClient
   def serviceUrl: String
   def sessionCache: SessionCache
   val metricsService: MetricsService
+  implicit val executionContext: ExecutionContext
 
   protected def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val keystoreTimerContext = metricsService.keystoreReadTimer.time()
@@ -93,7 +92,7 @@ trait BackendConnector {
     a
   }
 
-  private def formatJsonErrors(errors: Seq[(JsPath, Seq[ValidationError])]): String = {
+  private def formatJsonErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): String = {
     errors.map(p => p._1 + " - " + p._2.map(e => removeJson(e.message)).mkString(",")).mkString(" | ")
   }
 

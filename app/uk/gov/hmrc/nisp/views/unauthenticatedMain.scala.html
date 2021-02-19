@@ -19,12 +19,12 @@
 @import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 @import play.twirl.api.Html
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
-@import play.api.Application
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.http.SessionKeys
 @import uk.gov.hmrc.nisp.utils.Constants
+@import play.api.Play
 
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
@@ -39,7 +39,6 @@
     implicit
         request: Request[_],
         messages: Messages,
-        application: Application,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
         templateRenderer: TemplateRenderer
 )
@@ -119,7 +118,7 @@
     }
 }
 
-@clc = @{ Application.instanceCache[CustomLanguageController].apply(application) }
+@clc = @{ Play.current.injector.instanceOf[CustomLanguageController] }
 
 
 @mainContentHeader = {
@@ -207,9 +206,8 @@
         "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
-
-        "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
-        "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
+        "isGovernmentGateway" -> false,
+        "isVerify" -> false,
         "isSa" -> false,
         "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
         "hideAccountMenu" -> mainTemplateParams.hideNavBar,

@@ -20,7 +20,7 @@
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, application: Application, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @unauthenticatedMain(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")))) {
 
@@ -33,7 +33,7 @@
 </div>
 
 <div class="grid-wrapper sign-in-grid">
-    <h2 class="heading-medium">@messages("nisp.landing.signin.heading")</h2>
+    <h2 id="landing-signin-heading" class="heading-medium">@messages("nisp.landing.signin.heading")</h2>
 
     <div class="grid grid-1-2 left">
         <div class="inner-block">

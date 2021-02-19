@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,142 +18,323 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
-import org.joda.time.{LocalDate, LocalDateTime}
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.Play.configuration
-import play.api.http.Status
+import org.joda.time.LocalDate
+import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.StatePensionAmountRegular
-import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NationalInsuranceService}
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
-import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
+import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.time.DateTimeUtils.now
+import scala.concurrent.Future
 
-class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppPerSuite {
+class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
 
-  val mockUsername = "mockuser"
-  val mockUserId = "/auth/oid/" + mockUsername
-  val mockUserIdExcluded = "/auth/oid/mockexcludedall"
-  val mockUserIdContractedOut = "/auth/oid/mockcontractedout"
-  val mockUserIdBlank = "/auth/oid/mockblank"
-  val mockUserIdMQP = "/auth/oid/mockmqp"
-  val mockUserIdForecastOnly = "/auth/oid/mockforecastonly"
-  val mockUserIdWeak = "/auth/oid/mockweak"
-  val mockUserIdAbroad = "/auth/oid/mockabroad"
-  val mockUserIdMQPAbroad = "/auth/oid/mockmqpabroad"
-  val mockUserIdMwrre = "/auth/oid/mockexcludedmwrre"
+  val fakeRequest = FakeRequest()
 
-  val mockUserIdFillGapsSingle = "/auth/oid/mockfillgapssingle"
-  val mockUserIdFillGapsMultiple = "/auth/oid/mockfillgapsmultiple"
-  val mockUserIdBackendNotFound = "/auth/oid/mockbackendnotfound"
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
 
-  val ggSignInUrl = "http://localhost:9949/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
-  val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
+  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-  lazy val fakeRequest = FakeRequest()
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockAuditConnector, mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper)
+  }
 
-  private def authenticatedFakeRequest(userId: String = mockUserId) = FakeRequest().withSession(
+  def generateFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-    SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-    SessionKeys.userId -> userId,
-    SessionKeys.authProvider -> Constants.VerifyProviderId
+    SessionKeys.lastRequestTimestamp -> now.getMillis.toString
   )
 
-  def testAccountController(testNow: LocalDateTime, nino: Nino): StatePensionController = new MockStatePensionController {
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
-    override val authenticate: AuthAction = new MockAuthAction(nino)
-  }
+  val injector = GuiceApplicationBuilder()
+  .overrides(
+    bind[StatePensionService].toInstance(mockStatePensionService),
+    bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+    bind[AuditConnector].toInstance(mockAuditConnector),
+    bind[ApplicationConfig].toInstance(mockAppConfig),
+    bind[PertaxHelper].toInstance(mockPertaxHelper),
+    bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+    bind[FormPartialRetriever].toInstance(formPartialRetriever),
+    bind[TemplateRenderer].toInstance(templateRenderer),
+    bind[AuthAction].to[FakeAuthAction])
+    .build()
+    .injector
 
-  def mockStatePensionController(nino: Nino): StatePensionController = new MockStatePensionController {
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override val nationalInsuranceService: NationalInsuranceService = MockNationalInsuranceServiceViaNationalInsurance
-    override val authenticate: AuthAction = new MockAuthAction(nino)
-  }
+  val abroadUserInjector = GuiceApplicationBuilder()
+    .overrides(
+      bind[StatePensionService].toInstance(mockStatePensionService),
+      bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+      bind[AuditConnector].toInstance(mockAuditConnector),
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[TemplateRenderer].toInstance(templateRenderer),
+      bind[AuthAction].to[FakeAuthActionWithNino],
+      bind[NinoContainer].toInstance(AbroadNinoContainer)
+    )
+    .build()
+    .injector
+
+  val standardNino = TestAccountBuilder.regularNino
+  val foreignNino = TestAccountBuilder.abroadNino
+
+  val statePensionController = injector.instanceOf[StatePensionController]
+
+  val statePensionCopeResponse = StatePension(
+    new LocalDate(2014, 4, 5),
+    StatePensionAmounts(
+      false,
+      StatePensionAmountRegular(46.38, 201.67, 2420.04),
+      StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
+      StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
+      StatePensionAmountRegular(50, 217.41, 2608.93))
+    ,64, new LocalDate(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
+
+  val statePensionResponse = StatePension(
+    new LocalDate(2015, 4, 5),
+    StatePensionAmounts(
+      false,
+      StatePensionAmountRegular(133.41, 580.1, 6961.14),
+      StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+      StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+      StatePensionAmountRegular(0, 0, 0))
+    ,64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+
+  val statePensionVariation2 = StatePension(
+    new LocalDate(2015, 4, 5),
+    StatePensionAmounts(
+      false,
+      StatePensionAmountRegular(0, 0, 0),
+      StatePensionAmountForecast(1, 0, 0, 0),
+      StatePensionAmountMaximum(1, 6, 155.65, 676.8, 8121.59),
+      StatePensionAmountRegular(0, 0, 0))
+    ,64, new LocalDate(2016, 7, 6),
+    "2034-35", 30, false, 0, true, false)
+
+  val statePensionResponseVariation3 = StatePension(
+    new LocalDate(2014, 4, 5),
+    StatePensionAmounts(
+      false,
+      StatePensionAmountRegular(133.41, 580.1, 6961.14),
+      StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
+      StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
+      StatePensionAmountRegular(0, 0, 0))
+    ,64, new LocalDate(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+
+
+  val nationalInsuranceRecord = NationalInsuranceRecord(28, -3, 6, 4, Some(new LocalDate(1975, 8, 1)),
+    true, new LocalDate(2016, 4, 5),
+    List(
+      NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false),
+      NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 0, None, None, false, false)
+    ),
+    false
+  )
+
+  val nationaInsuranceRecordVariant2 = NationalInsuranceRecord(28, 28, 6, 4, Some(new LocalDate(1975, 8, 1)),
+    true, new LocalDate(2014, 4, 5),
+    List(
+      NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2019, 4, 5)),
+        Some(new LocalDate(2024, 4, 5)), true, false),
+      NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5)),
+        Some(new LocalDate(2023, 4, 5)), true, false)
+    ),
+    false
+  )
 
   "State Pension controller" should {
 
     "GET /statepension" should {
 
-      "return 500 when backend 404" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.backendNotFound)
-          .show()(authenticatedFakeRequest(mockUserIdBackendNotFound))
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-
       "return the forecast only page for a user with a forecast lower than current amount" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.forecastOnlyNino)
-          .show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionResponse))
+        )
+
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should not include ("£80.38")
       }
 
       "return 200, with exclusion message for excluded user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.excludedAll)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Left(Exclusion.Dead))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
+        )
+
+        val result = statePensionController
           .show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
-          SessionKeys.userId -> mockUserIdExcluded,
-          SessionKeys.authProvider -> Constants.VerifyProviderId
+          SessionKeys.lastRequestTimestamp -> now.getMillis.toString
         ))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
       "return content about COPE for contracted out (B) user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.contractedOutBTestNino)
-          .show()(authenticatedFakeRequest(mockUserIdContractedOut))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -8, 0, 0, Some(new LocalDate(1975, 8, 1)),
+          true, new LocalDate(2016, 4, 5),
+          List(
+            NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false),
+            NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 0, None, None, false, false)
+          ),
+          false
+        )
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(expectedNationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionCopeResponse))
+        )
+
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("You’ve been in a contracted-out pension scheme")
       }
 
       "return COPE page for contracted out (B) user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.contractedOutBTestNino)
-          .showCope()(authenticatedFakeRequest(mockUserIdContractedOut))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionCopeResponse))
+        )
+
+        val result = statePensionController.showCope()(generateFakeRequest)
         contentAsString(result) should include("You were contracted out")
       }
 
       "return abroad message for abroad user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.abroadNino)
-          .show()(authenticatedFakeRequest(mockUserIdAbroad))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionResponse))
+        )
+
+        val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
+
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
       }
 
       "return /exclusion for MWRRE user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.excludedMwrreAbroad)
-          .show()(authenticatedFakeRequest(mockUserIdMwrre))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
+        )
+
+        val result = statePensionController.show()(generateFakeRequest)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
 
       "return abroad message for forecast only user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.forecastOnlyNino)
-          .show()(authenticatedFakeRequest(mockUserIdForecastOnly))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionResponse))
+        )
+
+        val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
+
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "£80.38"
       }
 
       "return abroad message for an mqp user instead of standard mqp overseas message" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.mqpAbroadNino)
-          .show()(authenticatedFakeRequest(mockUserIdMQPAbroad))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionResponse))
+        )
+
+        val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
+
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("As you are living or working overseas")
         contentAsString(result) should not include "If you have lived or worked overseas"
       }
 
       "redirect to statepension page for non contracted out user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.mqpNino)
-          .showCope()(authenticatedFakeRequest(mockUserIdMQP))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionVariation2))
+        )
+
+        val result = statePensionController.showCope()(generateFakeRequest)
         redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
       }
 
       "return page with MQP messaging for MQP user" in {
-        val result = new MockStatePensionControllerImpl(TestAccountBuilder.mqpNino)
-          .show()(authenticatedFakeRequest(mockUserIdMQP))
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+        val expectedNationalInsuranceRecord = NationalInsuranceRecord(3, 3, 19, 7, Some(new LocalDate(1975, 8, 1)),
+          false, new LocalDate(2014, 4, 5),
+          List.empty[NationalInsuranceTaxYear],
+          false
+        )
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(expectedNationalInsuranceRecord))
+        )
+
+        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          Future.successful(Right(statePensionVariation2))
+        )
+
+        val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
     }
@@ -161,59 +342,64 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
     "when there is a Fill Gaps Scenario" when {
       "the future config is set to off" should {
         "show year information when there is multiple years" in {
-          val result = mockStatePensionController(TestAccountBuilder.fillGapsMultiple)
-            .show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationaInsuranceRecordVariant2))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(statePensionResponseVariation3))
+          )
+
+          val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
           contentAsString(result) should include("filling years can improve your forecast")
           contentAsString(result) should include("you only need to fill 7 years to get the most you can")
           contentAsString(result) should include("The most you can get by filling any 7 years in your record is")
         }
         "show specific text when is only one payable gap" in {
-          val result = mockStatePensionController(TestAccountBuilder.fillGapSingle)
-            .show()(authenticatedFakeRequest(mockUserIdFillGapsSingle))
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+
+          val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, 28, 1, 1, Some(new LocalDate(1975, 8, 1)),
+            true, new LocalDate(2014, 4, 5),
+            List(
+              NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2019, 4, 5)),
+                Some(new LocalDate(2024, 4, 5)), true, false),
+              NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5)),
+                Some(new LocalDate(2023, 4, 5)), true, false)
+            ),
+            false
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(expectedNationalInsuranceRecord))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(statePensionResponseVariation3))
+          )
+
+          val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
           contentAsString(result) should include("The most you can get by filling this year in your record is")
         }
       }
 
       "the future proof config is set to true" should {
-        val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.fillGapsMultiple)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = true
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override lazy val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = true
-            override val isWelshEnabled = false
-            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendUrl: String = "/foo"
-            override val googleTagManagerId: String = ""
-            override val isGtmEnabled: Boolean = false
-            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-        }
-          "show new personal max text when there are multiple/single year" in {
-          val result = controller.show()(authenticatedFakeRequest(mockUserIdFillGapsMultiple))
+        "show new personal max text when there are multiple/single year" in {
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+          when(mockAppConfig.futureProofPersonalMax).thenReturn(true)
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationaInsuranceRecordVariant2))
+          )
+
+          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+            Future.successful(Right(statePensionResponseVariation3))
+          )
+
+          val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")
           contentAsString(result) should include("The most you can increase your forecast to is")
         }
@@ -222,83 +408,16 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with OneAppP
 
     "GET /signout" should {
       "redirect to the questionnaire page when govuk done page is disabled" in {
-        val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = false
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override lazy val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val isWelshEnabled = false
-            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendUrl: String = "/foo"
-            override val googleTagManagerId: String = ""
-            override val isGtmEnabled: Boolean = false
-            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-        }
-        val result = controller.signOut(fakeRequest)
+        when(mockAppConfig.feedbackFrontendUrl).thenReturn("/foo")
+
+        val result = statePensionController.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "/foo"
       }
 
       "redirect to the feedback questionnaire page when govuk done page is enabled" in {
-        val controller = new MockStatePensionController {
-          override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.regularNino)
-          override val applicationConfig: ApplicationConfig = new ApplicationConfig {
-            override val assetsPrefix: String = ""
-            override val reportAProblemNonJSUrl: String = ""
-            override val ssoUrl: Option[String] = None
-            override val betaFeedbackUnauthenticatedUrl: String = ""
-            override val contactFrontendPartialBaseUrl: String = ""
-            override val govUkFinishedPageUrl: String = "govukdone"
-            override val showGovUkDonePage: Boolean = true
-            override val analyticsHost: String = ""
-            override val analyticsToken: Option[String] = None
-            override val betaFeedbackUrl: String = ""
-            override val reportAProblemPartialUrl: String = ""
-            override val verifySignIn: String = ""
-            override val verifySignInContinue: Boolean = false
-            override val postSignInRedirectUrl: String = ""
-            override val notAuthorisedRedirectUrl: String = ""
-            override val identityVerification: Boolean = false
-            override val ivUpliftUrl: String = "ivuplift"
-            override val ggSignInUrl: String = "ggsignin"
-            override val pertaxFrontendUrl: String = ""
-            override val contactFormServiceIdentifier: String = ""
-            override val breadcrumbPartialUrl: String = ""
-            override lazy val showFullNI: Boolean = false
-            override val futureProofPersonalMax: Boolean = false
-            override val isWelshEnabled = false
-            override val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
-            override val feedbackFrontendUrl: String = "/foo"
-            override val googleTagManagerId: String = ""
-            override val isGtmEnabled: Boolean = false
-            override def accessibilityStatementUrl(relativeReferrerPath: String): String = ""
-          }
-          override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-        }
-        val result = controller.signOut(fakeRequest)
+        when(mockAppConfig.feedbackFrontendUrl).thenReturn("/foo")
 
+        val result = statePensionController.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "/foo"
       }
     }

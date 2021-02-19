@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.renderer.TemplateRenderer
 
 
-@()(implicit lang: Lang, request: Request[_], messages: Messages, application: Application, formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
+@()(implicit request: Request[_], messages: Messages, formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @anchor(text: String, url: String) = {<a href="@url" target="_blank">@text</a>}
 

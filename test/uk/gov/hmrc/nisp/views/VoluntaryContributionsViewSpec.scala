@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,29 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.DateTime
 import org.scalatest._
-import org.scalatest.mock.MockitoSugar
-import play.api.test.FakeRequest
+import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.controllers.NispFrontendController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
-import uk.gov.hmrc.nisp.helpers.{MockCachedStaticHtmlPartialRetriever, TestAccountBuilder}
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
+import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter {
+class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
 
-  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+  implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
-  val mockUserNino = TestAccountBuilder.regularNino
-
-  implicit val user = NispAuthedUserFixture.user(mockUserNino)
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
-  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
 
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"
   val expectedCitizensAdviceLink = "https://www.citizensadvice.org.uk/"
@@ -53,7 +50,7 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with NispFrontendControlle
     lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
 
     "render with correct page title" in {
-      assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.nirecord.voluntarycontributions.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+      assertElementContainsText(htmlAccountDoc, "head>title" , messages("nisp.nirecord.voluntarycontributions.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
     "render page with heading  Voluntary contributions " in {
       assertEqualsMessage(htmlAccountDoc, "h1.heading-large", "nisp.nirecord.voluntarycontributions.heading")

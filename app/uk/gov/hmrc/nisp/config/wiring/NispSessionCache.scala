@@ -16,17 +16,13 @@
 
 package uk.gov.hmrc.nisp.config.wiring
 
-import play.api.{Configuration, Play}
-import play.api.Mode.Mode
-import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
+import com.google.inject.Inject
 import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.http.HttpClient
 
-object NispSessionCache extends SessionCache with AppName with ServicesConfig {
-  override lazy val http = WSHttp
-  override lazy val defaultSource = appName
-  override lazy val baseUri = baseUrl("cachable.session-cache")
-  override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
-  override protected def appNameConfiguration: Configuration = Play.current.configuration
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+class NispSessionCache @Inject()(appConfig: ApplicationConfig, val http: HttpClient) extends SessionCache {
+  override val defaultSource: String = appConfig.appName
+  override val baseUri = appConfig.sessionCacheURL
+  override val domain = appConfig.sessionCacheDomain
 }

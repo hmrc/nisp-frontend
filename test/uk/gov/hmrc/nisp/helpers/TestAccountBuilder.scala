@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,16 @@
 package uk.gov.hmrc.nisp.helpers
 
 import play.api.http.Status
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.domain.{Generator, Nino}
-
 import scala.concurrent.Future
 import scala.io.Source
 import scala.util.Random
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
+import resource._
+
 
 object TestAccountBuilder {
 
@@ -115,11 +116,15 @@ object TestAccountBuilder {
   )
 
   def directJsonResponse(nino: Nino, api: String): CitizenDetailsResponse = {
-    val string  = Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json").mkString
-    Json.parse(string.replace("<NINO>", nino.nino)).as[CitizenDetailsResponse]
+    jsonResponseByType[CitizenDetailsResponse](nino, api)
   }
 
-  private def fileContents(filename: String): Future[String] = Future { Source.fromFile(filename).mkString }
+  def jsonResponseByType[A](nino: Nino, api: String)(implicit fjs: Reads[A]): A = {
+    managed(Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json"))
+      .acquireAndGet(resource => Json.parse(resource.mkString.replace("<NINO>", nino.nino)).as[A])
+  }
+
+  private def fileContents(filename: String): Future[String] = Future { managed(Source.fromFile(filename)).acquireAndGet(_.mkString)}
 
   def jsonResponse(nino: Nino, api: String): Future[HttpResponse] = {
     fileContents(s"test/resources/${mappedTestAccounts(nino)}/$api.json").map { string: String =>

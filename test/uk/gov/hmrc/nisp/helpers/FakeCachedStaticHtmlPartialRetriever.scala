@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,12 @@ package uk.gov.hmrc.nisp.helpers
 
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.http.HttpGet
 
-object MockFormPartialRetriever extends FormPartialRetriever {
-  override def crypto: (String) => String = ???
-
+object FakeCachedStaticHtmlPartialRetriever extends CachedStaticHtmlPartialRetriever {
   override def httpGet: HttpGet = ???
 
-  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html = Html("")
+  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html =
+    Html("")
 }

@@ -16,25 +16,18 @@
 
 package uk.gov.hmrc.nisp.utils
 
+import com.google.inject.Inject
 import play.api.i18n.Messages
 import play.api.mvc.Request
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.play.breadcrumb.model.{Breadcrumb, BreadcrumbItem}
 
-object NispBreadcrumb extends NispBreadcrumb {
-  override lazy val applicationConfig = ApplicationConfig
-}
-
-trait NispBreadcrumb{
-
-  val applicationConfig: ApplicationConfig
+class NispBreadcrumb @Inject()(applicationConfig: ApplicationConfig){
 
   def initialBreadCrumbList(implicit messages: Messages) = List((messages("nisp.breadcrumb.account"), applicationConfig.pertaxFrontendUrl))
 
-  lazy val mainContentHeaderPartialUrl = applicationConfig.breadcrumbPartialUrl
-
-   def buildBreadCrumb(implicit request: Request[_], messages: Messages): Breadcrumb = {
+  def buildBreadCrumb(implicit request: Request[_], messages: Messages): Breadcrumb = {
     val links = Map(
       "account" -> (Messages("nisp.breadcrumb.pension"), routes.StatePensionController.show().url),
       "nirecord" -> (Messages("nisp.breadcrumb.nirecord"), routes.NIRecordController.showFull().url),
@@ -46,9 +39,9 @@ trait NispBreadcrumb{
     )
 
     val items: List[Option[(String, String)]] = request.path.split("/").filter(!_.isEmpty).map(links.get).toList
-    val breacrumList = initialBreadCrumbList ::: items.flatten
+    val breadCrumbList = initialBreadCrumbList ::: items.flatten
 
-    val bcItems: Seq[BreadcrumbItem] = breacrumList.map( { case(label, url) => BreadcrumbItem(label, url) })
+    val bcItems: Seq[BreadcrumbItem] = breadCrumbList.map( { case(label, url) => BreadcrumbItem(label, url) })
     Breadcrumb(bcItems.toVector)
   }
 

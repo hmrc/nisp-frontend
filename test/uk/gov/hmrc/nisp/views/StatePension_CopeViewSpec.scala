@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,59 +18,122 @@ package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.lang3.StringEscapeUtils
 import org.joda.time.{DateTime, LocalDate}
-import org.scalatest._
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
+import play.api.Application
 import play.api.i18n.Messages
-import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, _}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Helpers.contentAsString
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
-import uk.gov.hmrc.nisp.builders.ApplicationConfigBuilder
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.NispFormPartialRetriever
-import uk.gov.hmrc.nisp.controllers.NispFrontendController
+import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.UserName
+import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
-import uk.gov.hmrc.nisp.utils.{Constants, MockTemplateRenderer}
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class StatePension_CopeViewSpec extends HtmlSpec with NispFrontendController with MockitoSugar with BeforeAndAfter with ScalaFutures {
+import scala.concurrent.Future
 
-  implicit val cachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
+  ScalaFutures with Injecting {
 
   val mockUserNino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded = TestAccountBuilder.excludedAll
   val mockUserNinoNotFound = TestAccountBuilder.blankNino
-
-  val ggSignInUrl = "http://localhost:9949/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
-  val twoFactorUrl = "http://localhost:9949/coafe/two-step-verification/register/?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failure=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised"
 
   implicit val user: NispAuthedUser = NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, None, false)
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
-  override implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = NispFormPartialRetriever
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
+  val mockMetricsService: MetricsService = mock[MetricsService]
+  val mockSessionCache: SessionCache = mock[SessionCache]
 
-  def authenticatedFakeRequest(userId: String) = fakeRequest
+  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
+  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
+  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-  lazy val controller = new MockStatePensionController {
-    override val authenticate: AuthAction = new MockAuthAction(TestAccountBuilder.contractedOutBTestNino)
-    override val applicationConfig: ApplicationConfig = ApplicationConfigBuilder()
-    override implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = MockCachedStaticHtmlPartialRetriever
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
+    when(mockPertaxHelper.isFromPertax(ArgumentMatchers.any())).thenReturn(Future.successful(false))
   }
 
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[AuthAction].to[FakeAuthAction],
+      bind[StatePensionService].toInstance(mockStatePensionService),
+      bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+      bind[AuditConnector].toInstance(mockAuditConnector),
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[TemplateRenderer].toInstance(templateRenderer)
+    ).build()
+
+  val statePensionController = inject[StatePensionController]
+
   "Render State Pension view with Contracted out User" should {
-    lazy val result = controller.show()(AuthenticatedRequest(FakeRequest().withCookies(lanCookie), user, authDetails))
+
+    def mockSetup = {
+
+      when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful(Right(StatePension(
+          new LocalDate(2014, 4, 5),
+          StatePensionAmounts(
+            false,
+            StatePensionAmountRegular(46.38, 201.67, 2420.04),
+            StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
+            StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
+            StatePensionAmountRegular(50, 217.41, 2608.93))
+          ,64, new LocalDate(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
+        )))
+
+      when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+          qualifyingYears = 11,
+          qualifyingYearsPriorTo1975 = 0,
+          numberOfGaps = 2,
+          numberOfGapsPayable = 2,
+          Some(new LocalDate(1954, 3, 6)),
+          false,
+          new LocalDate(2017, 4, 5),
+          List(
+
+            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false)
+          ),
+          reducedRateElection = false
+        )
+        )))
+
+    }
+
+    lazy val result = statePensionController.show()(AuthenticatedRequest(FakeRequest(), user, authDetails))
     lazy val htmlAccountDoc = asDocument(contentAsString(result))
 
     "render with correct page title" in {
+      mockSetup
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
     }
     "render page with heading  'Your State Pension' " in {

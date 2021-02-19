@@ -16,18 +16,20 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import com.google.inject.Inject
 import play.api.http.Status._
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-
-import scala.concurrent.Future
+import uk.gov.hmrc.http.HttpClient
+import scala.concurrent.{ExecutionContext, Future}
 
 sealed trait IdentityVerificationResponse
 case object IdentityVerificationForbiddenResponse extends IdentityVerificationResponse
 case object IdentityVerificationNotFoundResponse extends IdentityVerificationResponse
 case class IdentityVerificationErrorResponse(cause: Throwable) extends IdentityVerificationResponse
 case class IdentityVerificationSuccessResponse(result: String) extends IdentityVerificationResponse
+
 object IdentityVerificationSuccessResponse {
   val Success = "Success"
   val Incomplete = "Incomplete"
@@ -41,10 +43,12 @@ object IdentityVerificationSuccessResponse {
   val FailedIV = "FailedIV"
 }
 
-trait IdentityVerificationConnector {
-  val serviceUrl: String
-  def http: HttpGet
-  val metricsService: MetricsService
+class IdentityVerificationConnector @Inject()(http: HttpClient,
+                                              metricsService: MetricsService,
+                                              appConfig: ApplicationConfig)
+                                             (implicit ec: ExecutionContext) {
+
+  val serviceUrl: String = appConfig.identityVerificationServiceUrl
 
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
 
@@ -55,7 +59,7 @@ trait IdentityVerificationConnector {
       val result = (httpResponse.json \ "result").as[String]
       IdentityVerificationSuccessResponse(result)
     } recover {
-       case e: NotFoundException =>
+       case _: NotFoundException =>
         metricsService.identityVerificationFailedCounter.inc()
         IdentityVerificationNotFoundResponse
        case Upstream4xxResponse(_, FORBIDDEN, _, _) =>

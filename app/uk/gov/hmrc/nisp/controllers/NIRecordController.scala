@@ -16,48 +16,43 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.joda.time.{DateTimeZone, LocalDate}
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.{Action, AnyContent}
+import com.google.inject.Inject
+import org.joda.time.LocalDate
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.config.wiring.{CustomAuditConnector, MetricsService, NationalInsuranceService, NispSessionCache, StatePensionService}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, NispAuthedUser}
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.nisp.controllers.partial.PartialRetriever
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services._
-import uk.gov.hmrc.nisp.utils.{Constants, Formatting}
+import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
 
-object NIRecordController extends NIRecordController with PartialRetriever {
-  val applicationConfig: ApplicationConfig = ApplicationConfig
-  override val customAuditConnector: CustomAuditConnector = CustomAuditConnector
-  override val sessionCache: SessionCache = NispSessionCache
-  override lazy val showFullNI: Boolean = ApplicationConfig.showFullNI
-  override val currentDate = new LocalDate(DateTimeZone.forID("Europe/London"))
-  override val metricsService: MetricsService = MetricsService
-  override val nationalInsuranceService: NationalInsuranceService = NationalInsuranceService
-  override val statePensionService: StatePensionService = StatePensionService
-  override val authenticate: AuthAction = AuthActionSelector.decide(applicationConfig)
-}
+import scala.concurrent.ExecutionContext
 
-trait NIRecordController extends NispFrontendController with PertaxHelper {
-  val customAuditConnector: CustomAuditConnector
-  val authenticate: AuthAction
+class NIRecordController @Inject()(auditConnector: AuditConnector,
+                                   authenticate: AuthAction,
+                                   nationalInsuranceService: NationalInsuranceService,
+                                   statePensionService: StatePensionService,
+                                   appConfig: ApplicationConfig,
+                                   pertaxHelper: PertaxHelper,
+                                   mcc: MessagesControllerComponents,
+                                   dateProvider: DateProvider
+                                  )(implicit val formPartialRetriever: FormPartialRetriever,
+                                    val templateRenderer: TemplateRenderer,
+                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                    ec: ExecutionContext)
+  extends NispFrontendController(mcc) with I18nSupport {
 
-  def nationalInsuranceService: NationalInsuranceService
+  val showFullNI: Boolean = appConfig.showFullNI
 
-  def statePensionService: StatePensionService
-
-  lazy val showFullNI: Boolean = ApplicationConfig.showFullNI
-  val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
 
   def showFull: Action[AnyContent] = show(gapsOnlyView = false)
 
@@ -65,12 +60,12 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
 
   def pta: Action[AnyContent] = authenticate {
     implicit request =>
-      setFromPertax
+      pertaxHelper.setFromPertax
       Redirect(routes.NIRecordController.showFull())
   }
 
   private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit hc: HeaderCarrier): Unit = {
-    customAuditConnector.sendEvent(NIRecordEvent(
+    auditConnector.sendEvent(NIRecordEvent(
       nino.nino,
       yearsToContribute,
       niRecord.qualifyingYears,
@@ -114,10 +109,10 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
 
       val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
       val statePensionResponseF = statePensionService.getSummary(nino)
-      (for (
-        nationalInsuranceRecordResponse <- nationalInsuranceResponseF;
+      for {
+        nationalInsuranceRecordResponse <- nationalInsuranceResponseF
         statePensionResponse <- statePensionResponseF
-      ) yield {
+      } yield {
         nationalInsuranceRecordResponse match {
           case Right(niRecord) =>
             if (gapsOnlyView && niRecord.numberOfGaps < 1) {
@@ -149,18 +144,16 @@ trait NIRecordController extends NispFrontendController with PertaxHelper {
                 showPre1975Years = showPre1975Years(niRecord.dateOfEntry, request.nispAuthedUser.dateOfBirth, niRecord.qualifyingYearsPriorTo1975),
                 authenticationProvider = request.authDetails.authProvider.getOrElse("N/A"),
                 showFullNI = showFullNI,
-                currentDate = currentDate))
+                currentDate = dateProvider.currentDate))
             }
           case Left(exclusion) =>
-            customAuditConnector.sendEvent(AccountExclusionEvent(
+            auditConnector.sendEvent(AccountExclusionEvent(
               nino.nino,
               request.nispAuthedUser.name,
               exclusion
             ))
             Redirect(routes.ExclusionController.showNI())
         }
-      }).recover {
-        case ex: Exception => onError(ex)
       }
   }
 

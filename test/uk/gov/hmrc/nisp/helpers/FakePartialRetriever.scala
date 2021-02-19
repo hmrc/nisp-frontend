@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.config.wiring
+package uk.gov.hmrc.nisp.helpers
 
-import play.api.Play
-import uk.gov.hmrc.crypto.ApplicationCrypto
-import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
+import play.api.mvc.RequestHeader
+import play.twirl.api.Html
+import uk.gov.hmrc.http.CoreGet
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-trait SessionCookieCryptoFilterWrapper {
-  def encryptCookieString(cookie: String) : String = {
-  new SessionCookieCryptoFilter(new ApplicationCrypto(Play.current.configuration.underlying)).encrypt(cookie)
-  }
+object FakePartialRetriever extends FormPartialRetriever {
+  override def crypto: String => String = ???
+
+  override def httpGet: CoreGet = ???
+
+  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html = Html("")
 }

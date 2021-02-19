@@ -19,6 +19,8 @@ package uk.gov.hmrc.nisp.models
 import org.joda.time.LocalDate
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 case class NationalInsuranceRecord(
                                     qualifyingYears: Int,

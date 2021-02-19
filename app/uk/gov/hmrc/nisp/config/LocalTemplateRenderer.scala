@@ -16,46 +16,18 @@
 
 package uk.gov.hmrc.nisp.config
 
-import akka.actor.ActorSystem
-import com.typesafe.config.Config
-import play.api.{Configuration, Play}
-import play.api.Mode.Mode
-import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
-import uk.gov.hmrc.nisp.config.wiring.{NispAuditConnector, WSHttp}
-import uk.gov.hmrc.play.audit.http.HttpAuditing
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-
-import scala.concurrent.Future
-import scala.concurrent.duration._
+import com.google.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.renderer.TemplateRenderer
+import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future}
 
-trait LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
-  override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")
+class LocalTemplateRenderer @Inject()(appConfig: ApplicationConfig,
+                                      http: HttpClient)(implicit val executionContext: ExecutionContext) extends TemplateRenderer {
+  override val templateServiceBaseUrl = appConfig.frontEndTemplateProviderBaseUrl
   override val refreshAfter: Duration = 10 minutes
   private implicit val hc = HeaderCarrier()
-  val wsHttp: WSHttp
 
-  override def fetchTemplate(path: String): Future[String] =  {
-    wsHttp.GET(path).map(_.body)
-  }
-}
-
-object LocalTemplateRenderer extends LocalTemplateRenderer {
-  override val wsHttp = WsAllMethods
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-}
-
-trait WsAllMethods extends WSHttp with HttpAuditing with AppName with RunMode
-
-object WsAllMethods extends WsAllMethods {
-  override lazy val auditConnector = NispAuditConnector
-  override val hooks = Seq (AuditingHook)
-
-  override protected def appNameConfiguration: Configuration = Play.current.configuration
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-  override protected def actorSystem: ActorSystem = Play.current.actorSystem
-  override protected def configuration: Option[Config] = Option(Play.current.configuration.underlying)
+  override def fetchTemplate(path: String): Future[String] = http.GET(path).map(_.body)
 }

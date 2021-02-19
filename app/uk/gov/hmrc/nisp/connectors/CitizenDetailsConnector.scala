@@ -16,18 +16,24 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import com.google.inject.Inject
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.domain.Nino
 
-import scala.concurrent.Future
 
-trait CitizenDetailsConnector {
-  val serviceUrl: String
-  val metricsService: MetricsService
-  def http: HttpGet
+import scala.concurrent.{ExecutionContext, Future}
+
+//TODO[Testing] this class needs testing
+class CitizenDetailsConnector @Inject()(http: HttpClient,
+                                        metricsService: MetricsService,
+                                        appConfig: ApplicationConfig
+                                        )(implicit executionContext: ExecutionContext) {
+
+  val serviceUrl: String = appConfig.citizenDetailsServiceUrl
 
   def connectToGetPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
 
@@ -38,7 +44,7 @@ trait CitizenDetailsConnector {
     }
 
     result onFailure {
-      case e: Exception =>
+      case _: Exception =>
         metricsService.citizenDetailsFailedCounter.inc()
     }
 

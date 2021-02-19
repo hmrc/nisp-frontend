@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.views
+package uk.gov.hmrc.nisp.helpers
 
-import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
 
-class StatePensionViewWelshSpec extends StatePensionViewSpec {
-
-  implicit override val lang = LanguageToggle.getLanguageCode(testInWelsh = true)
-  implicit override val lanCookie = LanguageToggle.getLanguageCookie(testInWelsh = true)
-
+object FakeNispHeaderCarrierForPartialsConverter extends HeaderCarrierForPartialsConverter {
+  override def crypto: String => String = ???
 }

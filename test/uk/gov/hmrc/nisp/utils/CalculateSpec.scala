@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,12 @@ class CalculateSpec extends UnitSpec {
       Calculate.calculateChartWidths(StatePensionAmountRegular(currentAmount, 0, 0), StatePensionAmountRegular(forecastAmount, 0, 0), StatePensionAmountRegular(personalMax, 0, 0))
 
     "current chart is 100 when current amount is higher" in {
-      val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 30, 0)
+      val (currentChart, _, _) = calculateCharts(70, 30, 0)
       currentChart.width shouldBe 100
     }
 
     "forecast chart is 100 when forecast amount is higher" in {
-      val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 80, 80)
+      val (_, forecastChart, personalMaxChart) = calculateCharts(70, 80, 80)
       forecastChart.width shouldBe 100
       personalMaxChart.width shouldBe 100
     }

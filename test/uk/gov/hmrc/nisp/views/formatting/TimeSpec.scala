@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,15 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
-import javax.inject.Inject
+import java.util.Locale
 
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
+import play.api.test.Injecting
 import uk.gov.hmrc.play.test.UnitSpec
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 
-class TimeSpec extends UnitSpec with OneAppPerSuite {
-  val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val messages = new Messages(new Lang("en"), messagesApi)
+class TimeSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
+  val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   "years" should {
     "return 1 year when there is 1 year"  in {

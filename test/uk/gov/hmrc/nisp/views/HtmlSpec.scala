@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,26 @@
 
 package uk.gov.hmrc.nisp.views
 
+import java.util.Locale
+
+import akka.util.Timeout
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.selenium.WebBrowser.ClassNameQuery
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.test.FakeRequest
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.helpers._
 
-trait HtmlSpec extends PlaySpec with OneAppPerSuite {
+import scala.concurrent.duration._
+
+trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   implicit val request = FakeRequest()
-  implicit val lang = LanguageToggle.getLanguageCode()
-  implicit val lanCookie = LanguageToggle.getLanguageCookie()
-  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit def messages = new Messages(lang, messagesApi)
+  implicit val defaultAwaitTimeout: Timeout = 5.seconds
+  implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 

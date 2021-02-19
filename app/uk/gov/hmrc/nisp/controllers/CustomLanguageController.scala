@@ -17,16 +17,15 @@
 package uk.gov.hmrc.nisp.controllers
 
 import javax.inject.Inject
-import play.api.{Application, Configuration}
+import play.api.{Configuration, Play}
 import play.api.i18n.{Lang, MessagesApi}
-import play.api.mvc.Call
+import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 
 class CustomLanguageController @Inject()(implicit override val messagesApi: MessagesApi,
-                                         application: Application,
                                          languageUtils: LanguageUtils,
-                                         configuration: Configuration
-                                        ) extends LanguageController(configuration, languageUtils) {
+                                         val cc: ControllerComponents
+                                        ) extends LanguageController(languageUtils, cc) {
 
   def routeToSwitchLanguage = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
 
@@ -38,4 +37,5 @@ class CustomLanguageController @Inject()(implicit override val messagesApi: Mess
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
   )
+
 }

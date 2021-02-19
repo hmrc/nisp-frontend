@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import uk.gov.hmrc.nisp.controllers.connectors.CustomAuditConnector
-import uk.gov.hmrc.play.audit.http.config.AuditingConfig
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.domain.Nino
 
-object MockCustomAuditConnector extends CustomAuditConnector {
-  override val auditConnector: AuditConnector = new AuditConnector {
-    override def auditingConfig: AuditingConfig = ???
-  }
+sealed trait NinoContainer {
+ val nino: Nino
+}
 
-  override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier): Unit = ()
+object RegularNinoContainer extends NinoContainer {
+  override val nino: Nino = TestAccountBuilder.regularNino
+}
+
+object AbroadNinoContainer extends NinoContainer {
+  override val nino: Nino = TestAccountBuilder.abroadNino
 }

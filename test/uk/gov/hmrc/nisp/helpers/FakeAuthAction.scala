@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,19 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import com.google.inject.Inject
 import org.joda.time.DateTime
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{BodyParsers, Request, Result}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
+import scala.concurrent.{ExecutionContext, Future}
 
-import scala.concurrent.Future
-
-class MockAuthAction(ninoToReturn: Nino) extends AuthAction {
+class FakeAuthAction @Inject()(val parser: BodyParsers.Default,
+                               val executionContext: ExecutionContext) extends AuthAction {
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(AuthenticatedRequest(request, NispAuthedUserFixture.user(ninoToReturn),
-      AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))))
+    block(AuthenticatedRequest(request, NispAuthedUserFixture.user(TestAccountBuilder.regularNino),
+      AuthDetails(ConfidenceLevel.L200, Some("GGW"), LoginTimes(DateTime.now, None))))
   }
 }
