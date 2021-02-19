@@ -43,8 +43,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val frontendTemplatePath: String = getConfString("frontend-template-provider.path", "/template/mustache")
   val frontEndTemplateProviderBaseUrl = baseUrl("frontend-template-provider")
 
-  val googleTagManagerId = loadConfig("google-tag-manager.id")
-  val isGtmEnabled = configuration.getOptional[Boolean]("google-tag-manager.enabled").getOrElse(false)
   val contactFormServiceIdentifier = "NISP"
   val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
