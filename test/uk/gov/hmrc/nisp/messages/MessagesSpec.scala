@@ -17,9 +17,10 @@
 package uk.gov.hmrc.nisp.messages
 
 import java.io.{File, FileNotFoundException}
-import java.util.{Locale, Properties}
+import java.util.Properties
+
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
+import play.api.i18n.MessagesApi
 import play.api.test.Injecting
 import resource._
 import uk.gov.hmrc.play.test.UnitSpec
@@ -31,7 +32,6 @@ class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
   val englishMessages: Set[String] = createMessageSet(new File(".", "conf/messages"))
   val welshMessages: Set[String] = createMessageSet(new File(".", "conf/messages.cy"))
   lazy val messagesApi: MessagesApi = inject[MessagesApi]
-  lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), messagesApi)
 
   def createMessageSet(file: File): Set[String] = {
     if (file.exists()) {
