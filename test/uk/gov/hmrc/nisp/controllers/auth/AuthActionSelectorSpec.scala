@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.config
+package uk.gov.hmrc.nisp.controllers.auth
 
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.Injector
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl, VerifyAuthActionImpl}
 
-class NispModuleSpec extends PlaySpec {
+class AuthActionSelectorSpec extends PlaySpec {
 
   val identityVerificationProp = "microservice.services.features.identityVerification"
 
-  "bindings" must {
-    "bind an instance of AuthActionImpl" when {
+  "decide" must {
+    "return an instance of AuthActionImpl" when {
       "the identity verification flag is set to true" in {
         val injector: Injector = new GuiceApplicationBuilder()
           .configure(identityVerificationProp -> true)
           .injector()
 
-        injector.instanceOf[AuthAction] mustBe an[AuthActionImpl]
+        injector.instanceOf[AuthActionSelector].decide mustBe an[AuthActionImpl]
       }
     }
-    "bind an instance of VerifyAuthActionImpl" when {
+    "return an instance of VerifyAuthActionImpl" when {
       "the identity verification flag is set to false" in {
         val injector: Injector = new GuiceApplicationBuilder()
           .configure(identityVerificationProp -> false)
           .injector()
 
-        injector.instanceOf[AuthAction] mustBe a[VerifyAuthActionImpl]
+        injector.instanceOf[AuthActionSelector].decide mustBe a[VerifyAuthActionImpl]
       }
     }
   }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers.auth
 
-import com.google.inject.{ImplementedBy, Inject}
+import com.google.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthProvider.Verify
@@ -94,7 +94,6 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
   }
 }
 
-@ImplementedBy(classOf[AuthActionImpl])
 trait AuthAction extends ActionBuilder[AuthenticatedRequest, AnyContent] with ActionFunction[Request, AuthenticatedRequest]
 
 class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,

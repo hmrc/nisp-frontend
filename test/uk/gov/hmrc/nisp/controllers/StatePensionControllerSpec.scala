@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.auth.AuthActionSelector
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
@@ -41,6 +41,7 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils.now
+
 import scala.concurrent.Future
 
 class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
@@ -77,7 +78,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
     bind[FormPartialRetriever].toInstance(formPartialRetriever),
     bind[TemplateRenderer].toInstance(templateRenderer),
-    bind[AuthAction].to[FakeAuthAction])
+    bind[AuthActionSelector].to[FakeAuthSelector])
     .build()
     .injector
 
@@ -91,7 +92,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[FormPartialRetriever].toInstance(formPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
-      bind[AuthAction].to[FakeAuthActionWithNino],
+      bind[AuthActionSelector].to[FakeAuthWithNinoSelector],
       bind[NinoContainer].toInstance(AbroadNinoContainer)
     )
     .build()

@@ -34,7 +34,7 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthActionSelector, AuthDetails, AuthenticatedRequest, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
@@ -79,7 +79,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[AuthAction].to[FakeAuthAction],
+      bind[AuthActionSelector].to[FakeAuthSelector],
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),

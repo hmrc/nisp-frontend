@@ -25,7 +25,6 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.http._
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -53,16 +52,6 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-  val authBasedInjector = GuiceApplicationBuilder().
-    overrides(
-      bind[IdentityVerificationConnector].toInstance(mockIVConnector),
-      bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].toInstance(formPartialRetriever),
-      bind[TemplateRenderer].toInstance(templateRenderer),
-      bind[AuthAction].to[FakeAuthAction]
-    ).injector()
-
   val verifyAuthBasedInjector = GuiceApplicationBuilder().
     overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
@@ -70,7 +59,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[FormPartialRetriever].toInstance(formPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
-      bind[AuthAction].to[FakeVerifyAuthAction]
+      bind[AuthAction].qualifiedWith("verifyAuthAction").to(classOf[FakeVerifyAuthAction])
     ).injector()
 
   override def beforeEach(): Unit = {
@@ -78,38 +67,37 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
     reset(mockApplicationConfig, mockIVConnector)
   }
 
-  val landingController = authBasedInjector.instanceOf[LandingController]
   val verifyLandingController = verifyAuthBasedInjector.instanceOf[LandingController]
 
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   "GET /" should {
     "return 200" in {
-      val result = landingController.show(fakeRequest)
-      status(result) mustBe Status.OK
+      val result = verifyLandingController.show(fakeRequest)
+      status(result) mustBe OK
     }
 
     "return HTML" in {
-      val result = landingController.show(fakeRequest)
+      val result = verifyLandingController.show(fakeRequest)
       Helpers.contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
     }
 
     "load the landing page" in {
-      val result = landingController.show(fakeRequest)
+      val result = verifyLandingController.show(fakeRequest)
       contentAsString(result) must include("Your State Pension forecast is provided for your information only and the " +
         "service does not offer financial advice. When planning for your retirement, you should seek professional advice.")
     }
 
     "have a start button" in {
-      val result = landingController.show(fakeRequest)
+      val result = verifyLandingController.show(fakeRequest)
       contentAsString(result) must include("Continue")
     }
 
     "return IVLanding page" in {
       when(mockApplicationConfig.identityVerification).thenReturn(true)
 
-      val result = landingController.show(fakeRequest)
+      val result = verifyLandingController.show(fakeRequest)
       val doc = Jsoup.parse( contentAsString(result))
       doc.getElementById("landing-signin-heading").text mustBe messages("nisp.landing.signin.heading")
     }
@@ -117,7 +105,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
     "return non-IV landing page when switched on" in {
       when(mockApplicationConfig.identityVerification).thenReturn(false)
 
-      val result = landingController.show(fakeRequest)
+      val result = verifyLandingController.show(fakeRequest)
       val doc = Jsoup.parse( contentAsString(result))
       doc.getElementById("eligibility-heading").text mustBe messages("nisp.landing.eligibility.heading")
     }
@@ -129,13 +117,14 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
         SessionKeys.lastRequestTimestamp -> now.getMillis.toString
       ))
+
       redirectLocation(result) mustBe Some("/check-your-state-pension/account")
     }
   }
 
   "GET /not-authorised" must {
     "show not authorised page" in {
-      val result = landingController.showNotAuthorised(None)(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(None)(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
@@ -146,7 +135,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         Future.successful(IdentityVerificationSuccessResponse("FailedMatching"))
       )
 
-      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
@@ -157,7 +146,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         Future.successful(IdentityVerificationSuccessResponse("InsufficientEvidence"))
       )
 
-      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
@@ -168,7 +157,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         Future.successful(IdentityVerificationSuccessResponse("Incomplete"))
       )
 
-      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
@@ -179,7 +168,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         Future.successful(IdentityVerificationSuccessResponse("PreconditionFailed"))
       )
 
-      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
@@ -190,7 +179,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         Future.successful(IdentityVerificationSuccessResponse("UserAborted"))
       )
 
-      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
     }
 
@@ -201,7 +190,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         Future.successful(IdentityVerificationSuccessResponse("TechnicalIssue"))
       )
 
-      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("This online service is experiencing technical difficulties.")
     }
 
@@ -212,7 +201,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         Future.successful(IdentityVerificationSuccessResponse("LockedOut"))
       )
 
-      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("You have reached the maximum number of attempts to confirm your identity.")
     }
 
@@ -223,12 +212,12 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         Future.successful(IdentityVerificationSuccessResponse("Timeout"))
       )
 
-      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       contentAsString(result) must include("Your session has ended because you have not done anything for 15 minutes.")
     }
 
     "show 2FA failure page when no journey ID specified" in {
-      val result = landingController.showNotAuthorised(None)(fakeRequest)
+      val result = verifyLandingController.showNotAuthorised(None)(fakeRequest)
       contentAsString(result) must include("We cannot confirm your identity")
       contentAsString(result) must not include "If you cannot confirm your identity and you have a query you can"
     }
@@ -237,17 +226,17 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   "GET /cymraeg" must {
     implicit val lang = Lang("cy")
     "return 200" in {
-      val result = landingController.show(fakeRequestWelsh)
-      status(result) mustBe Status.OK
+      val result = verifyLandingController.show(fakeRequestWelsh)
+      status(result) mustBe OK
     }
 
     "return HTML" in {
-      val result = landingController.show(fakeRequestWelsh)
+      val result = verifyLandingController.show(fakeRequestWelsh)
       Helpers.contentType(result) mustBe Some("text/html")
       charset(result) mustBe Some("utf-8")
     }
     "load the landing page in welsh" in {
-      val result = landingController.show(fakeRequestWelsh)
+      val result = verifyLandingController.show(fakeRequestWelsh)
       contentAsString(result) must include("data-journey-click=\"checkmystatepension:language: cy\"")
     }
   }

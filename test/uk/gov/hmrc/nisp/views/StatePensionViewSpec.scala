@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
@@ -59,7 +59,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   val standardInjector = GuiceApplicationBuilder()
     .overrides(
-      bind[AuthAction].to[FakeAuthAction],
+      bind[AuthActionSelector].to[FakeAuthSelector],
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
@@ -82,7 +82,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[FormPartialRetriever].toInstance(FakePartialRetriever),
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
-      bind[AuthAction].to[FakeAuthActionWithNino],
+      bind[AuthActionSelector].to[FakeAuthWithNinoSelector],
       bind[NinoContainer].toInstance(AbroadNinoContainer)
     )
     .build()

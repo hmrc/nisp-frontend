@@ -29,6 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class FakeVerifyAuthAction @Inject()(val parser: BodyParsers.Default,
                                      val executionContext: ExecutionContext) extends AuthAction {
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
+
     block(AuthenticatedRequest(request, NispAuthedUserFixture.user(TestAccountBuilder.regularNino),
       AuthDetails(ConfidenceLevel.L500, Some("IDA"), LoginTimes(DateTime.now, None))))
   }

@@ -17,9 +17,10 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.i18n.{I18nSupport, Messages}
+import com.google.inject.name.Named
+import play.api.Logger
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.api.{Application, Logger}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
@@ -32,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class LandingController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
                                   applicationConfig: ApplicationConfig,
-                                  verifyAuthAction: AuthAction,
+                                  @Named("verifyAuthAction")verifyAuthAction: AuthAction,
                                   mcc: MessagesControllerComponents)
                                  (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                   val formPartialRetriever: FormPartialRetriever,

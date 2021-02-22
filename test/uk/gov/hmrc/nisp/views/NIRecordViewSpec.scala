@@ -51,7 +51,7 @@ import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.NIRecordController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, AuthDetails, AuthenticatedRequest, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
@@ -88,7 +88,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[AuditConnector].toInstance(mockAuditConnector),
-      bind[AuthAction].to[FakeAuthAction],
+      bind[AuthActionSelector].to[FakeAuthSelector],
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[ApplicationConfig].toInstance(mockAppConfig),
@@ -856,7 +856,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
         bind[FormPartialRetriever].toInstance(formPartialRetriever),
         bind[TemplateRenderer].toInstance(templateRenderer),
-        bind[AuthAction].to[FakeAuthActionWithNino],
+        bind[AuthActionSelector].to[FakeAuthWithNinoSelector],
         bind[NinoContainer].toInstance(AbroadNinoContainer),
         bind[DateProvider].toInstance(mockDateProvider)
       )
