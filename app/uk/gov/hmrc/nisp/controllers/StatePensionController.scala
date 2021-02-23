@@ -90,10 +90,10 @@ class StatePensionController @Inject()(authenticate: AuthAction,
         val statePensionResponseF = statePensionService.getSummary(user.nino)
         val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
 
-        for (
-          statePensionResponse <- statePensionResponseF;
+        for {
+          statePensionResponse <- statePensionResponseF
           nationalInsuranceResponse <- nationalInsuranceResponseF
-        ) yield {
+        } yield {
           (statePensionResponse, nationalInsuranceResponse) match {
             case (Right(statePension), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
               auditConnector.sendEvent(AccountExclusionEvent(

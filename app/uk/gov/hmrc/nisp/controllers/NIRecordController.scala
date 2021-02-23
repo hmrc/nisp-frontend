@@ -109,10 +109,10 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
 
       val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
       val statePensionResponseF = statePensionService.getSummary(nino)
-      for (
-        nationalInsuranceRecordResponse <- nationalInsuranceResponseF;
+      for {
+        nationalInsuranceRecordResponse <- nationalInsuranceResponseF
         statePensionResponse <- statePensionResponseF
-      ) yield {
+      } yield {
         nationalInsuranceRecordResponse match {
           case Right(niRecord) =>
             if (gapsOnlyView && niRecord.numberOfGaps < 1) {
