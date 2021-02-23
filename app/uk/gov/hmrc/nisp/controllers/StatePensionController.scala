@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, AuthDetails, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
@@ -35,9 +35,10 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils
+
 import scala.concurrent.ExecutionContext
 
-class StatePensionController @Inject()(authActionSelector: AuthActionSelector,
+class StatePensionController @Inject()(authenticate: AuthAction,
                                        statePensionService: StatePensionService,
                                        nationalInsuranceService: NationalInsuranceService,
                                        auditConnector: AuditConnector,
@@ -48,8 +49,6 @@ class StatePensionController @Inject()(authActionSelector: AuthActionSelector,
                                        val formPartialRetriever: FormPartialRetriever,
                                        val templateRenderer: TemplateRenderer,
                                        executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
-
-  val authenticate: AuthAction = authActionSelector.decide
 
   def showCope: Action[AnyContent] = authenticate.async {
     implicit request =>

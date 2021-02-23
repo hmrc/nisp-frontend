@@ -23,7 +23,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
@@ -37,8 +37,8 @@ import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.ExecutionContext
 
-class NIRecordController @Inject()(authActionSelector: AuthActionSelector,
-                                   auditConnector: AuditConnector,
+class NIRecordController @Inject()(auditConnector: AuditConnector,
+                                   authenticate: AuthAction,
                                    nationalInsuranceService: NationalInsuranceService,
                                    statePensionService: StatePensionService,
                                    appConfig: ApplicationConfig,
@@ -51,8 +51,8 @@ class NIRecordController @Inject()(authActionSelector: AuthActionSelector,
                                     ec: ExecutionContext)
   extends NispFrontendController(mcc) with I18nSupport {
 
-  val authenticate: AuthAction = authActionSelector.decide
   val showFullNI: Boolean = appConfig.showFullNI
+
 
   def showFull: Action[AnyContent] = show(gapsOnlyView = false)
 

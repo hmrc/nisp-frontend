@@ -25,14 +25,13 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.http.Status
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.http.{SessionKeys, Upstream4xxResponse}
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionSelector}
+import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
@@ -68,7 +67,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[AuditConnector].toInstance(mockAuditConnector),
-      bind[AuthActionSelector].to[FakeAuthSelector],
+      bind[AuthAction].to[FakeAuthAction],
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[ApplicationConfig].toInstance(mockAppConfig),

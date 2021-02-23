@@ -32,8 +32,11 @@ class NispModule extends Module {
             bind[FormPartialRetriever].to[NispFormPartialRetriever],
             bind[TemplateRenderer].to[LocalTemplateRenderer],
             bind[HeaderCarrierForPartialsConverter].to[NispHeaderCarrierForPartialsConverter],
-            bind[AuthAction].qualifiedWith("authAction").to(classOf[AuthActionImpl]),
-            bind[AuthAction].qualifiedWith("verifyAuthAction").to(classOf[VerifyAuthActionImpl])
+            if(configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)){
+                bind[AuthAction].to[AuthActionImpl]
+            }else{
+                bind[AuthAction].to[VerifyAuthActionImpl]
+            }
         )
     }
 }

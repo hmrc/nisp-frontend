@@ -33,7 +33,7 @@ import play.api.test.{FakeRequest, Helpers, Injecting}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, VerifyAuthActionImpl}
 import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -59,7 +59,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[FormPartialRetriever].toInstance(formPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
-      bind[AuthAction].qualifiedWith("verifyAuthAction").to(classOf[FakeVerifyAuthAction])
+      bind[VerifyAuthActionImpl].to[FakeVerifyAuthAction]
     ).injector()
 
   override def beforeEach(): Unit = {

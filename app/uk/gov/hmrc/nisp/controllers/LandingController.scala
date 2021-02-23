@@ -23,7 +23,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, VerifyAuthActionImpl}
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class LandingController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
                                   applicationConfig: ApplicationConfig,
-                                  @Named("verifyAuthAction")verifyAuthAction: AuthAction,
+                                  verifyAuthAction: VerifyAuthActionImpl,
                                   mcc: MessagesControllerComponents)
                                  (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                   val formPartialRetriever: FormPartialRetriever,
