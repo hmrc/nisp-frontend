@@ -30,10 +30,11 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers, Injecting}
+import uk.gov.hmrc.auth.core.{AuthConnector, MissingBearerToken}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, VerifyAuthActionImpl}
+import uk.gov.hmrc.nisp.controllers.auth.VerifyAuthActionImpl
 import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -52,7 +53,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-  val verifyAuthBasedInjector = GuiceApplicationBuilder().
+  val injector = GuiceApplicationBuilder().
     overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
@@ -67,7 +68,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
     reset(mockApplicationConfig, mockIVConnector)
   }
 
-  val verifyLandingController = verifyAuthBasedInjector.instanceOf[LandingController]
+  val verifyLandingController = injector.instanceOf[LandingController]
+
 
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
@@ -112,6 +114,26 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   }
 
   "GET /signin/verify" must {
+    "redirect to verify" in {
+      val mockAuthConnector = mock[AuthConnector]
+
+      val verifyAuthBasedInjector = GuiceApplicationBuilder().
+        overrides(
+          bind[IdentityVerificationConnector].toInstance(mockIVConnector),
+          bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+          bind[FormPartialRetriever].toInstance(formPartialRetriever),
+          bind[AuthConnector].toInstance(mockAuthConnector),
+          bind[TemplateRenderer].toInstance(templateRenderer)
+        ).injector()
+
+      when(mockAuthConnector.authorise(mockAny(), mockAny())(mockAny(), mockAny()))
+        .thenReturn(Future.failed(MissingBearerToken("Missing Bearer Token!")))
+
+      val verifyLandingController = verifyAuthBasedInjector.instanceOf[LandingController]
+      val result = verifyLandingController.verifySignIn(fakeRequest)
+      redirectLocation(result) mustBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
+    }
+
     "redirect to account page when signed in" in {
       val result = verifyLandingController.verifySignIn(FakeRequest().withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
