@@ -25,6 +25,7 @@
 @import uk.gov.hmrc.http.SessionKeys
 @import uk.gov.hmrc.nisp.utils.Constants
 @import play.api.Play
+@import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
 
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
@@ -73,6 +74,10 @@
     Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
 }
 
+@inlineScript = @{
+  val trackingCodeSnippet = Play.current.injector.instanceOf[TrackingConsentSnippet]
+  trackingCodeSnippet()
+}
 
 @links = @{
     if(mainTemplateParams.articleEnabled) {
@@ -203,6 +208,7 @@
         "pageTitle" -> mainTemplateParams.pageTitle.map{x => x + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")},
         "linkElems" -> linkElems,
         "scriptElems" -> scriptElement,
+        "inlineScript" -> inlineScript,
         "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,

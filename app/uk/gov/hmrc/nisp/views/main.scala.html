@@ -69,7 +69,7 @@
     Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
 }
 
-@inlineScript = {
+@inlineScript = @{
     val trackingCodeSnippet = Play.current.injector.instanceOf[TrackingConsentSnippet]
     trackingCodeSnippet()
 }
