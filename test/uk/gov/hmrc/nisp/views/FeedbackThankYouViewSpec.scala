@@ -40,17 +40,16 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar {
 
     "assert correct page title" in {
       val title = contentAsString(html)
-      val expected =  messages("nisp.feedback.title")
-      title must include(expected)
+      title must include(messages("nisp.feedback.title"))
     }
 
     "assert correct html displayed from partialURL call" in {
       reset(cachedStaticHtmlPartialRetriever)
       when(cachedStaticHtmlPartialRetriever.getPartialContent(ArgumentMatchers.anyString(), any(), any())(any()))
         .thenReturn(Html("<p> Mock partial content </p>"))
+
       val content = contentAsString(html)
-      val expected = "<p> Mock partial content </p>"
-      content must include(expected)
+      content must include("<p> Mock partial content </p>")
       verify(cachedStaticHtmlPartialRetriever, times(1)).getPartialContent(
         url = ArgumentMatchers.eq(partialUrl),
         any(), any())(any())
@@ -59,10 +58,9 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar {
     "assert correct href on the start again button" in {
       when(cachedStaticHtmlPartialRetriever.getPartialContent(ArgumentMatchers.anyString(), any(), any())(any()))
         .thenReturn(Html("<p> Mock partial content </p>"))
-      val expected = "/check-your-state-pension/account"
       val redirect = source.getElementById("Start").attr("href")
 
-      redirect must include(expected)
+      redirect must include("/check-your-state-pension/account")
     }
   }
 }

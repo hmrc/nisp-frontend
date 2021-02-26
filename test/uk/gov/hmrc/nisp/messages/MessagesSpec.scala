@@ -51,7 +51,7 @@ class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
   "Application" should {
     "have the correct message configs" in {
       messagesApi.messages.size shouldBe 4
-      messagesApi.messages.keys should contain theSameElementsAs Vector("en", "cy", "default", "default.play")
+      messagesApi.messages.keys should contain theSameElementsAs List("en", "cy", "default", "default.play")
     }
   }
 

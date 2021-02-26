@@ -48,9 +48,7 @@ class LockedOutViewSpec extends HtmlSpec with MockitoSugar {
 
     "assert correct heading title on page" in {
       val title = source.getElementsByTag("h1").get(0).toString
-      val messageKey = "nisp.iv.failure.lockedout.title"
-      val expected = "> " + messages(messageKey) + " <"
-      title must include(expected)
+      title must include(messages("nisp.iv.failure.lockedout.title"))
     }
   }
 }

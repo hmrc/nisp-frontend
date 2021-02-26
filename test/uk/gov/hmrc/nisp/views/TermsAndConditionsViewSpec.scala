@@ -50,16 +50,12 @@ class TermsAndConditionsViewSpec extends HtmlSpec with MockitoSugar {
 
     "assert correct heading title on page" in {
       val title = source.getElementsByTag("h1").get(0).toString
-      val messageKey = "nisp.tandcs.title"
-      val expected = messages(messageKey)
-      title must include(expected)
+      title must include(messages("nisp.tandcs.title"))
     }
 
     "assert correct heading level 2 on page" in {
       val title = source.getElementsByTag("h2").get(0).toString
-      val messageKey = "nisp.tandcs.heading"
-      val expected = messages(messageKey)
-      title must include(expected)
+      title must include(messages("nisp.tandcs.heading"))
     }
   }
 }

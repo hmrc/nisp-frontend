@@ -41,7 +41,7 @@ class FeedbackViewSpec extends HtmlSpec with MockitoSugar {
       val source = asDocument(contentAsString(html))
       val row = source.getElementsByTag("script").get(0).toString
       val expected = messages("nisp.feedback.title")
-      row must include(s"document.title = \042$expected\042")
+      row must include(s"""document.title = "$expected"""")
     }
 
     "assert passed in formBody is displayed" in {
@@ -57,6 +57,7 @@ class FeedbackViewSpec extends HtmlSpec with MockitoSugar {
       val expected = "<p> Mock partial content </p>"
       when(formPartialRetriever.getPartialContent(any(), any(), any())(any()))
         .thenReturn(Html(expected))
+
       val html = feedback(partialUrl, None)
       val content = contentAsString(html)
       content must include(expected)

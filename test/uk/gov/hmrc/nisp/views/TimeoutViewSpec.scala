@@ -44,36 +44,27 @@ class TimeoutViewSpec extends HtmlSpec with MockitoSugar {
 
     "assert correct heading title on page" in {
       val heading = source.getElementsByTag("h1").get(0).toString
-      val messageKey = "nisp.iv.failure.timeout.title"
-      val expected = messages(messageKey)
-      heading must include(expected)
+      heading must include(messages("nisp.iv.failure.timeout.title"))
     }
 
     "assert correct paragraph one text on page" in {
       val paragraph = source.getElementsByTag("p").get(1).toString
-      val messageKey = "nisp.iv.failure.timeout.message"
-      val expected = messages(messageKey)
-      paragraph must include(expected)
+      paragraph must include(messages("nisp.iv.failure.timeout.message"))
     }
 
     "assert correct paragraph two text on page" in {
       val paragraph = source.getElementsByTag("p").get(2).toString
-      val messageKey = "nisp.iv.failure.timeout.data"
-      val expected = messages(messageKey)
-      paragraph must include(expected)
+      paragraph must include(messages("nisp.iv.failure.timeout.data"))
     }
 
     "assert correct button text on page" in {
       val button = source.getElementsByClass("button").text
-      val messageKey = "nisp.iv.failure.timeout.button"
-      val expected = messages(messageKey)
-      button must include(expected)
+      button must include(messages("nisp.iv.failure.timeout.button"))
     }
 
     "assert correct href on the start again button" in {
       val buttonHref = source.getElementsByClass("button").attr("href")
-      val expected = "/check-your-state-pension/account"
-      buttonHref must include(expected)
+      buttonHref must include("/check-your-state-pension/account")
     }
   }
 }
