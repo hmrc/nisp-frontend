@@ -68,6 +68,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val pensionWiseLink = configuration.get[String]("pension-wise-link.url")
   val frontendHost = loadConfig("nisp-frontend.host")
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
+  val urRecruitmentLinkURL: String = configuration.get[String]("ur-research.url")
 
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   val pertaxFrontendUrl: String = configuration.getOptional[String]("breadcrumb-service.url").getOrElse("")

@@ -85,6 +85,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer)
     )
+    .configure("ur-research.url" -> "testUrResearchURL")
     .build()
     .injector
 
@@ -180,7 +181,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
             val urBannerHref =  source.getElementById("fullWidthBannerLink")
             val urDismissedText = source.getElementById("fullWidthBannerDismissText")
             assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
-            assert(urBannerHref.text() == Messages("nisp.home.banner.recruitment.linkURL"))
+            assert(urBannerHref.text() == "testUrResearchURL")
             assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
             assert(source.getElementById("full-width-banner") != null)
           }

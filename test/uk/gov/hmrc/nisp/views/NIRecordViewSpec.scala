@@ -97,7 +97,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       bind[FormPartialRetriever].toInstance(formPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[DateProvider].toInstance(mockDateProvider)
-    ).build()
+    )
+    .configure("ur-research.url" -> "testUrResearchURL")
+    .build()
 
   lazy val controller = inject[NIRecordController]
 
@@ -158,7 +160,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       val urBannerHref =  doc.getElementById("fullWidthBannerLink")
       val urDismissedText = doc.getElementById("fullWidthBannerDismissText")
       assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
-      assert(urBannerHref.text() == Messages("nisp.home.banner.recruitment.linkURL"))
+      assert(urBannerHref.text() == "testUrResearchURL")
       assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
       assert(doc.getElementById("full-width-banner") != null)
     }
