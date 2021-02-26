@@ -52,7 +52,6 @@ class LandingViewSpec extends HtmlSpec with MockitoSugar {
     val current: String = contentAsString(html)
     val document = asDocument(current)
     val title = document.title()
-    val expected = messages("nisp.landing.title")
-    title must include(expected)
+    title must include(messages("nisp.landing.title"))
   }
 }
