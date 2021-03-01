@@ -85,7 +85,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer)
     )
-    .configure("ur-research.url" -> "testUrResearchURL")
     .build()
     .injector
 
@@ -104,8 +103,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     SessionKeys.lastRequestTimestamp -> now.getMillis.toString
   )
 
-  
-
   "The State Pension page" when {
 
     "the user is a NON-MQP" when {
@@ -113,7 +110,6 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       "The scenario is continue working  || Fill Gaps" when {
 
         "State Pension view with NON-MQP :  Personal Max" should {
-
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
@@ -174,14 +170,13 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           "render page with UR banner" in {
             mockSetup
             val request = statePensionController.show()(generateFakeRequest)
-
             val source = asDocument(contentAsString(request))
-
+            val urResearchURL = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
             val urBanner =  source.getElementsByClass("full-width-banner__title")
             val urBannerHref =  source.getElementById("fullWidthBannerLink")
             val urDismissedText = source.getElementById("fullWidthBannerDismissText")
             assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
-            assert(urBannerHref.text() == "testUrResearchURL")
+            assert(urBannerHref.text() == urResearchURL)
             assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
             assert(source.getElementById("full-width-banner") != null)
           }
