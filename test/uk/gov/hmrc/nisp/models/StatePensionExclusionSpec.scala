@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.models
 
 import org.joda.time.LocalDate
-import uk.gov.hmrc.nisp.models.enums.Exclusion
 import uk.gov.hmrc.play.test.UnitSpec
 
 

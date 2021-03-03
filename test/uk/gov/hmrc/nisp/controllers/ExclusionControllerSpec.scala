@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
-
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
@@ -33,8 +32,7 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.play.test.UnitSpec

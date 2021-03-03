@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nisp.models.enums
 
-import Exclusion.Exclusion
 import play.api.libs.json.{JsString, Json}
+import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.play.test.UnitSpec
 
 class SPExclusionSpec extends UnitSpec {

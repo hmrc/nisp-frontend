@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.events
 
-import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
+import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.models.UserName
 

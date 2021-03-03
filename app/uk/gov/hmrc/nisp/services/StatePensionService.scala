@@ -22,17 +22,18 @@ import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
-import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.models.enums.Exclusion._
+import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.time.CurrentTaxYear
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
                                    (implicit executor: ExecutionContext) extends CurrentTaxYear {
 
-  val exclusionCodeDead = "EXCLUSION_DEAD"
-  val exclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
+  val exclusionCodeDead: String = "EXCLUSION_DEAD"
+  val exclusionCodeManualCorrespondence: String = "EXCLUSION_MANUAL_CORRESPONDENCE"
+  val exclusionCodeCopeProcessing: String = "EXCLUSION_COPE_PROCESSING"
+  val exclusionCodeCopeProcessingFailed: String = "EXCLUSION_COPE_PROCESSING_FAILED"
 
   override def now: () => DateTime = () => DateTime.now(ukTime)
 
@@ -53,6 +54,11 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
           Left(StatePensionExclusionFiltered(Exclusion.Dead))
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeManualCorrespondence) =>
           Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
+        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessing) =>
+          Left(StatePensionExclusionFiltered(Exclusion.CopeProcessing))
+        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessingFailed) =>
+          Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
+        // Case match not exhaustive
       }
   }
 
