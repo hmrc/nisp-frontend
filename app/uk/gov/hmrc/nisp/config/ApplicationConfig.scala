@@ -32,7 +32,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
 
-  val appName: String = getConfString("appName", "APP NAME NOT SET")
+  val appName: String = getString("appName")
   val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version") + "/"
   val betaFeedbackUrl = s"${Constants.baseUrl}/feedback"
   val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
