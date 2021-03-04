@@ -64,14 +64,9 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
               Ok(excluded_cope(CopeProcessing, statePensionExclFiltered.pensionAge))
             else if (statePensionExclFiltered.exclusion == CopeProcessingFailed)
               Ok(excluded_cope(CopeProcessingFailed, statePensionExclFiltered.pensionAge))
-            else {
-              println("\n\n\nOPTION NUMBER 2\n\n")
-              println(s"\n\n\nexc = $statePensionExclFiltered\n\n")
+            else
               Ok(excluded_sp(statePensionExclFiltered.exclusion, statePensionExclFiltered.pensionAge, statePensionExclFiltered.pensionDate, nationalInsurance.isRight, statePensionExclFiltered.statePensionAgeUnderConsideration))
-            }
           case exclusion =>
-            println("\n\n\n\n YOU ARE HERE\n\n\n\n")
-            println(s"\n\n\n\n $exclusion\n\n\n\n")
             Logger.warn("User accessed /exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show())
         }
