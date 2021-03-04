@@ -170,6 +170,10 @@ nisp.excluded.haveReached = You reached State Pension age on {0}
 nisp.excluded.willReach = You’ll reach State Pension age on <span class="nowrap">{0}</span>
 nisp.nirecord.summary.youhave = You have:
 
+nisp.excluded.cope.processing.h1 = Your State Pension Forecast
+nisp.excluded.cope.processing = We are making updates to your National Insurance Record and are unable to calculate your State Pension forecast at the moment.
+nisp.excluded.cope.processing.returnDate = Your State Pension Forecast will be available on {0}.
+
 #**********************
 # Thank you messages
 #**********************

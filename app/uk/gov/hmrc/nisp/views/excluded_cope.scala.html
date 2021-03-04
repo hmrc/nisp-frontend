@@ -45,12 +45,14 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
 }
 
 @unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
-            pageTitle = Some(messages("nisp.main.h1.title")), articleClasses = Some("mainpage"),
+            pageTitle = Some(messages("nisp.excluded.cope.processing.h1")), articleClasses = Some("mainpage"),
             gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
 ) {
 
     @if(exclusion.equals(CopeProcessing)) {
-            <p>@Html(messages("nisp.excluded.cope.processing"))</p>
+            <div class="panel-indent">@Html(messages("nisp.excluded.cope.processing"))</div>
+
+            <p>@Html(messages("nisp.excluded.cope.processing.returnDate"))</p>
 
     } else {
             <p>@Html(messages("nisp.excluded.cope.processing.failed"))</p>
