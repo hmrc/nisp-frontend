@@ -23,10 +23,12 @@ import play.twirl.api.Html
 import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.http.UpstreamErrorResponse.Upstream4xxResponse
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.views.html.{global_error, page_not_found_template, service_error_500}
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import uk.gov.hmrc.nisp.views.html.{excluded_cope, global_error, page_not_found_template, service_error_500}
+import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
+import play.api.mvc.Results.Ok
+import uk.gov.hmrc.nisp.models.Exclusion.{CopeProcessing, CopeProcessingFailed}
 
 import scala.concurrent.Future
 
@@ -43,10 +45,4 @@ class ErrorHandler @Inject()(applicationConfig: ApplicationConfig)
 
   override def notFoundTemplate(implicit request: Request[_]): Html = page_not_found_template()
 
-  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
-    exception match {
-      case ex: Upstream4xxResponse if ex.upstreamResponseCode == 403 && ex.message.contentEquals("EXCLUSION_COPE_PROCESSING") =>
-        ???
-    }
-  }
 }

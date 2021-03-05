@@ -54,10 +54,10 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
           Left(StatePensionExclusionFiltered(Exclusion.Dead))
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeManualCorrespondence) =>
           Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
-        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessing) =>
-          Left(StatePensionExclusionFiltered(Exclusion.CopeProcessing))
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
+        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessing) =>
+          Left(StatePensionExclusionFiltered(Exclusion.CopeProcessing))
         // Case match not exhaustive
       }
   }

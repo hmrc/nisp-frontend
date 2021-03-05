@@ -40,12 +40,20 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
     )
 }
 
+@pageTitle = @{
+    if(exclusion == CopeProcessing){
+        messages("nisp.excluded.cope.processing.h1")
+    } else {
+        messages("nisp.excluded.cope.failed.h1")
+    }
+}
+
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
 @unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
-            pageTitle = Some(messages("nisp.excluded.cope.processing.h1")), articleClasses = Some("mainpage"),
+            pageTitle = Some(pageTitle), articleClasses = Some("mainpage"),
             gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
 ) {
 
@@ -55,7 +63,7 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
             <p>@Html(messages("nisp.excluded.cope.processing.returnDate"))</p>
 
     } else {
-            <p>@Html(messages("nisp.excluded.cope.processing.failed"))</p>
+            <div>@Html(messages("nisp.excluded.cope.processing.failed")) <a href="">@Html(messages("nisp.excluded.cope.processing.failed.link"))</a></div>
 
     }
 
