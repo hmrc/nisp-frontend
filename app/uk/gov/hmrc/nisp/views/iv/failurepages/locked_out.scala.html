@@ -22,13 +22,8 @@
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@analyticsAdditionalJs = {
-    ga('send', 'pageview', '/check-your-state-pension/unauthorised-locked-out');
-}
-
 @unauthenticatedMain(MainTemplateParams(
  articleClasses = Some("mainpage"),
- analyticsAdditionalJs = Some(analyticsAdditionalJs),
  pageTitle = Some(messages("nisp.iv.failure.lockedout.title")),
  h1Class = Some("heading-xlarge")
 )) {

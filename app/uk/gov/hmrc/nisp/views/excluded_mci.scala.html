@@ -44,7 +44,6 @@ statePensionAge: Option[Int])(
         browserTitle = Some(messages("nisp.main.title")),
         pageTitle = Some(messages("nisp.excluded.mci.title")),
         articleClasses = Some("mainpage"),
-        gaDimensions = Some(analyticsAdditionalJs),
         hideBreadcrumb = true
 )) {
     <p class="lede">@Html(messages("nisp.excluded.mci.info"))</p>

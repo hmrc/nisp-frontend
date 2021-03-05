@@ -35,22 +35,12 @@ statePensionAgeUnderConsideration: Option[Boolean]
 )(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@analyticsAdditionalJs = @{
-    Map[String, Any](
-        "nispExclusionType" -> exclusion.toString,
-        "statePensionAge" -> statePensionAge,
-        "authProvider" -> request.authDetails.authProvider,
-        "confidenceLevel" -> request.authDetails.confidenceLevel
-    )
-}
-
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
 @unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
-            pageTitle = Some(messages("nisp.main.h1.title")), articleClasses = Some("mainpage"),
-            gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
+  pageTitle = Some(messages("nisp.main.h1.title")), articleClasses = Some("mainpage"), showUrBanner = excludeUrPanel(exclusion))
 ) {
 
     @for(
