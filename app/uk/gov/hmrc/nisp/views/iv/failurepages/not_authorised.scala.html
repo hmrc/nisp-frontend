@@ -33,9 +33,9 @@ partialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov
 <p class="margin-bottom">@messages("nisp.iv.failure.general.youcan")</p>
 
 <ul class="list list-bullet">
- <li><a href=@ApplicationConfig.postSignInRedirectUrl>@messages("nisp.iv.failure.general.confirmIdentityAgain")</a></li>
- <li><a href="https://www.gov.uk/contact-hmrc" data-journey-click=checkmystatepension:external:helpline>@messages("nisp.iv.failure.general.contactHMRC")</a></li>
- <li><a href="https://www.gov.uk/future-pension-centre" data-journey-click=checkmystatepension:external:pensioncentre>@messages("nisp.iv.failure.general.contactFuturePension")</a></li>
+ <li><a id="confirm-identity-link" href=@ApplicationConfig.postSignInRedirectUrl>@messages("nisp.iv.failure.general.confirmIdentityAgain")</a></li>
+ <li><a id="contact-HMRC-link" href="https://www.gov.uk/contact-hmrc" data-journey-click=checkmystatepension:external:helpline>@messages("nisp.iv.failure.general.contactHMRC")</a></li>
+ <li><a id="contact-pension-link" href="https://www.gov.uk/future-pension-centre" data-journey-click=checkmystatepension:external:pensioncentre>@messages("nisp.iv.failure.general.contactFuturePension")</a></li>
 </ul>
 
 }

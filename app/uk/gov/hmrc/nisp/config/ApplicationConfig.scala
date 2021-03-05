@@ -32,7 +32,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
 
-  val appName: String = getConfString("appName", "APP NAME NOT SET")
+  val appName: String = getString("appName")
   val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version") + "/"
   val betaFeedbackUrl = s"${Constants.baseUrl}/feedback"
   val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
@@ -66,6 +66,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val pensionWiseLink = configuration.get[String]("pension-wise-link.url")
   val frontendHost = loadConfig("nisp-frontend.host")
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
+  val urRecruitmentLinkURL: String = configuration.get[String]("ur-research.url")
 
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   val pertaxFrontendUrl: String = configuration.getOptional[String]("breadcrumb-service.url").getOrElse("")
