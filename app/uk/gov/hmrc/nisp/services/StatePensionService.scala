@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.services
 
 import com.google.inject.Inject
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.joda.time.{DateTime, LocalDate}
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
@@ -25,6 +26,7 @@ import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.time.CurrentTaxYear
 
+import scala.util.matching.Regex
 import scala.concurrent.{ExecutionContext, Future}
 
 class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
@@ -57,7 +59,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessing) =>
-          Left(StatePensionExclusionFiltered(Exclusion.CopeProcessing))
+          Left(StatePensionExclusionFiltered(exclusion = Exclusion.CopeProcessing, copeDataAvailableDate = getDateWithRegex(ex.message)))
         // Case match not exhaustive
       }
   }
@@ -81,6 +83,23 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
       Exclusion.MarriedWomenReducedRateElection
     } else {
       throw new RuntimeException(s"Un-accounted for exclusion in NispConnectionNI: $exclusions")
+    }
+  }
+
+  private def getDateWithRegex(copeResponse: String): Option[LocalDate] = {
+    val upstream4xxResponseDateCapturingRegex: Regex = """(?:.*)(?:'\{"errorCode":"EXCLUSION_COPE_PROCESSING","copeDataAvailableDate":\")(\d{4}-\d{2}-\d{2})(?:\"}')""".r
+    val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("d MMMM y")
+
+    copeResponse match {
+      case upstream4xxResponseDateCapturingRegex(copeResponseDate) => {
+        println(new LocalDate(copeResponseDate).toString(dateFormatter))
+
+        // WIP
+        val dateAsString: String = new LocalDate(copeResponseDate).toString(dateFormatter)
+        val dateFromString = new LocalDate(dateAsString)
+        Some(dateFromString)
+      }
+      case _ => None
     }
   }
 }

@@ -28,7 +28,7 @@
 @import uk.gov.hmrc.play.partials._
 @import uk.gov.hmrc.renderer._
 
-@(exclusion: Exclusion, statePensionAge: Option[Int])(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
+@(exclusion: Exclusion, statePensionAge: Option[Int], copeDataAvailableDate: Option[LocalDate])(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @analyticsAdditionalJs = @{
@@ -60,7 +60,7 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
     @if(exclusion.equals(CopeProcessing)) {
             <div class="panel-indent">@Html(messages("nisp.excluded.cope.processing"))</div>
 
-            <p>@Html(messages("nisp.excluded.cope.processing.returnDate"))</p>
+            <p>@Html(messages("nisp.excluded.cope.processing.returnDate", copeDataAvailableDate.get))</p>
 
     } else {
             <div>@Html(messages("nisp.excluded.cope.processing.failed")) <a href="">@Html(messages("nisp.excluded.cope.processing.failed.link"))</a></div>

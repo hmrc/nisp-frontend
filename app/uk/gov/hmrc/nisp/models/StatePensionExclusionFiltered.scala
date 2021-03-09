@@ -26,7 +26,9 @@ case class StatePensionExclusionFiltered(
                                  exclusion: Exclusion,
                                  pensionAge: Option[Int] = None,
                                  pensionDate: Option[LocalDate] = None,
-                                 statePensionAgeUnderConsideration: Option[Boolean] = None) {
+                                 statePensionAgeUnderConsideration: Option[Boolean] = None,
+                                 copeDataAvailableDate: Option[LocalDate] = None
+                              ) {
   val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
 }
 

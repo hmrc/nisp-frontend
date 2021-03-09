@@ -61,9 +61,9 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
             else if (statePensionExclFiltered.exclusion == ManualCorrespondenceIndicator)
               Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, statePensionExclFiltered.pensionAge))
             else if (statePensionExclFiltered.exclusion == CopeProcessing)
-              Ok(excluded_cope(CopeProcessing, statePensionExclFiltered.pensionAge))
+              Ok(excluded_cope(CopeProcessing, statePensionExclFiltered.pensionAge, statePensionExclFiltered.copeDataAvailableDate))
             else if (statePensionExclFiltered.exclusion == CopeProcessingFailed)
-              Ok(excluded_cope(CopeProcessingFailed, statePensionExclFiltered.pensionAge))
+              Ok(excluded_cope(CopeProcessingFailed, statePensionExclFiltered.pensionAge, None))
             else
               Ok(excluded_sp(statePensionExclFiltered.exclusion, statePensionExclFiltered.pensionAge, statePensionExclFiltered.pensionDate, nationalInsurance.isRight, statePensionExclFiltered.statePensionAgeUnderConsideration))
           case exclusion =>
