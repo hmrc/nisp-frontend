@@ -27,6 +27,8 @@
 @import uk.gov.hmrc.nisp.models.Exclusion._
 @import uk.gov.hmrc.play.partials._
 @import uk.gov.hmrc.renderer._
+@import org.joda.time.LocalDate._
+@import org.joda.time.format.DateTimeFormat
 
 @(exclusion: Exclusion, statePensionAge: Option[Int], copeDataAvailableDate: Option[LocalDate])(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
@@ -48,19 +50,20 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
     }
 }
 
+@dateFormatter = @{ DateTimeFormat.forPattern("d MMMM y") }
+
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
 @unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
-            pageTitle = Some(pageTitle), articleClasses = Some("mainpage"),
-            gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
+            pageTitle = Some(pageTitle), articleClasses = Some("mainpage"))
 ) {
 
     @if(exclusion.equals(CopeProcessing)) {
             <div class="panel-indent">@Html(messages("nisp.excluded.cope.processing"))</div>
 
-            <p>@Html(messages("nisp.excluded.cope.processing.returnDate", copeDataAvailableDate.get))</p>
+            <p>@Html(messages("nisp.excluded.cope.processing.returnDate", copeDataAvailableDate.getOrElse(LocalDate.now()).toString(dateFormatter)))</p>
 
     } else {
             <div>@Html(messages("nisp.excluded.cope.processing.failed")) <a href="">@Html(messages("nisp.excluded.cope.processing.failed.link"))</a></div>
