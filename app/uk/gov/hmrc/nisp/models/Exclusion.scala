@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nisp.models
 
+import org.joda.time.LocalDate
+
 import play.api.libs.json._
 
 trait Exclusion

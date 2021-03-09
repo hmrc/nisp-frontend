@@ -39,7 +39,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
 
   override def now: () => DateTime = () => DateTime.now(ukTime)
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFiltered, StatePension]] = {
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]] = {
     statePensionConnector.getStatePension(nino)
       .map {
         case Right(statePension) => Right(statePension)
@@ -59,7 +59,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessing) =>
-          Left(StatePensionExclusionFiltered(exclusion = Exclusion.CopeProcessing, copeDataAvailableDate = getDateWithRegex(ex.message)))
+          Left(StatePensionExclusionFilteredWithCopeDate(exclusion = Exclusion.CopeProcessing, copeDate = getDateWithRegex(ex.message)))
         // Case match not exhaustive
       }
   }
@@ -86,12 +86,12 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
     }
   }
 
-  private def getDateWithRegex(copeResponse: String): Option[LocalDate] = {
+  private def getDateWithRegex(copeResponse: String): LocalDate = {
     val copeResponseDateCapturingRegex: Regex = """(?:.*)(?:'\{"errorCode":"EXCLUSION_COPE_PROCESSING","copeDataAvailableDate":\")(\d{4}-\d{2}-\d{2})(?:\"}')""".r
 
     copeResponse match {
-      case copeResponseDateCapturingRegex(copeResponseDateAsString) => Some(new LocalDate(copeResponseDateAsString))
-      case _ => None
+      case copeResponseDateCapturingRegex(copeResponseDateAsString) => new LocalDate(copeResponseDateAsString)
+      case _ => throw new Exception("cope date not matched with regex")
     }
   }
 }

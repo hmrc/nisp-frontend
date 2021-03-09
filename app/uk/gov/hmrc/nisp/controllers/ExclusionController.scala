@@ -56,17 +56,17 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
         statePension match {
           case Right(sp) if sp.reducedRateElection =>
             Ok(excluded_sp(MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), false, None))
-          case Left(statePensionExclFiltered) =>
-            if (statePensionExclFiltered.exclusion == Dead)
-              Ok(excluded_dead(Exclusion.Dead, statePensionExclFiltered.pensionAge))
-            else if (statePensionExclFiltered.exclusion == ManualCorrespondenceIndicator)
-              Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, statePensionExclFiltered.pensionAge))
-            else if (statePensionExclFiltered.exclusion == CopeProcessing)
-              Ok(excluded_cope(CopeProcessing, statePensionExclFiltered.pensionAge, statePensionExclFiltered.copeDataAvailableDate))
-            else if (statePensionExclFiltered.exclusion == CopeProcessingFailed)
-              Ok(excluded_cope(CopeProcessingFailed, statePensionExclFiltered.pensionAge, None))
+          case Left(statePensionExclusion) =>
+            if (statePensionExclusion.exclusion == Dead)
+              Ok(excluded_dead(Exclusion.Dead, statePensionExclusion.pensionAge))
+            else if (statePensionExclusion.exclusion == ManualCorrespondenceIndicator)
+              Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusion.pensionAge))
+            else if (statePensionExclusion.exclusion == CopeProcessing)
+              Ok(excluded_cope(CopeProcessing, statePensionExclusion.pensionAge, statePensionExclusion.copeDate))
+            else if (statePensionExclusion.exclusion == CopeProcessingFailed)
+              Ok(excluded_cope(CopeProcessingFailed, statePensionExclusion.pensionAge, None))
             else
-              Ok(excluded_sp(statePensionExclFiltered.exclusion, statePensionExclFiltered.pensionAge, statePensionExclFiltered.pensionDate, nationalInsurance.isRight, statePensionExclFiltered.statePensionAgeUnderConsideration))
+              Ok(excluded_sp(statePensionExclusion.exclusion, statePensionExclusion.pensionAge, statePensionExclusion.pensionDate, nationalInsurance.isRight, statePensionExclusion.statePensionAgeUnderConsideration))
           case exclusion =>
             Logger.warn("User accessed /exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show())

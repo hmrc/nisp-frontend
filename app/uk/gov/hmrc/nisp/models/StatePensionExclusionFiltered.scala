@@ -22,15 +22,35 @@ import uk.gov.hmrc.time.TaxYear
 import play.api.libs.json.JodaReads._
 import play.api.libs.json.JodaWrites._
 
+
+trait StatePensionExclusion {
+  def exclusion: Exclusion
+  def pensionAge: Option[Int]
+  def pensionDate: Option[LocalDate]
+  def statePensionAgeUnderConsideration: Option[Boolean]
+}
+
+trait CopeData {
+  def copeDate: LocalDate
+}
+
 case class StatePensionExclusionFiltered(
                                  exclusion: Exclusion,
                                  pensionAge: Option[Int] = None,
                                  pensionDate: Option[LocalDate] = None,
-                                 statePensionAgeUnderConsideration: Option[Boolean] = None,
-                                 copeDataAvailableDate: Option[LocalDate] = None
-                              ) {
+                                 statePensionAgeUnderConsideration: Option[Boolean] = None
+                              ) extends StatePensionExclusion {
   val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
 }
+
+case class StatePensionExclusionFilteredWithCopeDate(
+                                                      exclusion: Exclusion,
+                                                      pensionAge: Option[Int] = None,
+                                                      pensionDate: Option[LocalDate] = None,
+                                                      statePensionAgeUnderConsideration: Option[Boolean] = None,
+                                                      copeDate: LocalDate
+                                                    ) extends StatePensionExclusion with CopeData
+
 
 object StatePensionExclusionFiltered {
   implicit val formats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
