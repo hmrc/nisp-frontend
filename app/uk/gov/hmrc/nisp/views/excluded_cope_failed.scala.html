@@ -30,7 +30,7 @@
 @import org.joda.time.LocalDate._
 @import org.joda.time.format.DateTimeFormat
 
-@(exclusion: Exclusion, statePensionAge: Option[Int], copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
+@(exclusion: Exclusion, statePensionAge: Option[Int])(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @analyticsAdditionalJs = @{
@@ -42,17 +42,15 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
     )
 }
 
-@dateFormatter = @{ DateTimeFormat.forPattern("d MMMM y") }
+
 
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
 @unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
-            pageTitle = Some(messages("nisp.excluded.cope.processing.h1")), articleClasses = Some("mainpage")
-)
+            pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage"),
+            gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
 ) {
-    <div class="panel-indent">@Html(messages("nisp.excluded.cope.processing"))</div>
-
-    <p>@Html(messages("nisp.excluded.cope.processing.returnDate", copeDataAvailableDate.toString(dateFormatter)))</p>
+    <div>@Html(messages("nisp.excluded.cope.processing.failed")) <a href="">@Html(messages("nisp.excluded.cope.processing.failed.link"))</a></div>
 }
