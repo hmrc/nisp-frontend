@@ -30,6 +30,8 @@
 @import org.joda.time.LocalDate._
 @import org.joda.time.format.DateTimeFormat
 
+
+@this()
 @(exclusion: Exclusion, statePensionAge: Option[Int], copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
 

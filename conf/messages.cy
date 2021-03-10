@@ -167,6 +167,14 @@ nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar
 nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 nisp.nirecord.summary.youhave = Mae gennych:
 
+nisp.excluded.cope.processing.h1 = Your State Pension Forecast
+nisp.excluded.cope.processing = We are making updates to your National Insurance Record and are unable to calculate your State Pension forecast at the moment.
+nisp.excluded.cope.processing.returnDate = Your State Pension Forecast will be available on {0}.
+
+nisp.excluded.cope.failed.h1 = Sorry, we cannot show your forecast online
+nisp.excluded.cope.processing.failed = To get your State Pension forecast you need to
+nisp.excluded.cope.processing.failed.link = call the Future Pension Service and they will post it out to you.
+
 #***********************
 # Thank you messages
 #***********************

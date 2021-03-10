@@ -57,4 +57,5 @@ case class StatePensionExclusionFilteredWithCopeDate(
 
 object StatePensionExclusionFiltered {
   implicit val formats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
+  implicit val copeDataFormats: OFormat[StatePensionExclusionFilteredWithCopeDate] = Json.format[StatePensionExclusionFilteredWithCopeDate]
 }

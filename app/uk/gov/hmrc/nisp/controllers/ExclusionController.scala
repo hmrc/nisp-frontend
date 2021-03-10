@@ -34,7 +34,8 @@ import uk.gov.hmrc.nisp.views.html._
 class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     nationalInsuranceService: NationalInsuranceService,
                                     authenticate: ExcludedAuthAction,
-                                    mcc: MessagesControllerComponents)
+                                    mcc: MessagesControllerComponents,
+                                    excludedCopeView: excluded_cope)
                                    (implicit val executor: ExecutionContext,
                                     val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
@@ -71,7 +72,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
           case Left(spExclusion: StatePensionExclusionFilteredWithCopeDate) =>
-            Ok(excluded_cope(spExclusion.exclusion, spExclusion.pensionAge, spExclusion.copeAvailableDate))
+            Ok(excludedCopeView(spExclusion.exclusion, spExclusion.pensionAge, spExclusion.copeAvailableDate))
           case _ =>
             Logger.warn("User accessed /exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show())
