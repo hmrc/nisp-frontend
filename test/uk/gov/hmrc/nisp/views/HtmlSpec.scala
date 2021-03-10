@@ -26,7 +26,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.test.{FakeRequest, Injecting}
+import play.api.test.{FakeRequest, Helpers, Injecting}
 import play.twirl.api.Html
 
 import scala.concurrent.duration._
@@ -35,7 +35,8 @@ trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with Bef
 
   implicit val request = FakeRequest()
   implicit val defaultAwaitTimeout: Timeout = 5.seconds
-  implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+//  implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+  implicit val messages: Messages = Helpers.stubMessages()
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
