@@ -23,7 +23,7 @@ import play.api.libs.json.JodaReads._
 import play.api.libs.json.JodaWrites._
 
 
-trait StatePensionExclusion {
+trait StatePensionExclusionFilter {
   def exclusion: Exclusion
   def pensionAge: Option[Int]
   def pensionDate: Option[LocalDate]
@@ -31,25 +31,28 @@ trait StatePensionExclusion {
 }
 
 trait CopeData {
-  def copeDate: LocalDate
+  def copeAvailableDate: LocalDate
+  def previousAvailableDate: Option[LocalDate]
 }
 
 case class StatePensionExclusionFiltered(
                                  exclusion: Exclusion,
                                  pensionAge: Option[Int] = None,
                                  pensionDate: Option[LocalDate] = None,
-                                 statePensionAgeUnderConsideration: Option[Boolean] = None
-                              ) extends StatePensionExclusion {
-  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
-}
+
+                                 statePensionAgeUnderConsideration: Option[Boolean] = None,
+                                 copeDataAvailableDate: Option[LocalDate] = None
+                              ) extends StatePensionExclusionFilter
 
 case class StatePensionExclusionFilteredWithCopeDate(
                                                       exclusion: Exclusion,
                                                       pensionAge: Option[Int] = None,
                                                       pensionDate: Option[LocalDate] = None,
                                                       statePensionAgeUnderConsideration: Option[Boolean] = None,
-                                                      copeDate: LocalDate
-                                                    ) extends StatePensionExclusion with CopeData
+
+                                                      copeAvailableDate: LocalDate,
+                                                      previousAvailableDate: Option[LocalDate] = None
+                                                    ) extends StatePensionExclusionFilter with CopeData
 
 
 object StatePensionExclusionFiltered {

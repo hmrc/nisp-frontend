@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.services
 
 import com.google.inject.Inject
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.joda.time.{DateTime, LocalDate}
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
@@ -39,7 +38,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
 
   override def now: () => DateTime = () => DateTime.now(ukTime)
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusion, StatePension]] = {
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFilter, StatePension]] = {
     statePensionConnector.getStatePension(nino)
       .map {
         case Right(statePension) => Right(statePension)
@@ -59,7 +58,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessing) =>
-          Left(StatePensionExclusionFilteredWithCopeDate(exclusion = Exclusion.CopeProcessing, copeDate = getDateWithRegex(ex.message)))
+          Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, copeAvailableDate = getDateWithRegex(ex.message)))
         // Case match not exhaustive
       }
   }

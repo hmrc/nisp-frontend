@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.{Application, Logger}
+import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
@@ -30,7 +30,6 @@ import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.nisp.models.Exclusion._
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
-import uk.gov.hmrc.nisp.utils.DateProvider
 
 class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     nationalInsuranceService: NationalInsuranceService,
@@ -55,7 +54,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
       ) yield {
         statePension match {
           case Right(sp) if sp.reducedRateElection =>
-            Ok(excluded_sp(MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), false, None))
+            Ok(excluded_sp(MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), canSeeNIRecord = false, None))
           case Left(statePensionExclusionFiltered: StatePensionExclusionFiltered) =>
             if (statePensionExclusionFiltered.exclusion == Dead)
               Ok(excluded_dead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge))
@@ -72,8 +71,8 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
           case Left(spExclusion: StatePensionExclusionFilteredWithCopeDate) =>
-            Ok(excluded_cope(spExclusion.exclusion, spExclusion.pensionAge, spExclusion.copeDate))
-          case exclusion =>
+            Ok(excluded_cope(spExclusion.exclusion, spExclusion.pensionAge, spExclusion.copeAvailableDate))
+          case _ =>
             Logger.warn("User accessed /exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show())
         }
