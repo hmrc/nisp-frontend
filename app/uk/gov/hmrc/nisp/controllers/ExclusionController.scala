@@ -35,7 +35,8 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     nationalInsuranceService: NationalInsuranceService,
                                     authenticate: ExcludedAuthAction,
                                     mcc: MessagesControllerComponents,
-                                    excludedCopeView: excluded_cope)
+                                    excludedCopeView: excluded_cope,
+                                    excludedCopeFailedView: excluded_cope_failed)
                                    (implicit val executor: ExecutionContext,
                                     val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
@@ -62,7 +63,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
             else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
               Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge))
             else if (statePensionExclusionFiltered.exclusion == CopeProcessingFailed)
-              Ok(excluded_cope_failed(CopeProcessingFailed, statePensionExclusionFiltered.pensionAge))
+              Ok(excludedCopeFailedView(CopeProcessingFailed, statePensionExclusionFiltered.pensionAge))
             else
               Ok(excluded_sp(
                 statePensionExclusionFiltered.exclusion,

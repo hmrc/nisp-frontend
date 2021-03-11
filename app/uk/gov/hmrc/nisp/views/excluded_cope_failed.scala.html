@@ -27,8 +27,11 @@
 @import uk.gov.hmrc.nisp.models.Exclusion._
 @import uk.gov.hmrc.play.partials._
 @import uk.gov.hmrc.renderer._
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import org.joda.time.LocalDate._
 @import org.joda.time.format.DateTimeFormat
+
+@this(appConfig: ApplicationConfig)
 
 @(exclusion: Exclusion, statePensionAge: Option[Int])(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
@@ -52,5 +55,5 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
             pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage"),
             gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
 ) {
-    <div>@Html(messages("nisp.excluded.cope.processing.failed")) <a href="">@Html(messages("nisp.excluded.cope.processing.failed.link"))</a></div>
+<div><p>@Html(messages("nisp.excluded.cope.processing.failed"))</p> <a id="futurePensionLink" href="@appConfig.futurePensionUrl">@Html(messages("nisp.excluded.cope.processing.failed.link"))</a></div>
 }

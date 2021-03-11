@@ -35,8 +35,7 @@ trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with Bef
 
   implicit val request = FakeRequest()
   implicit val defaultAwaitTimeout: Timeout = 5.seconds
-//  implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
-  implicit val messages: Messages = Helpers.stubMessages()
+  implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
