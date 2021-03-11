@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
+
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
@@ -77,6 +78,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
   val mwrreMessagingNI = "We’re currently unable to show your National Insurance Record as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>."
   val abroadMessaging = "We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad."
   val spaUnderConsiderationMessaging = "Proposed change to your State Pension age"
+  val copeProcessingHeader = "Your State Pension Forecast"
+  val copeFailedHeader = "Sorry, we cannot show your forecast online"
 
   "GET /exclusion" should {
 
@@ -545,11 +548,20 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
             previousAvailableDate = Some(new LocalDate(2017, 7, 18))
           )
 
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(statePensionCopeProcessingResponse))
           )
 
-          // WIP
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationalInsuranceRecord)))
+
+          val result = testExclusionController.showSP()(FakeRequest())
+
+          status(result) shouldBe OK
+          contentAsString(result) should include(copeProcessingHeader)
         }
       }
 
@@ -557,14 +569,23 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
         "return the COPE Failed Exclusion on /exclusion" in {
           val statePensionCopeFailedResponse = StatePensionExclusionFiltered(
-            exclusion = Exclusion.CopeProcessing
+            exclusion = Exclusion.CopeProcessingFailed
           )
+
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(statePensionCopeFailedResponse))
           )
 
-          // WIP
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationalInsuranceRecord)))
+
+          val result = testExclusionController.showSP()(FakeRequest())
+
+          status(result) shouldBe OK
+          contentAsString(result) should include(copeFailedHeader)
         }
       }
 
