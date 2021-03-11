@@ -39,9 +39,7 @@ case class StatePensionExclusionFiltered(
                                  exclusion: Exclusion,
                                  pensionAge: Option[Int] = None,
                                  pensionDate: Option[LocalDate] = None,
-
-                                 statePensionAgeUnderConsideration: Option[Boolean] = None,
-                                 copeDataAvailableDate: Option[LocalDate] = None
+                                 statePensionAgeUnderConsideration: Option[Boolean] = None
                               ) extends StatePensionExclusionFilter
 
 case class StatePensionExclusionFilteredWithCopeDate(
