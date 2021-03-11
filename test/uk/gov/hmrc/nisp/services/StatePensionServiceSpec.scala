@@ -118,6 +118,38 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
       }
     }
 
+    "transform the COPE Failed 403 into a CopeProcessingFailed exclusion" in {
+      when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.failed(
+          new Upstream4xxResponse(
+            message = "GET of 'http://url' returned 403. Response body: '{\"errorCode\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'",
+            upstreamResponseCode = 403,
+            reportAs = 500
+          )
+        )
+      )
+
+      whenReady(statePensionService.getSummary(TestAccountBuilder.regularNino)) { exclusion =>
+        exclusion shouldBe Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
+      }
+    }
+
+    "transform the COPE Failed 403 into a CopeProcessing exclusion" in {
+      when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.failed(
+          new Upstream4xxResponse(
+            message = "GET of 'http://url' returned 403. Response body: '{\"errorCode\":\"EXCLUSION_COPE_PROCESSING\",\"copeDataAvailableDate\":\"2021-02-17\"}'",
+            upstreamResponseCode = 403,
+            reportAs = 500
+          )
+        )
+      )
+
+      whenReady(statePensionService.getSummary(TestAccountBuilder.regularNino)) { exclusion =>
+        exclusion shouldBe Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, copeAvailableDate = new LocalDate("2021-02-17")))
+      }
+    }
+
     "return the connector response for a regular user" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(statePensionResponse[StatePension](TestAccountBuilder.regularNino)))
