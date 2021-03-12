@@ -90,7 +90,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
 
     copeResponse match {
       case copeResponseDateCapturingRegex(copeResponseDateAsString) => new LocalDate(copeResponseDateAsString)
-      case _ => throw new Exception("cope date not matched with regex")
+      case _ => throw new Exception("COPE date not matched with regex!")
     }
   }
 }
