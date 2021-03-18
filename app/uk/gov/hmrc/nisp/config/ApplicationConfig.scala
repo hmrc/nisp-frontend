@@ -36,8 +36,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version") + "/"
   val betaFeedbackUrl = s"${Constants.baseUrl}/feedback"
   val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
-  val analyticsToken: Option[String] = configuration.getOptional[String](s"google-analytics.token")
-  val analyticsHost: String = configuration.getOptional[String]("google-analytics.host").getOrElse("auto")
   val ssoUrl: Option[String] = configuration.getOptional[String]("portal.ssoUrl")
 
   val frontendTemplatePath: String = getConfString("frontend-template-provider.path", "/template/mustache")

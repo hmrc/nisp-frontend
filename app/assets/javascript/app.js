@@ -6,16 +6,6 @@ $(document).ready(function(){
 		event.preventDefault();
 		$href = $(this).attr('href')
 		$path = $href.substring($href.lastIndexOf("/")+1);
-		ga('send', {
-  			hitType: 'event',
-  			eventCategory: 'other-global',
-  			eventAction: 'click',
-  			eventLabel: "'"+$path+"'",
-				hitCallback: function() {
-      			window.location.href = $href;
-				}
-		});
-
 	});
 
 if($("form").length) {
@@ -56,14 +46,14 @@ if($("form").length) {
 	}
 
 	if($("input[name='whatWillYouDoNext']").length) {
-    		var $followUpOther = ($("input[name=whatWillYouDoNext]"));
-    		$followUpOther.change(function() {
-    			if($('input[name=whatWillYouDoNext]:checked').val() === "8")
-    				$(".other-follow").css("display","inline-block");
-    			else
-    				$(".other-follow").css('display','none');
-    		});
-    	}
+		var $followUpOther = ($("input[name=whatWillYouDoNext]"));
+		$followUpOther.change(function() {
+			if($('input[name=whatWillYouDoNext]:checked').val() === "8")
+				$(".other-follow").css("display","inline-block");
+			else
+				$(".other-follow").css('display','none');
+		});
+	}
 }
 
 });

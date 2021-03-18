@@ -35,13 +35,6 @@
      @language_selection(clc.languageMap, clc.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
 }
 
-@googleAnalytics = @{
-     Map[String, Any](
-         "trackingId" -> applicationConfig.analyticsToken,
-         "cookieDomain" -> applicationConfig.analyticsHost
-     )
-}
-
 @linkElems = @{
     Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
 }
@@ -66,7 +59,6 @@
            "linkElems" -> linkElems,
           "scriptElems" -> None,
           "mainContentHeader" -> mainContentHeader,
-          "googleAnalytics" -> googleAnalytics,
           "ssoUrl" -> None,
           "signOutUrl" -> Some(routes .StatePensionController.signOut),
           "betaBanner" -> false,

@@ -34,7 +34,6 @@ case class MainTemplateParams(
   showBetaBanner: Boolean = false,
   pageScripts: Option[Html] = None,
   articleClasses: Option[String] = None,
-  gaDimensions: Option[Map[String, Any]] = None,
   analyticsAdditionalJs: Option[Html] = None,
   articleEnabled: Boolean = true,
   hideBreadcrumb: Boolean = false,

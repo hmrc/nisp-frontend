@@ -42,8 +42,7 @@
 @unauthenticatedMain(MainTemplateParams(
     Some(messages("nisp.main.title")),
     userLoggedIn = true,
-    pageTitle = Some(messages("nisp.excluded.title")),
-    gaDimensions = Some(analyticsAdditionalJs)
+    pageTitle = Some(messages("nisp.excluded.title"))
 )) {
     @exclusions.dead()
 }

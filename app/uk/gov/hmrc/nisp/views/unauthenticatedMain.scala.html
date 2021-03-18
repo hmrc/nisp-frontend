@@ -162,12 +162,6 @@
     mustacheCheck(msg)
 }
 
-@googleAnalytics = @{
-    Map[String, Any](
-        "trackingId" -> mainTemplateParams.applicationConfig.analyticsToken,
-        "cookieDomain" -> mainTemplateParams.applicationConfig.analyticsHost
-    ) ++ mainTemplateParams.gaDimensions.getOrElse(Map.empty)
-}
 @showLastLogInStatus = @{
     if(mainTemplateParams.articleEnabled) {
         true
@@ -218,7 +212,6 @@
         "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
         "hideAccountMenu" -> mainTemplateParams.hideNavBar,
 
-        "googleAnalytics" -> googleAnalytics,
         "ssoUrl" -> mainTemplateParams.applicationConfig.ssoUrl,
 
         "betaBanner" -> betaHeaderEnable,
