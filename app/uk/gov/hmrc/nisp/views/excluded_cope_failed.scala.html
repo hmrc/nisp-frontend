@@ -43,8 +43,7 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
 }
 
 @unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
-            pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage"),
-            gaDimensions = Some(analyticsAdditionalJs), showUrBanner = excludeUrPanel(exclusion))
+            pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage"))
 ) {
     <div>
         <p>@Html(messages("nisp.excluded.cope.processing.failed"))</p>
