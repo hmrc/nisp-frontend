@@ -46,8 +46,29 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
             pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage"))
 ) {
     <div>
-        <p>@Html(messages("nisp.excluded.cope.processing.failed"))</p>
+        <div class="panel-indent">@Html(messages("nisp.excluded.cope.failed"))</div>
 
-        <a id="futurePensionLink" href="@appConfig.futurePensionUrl">@Html(messages("nisp.excluded.cope.processing.failed.link"))</a>
+        <h2>@messages("nisp.excluded.cope.failed.h2")</h2>
+
+        <h3>@messages("nisp.excluded.cope.failed.telephone.h3")</h3>
+        @messages("nisp.excluded.cope.failed.telephone.line1")
+        @messages("nisp.excluded.cope.failed.telephone.line2")
+        @messages("nisp.excluded.cope.failed.telephone.line3")
+
+        <h3>@messages("nisp.excluded.cope.failed.textphone.h3")</h3>
+        @messages("nisp.excluded.cope.failed.textphone.line1")
+        @messages("nisp.excluded.cope.failed.textphone.line2")
+        @messages("nisp.excluded.cope.failed.textphone.line3")
+
+        <h3>@messages("nisp.excluded.cope.failed.relayUK.h3")</h3>
+        @Html(messages("nisp.excluded.cope.failed.relayUK.line1"))
+        @messages("nisp.excluded.cope.failed.relayUK.line2")
+
+        <h3>@messages("nisp.excluded.cope.failed.britishSignLanguage.h3")</h3>
+        @Html(messages("nisp.excluded.cope.failed.britishSignLanguage.line1"))
+
+        <h3>@messages("nisp.excluded.cope.failed.openingTimes.h3")</h3>
+        @messages("nisp.excluded.cope.failed.openingTimes.line1")
+        @Html(messages("nisp.excluded.cope.failed.openingTimes.line2"))
     </div>
 }

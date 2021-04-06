@@ -49,7 +49,11 @@ formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
             pageTitle = Some(messages("nisp.excluded.cope.processing.h1")), articleClasses = Some("mainpage")
 )
 ) {
-    <div class="panel-indent">@Html(messages("nisp.excluded.cope.processing"))</div>
+    <div>
+        <div class="panel-indent">@messages("nisp.excluded.cope.processing")</div>
 
-    <p>@Html(messages("nisp.excluded.cope.processing.returnDate", copeDataAvailableDate.toString(dateFormatter)))</p>
+        <p>@messages("nisp.excluded.cope.processing.manualWork")</p>
+
+        <p>@messages("nisp.excluded.cope.processing.returnDate", copeDataAvailableDate.toString(dateFormatter))</p>
+    </div>
 }
