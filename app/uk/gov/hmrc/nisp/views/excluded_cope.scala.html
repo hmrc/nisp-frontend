@@ -27,23 +27,10 @@
 
 
 @this()
-@(exclusion: Exclusion, statePensionAge: Option[Int], copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
+@(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
 
-@analyticsAdditionalJs = @{
-    Map[String, Any](
-        "nispExclusionType" -> exclusion.toString,
-        "statePensionAge" -> statePensionAge,
-        "authProvider" -> request.authDetails.authProvider,
-        "confidenceLevel" -> request.authDetails.confidenceLevel
-    )
-}
-
 @dateFormatter = @{ DateTimeFormat.forPattern("d MMMM y") }
-
-@excludeUrPanel(showUrBannerOn: Exclusion) = @{
-    showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
-}
 
 @unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
             pageTitle = Some(messages("nisp.excluded.cope.processing.h1")), articleClasses = Some("mainpage")

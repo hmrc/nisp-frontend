@@ -41,7 +41,7 @@ class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   val excludedCopeView = inject[excluded_cope]
   val today = LocalDate.now()
 
-  lazy val view = asDocument(contentAsString(excludedCopeView(Exclusion.CopeProcessing, Some(65), today)))
+  lazy val view = asDocument(contentAsString(excludedCopeView(today)))
 
   "render correct h1" in {
     assertEqualsMessage(view, "h1", "nisp.excluded.cope.processing.h1")

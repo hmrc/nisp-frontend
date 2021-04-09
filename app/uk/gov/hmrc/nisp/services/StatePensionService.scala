@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import org.joda.time.{DateTime, LocalDate}
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.UpstreamErrorResponse.WithStatusCode
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
@@ -51,13 +52,13 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         ))
       }
       .recover {
-        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeDead) =>
+        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeDead) =>
           Left(StatePensionExclusionFiltered(Exclusion.Dead))
-        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeManualCorrespondence) =>
+        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeManualCorrespondence) =>
           Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
-        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessingFailed) =>
+        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
-        case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessing) =>
+        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeCopeProcessing) =>
           Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, copeAvailableDate = getDateWithRegex(ex.message)))
       }
   }

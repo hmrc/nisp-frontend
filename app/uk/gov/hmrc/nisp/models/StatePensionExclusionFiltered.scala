@@ -26,14 +26,6 @@ trait StatePensionExcl {
   def exclusion: Exclusion
 }
 
-//trait StatePensionExclusionFilter {
-//  def exclusion: Exclusion
-//  def pensionAge: Option[Int]
-//  def pensionDate: Option[LocalDate]
-//  def statePensionAgeUnderConsideration: Option[Boolean]
-//  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
-//}
-
 trait CopeData {
   def copeAvailableDate: LocalDate
   def previousAvailableDate: Option[LocalDate]

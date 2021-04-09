@@ -62,7 +62,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
             else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
               Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge))
             else if (statePensionExclusionFiltered.exclusion == CopeProcessingFailed)
-              Ok(excludedCopeFailedView(CopeProcessingFailed, statePensionExclusionFiltered.pensionAge))
+              Ok(excludedCopeFailedView())
             else
               Ok(excluded_sp(
                 statePensionExclusionFiltered.exclusion,
@@ -72,7 +72,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
           case Left(spExclusion: StatePensionExclusionFilteredWithCopeDate) =>
-            Ok(excludedCopeView(spExclusion.exclusion, spExclusion.pensionAge, spExclusion.copeAvailableDate))
+            Ok(excludedCopeView(spExclusion.copeAvailableDate))
           case _ =>
             Logger.warn("User accessed /exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show())
