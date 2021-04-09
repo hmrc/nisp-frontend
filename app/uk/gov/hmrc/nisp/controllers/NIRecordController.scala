@@ -26,6 +26,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
+import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessingFailed
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
@@ -119,32 +120,38 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
               Redirect(routes.NIRecordController.showFull())
             } else {
               val finalRelevantStartYear = statePensionResponse match {
-                case Left(spExclusion: StatePensionExclusionFiltered) => spExclusion.finalRelevantStartYear
-                  .getOrElse(throw new RuntimeException(s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion"))
-                case Right(sp) => sp.finalRelevantStartYear
+                case Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _)) |
+                     Left(StatePensionExclusionFilteredWithCopeDate(_, _, _)) => None
+                case Left(spExclusion: StatePensionExclusionFiltered) => Some(spExclusion.finalRelevantStartYear
+                  .getOrElse(throw new RuntimeException(s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion")))
+                case Right(sp) => Some(sp.finalRelevantStartYear)
               }
-              val yearsToContribute = statePensionService.yearsToContributeUntilPensionAge(niRecord.earningsIncludedUpTo, finalRelevantStartYear)
-              val recordHasEnded = yearsToContribute < 1
-              val tableStart: String =
-                if (recordHasEnded) Formatting.startYearToTaxYear(finalRelevantStartYear)
-                else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
-              val tableEnd: String = niRecord.taxYears match {
-                case Nil => tableStart
-                case _ => niRecord.taxYears.last.taxYear
-              }
-              sendAuditEvent(nino, niRecord, yearsToContribute)
 
-              Ok(nirecordpage(
-                tableList = generateTableList(tableStart, tableEnd),
-                niRecord = niRecord,
-                gapsOnlyView = gapsOnlyView,
-                recordHasEnded = recordHasEnded,
-                yearsToContribute = yearsToContribute,
-                finalRelevantEndYear = finalRelevantStartYear + 1,
-                showPre1975Years = showPre1975Years(niRecord.dateOfEntry, request.nispAuthedUser.dateOfBirth, niRecord.qualifyingYearsPriorTo1975),
-                authenticationProvider = request.authDetails.authProvider.getOrElse("N/A"),
-                showFullNI = showFullNI,
-                currentDate = dateProvider.currentDate))
+              finalRelevantStartYear.map { finalRelevantStartYear =>
+                val yearsToContribute = statePensionService.yearsToContributeUntilPensionAge(niRecord.earningsIncludedUpTo, finalRelevantStartYear)
+                val recordHasEnded = yearsToContribute < 1
+                val tableStart: String =
+                  if (recordHasEnded) Formatting.startYearToTaxYear(finalRelevantStartYear)
+                  else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
+                val tableEnd: String = niRecord.taxYears match {
+                  case Nil => tableStart
+                  case _ => niRecord.taxYears.last.taxYear
+                }
+                sendAuditEvent(nino, niRecord, yearsToContribute)
+
+                Ok(nirecordpage(
+                  tableList = generateTableList(tableStart, tableEnd),
+                  niRecord = niRecord,
+                  gapsOnlyView = gapsOnlyView,
+                  recordHasEnded = recordHasEnded,
+                  yearsToContribute = yearsToContribute,
+                  finalRelevantEndYear = finalRelevantStartYear + 1,
+                  showPre1975Years = showPre1975Years(niRecord.dateOfEntry, request.nispAuthedUser.dateOfBirth, niRecord.qualifyingYearsPriorTo1975),
+                  authenticationProvider = request.authDetails.authProvider.getOrElse("N/A"),
+                  showFullNI = showFullNI,
+                  currentDate = dateProvider.currentDate))
+
+              }.getOrElse(Redirect(routes.ExclusionController.showSP()))
             }
           case Left(exclusion) =>
             auditConnector.sendEvent(AccountExclusionEvent(
