@@ -22,14 +22,17 @@ import uk.gov.hmrc.time.TaxYear
 import play.api.libs.json.JodaReads._
 import play.api.libs.json.JodaWrites._
 
-
-trait StatePensionExclusionFilter {
+trait StatePensionExcl {
   def exclusion: Exclusion
-  def pensionAge: Option[Int]
-  def pensionDate: Option[LocalDate]
-  def statePensionAgeUnderConsideration: Option[Boolean]
-  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
 }
+
+//trait StatePensionExclusionFilter {
+//  def exclusion: Exclusion
+//  def pensionAge: Option[Int]
+//  def pensionDate: Option[LocalDate]
+//  def statePensionAgeUnderConsideration: Option[Boolean]
+//  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
+//}
 
 trait CopeData {
   def copeAvailableDate: LocalDate
@@ -37,24 +40,25 @@ trait CopeData {
 }
 
 case class StatePensionExclusionFiltered(
-                                 exclusion: Exclusion,
-                                 pensionAge: Option[Int] = None,
-                                 pensionDate: Option[LocalDate] = None,
-                                 statePensionAgeUnderConsideration: Option[Boolean] = None
-                              ) extends StatePensionExclusionFilter
+  exclusion: Exclusion,
+  pensionAge: Option[Int] = None,
+  pensionDate: Option[LocalDate] = None,
+  statePensionAgeUnderConsideration: Option[Boolean] = None
+) extends StatePensionExcl {
+  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
+}
 
 case class StatePensionExclusionFilteredWithCopeDate(
-                                                      exclusion: Exclusion,
-                                                      pensionAge: Option[Int] = None,
-                                                      pensionDate: Option[LocalDate] = None,
-                                                      statePensionAgeUnderConsideration: Option[Boolean] = None,
-
-                                                      copeAvailableDate: LocalDate,
-                                                      previousAvailableDate: Option[LocalDate] = None
-                                                    ) extends StatePensionExclusionFilter with CopeData
+  exclusion: Exclusion,
+  copeAvailableDate: LocalDate,
+  previousAvailableDate: Option[LocalDate] = None
+) extends StatePensionExcl with CopeData
 
 
 object StatePensionExclusionFiltered {
-  implicit val formats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
+  implicit val statePensionExclusionFilteredFormats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
+}
+
+object StatePensionExclusionFilteredWithCopeDate {
   implicit val copeDataFormats: OFormat[StatePensionExclusionFilteredWithCopeDate] = Json.format[StatePensionExclusionFilteredWithCopeDate]
 }

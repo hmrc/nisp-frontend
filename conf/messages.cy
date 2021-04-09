@@ -184,18 +184,18 @@ nisp.excluded.cope.failed.telephone.line3 = Gwasanaeth Cwsmeriaid Cymraeg CThEM:
 
 nisp.excluded.cope.failed.textphone.h3 = Ffôn testun
 nisp.excluded.cope.failed.textphone.line1 = Ffôn testun: 0800 731 0456
-nisp.excluded.cope.failed.textphone.line2 = Textphone from outside UK: +44 (0)191 218 2051
-nisp.excluded.cope.failed.textphone.line3 = Welsh language textphone: 0800 731 0456
+nisp.excluded.cope.failed.textphone.line2 = Ffôn testun o’r tu allan i’r DU: +44 (0)191 218 2051
+nisp.excluded.cope.failed.textphone.line3 = Ffôn testun Cymraeg: 0800 731 0456
 
 nisp.excluded.cope.failed.relayUK.h3 = Relay UK
 nisp.excluded.cope.failed.relayUK.line1 = Os na allwch glywed neu siarad ar y ffôn, defnyddiwch <a href="https://www.relayuk.bt.com/" target="_blank">Relay UK</a>:
 nisp.excluded.cope.failed.relayUK.line2 = 18001 yna 0800 731 0175
 
 nisp.excluded.cope.failed.britishSignLanguage.h3 = Iaith Arwyddion Prydain
-nisp.excluded.cope.failed.britishSignLanguage.line1 = <a href="https://dwppensionforecasting.signvideo.net/" target="_blank">Video relay service</a> for British Sign Language (BSL) users - <a href="https://www.youtube.com/watch?v=Osx7FFxFpNY" target="_blank">check you can use this service</a>.
+nisp.excluded.cope.failed.britishSignLanguage.line1 = <a href="https://dwppensionforecasting.signvideo.net/" target="_blank">Gwasanaeth cyfnewid fideo</a> ar gyfer y rhai sy’n defnyddio Iaith Arwyddion Prydain (BSL) - <a href="https://www.youtube.com/watch?v=Osx7FFxFpNY" target="_blank">gwiriwch eich bod yn gallu defnyddio’r gwasanaeth hwn</a>.
 
 nisp.excluded.cope.failed.openingTimes.h3 = Oriau agor
-nisp.excluded.cope.failed.openingTimes.line1 = 9:30am – 3:30pm, o ddydd Llun i ddydd Gwener
+nisp.excluded.cope.failed.openingTimes.line1 = 8:30am – 3:30pm, o ddydd Llun i ddydd Gwener
 nisp.excluded.cope.failed.openingTimes.line2 = <a href="https://www.gov.uk/call-charges" target="_blank">Gwybodaeth am gostau galwadau</a>
 
 

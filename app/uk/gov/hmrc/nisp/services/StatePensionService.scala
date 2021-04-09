@@ -38,7 +38,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
 
   override def now: () => DateTime = () => DateTime.now(ukTime)
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExclusionFilter, StatePension]] = {
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExcl, StatePension]] = {
     statePensionConnector.getStatePension(nino)
       .map {
         case Right(statePension) => Right(statePension)
@@ -59,7 +59,6 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
         case ex: Upstream4xxResponse if ex.upstreamResponseCode == FORBIDDEN && ex.message.contains(exclusionCodeCopeProcessing) =>
           Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, copeAvailableDate = getDateWithRegex(ex.message)))
-        // Case match not exhaustive
       }
   }
 
