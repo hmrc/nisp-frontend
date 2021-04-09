@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.views
 
 import org.joda.time.{DateTime, LocalDate}
+import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.{FakeRequest, Helpers, Injecting}
@@ -39,9 +40,9 @@ class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
 
   val excludedCopeView = inject[excluded_cope]
-  val today = LocalDate.now()
+  val today: LocalDate = LocalDate.now()
 
-  lazy val view = asDocument(contentAsString(excludedCopeView(today)))
+  lazy val view: Document = asDocument(contentAsString(excludedCopeView(today)))
 
   "render correct h1" in {
     assertEqualsMessage(view, "h1", "nisp.excluded.cope.processing.h1")
@@ -49,10 +50,10 @@ class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   "render correct indent-panel div with text" in {
     assert(view.getElementsByClass("panel-indent").size() == 1)
-    assertEqualsMessage(view, "article > div", "nisp.excluded.cope.processing")
+    assertEqualsMessage(view, ".panel-indent", "nisp.excluded.cope.processing")
   }
 
   "render correct p tag with text" in {
-    assertContainsDynamicMessage(view, "article > p", "nisp.excluded.cope.processing.returnDate", today.toString("d MMMM y"))
+    assertContainsDynamicMessage(view, "article p:last-of-type", "nisp.excluded.cope.processing.returnDate", today.toString("d MMMM y"))
   }
 }

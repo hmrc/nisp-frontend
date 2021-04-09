@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.views
 
 import org.joda.time.{DateTime, LocalDate}
+import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -26,7 +27,6 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
-import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_cope_failed
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -44,20 +44,36 @@ class ExclusionCopeFailedViewSpec extends HtmlSpec with MockitoSugar with Inject
     .build()
 
   val excludedCopeFailedView = inject[excluded_cope_failed]
-  val today = LocalDate.now()
+  val today: LocalDate = LocalDate.now()
 
-  lazy val view = asDocument(contentAsString(excludedCopeFailedView()))
+  lazy val view: Document = asDocument(contentAsString(excludedCopeFailedView()))
 
   "render correct h1" in {
     assertEqualsMessage(view, "h1", "nisp.excluded.cope.failed.h1")
   }
 
-  "render correct p tag and text" in {
-    assertEqualsMessage(view, "article > div > p", "nisp.excluded.cope.processing.failed")
+  "render correct h2" in {
+    assertEqualsMessage(view, "h2", "nisp.excluded.cope.failed.h2")
   }
 
-  "render correct a tag text and href" in {
-    assertEqualsMessage(view, "article > div > a", "nisp.excluded.cope.processing.failed.link")
-    assert(view.getElementById("futurePensionLink").attr("href") == "pensionUrl")
+  "render correct Telephone h3" in {
+    assertElementContainsText(view, "h3:nth-of-type(1)", "Telephone")
   }
+
+  "render correct Textphone H3" in {
+    assertElementContainsText(view, "h3:nth-of-type(2)", "Textphone")
+  }
+
+  "render correct Relay UK H3" in {
+    assertElementContainsText(view, "h3:nth-of-type(3)", "Relay UK")
+  }
+
+  "render correct British Sign Language H3" in {
+    assertElementContainsText(view, "h3:nth-of-type(4)", "British Sign Language")
+  }
+
+  "render correct Opening Times H3" in {
+    assertElementContainsText(view, "h3:nth-of-type(5)", "Opening Times")
+  }
+
 }
