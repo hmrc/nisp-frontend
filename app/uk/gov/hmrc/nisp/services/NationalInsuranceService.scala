@@ -20,9 +20,8 @@ import com.google.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
-import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
-import uk.gov.hmrc.nisp.models.enums.Exclusion
-import uk.gov.hmrc.nisp.models.enums.Exclusion.Exclusion
+import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)

@@ -32,8 +32,7 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, MockNispHttp, TestAccountBuilder}
-import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.play.test.UnitSpec
 

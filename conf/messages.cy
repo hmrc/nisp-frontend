@@ -167,6 +167,39 @@ nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar
 nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 nisp.nirecord.summary.youhave = Mae gennych:
 
+nisp.excluded.cope.processing.h1 = Mae’n ddrwg gennym – ni allwn gyfrifo’ch rhagolwg ar hyn o bryd
+nisp.excluded.cope.processing = Mae ein tîm arbenigol yn gwirio’ch cofnod Yswiriant Gwladol er mwyn sicrhau bod y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth yn gywir.
+nisp.excluded.cope.processing.manualWork = Gwneir y math hwn o waith llaw fel mater o drefn, a hynny er mwyn gwneud yn siŵr bod yr wybodaeth yn gyfredol.
+nisp.excluded.cope.processing.returnDate = Gwneir y math hwn o waith llaw fel mater o drefn, a hynny er mwyn gwneud yn siŵr bod yr wybodaeth yn gyfredol.
+nisp.excluded.cope.processing.returnDate = Bydd y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth ar gael ar {0}.
+
+nisp.excluded.cope.failed.h1 = Mae’n ddrwg gennym – ni allwn ddangos eich rhagolwg ar-lein
+nisp.excluded.cope.failed = I gael rhagolwg, bydd angen i chi ffonio a byddwn yn anfon un atoch drwy’r post.
+
+nisp.excluded.cope.failed.h2 = Cael rhagolwg wedi’i anfon atoch
+
+nisp.excluded.cope.failed.telephone.h3 = Rhif ffôn
+nisp.excluded.cope.failed.telephone.line1 = Rhif ffôn: 0800 731 0453
+nisp.excluded.cope.failed.telephone.line2 = Rhif ffôn o’r tu allan i’r DU: +44 (0)191 218 3600
+nisp.excluded.cope.failed.telephone.line3 = Gwasanaeth Cwsmeriaid Cymraeg CThEM: 0800 731 0453
+
+nisp.excluded.cope.failed.textphone.h3 = Ffôn testun
+nisp.excluded.cope.failed.textphone.line1 = Ffôn testun: 0800 731 0456
+nisp.excluded.cope.failed.textphone.line2 = Ffôn testun o’r tu allan i’r DU: +44 (0)191 218 2051
+nisp.excluded.cope.failed.textphone.line3 = Ffôn testun Cymraeg: 0800 731 0456
+
+nisp.excluded.cope.failed.relayUK.h3 = Relay UK
+nisp.excluded.cope.failed.relayUK.line1 = Os na allwch glywed neu siarad ar y ffôn, defnyddiwch <a href="https://www.relayuk.bt.com/" target="_blank">Relay UK</a>:
+nisp.excluded.cope.failed.relayUK.line2 = 18001 yna 0800 731 0175
+
+nisp.excluded.cope.failed.britishSignLanguage.h3 = Iaith Arwyddion Prydain
+nisp.excluded.cope.failed.britishSignLanguage.line1 = <a href="https://dwppensionforecasting.signvideo.net/" target="_blank">Gwasanaeth cyfnewid fideo</a> ar gyfer y rhai sy’n defnyddio Iaith Arwyddion Prydain (BSL) - <a href="https://www.youtube.com/watch?v=Osx7FFxFpNY" target="_blank">gwiriwch eich bod yn gallu defnyddio’r gwasanaeth hwn</a>.
+
+nisp.excluded.cope.failed.openingTimes.h3 = Oriau agor
+nisp.excluded.cope.failed.openingTimes.line1 = 8:30am – 3:30pm, o ddydd Llun i ddydd Gwener
+nisp.excluded.cope.failed.openingTimes.line2 = <a href="https://www.gov.uk/call-charges" target="_blank">Gwybodaeth am gostau galwadau</a>
+
+
 #***********************
 # Thank you messages
 #***********************

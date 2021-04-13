@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
-
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
@@ -27,6 +26,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
@@ -34,8 +34,8 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessing
+import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.DateProvider
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -159,7 +159,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
     }
 
     "redirect to exclusion for excluded user" in {
-
+      // FIXME: add COPE
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Left(Exclusion.Dead))
       )
@@ -395,7 +395,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       contentAsString(result) shouldNot include("52 weeks")
     }
 
-    "return NI record when number of qualifying years is 0" in {
+    "return NI record page when number of qualifying years is 0" in {
       val expectedNationalInsuranceResponse = NationalInsuranceRecord(0, 0, 0, 0, Some(new LocalDate(1975, 8, 1)),
         false, new LocalDate(2016, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
@@ -698,4 +698,74 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       }
     }
   }
+
+  "redirect to State Pension page" in {
+    val statePensionExclusionResponse = StatePension(
+      new LocalDate(2015, 4, 5),
+      StatePensionAmounts(
+        false,
+        StatePensionAmountRegular(133.41, 580.1, 6961.14),
+        StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+        StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+        StatePensionAmountRegular(0, 0, 0))
+      ,64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+
+    val expectedNationalInsuranceRecord = NationalInsuranceRecord(40, 39, 2, 1, Some(new LocalDate(1973, 7, 7)),
+      false, new LocalDate(2016, 4, 5),
+      List(
+        NationalInsuranceTaxYear("2015-16", true, 12345.45, 0, 0, 0, 0, None, None, false, false),
+        NationalInsuranceTaxYear("2014-15", false, 123, 1, 1, 1, 456.58, Some(new LocalDate(2019, 4, 5)),
+          Some(new LocalDate(2023, 4, 5)), false, false),
+        NationalInsuranceTaxYear("1999-00", false, 2, 5, 0, 1, 111.11, Some(new LocalDate(2019, 4, 5)),
+          Some(new LocalDate(2023, 4, 5)), false, false)
+      ),
+      false
+    )
+
+    val copeExclusionResponse = StatePensionExclusionFilteredWithCopeDate(CopeProcessing, new LocalDate(2023, 4, 5), None)
+
+    when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      Future.successful(Right(expectedNationalInsuranceRecord))
+    )
+
+    when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      Future.successful(Left(copeExclusionResponse))
+    )
+
+    val result: Future[Result] = niRecordController.showGaps(generateFakeRequest)
+
+    status(result) shouldBe SEE_OTHER
+  }
+
+
+  "throw an exception when the response is an exclusion without finalRelevantStartYear" in {
+    val statePensionExclusionResponse = StatePensionExclusionFiltered(CopeProcessing, None, None, None)
+
+    val expectedNationalInsuranceRecord = NationalInsuranceRecord(40, 39, 2, 1, Some(new LocalDate(1973, 7, 7)),
+      false, new LocalDate(2016, 4, 5),
+      List(
+        NationalInsuranceTaxYear("2015-16", true, 12345.45, 0, 0, 0, 0, None, None, false, false),
+        NationalInsuranceTaxYear("2014-15", false, 123, 1, 1, 1, 456.58, Some(new LocalDate(2019, 4, 5)),
+          Some(new LocalDate(2023, 4, 5)), false, false),
+        NationalInsuranceTaxYear("1999-00", false, 2, 5, 0, 1, 111.11, Some(new LocalDate(2019, 4, 5)),
+          Some(new LocalDate(2023, 4, 5)), false, false)
+      ),
+      false
+    )
+
+    when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      Future.successful(Right(expectedNationalInsuranceRecord))
+    )
+
+    when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
+    )
+
+    val caught = intercept[RuntimeException] {
+      await(niRecordController.showGaps(generateFakeRequest))
+    }
+
+    caught.getMessage shouldBe "NIRecordController: Can't get pensionDate from StatePensionExclusion StatePensionExclusionFiltered(Dead,None,None,None)"
+  }
+
 }

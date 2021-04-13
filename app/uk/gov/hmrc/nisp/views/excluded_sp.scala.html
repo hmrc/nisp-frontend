@@ -15,7 +15,6 @@
  *@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.nisp.models.enums.Exclusion.{Exclusion, AmountDissonance, PostStatePensionAge, IsleOfMan, MarriedWomenReducedRateElection}
 @import org.joda.time.LocalDate
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.controllers.routes
@@ -25,6 +24,8 @@
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.views.html.includes
 @import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
+@import uk.gov.hmrc.nisp.models.Exclusion
+@import uk.gov.hmrc.nisp.models.Exclusion._
 
 @(
 exclusion: Exclusion,

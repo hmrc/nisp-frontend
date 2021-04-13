@@ -33,8 +33,7 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -79,6 +78,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
   val mwrreMessagingNI = "We’re currently unable to show your National Insurance Record as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>."
   val abroadMessaging = "We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad."
   val spaUnderConsiderationMessaging = "Proposed change to your State Pension age"
+  val copeProcessingHeader = "Your State Pension Forecast"
+  val copeFailedHeader = "Sorry, we cannot show your forecast online"
 
   "GET /exclusion" should {
 
@@ -534,6 +535,57 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include spaUnderConsiderationMessaging
+        }
+      }
+
+
+      "The user has COPE Processing exclusion" should {
+
+        "return the COPE Processing Exclusion on /exclusion" in {
+          val statePensionCopeProcessingResponse = StatePensionExclusionFilteredWithCopeDate(
+            exclusion = Exclusion.CopeProcessing,
+            copeAvailableDate= new LocalDate(2017, 7, 18),
+            previousAvailableDate = Some(new LocalDate(2017, 7, 18))
+          )
+
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(statePensionCopeProcessingResponse))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationalInsuranceRecord)))
+
+          val result = testExclusionController.showSP()(FakeRequest())
+
+          status(result) shouldBe OK
+          contentAsString(result) should include(copeProcessingHeader)
+        }
+      }
+
+      "The user has COPE Failed exclusion" should {
+
+        "return the COPE Failed Exclusion on /exclusion" in {
+          val statePensionCopeFailedResponse = StatePensionExclusionFiltered(
+            exclusion = Exclusion.CopeProcessingFailed
+          )
+
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(statePensionCopeFailedResponse))
+          )
+
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Right(nationalInsuranceRecord)))
+
+          val result = testExclusionController.showSP()(FakeRequest())
+
+          status(result) shouldBe OK
+          contentAsString(result) should include(copeFailedHeader)
         }
       }
 

@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.nisp.models
 
-import uk.gov.hmrc.nisp.models.enums.Exclusion
-import Exclusion.Exclusion
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ExclusionsModel(exclusions: List[Exclusion])
 
 object ExclusionsModel {
-  implicit val formats = Json.format[ExclusionsModel]
+  implicit val formats: OFormat[ExclusionsModel] = Json.format[ExclusionsModel]
 }

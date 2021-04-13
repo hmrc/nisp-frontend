@@ -17,22 +17,25 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.{Application, Logger}
+import play.api.Logger
 import play.api.i18n.I18nSupport
-import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
-import scala.concurrent.ExecutionContext
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}
-import uk.gov.hmrc.nisp.models.enums.Exclusion
+import uk.gov.hmrc.nisp.models.Exclusion._
+import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
+
+import scala.concurrent.ExecutionContext
 
 class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     nationalInsuranceService: NationalInsuranceService,
                                     authenticate: ExcludedAuthAction,
-                                    mcc: MessagesControllerComponents)
+                                    mcc: MessagesControllerComponents,
+                                    excludedCopeView: excluded_cope,
+                                    excludedCopeFailedView: excluded_cope_failed)
                                    (implicit val executor: ExecutionContext,
                                     val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
@@ -52,15 +55,24 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
       ) yield {
         statePension match {
           case Right(sp) if sp.reducedRateElection =>
-            Ok(excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), false, None))
-          case Left(exclusion) =>
-            if (exclusion.exclusion == Exclusion.Dead)
-              Ok(excluded_dead(Exclusion.Dead, exclusion.pensionAge))
-            else if (exclusion.exclusion == Exclusion.ManualCorrespondenceIndicator)
-              Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, exclusion.pensionAge))
-            else {
-              Ok(excluded_sp(exclusion.exclusion, exclusion.pensionAge, exclusion.pensionDate, nationalInsurance.isRight, exclusion.statePensionAgeUnderConsideration))
-            }
+            Ok(excluded_sp(MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), canSeeNIRecord = false, None))
+          case Left(statePensionExclusionFiltered: StatePensionExclusionFiltered) =>
+            if (statePensionExclusionFiltered.exclusion == Dead)
+              Ok(excluded_dead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge))
+            else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
+              Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge))
+            else if (statePensionExclusionFiltered.exclusion == CopeProcessingFailed)
+              Ok(excludedCopeFailedView())
+            else
+              Ok(excluded_sp(
+                statePensionExclusionFiltered.exclusion,
+                statePensionExclusionFiltered.pensionAge,
+                statePensionExclusionFiltered.pensionDate,
+                nationalInsurance.isRight,
+                statePensionExclusionFiltered.statePensionAgeUnderConsideration
+              ))
+          case Left(spExclusion: StatePensionExclusionFilteredWithCopeDate) =>
+            Ok(excludedCopeView(spExclusion.copeAvailableDate))
           case _ =>
             Logger.warn("User accessed /exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show())
@@ -73,11 +85,11 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
       implicit val authDetails: AuthDetails = request.authDetails
       nationalInsuranceService.getSummary(request.nino).map {
         case Left(exclusion) =>
-          if (exclusion == Exclusion.Dead) {
+          if (exclusion == Dead) {
             Ok(excluded_dead(Exclusion.Dead, None))
           }
           else if (exclusion == Exclusion.ManualCorrespondenceIndicator) {
-            Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, None))
+            Ok(excluded_mci(ManualCorrespondenceIndicator, None))
           } else {
             Ok(excluded_ni(exclusion))
           }

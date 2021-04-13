@@ -22,7 +22,7 @@ import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.views.html.{global_error, page_not_found_template, service_error_500}
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -38,4 +38,5 @@ class ErrorHandler @Inject()(applicationConfig: ApplicationConfig)
   override def internalServerErrorTemplate(implicit request: Request[_]): Html = service_error_500()
 
   override def notFoundTemplate(implicit request: Request[_]): Html = page_not_found_template()
+
 }

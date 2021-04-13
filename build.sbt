@@ -21,7 +21,7 @@ val excludedPackages = Seq[String](
 lazy val scoverageSettings = {
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-    ScoverageKeys.coverageMinimum := 80,
+    ScoverageKeys.coverageMinimum := 88.23,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -33,7 +33,7 @@ lazy val microservice = Project(appName, file("."))
     playSettings,
     scoverageSettings,
     PlayKeys.playDefaultPort := 9234,
-    scalaVersion := "2.11.11",
+    scalaVersion := "2.11.12",
     libraryDependencies ++= AppDependencies.all,
     retrieveManaged := true,
     resolvers ++= Seq(

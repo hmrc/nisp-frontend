@@ -75,6 +75,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val futureProofPersonalMax: Boolean = getConfBool("features.future-proof.personalMax", false)
   val isWelshEnabled: Boolean = getConfBool("features.welsh-translation", false)
   val feedbackFrontendUrl: String = loadConfig("feedback-frontend.url")
+  val futurePensionUrl: String = configuration.getOptional[String]("future-pension-link.url").getOrElse("")
 
   val citizenDetailsServiceUrl: String = baseUrl("citizen-details")
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")

@@ -1,0 +1,61 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
+@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
+@import uk.gov.hmrc.nisp.models.Exclusion
+@import uk.gov.hmrc.nisp.models.Exclusion._
+@import uk.gov.hmrc.play.partials._
+@import uk.gov.hmrc.renderer._
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
+
+@this(appConfig: ApplicationConfig)
+
+@()(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
+formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
+
+@unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
+            pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage"))
+) {
+    <div>
+        <div class="panel-indent">@Html(messages("nisp.excluded.cope.failed"))</div>
+
+        <h2>@messages("nisp.excluded.cope.failed.h2")</h2>
+
+        <h3>@messages("nisp.excluded.cope.failed.telephone.h3")</h3>
+        @messages("nisp.excluded.cope.failed.telephone.line1")
+        @messages("nisp.excluded.cope.failed.telephone.line2")
+        @messages("nisp.excluded.cope.failed.telephone.line3")
+
+        <h3>@messages("nisp.excluded.cope.failed.textphone.h3")</h3>
+        @messages("nisp.excluded.cope.failed.textphone.line1")
+        @messages("nisp.excluded.cope.failed.textphone.line2")
+        @messages("nisp.excluded.cope.failed.textphone.line3")
+
+        <h3>@messages("nisp.excluded.cope.failed.relayUK.h3")</h3>
+        @Html(messages("nisp.excluded.cope.failed.relayUK.line1"))
+        @messages("nisp.excluded.cope.failed.relayUK.line2")
+
+        <h3>@messages("nisp.excluded.cope.failed.britishSignLanguage.h3")</h3>
+        @Html(messages("nisp.excluded.cope.failed.britishSignLanguage.line1"))
+
+        <h3>@messages("nisp.excluded.cope.failed.openingTimes.h3")</h3>
+        @messages("nisp.excluded.cope.failed.openingTimes.line1")
+        @Html(messages("nisp.excluded.cope.failed.openingTimes.line2"))
+    </div>
+}
