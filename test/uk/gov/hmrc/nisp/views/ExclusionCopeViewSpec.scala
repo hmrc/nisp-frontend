@@ -54,6 +54,6 @@ class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   }
 
   "render correct p tag with text" in {
-    assertContainsDynamicMessage(view, "article p:last-of-type", "nisp.excluded.cope.processing.returnDate", today.toString("d MMMM y"))
+    assertContainsDynamicMessage(view, "article p:last-of-type", "nisp.excluded.cope.returnDate", today.toString("d MMMM y"))
   }
 }
