@@ -563,6 +563,14 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           status(result) shouldBe OK
           contentAsString(result) should include(copeProcessingHeader)
         }
+
+        "redirect to showSP" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.CopeProcessing)))
+
+          val result = testExclusionController.showNI()(FakeRequest())
+          redirectLocation(result) shouldBe Some(routes.ExclusionController.showSP().url)
+        }
       }
 
       "The user has COPE Failed exclusion" should {
@@ -586,6 +594,14 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           status(result) shouldBe OK
           contentAsString(result) should include(copeFailedHeader)
+        }
+
+        "redirect to showSP" in {
+          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+            Future.successful(Left(Exclusion.CopeProcessingFailed)))
+
+          val result = testExclusionController.showNI()(FakeRequest())
+          redirectLocation(result) shouldBe Some(routes.ExclusionController.showSP().url)
         }
       }
 
