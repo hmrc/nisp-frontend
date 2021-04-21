@@ -86,7 +86,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
   }
 
   private def getDateWithRegex(copeResponse: String): LocalDate = {
-    val copeResponseDateCapturingRegex: Regex = """(?:.*)(?:'\{"errorCode":"EXCLUSION_COPE_PROCESSING","copeDataAvailableDate":\")(\d{4}-\d{2}-\d{2})(?:\"}')""".r
+    val copeResponseDateCapturingRegex: Regex = """(?:.*)(?:'\{"code":"EXCLUSION_COPE_PROCESSING","copeDataAvailableDate":\")(\d{4}-\d{2}-\d{2})(?:\"}')""".r
 
     copeResponse match {
       case copeResponseDateCapturingRegex(copeResponseDateAsString) => new LocalDate(copeResponseDateAsString)
