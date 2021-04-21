@@ -17,12 +17,16 @@
 package uk.gov.hmrc.nisp.services
 
 import com.google.inject.Inject
+import org.joda.time.LocalDate
+import play.api.http.Status.FORBIDDEN
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.UpstreamErrorResponse.WithStatusCode
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
-import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord}
+import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.matching.Regex
 
 class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
                                         (implicit executor: ExecutionContext){
@@ -31,6 +35,8 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
   final val ExclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
   final val ExclusionCodeIsleOfMan = "EXCLUSION_ISLE_OF_MAN"
   final val ExclusionCodeMarriedWomen = "EXCLUSION_MARRIED_WOMENS_REDUCED_RATE"
+  final val ExclusionCodeCopeProcessing: String = "EXCLUSION_COPE_PROCESSING"
+  final val ExclusionCodeCopeProcessingFailed: String = "EXCLUSION_COPE_PROCESSING_FAILED"
   final val ExclusionErrorCode = 403
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
@@ -53,6 +59,10 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
           Left(Exclusion.IsleOfMan)
         case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeMarriedWomen) =>
           Left(Exclusion.MarriedWomenReducedRateElection)
+        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(ExclusionCodeCopeProcessingFailed) =>
+          Left(Exclusion.CopeProcessingFailed)
+        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(ExclusionCodeCopeProcessing) =>
+          Left(Exclusion.CopeProcessing)
       }
   }
 }

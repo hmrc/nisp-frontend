@@ -28,7 +28,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -279,7 +279,7 @@ with BeforeAndAfterEach with Injecting {
 
 
 
-      "return a Left(Excelution)" in {
+      "return a Left(Exclusion)" in {
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(mockNationalInsuranceRecord))
 
@@ -288,6 +288,31 @@ with BeforeAndAfterEach with Injecting {
         niSummary.left.get shouldBe a[Exclusion]
       }
 
+    }
+
+    "There is a cope exclusion" should {
+
+      "return Left(CopeProcessing)" in {
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.failed(UpstreamErrorResponse(
+            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING\"}'",
+            statusCode = 403
+          )))
+
+        val result = nationalInsuranceService.getSummary(generateNino)
+        result.futureValue shouldBe Left(Exclusion.CopeProcessing)
+      }
+
+      "return Left(CopeProcessingFailed)" in {
+        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.failed(UpstreamErrorResponse(
+            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'",
+            statusCode = 403
+          )))
+
+        val result = nationalInsuranceService.getSummary(generateNino)
+        result.futureValue shouldBe Left(Exclusion.CopeProcessingFailed)
+      }
     }
   }
 }

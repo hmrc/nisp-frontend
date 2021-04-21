@@ -88,6 +88,8 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
     implicit request =>
       implicit val authDetails: AuthDetails = request.authDetails
       nationalInsuranceService.getSummary(request.nino).map {
+        case Left(CopeProcessing) | Left(CopeProcessingFailed) =>
+          Redirect(routes.ExclusionController.showSP())
         case Left(exclusion) =>
           if (exclusion == Dead) {
             Ok(excluded_dead(Exclusion.Dead, None))
