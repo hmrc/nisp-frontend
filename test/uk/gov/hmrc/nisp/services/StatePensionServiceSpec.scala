@@ -117,7 +117,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
     }
 
     "transform the COPE Failed 403 into a CopeProcessingFailed exclusion" in {
-      val copeResponseProcessingFailed: String = "GET of 'http://url' returned 403. Response body: '{\"errorCode\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'"
+      val copeResponseProcessingFailed: String = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'"
 
       when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny())).thenReturn(Future.failed(new Upstream4xxResponse(message = copeResponseProcessingFailed, upstreamResponseCode = 403, reportAs = 500)))
 
@@ -127,7 +127,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
     }
 
     "transform the COPE Failed 403 into a CopeProcessing exclusion" in {
-      val copeResponseProcessing: String = "GET of 'http://url' returned 403. Response body: '{\"errorCode\":\"EXCLUSION_COPE_PROCESSING\",\"copeDataAvailableDate\":\"2021-02-17\"}'"
+      val copeResponseProcessing: String = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING\",\"copeDataAvailableDate\":\"2021-02-17\"}'"
 
       when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny())).thenReturn(Future.failed(new Upstream4xxResponse(message = copeResponseProcessing, upstreamResponseCode = 403, reportAs = 500)))
 
@@ -282,7 +282,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
     }
 
     "Private method getDateWithRegex should return an exception when COPE response without date is given" in {
-      val copeResponseProcessing: String = "GET of 'http://url' returned 403. Response body: '{\"errorCode\":\"EXCLUSION_COPE_PROCESSING\",\"copeDataAvailableDate\":\"aaaaaaa\"}'"
+      val copeResponseProcessing: String = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING\",\"copeDataAvailableDate\":\"aaaaaaa\"}'"
 
       when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny())).thenReturn(Future.failed(new Upstream4xxResponse(message = copeResponseProcessing, upstreamResponseCode = 403, reportAs = 500)))
 
