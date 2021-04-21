@@ -74,7 +74,11 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
               ))
           case Left(spExclusion: StatePensionExclusionFilteredWithCopeDate) =>
             if(spExclusion.previousAvailableDate.isDefined) {
-              Ok(excludedCopeExtendedView(spExclusion.copeAvailableDate))
+              spExclusion.previousAvailableDate match {
+                case Some(prevAvailDate) if prevAvailDate.isBefore(spExclusion.copeAvailableDate) =>
+                  Ok(excludedCopeExtendedView(spExclusion.copeAvailableDate))
+                case _ => Ok(excludedCopeView(spExclusion.copeAvailableDate))
+              }
             } else
               Ok(excludedCopeView(spExclusion.copeAvailableDate))
           case _ =>
