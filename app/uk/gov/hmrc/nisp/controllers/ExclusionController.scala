@@ -73,14 +73,11 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
           case Left(spExclusion: StatePensionExclusionFilteredWithCopeDate) =>
-            if(spExclusion.previousAvailableDate.isDefined) {
-              spExclusion.previousAvailableDate match {
-                case Some(prevAvailDate) if prevAvailDate.isBefore(spExclusion.copeAvailableDate) =>
-                  Ok(excludedCopeExtendedView(spExclusion.copeAvailableDate))
-                case _ => Ok(excludedCopeView(spExclusion.copeAvailableDate))
-              }
-            } else
+            if(spExclusion.previousAvailableDate.exists(_.isBefore(spExclusion.copeAvailableDate))) {
+              Ok(excludedCopeExtendedView(spExclusion.copeAvailableDate))
+            } else {
               Ok(excludedCopeView(spExclusion.copeAvailableDate))
+            }
           case _ =>
             Logger.warn("User accessed/exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show())

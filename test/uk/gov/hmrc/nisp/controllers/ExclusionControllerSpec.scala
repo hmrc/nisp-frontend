@@ -568,9 +568,9 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
 
       "return the COPE Processing Extended Exclusion on /exclusion" in {
-        val statePensionCopeProcessingResponse = StatePensionExclusionFilteredWithCopeDate(
+        val statePensionCopeProcessingExtendedResponse = StatePensionExclusionFilteredWithCopeDate(
           exclusion = Exclusion.CopeProcessing,
-          copeAvailableDate = new LocalDate(2017, 7, 18),
+          copeAvailableDate = new LocalDate(2017, 7, 28),
           previousAvailableDate = Some(new LocalDate(2017, 7, 18))
         )
 
@@ -578,7 +578,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
         when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-          Future.successful(Left(statePensionCopeProcessingResponse))
+          Future.successful(Left(statePensionCopeProcessingExtendedResponse))
         )
 
         when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
