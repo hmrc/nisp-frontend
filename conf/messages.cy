@@ -170,8 +170,12 @@ nisp.nirecord.summary.youhave = Mae gennych:
 nisp.excluded.cope.processing.h1 = Mae’n ddrwg gennym – ni allwn gyfrifo’ch rhagolwg ar hyn o bryd
 nisp.excluded.cope.processing = Mae ein tîm arbenigol yn gwirio’ch cofnod Yswiriant Gwladol er mwyn sicrhau bod y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth yn gywir.
 nisp.excluded.cope.processing.manualWork = Gwneir y math hwn o waith llaw fel mater o drefn, a hynny er mwyn gwneud yn siŵr bod yr wybodaeth yn gyfredol.
-nisp.excluded.cope.processing.returnDate = Gwneir y math hwn o waith llaw fel mater o drefn, a hynny er mwyn gwneud yn siŵr bod yr wybodaeth yn gyfredol.
-nisp.excluded.cope.processing.returnDate = Bydd y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth ar gael ar {0}.
+
+nisp.excluded.cope.extended.h1 = Mae’n ddrwg gennym – rydym yn dal i weithio ar ddiweddariadau i’ch rhagolwg
+nisp.excluded.cope.extended = Mae ein tîm arbenigol yn gwirio’ch cofnod Yswiriant Gwladol er mwyn sicrhau bod y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth yn gywir ac yn gyfredol.
+nisp.excluded.cope.extended.backlog = Yn anffodus, mae llwyth o waith i’w brosesu â llaw o hyd ac mae’n cymryd mwy o amser i’w gwblhau.
+
+nisp.excluded.cope.returnDate = Bydd y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth ar gael ar {0}.
 
 nisp.excluded.cope.failed.h1 = Mae’n ddrwg gennym – ni allwn ddangos eich rhagolwg ar-lein
 nisp.excluded.cope.failed = I gael rhagolwg, bydd angen i chi ffonio a byddwn yn anfon un atoch drwy’r post.

@@ -35,6 +35,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     authenticate: ExcludedAuthAction,
                                     mcc: MessagesControllerComponents,
                                     excludedCopeView: excluded_cope,
+                                    excludedCopeExtendedView: excluded_cope_extended,
                                     excludedCopeFailedView: excluded_cope_failed)
                                    (implicit val executor: ExecutionContext,
                                     val formPartialRetriever: FormPartialRetriever,
@@ -72,9 +73,13 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
           case Left(spExclusion: StatePensionExclusionFilteredWithCopeDate) =>
-            Ok(excludedCopeView(spExclusion.copeAvailableDate))
+            if(spExclusion.previousAvailableDate.exists(_.isBefore(spExclusion.copeAvailableDate))) {
+              Ok(excludedCopeExtendedView(spExclusion.copeAvailableDate))
+            } else {
+              Ok(excludedCopeView(spExclusion.copeAvailableDate))
+            }
           case _ =>
-            Logger.warn("User accessed /exclusion as non-excluded user")
+            Logger.warn("User accessed/exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show())
         }
       }

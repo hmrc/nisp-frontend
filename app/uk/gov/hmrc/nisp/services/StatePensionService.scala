@@ -59,7 +59,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
         case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeCopeProcessing) =>
-          Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, copeAvailableDate = getDateWithRegex(ex.message)))
+          Left(getCopeExclusionWithRegex(ex.message))
       }
   }
 
@@ -85,11 +85,14 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
     }
   }
 
-  private def getDateWithRegex(copeResponse: String): LocalDate = {
-    val copeResponseDateCapturingRegex: Regex = """(?:.*)(?:'\{"code":"EXCLUSION_COPE_PROCESSING","copeDataAvailableDate":\")(\d{4}-\d{2}-\d{2})(?:\"}')""".r
+  private def getCopeExclusionWithRegex(copeResponse: String): StatePensionExclusionFilteredWithCopeDate = {
+    val copeRegex: Regex = """(?:.*)(?:'\{"code":"EXCLUSION_COPE_PROCESSING","copeDataAvailableDate":\")(\d{4}-\d{2}-\d{2})(?:(?:\",\"previousAvailableDate\":\"(\d{4}-\d{2}-\d{2}))?)(?:\"}')""".r
 
     copeResponse match {
-      case copeResponseDateCapturingRegex(copeResponseDateAsString) => new LocalDate(copeResponseDateAsString)
+      case copeRegex(copeAvailableDate, null) =>
+        StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, new LocalDate(copeAvailableDate), None)
+      case copeRegex(copeAvailableDate, copePreviousAvailableDate) =>
+        StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, LocalDate.parse(copeAvailableDate), Some(LocalDate.parse(copePreviousAvailableDate)))
       case _ => throw new Exception("COPE date not matched with regex!")
     }
   }

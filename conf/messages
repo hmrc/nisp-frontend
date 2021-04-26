@@ -173,7 +173,12 @@ nisp.nirecord.summary.youhave = You have:
 nisp.excluded.cope.processing.h1 = Sorry, we are unable to calculate your forecast at the moment
 nisp.excluded.cope.processing = Our Specialist Team is checking your National Insurance record to ensure your State Pension forecast is accurate.
 nisp.excluded.cope.processing.manualWork = This kind of manual work is routinely done to make sure information is up to date.
-nisp.excluded.cope.processing.returnDate = Your State Pension Forecast will be available on {0}.
+
+nisp.excluded.cope.extended.h1 = Sorry, we are still working on updates to your forecast
+nisp.excluded.cope.extended = Our Specialist Team is checking your National Insurance record to ensure your State Pension forecast is accurate and up to date.
+nisp.excluded.cope.extended.backlog = Unfortunately, there is a backlog of work to manually process and it is taking longer to complete.
+
+nisp.excluded.cope.returnDate = Your State Pension forecast will be available on {0}.
 
 nisp.excluded.cope.failed.h1 = Sorry, we cannot show your forecast online
 nisp.excluded.cope.failed = To get a forecast you need to call and we will post one out to you.

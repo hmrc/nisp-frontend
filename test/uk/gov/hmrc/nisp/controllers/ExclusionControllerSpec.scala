@@ -78,7 +78,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
   val mwrreMessagingNI = "We’re currently unable to show your National Insurance Record as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>."
   val abroadMessaging = "We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad."
   val spaUnderConsiderationMessaging = "Proposed change to your State Pension age"
-  val copeProcessingHeader = "Your State Pension Forecast"
+  val copeProcessingHeader = "Sorry, we are unable to calculate your forecast at the moment"
+  val copeProcessingExtendedHeader = "Sorry, we are still working on updates to your forecast"
   val copeFailedHeader = "Sorry, we cannot show your forecast online"
 
   "GET /exclusion" should {
@@ -89,18 +90,18 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         false, new LocalDate(2014, 4, 5),
         List(
           NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60, Some(new LocalDate(2019, 4, 5)),
-            Some(new LocalDate(2023, 4, 5)),true,false),
-          NationalInsuranceTaxYear("2012-13", true, 0,0,0,52,689, Some(new LocalDate(2019, 4, 5)),
-            Some(new LocalDate(2023, 4, 5)),true,false)
+            Some(new LocalDate(2023, 4, 5)), true, false),
+          NationalInsuranceTaxYear("2012-13", true, 0, 0, 0, 52, 689, Some(new LocalDate(2019, 4, 5)),
+            Some(new LocalDate(2023, 4, 5)), true, false)
         ),
         false)
 
-      val expectedStatePensionResponse = StatePension(new LocalDate(2015, 4,5),
+      val expectedStatePensionResponse = StatePension(new LocalDate(2015, 4, 5),
         StatePensionAmounts(false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0,0,0)
+          StatePensionAmountRegular(0, 0, 0)
         ), 64, new LocalDate(2018, 7, 6),
         "2017-18", 30, false, 155.65, false, false)
 
@@ -149,7 +150,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result) should include (deadMessaging)
+          contentAsString(result) should include(deadMessaging)
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include postSPAMessaging
           contentAsString(result) should not include dissonanceMessaging
@@ -165,7 +166,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           val result = generateNIRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result) should include (deadMessaging)
+          contentAsString(result) should include(deadMessaging)
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include isleOfManMessagingNI
           contentAsString(result) should not include mwrreMessagingNI
@@ -179,13 +180,13 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful( Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator)))
+            Future.successful(Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator)))
           )
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
-          contentAsString(result) should include (mciMessaging)
+          contentAsString(result) should include(mciMessaging)
           contentAsString(result) should not include postSPAMessaging
           contentAsString(result) should not include dissonanceMessaging
           contentAsString(result) should not include isleOfManMessagingSP
@@ -201,7 +202,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
-          contentAsString(result) should include (mciMessaging)
+          contentAsString(result) should include(mciMessaging)
           contentAsString(result) should not include isleOfManMessagingNI
           contentAsString(result) should not include mwrreMessagingNI
         }
@@ -222,7 +223,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
-          contentAsString(result) should include (postSPAMessaging)
+          contentAsString(result) should include(postSPAMessaging)
           contentAsString(result) should not include dissonanceMessaging
           contentAsString(result) should not include isleOfManMessagingSP
           contentAsString(result) should not include mwrreMessagingSP
@@ -238,7 +239,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
-          contentAsString(result) should include (isleOfManMessagingNI)
+          contentAsString(result) should include(isleOfManMessagingNI)
           contentAsString(result) should not include mwrreMessagingNI
         }
       }
@@ -259,7 +260,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include postSPAMessaging
-          contentAsString(result) should include (dissonanceMessaging)
+          contentAsString(result) should include(dissonanceMessaging)
           contentAsString(result) should not include isleOfManMessagingSP
           contentAsString(result) should not include mwrreMessagingSP
           contentAsString(result) should not include abroadMessaging
@@ -274,7 +275,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
-          contentAsString(result) should include (isleOfManMessagingNI)
+          contentAsString(result) should include(isleOfManMessagingNI)
           contentAsString(result) should not include mwrreMessagingNI
         }
       }
@@ -287,7 +288,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(new LocalDate(2017, 7, 18))
-              ,Some(true))))
+              , Some(true))))
           )
 
           val result = generateSPRequest
@@ -296,7 +297,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include postSPAMessaging
           contentAsString(result) should not include dissonanceMessaging
-          contentAsString(result) should include (isleOfManMessagingSP)
+          contentAsString(result) should include(isleOfManMessagingSP)
           contentAsString(result) should not include mwrreMessagingSP
           contentAsString(result) should not include abroadMessaging
         }
@@ -310,7 +311,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
-          contentAsString(result) should include (isleOfManMessagingNI)
+          contentAsString(result) should include(isleOfManMessagingNI)
           contentAsString(result) should not include mwrreMessagingNI
         }
       }
@@ -322,7 +323,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
               StatePensionAmountRegular(133.41, 580.1, 6961.14),
               StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
               StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
-              StatePensionAmountRegular(0, 0, 0)),64, new LocalDate(2050, 7, 6),
+              StatePensionAmountRegular(0, 0, 0)), 64, new LocalDate(2050, 7, 6),
             "2050-51", 25, false, 155.65, true, false)
 
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -340,7 +341,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           contentAsString(result) should not include postSPAMessaging
           contentAsString(result) should not include dissonanceMessaging
           contentAsString(result) should not include isleOfManMessagingSP
-          contentAsString(result) should include (mwrreMessagingSP)
+          contentAsString(result) should include(mwrreMessagingSP)
           contentAsString(result) should not include abroadMessaging
         }
 
@@ -354,7 +355,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include isleOfManMessagingNI
-          contentAsString(result) should include (mwrreMessagingNI)
+          contentAsString(result) should include(mwrreMessagingNI)
         }
       }
 
@@ -364,10 +365,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           val expectedStatePension = StatePension(new LocalDate(2015, 4, 5),
             StatePensionAmounts(false,
               StatePensionAmountRegular(133.41, 580.1, 6961.14),
-              StatePensionAmountForecast(3,146.76, 638.14, 7657.73),
-              StatePensionAmountMaximum(3,2, 155.65, 676.8, 8121.59),
-              StatePensionAmountRegular(0,0,0)),
-            64, new LocalDate(2018, 7,6), "2017-18", 30, false, 155.65, true, false)
+              StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+              StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+              StatePensionAmountRegular(0, 0, 0)),
+            64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true, false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Right(expectedStatePension))
@@ -378,15 +379,15 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           )
 
           val result = testExclusionController.showSP()(fakeRequest.withSession(
-              SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-              SessionKeys.lastRequestTimestamp -> now.getMillis.toString
-            ))
+            SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+            SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+          ))
 
           redirectLocation(result) shouldBe None
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include isleOfManMessagingSP
-          contentAsString(result) should include (mwrreMessagingSP)
+          contentAsString(result) should include(mwrreMessagingSP)
         }
 
         "return only the MWRRE Exclusion on /exclusionni" in {
@@ -399,7 +400,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           contentAsString(result) should not include deadMessaging
           contentAsString(result) should not include mciMessaging
           contentAsString(result) should not include isleOfManMessagingNI
-          contentAsString(result) should include (mwrreMessagingNI)
+          contentAsString(result) should include(mwrreMessagingNI)
         }
       }
 
@@ -421,7 +422,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result) should include (spaUnderConsiderationMessaging)
+          contentAsString(result) should include(spaUnderConsiderationMessaging)
         }
       }
 
@@ -431,7 +432,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           val statePensionResponse = StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(new LocalDate(2017, 7, 18)),
             Some(true))
 
-          val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8,1)),
+          val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
             false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -444,7 +445,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result) should include (spaUnderConsiderationMessaging)
+          contentAsString(result) should include(spaUnderConsiderationMessaging)
         }
       }
 
@@ -544,8 +545,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         "return the COPE Processing Exclusion on /exclusion" in {
           val statePensionCopeProcessingResponse = StatePensionExclusionFilteredWithCopeDate(
             exclusion = Exclusion.CopeProcessing,
-            copeAvailableDate= new LocalDate(2017, 7, 18),
-            previousAvailableDate = Some(new LocalDate(2017, 7, 18))
+            copeAvailableDate = new LocalDate(2017, 7, 18),
+            previousAvailableDate = None
           )
 
           val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
@@ -563,46 +564,54 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           status(result) shouldBe OK
           contentAsString(result) should include(copeProcessingHeader)
         }
-
-        "redirect to showSP" in {
-          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Left(Exclusion.CopeProcessing)))
-
-          val result = testExclusionController.showNI()(FakeRequest())
-          redirectLocation(result) shouldBe Some(routes.ExclusionController.showSP().url)
-        }
       }
 
-      "The user has COPE Failed exclusion" should {
 
-        "return the COPE Failed Exclusion on /exclusion" in {
-          val statePensionCopeFailedResponse = StatePensionExclusionFiltered(
-            exclusion = Exclusion.CopeProcessingFailed
-          )
+      "return the COPE Processing Extended Exclusion on /exclusion" in {
+        val statePensionCopeProcessingExtendedResponse = StatePensionExclusionFilteredWithCopeDate(
+          exclusion = Exclusion.CopeProcessing,
+          copeAvailableDate = new LocalDate(2017, 7, 28),
+          previousAvailableDate = Some(new LocalDate(2017, 7, 18))
+        )
 
-          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+        val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+          false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Left(statePensionCopeFailedResponse))
-          )
+        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          Future.successful(Left(statePensionCopeProcessingExtendedResponse))
+        )
 
-          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(nationalInsuranceRecord)))
+        when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord)))
 
-          val result = testExclusionController.showSP()(FakeRequest())
+        val result = testExclusionController.showSP()(FakeRequest())
 
-          status(result) shouldBe OK
-          contentAsString(result) should include(copeFailedHeader)
-        }
+        status(result) shouldBe OK
+        contentAsString(result) should include(copeProcessingExtendedHeader)
+      }
+    }
 
-        "redirect to showSP" in {
-          when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Left(Exclusion.CopeProcessingFailed)))
+    "The user has COPE Failed exclusion" should {
 
-          val result = testExclusionController.showNI()(FakeRequest())
-          redirectLocation(result) shouldBe Some(routes.ExclusionController.showSP().url)
-        }
+      "return the COPE Failed Exclusion on /exclusion" in {
+        val statePensionCopeFailedResponse = StatePensionExclusionFiltered(
+          exclusion = Exclusion.CopeProcessingFailed
+        )
+
+        val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
+          false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          Future.successful(Left(statePensionCopeFailedResponse))
+        )
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          Future.successful(Right(nationalInsuranceRecord)))
+
+        val result = testExclusionController.showSP()(FakeRequest())
+
+        status(result) shouldBe OK
+        contentAsString(result) should include(copeFailedHeader)
       }
 
     }
