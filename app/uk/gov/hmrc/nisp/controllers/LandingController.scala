@@ -60,21 +60,19 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
 
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult map {
-        case IdentityVerificationSuccessResponse(FailedMatching) => not_authorised()
-        case IdentityVerificationSuccessResponse(InsufficientEvidence) => not_authorised()
-        case IdentityVerificationSuccessResponse(TechnicalIssue) => technical_issue()
-        case IdentityVerificationSuccessResponse(LockedOut) => locked_out()
-        case IdentityVerificationSuccessResponse(Timeout) => timeout()
-        case IdentityVerificationSuccessResponse(Incomplete) => not_authorised()
-        case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => not_authorised()
-        case IdentityVerificationSuccessResponse(UserAborted) => not_authorised()
-        case IdentityVerificationSuccessResponse(FailedIV) => not_authorised()
-        case response => Logger.warn(s"Unhandled Response from Identity Verification: $response"); technical_issue()
+        case IdentityVerificationSuccessResponse(FailedMatching) => Unauthorized(not_authorised())
+        case IdentityVerificationSuccessResponse(InsufficientEvidence) => Unauthorized(not_authorised())
+        case IdentityVerificationSuccessResponse(TechnicalIssue) => InternalServerError(technical_issue())
+        case IdentityVerificationSuccessResponse(LockedOut) => Forbidden(locked_out())
+        case IdentityVerificationSuccessResponse(Timeout) => Unauthorized(timeout())
+        case IdentityVerificationSuccessResponse(Incomplete) => Unauthorized(not_authorised())
+        case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => Unauthorized(not_authorised())
+        case IdentityVerificationSuccessResponse(UserAborted) => Unauthorized(not_authorised())
+        case IdentityVerificationSuccessResponse(FailedIV) => Unauthorized(not_authorised())
+        case response => Logger.warn(s"Unhandled Response from Identity Verification: $response"); InternalServerError(technical_issue())
       }
-    } getOrElse Future.successful(not_authorised(showFirstParagraph = false))
+    } getOrElse Future.successful(Unauthorized(not_authorised(showFirstParagraph = false)))
 
-    result.map {
-      Ok(_).withNewSession
-    }
+    result.map(_.withNewSession)
   }
 }
