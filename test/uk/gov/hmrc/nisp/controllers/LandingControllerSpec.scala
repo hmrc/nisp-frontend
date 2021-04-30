@@ -235,7 +235,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       )
 
       val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-      status(result) mustBe FORBIDDEN
+      status(result) mustBe LOCKED
       contentAsString(result) must include("You have reached the maximum number of attempts to confirm your identity.")
     }
 

@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.controllers
 import com.google.inject.Inject
 import play.api.Logger
 import play.api.i18n.I18nSupport
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
@@ -38,6 +39,8 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
                                   val formPartialRetriever: FormPartialRetriever,
                                   val templateRenderer: TemplateRenderer,
                                   val executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
+
+  val logger = Logger(this.getClass)
 
   def show: Action[AnyContent] = Action(
     implicit request =>
@@ -60,16 +63,43 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
 
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult map {
-        case IdentityVerificationSuccessResponse(FailedMatching) => Unauthorized(not_authorised())
-        case IdentityVerificationSuccessResponse(InsufficientEvidence) => Unauthorized(not_authorised())
-        case IdentityVerificationSuccessResponse(TechnicalIssue) => InternalServerError(technical_issue())
-        case IdentityVerificationSuccessResponse(LockedOut) => Forbidden(locked_out())
-        case IdentityVerificationSuccessResponse(Timeout) => Unauthorized(timeout())
-        case IdentityVerificationSuccessResponse(Incomplete) => Unauthorized(not_authorised())
-        case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => Unauthorized(not_authorised())
-        case IdentityVerificationSuccessResponse(UserAborted) => Unauthorized(not_authorised())
-        case IdentityVerificationSuccessResponse(FailedIV) => Unauthorized(not_authorised())
-        case response => Logger.warn(s"Unhandled Response from Identity Verification: $response"); InternalServerError(technical_issue())
+        case IdentityVerificationSuccessResponse(FailedMatching) => {
+          logger.warn(s"identityVerification has returned, $FailedMatching")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(InsufficientEvidence) => {
+          logger.warn(s"identityVerification has returned, $InsufficientEvidence")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(TechnicalIssue) => {
+          logger.warn(s"identityVerification has returned, $TechnicalIssue")
+          InternalServerError(technical_issue())
+        }
+        case IdentityVerificationSuccessResponse(LockedOut) => {
+          logger.warn(s"identityVerification has returned, $Locked")
+          Locked(locked_out())
+        }
+        case IdentityVerificationSuccessResponse(Timeout) => {
+          logger.warn(s"identityVerification has returned, $Timeout")
+          Unauthorized(timeout())
+        }
+        case IdentityVerificationSuccessResponse(Incomplete) => {
+          logger.warn(s"identityVerification has returned, $Incomplete")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => {
+          logger.warn(s"identityVerification has returned, ${IdentityVerificationSuccessResponse.PreconditionFailed}")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(UserAborted) => {
+          logger.warn(s"identityVerification has returned, $UserAborted")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(FailedIV) => {
+          logger.warn(s"identityVerification has returned, $FailedIV")
+          Unauthorized(not_authorised())
+        }
+        case response => logger.warn(s"Unhandled Response from Identity Verification: $response"); InternalServerError(technical_issue())
       }
     } getOrElse Future.successful(Unauthorized(not_authorised(showFirstParagraph = false)))
 
