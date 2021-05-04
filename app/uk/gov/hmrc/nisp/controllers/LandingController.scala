@@ -68,35 +68,35 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
           Unauthorized(not_authorised())
         }
         case IdentityVerificationSuccessResponse(InsufficientEvidence) => {
-          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $InsufficientEvidence error")
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $InsufficientEvidence error")
           Unauthorized(not_authorised())
         }
         case IdentityVerificationSuccessResponse(TechnicalIssue) => {
-          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $TechnicalIssue error")
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $TechnicalIssue error")
           InternalServerError(technical_issue())
         }
         case IdentityVerificationSuccessResponse(LockedOut) => {
-          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $Locked error")
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $Locked error")
           Locked(locked_out())
         }
         case IdentityVerificationSuccessResponse(Timeout) => {
-          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $Timeout error")
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $Timeout error")
           Unauthorized(timeout())
         }
         case IdentityVerificationSuccessResponse(Incomplete) => {
-          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $Incomplete error")
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $Incomplete error")
           Unauthorized(not_authorised())
         }
         case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => {
-          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, ${IdentityVerificationSuccessResponse.PreconditionFailed} error")
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, ${IdentityVerificationSuccessResponse.PreconditionFailed} error")
           Unauthorized(not_authorised())
         }
         case IdentityVerificationSuccessResponse(UserAborted) => {
-          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $UserAborted error")
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $UserAborted error")
           Unauthorized(not_authorised())
         }
         case IdentityVerificationSuccessResponse(FailedIV) => {
-          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $FailedIV error")
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $FailedIV error")
           Unauthorized(not_authorised())
         }
         case response => logger.warn(s"Unhandled Response from Identity Verification: $response"); InternalServerError(technical_issue())
