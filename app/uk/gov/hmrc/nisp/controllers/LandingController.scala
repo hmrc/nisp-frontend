@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.controllers
 import com.google.inject.Inject
 import play.api.Logger
 import play.api.i18n.I18nSupport
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
@@ -38,6 +39,8 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
                                   val formPartialRetriever: FormPartialRetriever,
                                   val templateRenderer: TemplateRenderer,
                                   val executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
+
+  val logger = Logger(this.getClass)
 
   def show: Action[AnyContent] = Action(
     implicit request =>
@@ -60,21 +63,46 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
 
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult map {
-        case IdentityVerificationSuccessResponse(FailedMatching) => not_authorised()
-        case IdentityVerificationSuccessResponse(InsufficientEvidence) => not_authorised()
-        case IdentityVerificationSuccessResponse(TechnicalIssue) => technical_issue()
-        case IdentityVerificationSuccessResponse(LockedOut) => locked_out()
-        case IdentityVerificationSuccessResponse(Timeout) => timeout()
-        case IdentityVerificationSuccessResponse(Incomplete) => not_authorised()
-        case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => not_authorised()
-        case IdentityVerificationSuccessResponse(UserAborted) => not_authorised()
-        case IdentityVerificationSuccessResponse(FailedIV) => not_authorised()
-        case response => Logger.warn(s"Unhandled Response from Identity Verification: $response"); technical_issue()
+        case IdentityVerificationSuccessResponse(FailedMatching) => {
+          logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $FailedMatching error")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(InsufficientEvidence) => {
+          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $InsufficientEvidence error")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(TechnicalIssue) => {
+          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $TechnicalIssue error")
+          InternalServerError(technical_issue())
+        }
+        case IdentityVerificationSuccessResponse(LockedOut) => {
+          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $Locked error")
+          Locked(locked_out())
+        }
+        case IdentityVerificationSuccessResponse(Timeout) => {
+          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $Timeout error")
+          Unauthorized(timeout())
+        }
+        case IdentityVerificationSuccessResponse(Incomplete) => {
+          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $Incomplete error")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => {
+          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, ${IdentityVerificationSuccessResponse.PreconditionFailed} error")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(UserAborted) => {
+          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $UserAborted error")
+          Unauthorized(not_authorised())
+        }
+        case IdentityVerificationSuccessResponse(FailedIV) => {
+          logger.warn(s"dentityVerificationConnector.identityVerificationResponse has returned, $FailedIV error")
+          Unauthorized(not_authorised())
+        }
+        case response => logger.warn(s"Unhandled Response from Identity Verification: $response"); InternalServerError(technical_issue())
       }
-    } getOrElse Future.successful(not_authorised(showFirstParagraph = false))
+    } getOrElse Future.successful(Unauthorized(not_authorised(showFirstParagraph = false)))
 
-    result.map {
-      Ok(_).withNewSession
-    }
+    result.map(_.withNewSession)
   }
 }
