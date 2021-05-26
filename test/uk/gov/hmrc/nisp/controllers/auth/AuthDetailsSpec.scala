@@ -29,7 +29,7 @@ class AuthDetailsSpec extends UnitSpec {
   "isGG" should {
     "return true" when {
       "the auth provider contains the GG flag" in {
-        val authProvider = Some("GGW")
+        val authProvider = Some("GovernmentGateway")
         val authDetails = AuthDetails(confidenceLevel, authProvider, loginTimes)
 
         authDetails.isGG shouldBe true
@@ -38,7 +38,7 @@ class AuthDetailsSpec extends UnitSpec {
 
     "return false" when {
       "the auth provider does not contain the GG flag" in {
-        val authProviderNonGG = Some("verify")
+        val authProviderNonGG = Some("Verify")
         val authDetails = AuthDetails(confidenceLevel, authProviderNonGG, loginTimes)
 
         authDetails.isGG shouldBe false
@@ -49,7 +49,7 @@ class AuthDetailsSpec extends UnitSpec {
   "isVerify" should {
     "return true" when {
       "the auth provider contains the verify flag" in {
-        val authProvider = Some("IDA")
+        val authProvider = Some("Verify")
         val authDetails = AuthDetails(confidenceLevel, authProvider, loginTimes)
 
         authDetails.isVerify shouldBe true
@@ -58,7 +58,7 @@ class AuthDetailsSpec extends UnitSpec {
 
     "return false" when {
       "the auth provider does not contain the verify flag" in {
-        val authProviderNonGG = Some("gg")
+        val authProviderNonGG = Some("GovernmentGateway")
         val authDetails = AuthDetails(confidenceLevel, authProviderNonGG, loginTimes)
 
         authDetails.isVerify shouldBe false
