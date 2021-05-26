@@ -19,7 +19,6 @@ package uk.gov.hmrc.nisp.utils
 object Constants {
 
   val GovernmentGatewayId = "GovernmentGateway"
-  val AnyAuthenticationProviderId = "IDAorGGW"
   val VerifyProviderId = "Verify"
 
   // scalastyle:off magic.number
