@@ -21,24 +21,21 @@
 
 <div class="header-proposition">
     <div class="content">
-        
-        <nav id="proposition-menu" class="header__menu" role="navigation">
 
-            @if(navTitleLink){
-                <a href="@navTitleLink" class="header__menu__proposition-name">@navTitle</a>
-            }else{
-                <span class="header__menu__proposition-name">@navTitle</span>
-            }
+        @if(navTitleLink){
+            <a href="@navTitleLink" class="header__menu__proposition-name">@navTitle</a>
+        }else{
+            <span class="header__menu__proposition-name">@navTitle</span>
+        }
 
-            @if(showBetaLink) {
-                <a href="https://www.gov.uk/service-manual" class="phase-tag beta">Beta</a>
-            }
+        @if(showBetaLink) {
+            <a href="https://www.gov.uk/service-manual" class="phase-tag beta">Beta</a>
+        }
 
-            @if(navLinks) {
-                <ul class="header__menu__proposition-links">
-                    @navLinks
-                </ul>
-            }
-        </nav>
+        @if(navLinks) {
+            <ul class="header__menu__proposition-links">
+                @navLinks
+            </ul>
+        }
     </div>
 </div>
