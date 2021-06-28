@@ -21,5 +21,5 @@ import javax.inject.Singleton
 
 @Singleton
 class DateProvider{
-  val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
+  def currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
 }
