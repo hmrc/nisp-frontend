@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.nisp.models.citizen
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json._
 import uk.gov.hmrc.domain.Nino
-import play.api.libs.json.JodaWrites._
 
 case class Citizen(nino: Nino, firstName: Option[String] = None, lastName: Option[String] = None,
                    dateOfBirth: LocalDate) {
@@ -34,7 +33,7 @@ case class Citizen(nino: Nino, firstName: Option[String] = None, lastName: Optio
 object Citizen {
 
   implicit val dateReads: Reads[LocalDate] = Reads[LocalDate] {
-    case value: JsNumber => value.validate[Long].map(new LocalDate(_))
+    case value: JsNumber => value.validate[Long].map(LocalDate.ofEpochDay(_))
     case value => value.validate[String].map(LocalDate.parse)
   }
 

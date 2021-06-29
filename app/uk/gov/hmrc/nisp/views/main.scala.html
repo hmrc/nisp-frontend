@@ -17,7 +17,6 @@
 @import uk.gov.hmrc.play.views.html.layouts
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 @import play.twirl.api.Html
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
 @import uk.gov.hmrc.renderer.TemplateRenderer
@@ -30,6 +29,8 @@
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import play.api.Play
 @import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
+@import org.joda.time.DateTime
+@import java.time.LocalDateTime
 
 @(
     mainTemplateParams: MainTemplateParams
@@ -42,6 +43,13 @@
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
         templateRenderer: TemplateRenderer
 )
+
+@toLocalDateTime(date: Option[DateTime]) = @{
+   date.map { dateTime =>
+    LocalDateTime.of(dateTime.getYear, dateTime.getMonthOfYear, dateTime.getDayOfMonth, 0, 0, 0)
+}}
+
+
 
 @mustacheCheck(str: String) = @{
     if(str.trim=="") false else str
@@ -173,7 +181,8 @@
 }
 
 @previouslyLoggedInAt = @{
-    val msg =  LanguageHelper.langUtils.Dates.formatEasyReadingTimestamp(request.authDetails.loginTimes.previousLogin, "")
+    val msg =  LanguageHelper.langUtils.Dates.formatEasyReadingTimestamp(
+toLocalDateTime(request.authDetails.loginTimes.previousLogin), "")
     mustacheCheck(msg)
 }
 

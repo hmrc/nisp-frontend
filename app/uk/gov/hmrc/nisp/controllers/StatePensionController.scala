@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import java.time.LocalDate
+
 import com.google.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -34,7 +36,6 @@ import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils
 
 import scala.concurrent.ExecutionContext
 
@@ -120,7 +121,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                   nationalInsuranceRecord.numberOfGapsPayable,
                   yearsMissing,
                   user.livesAbroad,
-                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
+                  calculateAge(user.dateOfBirth, LocalDate.now()),
                   isPertax,
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
@@ -130,7 +131,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
-                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
+                  calculateAge(user.dateOfBirth, LocalDate.now),
                   user.livesAbroad,
                   isPertax,
                   yearsToContributeUntilPensionAge
@@ -152,7 +153,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                   personalMaximumChart,
                   isPertax,
                   hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
-                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
+                  calculateAge(user.dateOfBirth, LocalDate.now),
                   user.livesAbroad,
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))

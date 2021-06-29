@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json.{JsPath, Json, Reads}
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario

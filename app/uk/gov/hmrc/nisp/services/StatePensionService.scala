@@ -17,7 +17,8 @@
 package uk.gov.hmrc.nisp.services
 
 import com.google.inject.Inject
-import org.joda.time.{DateTime, LocalDate}
+import java.time.{LocalDate, LocalDateTime, ZoneId}
+
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse.WithStatusCode
@@ -37,7 +38,6 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
   val exclusionCodeCopeProcessing: String = "EXCLUSION_COPE_PROCESSING"
   val exclusionCodeCopeProcessingFailed: String = "EXCLUSION_COPE_PROCESSING_FAILED"
 
-  override def now: () => DateTime = () => DateTime.now(ukTime)
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExcl, StatePension]] = {
     statePensionConnector.getStatePension(nino)
@@ -52,14 +52,14 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         ))
       }
       .recover {
-        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeDead) =>
+        case ex if ex.getMessage.contains(exclusionCodeDead) =>
           Left(StatePensionExclusionFiltered(Exclusion.Dead))
-        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeManualCorrespondence) =>
+        case ex if ex.getMessage.contains(exclusionCodeManualCorrespondence) =>
           Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
-        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeCopeProcessingFailed) =>
+        case ex if ex.getMessage.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
-        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(exclusionCodeCopeProcessing) =>
-          Left(getCopeExclusionWithRegex(ex.message))
+        case ex if ex.getMessage.contains(exclusionCodeCopeProcessing) =>
+          Left(getCopeExclusionWithRegex(ex.getMessage))
       }
   }
 
@@ -90,10 +90,12 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
 
     copeResponse match {
       case copeRegex(copeAvailableDate, null) =>
-        StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, new LocalDate(copeAvailableDate), None)
+        StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, LocalDate.parse(copeAvailableDate), None)
       case copeRegex(copeAvailableDate, copePreviousAvailableDate) =>
         StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, LocalDate.parse(copeAvailableDate), Some(LocalDate.parse(copePreviousAvailableDate)))
       case _ => throw new Exception("COPE date not matched with regex!")
     }
   }
+
+  override def now: () => LocalDate = () => LocalDate.now(ZoneId.of("Europe/London"))
 }

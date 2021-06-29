@@ -59,9 +59,9 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
           Left(Exclusion.IsleOfMan)
         case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeMarriedWomen) =>
           Left(Exclusion.MarriedWomenReducedRateElection)
-        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(ExclusionCodeCopeProcessingFailed) =>
+        case ex if ex.getMessage.contains(ExclusionCodeCopeProcessingFailed) =>
           Left(Exclusion.CopeProcessingFailed)
-        case WithStatusCode(FORBIDDEN, ex) if ex.message.contains(ExclusionCodeCopeProcessing) =>
+        case ex if ex.getMessage.contains(ExclusionCodeCopeProcessing) =>
           Left(Exclusion.CopeProcessing)
       }
   }

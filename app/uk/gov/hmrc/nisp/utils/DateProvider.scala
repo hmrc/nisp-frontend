@@ -16,10 +16,12 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import org.joda.time.{DateTimeZone, LocalDate}
+import java.time.{LocalDate, ZoneId}
+
 import javax.inject.Singleton
 
 @Singleton
 class DateProvider{
-  val currentDate: LocalDate = new LocalDate(DateTimeZone.forID("Europe/London"))
+  val currentDate: LocalDate = LocalDate.now(ZoneId.of("Europe/London"))
+
 }

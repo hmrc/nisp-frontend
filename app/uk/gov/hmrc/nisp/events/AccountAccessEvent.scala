@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nisp.events
 
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -45,10 +45,10 @@ class AccountAccessEvent(nino: String, statePensionAge: LocalDate, statePensionA
   extends NispBusinessEvent("AccountPage",
     Map(
       "nino" -> nino,
-      "StatePensionAge" -> DateTimeFormat.forPattern("dd/MM/yyyy").print(statePensionAge),
+      "StatePensionAge" -> statePensionAge.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
       "StatePensionAmount" -> statePensionAmount.toString(),
       "StatePensionForecast" -> statePensionForecast.toString(),
-      "DateOfBirth" -> DateTimeFormat.forPattern("dd/MM/yyyy").print(dateOfBirth),
+      "DateOfBirth" -> dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
       "Name" -> name,
       "ContractedOut" -> contractedOutFlag.toString,
       "ForecastScenario" -> forecastScenario.toString,
