@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.models
 
-import org.joda.time._
+import java.time.LocalDate
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -33,7 +33,7 @@ class StatePensionSpec extends UnitSpec {
                          statePensionAgeUnderConsideration: Boolean = false
                         ) = {
     StatePension(
-      new LocalDate(earningsIncludedUpTo + 1, 4, 5),
+      LocalDate.of(earningsIncludedUpTo + 1, 4, 5),
       amounts = StatePensionAmounts (
         false,
         StatePensionAmountRegular(currentAmount, currentAmount / 7 * 365.25 / 12, currentAmount / 7 * 365.25),
@@ -42,7 +42,7 @@ class StatePensionSpec extends UnitSpec {
         cope = StatePensionAmountRegular(cope, cope / 7 * 365.25 / 12, cope / 7 * 365.25)
       ),
       65,
-      new LocalDate(2019, 5, 1),
+      LocalDate.of(2019, 5, 1),
       finalRelevantYear,
       qualifyingYears,
       false,

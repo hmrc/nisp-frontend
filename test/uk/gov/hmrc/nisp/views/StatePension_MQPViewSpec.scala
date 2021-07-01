@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.views
 import java.util.UUID
 
 import org.apache.commons.lang3.StringEscapeUtils
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.mockito.MockitoSugar
@@ -43,7 +43,6 @@ import uk.gov.hmrc.nisp.views.formatting.Time
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
 
@@ -54,7 +53,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
   def generateFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-    SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+    SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
 
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
@@ -118,7 +117,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
         def mockSetup = {
           when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
-              new LocalDate(2016, 4, 5),
+              LocalDate.of(2016, 4, 5),
               amounts = StatePensionAmounts(
                 protectedPayment = false,
                 StatePensionAmountRegular(151.71, 590.10, 7081.15),
@@ -127,7 +126,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 StatePensionAmountRegular(0, 0, 0)
               ),
               pensionAge = 67,
-              new LocalDate(2020, 6, 7),
+              LocalDate.of(2020, 6, 7),
               "2019-20",
               20,
               pensionSharingOrder = false,
@@ -143,9 +142,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 1,
               numberOfGapsPayable = 1,
-              Some(new LocalDate(1954, 3, 6)),
+              Some(LocalDate.of(1954, 3, 6)),
               false,
-              new LocalDate(2017, 4, 5),
+              LocalDate.of(2017, 4, 5),
               List(
 
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -172,7 +171,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
         }
         "render page with text  '7 june 2020' " in {
           mockSetup
-          assertEqualsValue(nonForeignDoc, "article.content__body>div.highlighted-event>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
+          assertEqualsValue(nonForeignDoc, "article.content__body>div.highlighted-event>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
         }
         "render page with text  'Your forecast is' " in {
           mockSetup
@@ -200,7 +199,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
         }
         "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
           mockSetup
-          assertContainsDynamicMessage(nonForeignDoc, "article.content__body ul.list-bullet li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
+          assertContainsDynamicMessage(nonForeignDoc, "article.content__body ul.list-bullet li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(LocalDate.of(2016, 4, 5)))
         }
         "render page with text  ' does not include any increase due to inflation '" in {
           mockSetup
@@ -218,7 +217,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
         }
         "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
           mockSetup
-          assertContainsDynamicMessage(foreignDoc, "article.content__body p:nth-child(9)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2020, 6, 7)))
+          assertContainsDynamicMessage(foreignDoc, "article.content__body p:nth-child(9)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(LocalDate.of(2020, 6, 7)))
         }
         "render page with link  'View your National Insurence Record'" in {
           mockSetup
@@ -256,7 +255,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
           mockSetup
-          assertContainsDynamicMessage(foreignDoc, "article.content__body p:nth-child(13)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+          assertContainsDynamicMessage(foreignDoc, "article.content__body p:nth-child(13)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -292,7 +291,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
         def mockSetup = {
           when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
             .thenReturn(Future.successful(Right(StatePension(
-              new LocalDate(2016, 4, 5),
+              LocalDate.of(2016, 4, 5),
               amounts = StatePensionAmounts(
                 protectedPayment = false,
                 StatePensionAmountRegular(151.71, 590.10, 7081.15),
@@ -301,7 +300,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 StatePensionAmountRegular(0, 0, 0)
               ),
               pensionAge = 67,
-              new LocalDate(2020, 6, 7),
+              LocalDate.of(2020, 6, 7),
               "2019-20",
               20,
               pensionSharingOrder = false,
@@ -317,9 +316,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 1,
               numberOfGapsPayable = 1,
-              Some(new LocalDate(1954, 3, 6)),
+              Some(LocalDate.of(1954, 3, 6)),
               false,
-              new LocalDate(2017, 4, 5),
+              LocalDate.of(2017, 4, 5),
               List(
 
                 NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -350,7 +349,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
         "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
           mockSetup
-          assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+          assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
         }
 
         //deferral message
@@ -361,7 +360,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
           mockSetup
-          assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+          assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -381,7 +380,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(111.71, 590.10, 7081.15),
@@ -390,7 +389,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2020, 6, 7),
+                LocalDate.of(2020, 6, 7),
                 "2019-20",
                 4,
                 pensionSharingOrder = false,
@@ -406,9 +405,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -441,7 +440,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             mockSetup
@@ -469,7 +468,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(LocalDate.of(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             mockSetup
@@ -525,7 +524,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
           /*Ends*/
 
@@ -536,7 +535,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -572,7 +571,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(111.71, 590.10, 7081.15),
@@ -581,7 +580,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2020, 6, 7),
+                LocalDate.of(2020, 6, 7),
                 "2019-20",
                 4,
                 pensionSharingOrder = false,
@@ -597,9 +596,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -632,7 +631,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(14)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(14)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           //deferral message
@@ -643,7 +642,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -661,7 +660,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(111.71, 590.10, 7081.15),
@@ -670,7 +669,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2020, 6, 7),
+                LocalDate.of(2020, 6, 7),
                 "2019-20",
                 4,
                 pensionSharingOrder = false,
@@ -686,9 +685,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 0,
                 numberOfGapsPayable = 0,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -721,7 +720,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             mockSetup
@@ -749,7 +748,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(LocalDate.of(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             mockSetup
@@ -777,7 +776,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
             mockSetup
-            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
           "render page with link  'View your National Insurence Record'" in {
             mockSetup
@@ -808,7 +807,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with heading 'Putting of claiming'" in {
@@ -818,7 +817,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -836,7 +835,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(111.71, 590.10, 7081.15),
@@ -845,7 +844,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2020, 6, 7),
+                LocalDate.of(2020, 6, 7),
                 "2019-20",
                 4,
                 pensionSharingOrder = false,
@@ -861,9 +860,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 0,
                 numberOfGapsPayable = 0,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -895,7 +894,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with heading  'Putting of claiming'" in {
@@ -905,7 +904,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -923,7 +922,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(111.71, 590.10, 7081.15),
@@ -932,7 +931,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2020, 6, 7),
+                LocalDate.of(2020, 6, 7),
                 "2019-20",
                 0,
                 pensionSharingOrder = false,
@@ -948,9 +947,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 1,
                 numberOfGapsPayable = 1,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -983,7 +982,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             mockSetup
@@ -1011,7 +1010,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(LocalDate.of(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             mockSetup
@@ -1039,7 +1038,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
             mockSetup
-            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
           "render page with link  'View your National Insurence Record'" in {
             mockSetup
@@ -1072,7 +1071,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
           /*Ends*/
 
@@ -1083,7 +1082,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1101,7 +1100,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(111.71, 590.10, 7081.15),
@@ -1110,7 +1109,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2020, 6, 7),
+                LocalDate.of(2020, 6, 7),
                 "2019-20",
                 0,
                 pensionSharingOrder = false,
@@ -1126,9 +1125,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 1,
                 numberOfGapsPayable = 1,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -1160,7 +1159,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with heading  'Putting of claiming'" in {
@@ -1170,7 +1169,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1188,7 +1187,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(111.71, 590.10, 7081.15),
@@ -1197,7 +1196,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2020, 6, 7),
+                LocalDate.of(2020, 6, 7),
                 "2019-20",
                 9,
                 pensionSharingOrder = false,
@@ -1213,9 +1212,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 0,
                 numberOfGapsPayable = 0,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
@@ -1247,7 +1246,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             mockSetup
@@ -1275,7 +1274,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(new LocalDate(2016, 4, 5)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", Dates.formatDate(LocalDate.of(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             mockSetup
@@ -1304,7 +1303,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
             mockSetup
-            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
           "render page with link  'View your National Insurence Record'" in {
             mockSetup
@@ -1337,7 +1336,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "Not render page with text 'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with heading  'Putting of claiming'" in {
@@ -1347,7 +1346,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1365,7 +1364,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(111.71, 590.10, 7081.15),
@@ -1374,7 +1373,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2020, 6, 7),
+                LocalDate.of(2020, 6, 7),
                 "2019-20",
                 9,
                 pensionSharingOrder = false,
@@ -1390,9 +1389,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 0,
                 numberOfGapsPayable = 0,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
@@ -1423,7 +1422,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with heading  'Putting of claiming'" in {
@@ -1433,7 +1432,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
@@ -1454,7 +1453,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(0, 0, 0),
@@ -1463,7 +1462,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2017, 5, 4),
+                LocalDate.of(2017, 5, 4),
                 "2016-17",
                 4,
                 pensionSharingOrder = false,
@@ -1479,9 +1478,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 0,
                 numberOfGapsPayable = 0,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -1515,7 +1514,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2017. ' " in {
             mockSetup
-            val sMessage = Dates.formatDate(new LocalDate(2017, 5, 4)) + "."
+            val sMessage = Dates.formatDate(LocalDate.of(2017, 5, 4)) + "."
             assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
@@ -1545,7 +1544,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "Not render page with text 'Youll reach State Pension age on 4 May 2017. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2017, 5, 4)))
+            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2017, 5, 4)))
           }
           /*Ends*/
 
@@ -1564,7 +1563,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(new LocalDate(2017, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(LocalDate.of(2017, 5, 4)))
           }
 
           "render page with text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
@@ -1609,7 +1608,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(0, 0, 0),
@@ -1618,7 +1617,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2017, 5, 4),
+                LocalDate.of(2017, 5, 4),
                 "2016-17",
                 4,
                 pensionSharingOrder = false,
@@ -1634,9 +1633,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 0,
                 numberOfGapsPayable = 0,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -1672,7 +1671,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'Youll reach State Pension age on 4 May 2017. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2017, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2017, 5, 4)))
           }
         }
 
@@ -1681,7 +1680,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(0, 0, 0),
@@ -1690,7 +1689,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2018, 5, 4),
+                LocalDate.of(2018, 5, 4),
                 "2017-18",
                 4,
                 pensionSharingOrder = false,
@@ -1706,9 +1705,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -1742,7 +1741,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
             mockSetup
-            val sMessage = Dates.formatDate(new LocalDate(2018, 5, 4)) + "."
+            val sMessage = Dates.formatDate(LocalDate.of(2018, 5, 4)) + "."
             assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
           }
 
@@ -1772,7 +1771,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "Not render page with text 'Youll reach State Pension age on 4 May 2018. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2018, 5, 4)))
+            assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2018, 5, 4)))
           }
           /*Ends*/
 
@@ -1793,7 +1792,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'After State Pension age, 4 May 2018 you no longer pay National Insurance contributions.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(new LocalDate(2018, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(LocalDate.of(2018, 5, 4)))
           }
 
           "render page with href text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
@@ -1829,7 +1828,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
               .thenReturn(Future.successful(Right(StatePension(
-                new LocalDate(2016, 4, 5),
+                LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
                   StatePensionAmountRegular(0, 0, 0),
@@ -1838,7 +1837,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                   StatePensionAmountRegular(0, 0, 0)
                 ),
                 pensionAge = 67,
-                new LocalDate(2018, 5, 4),
+                LocalDate.of(2018, 5, 4),
                 "2017-18",
                 4,
                 pensionSharingOrder = false,
@@ -1854,9 +1853,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
-                Some(new LocalDate(1954, 3, 6)),
+                Some(LocalDate.of(1954, 3, 6)),
                 false,
-                new LocalDate(2017, 4, 5),
+                LocalDate.of(2017, 4, 5),
                 List(
 
                   NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -1891,7 +1890,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text  'Youll reach State Pension age on 4 May 2018. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(new LocalDate(2018, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2018, 5, 4)))
           }
         }
       }

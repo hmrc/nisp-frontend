@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import java.time.LocalDate
 import java.util.{Locale, UUID}
 
 import org.jsoup.Jsoup
@@ -38,7 +39,6 @@ import uk.gov.hmrc.nisp.controllers.auth.VerifyAuthActionImpl
 import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils._
 
 import scala.concurrent.Future
 
@@ -137,7 +137,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
     "redirect to account page when signed in" in {
       val result = verifyLandingController.verifySignIn(FakeRequest().withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+        SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
       ))
 
       redirectLocation(result) mustBe Some("/check-your-state-pension/account")

@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2021 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http:www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
-import org.joda.time.{DateTime, LocalDate}
+import java.time.LocalDate
+import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.mockito.MockitoSugar
@@ -61,7 +46,6 @@ import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
 
@@ -109,22 +93,22 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   def generateFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-    SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+    SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
 
   val nIRecordRegular = TestAccountBuilder.jsonResponseByType[NationalInsuranceRecord](TestAccountBuilder.regularNino,
     "national-insurance-record")
 
   def mockSetup = {
-    when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
+    when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
     when(mockAppConfig.showFullNI).thenReturn(true)
 
-    when(mockStatePensionService.yearsToContributeUntilPensionAge(mockEQ(new LocalDate(2014, 4, 5)), mockEQ(2017)))
+    when(mockStatePensionService.yearsToContributeUntilPensionAge(mockEQ(LocalDate.of(2014, 4, 5)), mockEQ(2017)))
       .thenReturn(4)
 
     when(mockStatePensionService.getSummary(mockAny())(mockAny()))
       .thenReturn(Future.successful(Right(StatePension(
-        new LocalDate(2015, 4, 5),
+        LocalDate.of(2015, 4, 5),
         amounts = StatePensionAmounts(
           protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
@@ -133,7 +117,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           StatePensionAmountRegular(0, 0, 0)
         ),
         pensionAge = 64,
-        new LocalDate(2018, 7, 6),
+        LocalDate.of(2018, 7, 6),
         "2017-18",
         30,
         pensionSharingOrder = false,
@@ -235,7 +219,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       assertEqualsMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of £530 by 5 April 2023. This shortfall may increase after 5 April 2019.'" in {
-      assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
+      assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(LocalDate.of(2023, 4, 5)), Dates.formatDate(LocalDate.of(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -350,7 +334,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       assertEqualsMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(new LocalDate(2023, 4, 5)), Dates.formatDate(new LocalDate(2019, 4, 5)))
+      assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(LocalDate.of(2023, 4, 5)), Dates.formatDate(LocalDate.of(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -562,7 +546,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
     def mockSetup = {
-      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
@@ -571,9 +555,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           qualifyingYearsPriorTo1975 = 5,
           numberOfGaps = 0,
           numberOfGapsPayable = 0,
-          Some(new LocalDate(1954, 3, 6)),
+          Some(LocalDate.of(1954, 3, 6)),
           false,
-          new LocalDate(2016, 4, 5),
+          LocalDate.of(2016, 4, 5),
           List(
             NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
@@ -587,7 +571,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
-          Some(new LocalDate(2020, 3, 6))
+          Some(LocalDate.of(2020, 3, 6))
         )
         )))
     }
@@ -640,7 +624,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
     def mockSetup = {
-      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
@@ -649,9 +633,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           qualifyingYearsPriorTo1975 = 0,
           numberOfGaps = 1,
           numberOfGapsPayable = 1,
-          Some(new LocalDate(1954, 3, 6)),
+          Some(LocalDate.of(1954, 3, 6)),
           false,
-          new LocalDate(2015, 4, 5),
+          LocalDate.of(2015, 4, 5),
           List(
             NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
@@ -665,7 +649,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
-          Some(new LocalDate(2020, 3, 6))
+          Some(LocalDate.of(2020, 3, 6))
         )
         )))
     }
@@ -729,7 +713,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
     def mockSetup = {
-      when(mockDateProvider.currentDate).thenReturn(new LocalDate(2016, 9, 9))
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
@@ -738,9 +722,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           qualifyingYearsPriorTo1975 = 0,
           numberOfGaps = 1,
           numberOfGapsPayable = 1,
-          Some(new LocalDate(1954, 3, 6)),
+          Some(LocalDate.of(1954, 3, 6)),
           false,
-          new LocalDate(2017, 4, 5),
+          LocalDate.of(2017, 4, 5),
           List(
             NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
             NationalInsuranceTaxYearBuilder("2014-15", qualifying = true, underInvestigation = false),
@@ -757,7 +741,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
-          Some(new LocalDate(2018, 3, 6))
+          Some(LocalDate.of(2018, 3, 6))
         )
         )))
     }
@@ -875,9 +859,9 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           qualifyingYearsPriorTo1975 = 0,
           numberOfGaps = 1,
           numberOfGapsPayable = 1,
-          Some(new LocalDate(1954, 3, 6)),
+          Some(LocalDate.of(1954, 3, 6)),
           false,
-          new LocalDate(2017, 4, 5),
+          LocalDate.of(2017, 4, 5),
           List(
             NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
             NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
@@ -894,7 +878,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
-          Some(new LocalDate(2018, 3, 6))
+          Some(LocalDate.of(2018, 3, 6))
         )
         )))
     }

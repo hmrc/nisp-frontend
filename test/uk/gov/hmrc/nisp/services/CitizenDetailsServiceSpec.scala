@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -111,7 +111,7 @@ class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAn
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p.right.map(_.person.copy(nino = nino)) shouldBe Right(Citizen(nino, Some("AHMED"), Some("BRENNAN"), new LocalDate(1954, 3, 9)))
+        p.right.map(_.person.copy(nino = nino)) shouldBe Right(Citizen(nino, Some("AHMED"), Some("BRENNAN"), LocalDate.of(1954, 3, 9)))
         p.right.get.person.getNameFormatted shouldBe Some("AHMED BRENNAN")
       }
     }
@@ -123,7 +123,7 @@ class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAn
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(noNameNino)(new HeaderCarrier())
       whenReady(person) {p =>
-        p shouldBe Right(CitizenDetailsResponse(Citizen(noNameNino, None, None, new LocalDate(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
+        p shouldBe Right(CitizenDetailsResponse(Citizen(noNameNino, None, None, LocalDate.of(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
         p.right.get.person.getNameFormatted shouldBe None
       }
     }

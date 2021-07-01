@@ -124,6 +124,11 @@ object TestAccountBuilder {
       .acquireAndGet(resource => Json.parse(resource.mkString.replace("<NINO>", nino.nino)).as[A])
   }
 
+  def getRawJson(nino: Nino, api: String) = {
+    managed(Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json"))
+      .acquireAndGet(resource => Json.parse(resource.mkString.replace("<NINO>", nino.nino)))
+  }
+
   private def fileContents(filename: String): Future[String] = Future { managed(Source.fromFile(filename)).acquireAndGet(_.mkString)}
 
   def jsonResponse(nino: Nino, api: String): Future[HttpResponse] = {

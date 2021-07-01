@@ -17,7 +17,8 @@
 package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.lang3.StringEscapeUtils
-import org.joda.time.{DateTime, LocalDate}
+import java.time.LocalDate
+import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.concurrent.ScalaFutures
@@ -98,14 +99,14 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
 
       when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful(Right(StatePension(
-          new LocalDate(2014, 4, 5),
+          LocalDate.of(2014, 4, 5),
           StatePensionAmounts(
             false,
             StatePensionAmountRegular(46.38, 201.67, 2420.04),
             StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
             StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
             StatePensionAmountRegular(50, 217.41, 2608.93))
-          ,64, new LocalDate(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
+          ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
         )))
 
       when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
@@ -114,9 +115,9 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
           qualifyingYearsPriorTo1975 = 0,
           numberOfGaps = 2,
           numberOfGapsPayable = 2,
-          Some(new LocalDate(1954, 3, 6)),
+          Some(LocalDate.of(1954, 3, 6)),
           false,
-          new LocalDate(2017, 4, 5),
+          LocalDate.of(2017, 4, 5),
           List(
 
             NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
@@ -144,7 +145,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
       assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div:nth-child(4)>p", "nisp.main.basedOn")
     }
     "render page with text  '18 july 2012' " in {
-      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(new LocalDate(2021, 7, 18)) + ".")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(LocalDate.of(2021, 7, 18)) + ".")
     }
     "render page with text  'Your forecast is' " in {
       val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -187,7 +188,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
     }
     "render page with text 'If you’re working you may still need to pay National Insurance contributions until 18 " +
       "July 2021 as they fund other state benefits and the NHS.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(new LocalDate(2021, 7, 18)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(12)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(LocalDate.of(2021, 7, 18)))
     }
     "render page with link  'View your National Insurence Record'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>a:nth-child(13)", "nisp.main.showyourrecord")
@@ -210,7 +211,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
     }
 
     "render page with text  'You can put off claiming your State Pension from 18 July 2021. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.main.puttingOff.line1", Dates.formatDate(new LocalDate(2021, 7, 18)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(18)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2021, 7, 18)))
     }
 
     "render page with link 'More on putting off claiming (opens in new tab)'" in {

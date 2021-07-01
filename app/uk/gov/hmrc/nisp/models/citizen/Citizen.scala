@@ -31,11 +31,5 @@ case class Citizen(nino: Nino, firstName: Option[String] = None, lastName: Optio
 }
 
 object Citizen {
-
-  implicit val dateReads: Reads[LocalDate] = Reads[LocalDate] {
-    case value: JsNumber => value.validate[Long].map(LocalDate.ofEpochDay(_))
-    case value => value.validate[String].map(LocalDate.parse)
-  }
-
   implicit val formats = Json.format[Citizen]
 }

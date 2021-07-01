@@ -16,7 +16,10 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.{DateTime, LocalDate}
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import org.joda.time.DateTime
 import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
 import play.api.i18n.Messages
@@ -54,6 +57,8 @@ class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   }
 
   "render correct p tag with text" in {
-    assertContainsDynamicMessage(view, "article p:last-of-type", "nisp.excluded.cope.returnDate", today.toString("d MMMM y"))
+    assertContainsDynamicMessage(view, "article p:last-of-type",
+      "nisp.excluded.cope.returnDate",
+      today.format(DateTimeFormatter.ofPattern("d MMMM y")))
   }
 }

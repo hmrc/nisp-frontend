@@ -53,7 +53,7 @@ class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures 
     }
   }
 
-  implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
+  implicit val headerCarrier = HeaderCarrier()
 
   "connectToMicroservice" should {
     "should return depersonalised JSON" in {
@@ -75,7 +75,7 @@ class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures 
       }
 
       val response = Future(HttpResponse(OK, json, Map.empty[String, Seq[String]]))
-      when(mockHttp.GET[HttpResponse]("national-insurance/ni")).thenReturn(response)
+      when(mockHttp.GET[HttpResponse]("national-insurance/ni", Seq(), Seq())).thenReturn(response)
 
       val future: Future[NationalInsuranceRecord] = BackendConnectorImpl.getNationalInsurance()
 

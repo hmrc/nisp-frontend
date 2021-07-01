@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -38,7 +38,6 @@ import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils._
 
 import scala.concurrent.Future
 
@@ -86,23 +85,23 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
     "return redirect to account page for non-excluded user" in {
 
-      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 10, 4, Some(new LocalDate(1975, 8, 1)),
-        false, new LocalDate(2014, 4, 5),
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+        false, LocalDate.of(2014, 4, 5),
         List(
-          NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60, Some(new LocalDate(2019, 4, 5)),
-            Some(new LocalDate(2023, 4, 5)), true, false),
-          NationalInsuranceTaxYear("2012-13", true, 0, 0, 0, 52, 689, Some(new LocalDate(2019, 4, 5)),
-            Some(new LocalDate(2023, 4, 5)), true, false)
+          NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60, Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)), true, false),
+          NationalInsuranceTaxYear("2012-13", true, 0, 0, 0, 52, 689, Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)), true, false)
         ),
         false)
 
-      val expectedStatePensionResponse = StatePension(new LocalDate(2015, 4, 5),
+      val expectedStatePensionResponse = StatePension(LocalDate.of(2015, 4, 5),
         StatePensionAmounts(false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
           StatePensionAmountRegular(0, 0, 0)
-        ), 64, new LocalDate(2018, 7, 6),
+        ), 64, LocalDate.of(2018, 7, 6),
         "2017-18", 30, false, 155.65, false, false)
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -115,7 +114,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       val result = testExclusionController.showSP()(fakeRequest.withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+        SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
       ))
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
@@ -126,14 +125,14 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       def generateSPRequest: Future[Result] = {
         testExclusionController.showSP()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+          SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
         ))
       }
 
       def generateNIRequest: Future[Result] = {
         testExclusionController.showNI()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+          SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
         ))
       }
 
@@ -216,7 +215,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(StatePensionExclusionFiltered(Exclusion.PostStatePensionAge, Some(65),
-              Some(new LocalDate(2017, 7, 18)), Some(false))))
+              Some(LocalDate.of(2017, 7, 18)), Some(false))))
           )
 
           val result = generateSPRequest
@@ -252,7 +251,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(StatePensionExclusionFiltered(Exclusion.AmountDissonance, Some(65),
-              Some(new LocalDate(2017, 7, 18)), Some(true))))
+              Some(LocalDate.of(2017, 7, 18)), Some(true))))
           )
 
           val result = generateSPRequest
@@ -287,7 +286,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(new LocalDate(2017, 7, 18))
+            Future.successful(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(LocalDate.of(2017, 7, 18))
               , Some(true))))
           )
 
@@ -318,12 +317,12 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
       "The User has MWRRE and Abroad exclusions" should {
         "return only the MWREE Exclusion on /exclusion" in {
-          val expectedStatePension = StatePension(new LocalDate(2014, 4, 5),
+          val expectedStatePension = StatePension(LocalDate.of(2014, 4, 5),
             StatePensionAmounts(false,
               StatePensionAmountRegular(133.41, 580.1, 6961.14),
               StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
               StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
-              StatePensionAmountRegular(0, 0, 0)), 64, new LocalDate(2050, 7, 6),
+              StatePensionAmountRegular(0, 0, 0)), 64, LocalDate.of(2050, 7, 6),
             "2050-51", 25, false, 155.65, true, false)
 
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -362,13 +361,13 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       "The User has MWRRE exclusion" should {
 
         "return only the MWRRE Exclusion on /exclusion" in {
-          val expectedStatePension = StatePension(new LocalDate(2015, 4, 5),
+          val expectedStatePension = StatePension(LocalDate.of(2015, 4, 5),
             StatePensionAmounts(false,
               StatePensionAmountRegular(133.41, 580.1, 6961.14),
               StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
               StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
               StatePensionAmountRegular(0, 0, 0)),
-            64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true, false)
+            64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, true, false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Right(expectedStatePension))
@@ -380,7 +379,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
 
           val result = testExclusionController.showSP()(fakeRequest.withSession(
             SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-            SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+            SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
           ))
 
           redirectLocation(result) shouldBe None
@@ -407,10 +406,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       "The User has SPA under consideration flag and Amount Dis exclusion" should {
         "return with SPA under consideration message" in {
           val expectedStatePensionResponse = StatePensionExclusionFiltered(Exclusion.AmountDissonance, Some(65),
-            Some(new LocalDate(2017, 7, 18)), Some(true))
+            Some(LocalDate.of(2017, 7, 18)), Some(true))
 
-          val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+          val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+            false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(expectedStatePensionResponse))
@@ -429,11 +428,11 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       "The User has SPA under consideration flag and IoM exclusion" should {
         "return with SPA under consideration message" in {
 
-          val statePensionResponse = StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(new LocalDate(2017, 7, 18)),
+          val statePensionResponse = StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(LocalDate.of(2017, 7, 18)),
             Some(true))
 
-          val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+          val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+            false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(statePensionResponse))
@@ -453,10 +452,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         "return with no SPA under consideration message" in {
 
           val statePensionResponse = StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection, Some(65),
-            Some(new LocalDate(2017, 7, 18)), Some(true))
+            Some(LocalDate.of(2017, 7, 18)), Some(true))
 
-          val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+          val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+            false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(statePensionResponse))
@@ -476,10 +475,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         "return with no SPA under consideration message" in {
 
           val statePensionResponse = StatePensionExclusionFiltered(Exclusion.PostStatePensionAge, Some(65),
-            Some(new LocalDate(2017, 7, 18)), Some(true))
+            Some(LocalDate.of(2017, 7, 18)), Some(true))
 
-          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+            false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(statePensionResponse))
@@ -498,10 +497,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       "The User has SPA under consideration flag and Multiple exclusions with Over SPA first" should {
         "return with no SPA under consideration message" in {
           val statePensionResponse = StatePensionExclusionFiltered(Exclusion.PostStatePensionAge, Some(65),
-            Some(new LocalDate(2017, 7, 18)), Some(true))
+            Some(LocalDate.of(2017, 7, 18)), Some(true))
 
-          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+            false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(statePensionResponse))
@@ -520,10 +519,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       "The User has no SPA under consideration flag and exclusion" should {
         "return with no SPA under consideration message" in {
           val statePensionResponse = StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65),
-            Some(new LocalDate(2017, 7, 18)), None)
+            Some(LocalDate.of(2017, 7, 18)), None)
 
-          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+            false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(statePensionResponse))
@@ -545,12 +544,12 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
         "return the COPE Processing Exclusion on /exclusion" in {
           val statePensionCopeProcessingResponse = StatePensionExclusionFilteredWithCopeDate(
             exclusion = Exclusion.CopeProcessing,
-            copeAvailableDate = new LocalDate(2017, 7, 18),
+            copeAvailableDate = LocalDate.of(2017, 7, 18),
             previousAvailableDate = None
           )
 
-          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-            false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+          val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+            false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
             Future.successful(Left(statePensionCopeProcessingResponse))
@@ -570,12 +569,12 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       "return the COPE Processing Extended Exclusion on /exclusion" in {
         val statePensionCopeProcessingExtendedResponse = StatePensionExclusionFilteredWithCopeDate(
           exclusion = Exclusion.CopeProcessing,
-          copeAvailableDate = new LocalDate(2017, 7, 28),
-          previousAvailableDate = Some(new LocalDate(2017, 7, 18))
+          copeAvailableDate = LocalDate.of(2017, 7, 28),
+          previousAvailableDate = Some(LocalDate.of(2017, 7, 18))
         )
 
-        val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-          false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+        val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+          false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
         when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
           Future.successful(Left(statePensionCopeProcessingExtendedResponse))
@@ -598,8 +597,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
           exclusion = Exclusion.CopeProcessingFailed
         )
 
-        val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(new LocalDate(1975, 8, 1)),
-          false, new LocalDate(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+        val nationalInsuranceRecord = NationalInsuranceRecord(28, 28, 10, 4, Some(LocalDate.of(1975, 8, 1)),
+          false, LocalDate.of(2014, 4, 5), List.empty[NationalInsuranceTaxYear], false)
 
         when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
           Future.successful(Left(statePensionCopeFailedResponse))

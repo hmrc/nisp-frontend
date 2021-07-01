@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import uk.gov.hmrc.play.test.UnitSpec
 
 
@@ -31,37 +31,37 @@ class StatePensionExclusionSpec extends UnitSpec {
 
     "the pensionDate is 5th April 2020" should {
       "be 2018" in {
-        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(new LocalDate(2020, 4, 5))).finalRelevantStartYear shouldBe Some(2018)
+        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(LocalDate.of(2020, 4, 5))).finalRelevantStartYear shouldBe Some(2018)
       }
     }
 
     "the pensionDate is 6th April 2020" should {
       "be 2019" in {
-        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(new LocalDate(2020, 4, 6))).finalRelevantStartYear shouldBe Some(2019)
+        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(LocalDate.of(2020, 4, 6))).finalRelevantStartYear shouldBe Some(2019)
       }
     }
 
     "the pensionDate is 6th April 2000" should {
       "be 1999" in {
-        StatePensionExclusion(List(Exclusion.AmountDissonance, Exclusion.PostStatePensionAge), Some(65), Some(new LocalDate(2000, 4, 6))).finalRelevantStartYear shouldBe Some(1999)
+        StatePensionExclusion(List(Exclusion.AmountDissonance, Exclusion.PostStatePensionAge), Some(65), Some(LocalDate.of(2000, 4, 6))).finalRelevantStartYear shouldBe Some(1999)
       }
     }
 
     "the pensionDate is 5th April 2020 and there is no flag for state pension age under consideration" should {
       "be 2018" in {
-        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(new LocalDate(2020, 4, 5))).finalRelevantStartYear shouldBe Some(2018)
+        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(LocalDate.of(2020, 4, 5))).finalRelevantStartYear shouldBe Some(2018)
       }
     }
 
     "the pensionDate is 5th April 2020 and there is a true flag for state pension age under consideration" should {
       "be 2018" in {
-        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(new LocalDate(2020, 4, 5)), Some(true)).finalRelevantStartYear shouldBe Some(2018)
+        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(LocalDate.of(2020, 4, 5)), Some(true)).finalRelevantStartYear shouldBe Some(2018)
       }
     }
 
     "the pensionDate is 5th April 2020 and there is a false flag for state pension age under consideration" should {
       "be 2018" in {
-        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(new LocalDate(2020, 4, 5)), Some(false)).finalRelevantStartYear shouldBe Some(2018)
+        StatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(LocalDate.of(2020, 4, 5)), Some(false)).finalRelevantStartYear shouldBe Some(2018)
       }
     }
 

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -52,9 +52,9 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             qualifyingYearsPriorTo1975 = 0,
             numberOfGaps = 0,
             numberOfGapsPayable = 0,
-            dateOfEntry = Some(new LocalDate(2015, 5, 4)),
+            dateOfEntry = Some(LocalDate.of(2015, 5, 4)),
             homeResponsibilitiesProtection = false,
-            earningsIncludedUpTo = new LocalDate(2016, 4, 5),
+            earningsIncludedUpTo = LocalDate.of(2016, 4, 5),
             List(),
             reducedRateElection = false
           )
@@ -90,7 +90,7 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             numberOfGapsPayable = 0,
             dateOfEntry = None,
             homeResponsibilitiesProtection = false,
-            earningsIncludedUpTo = new LocalDate(2016, 4, 5),
+            earningsIncludedUpTo = LocalDate.of(2016, 4, 5),
             List(),
             reducedRateElection = false
           )
@@ -142,9 +142,9 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             qualifyingYearsPriorTo1975 = 0,
             numberOfGaps = 0,
             numberOfGapsPayable = 0,
-            dateOfEntry = Some(new LocalDate(2015, 5, 4)),
+            dateOfEntry = Some(LocalDate.of(2015, 5, 4)),
             homeResponsibilitiesProtection = false,
-            earningsIncludedUpTo = new LocalDate(2017, 4, 5),
+            earningsIncludedUpTo = LocalDate.of(2017, 4, 5),
             List(NationalInsuranceTaxYear(
               "2016-17",
               true,
@@ -228,9 +228,9 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             qualifyingYearsPriorTo1975 = 0,
             numberOfGaps = 1,
             numberOfGapsPayable = 1,
-            dateOfEntry = Some(new LocalDate(2015, 5, 4)),
+            dateOfEntry = Some(LocalDate.of(2015, 5, 4)),
             homeResponsibilitiesProtection = false,
-            earningsIncludedUpTo = new LocalDate(2018, 4, 5),
+            earningsIncludedUpTo = LocalDate.of(2018, 4, 5),
             List(
               NationalInsuranceTaxYear(
                 "2017-18",
@@ -240,8 +240,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
                 0,
                 0,
                 722.8,
-                Some(new LocalDate(2019, 4, 5)),
-                Some(new LocalDate(2023, 4, 5)),
+                Some(LocalDate.of(2019, 4, 5)),
+                Some(LocalDate.of(2023, 4, 5)),
                 true,
                 false
               ),
