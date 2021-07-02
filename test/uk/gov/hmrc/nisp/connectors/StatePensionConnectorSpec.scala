@@ -19,8 +19,8 @@ package uk.gov.hmrc.nisp.connectors
 import java.time.LocalDate
 
 import org.mockito.Mockito
-import org.mockito.Mockito.{reset, when}
-import com.github.tomakehurst.wiremock.client.WireMock.{get, forbidden, ok, urlEqualTo}
+import org.mockito.Mockito.reset
+import com.github.tomakehurst.wiremock.client.WireMock.{equalTo, forbidden, get, getRequestedFor, ok, urlEqualTo, matching}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
@@ -32,7 +32,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -42,12 +42,13 @@ import uk.gov.hmrc.play.test.UnitSpec
 class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
   Injecting with BeforeAndAfterEach with WireMockHelper {
 
-  implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
+  implicit val headerCarrier = HeaderCarrier()
 
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
+  val uuidRegex =  """[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"""
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -110,6 +111,13 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with MockitoS
           ex.upstreamResponseCode shouldBe 403
           ex.message.contains("EXCLUSION_DEAD") shouldBe true
       }
+
+      server.verify(getRequestedFor(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAll}"))
+        .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
+        .withHeader(HeaderNames.xRequestId, equalTo("-"))
+        .withHeader(HeaderNames.xSessionId, equalTo("-"))
+        .withHeader("CorrelationId", matching(uuidRegex))
+      )
     }
 
     "return a failed Future 403 with a MCI message for all exclusion but dead" in {

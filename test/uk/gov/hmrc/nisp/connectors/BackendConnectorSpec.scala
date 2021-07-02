@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{RETURNS_DEEP_STUBS, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -30,6 +30,7 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
 import uk.gov.hmrc.play.test.UnitSpec
 import play.api.http.Status.OK
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -75,7 +76,9 @@ class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures 
       }
 
       val response = Future(HttpResponse(OK, json, Map.empty[String, Seq[String]]))
-      when(mockHttp.GET[HttpResponse]("national-insurance/ni", Seq(), Seq())).thenReturn(response)
+      when(mockHttp.GET[HttpResponse](ArgumentMatchers.eq("national-insurance/ni"), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(response)
 
       val future: Future[NationalInsuranceRecord] = BackendConnectorImpl.getNationalInsurance()
 
