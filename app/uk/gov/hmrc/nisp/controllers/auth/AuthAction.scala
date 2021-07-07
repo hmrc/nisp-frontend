@@ -104,7 +104,7 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorised(AuthProviders(Verify) and ConfidenceLevel.L500)
       .retrieve(nino and confidenceLevel and credentials and loginTimes and allEnrolments and trustedHelper) {

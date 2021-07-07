@@ -16,26 +16,24 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import org.mockito.Mockito.{reset, when}
-import org.mockito.{ArgumentMatchers, Mockito}
-import com.github.tomakehurst.wiremock.client.WireMock.{forbidden, get, ok, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, urlEqualTo}
+import org.mockito.Mockito
+import org.mockito.Mockito.reset
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.http.Status
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.WireMockHelper
 import uk.gov.hmrc.play.test.UnitSpec
 
-import scala.concurrent.Future
 import scala.io.Source
 
 class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with ScalaFutures

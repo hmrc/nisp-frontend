@@ -8,7 +8,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "govuk-template" % "5.61.0-play-26",
     "uk.gov.hmrc" %% "play-ui" % "8.21.0-play-26",
     "uk.gov.hmrc" %% "domain" % "5.10.0-play-26",
-    "uk.gov.hmrc" %% "http-caching-client" % "9.2.0-play-26",
+    "uk.gov.hmrc" %% "http-caching-client" % "9.5.0-play-26",
     "uk.gov.hmrc" %% "play-language" % "5.1.0-play-26",
     "uk.gov.hmrc" %% "tax-year" % "1.3.0",
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "1.5.0-play-26",
@@ -24,7 +24,7 @@ object AppDependencies {
       "uk.gov.hmrc" %% "hmrctest" % "3.10.0-play-26",
       "org.mockito" % "mockito-core" % "3.1.0",
       "com.github.tomakehurst" % "wiremock-jre8" % "2.27.0"
-  ).map(_ % "test")
+  ).map(_ % "test,it")
 
   val all: Seq[ModuleID] = compile ++ test
 }
