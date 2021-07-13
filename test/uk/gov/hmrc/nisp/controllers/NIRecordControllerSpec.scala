@@ -54,7 +54,6 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
   val mockDateProvider: DateProvider = mock[DateProvider]
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   override def beforeEach(): Unit = {
@@ -72,7 +71,7 @@ class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneApp
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[DateProvider].toInstance(mockDateProvider)
     ).build()

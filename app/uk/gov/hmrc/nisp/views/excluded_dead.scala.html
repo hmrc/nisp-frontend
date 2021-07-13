@@ -22,6 +22,14 @@
 @import uk.gov.hmrc.nisp.views.html.exclusions
 @import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
 
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: unauthenticatedMain
+)(
+    implicit ec: ExecutionContext
+)
+
 @(exclusion: Exclusion, statePensionAge: Option[Int])(
         implicit messages: Messages,
         request: ExcludedAuthenticatedRequest[_],
@@ -39,7 +47,7 @@
     )
 }
 
-@unauthenticatedMain(MainTemplateParams(
+@main(MainTemplateParams(
     Some(messages("nisp.main.title")),
     userLoggedIn = true,
     pageTitle = Some(messages("nisp.excluded.title"))

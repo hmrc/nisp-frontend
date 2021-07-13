@@ -45,7 +45,10 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
                                    appConfig: ApplicationConfig,
                                    pertaxHelper: PertaxHelper,
                                    mcc: MessagesControllerComponents,
-                                   dateProvider: DateProvider
+                                   dateProvider: DateProvider,
+                                   niRecordPage: nirecordpage,
+                                   niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
+                                   nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
                                   )(implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
@@ -139,7 +142,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
                 }
                 sendAuditEvent(nino, niRecord, yearsToContribute)
 
-                Ok(nirecordpage(
+                Ok(niRecordPage(
                   tableList = generateTableList(tableStart, tableEnd),
                   niRecord = niRecord,
                   gapsOnlyView = gapsOnlyView,
@@ -169,7 +172,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
       implicit val user: NispAuthedUser = request.nispAuthedUser
       nationalInsuranceService.getSummary(user.nino) map {
         case Right(niRecord) =>
-          Ok(nirecordGapsAndHowToCheckThem(niRecord.homeResponsibilitiesProtection))
+          Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
         case Left(_) =>
           Redirect(routes.ExclusionController.showNI())
       }
@@ -178,7 +181,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
   def showVoluntaryContributions: Action[AnyContent] = authenticate {
     implicit request =>
       implicit val user: NispAuthedUser = request.nispAuthedUser
-      Ok(nirecordVoluntaryContributions())
+      Ok(nirecordVoluntaryContributionsView())
   }
 
 }

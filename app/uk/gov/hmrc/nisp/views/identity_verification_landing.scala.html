@@ -20,9 +20,17 @@
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: unauthenticatedMain
+)(
+    implicit ec: ExecutionContext
+)
 @()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@unauthenticatedMain(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")))) {
+@main(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")))) {
 
 
 

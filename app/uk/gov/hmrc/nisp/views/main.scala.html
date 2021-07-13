@@ -32,6 +32,13 @@
 @import org.joda.time.DateTime
 @import java.time.LocalDateTime
 
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+    implicit ec: ExecutionContext
+)
+
 @(
     mainTemplateParams: MainTemplateParams
 )(

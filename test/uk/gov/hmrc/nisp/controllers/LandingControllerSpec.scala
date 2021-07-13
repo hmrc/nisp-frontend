@@ -50,7 +50,6 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   val mockIVConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   val injector = GuiceApplicationBuilder().
@@ -58,7 +57,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[VerifyAuthActionImpl].to[FakeVerifyAuthAction]
     ).injector()
@@ -121,7 +120,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         overrides(
           bind[IdentityVerificationConnector].toInstance(mockIVConnector),
           bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-          bind[FormPartialRetriever].toInstance(formPartialRetriever),
+          bind[FormPartialRetriever].to[FakePartialRetriever],
           bind[AuthConnector].toInstance(mockAuthConnector),
           bind[TemplateRenderer].toInstance(templateRenderer)
         ).injector()

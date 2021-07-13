@@ -27,6 +27,14 @@
 @import uk.gov.hmrc.nisp.models.Exclusion
 @import uk.gov.hmrc.nisp.models.Exclusion._
 
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: unauthenticatedMain
+)(
+    implicit ec: ExecutionContext
+)
+
 @(
 exclusion: Exclusion,
 statePensionAge: Option[Int],
@@ -40,7 +48,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRe
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
-@unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
+@main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
   pageTitle = Some(messages("nisp.main.h1.title")), articleClasses = Some("mainpage"), showUrBanner = excludeUrPanel(exclusion))
 ) {
 

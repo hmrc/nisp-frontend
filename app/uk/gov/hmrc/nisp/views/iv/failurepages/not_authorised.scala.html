@@ -22,10 +22,19 @@
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+ main: unauthenticatedMain
+)(
+ implicit ec: ExecutionContext
+)
+
 @(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_],
 partialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@unauthenticatedMain(MainTemplateParams(
+@main(MainTemplateParams(
  articleClasses = Some("mainpage"),
  pageTitle= Some(messages("nisp.iv.failure.general.title")), h1Class = Some("heading-xlarge")
 )) {

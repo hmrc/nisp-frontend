@@ -22,6 +22,14 @@
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.views.html.exclusions
 
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: unauthenticatedMain
+)(
+    implicit ec: ExecutionContext
+)
+
 @(exclusion: Exclusion)(
         implicit messages: Messages,
         request: Request[_],
@@ -40,7 +48,7 @@
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
-@unauthenticatedMain(MainTemplateParams(
+@main(MainTemplateParams(
     browserTitle=Some(messages("nisp.main.title")),
     pageTitle = Some(messages("nisp.nirecord.heading")),
     userLoggedIn = true,

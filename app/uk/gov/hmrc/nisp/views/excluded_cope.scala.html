@@ -25,13 +25,20 @@
 @import uk.gov.hmrc.renderer._
 @import java.time.format.DateTimeFormatter
 
-@this()
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: unauthenticatedMain
+)(
+    implicit ec: ExecutionContext
+)
+
 @(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
 formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @dateFormatter = @{ DateTimeFormatter.ofPattern("d MMMM y") }
 
-@unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
+@main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
             pageTitle = Some(messages("nisp.excluded.cope.processing.h1")), articleClasses = Some("mainpage")
 )
 ) {

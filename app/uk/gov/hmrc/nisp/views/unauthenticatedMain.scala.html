@@ -31,6 +31,13 @@
 @import scala.util.Random
 @import java.util.NoSuchElementException
 @import uk.gov.hmrc.domain.Nino
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+    implicit ec: ExecutionContext
+)
+
 @(
     mainTemplateParams: MainTemplateParams
 )(

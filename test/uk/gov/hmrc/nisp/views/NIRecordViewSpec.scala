@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import java.util.UUID
 import java.time.LocalDate
+
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
@@ -43,6 +44,7 @@ import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
+import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -53,7 +55,6 @@ import scala.concurrent.Future
 class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
@@ -76,7 +77,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[DateProvider].toInstance(mockDateProvider)
     )
@@ -374,8 +375,8 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   "Render Ni Record view With HRP Message" should {
 
-    lazy val withHRPResult = html.nirecordGapsAndHowToCheckThem(true)
-    lazy val withHRPDoc = asDocument(contentAsString(withHRPResult))
+    lazy val withHRPResult = inject[nirecordGapsAndHowToCheckThem]
+    lazy val withHRPDoc = asDocument(withHRPResult(true).toString)
 
     "render with correct page title" in {
       assertElementContainsText(withHRPDoc, "head>title" ,messages("nisp.nirecord.gapsinyourrecord.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
@@ -460,8 +461,8 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   "Render Ni Record without HRP Message" should {
 
-    lazy val withoutHRPresult = html.nirecordGapsAndHowToCheckThem(false)
-    lazy val withoutHRPDoc = asDocument(contentAsString(withoutHRPresult))
+    lazy val withoutHRPresult = inject[nirecordGapsAndHowToCheckThem]
+    lazy val withoutHRPDoc = asDocument(withoutHRPresult(false).toString)
 
     "render with correct page title" in {
       assertElementContainsText(withoutHRPDoc, "head>title" ,messages("nisp.nirecord.gapsinyourrecord.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
@@ -838,7 +839,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         bind[ApplicationConfig].toInstance(mockAppConfig),
         bind[PertaxHelper].toInstance(mockPertaxHelper),
         bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-        bind[FormPartialRetriever].toInstance(formPartialRetriever),
+        bind[FormPartialRetriever].to[FakePartialRetriever],
         bind[TemplateRenderer].toInstance(templateRenderer),
         bind[AuthAction].to[FakeAuthActionWithNino],
         bind[NinoContainer].toInstance(AbroadNinoContainer),

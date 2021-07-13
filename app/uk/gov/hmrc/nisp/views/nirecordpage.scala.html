@@ -28,6 +28,15 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: main
+)(
+    implicit ec: ExecutionContext
+)
+
 @(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean,
 yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String,
 showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages,

@@ -53,7 +53,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[ExcludedAuthAction].to[FakeExcludedAuthAction],
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
-      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter)
     ).build()

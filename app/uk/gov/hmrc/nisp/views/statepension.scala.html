@@ -28,6 +28,15 @@
 @import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
 
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: main
+)(
+    implicit ec: ExecutionContext
+)
+
 @(
     statePension: StatePension,
     numberOfGaps: Int,

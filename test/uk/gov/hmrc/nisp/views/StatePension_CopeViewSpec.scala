@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.lang3.StringEscapeUtils
 import java.time.LocalDate
+
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
@@ -42,6 +43,7 @@ import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
+import uk.gov.hmrc.nisp.views.html.statepension_cope
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -69,7 +71,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
   val mockSessionCache: SessionCache = mock[SessionCache]
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   override def beforeEach(): Unit = {
@@ -87,7 +88,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[TemplateRenderer].toInstance(templateRenderer)
     ).build()
 
@@ -238,8 +239,8 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
 
   "Render Contracted Out View" should {
 
-    lazy val sResult = html.statepension_cope(99.54, true)
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[statepension_cope]
+    lazy val htmlAccountDoc = asDocument(sResult(99.54, true).toString)
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.cope.youWereContractedOut") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))

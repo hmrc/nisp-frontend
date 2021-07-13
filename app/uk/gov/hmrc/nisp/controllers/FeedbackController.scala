@@ -26,7 +26,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.views.html.feedback_thankyou
+import uk.gov.hmrc.nisp.views.html.{feedback, feedback_thankyou}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -36,7 +36,9 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
                                    httpClient: HttpClient,
                                    executionContext: ExecutionContext,
                                    nispHeaderCarrierForPartialsConverter: HeaderCarrierForPartialsConverter,
-                                   mcc: MessagesControllerComponents)
+                                   mcc: MessagesControllerComponents,
+                                   feedbackThankYou: feedback_thankyou,
+                                   feedback: feedback)
                                    (implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
@@ -62,9 +64,9 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
     implicit request =>
       (request.session.get(REFERER), request.headers.get(REFERER)) match {
         case (None, Some(ref)) =>
-          Ok(uk.gov.hmrc.nisp.views.html.feedback(feedbackFormPartialUrl, None)).withSession(request.session + (REFERER -> ref))
+          Ok(feedback(feedbackFormPartialUrl, None)).withSession(request.session + (REFERER -> ref))
         case _ =>
-          Ok(uk.gov.hmrc.nisp.views.html.feedback(feedbackFormPartialUrl, None))
+          Ok(feedback(feedbackFormPartialUrl, None))
       }
   }
 
@@ -75,7 +77,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
           resp =>
             resp.status match {
               case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))
-              case HttpStatus.BAD_REQUEST => BadRequest(uk.gov.hmrc.nisp.views.html.feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
+              case HttpStatus.BAD_REQUEST => BadRequest(feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
               case status => Logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
             }
         }
@@ -89,7 +91,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
     implicit request =>
       val ticketId = request.session.get(TICKET_ID).getOrElse("N/A")
       val referer = request.session.get(REFERER).getOrElse("/")
-      Ok(feedback_thankyou(feedbackThankYouPartialUrl(ticketId), referer)).withSession(request.session - REFERER)
+      Ok(feedbackThankYou(feedbackThankYouPartialUrl(ticketId), referer)).withSession(request.session - REFERER)
   }
 
   private def urlEncode(value: String) = URLEncoder.encode(value, "UTF-8")

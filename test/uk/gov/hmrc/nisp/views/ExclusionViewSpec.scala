@@ -18,8 +18,9 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.DateTime
 import java.time.LocalDate
+
 import org.scalatest.mockito.MockitoSugar
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
@@ -29,14 +30,13 @@ import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeParti
 import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
-import uk.gov.hmrc.nisp.views.html.excluded_dead
+import uk.gov.hmrc.nisp.views.html.{excluded_dead, excluded_mci, excluded_sp}
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
+class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
@@ -44,8 +44,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
 
   "Exclusion Dead" should {
-    lazy val sResult = excluded_dead(Exclusion.Dead, Some(65))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_dead]
+    lazy val htmlAccountDoc = asDocument(sResult(Exclusion.Dead, Some(65)).toString)
 
     "not render the UR banner" in {
       val urBanner = htmlAccountDoc.getElementById("full-width-banner")
@@ -85,8 +85,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Isle of Man : Can't see NI Record: State Pension Age under consideration - no flag" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, None)
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, None).toString)
 
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
@@ -134,8 +134,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Isle of Man : Can't see NI Record: State Pension Age under consideration - false" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, Some(false))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, Some(false)).toString)
 
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
@@ -182,8 +182,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Isle of Man : Can't see NI Record: State Pension Age under consideration - true" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, Some(true))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, Some(true)).toString)
 
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
@@ -232,9 +232,9 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
     implicit val authDetails = AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))
 
-    lazy val sResult = html.excluded_mci(Exclusion.ManualCorrespondenceIndicator, Some(40))
+    lazy val sResult = inject[excluded_mci]
 
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.ManualCorrespondenceIndicator, Some(40)).toString)
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.excluded.mci.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
@@ -293,8 +293,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Post State Pension Age: State Pension Age under consideration - no flag" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, None)
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, None).toString)
 
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
@@ -337,8 +337,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Post State Pension Age: State Pension Age under consideration - false" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(false))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(false)).toString)
 
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
@@ -380,8 +380,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Post State Pension Age: State Pension Age under consideration - true" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(true))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(true)).toString)
 
     "render the UR banner" in {
       assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
@@ -422,8 +422,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Amount Dissonance: State Pension Age under consideration - no flag" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, None)
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, None).toString)
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
@@ -465,8 +465,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Amount Dissonance: State Pension Age under consideration - false" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(false))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(false)).toString)
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
@@ -508,8 +508,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Amount Dissonance: State Pension Age under consideration - true" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(true))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(true)).toString)
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
@@ -551,8 +551,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Married Women: State Pension Age under consideration - no flag" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(LocalDate.of(2015, 9, 6)), false, None)
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(LocalDate.of(2015, 9, 6)), false, None).toString)
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
@@ -608,8 +608,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Married Women: State Pension Age under consideration - false" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(LocalDate.of(2015, 9, 6)), false, Some(false))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(LocalDate.of(2015, 9, 6)), false, Some(false)).toString)
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
@@ -662,8 +662,8 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar {
 
   "Exclusion Married Women: State Pension Age under consideration - true" should {
 
-    lazy val sResult = html.excluded_sp(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(LocalDate.of(2015, 9, 6)), false, Some(true))
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(sResult.apply(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(LocalDate.of(2015, 9, 6)), false, Some(true)).toString)
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))

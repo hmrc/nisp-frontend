@@ -65,7 +65,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
-      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer)
     )
     .build()
@@ -79,7 +79,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
-      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer)

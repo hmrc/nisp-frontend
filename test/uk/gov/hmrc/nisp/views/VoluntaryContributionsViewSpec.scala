@@ -19,6 +19,8 @@ package uk.gov.hmrc.nisp.views
 import org.joda.time.DateTime
 import org.scalatest._
 import org.scalatest.mockito.MockitoSugar
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -27,10 +29,12 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.views.html.nirecordVoluntaryContributions
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import play.api.inject.bind
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter {
+class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
@@ -40,14 +44,18 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with Bef
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[FormPartialRetriever].to[FakePartialRetriever]
+    ).build()
 
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"
   val expectedCitizensAdviceLink = "https://www.citizensadvice.org.uk/"
 
   "Voluntary contributions view" should {
-    lazy val sResult = html.nirecordVoluntaryContributions()
-    lazy val htmlAccountDoc = asDocument(contentAsString(sResult))
+    lazy val sResult: nirecordVoluntaryContributions = inject[nirecordVoluntaryContributions]
+    lazy val htmlAccountDoc = asDocument(sResult.apply().toString())
+
 
     "render with correct page title" in {
       assertElementContainsText(htmlAccountDoc, "head>title" , messages("nisp.nirecord.voluntarycontributions.heading") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))

@@ -45,7 +45,12 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                                        auditConnector: AuditConnector,
                                        applicationConfig: ApplicationConfig,
                                        pertaxHelper: PertaxHelper,
-                                       mcc: MessagesControllerComponents)
+                                       mcc: MessagesControllerComponents,
+                                       sessionTimeout: sessionTimeout,
+                                       statePensionMQP: statepension_mqp,
+                                       statePensionCope: statepension_cope,
+                                       statePensionForecastOnly: statepension_forecastonly,
+                                       statePensionView: statepension)
                                       (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                        val formPartialRetriever: FormPartialRetriever,
                                        val templateRenderer: TemplateRenderer,
@@ -58,7 +63,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
 
         statePensionService.getSummary(user.nino) map {
           case Right(statePension) if statePension.contractedOut =>
-            Ok(statepension_cope(
+            Ok(statePensionCope(
               statePension.amounts.cope.weeklyAmount,
               isPertax
             ))
@@ -115,7 +120,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
 
               if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
                 val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
-                Ok(statepension_mqp(
+                Ok(statePensionMQP(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
@@ -127,7 +132,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
               } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
 
-                Ok(statepension_forecastonly(
+                Ok(statePensionForecastOnly(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
@@ -144,7 +149,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                     statePension.amounts.forecast,
                     statePension.amounts.maximum
                   )
-                Ok(statepension(
+                Ok(statePensionView(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,

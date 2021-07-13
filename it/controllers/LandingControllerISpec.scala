@@ -38,7 +38,7 @@ class LandingControllerISpec extends WordSpec
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
-      bind[FormPartialRetriever].toInstance(FakePartialRetriever)
+      bind[FormPartialRetriever].to[FakePartialRetriever]
     )
     .configure(
       "microservice.services.auth.port" -> server.port(),

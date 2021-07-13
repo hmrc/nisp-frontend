@@ -16,15 +16,17 @@
 
 package it_utils
 
+import com.google.inject.Inject
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import uk.gov.hmrc.http.CoreGet
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.http.{CoreGet, HttpClient}
+import uk.gov.hmrc.play.partials.{FormPartialRetriever, HeaderCarrierForPartialsConverter}
 
-object FakePartialRetriever extends FormPartialRetriever {
-  override def crypto: String => String = ???
+import scala.concurrent.ExecutionContext
 
-  override def httpGet: CoreGet = ???
+class FakePartialRetriever @Inject()(override val httpGet: HttpClient,
+                                     override val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter) extends FormPartialRetriever {
+  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)
+                                (implicit ec: ExecutionContext, request: RequestHeader): Html = Html("")
 
-  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html = Html("")
 }
