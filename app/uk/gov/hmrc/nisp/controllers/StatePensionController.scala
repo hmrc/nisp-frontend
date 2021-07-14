@@ -126,7 +126,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                   nationalInsuranceRecord.numberOfGapsPayable,
                   yearsMissing,
                   user.livesAbroad,
-                  calculateAge(user.dateOfBirth, LocalDate.now()),
+                  calculateAge(user.dateOfBirth, LocalDate.now),
                   isPertax,
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))

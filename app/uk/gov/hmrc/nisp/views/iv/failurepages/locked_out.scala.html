@@ -17,13 +17,14 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import play.api.Application
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 
 @import scala.concurrent.ExecutionContext
 
 @this(
- main: uk.gov.hmrc.nisp.views.html.unauthenticatedMain
+ main: unauthenticatedMain
 )(
  implicit ec: ExecutionContext
 )

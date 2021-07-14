@@ -29,21 +29,8 @@ object FakeTemplateRenderer extends TemplateRenderer {
   override val refreshAfter = 10 minutes
 
   override def renderDefaultTemplate(path:String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages): Html = {
-    Html(
-      "<title>" + extraArgs("pageTitle") + "</title>"
-        + "<sidebar>"+extraArgs("sidebar")+"</sidebar>"
-        + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"
-        + displayUrBanner(extraArgs) +
-        "<mainContentHeader>" +extraArgs("mainContentHeader")+ "</mainContentHeader>"
-        + "<mainContent>" + content + "</mainContent>")
+    Html("")
   }
-
-    def displayUrBanner(extraArgs: Map[String, Any]): String ={
-      if(extraArgs.contains("fullWidthBannerTitle")){
-        "<div id=full-width-banner>" + "<div class = \"full-width-banner__title\">" + extraArgs("fullWidthBannerTitle") + "</div>" + "<div id = fullWidthBannerLink>" + extraArgs("fullWidthBannerLink") +  "</div>"+ "<div>" + extraArgs("fullWidthBannerText")+ "</div>"+ "<div id = fullWidthBannerDismissText>"+extraArgs("fullWidthBannerDismissText")+"</div>"
-      }
-      else ""
-    }
 
   override def fetchTemplate(path: String): Future[String] = ???
 }

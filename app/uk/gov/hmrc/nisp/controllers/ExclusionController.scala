@@ -43,7 +43,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     excludedMci: excluded_mci,
                                     excludedNi: excluded_ni)
                                    (implicit val executor: ExecutionContext,
-                                    implicit val formPartialRetriever: NispFormPartialRetriever,
+                                    implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
   extends NispFrontendController(mcc) with I18nSupport{
