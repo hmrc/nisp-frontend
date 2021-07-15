@@ -52,13 +52,13 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         ))
       }
       .recover {
-        case ex if ex.getMessage.contains(exclusionCodeDead) =>
+        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeDead) =>
           Left(StatePensionExclusionFiltered(Exclusion.Dead))
-        case ex if ex.getMessage.contains(exclusionCodeManualCorrespondence) =>
+        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeManualCorrespondence) =>
           Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
-        case ex if ex.getMessage.contains(exclusionCodeCopeProcessingFailed) =>
+        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
-        case ex if ex.getMessage.contains(exclusionCodeCopeProcessing) =>
+        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeCopeProcessing) =>
           Left(getCopeExclusionWithRegex(ex.getMessage))
       }
   }
