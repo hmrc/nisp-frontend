@@ -38,7 +38,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class ErrorHandlerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting{
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val request: Request[_] = FakeRequest()
 
@@ -47,7 +46,7 @@ class ErrorHandlerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSui
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[TemplateRenderer].toInstance(templateRenderer),
-      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[ApplicationConfig].toInstance(mockApplicationConfig)
     ).build()

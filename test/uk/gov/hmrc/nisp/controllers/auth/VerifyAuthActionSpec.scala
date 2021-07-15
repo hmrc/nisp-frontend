@@ -17,7 +17,8 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import akka.util.Timeout
-import org.joda.time.{DateTime, LocalDate}
+import java.time.LocalDate
+import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{spy, verify, when, reset}
 import org.scalatest.BeforeAndAfterEach
@@ -63,7 +64,7 @@ class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPe
   val nino: String = new Generator().nextNino.nino
   val fakeLoginTimes = LoginTimes(DateTime.now(), None)
   val credentials = Credentials("providerId", "providerType")
-  val citizen: Citizen = Citizen(Nino(nino), Some("John"), Some("Smith"), new LocalDate(1983, 1, 2))
+  val citizen: Citizen = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
   val address: Address = Address(Some("Country"))
   val citizenDetailsResponse: CitizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 

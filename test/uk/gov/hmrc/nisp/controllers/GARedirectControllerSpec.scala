@@ -36,7 +36,7 @@ class GARedirectControllerSpec  extends PlaySpec with MockitoSugar with GuiceOne
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
-      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     ).build()
 

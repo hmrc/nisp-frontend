@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers.auth
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.models.UserName

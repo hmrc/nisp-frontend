@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.helpers
+package it_utils
 
 import com.google.inject.Inject
-import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{CoreGet, HttpClient}
@@ -25,11 +24,9 @@ import uk.gov.hmrc.play.partials.{FormPartialRetriever, HeaderCarrierForPartials
 
 import scala.concurrent.ExecutionContext
 
-class FakePartialRetriever @Inject()(
-                                      override val httpGet: HttpClient,
-                                      override val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter
-                                    ) extends FormPartialRetriever with MockitoSugar {
-
+class FakePartialRetriever @Inject()(override val httpGet: HttpClient,
+                                     override val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter) extends FormPartialRetriever {
   override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)
                                 (implicit ec: ExecutionContext, request: RequestHeader): Html = Html("")
+
 }

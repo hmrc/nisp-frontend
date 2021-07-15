@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import org.joda.time.{LocalDate, Period}
+import java.time.{LocalDate, Period}
 import uk.gov.hmrc.nisp.models.{SPChartModel, StatePensionAmount}
 
 object Calculate {
@@ -43,7 +43,7 @@ object Calculate {
   }
 
   def calculateAge(dateOfBirth: LocalDate, currentDate: LocalDate): Int = {
-    new Period(dateOfBirth, currentDate).getYears
+    Period.between(dateOfBirth, currentDate).getYears
   }
 
 }

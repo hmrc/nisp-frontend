@@ -19,5 +19,4 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
 
 object FakeNispHeaderCarrierForPartialsConverter extends HeaderCarrierForPartialsConverter {
-  override def crypto: String => String = ???
 }

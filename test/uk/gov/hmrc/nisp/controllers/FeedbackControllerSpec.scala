@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
@@ -28,9 +28,11 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
+import play.twirl.api.Html
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever, FakeTemplateRenderer}
+import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -40,15 +42,17 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
   val fakeRequest = FakeRequest("GET", "/")
   val mockApplicationConfig = mock[ApplicationConfig]
   val mockHttp = mock[HttpClient]
+  val mockView = mock[feedback_thankyou]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
       bind[HttpClient].toInstance(mockHttp),
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
-      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
-      bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter)
+      bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter),
+      bind[feedback_thankyou].toInstance(mockView)
     ).build()
 
   override def beforeEach(): Unit = {
@@ -79,8 +83,8 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
   "POST /feedback" should {
     val fakePostRequest = FakeRequest("POST", "/check-your-state-pension/feedback").withFormUrlEncodedBody("test" -> "test")
     "return form with thank you for valid selections" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
-        (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
+      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())
+        (any(), any(),any())).thenReturn(
         Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakePostRequest)
@@ -91,8 +95,8 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       when(mockApplicationConfig.contactFrontendPartialBaseUrl).thenReturn("baseUrl")
       when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("serviceIdentifier")
 
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
-        (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
+      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())
+        (any(), any(),any())).thenReturn(
         Future.successful(HttpResponse(Status.BAD_REQUEST, "<p>:^(</p>")))
 
       val result = testFeedbackController.submit(fakePostRequest)
@@ -100,16 +104,16 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
     }
 
     "return error for other http code back from contact-frontend" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
-        (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
+      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())
+        (any(), any(),any())).thenReturn(
         Future.successful(HttpResponse(418, "")))
       val result = testFeedbackController.submit(fakePostRequest)
       status(result) mustBe Status.INTERNAL_SERVER_ERROR
     }
 
     "return internal server error when there is an empty form" in {
-      when(mockHttp.POSTForm[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
-        (ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(
+      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())
+        (any(), any(),any())).thenReturn(
         Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakeRequest)
@@ -119,6 +123,9 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
 
   "GET /feedback/thankyou" should {
     "should return the thank you page" in {
+      
+      when(mockView(any(), any())(any(), any(), any(), any(), any())).thenReturn(Html(""))
+      
       val result = testFeedbackController.showThankYou(fakeRequest)
       status(result) mustBe Status.OK
     }

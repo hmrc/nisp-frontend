@@ -18,20 +18,19 @@ package uk.gov.hmrc.nisp.views
 
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
+import play.api.test.Injecting
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class TimeoutViewSpec extends HtmlSpec with MockitoSugar {
+class TimeoutViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   val feedbackFrontendUrl: String = "/foo"
-  lazy val html = uk.gov.hmrc.nisp.views.html.iv.failurepages.timeout()
-  lazy val source = asDocument(contentAsString(html))
+  lazy val html = inject[uk.gov.hmrc.nisp.views.html.iv.failurepages.timeout]
+  lazy val source = asDocument(html().toString)
 
   "TimeoutView" should {
 

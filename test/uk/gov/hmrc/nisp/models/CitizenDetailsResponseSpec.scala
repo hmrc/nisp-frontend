@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json.Json
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsResponse}
@@ -32,7 +32,7 @@ class CitizenDetailsResponseSpec extends UnitSpec {
           nino,
           Some("AHMED"),
           Some("BRENNAN"),
-          new LocalDate(1954, 3, 9)
+          LocalDate.of(1954, 3, 9)
         ),
         Some(Address(
           country = Some("USA")

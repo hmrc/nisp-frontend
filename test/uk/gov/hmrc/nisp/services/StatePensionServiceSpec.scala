@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.joda.time.{DateTime, LocalDate}
+import org.joda.time.DateTime
+import java.time.{LocalDate, LocalDateTime}
+
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.when
 import org.scalatest.{BeforeAndAfterEach, PrivateMethodTester}
@@ -41,7 +43,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
   val mockStatePensionConnector = mock[StatePensionConnector]
 
   val statePensionService = new StatePensionService(mockStatePensionConnector)(global) {
-    override def now: () => DateTime = () => new DateTime(new LocalDate(2016, 11, 1))
+    override def now: () => LocalDate = () =>  LocalDate.of(2016, 11, 1)
   }
 
   def statePensionResponse[A](nino: Nino)(implicit fjs: Reads[A]): A = jsonResponseByType(nino, "state-pension")
@@ -49,35 +51,35 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
   "yearsToContributeUntilPensionAge" should {
     "shouldBe 2 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2016-4-5" in {
       statePensionService.yearsToContributeUntilPensionAge(
-        earningsIncludedUpTo = new LocalDate(2016, 4, 5),
+        earningsIncludedUpTo = LocalDate.of(2016, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 2
     }
 
     "shouldBe 3 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2015-4-5" in {
       statePensionService.yearsToContributeUntilPensionAge(
-        earningsIncludedUpTo = new LocalDate(2015, 4, 5),
+        earningsIncludedUpTo = LocalDate.of(2015, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 3
     }
 
     "shouldBe 1 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2017-4-5" in {
       statePensionService.yearsToContributeUntilPensionAge(
-        earningsIncludedUpTo = new LocalDate(2017, 4, 5),
+        earningsIncludedUpTo = LocalDate.of(2017, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 1
     }
 
     "shouldBe 0 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2018-4-5" in {
       statePensionService.yearsToContributeUntilPensionAge(
-        earningsIncludedUpTo = new LocalDate(2018, 4, 5),
+        earningsIncludedUpTo = LocalDate.of(2018, 4, 5),
         finalRelevantYearStart = 2017
       ) shouldBe 0
     }
 
     "shouldBe 0 when finalRelevantYear is 2017-18 and earningsIncludedUpTo is 2017-4-6" in {
       statePensionService.yearsToContributeUntilPensionAge(
-        earningsIncludedUpTo = new LocalDate(2017, 4, 6),
+        earningsIncludedUpTo = LocalDate.of(2017, 4, 6),
         finalRelevantYearStart = 2017
       ) shouldBe 0
     }
@@ -132,7 +134,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
       when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny())).thenReturn(Future.failed(new Upstream4xxResponse(message = copeResponseProcessing, upstreamResponseCode = 403, reportAs = 500)))
 
       whenReady(statePensionService.getSummary(regularNino)) { exclusion =>
-        exclusion shouldBe Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, copeAvailableDate = new LocalDate("2021-02-17")))
+        exclusion shouldBe Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, copeAvailableDate = LocalDate.of(2021,2,17)))
       }
     }
 
@@ -143,7 +145,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
       whenReady(statePensionService.getSummary(regularNino)) { statePension =>
         statePension shouldBe Right(StatePension(
-          new LocalDate(2015, 4, 5),
+          LocalDate.of(2015, 4, 5),
           StatePensionAmounts(
             false,
             StatePensionAmountRegular(133.41, 580.1, 6961.14),
@@ -151,7 +153,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
+          64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
         ))
       }
     }
@@ -163,7 +165,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
       whenReady(statePensionService.getSummary(excludedMwrre)) { statePension =>
         statePension shouldBe Right(StatePension(
-          new LocalDate(2015, 4, 5),
+          LocalDate.of(2015, 4, 5),
           StatePensionAmounts(
             false,
             StatePensionAmountRegular(133.41, 580.1, 6961.14),
@@ -171,7 +173,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, true, false
+          64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, true, false
         ))
       }
     }
@@ -183,7 +185,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
       whenReady(statePensionService.getSummary(excludedAbroad)) { statePension =>
         statePension shouldBe Right(StatePension(
-          new LocalDate(2015, 4, 5),
+          LocalDate.of(2015, 4, 5),
           StatePensionAmounts(
             false,
             StatePensionAmountRegular(133.41, 580.1, 6961.14),
@@ -191,7 +193,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
+          64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
         ))
       }
     }
@@ -205,7 +207,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
         statePension shouldBe Left(StatePensionExclusionFiltered(
           Exclusion.PostStatePensionAge,
           pensionAge = Some(65),
-          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = Some(false)
         ))
       }
@@ -218,7 +220,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
       whenReady(statePensionService.getSummary(spaUnderConsiderationNino)) { statePension =>
         statePension shouldBe Right(StatePension(
-          new LocalDate(2015, 4, 5),
+          LocalDate.of(2015, 4, 5),
           StatePensionAmounts(
             false,
             StatePensionAmountRegular(133.41, 580.1, 6961.14),
@@ -226,7 +228,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, true
+          64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, true
         ))
       }
     }
@@ -238,7 +240,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
       whenReady(statePensionService.getSummary(spaUnderConsiderationNoFlagNino)) { statePension =>
         statePension shouldBe Right(StatePension(
-          new LocalDate(2015, 4, 5),
+          LocalDate.of(2015, 4, 5),
           StatePensionAmounts(
             false,
             StatePensionAmountRegular(133.41, 580.1, 6961.14),
@@ -246,7 +248,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
             StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
             StatePensionAmountRegular(0, 0, 0)
           ),
-          64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
+          64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
         ))
       }
     }
@@ -260,7 +262,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
         statePension shouldBe Left(StatePensionExclusionFiltered(
           Exclusion.IsleOfMan,
           pensionAge = Some(65),
-          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = Some(true)
         ))
       }
@@ -275,7 +277,7 @@ class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutur
         statePension shouldBe Left(StatePensionExclusionFiltered(
           Exclusion.IsleOfMan,
           pensionAge = Some(65),
-          pensionDate = Some(new LocalDate(2017, 7, 18)),
+          pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = None
         ))
       }

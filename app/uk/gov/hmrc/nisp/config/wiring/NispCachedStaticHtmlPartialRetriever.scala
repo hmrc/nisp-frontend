@@ -20,4 +20,12 @@ import com.google.inject.Inject
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-class NispCachedStaticHtmlPartialRetriever @Inject()(val httpGet: HttpClient) extends CachedStaticHtmlPartialRetriever
+import scala.concurrent.duration.Duration
+
+class NispCachedStaticHtmlPartialRetriever @Inject()(val httpGet: HttpClient) extends CachedStaticHtmlPartialRetriever {
+  override def refreshAfter: Duration = ???
+
+  override def expireAfter: Duration = ???
+
+  override def maximumEntries: Int = ???
+}

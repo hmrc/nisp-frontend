@@ -26,17 +26,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class ErrorHandler @Inject()(applicationConfig: ApplicationConfig)
+class ErrorHandler @Inject()(applicationConfig: ApplicationConfig, serviceError500: service_error_500, pageNotFound: page_not_found_template,
+                             globalError: global_error)
                             (implicit templateRenderer: TemplateRenderer,
                              formPartialRetriever: FormPartialRetriever,
                              val partialRetriever: CachedStaticHtmlPartialRetriever,
                              val messagesApi: MessagesApi) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-  global_error(pageTitle, heading, message, applicationConfig)
+    globalError(pageTitle, heading, message, applicationConfig)
 
-  override def internalServerErrorTemplate(implicit request: Request[_]): Html = service_error_500()
+  override def internalServerErrorTemplate(implicit request: Request[_]): Html = serviceError500()
 
-  override def notFoundTemplate(implicit request: Request[_]): Html = page_not_found_template()
+  override def notFoundTemplate(implicit request: Request[_]): Html = pageNotFound()
 
 }

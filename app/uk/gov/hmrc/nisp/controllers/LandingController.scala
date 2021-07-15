@@ -34,7 +34,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class LandingController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
                                   applicationConfig: ApplicationConfig,
                                   verifyAuthAction: VerifyAuthActionImpl,
-                                  mcc: MessagesControllerComponents)
+                                  mcc: MessagesControllerComponents,
+                                  identityVerificationLanding: identity_verification_landing,
+                                  landing: landing,
+                                  notAuthorised: not_authorised,
+                                  technicalIssue: technical_issue,
+                                  lockedOut: locked_out,
+                                  timeout: timeout
+                                 )
                                  (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                   val formPartialRetriever: FormPartialRetriever,
                                   val templateRenderer: TemplateRenderer,
@@ -45,7 +52,7 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
   def show: Action[AnyContent] = Action(
     implicit request =>
       if (applicationConfig.identityVerification) {
-        Ok(identity_verification_landing()).withNewSession
+        Ok(identityVerificationLanding()).withNewSession
       } else {
         Ok(landing()).withNewSession
       }
@@ -65,19 +72,19 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
       identityVerificationResult map {
         case IdentityVerificationSuccessResponse(FailedMatching) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $FailedMatching error")
-          Unauthorized(not_authorised())
+          Unauthorized(notAuthorised())
         }
         case IdentityVerificationSuccessResponse(InsufficientEvidence) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $InsufficientEvidence error")
-          Unauthorized(not_authorised())
+          Unauthorized(notAuthorised())
         }
         case IdentityVerificationSuccessResponse(TechnicalIssue) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $TechnicalIssue error")
-          InternalServerError(technical_issue())
+          InternalServerError(technicalIssue())
         }
         case IdentityVerificationSuccessResponse(LockedOut) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $Locked error")
-          Locked(locked_out())
+          Locked(lockedOut())
         }
         case IdentityVerificationSuccessResponse(Timeout) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $Timeout error")
@@ -85,23 +92,23 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
         }
         case IdentityVerificationSuccessResponse(Incomplete) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $Incomplete error")
-          Unauthorized(not_authorised())
+          Unauthorized(notAuthorised())
         }
         case IdentityVerificationSuccessResponse(IdentityVerificationSuccessResponse.PreconditionFailed) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, ${IdentityVerificationSuccessResponse.PreconditionFailed} error")
-          Unauthorized(not_authorised())
+          Unauthorized(notAuthorised())
         }
         case IdentityVerificationSuccessResponse(UserAborted) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $UserAborted error")
-          Unauthorized(not_authorised())
+          Unauthorized(notAuthorised())
         }
         case IdentityVerificationSuccessResponse(FailedIV) => {
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $FailedIV error")
-          Unauthorized(not_authorised())
+          Unauthorized(notAuthorised())
         }
-        case response => logger.warn(s"Unhandled Response from Identity Verification: $response"); InternalServerError(technical_issue())
+        case response => logger.warn(s"Unhandled Response from Identity Verification: $response"); InternalServerError(technicalIssue())
       }
-    } getOrElse Future.successful(Unauthorized(not_authorised(showFirstParagraph = false)))
+    } getOrElse Future.successful(Unauthorized(notAuthorised(showFirstParagraph = false)))
 
     result.map(_.withNewSession)
   }

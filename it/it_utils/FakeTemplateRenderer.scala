@@ -14,11 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.config.wiring
+package it_utils
 
-import com.google.inject.Inject
-import uk.gov.hmrc.crypto.PlainText
-import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
-import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
+import play.api.i18n.Messages
+import play.twirl.api.Html
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-class NispHeaderCarrierForPartialsConverter extends HeaderCarrierForPartialsConverter
+import scala.concurrent.Future
+import scala.concurrent.duration._
+
+object FakeTemplateRenderer extends TemplateRenderer {
+
+  override lazy val templateServiceBaseUrl = "http://example.com/template/mustache"
+  override val refreshAfter = 10 minutes
+
+  override def renderDefaultTemplate(path:String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages): Html = {
+    Html("")
+  }
+
+  override def fetchTemplate(path: String): Future[String] = ???
+}

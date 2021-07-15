@@ -21,6 +21,12 @@
 
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
+@import scala.concurrent.ExecutionContext
+
+@this(
+   implicit ec: ExecutionContext
+)
+
 @(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig)(implicit request: Request[_], messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @mainContent = {

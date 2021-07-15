@@ -23,7 +23,7 @@ import uk.gov.hmrc.nisp.views.html.termsAndConditions
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class TermsConditionsController @Inject()(mcc: MessagesControllerComponents)
+class TermsConditionsController @Inject()(mcc: MessagesControllerComponents, termsAndConditions: termsAndConditions)
                                          (implicit val formPartialRetriever: FormPartialRetriever,
                                           val templateRenderer: TemplateRenderer,
                                           val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)

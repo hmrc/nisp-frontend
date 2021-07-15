@@ -23,19 +23,34 @@ import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.mockito.MockitoSugar
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.bind
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import play.twirl.api.Html
+import uk.gov.hmrc.nisp.helpers.{FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever}
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.duration._
 
-trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
+trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach with MockitoSugar {
 
   implicit val request = FakeRequest()
   implicit val defaultAwaitTimeout: Timeout = 5.seconds
+  implicit val fakePartialRetriever = new FakePartialRetriever(mock[HttpClient], FakeNispHeaderCarrierForPartialsConverter)
   implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[FormPartialRetriever].to[FakePartialRetriever]
+    ).build()
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
