@@ -200,7 +200,7 @@ nisp.excluded.cope.failed.britishSignLanguage.h3 = Iaith Arwyddion Prydain
 nisp.excluded.cope.failed.britishSignLanguage.line1 = <a href="https://dwppensionforecasting.signvideo.net/" target="_blank">Gwasanaeth cyfnewid fideo</a> ar gyfer y rhai sy’n defnyddio Iaith Arwyddion Prydain (BSL) - <a href="https://www.youtube.com/watch?v=Osx7FFxFpNY" target="_blank">gwiriwch eich bod yn gallu defnyddio’r gwasanaeth hwn</a>.
 
 nisp.excluded.cope.failed.openingTimes.h3 = Oriau agor
-nisp.excluded.cope.failed.openingTimes.line1 = 8:30am – 3:30pm, o ddydd Llun i ddydd Gwener
+nisp.excluded.cope.failed.openingTimes.line1 = 8:30am i 3:30pm, o ddydd Llun i ddydd Gwener
 nisp.excluded.cope.failed.openingTimes.line2 = <a href="https://www.gov.uk/call-charges" target="_blank">Gwybodaeth am gostau galwadau</a>
 
 
@@ -282,7 +282,7 @@ nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gen
 nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
 nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
-nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 9.30am i 3.30pm
+nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:30am i 3:30pm
 
 #****************************
 # Gaps in your record page
