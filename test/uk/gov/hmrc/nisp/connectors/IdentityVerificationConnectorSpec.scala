@@ -30,8 +30,10 @@ import play.api.libs.json.Json
 import play.api.test.Injecting
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.WireMockHelper
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.io.Source
@@ -53,6 +55,8 @@ class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MetricsService].toInstance(mockMetricService),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     )
     .configure(
       "microservice.services.identity-verification.port" -> server.port()

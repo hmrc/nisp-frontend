@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
@@ -27,10 +28,12 @@
 @this(
  main: unauthenticatedMain
 )(
- implicit ec: ExecutionContext
+ implicit ec: ExecutionContext,
+ partialRetriever: CachedStaticHtmlPartialRetriever,
+ formPartialRetriever: FormPartialRetriever
 )
 
-@()(implicit partialRetriever: CachedStaticHtmlPartialRetriever, request: Request[_], messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()(implicit request: Request[_], messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @main(MainTemplateParams(
  browserTitle = Some(messages("nisp.timeout.title")),

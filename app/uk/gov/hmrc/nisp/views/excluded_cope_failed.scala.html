@@ -30,11 +30,12 @@
     appConfig: ApplicationConfig,
     main: unauthenticatedMain
 )(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
 )
 
-@()(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
-formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
+@()(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], templateRenderer: TemplateRenderer)
 
 @main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
             pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage"))

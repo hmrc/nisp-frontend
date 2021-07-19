@@ -23,6 +23,7 @@
 @import play.api.Logger
 @import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
@@ -35,7 +36,9 @@
 @this(
     main: main
 )(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
 )
 
 @(
@@ -47,8 +50,7 @@
   customerAge: Int,
   isPertaxUrl: Boolean,
   yearsToContributeUntilPensionAge: Int
-)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar" >

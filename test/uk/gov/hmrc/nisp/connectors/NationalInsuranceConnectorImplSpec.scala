@@ -33,9 +33,10 @@ import play.api.libs.json.Json
 import play.api.test.Injecting
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
-import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, TestAccountBuilder}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeSessionCache, TestAccountBuilder}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.WireMockHelper
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
@@ -51,7 +52,9 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MetricsService].toInstance(mockMetricService),
-      bind[SessionCache].toInstance(FakeSessionCache)
+      bind[SessionCache].toInstance(FakeSessionCache),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     )
     .configure(
       "microservice.services.national-insurance.port" -> server.port()

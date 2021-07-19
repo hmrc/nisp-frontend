@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import java.time.LocalDate
 @import uk.gov.hmrc.nisp.controllers.routes
@@ -34,7 +35,9 @@
 @this(
     main: main
 )(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
 )
 
 @(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean,
@@ -42,8 +45,6 @@ yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, au
 showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages,
 request: AuthenticatedRequest[_],
 user: NispAuthedUser,
-partialRetriever: CachedStaticHtmlPartialRetriever,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 

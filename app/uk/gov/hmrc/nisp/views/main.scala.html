@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.play.views.html.layouts
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import play.twirl.api.Html
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
@@ -36,7 +37,8 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
 
 @(
@@ -47,7 +49,6 @@
     implicit
         request: AuthenticatedRequest[_],
         messages: Messages,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
         templateRenderer: TemplateRenderer
 )
 

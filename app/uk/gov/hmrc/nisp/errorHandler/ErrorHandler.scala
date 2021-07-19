@@ -30,7 +30,7 @@ class ErrorHandler @Inject()(applicationConfig: ApplicationConfig, serviceError5
                              globalError: global_error)
                             (implicit templateRenderer: TemplateRenderer,
                              formPartialRetriever: FormPartialRetriever,
-                             val partialRetriever: CachedStaticHtmlPartialRetriever,
+                             partialRetriever: CachedStaticHtmlPartialRetriever,
                              val messagesApi: MessagesApi) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =

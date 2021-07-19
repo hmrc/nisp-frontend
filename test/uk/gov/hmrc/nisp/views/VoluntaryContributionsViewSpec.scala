@@ -30,7 +30,7 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.html.nirecordVoluntaryContributions
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import play.api.inject.bind
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -46,7 +46,8 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with Bef
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[FormPartialRetriever].to[FakePartialRetriever]
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     ).build()
 
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"

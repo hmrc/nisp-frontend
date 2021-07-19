@@ -34,8 +34,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.helpers.{FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever}
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.duration._
@@ -44,12 +44,12 @@ trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with Bef
 
   implicit val request = FakeRequest()
   implicit val defaultAwaitTimeout: Timeout = 5.seconds
-  implicit val fakePartialRetriever = new FakePartialRetriever(mock[HttpClient], FakeNispHeaderCarrierForPartialsConverter)
   implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[FormPartialRetriever].to[FakePartialRetriever]
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     ).build()
 
   def asDocument(html: String): Document = Jsoup.parse(html)

@@ -24,10 +24,11 @@
 @this(
  main: unauthenticatedMain
 )(
- implicit ec: ExecutionContext
+ implicit ec: ExecutionContext,
+ formPartialRetriever: FormPartialRetriever
 )
 
-@()(implicit request: Request[_], messages: Messages, formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
+@()(implicit request: Request[_], messages: Messages, templateRenderer: TemplateRenderer)
 
 @anchor(text: String, url: String) = {<a href="@url" target="_blank">@text</a>}
 

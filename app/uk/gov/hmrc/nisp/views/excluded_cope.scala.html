@@ -30,11 +30,12 @@
 @this(
     main: unauthenticatedMain
 )(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
 )
 
-@(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
-formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
+@(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], templateRenderer: TemplateRenderer)
 
 @dateFormatter = @{ DateTimeFormatter.ofPattern("d MMMM y") }
 

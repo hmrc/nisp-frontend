@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import play.api.Application
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 
@@ -24,12 +25,14 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
- main: unauthenticatedMain
+ main: unauthenticatedMain,
+ partialRetriever: CachedStaticHtmlPartialRetriever,
+ formPartialRetriever: FormPartialRetriever
 )(
  implicit ec: ExecutionContext
 )
 
-@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @main(MainTemplateParams(
  articleClasses = Some("mainpage"),

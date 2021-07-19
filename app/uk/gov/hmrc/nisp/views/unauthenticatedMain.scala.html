@@ -25,8 +25,7 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import play.api.Play
 @import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
-
-
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import scala.util.Random
 @import java.util.NoSuchElementException
@@ -35,7 +34,8 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    formPartialRetriever: FormPartialRetriever
 )
 
 @(
@@ -46,7 +46,6 @@
     implicit
         request: Request[_],
         messages: Messages,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
         templateRenderer: TemplateRenderer
 )
 

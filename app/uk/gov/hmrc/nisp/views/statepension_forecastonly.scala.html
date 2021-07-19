@@ -22,6 +22,7 @@
 @import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
@@ -32,14 +33,16 @@
 
 @this(
     main: main
+
 )(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
 )
 
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
 isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser,
-authDetails: AuthDetails, partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+authDetails: AuthDetails, messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar" >

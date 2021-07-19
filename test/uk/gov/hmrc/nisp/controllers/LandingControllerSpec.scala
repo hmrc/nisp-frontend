@@ -26,6 +26,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -49,25 +50,24 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
   val mockIVConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
 
-  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-  val injector = GuiceApplicationBuilder().
+  override def fakeApplication(): Application = GuiceApplicationBuilder().
     overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[VerifyAuthActionImpl].to[FakeVerifyAuthAction]
-    ).injector()
+    ).build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockApplicationConfig, mockIVConnector)
   }
 
-  val verifyLandingController = injector.instanceOf[LandingController]
+  val verifyLandingController = inject[LandingController]
 
 
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
@@ -119,7 +119,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       val verifyAuthBasedInjector = GuiceApplicationBuilder().
         overrides(
           bind[IdentityVerificationConnector].toInstance(mockIVConnector),
-          bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
+          bind[FormPartialRetriever].to[FakePartialRetriever],
+          bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
           bind[FormPartialRetriever].to[FakePartialRetriever],
           bind[AuthConnector].toInstance(mockAuthConnector),
           bind[TemplateRenderer].toInstance(templateRenderer)

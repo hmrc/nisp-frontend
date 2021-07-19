@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import java.time.LocalDate
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.controllers.routes
@@ -32,7 +33,9 @@
 @this(
     main: unauthenticatedMain
 )(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
 
 @(
@@ -41,8 +44,7 @@ statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
 canSeeNIRecord: Boolean,
 statePensionAgeUnderConsideration: Option[Boolean]
-)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan

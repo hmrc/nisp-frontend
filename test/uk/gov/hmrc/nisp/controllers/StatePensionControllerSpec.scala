@@ -24,9 +24,10 @@ import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -42,7 +43,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
-class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
+class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
 
   val fakeRequest = FakeRequest()
 
@@ -65,20 +66,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
 
-  val injector = GuiceApplicationBuilder()
-  .overrides(
-    bind[StatePensionService].toInstance(mockStatePensionService),
-    bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-    bind[AuditConnector].toInstance(mockAuditConnector),
-    bind[ApplicationConfig].toInstance(mockAppConfig),
-    bind[PertaxHelper].toInstance(mockPertaxHelper),
-    bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-    bind[FormPartialRetriever].to[FakePartialRetriever],
-    bind[TemplateRenderer].toInstance(templateRenderer),
-    bind[AuthAction].to[FakeAuthAction])
-    .build()
-    .injector
-
   val abroadUserInjector = GuiceApplicationBuilder()
     .overrides(
       bind[StatePensionService].toInstance(mockStatePensionService),
@@ -86,8 +73,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer)
@@ -95,10 +82,22 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     .build()
     .injector
 
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[StatePensionService].toInstance(mockStatePensionService),
+          bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+          bind[AuditConnector].toInstance(mockAuditConnector),
+          bind[ApplicationConfig].toInstance(mockAppConfig),
+          bind[PertaxHelper].toInstance(mockPertaxHelper),
+          bind[FormPartialRetriever].to[FakePartialRetriever],
+          bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+          bind[TemplateRenderer].toInstance(templateRenderer),
+          bind[AuthAction].to[FakeAuthAction]).build()
+
   val standardNino = TestAccountBuilder.regularNino
   val foreignNino = TestAccountBuilder.abroadNino
 
-  val statePensionController = injector.instanceOf[StatePensionController]
+  val statePensionController = inject[StatePensionController]
 
   val statePensionCopeResponse = StatePension(
     LocalDate.of(2014, 4, 5),

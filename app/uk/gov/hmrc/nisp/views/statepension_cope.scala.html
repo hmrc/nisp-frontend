@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
@@ -30,11 +31,12 @@
 @this(
     main: main
 )(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
 )
 
-@(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser,
-partialRetriever: CachedStaticHtmlPartialRetriever, messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @sidebar = {
 <div class="helpline-sidebar">

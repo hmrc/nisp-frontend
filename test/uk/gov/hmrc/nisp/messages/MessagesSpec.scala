@@ -20,10 +20,16 @@ import java.io.{File, FileNotFoundException}
 import java.util.Properties
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.i18n.MessagesApi
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import resource._
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
+
 import scala.collection.JavaConversions._
 import scala.io.{BufferedSource, Source}
 
@@ -32,6 +38,12 @@ class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
   val englishMessages: Set[String] = createMessageSet(new File(".", "conf/messages"))
   val welshMessages: Set[String] = createMessageSet(new File(".", "conf/messages.cy"))
   lazy val messagesApi: MessagesApi = inject[MessagesApi]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+    ).build()
 
   def createMessageSet(file: File): Set[String] = {
     if (file.exists()) {

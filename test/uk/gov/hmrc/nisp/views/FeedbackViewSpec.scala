@@ -26,24 +26,29 @@ import play.api.inject.bind
 import play.api.test.Helpers._
 import play.api.test.Injecting
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.helpers.FakeTemplateRenderer
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
 import uk.gov.hmrc.nisp.views.html.feedback
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class FeedbackViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
-  implicit val cachedStaticHtmlPartialRetriever  = mock[CachedStaticHtmlPartialRetriever]
-  implicit val formPartialRetriever: FormPartialRetriever = mock[FormPartialRetriever]
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-  val partialUrl = "partialUrl"
+  val mockFormPartialRetriever: FormPartialRetriever = mock[FormPartialRetriever]
+  val partialUrl: String = "partialUrl"
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[FormPartialRetriever].toInstance(mockFormPartialRetriever),
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+    ).build()
 
   "Feedback page" should {
     "assert correct feedback title page" in {
       val html = inject[feedback]
       val source = asDocument(html(partialUrl, Some(Html("sdfgh")))
-      (messages, request, formPartialRetriever, cachedStaticHtmlPartialRetriever, templateRenderer).toString)
+      (messages, request, templateRenderer).toString)
       val row = source.getElementsByTag("script").get(0).toString
       val expected = messages("nisp.feedback.title")
       row must include(s"""document.title = "$expected"""")
@@ -52,20 +57,20 @@ class FeedbackViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     "assert passed in formBody is displayed" in {
       val testHtml = "<p> test html </p>"
       val html = inject[feedback]
-      html(partialUrl, Some(Html(testHtml)))(messages, request, formPartialRetriever, cachedStaticHtmlPartialRetriever, templateRenderer).toString must include (testHtml)
-      verify(formPartialRetriever, times(0)).getPartialContent(
+      html(partialUrl, Some(Html(testHtml)))(messages, request, templateRenderer).toString must include (testHtml)
+      verify(mockFormPartialRetriever, times(0)).getPartialContent(
         ArgumentMatchers.eq(partialUrl), any(), any())(any(),any())
     }
 
     "assert correct html displayed from partialURL call when formBody is not provided" in {
-      reset(formPartialRetriever)
+      reset(mockFormPartialRetriever)
       val expected = "<p> Mock partial content </p>"
-      when(formPartialRetriever.getPartialContent(any(), any(), any())(any(), any()))
+      when(mockFormPartialRetriever.getPartialContent(any(), any(), any())(any(), any()))
         .thenReturn(Html(expected))
 
       val html = inject[feedback]
-      html(partialUrl, None)(messages, request, formPartialRetriever, cachedStaticHtmlPartialRetriever, templateRenderer).toString must include(expected)
-      verify(formPartialRetriever, times(1)).getPartialContent(
+      html(partialUrl, None)(messages, request, templateRenderer).toString must include(expected)
+      verify(mockFormPartialRetriever, times(1)).getPartialContent(
         url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
     }
   }

@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
@@ -26,9 +27,11 @@
 @this(
     main: unauthenticatedMain
 )(
-    implicit ec: ExecutionContext
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
 )
-@()(implicit messages: Messages, request: Request[_], partialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @main(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")))) {
 

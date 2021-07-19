@@ -20,6 +20,9 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.helpers.FakeTemplateRenderer
@@ -35,6 +38,11 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar with Injecting
   val partialUrl = "partialUrl"
   def html = inject[feedback_thankyou]
   def source = asDocument(html(partialUrl, "/check-your-state-pension/account").toString)
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedStaticHtmlPartialRetriever)
+    ).build()
 
   "FeedbackThankYou" should {
 
