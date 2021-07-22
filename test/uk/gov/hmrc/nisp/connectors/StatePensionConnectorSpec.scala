@@ -114,13 +114,6 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with MockitoS
           ex.upstreamResponseCode shouldBe 403
           ex.message.contains("EXCLUSION_DEAD") shouldBe true
       }
-
-      server.verify(getRequestedFor(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAll}"))
-        .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
-        .withHeader(HeaderNames.xRequestId, equalTo("-"))
-        .withHeader(HeaderNames.xSessionId, equalTo("-"))
-        .withHeader("CorrelationId", matching(uuidRegex))
-      )
     }
 
     "return a failed Future 403 with a MCI message for all exclusion but dead" in {

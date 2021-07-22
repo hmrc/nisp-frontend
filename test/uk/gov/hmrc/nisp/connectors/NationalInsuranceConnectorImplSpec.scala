@@ -106,7 +106,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
         nationalInsuranceRecord.earningsIncludedUpTo shouldBe LocalDate.of(2014, 4, 5)
       }
 
-      "return a National Insurance Record with 1 tax years" in {
+      "return a National Insurance Record with 39 tax years" in {
         nationalInsuranceRecord.taxYears.length shouldBe 39
       }
 

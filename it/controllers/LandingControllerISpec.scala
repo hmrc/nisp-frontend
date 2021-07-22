@@ -3,8 +3,8 @@ package controllers
 import java.time.LocalDate
 import java.util.UUID
 
-import it_utils.{FakePartialRetriever, FakeTemplateRenderer, WiremockHelper}
-import com.github.tomakehurst.wiremock.client.WireMock.{forbidden, get, notFound, ok, post, urlEqualTo, serviceUnavailable}
+import it_utils.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, WiremockHelper}
+import com.github.tomakehurst.wiremock.client.WireMock.{forbidden, get, notFound, ok, post, serviceUnavailable, urlEqualTo}
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils.currentTimeMillis
 import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
@@ -22,7 +22,7 @@ import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationSuccessResponse
 import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear, StatePension, StatePensionAmountForecast, StatePensionAmountMaximum, StatePensionAmountRegular, StatePensionAmounts}
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class LandingControllerISpec extends WordSpec
@@ -38,7 +38,8 @@ class LandingControllerISpec extends WordSpec
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
-      bind[FormPartialRetriever].to[FakePartialRetriever]
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     )
     .configure(
       "microservice.services.auth.port" -> server.port(),
