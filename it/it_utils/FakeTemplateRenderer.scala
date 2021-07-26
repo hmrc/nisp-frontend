@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.config.wiring
+package it_utils
 
-import com.google.inject.Inject
-import uk.gov.hmrc.crypto.PlainText
-import uk.gov.hmrc.http.HttpClient
-import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import play.api.i18n.Messages
+import play.twirl.api.Html
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-class NispFormPartialRetriever @Inject()(val httpGet: HttpClient,
-                                         sessionCookieCrypto: SessionCookieCrypto) extends FormPartialRetriever {
-  override def crypto: String => String = cookie => sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
+import scala.concurrent.Future
+import scala.concurrent.duration._
+
+object FakeTemplateRenderer extends TemplateRenderer {
+
+  override lazy val templateServiceBaseUrl = "http://example.com/template/mustache"
+  override val refreshAfter = 10 minutes
+
+  override def renderDefaultTemplate(path:String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages): Html = {
+    Html("")
+  }
+
+  override def fetchTemplate(path: String): Future[String] = ???
 }

@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.play.views.html.layouts
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import uk.gov.hmrc.nisp.utils.NispBreadcrumb
 @import play.twirl.api.Html
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
 @import uk.gov.hmrc.renderer.TemplateRenderer
@@ -26,12 +25,19 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import play.api.Play
 @import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
-
-
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import scala.util.Random
 @import java.util.NoSuchElementException
 @import uk.gov.hmrc.domain.Nino
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+    implicit ec: ExecutionContext,
+    formPartialRetriever: FormPartialRetriever
+)
+
 @(
     mainTemplateParams: MainTemplateParams
 )(
@@ -40,7 +46,6 @@
     implicit
         request: Request[_],
         messages: Messages,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
         templateRenderer: TemplateRenderer
 )
 

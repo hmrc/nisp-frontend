@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import java.time.LocalDate
+
 import com.google.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -34,7 +36,6 @@ import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils
 
 import scala.concurrent.ExecutionContext
 
@@ -44,7 +45,12 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                                        auditConnector: AuditConnector,
                                        applicationConfig: ApplicationConfig,
                                        pertaxHelper: PertaxHelper,
-                                       mcc: MessagesControllerComponents)
+                                       mcc: MessagesControllerComponents,
+                                       sessionTimeout: sessionTimeout,
+                                       statePensionMQP: statepension_mqp,
+                                       statePensionCope: statepension_cope,
+                                       statePensionForecastOnly: statepension_forecastonly,
+                                       statePensionView: statepension)
                                       (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                        val formPartialRetriever: FormPartialRetriever,
                                        val templateRenderer: TemplateRenderer,
@@ -57,7 +63,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
 
         statePensionService.getSummary(user.nino) map {
           case Right(statePension) if statePension.contractedOut =>
-            Ok(statepension_cope(
+            Ok(statePensionCope(
               statePension.amounts.cope.weeklyAmount,
               isPertax
             ))
@@ -114,23 +120,23 @@ class StatePensionController @Inject()(authenticate: AuthAction,
 
               if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
                 val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
-                Ok(statepension_mqp(
+                Ok(statePensionMQP(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
                   yearsMissing,
                   user.livesAbroad,
-                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
+                  calculateAge(user.dateOfBirth, LocalDate.now),
                   isPertax,
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
               } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
 
-                Ok(statepension_forecastonly(
+                Ok(statePensionForecastOnly(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
-                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
+                  calculateAge(user.dateOfBirth, LocalDate.now),
                   user.livesAbroad,
                   isPertax,
                   yearsToContributeUntilPensionAge
@@ -143,7 +149,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                     statePension.amounts.forecast,
                     statePension.amounts.maximum
                   )
-                Ok(statepension(
+                Ok(statePensionView(
                   statePension,
                   nationalInsuranceRecord.numberOfGaps,
                   nationalInsuranceRecord.numberOfGapsPayable,
@@ -152,7 +158,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                   personalMaximumChart,
                   isPertax,
                   hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
-                  calculateAge(user.dateOfBirth, DateTimeUtils.now.toLocalDate),
+                  calculateAge(user.dateOfBirth, LocalDate.now),
                   user.livesAbroad,
                   yearsToContributeUntilPensionAge
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))

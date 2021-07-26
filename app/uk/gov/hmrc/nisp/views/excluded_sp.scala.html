@@ -15,7 +15,8 @@
  *@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import org.joda.time.LocalDate
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+@import java.time.LocalDate
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
@@ -27,20 +28,29 @@
 @import uk.gov.hmrc.nisp.models.Exclusion
 @import uk.gov.hmrc.nisp.models.Exclusion._
 
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: unauthenticatedMain
+)(
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
+)
+
 @(
 exclusion: Exclusion,
 statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
 canSeeNIRecord: Boolean,
 statePensionAgeUnderConsideration: Option[Boolean]
-)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
-@unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
+@main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
   pageTitle = Some(messages("nisp.main.h1.title")), articleClasses = Some("mainpage"), showUrBanner = excludeUrPanel(exclusion))
 ) {
 

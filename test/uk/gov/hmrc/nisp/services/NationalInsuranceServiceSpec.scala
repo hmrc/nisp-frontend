@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
+
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -30,7 +31,9 @@ import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -46,7 +49,9 @@ with BeforeAndAfterEach with Injecting {
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[NationalInsuranceConnectorImpl].toInstance(mockNationalInsuranceConnector)
+      bind[NationalInsuranceConnectorImpl].toInstance(mockNationalInsuranceConnector),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     ).build()
 
   override def beforeEach(): Unit = {
@@ -65,9 +70,9 @@ with BeforeAndAfterEach with Injecting {
         qualifyingYearsPriorTo1975 = 39,
         numberOfGaps = 2,
         numberOfGapsPayable = 1,
-        Some(new LocalDate(1973, 7, 7)),
+        Some(LocalDate.of(1973, 7, 7)),
         homeResponsibilitiesProtection = false,
-        earningsIncludedUpTo = new LocalDate(2016, 4, 5),
+        earningsIncludedUpTo = LocalDate.of(2016, 4, 5),
         taxYears = List(
           NationalInsuranceTaxYear(
             taxYear = "2015-16",
@@ -90,8 +95,8 @@ with BeforeAndAfterEach with Injecting {
             classThreeCredits = 1,
             otherCredits = 1,
             classThreePayable = 456.58,
-            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
-            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+            classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+            classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
             payable = false,
             underInvestigation = false
           ),
@@ -103,8 +108,8 @@ with BeforeAndAfterEach with Injecting {
             classThreeCredits = 0,
             otherCredits = 1,
             classThreePayable = 111.11,
-            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
-            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+            classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+            classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
             payable = false,
             underInvestigation = false
           )
@@ -141,8 +146,8 @@ with BeforeAndAfterEach with Injecting {
             classThreeCredits = 1,
             otherCredits = 1,
             classThreePayable = 456.58,
-            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
-            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+            classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+            classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
             payable = false,
             underInvestigation = false
           ),
@@ -154,8 +159,8 @@ with BeforeAndAfterEach with Injecting {
             classThreeCredits = 0,
             otherCredits = 1,
             classThreePayable = 111.11,
-            classThreePayableBy = Some(new LocalDate(2019, 4, 5)),
-            classThreePayableByPenalty = Some(new LocalDate(2023, 4, 5)),
+            classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+            classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
             payable = false,
             underInvestigation = false
           ),
@@ -256,9 +261,9 @@ with BeforeAndAfterEach with Injecting {
         qualifyingYearsPriorTo1975 = 0,
         numberOfGaps = 2,
         numberOfGapsPayable = 1,
-        Some(new LocalDate(1973, 7, 7)),
+        Some(LocalDate.of(1973, 7, 7)),
         homeResponsibilitiesProtection = false,
-        earningsIncludedUpTo = new LocalDate(2016, 4, 5),
+        earningsIncludedUpTo = LocalDate.of(2016, 4, 5),
         taxYears = List(
           NationalInsuranceTaxYear(
             taxYear = "2015-16",

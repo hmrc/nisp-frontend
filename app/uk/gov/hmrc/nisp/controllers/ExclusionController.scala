@@ -36,9 +36,13 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     mcc: MessagesControllerComponents,
                                     excludedCopeView: excluded_cope,
                                     excludedCopeExtendedView: excluded_cope_extended,
-                                    excludedCopeFailedView: excluded_cope_failed)
+                                    excludedCopeFailedView: excluded_cope_failed,
+                                    excludedSp: excluded_sp,
+                                    excludedDead: excluded_dead,
+                                    excludedMci: excluded_mci,
+                                    excludedNi: excluded_ni)
                                    (implicit val executor: ExecutionContext,
-                                    val formPartialRetriever: FormPartialRetriever,
+                                    implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
   extends NispFrontendController(mcc) with I18nSupport{
@@ -56,16 +60,16 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
       ) yield {
         statePension match {
           case Right(sp) if sp.reducedRateElection =>
-            Ok(excluded_sp(MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), canSeeNIRecord = false, None))
+            Ok(excludedSp(MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), canSeeNIRecord = false, None))
           case Left(statePensionExclusionFiltered: StatePensionExclusionFiltered) =>
             if (statePensionExclusionFiltered.exclusion == Dead)
-              Ok(excluded_dead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge))
+              Ok(excludedDead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge))
             else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
-              Ok(excluded_mci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge))
+              Ok(excludedMci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge))
             else if (statePensionExclusionFiltered.exclusion == CopeProcessingFailed)
               Ok(excludedCopeFailedView())
             else
-              Ok(excluded_sp(
+              Ok(excludedSp(
                 statePensionExclusionFiltered.exclusion,
                 statePensionExclusionFiltered.pensionAge,
                 statePensionExclusionFiltered.pensionDate,
@@ -93,12 +97,12 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
           Redirect(routes.ExclusionController.showSP())
         case Left(exclusion) =>
           if (exclusion == Dead) {
-            Ok(excluded_dead(Exclusion.Dead, None))
+            Ok(excludedDead(Exclusion.Dead, None))
           }
           else if (exclusion == Exclusion.ManualCorrespondenceIndicator) {
-            Ok(excluded_mci(ManualCorrespondenceIndicator, None))
+            Ok(excludedMci(ManualCorrespondenceIndicator, None))
           } else {
-            Ok(excluded_ni(exclusion))
+            Ok(excludedNi(exclusion))
           }
         case _ =>
           Logger.warn("User accessed /exclusion/nirecord as non-excluded user")

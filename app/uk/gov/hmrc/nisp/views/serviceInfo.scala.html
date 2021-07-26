@@ -15,7 +15,8 @@
  *@
 
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
-@(betaBanner: Html, includeGridWrapper: Boolean, serviceInfoContent: Option[Html])(implicit messages: Messages, request: AuthenticatedRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
+@(betaBanner: Html, includeGridWrapper: Boolean, serviceInfoContent: Option[Html])(implicit messages: Messages, request: AuthenticatedRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 <div class="service-info @if( includeGridWrapper ){ grid-wrapper}">
     @betaBanner    

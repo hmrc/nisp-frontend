@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import uk.gov.hmrc.nisp.models.StatePensionAmountRegular
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -61,14 +61,14 @@ class CalculateSpec extends UnitSpec {
 
   "calculateAge" should {
     "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-10-28" in {
-      Calculate.calculateAge(new LocalDate(1986, 10, 28), new LocalDate(2016, 11, 2)) shouldBe 30
+      Calculate.calculateAge(LocalDate.of(1986, 10, 28), LocalDate.of(2016, 11, 2)) shouldBe 30
     }
     "return 30 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-2" in {
-      Calculate.calculateAge(new LocalDate(1986, 11, 2), new LocalDate(2016, 11, 2)) shouldBe 30
+      Calculate.calculateAge(LocalDate.of(1986, 11, 2), LocalDate.of(2016, 11, 2)) shouldBe 30
 
     }
     "return 29 when the currentDate is 2016-11-2 their dateOfBirth is 1986-11-3" in {
-      Calculate.calculateAge(new LocalDate(1986, 11, 3), new LocalDate(2016, 11, 2)) shouldBe 29
+      Calculate.calculateAge(LocalDate.of(1986, 11, 3), LocalDate.of(2016, 11, 2)) shouldBe 29
     }
   }
 

@@ -35,7 +35,7 @@ class TermsConditionsControllerSpec extends PlaySpec with GuiceOneAppPerSuite wi
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
-      bind[FormPartialRetriever].toInstance(FakePartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     ).build()
 

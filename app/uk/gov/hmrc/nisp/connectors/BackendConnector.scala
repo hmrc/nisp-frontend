@@ -16,13 +16,15 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import java.util.UUID
+
 import play.api.libs.json.{Format, JsPath, JsonValidationError}
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, HttpResponse}
 import uk.gov.hmrc.nisp.models.enums.APIType._
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
-import uk.gov.hmrc.http.HttpClient
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
@@ -34,7 +36,7 @@ trait BackendConnector {
   val metricsService: MetricsService
   implicit val executionContext: ExecutionContext
 
-  protected def retrieveFromCache[A](api: APIType, url: String)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
+  protected def retrieveFromCache[A](api: APIType, url: String, headers: Seq[(String, String)] = Seq())(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val keystoreTimerContext = metricsService.keystoreReadTimer.time()
 
     val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
@@ -49,17 +51,17 @@ trait BackendConnector {
           Future.successful(data)
         case None =>
           metricsService.keystoreMissCounter.inc()
-          connectToMicroservice[A](url, api) map {
+          connectToMicroservice[A](url, api, headers) map {
             data: A => cacheResult(data, api.toString)
           }
       }
     }
   }
 
-  private def connectToMicroservice[A](urlToRead: String, apiType: APIType)(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
+  private def connectToMicroservice[A](urlToRead: String, apiType: APIType, headers: Seq[(String, String)] = Seq())(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val timerContext = metricsService.startTimer(apiType)
 
-    val httpResponseF = http.GET[HttpResponse](urlToRead)
+    val httpResponseF = http.GET[HttpResponse](urlToRead, Seq())
     httpResponseF onSuccess {
       case _ => timerContext.stop()
     }

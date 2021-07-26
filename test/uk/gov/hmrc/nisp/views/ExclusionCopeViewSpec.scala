@@ -16,7 +16,10 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.{DateTime, LocalDate}
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import org.joda.time.DateTime
 import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
 import play.api.i18n.Messages
@@ -34,7 +37,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
@@ -54,6 +56,8 @@ class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   }
 
   "render correct p tag with text" in {
-    assertContainsDynamicMessage(view, "article p:last-of-type", "nisp.excluded.cope.returnDate", today.toString("d MMMM y"))
+    assertContainsDynamicMessage(view, "article p:last-of-type",
+      "nisp.excluded.cope.returnDate",
+      today.format(DateTimeFormatter.ofPattern("d MMMM y")))
   }
 }

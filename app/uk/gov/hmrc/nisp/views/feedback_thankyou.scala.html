@@ -15,19 +15,30 @@
  *@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
-@(partialUrl: String, redirectUrl: String)(implicit messages: Messages, request: Request[_],
-cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+ main: unauthenticatedMain
+)(
+ implicit ec: ExecutionContext,
+ cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
+)
+
+@(partialUrl: String, redirectUrl: String)(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
 <script>
         document.title = "@messages("nisp.feedback.title")"
 </script>
 
-@unauthenticatedMain(MainTemplateParams(showBetaBanner = false)) {
+@main(MainTemplateParams(showBetaBanner = false)) {
     @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
     <a id="Start" href='@redirectUrl' role="button" tabindex="0" data-journey-click="checkmystatepension:feedback:return" class="button">@messages("nisp.goback")</a>
 }

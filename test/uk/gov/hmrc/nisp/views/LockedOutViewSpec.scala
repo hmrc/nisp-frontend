@@ -17,25 +17,25 @@
 package uk.gov.hmrc.nisp.views
 
 import org.scalatest.mockito.MockitoSugar
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.views.html.iv.failurepages.locked_out
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class LockedOutViewSpec extends HtmlSpec with MockitoSugar {
+class LockedOutViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   val fakeRequest = FakeRequest("GET", "/")
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"
-  lazy val html = uk.gov.hmrc.nisp.views.html.iv.failurepages.locked_out()
-  lazy val source = asDocument(contentAsString(html))
+  lazy val html = inject[locked_out]
+  lazy val source = asDocument(html().toString)
 
   "LockedOutView" should {
 

@@ -17,7 +17,9 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import akka.util.Timeout
-import org.joda.time.{DateTime, LocalDate}
+import java.time.LocalDate
+
+import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, spy, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -39,10 +41,12 @@ import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.EqualsAuthenticatedRequest
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.duration._
@@ -65,7 +69,7 @@ class AuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite
   val nino = new Generator().nextNino.nino
   val fakeLoginTimes = LoginTimes(DateTime.now(), None)
   val credentials = Credentials("providerId", "providerType")
-  val citizen = Citizen(Nino(nino), Some("John"), Some("Smith"), new LocalDate(1983, 1, 2))
+  val citizen = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
   val address = Address(Some("Country"))
   val citizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 
@@ -73,7 +77,9 @@ class AuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite
     .overrides(
       bind[AuthConnector].toInstance(mockAuthConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[CitizenDetailsService].toInstance(mockCitizenDetailsService)
+      bind[CitizenDetailsService].toInstance(mockCitizenDetailsService),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
     ).build()
 
   override def beforeEach(): Unit = {

@@ -34,11 +34,10 @@ class NationalInsuranceConnectorImpl @Inject()(val http: HttpClient,
                                                val executionContext: ExecutionContext) extends BackendConnector{
 
   val serviceUrl: String = appConfig.nationalInsuranceServiceUrl
-  private val apiHeader = "Accept" -> "application/vnd.hmrc.1.0+json"
 
   def getNationalInsurance(nino: Nino)(implicit hc: HeaderCarrier): Future[NationalInsuranceRecord] = {
     val urlToRead = s"$serviceUrl/ni/$nino"
-    val headerCarrier = hc.copy(extraHeaders = hc.extraHeaders :+ apiHeader)
-    retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead)(headerCarrier, NationalInsuranceRecord.formats)
+    val header = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
+    retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead, header)
   }
 }

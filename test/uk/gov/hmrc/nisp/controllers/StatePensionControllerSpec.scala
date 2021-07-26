@@ -17,15 +17,17 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
-import org.joda.time.LocalDate
+import java.time.{LocalDate, LocalDateTime, ZoneId}
+
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -38,11 +40,10 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils.now
 
 import scala.concurrent.Future
 
-class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
+class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
 
   val fakeRequest = FakeRequest()
 
@@ -53,7 +54,6 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
   val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   override def beforeEach(): Unit = {
@@ -63,22 +63,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
 
   def generateFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-    SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+    SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
-
-  val injector = GuiceApplicationBuilder()
-  .overrides(
-    bind[StatePensionService].toInstance(mockStatePensionService),
-    bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-    bind[AuditConnector].toInstance(mockAuditConnector),
-    bind[ApplicationConfig].toInstance(mockAppConfig),
-    bind[PertaxHelper].toInstance(mockPertaxHelper),
-    bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-    bind[FormPartialRetriever].toInstance(formPartialRetriever),
-    bind[TemplateRenderer].toInstance(templateRenderer),
-    bind[AuthAction].to[FakeAuthAction])
-    .build()
-    .injector
 
   val abroadUserInjector = GuiceApplicationBuilder()
     .overrides(
@@ -87,8 +73,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer)
@@ -96,55 +82,67 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     .build()
     .injector
 
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[StatePensionService].toInstance(mockStatePensionService),
+          bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+          bind[AuditConnector].toInstance(mockAuditConnector),
+          bind[ApplicationConfig].toInstance(mockAppConfig),
+          bind[PertaxHelper].toInstance(mockPertaxHelper),
+          bind[FormPartialRetriever].to[FakePartialRetriever],
+          bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+          bind[TemplateRenderer].toInstance(templateRenderer),
+          bind[AuthAction].to[FakeAuthAction]).build()
+
   val standardNino = TestAccountBuilder.regularNino
   val foreignNino = TestAccountBuilder.abroadNino
 
-  val statePensionController = injector.instanceOf[StatePensionController]
+  val statePensionController = inject[StatePensionController]
 
   val statePensionCopeResponse = StatePension(
-    new LocalDate(2014, 4, 5),
+    LocalDate.of(2014, 4, 5),
     StatePensionAmounts(
       false,
       StatePensionAmountRegular(46.38, 201.67, 2420.04),
       StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
       StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
       StatePensionAmountRegular(50, 217.41, 2608.93))
-    ,64, new LocalDate(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
+    ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
 
   val statePensionResponse = StatePension(
-    new LocalDate(2015, 4, 5),
+    LocalDate.of(2015, 4, 5),
     StatePensionAmounts(
       false,
       StatePensionAmountRegular(133.41, 580.1, 6961.14),
       StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
       StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
       StatePensionAmountRegular(0, 0, 0))
-    ,64, new LocalDate(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+    ,64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
 
   val statePensionVariation2 = StatePension(
-    new LocalDate(2015, 4, 5),
+    LocalDate.of(2015, 4, 5),
     StatePensionAmounts(
       false,
       StatePensionAmountRegular(0, 0, 0),
       StatePensionAmountForecast(1, 0, 0, 0),
       StatePensionAmountMaximum(1, 6, 155.65, 676.8, 8121.59),
       StatePensionAmountRegular(0, 0, 0))
-    ,64, new LocalDate(2016, 7, 6),
+    ,64, LocalDate.of(2016, 7, 6),
     "2034-35", 30, false, 0, true, false)
 
   val statePensionResponseVariation3 = StatePension(
-    new LocalDate(2014, 4, 5),
+    LocalDate.of(2014, 4, 5),
     StatePensionAmounts(
       false,
       StatePensionAmountRegular(133.41, 580.1, 6961.14),
       StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
       StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
       StatePensionAmountRegular(0, 0, 0))
-    ,64, new LocalDate(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+    ,64, LocalDate.of(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
 
 
-  val nationalInsuranceRecord = NationalInsuranceRecord(28, -3, 6, 4, Some(new LocalDate(1975, 8, 1)),
-    true, new LocalDate(2016, 4, 5),
+  val nationalInsuranceRecord = NationalInsuranceRecord(28, -3, 6, 4, Some(LocalDate.of(1975, 8, 1)),
+    true, LocalDate.of(2016, 4, 5),
     List(
       NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false),
       NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 0, None, None, false, false)
@@ -152,13 +150,13 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
     false
   )
 
-  val nationaInsuranceRecordVariant2 = NationalInsuranceRecord(28, 28, 6, 4, Some(new LocalDate(1975, 8, 1)),
-    true, new LocalDate(2014, 4, 5),
+  val nationaInsuranceRecordVariant2 = NationalInsuranceRecord(28, 28, 6, 4, Some(LocalDate.of(1975, 8, 1)),
+    true, LocalDate.of(2014, 4, 5),
     List(
-      NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2019, 4, 5)),
-        Some(new LocalDate(2024, 4, 5)), true, false),
-      NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5)),
-        Some(new LocalDate(2023, 4, 5)), true, false)
+      NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2019, 4, 5)),
+        Some(LocalDate.of(2024, 4, 5)), true, false),
+      NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2018, 4, 5)),
+        Some(LocalDate.of(2023, 4, 5)), true, false)
     ),
     false
   )
@@ -196,7 +194,7 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
         val result = statePensionController
           .show()(fakeRequest.withSession(
           SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+          SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
         ))
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
       }
@@ -204,8 +202,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       "return content about COPE for contracted out (B) user" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-        val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -8, 0, 0, Some(new LocalDate(1975, 8, 1)),
-          true, new LocalDate(2016, 4, 5),
+        val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -8, 0, 0, Some(LocalDate.of(1975, 8, 1)),
+          true, LocalDate.of(2016, 4, 5),
           List(
             NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false),
             NationalInsuranceTaxYear("2014-15", false, 2430.24, 0, 0, 0, 0, None, None, false, false)
@@ -319,8 +317,8 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
       "return page with MQP messaging for MQP user" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-        val expectedNationalInsuranceRecord = NationalInsuranceRecord(3, 3, 19, 7, Some(new LocalDate(1975, 8, 1)),
-          false, new LocalDate(2014, 4, 5),
+        val expectedNationalInsuranceRecord = NationalInsuranceRecord(3, 3, 19, 7, Some(LocalDate.of(1975, 8, 1)),
+          false, LocalDate.of(2014, 4, 5),
           List.empty[NationalInsuranceTaxYear],
           false
         )
@@ -360,13 +358,13 @@ class StatePensionControllerSpec extends UnitSpec with MockitoSugar with BeforeA
         "show specific text when is only one payable gap" in {
           when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-          val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, 28, 1, 1, Some(new LocalDate(1975, 8, 1)),
-            true, new LocalDate(2014, 4, 5),
+          val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, 28, 1, 1, Some(LocalDate.of(1975, 8, 1)),
+            true, LocalDate.of(2014, 4, 5),
             List(
-              NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2019, 4, 5)),
-                Some(new LocalDate(2024, 4, 5)), true, false),
-              NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(new LocalDate(2018, 4, 5)),
-                Some(new LocalDate(2023, 4, 5)), true, false)
+              NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2019, 4, 5)),
+                Some(LocalDate.of(2024, 4, 5)), true, false),
+              NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2018, 4, 5)),
+                Some(LocalDate.of(2023, 4, 5)), true, false)
             ),
             false
           )

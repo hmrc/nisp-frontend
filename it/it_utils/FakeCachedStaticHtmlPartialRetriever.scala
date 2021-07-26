@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.config.wiring
+package it_utils
 
-import com.google.inject.Inject
-import uk.gov.hmrc.http.HttpClient
+import play.api.mvc.RequestHeader
+import play.twirl.api.Html
+import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-class NispCachedStaticHtmlPartialRetriever @Inject()(val httpGet: HttpClient) extends CachedStaticHtmlPartialRetriever
+import scala.concurrent.duration.Duration
+
+object FakeCachedStaticHtmlPartialRetriever extends CachedStaticHtmlPartialRetriever {
+  override def httpGet: HttpGet = ???
+
+  def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html =
+    Html("")
+
+  override def refreshAfter: Duration = ???
+
+  override def expireAfter: Duration = ???
+
+  override def maximumEntries: Int = ???
+}

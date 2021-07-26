@@ -24,12 +24,20 @@
 @import uk.gov.hmrc.renderer._
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 
-@this(appConfig: ApplicationConfig)
+@import scala.concurrent.ExecutionContext
 
-@()(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], partialRetriever: CachedStaticHtmlPartialRetriever,
-formPartialRetriever: FormPartialRetriever, templateRenderer: TemplateRenderer)
+@this(
+    appConfig: ApplicationConfig,
+    main: unauthenticatedMain
+)(
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
+)
 
-@unauthenticatedMain(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
+@()(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], templateRenderer: TemplateRenderer)
+
+@main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
             pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage"))
 ) {
     <div>

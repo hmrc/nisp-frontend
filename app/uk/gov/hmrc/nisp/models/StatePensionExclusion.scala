@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.models
 
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.time.TaxYear
 import play.api.libs.json.JodaWrites._

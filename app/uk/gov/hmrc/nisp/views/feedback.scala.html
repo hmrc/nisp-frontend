@@ -19,15 +19,24 @@
 @import play.api.Application
 
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@(partialUrl: String, formBody: Option[Html])(implicit messages: Messages, request: Request[_],
-formPartialRetriever: FormPartialRetriever, partialRetriever: CachedStaticHtmlPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@import scala.concurrent.ExecutionContext
+
+@this(
+ main: unauthenticatedMain
+)(
+ implicit ec: ExecutionContext,
+ formPartialRetriever: FormPartialRetriever,
+ partialRetriever: CachedStaticHtmlPartialRetriever
+)
+
+@(partialUrl: String, formBody: Option[Html])(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
 <script>
         document.title = "@messages("nisp.feedback.title")"
 </script>
 
-@unauthenticatedMain(MainTemplateParams(showBetaBanner = false)) {
+@main(MainTemplateParams(showBetaBanner = false)) {
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
 }
 

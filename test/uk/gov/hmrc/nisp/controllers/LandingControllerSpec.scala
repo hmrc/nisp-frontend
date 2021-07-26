@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import java.time.LocalDate
 import java.util.{Locale, UUID}
 
 import org.jsoup.Jsoup
@@ -25,6 +26,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -38,7 +40,6 @@ import uk.gov.hmrc.nisp.controllers.auth.VerifyAuthActionImpl
 import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.DateTimeUtils._
 
 import scala.concurrent.Future
 
@@ -49,26 +50,24 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
   val mockIVConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
 
-  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val formPartialRetriever: FormPartialRetriever = FakePartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
-  val injector = GuiceApplicationBuilder().
+  override def fakeApplication(): Application = GuiceApplicationBuilder().
     overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].toInstance(formPartialRetriever),
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[VerifyAuthActionImpl].to[FakeVerifyAuthAction]
-    ).injector()
+    ).build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockApplicationConfig, mockIVConnector)
   }
 
-  val verifyLandingController = injector.instanceOf[LandingController]
+  val verifyLandingController = inject[LandingController]
 
 
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
@@ -120,8 +119,9 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       val verifyAuthBasedInjector = GuiceApplicationBuilder().
         overrides(
           bind[IdentityVerificationConnector].toInstance(mockIVConnector),
-          bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-          bind[FormPartialRetriever].toInstance(formPartialRetriever),
+          bind[FormPartialRetriever].to[FakePartialRetriever],
+          bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+          bind[FormPartialRetriever].to[FakePartialRetriever],
           bind[AuthConnector].toInstance(mockAuthConnector),
           bind[TemplateRenderer].toInstance(templateRenderer)
         ).injector()
@@ -137,7 +137,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
     "redirect to account page when signed in" in {
       val result = verifyLandingController.verifySignIn(FakeRequest().withSession(
         SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> now.getMillis.toString
+        SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
       ))
 
       redirectLocation(result) mustBe Some("/check-your-state-pension/account")

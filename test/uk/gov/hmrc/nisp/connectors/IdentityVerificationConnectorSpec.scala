@@ -16,45 +16,50 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import org.mockito.Mockito.{reset, when}
-import org.mockito.{ArgumentMatchers, Mockito}
+import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, urlEqualTo}
+import org.mockito.Mockito
+import org.mockito.Mockito.reset
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.http.Status
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.nisp.utils.WireMockHelper
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.play.test.UnitSpec
-import scala.concurrent.Future
+
 import scala.io.Source
 
 class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with ScalaFutures
-  with Injecting with BeforeAndAfterEach {
+  with Injecting with BeforeAndAfterEach with WireMockHelper {
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   import IdentityVerificationSuccessResponse._
 
-  val mockHttpClient = mock[HttpClient]
   val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
   val mockApplicationConfig = mock[ApplicationConfig]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockHttpClient, mockMetricService, mockApplicationConfig)
+    reset(mockMetricService, mockApplicationConfig)
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[HttpClient].toInstance(mockHttpClient),
       bind[MetricsService].toInstance(mockMetricService),
-      bind[ApplicationConfig].toInstance(mockApplicationConfig)
+      bind[FormPartialRetriever].to[FakePartialRetriever],
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+    )
+    .configure(
+      "microservice.services.identity-verification.port" -> server.port()
     ).build()
 
   lazy val identityVerificationConnector = inject[IdentityVerificationConnector]
@@ -76,13 +81,14 @@ class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with 
 
   def mockJourneyId(journeyId: String): Unit = {
     val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-    when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).
-      thenReturn(Future.successful(HttpResponse(Status.OK, Json.parse(fileContents).toString())))
+    server.stubFor(
+      get(urlEqualTo(s"/mdtp/journey/journeyId/$journeyId"))
+      .willReturn(ok(Json.parse(fileContents).toString())))
   }
 
   def identityVerificationResponse(journeyId: String, ivResponse: String): Assertion = {
     mockJourneyId(journeyId)
-    identityVerificationConnector.identityVerificationResponse(journeyId).futureValue shouldBe IdentityVerificationSuccessResponse(ivResponse)
+    await(identityVerificationConnector.identityVerificationResponse(journeyId)) shouldBe IdentityVerificationSuccessResponse(ivResponse)
   }
 
   "return success when identityVerification returns success" in {

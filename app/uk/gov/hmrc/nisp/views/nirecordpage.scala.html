@@ -19,8 +19,9 @@
 @import uk.gov.hmrc.nisp.models.NpsDate
 @import uk.gov.hmrc.nisp.views.formatting.SinglePlural
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import org.joda.time.LocalDate
+@import java.time.LocalDate
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
 
@@ -28,13 +29,22 @@
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+
+@import scala.concurrent.ExecutionContext
+
+@this(
+    main: main
+)(
+    implicit ec: ExecutionContext,
+    partialRetriever: CachedStaticHtmlPartialRetriever,
+    formPartialRetriever: FormPartialRetriever
+)
+
 @(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean,
 yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String,
 showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages,
 request: AuthenticatedRequest[_],
 user: NispAuthedUser,
-partialRetriever: CachedStaticHtmlPartialRetriever,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 

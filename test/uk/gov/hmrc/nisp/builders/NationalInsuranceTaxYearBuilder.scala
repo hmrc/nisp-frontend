@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.builders
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import uk.gov.hmrc.nisp.models.NationalInsuranceTaxYear
 
 
@@ -45,8 +45,8 @@ object NationalInsuranceTaxYearBuilder {
         classThreeCredits = 1,
         otherCredits = 1,
         classThreePayable = 755.56,
-        classThreePayableBy = Some( new LocalDate(2019, 4, 5)),
-        classThreePayableByPenalty = Some( new LocalDate(2023, 4, 5)),
+        classThreePayableBy = Some( LocalDate.of(2019, 4, 5)),
+        classThreePayableByPenalty = Some( LocalDate.of(2023, 4, 5)),
         payable = payable,
         underInvestigation = underInvestigation
       )

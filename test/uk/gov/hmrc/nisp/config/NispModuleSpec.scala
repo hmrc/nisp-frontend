@@ -17,9 +17,11 @@
 package uk.gov.hmrc.nisp.config
 
 import org.scalatestplus.play.PlaySpec
-import play.api.inject.Injector
+import play.api.inject.{Injector, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl, VerifyAuthActionImpl}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
 class NispModuleSpec extends PlaySpec {
 
@@ -28,8 +30,12 @@ class NispModuleSpec extends PlaySpec {
   "bindings" must {
     "bind an instance of AuthActionImpl" when {
       "the identity verification flag is set to true" in {
-        val injector: Injector = new GuiceApplicationBuilder()
+        val injector: Injector = GuiceApplicationBuilder()
           .configure(identityVerificationProp -> true)
+          .overrides(
+            bind[FormPartialRetriever].to[FakePartialRetriever],
+            bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+          )
           .injector()
 
         injector.instanceOf[AuthAction] mustBe an[AuthActionImpl]
@@ -37,8 +43,12 @@ class NispModuleSpec extends PlaySpec {
     }
     "bind an instance of VerifyAuthActionImpl" when {
       "the identity verification flag is set to false" in {
-        val injector: Injector = new GuiceApplicationBuilder()
+        val injector: Injector = GuiceApplicationBuilder()
           .configure(identityVerificationProp -> false)
+          .overrides(
+            bind[FormPartialRetriever].to[FakePartialRetriever],
+            bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+          )
           .injector()
 
         injector.instanceOf[AuthAction] mustBe a[VerifyAuthActionImpl]
