@@ -31,7 +31,10 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: unauthenticatedMain
+    main: unauthenticatedMain,
+    amountDissonance: exclusions.sp.amountDissonance,
+    isleOfMan: exclusions.sp.isleOfMan,
+    mwrre: exclusions.sp.mwrre
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -69,13 +72,13 @@ statePensionAgeUnderConsideration: Option[Boolean]
                 @exclusions.sp.postStatePensionAge()
         } else {
                 @if(exclusion.equals(AmountDissonance)) {
-                    @exclusions.sp.amountDissonance()
+                    @amountDissonance()
                 } else {
                     @if(exclusion.equals(IsleOfMan)) {
-                        @exclusions.sp.isleOfMan()
+                        @isleOfMan()
                     } else {
                         @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-                            @exclusions.sp.mwrre()
+                            @mwrre()
                         }
                     }
             }

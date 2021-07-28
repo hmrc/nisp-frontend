@@ -26,7 +26,9 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: unauthenticatedMain
+    main: unauthenticatedMain,
+    isleOfMan: exclusions.ni.isleOfMan,
+    mwrre: exclusions.ni.mwrre
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -57,10 +59,10 @@
 )) {
     <div class="panel-indent">
         @if(exclusion.equals(IsleOfMan)) {
-            @exclusions.ni.isleOfMan()
+            @isleOfMan()
         } else {
             @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-                @exclusions.ni.mwrre()
+                @mwrre()
             }
         }
     </div>
