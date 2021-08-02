@@ -23,11 +23,11 @@ import org.scalatest.mockito.MockitoSugar
 import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
-import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, ExcludedAuthenticatedRequest, NispAuthedUser}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
-import uk.gov.hmrc.nisp.models.Exclusion
+import uk.gov.hmrc.nisp.models.{Exclusion, UserName}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.nisp.views.html.{excluded_dead, excluded_mci, excluded_sp}
@@ -38,7 +38,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-  implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,
+  implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), TestAccountBuilder.nispAuthedUser,
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 

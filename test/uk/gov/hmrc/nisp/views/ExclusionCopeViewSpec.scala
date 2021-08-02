@@ -27,7 +27,7 @@ import play.api.test.{FakeRequest, Helpers, Injecting}
 import play.api.test.Helpers.{contentAsString, stubMessages}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, ExcludedAuthenticatedRequest}
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.nisp.views.html.excluded_cope
@@ -38,7 +38,7 @@ class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-  implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,
+  implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), TestAccountBuilder.nispAuthedUser,
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
 
   val excludedCopeView = inject[excluded_cope]
