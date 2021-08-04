@@ -26,7 +26,8 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: unauthenticatedMain
+    main: unauthenticatedMain,
+    dead: exclusions.dead
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -53,5 +54,5 @@
     userLoggedIn = true,
     pageTitle = Some(messages("nisp.excluded.title"))
 )) {
-    @exclusions.dead()
+    @dead()
 }

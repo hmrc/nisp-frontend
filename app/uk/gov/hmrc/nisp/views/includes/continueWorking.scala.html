@@ -20,7 +20,9 @@
 @import uk.gov.hmrc.nisp.utils.LanguageHelper
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.html.includes.chart
 
+@this(chart: chart)
 @(statePension: StatePension, yearsToContributeUntilPensionAge: Int, currentChart: SPChartModel, forecastChart: SPChartModel)(implicit messages: Messages)
 
 @if(statePension.mqpScenario.isDefined)  {

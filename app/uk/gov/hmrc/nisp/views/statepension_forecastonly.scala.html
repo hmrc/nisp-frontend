@@ -32,8 +32,11 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main
-
+    main: main,
+    abroad: includes.abroad,
+    contractedOut: includes.contractedOut,
+    deferral: includes.deferral,
+    statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -112,19 +115,19 @@ authDetails: AuthDetails, messages: Messages, templateRenderer: uk.gov.hmrc.rend
     <a href='@routes.NIRecordController.showFull.url'>@Html(messages("nisp.main.showyourrecord"))</a>
 
     @if(isAbroad) {
-        @includes.abroad()
+        @abroad()
     }
 
     @if(statePension.statePensionAgeUnderConsideration) {
-        @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+        @statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
     @if(statePension.contractedOut) {
-        @includes.contractedOut()
+        @contractedOut()
     }
 
     @if(customerAge > Constants.deferralCutOffAge) {
-        @includes.deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+        @deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
     @if(isPertaxUrl){<div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>}

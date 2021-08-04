@@ -34,7 +34,8 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main
+    main: main,
+    statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -171,7 +172,7 @@
 
 
     @if(statePension.statePensionAgeUnderConsideration) {
-        @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+        @statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
 }

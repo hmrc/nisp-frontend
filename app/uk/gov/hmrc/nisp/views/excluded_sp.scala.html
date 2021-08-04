@@ -34,7 +34,9 @@
     main: unauthenticatedMain,
     amountDissonance: exclusions.sp.amountDissonance,
     isleOfMan: exclusions.sp.isleOfMan,
-    mwrre: exclusions.sp.mwrre
+    mwrre: exclusions.sp.mwrre,
+    postStatePensionAge: exclusions.sp.postStatePensionAge,
+    statePensionAgeUnderConsiderationView: includes.statePensionAgeUnderConsideration
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -69,7 +71,7 @@ statePensionAgeUnderConsideration: Option[Boolean]
     }
     <div class="panel-indent">
         @if(exclusion.equals(PostStatePensionAge)) {
-                @exclusions.sp.postStatePensionAge()
+                @postStatePensionAge()
         } else {
                 @if(exclusion.equals(AmountDissonance)) {
                     @amountDissonance()
@@ -112,7 +114,7 @@ statePensionAgeUnderConsideration: Option[Boolean]
         date <- statePensionAgeDate
     ) {
         @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
-            @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(date))
+            @statePensionAgeUnderConsiderationView(LanguageHelper.langUtils.Dates.formatDate(date))
         }
     }
 }

@@ -33,7 +33,17 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main
+    main: main,
+    abroad: includes.abroad,
+    spChart: includes.spChart,
+    continueWorking: includes.continueWorking,
+    fillGapsFutureProof: includes.fillGapsFutureProof,
+    fillGaps: includes.fillGaps,
+    contractedOut: includes.contractedOut,
+    deferral: includes.deferral,
+    fillGapsMQP: includes.fillGapsMQP,
+    reached: includes.reached,
+    statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -142,22 +152,22 @@
         @statePension.forecastScenario match {
 
             case Scenario.ContinueWorkingMax | Scenario.ContinueWorkingNonMax  => {
-                @includes.continueWorking(statePension, yearsToContributeUntilPensionAge, currentChart, forecastChart)
+                @continueWorking(statePension, yearsToContributeUntilPensionAge, currentChart, forecastChart)
             }
 
             case Scenario.FillGaps => {
-                @includes.fillGapsMQP()
+                @fillGapsMQP()
             }
         }
 
     } else {
 
         @if(statePension.forecastScenario.equals(Scenario.Reached)) {
-            @includes.reached(statePension)
+            @reached(statePension)
         }
 
         @if(statePension.forecastScenario.equals(Scenario.ContinueWorkingMax) || statePension.forecastScenario.equals(Scenario.ContinueWorkingNonMax)) {
-            @includes.continueWorking(statePension, yearsToContributeUntilPensionAge, currentChart, forecastChart)
+            @continueWorking(statePension, yearsToContributeUntilPensionAge, currentChart, forecastChart)
         }
 
         @if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
@@ -169,17 +179,17 @@
             </ul>
             <h2 class="heading-medium">@Html(messages("nisp.main.continueContribute"))</h2>
 
-            @includes.spChart(Html(messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
+            @spChart(Html(messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
             @if(statePension.amounts.protectedPayment) {
-                @includes.spChart(Html(messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart)
+                @spChart(Html(messages("nisp.main.chart.estimateIfYouContinue2016")), forecastChart)
             } else {
-                @includes.spChart(Html(messages("nisp.main.chart.spa.title",(statePension.finalRelevantEndYear).toString())), forecastChart)
+                @spChart(Html(messages("nisp.main.chart.spa.title",(statePension.finalRelevantEndYear).toString())), forecastChart)
             }
 
             @if(hidePersonalMaxYears) {
-                @includes.fillGapsFutureProof(statePension, personalMaximumChart)
+                @fillGapsFutureProof(statePension, personalMaximumChart)
             } else {
-                @includes.fillGaps(statePension, numberOfGaps, personalMaximumChart)
+                @fillGaps(statePension, numberOfGaps, personalMaximumChart)
             }
         }
 
@@ -188,19 +198,19 @@
 
 
     @if(isAbroad) {
-        @includes.abroad()
+        @abroad()
     }
 
     @if(statePension.statePensionAgeUnderConsideration) {
-        @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+        @statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
     @if(statePension.contractedOut) {
-        @includes.contractedOut()
+        @contractedOut()
     }
 
     @if(customerAge > Constants.deferralCutOffAge) {
-        @includes.deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+        @deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
     @if(isPertaxUrl) {
