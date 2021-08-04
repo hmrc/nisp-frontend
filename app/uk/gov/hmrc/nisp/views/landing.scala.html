@@ -31,7 +31,7 @@
     partialRetriever: CachedStaticHtmlPartialRetriever,
     formPartialRetriever: FormPartialRetriever
 )
-@()( implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()( implicit messages: Messages, request: Request[_])
 
 @main(MainTemplateParams(pageTitle = Some(messages("nisp.landing.title")))) {
 

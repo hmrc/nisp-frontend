@@ -49,7 +49,7 @@ statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
 canSeeNIRecord: Boolean,
 statePensionAgeUnderConsideration: Option[Boolean]
-)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
 
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan

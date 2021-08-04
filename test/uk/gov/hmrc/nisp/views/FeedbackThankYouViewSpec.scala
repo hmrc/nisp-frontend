@@ -33,7 +33,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = mock[CachedStaticHtmlPartialRetriever]
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
 
   val partialUrl = "partialUrl"
   def html = inject[feedback_thankyou]
@@ -41,7 +40,8 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedStaticHtmlPartialRetriever)
+      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedStaticHtmlPartialRetriever),
+      bind[TemplateRenderer].to(FakeTemplateRenderer)
     ).build()
 
   "FeedbackThankYou" should {

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.views
 
 import java.util.Locale
-
 import akka.util.Timeout
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
@@ -34,9 +33,10 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever, FakeTemplateRenderer}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.duration._
 
@@ -49,7 +49,8 @@ trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with Bef
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+      bind[TemplateRenderer].to(FakeTemplateRenderer)
     ).build()
 
   def asDocument(html: String): Document = Jsoup.parse(html)

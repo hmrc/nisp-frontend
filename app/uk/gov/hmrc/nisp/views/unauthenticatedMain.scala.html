@@ -33,7 +33,7 @@
 
 @import scala.concurrent.ExecutionContext
 
-@this(
+@this(templateRenderer: TemplateRenderer)(
     implicit ec: ExecutionContext,
     formPartialRetriever: FormPartialRetriever
 )
@@ -45,8 +45,7 @@
 )(
     implicit
         request: Request[_],
-        messages: Messages,
-        templateRenderer: TemplateRenderer
+        messages: Messages
 )
 
 @mustacheCheck(str: String) = @{

@@ -33,7 +33,7 @@
  formPartialRetriever: FormPartialRetriever
 )
 
-@()(implicit request: Request[_], messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()(implicit request: Request[_], messages: Messages)
 
 @main(MainTemplateParams(
  browserTitle = Some(messages("nisp.timeout.title")),

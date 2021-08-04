@@ -28,7 +28,7 @@
  formPartialRetriever: FormPartialRetriever
 )
 
-@()(implicit request: Request[_], messages: Messages, templateRenderer: TemplateRenderer)
+@()(implicit request: Request[_], messages: Messages)
 
 @anchor(text: String, url: String) = {<a href="@url" target="_blank">@text</a>}
 

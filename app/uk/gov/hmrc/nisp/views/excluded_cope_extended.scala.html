@@ -20,7 +20,6 @@
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
 @import uk.gov.hmrc.play.partials._
-@import uk.gov.hmrc.renderer._
 @import java.time.format.DateTimeFormatter
 
 @import scala.concurrent.ExecutionContext
@@ -33,7 +32,7 @@
     formPartialRetriever: FormPartialRetriever
 )
 
-@(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], templateRenderer: TemplateRenderer)
+@(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
 
 @dateFormatter = @{ DateTimeFormatter.ofPattern("d MMMM y") }
 
