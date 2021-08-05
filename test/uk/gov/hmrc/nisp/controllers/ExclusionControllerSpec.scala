@@ -17,8 +17,8 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.util.UUID
-
 import java.time.LocalDate
+
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -31,7 +31,7 @@ import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, ExcludedAuthAction}
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
@@ -51,7 +51,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Moc
     .overrides(
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-      bind[ExcludedAuthAction].to[FakeExcludedAuthAction],
+      bind[AuthAction].to[FakeAuthAction],
       bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
       bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),

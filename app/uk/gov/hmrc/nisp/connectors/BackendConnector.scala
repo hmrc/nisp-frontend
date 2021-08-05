@@ -61,7 +61,7 @@ trait BackendConnector {
   private def connectToMicroservice[A](urlToRead: String, apiType: APIType, headers: Seq[(String, String)] = Seq())(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val timerContext = metricsService.startTimer(apiType)
 
-    val httpResponseF = http.GET[HttpResponse](urlToRead, Seq())
+    val httpResponseF = http.GET[HttpResponse](urlToRead, Seq(), headers)
     httpResponseF onSuccess {
       case _ => timerContext.stop()
     }

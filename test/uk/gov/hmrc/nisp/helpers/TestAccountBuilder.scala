@@ -16,9 +16,12 @@
 
 package uk.gov.hmrc.nisp.helpers
 
+import java.time.LocalDate
+
 import play.api.http.Status
 import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.domain.{Generator, Nino}
+
 import scala.concurrent.Future
 import scala.io.Source
 import scala.util.Random
@@ -26,11 +29,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import resource._
+import uk.gov.hmrc.auth.core.retrieve.Name
+import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+import uk.gov.hmrc.nisp.models.UserName
 
 
 object TestAccountBuilder {
 
   def randomNino: Nino = Nino(new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA"))
+
+  val nispAuthedUser = NispAuthedUser(regularNino, LocalDate.now, UserName(Name(Some("first"), Some("name"))), None, None, false)
 
   val nonExistentNino: Nino = randomNino
   val regularNino: Nino = randomNino

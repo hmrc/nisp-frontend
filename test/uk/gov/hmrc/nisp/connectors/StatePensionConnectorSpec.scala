@@ -96,6 +96,12 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with MockitoS
           false
         ))
       }
+
+      server.verify(
+        getRequestedFor(urlEqualTo(s"/ni/$nino"))
+          .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
+      )
+
     }
 
     "return a failed Future 403 with a Dead message for all exclusion" in {

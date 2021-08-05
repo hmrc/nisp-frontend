@@ -17,10 +17,9 @@
 package uk.gov.hmrc.nisp.connectors
 
 import java.time.LocalDate
-
 import org.mockito.Mockito
 import org.mockito.Mockito.reset
-import com.github.tomakehurst.wiremock.client.WireMock.{forbidden, get, ok, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock.{equalTo, forbidden, get, getRequestedFor, ok, urlEqualTo}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
@@ -84,6 +83,12 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
         )
 
         nationalInsuranceRecord.qualifyingYears shouldBe 28
+
+        server.verify(
+          getRequestedFor(urlEqualTo(s"/ni/${TestAccountBuilder.regularNino}"))
+            .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
+        )
+
       }
 
       "return a National Insurance Record with 0 qualifyingYearsPriorTo1975" in {
