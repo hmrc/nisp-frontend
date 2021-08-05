@@ -19,13 +19,13 @@
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
-@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
-@import uk.gov.hmrc.nisp.views.html.main
+@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main
+    main: unauthenticatedMain
 )(
     implicit ec: ExecutionContext,
     formPartialRetriever: FormPartialRetriever
@@ -34,7 +34,7 @@
 @(exclusion: Exclusion,
 statePensionAge: Option[Int])(
         implicit messages: Messages,
-        request: AuthenticatedRequest[_],
+        request: ExcludedAuthenticatedRequest[_],
         authDetails: AuthDetails,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 )
@@ -54,7 +54,8 @@ statePensionAge: Option[Int])(
         pageTitle = Some(messages("nisp.excluded.mci.title")),
         articleClasses = Some("mainpage"),
         hideBreadcrumb = true
-)) {
+),
+    Some(request.authDetails)) {
     <p class="lede">@Html(messages("nisp.excluded.mci.info"))</p>
     <h2 class="heading-medium">@Html(messages("nisp.excluded.mci.howToFix"))</h2>
     <ul class="list-bullet">
