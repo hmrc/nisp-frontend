@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}
 import uk.gov.hmrc.nisp.models.Exclusion._
 import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.services._
@@ -32,7 +32,7 @@ import scala.concurrent.ExecutionContext
 
 class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     nationalInsuranceService: NationalInsuranceService,
-                                    authenticate: AuthAction,
+                                    authenticate: ExcludedAuthAction,
                                     mcc: MessagesControllerComponents,
                                     excludedCopeView: excluded_cope,
                                     excludedCopeExtendedView: excluded_cope_extended,
@@ -51,8 +51,8 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
     implicit request =>
       implicit val authDetails: AuthDetails = request.authDetails
 
-      val statePensionF = statePensionService.getSummary(request.nispAuthedUser.nino)
-      val nationalInsuranceF = nationalInsuranceService.getSummary(request.nispAuthedUser.nino)
+      val statePensionF = statePensionService.getSummary(request.nino)
+      val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
 
       for (
         statePension <- statePensionF;
@@ -92,7 +92,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
   def showNI: Action[AnyContent] = authenticate.async {
     implicit request =>
       implicit val authDetails: AuthDetails = request.authDetails
-      nationalInsuranceService.getSummary(request.nispAuthedUser.nino).map {
+      nationalInsuranceService.getSummary(request.nino).map {
         case Left(CopeProcessing) | Left(CopeProcessingFailed) =>
           Redirect(routes.ExclusionController.showSP())
         case Left(exclusion) =>

@@ -30,6 +30,7 @@
 @import scala.util.Random
 @import java.util.NoSuchElementException
 @import uk.gov.hmrc.domain.Nino
+@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
 
 @import scala.concurrent.ExecutionContext
 
@@ -39,7 +40,8 @@
 )
 
 @(
-    mainTemplateParams: MainTemplateParams
+    mainTemplateParams: MainTemplateParams,
+    authDetails: Option[AuthDetails] = None
 )(
     mainContent: Html
 )(
@@ -210,8 +212,8 @@
         "assetsPath" -> mainTemplateParams.applicationConfig.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
-        "isGovernmentGateway" -> false,
-        "isVerify" -> false,
+        "isGovernmentGateway" -> authDetails.fold(false)(ad => ad.isGG),
+        "isVerify" -> authDetails.fold(false)(ad => ad.isVerify),
         "isSa" -> false,
         "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
         "hideAccountMenu" -> mainTemplateParams.hideNavBar,

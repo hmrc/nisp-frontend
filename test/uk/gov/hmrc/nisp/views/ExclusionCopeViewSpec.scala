@@ -22,23 +22,20 @@ import java.time.format.DateTimeFormatter
 import org.joda.time.DateTime
 import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
-import play.api.i18n.Messages
-import play.api.test.{FakeRequest, Helpers, Injecting}
-import play.api.test.Helpers.{contentAsString, stubMessages}
+import play.api.test.Helpers.contentAsString
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, ExcludedAuthenticatedRequest}
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
-import uk.gov.hmrc.nisp.models.Exclusion
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
 import uk.gov.hmrc.nisp.views.html.excluded_cope
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-  implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), TestAccountBuilder.nispAuthedUser,
+  implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
 
   val excludedCopeView = inject[excluded_cope]

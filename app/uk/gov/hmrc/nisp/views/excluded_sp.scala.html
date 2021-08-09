@@ -22,16 +22,16 @@
 @import play.api.Application
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.views.html.exclusions
-@import uk.gov.hmrc.nisp.views.html.main
+@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.views.html.includes
-@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
 @import uk.gov.hmrc.nisp.models.Exclusion
 @import uk.gov.hmrc.nisp.models.Exclusion._
 
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main,
+    main: unauthenticatedMain,
     amountDissonance: exclusions.sp.amountDissonance,
     isleOfMan: exclusions.sp.isleOfMan,
     mwrre: exclusions.sp.mwrre,
@@ -49,14 +49,15 @@ statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
 canSeeNIRecord: Boolean,
 statePensionAgeUnderConsideration: Option[Boolean]
-)(implicit messages: Messages, request: AuthenticatedRequest[_])
+)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
 
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
 }
 
 @main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
-  pageTitle = Some(messages("nisp.main.h1.title")), articleClasses = Some("mainpage"), showUrBanner = excludeUrPanel(exclusion))
+  pageTitle = Some(messages("nisp.main.h1.title")), articleClasses = Some("mainpage"), showUrBanner = excludeUrPanel(exclusion)),
+  Some(request.authDetails)
 ) {
 
     @for(
