@@ -33,22 +33,20 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 class FeedbackViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-
   val mockFormPartialRetriever: FormPartialRetriever = mock[FormPartialRetriever]
   val partialUrl: String = "partialUrl"
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[FormPartialRetriever].toInstance(mockFormPartialRetriever),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+      bind[TemplateRenderer].to(FakeTemplateRenderer)
     ).build()
 
   "Feedback page" should {
     "assert correct feedback title page" in {
       val html = inject[feedback]
-      val source = asDocument(html(partialUrl, Some(Html("sdfgh")))
-      (messages, request, templateRenderer).toString)
+      val source = asDocument(html(partialUrl, Some(Html("sdfgh")))(messages, request).toString)
       val row = source.getElementsByTag("script").get(0).toString
       val expected = messages("nisp.feedback.title")
       row must include(s"""document.title = "$expected"""")
@@ -57,7 +55,7 @@ class FeedbackViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     "assert passed in formBody is displayed" in {
       val testHtml = "<p> test html </p>"
       val html = inject[feedback]
-      html(partialUrl, Some(Html(testHtml)))(messages, request, templateRenderer).toString must include (testHtml)
+      html(partialUrl, Some(Html(testHtml)))(messages, request).toString must include (testHtml)
       verify(mockFormPartialRetriever, times(0)).getPartialContent(
         ArgumentMatchers.eq(partialUrl), any(), any())(any(),any())
     }
@@ -69,7 +67,7 @@ class FeedbackViewSpec extends HtmlSpec with MockitoSugar with Injecting {
         .thenReturn(Html(expected))
 
       val html = inject[feedback]
-      html(partialUrl, None)(messages, request, templateRenderer).toString must include(expected)
+      html(partialUrl, None)(messages, request).toString must include(expected)
       verify(mockFormPartialRetriever, times(1)).getPartialContent(
         url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
     }

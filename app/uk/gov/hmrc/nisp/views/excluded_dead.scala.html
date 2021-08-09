@@ -17,7 +17,6 @@
 @import uk.gov.hmrc.nisp.models.Exclusion
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import play.api.Application
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.views.html.exclusions
@@ -26,7 +25,8 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: unauthenticatedMain
+    main: unauthenticatedMain,
+    dead: exclusions.dead
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -34,9 +34,8 @@
 )
 
 @(exclusion: Exclusion, statePensionAge: Option[Int])(
-        implicit messages: Messages,
-        request: ExcludedAuthenticatedRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
+    implicit messages: Messages,
+    request: ExcludedAuthenticatedRequest[_]
 )
 
 @analyticsAdditionalJs = @{
@@ -48,11 +47,13 @@
     )
 }
 
-@main(MainTemplateParams(
-    Some(messages("nisp.main.title")),
-    userLoggedIn = true,
-    pageTitle = Some(messages("nisp.excluded.title"))
-),
-    Some(request.authDetails)) {
-    @exclusions.dead()
-}
+@main(
+    MainTemplateParams(
+        Some(messages("nisp.main.title")),
+        userLoggedIn = true,
+        pageTitle = Some(messages("nisp.excluded.title"))
+    ),
+    Some(request.authDetails)
+) {
+        @dead()
+    }

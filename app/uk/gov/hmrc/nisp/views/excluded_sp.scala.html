@@ -31,7 +31,12 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: unauthenticatedMain
+    main: unauthenticatedMain,
+    amountDissonance: exclusions.sp.amountDissonance,
+    isleOfMan: exclusions.sp.isleOfMan,
+    mwrre: exclusions.sp.mwrre,
+    postStatePensionAge: exclusions.sp.postStatePensionAge,
+    statePensionAgeUnderConsiderationView: includes.statePensionAgeUnderConsideration
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -44,7 +49,7 @@ statePensionAge: Option[Int],
 statePensionAgeDate: Option[LocalDate],
 canSeeNIRecord: Boolean,
 statePensionAgeUnderConsideration: Option[Boolean]
-)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
 
 @excludeUrPanel(showUrBannerOn: Exclusion) = @{
     showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
@@ -67,16 +72,16 @@ statePensionAgeUnderConsideration: Option[Boolean]
     }
     <div class="panel-indent">
         @if(exclusion.equals(PostStatePensionAge)) {
-                @exclusions.sp.postStatePensionAge()
+                @postStatePensionAge()
         } else {
                 @if(exclusion.equals(AmountDissonance)) {
-                    @exclusions.sp.amountDissonance()
+                    @amountDissonance()
                 } else {
                     @if(exclusion.equals(IsleOfMan)) {
-                        @exclusions.sp.isleOfMan()
+                        @isleOfMan()
                     } else {
                         @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-                            @exclusions.sp.mwrre()
+                            @mwrre()
                         }
                     }
             }
@@ -110,7 +115,7 @@ statePensionAgeUnderConsideration: Option[Boolean]
         date <- statePensionAgeDate
     ) {
         @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
-            @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(date))
+            @statePensionAgeUnderConsiderationView(LanguageHelper.langUtils.Dates.formatDate(date))
         }
     }
 }

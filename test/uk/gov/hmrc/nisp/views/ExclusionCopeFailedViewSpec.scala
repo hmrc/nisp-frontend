@@ -35,15 +35,16 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class ExclusionCopeFailedViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,
+
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure("future-pension-link.url" -> "pensionUrl")
     .overrides(
       bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+      bind[TemplateRenderer].to(FakeTemplateRenderer)
     )
     .build()
 

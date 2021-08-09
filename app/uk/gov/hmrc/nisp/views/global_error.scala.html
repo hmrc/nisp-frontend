@@ -18,18 +18,19 @@
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.CustomLanguageController
+@import uk.gov.hmrc.renderer.TemplateRenderer
 @import play.api.Play
 
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
 @import scala.concurrent.ExecutionContext
 
-@this(
+@this(templateRenderer: TemplateRenderer)(
    implicit ec: ExecutionContext,
-    formPartialRetriever: FormPartialRetriever
+   formPartialRetriever: FormPartialRetriever
 )
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig)(implicit request: Request[_], messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig)(implicit request: Request[_], messages: Messages)
 
 @mainContent = {
     <h1 class="heading-xlarge">@heading</h1>

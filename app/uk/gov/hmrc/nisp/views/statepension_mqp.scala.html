@@ -34,7 +34,8 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main
+    main: main,
+    statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -50,7 +51,7 @@
   customerAge: Int,
   isPertaxUrl: Boolean,
   yearsToContributeUntilPensionAge: Int
-)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages)
 
 @sidebar = {
 <div class="helpline-sidebar" >
@@ -171,7 +172,7 @@
 
 
     @if(statePension.statePensionAgeUnderConsideration) {
-        @includes.statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+        @statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
 }

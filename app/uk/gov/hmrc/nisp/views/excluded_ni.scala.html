@@ -18,7 +18,6 @@
 @import uk.gov.hmrc.nisp.models.Exclusion.{PostStatePensionAge, IsleOfMan, MarriedWomenReducedRateElection}
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import play.api.Application
 @import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
@@ -27,6 +26,8 @@
 @import scala.concurrent.ExecutionContext
 
 @this(
+    isleOfMan: exclusions.ni.isleOfMan,
+    mwrre: exclusions.ni.mwrre,
     main: unauthenticatedMain
 )(
     implicit ec: ExecutionContext,
@@ -35,9 +36,8 @@
 )
 
 @(exclusion: Exclusion)(
-        implicit messages: Messages,
-        request: ExcludedAuthenticatedRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
+    implicit messages: Messages,
+    request: ExcludedAuthenticatedRequest[_]
 )
 
 @analyticsAdditionalJs = @{
@@ -59,10 +59,10 @@
     Some(request.authDetails)) {
     <div class="panel-indent">
         @if(exclusion.equals(IsleOfMan)) {
-            @exclusions.ni.isleOfMan()
+            @isleOfMan()
         } else {
             @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-                @exclusions.ni.mwrre()
+                @mwrre()
             }
         }
     </div>

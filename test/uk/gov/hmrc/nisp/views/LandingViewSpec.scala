@@ -30,7 +30,6 @@ class LandingViewSpec extends HtmlSpec {
 
   val fakeRequest = FakeRequest("GET", "/")
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"

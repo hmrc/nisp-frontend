@@ -37,7 +37,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
@@ -47,7 +46,8 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with Bef
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
+      bind[TemplateRenderer].to(FakeTemplateRenderer)
     ).build()
 
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"

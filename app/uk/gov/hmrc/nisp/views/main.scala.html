@@ -38,7 +38,8 @@
 
 @this(
     implicit ec: ExecutionContext,
-    formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
+    formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
+    templateRenderer: TemplateRenderer
 )
 
 @(
@@ -48,8 +49,7 @@
 )(
     implicit
         request: AuthenticatedRequest[_],
-        messages: Messages,
-        templateRenderer: TemplateRenderer
+        messages: Messages
 )
 
 @toLocalDateTime(date: Option[DateTime]) = @{

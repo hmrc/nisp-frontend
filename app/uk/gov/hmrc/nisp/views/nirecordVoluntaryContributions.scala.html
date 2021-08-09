@@ -34,7 +34,7 @@
     formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
 
-@()(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
 @defining(Some(user)) { implicit userOption =>
 @main(MainTemplateParams(

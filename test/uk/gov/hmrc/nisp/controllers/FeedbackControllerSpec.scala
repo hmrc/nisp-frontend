@@ -124,7 +124,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
   "GET /feedback/thankyou" should {
     "should return the thank you page" in {
       
-      when(mockView(any(), any())(any(), any(), any())).thenReturn(Html(""))
+      when(mockView(any(), any())(any(), any())).thenReturn(Html(""))
       
       val result = testFeedbackController.showThankYou(fakeRequest)
       status(result) mustBe Status.OK
