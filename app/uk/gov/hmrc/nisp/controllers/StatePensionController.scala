@@ -67,7 +67,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
               statePension.amounts.cope.weeklyAmount,
               isPertax
             ))
-          case _ => Redirect(routes.StatePensionController.show())
+          case _ => Redirect(routes.StatePensionController.show)
         }
       }
   }
@@ -107,7 +107,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                 user.name,
                 nationalInsuranceExclusion
               ))
-              Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
+              Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
 
             case (Right(statePension), Right(nationalInsuranceRecord)) =>
 
@@ -170,7 +170,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                 user.name,
                 statePensionExclusion.exclusion
               ))
-              Redirect(routes.ExclusionController.showSP()).withSession(storeUserInfoInSession(user, contractedOut = false))
+              Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
             case _ => throw new RuntimeException("StatePensionController: SP and NIR are unmatchable. This is probably a logic error.")
           }
         }
@@ -180,7 +180,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
   def pta(): Action[AnyContent] = authenticate {
     implicit request =>
       pertaxHelper.setFromPertax
-      Redirect(routes.StatePensionController.show())
+      Redirect(routes.StatePensionController.show)
   }
 
   private def storeUserInfoInSession(user: NispAuthedUser, contractedOut: Boolean)(implicit request: Request[AnyContent]): Session = {

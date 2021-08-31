@@ -68,9 +68,9 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
             case Left(NOT_FOUND) => throw new InternalServerException("User not found")
             case Left(MCI_EXCLUSION) =>
               if (request.path.contains("nirecord")) {
-                Future.successful(Redirect(routes.ExclusionController.showNI()))
+                Future.successful(Redirect(routes.ExclusionController.showNI))
               } else {
-                Future.successful(Redirect(routes.ExclusionController.showSP()))
+                Future.successful(Redirect(routes.ExclusionController.showSP))
               }
           }
         case _ => throw new RuntimeException("Can't find credentials for user")
@@ -126,9 +126,9 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
             case Left(NOT_FOUND) => throw new InternalServerException("User not found")
             case Left(MCI_EXCLUSION) =>
               if (request.path.contains("nirecord")) {
-                Future.successful(Redirect(routes.ExclusionController.showNI()))
+                Future.successful(Redirect(routes.ExclusionController.showNI))
               } else {
-                Future.successful(Redirect(routes.ExclusionController.showSP()))
+                Future.successful(Redirect(routes.ExclusionController.showSP))
               }
           }
         case _ => throw new RuntimeException("Can't find credentials for user")

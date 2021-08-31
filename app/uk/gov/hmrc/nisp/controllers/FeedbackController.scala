@@ -46,7 +46,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
 
 
   def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
-  def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
+  def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit.url
 
   private val TICKET_ID = "ticketId"
 
@@ -76,7 +76,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
         httpClient.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = executionContext).map {
           resp =>
             resp.status match {
-              case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou()).withSession(request.session + (TICKET_ID -> resp.body))
+              case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou).withSession(request.session + (TICKET_ID -> resp.body))
               case HttpStatus.BAD_REQUEST => BadRequest(feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
               case status => Logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
             }

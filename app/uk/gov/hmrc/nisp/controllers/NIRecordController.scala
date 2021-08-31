@@ -65,7 +65,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
   def pta: Action[AnyContent] = authenticate {
     implicit request =>
       pertaxHelper.setFromPertax
-      Redirect(routes.NIRecordController.showFull())
+      Redirect(routes.NIRecordController.showFull)
   }
 
   private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit hc: HeaderCarrier): Unit = {
@@ -120,7 +120,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
         nationalInsuranceRecordResponse match {
           case Right(niRecord) =>
             if (gapsOnlyView && niRecord.numberOfGaps < 1) {
-              Redirect(routes.NIRecordController.showFull())
+              Redirect(routes.NIRecordController.showFull)
             } else {
               val finalRelevantStartYear = statePensionResponse match {
                 case Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _)) |
@@ -154,7 +154,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
                   showFullNI = showFullNI,
                   currentDate = dateProvider.currentDate))
 
-              }.getOrElse(Redirect(routes.ExclusionController.showSP()))
+              }.getOrElse(Redirect(routes.ExclusionController.showSP))
             }
           case Left(exclusion) =>
             auditConnector.sendEvent(AccountExclusionEvent(
@@ -162,7 +162,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
               request.nispAuthedUser.name,
               exclusion
             ))
-            Redirect(routes.ExclusionController.showNI())
+            Redirect(routes.ExclusionController.showNI)
         }
       }
   }
@@ -174,7 +174,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
         case Right(niRecord) =>
           Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
         case Left(_) =>
-          Redirect(routes.ExclusionController.showNI())
+          Redirect(routes.ExclusionController.showNI)
       }
   }
 

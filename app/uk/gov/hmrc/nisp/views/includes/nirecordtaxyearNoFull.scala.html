@@ -88,7 +88,7 @@
             @if(niTaxYear.classOneContributions <= 0 && niTaxYear.otherCredits <= 0 && niTaxYear.classThreeCredits <= 0 && niTaxYear.classTwoCredits <= 0){
                 <p class="contributions-header">@messages("nisp.nirecord.youdidnotmakeanycontrib")</p>
             }
-            <p>@Html(messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem().url))</p>
+            <p>@Html(messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem.url))</p>
 
             @if(niTaxYear.payable && niTaxYear.classThreePayableBy.isDefined) {
                 @for(
@@ -103,7 +103,7 @@
                         <p>@Html(messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niTaxYear.classThreePayable),LanguageHelper.langUtils.Dates.formatDate(classThreePayableWithPenalty),LanguageHelper.langUtils.Dates.formatDate(classThreePayableByDate)))</p>
                     }
 
-                    <p>@Html(messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
+                    <p>@Html(messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions.url))</p>
                 }
             } else {
                 <p class="panel-indent">@Html(messages("nisp.nirecord.gap.latePaymentMessage"))</p>

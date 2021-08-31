@@ -84,7 +84,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
             }
           case _ =>
             Logger.warn("User accessed/exclusion as non-excluded user")
-            Redirect(routes.StatePensionController.show())
+            Redirect(routes.StatePensionController.show)
         }
       }
   }
@@ -94,7 +94,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
       implicit val authDetails: AuthDetails = request.authDetails
       nationalInsuranceService.getSummary(request.nino).map {
         case Left(CopeProcessing) | Left(CopeProcessingFailed) =>
-          Redirect(routes.ExclusionController.showSP())
+          Redirect(routes.ExclusionController.showSP)
         case Left(exclusion) =>
           if (exclusion == Dead) {
             Ok(excludedDead(Exclusion.Dead, None))
@@ -106,7 +106,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
           }
         case _ =>
           Logger.warn("User accessed /exclusion/nirecord as non-excluded user")
-          Redirect(routes.NIRecordController.showGaps())
+          Redirect(routes.NIRecordController.showGaps)
       }
   }
 }

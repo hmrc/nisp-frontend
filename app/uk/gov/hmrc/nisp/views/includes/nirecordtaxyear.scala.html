@@ -79,7 +79,7 @@
                 <p class="contributions-header">@messages("nisp.nirecord.youdidnotmakeanycontrib")</p>
             }
             @if(!niTaxYear.qualifying) {
-                <p>@Html(messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem().url))</p>
+                <p>@Html(messages("nisp.nirecord.gap.findoutmoreabout",routes.NIRecordController.showGapsAndHowToCheckThem.url))</p>
             }
 
             @if(niTaxYear.payable && niTaxYear.classThreePayableBy.isDefined && !niTaxYear.qualifying) {
@@ -95,7 +95,7 @@
                             <p class="voluntary-contribution">@Html(messages("nisp.nirecord.gap.payvoluntarycontrib",NispMoney.pounds(niTaxYear.classThreePayable),LanguageHelper.langUtils.Dates.formatDate(classThreePayableWithPenalty),LanguageHelper.langUtils.Dates.formatDate(classThreePayableByDate)))</p>
                         }
 
-                        <p>@Html(messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions().url))</p>
+                        <p>@Html(messages("nisp.nirecord.gap.findoutmore",routes.NIRecordController.showVoluntaryContributions.url))</p>
                 }
             } else {
                 @if(!niTaxYear.qualifying) {
