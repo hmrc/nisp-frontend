@@ -15,17 +15,16 @@
  *@
 
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import uk.gov.hmrc.nisp.controllers.{CustomLanguageController, routes}
+@import uk.gov.hmrc.nisp.controllers.{LanguageService, routes}
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.html.layouts.Article
-@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import uk.gov.hmrc.renderer.TemplateRenderer
 
 @import scala.concurrent.ExecutionContext
 
 @this(
     templateRenderer: TemplateRenderer,
-    customLanguageController: CustomLanguageController,
+    languageService: LanguageService,
     article: Article
 )(
     implicit ec: ExecutionContext,
@@ -41,7 +40,7 @@
 }
 
 @mainContentHeader = {
-     @language_selection(customLanguageController.languageMap, customLanguageController.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
+     @language_selection(languageService.languageMap, languageService.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
 }
 
 @linkElems = @{

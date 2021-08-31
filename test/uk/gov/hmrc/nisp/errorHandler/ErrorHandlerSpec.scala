@@ -32,7 +32,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ErrorHandlerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting{

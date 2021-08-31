@@ -18,9 +18,10 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
-@import uk.gov.hmrc.nisp.controllers.{CustomLanguageController, routes}
-@import uk.gov.hmrc.nisp.utils.{Constants, LanguageHelper}
+@import uk.gov.hmrc.nisp.controllers.{LanguageService, routes}
+@import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime
 @import uk.gov.hmrc.play.views.html.layouts.{Article, AttorneyBanner, Sidebar, TrackingConsentSnippet}
 @import uk.gov.hmrc.renderer.TemplateRenderer
@@ -32,10 +33,11 @@
 @this(
     config: ApplicationConfig,
     trackingCodeSnippet: TrackingConsentSnippet,
-    customLanguageController: CustomLanguageController,
+    languageService: LanguageService,
     articleView: Article,
     attorneyBannerView: AttorneyBanner,
-    sidebarView: Sidebar
+    sidebarView: Sidebar,
+    langUtils: LanguageUtils
 )(
     implicit ec: ExecutionContext,
     formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
@@ -146,7 +148,7 @@
 
 @mainContentHeader = {
  @if(config.isWelshEnabled){
-     @language_selection(customLanguageController.languageMap, customLanguageController.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
+     @language_selection(languageService.languageMap, languageService.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
     }
 }
 
@@ -177,7 +179,7 @@
 }
 
 @previouslyLoggedInAt = @{
-    val msg =  LanguageHelper.langUtils.Dates.formatEasyReadingTimestamp(
+    val msg = langUtils.Dates.formatEasyReadingTimestamp(
 toLocalDateTime(request.authDetails.loginTimes.previousLogin), "")
     mustacheCheck(msg)
 }

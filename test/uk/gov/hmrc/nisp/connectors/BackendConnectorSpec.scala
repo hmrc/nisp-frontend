@@ -28,7 +28,7 @@ import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import play.api.http.Status.OK
 
 import scala.concurrent.ExecutionContext.Implicits.global

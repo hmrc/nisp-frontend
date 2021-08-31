@@ -24,18 +24,24 @@ import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 
 class CustomLanguageController @Inject()(implicit override val messagesApi: MessagesApi,
                                          languageUtils: LanguageUtils,
+                                         languageService: LanguageService,
                                          val cc: ControllerComponents
                                         ) extends LanguageController(languageUtils, cc) {
 
-  def routeToSwitchLanguage = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
 
   /** Provides a fallback URL if there is no referrer in the request header. **/
   override protected def fallbackURL: String = routes.LandingController.show.url
 
   /** Returns a mapping between strings and the corresponding Lang object. **/
-  override def languageMap: Map[String, Lang] = Map(
+  override def languageMap: Map[String, Lang] = languageService.languageMap
+}
+
+class LanguageService @Inject()() {
+  def routeToSwitchLanguage = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
+
+  /** Returns a mapping between strings and the corresponding Lang object. **/
+  def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
   )
-
 }

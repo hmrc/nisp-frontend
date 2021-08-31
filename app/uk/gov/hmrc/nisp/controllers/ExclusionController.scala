@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}
@@ -45,7 +45,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
-  extends NispFrontendController(mcc) with I18nSupport{
+  extends NispFrontendController(mcc) with I18nSupport with Logging {
 
   def showSP: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -83,7 +83,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
               Ok(excludedCopeView(spExclusion.copeAvailableDate))
             }
           case _ =>
-            Logger.warn("User accessed/exclusion as non-excluded user")
+            logger.warn("User accessed/exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show)
         }
       }
@@ -105,7 +105,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
             Ok(excludedNi(exclusion))
           }
         case _ =>
-          Logger.warn("User accessed /exclusion/nirecord as non-excluded user")
+          logger.warn("User accessed /exclusion/nirecord as non-excluded user")
           Redirect(routes.NIRecordController.showGaps)
       }
   }

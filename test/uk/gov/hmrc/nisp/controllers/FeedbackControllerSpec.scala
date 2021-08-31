@@ -88,7 +88,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakePostRequest)
-      redirectLocation(result) mustBe Some(routes.FeedbackController.showThankYou().url)
+      redirectLocation(result) mustBe Some(routes.FeedbackController.showThankYou.url)
     }
 
     "return form with errors for invalid selections" in {

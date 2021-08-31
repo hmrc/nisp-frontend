@@ -16,13 +16,11 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.net.URLEncoder
-
 import com.google.inject.Inject
-import play.api.Logger
 import play.api.http.{Status => HttpStatus}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import play.api.{Logger, Logging}
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -30,6 +28,7 @@ import uk.gov.hmrc.nisp.views.html.{feedback, feedback_thankyou}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.net.URLEncoder
 import scala.concurrent.{ExecutionContext, Future}
 
 class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
@@ -42,7 +41,7 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
                                    (implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
-                                    executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
+                                    executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport with Logging {
 
 
   def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
@@ -78,11 +77,11 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
             resp.status match {
               case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou).withSession(request.session + (TICKET_ID -> resp.body))
               case HttpStatus.BAD_REQUEST => BadRequest(feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
-              case status => Logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
+              case status => logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
             }
         }
       }.getOrElse {
-        Logger.warn("Trying to submit an empty feedback form")
+        logger.warn("Trying to submit an empty feedback form")
         Future.successful(InternalServerError)
       }
   }

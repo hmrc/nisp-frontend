@@ -20,7 +20,7 @@ import java.time.LocalDate
 import play.api.libs.json.Json
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsResponse}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 
 class CitizenDetailsResponseSpec extends UnitSpec {

@@ -28,7 +28,7 @@ import play.api.test.Injecting
 import resource._
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import scala.collection.JavaConversions._
 import scala.io.{BufferedSource, Source}

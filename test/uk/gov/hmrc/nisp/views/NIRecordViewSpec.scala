@@ -16,9 +16,6 @@
 
 package uk.gov.hmrc.nisp.views
 
-import java.util.UUID
-import java.time.LocalDate
-
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
@@ -42,13 +39,15 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.Future
 
 
@@ -67,6 +66,8 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
   val mockDateProvider: DateProvider = mock[DateProvider]
+
+  lazy val langUtils = inject[LanguageUtils]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -220,7 +221,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       assertEqualsMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of £530 by 5 April 2023. This shortfall may increase after 5 April 2019.'" in {
-      assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(LocalDate.of(2023, 4, 5)), Dates.formatDate(LocalDate.of(2019, 4, 5)))
+      assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", langUtils.Dates.formatDate(LocalDate.of(2023, 4, 5)), langUtils.Dates.formatDate(LocalDate.of(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")
@@ -335,7 +336,7 @@ class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       assertEqualsMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)", "nisp.nirecord.gap.youcanmakeupshortfall")
     }
     "render page with text  'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", Dates.formatDate(LocalDate.of(2023, 4, 5)), Dates.formatDate(LocalDate.of(2019, 4, 5)))
+      assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)", "nisp.nirecord.gap.payvoluntarycontrib", "&pound;704.60", langUtils.Dates.formatDate(LocalDate.of(2023, 4, 5)), langUtils.Dates.formatDate(LocalDate.of(2019, 4, 5)))
     }
     "render page with text  'Find out more about...'" in {
       assertContainsDynamicMessage(doc, "article.content__body>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)", "nisp.nirecord.gap.findoutmore", "/check-your-state-pension/account/nirecord/voluntarycontribs")

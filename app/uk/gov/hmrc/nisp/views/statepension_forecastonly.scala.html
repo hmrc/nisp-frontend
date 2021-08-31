@@ -14,20 +14,14 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.nisp.utils.LanguageHelper
-@import uk.gov.hmrc.nisp.models.StatePension
-@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
-@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
-
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
+@import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
-@import play.api.Application
-
+@import uk.gov.hmrc.nisp.models.StatePension
+@import uk.gov.hmrc.nisp.utils.Constants
+@import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@import uk.gov.hmrc.play.language.LanguageUtils
+@import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
 @import scala.concurrent.ExecutionContext
 
@@ -36,7 +30,8 @@
     abroad: includes.abroad,
     contractedOut: includes.contractedOut,
     deferral: includes.deferral,
-    statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration
+    statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration,
+    langUtils: LanguageUtils
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -97,7 +92,7 @@ authDetails: AuthDetails, messages: Messages)
     <p>@messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
 
     <div class="highlighted-event govuk-box-highlight">
-        <p>@messages("nisp.main.basedOn") <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@messages("nisp.main.caveats") @messages("nisp.is")</span></p>
+        <p>@messages("nisp.main.basedOn") <span class="nowrap">@langUtils.Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@messages("nisp.main.caveats") @messages("nisp.is")</span></p>
         <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")</em></p>
         <p>@NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
         @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")</p>
@@ -105,13 +100,13 @@ authDetails: AuthDetails, messages: Messages)
     <p>@messages("nisp.main.caveats")</p>
     <ul class="list-bullet">
         <li>@Html(messages("nisp.main.notAGuarantee"))</li>
-        <li>@Html(messages("nisp.main.isBased", LanguageHelper.langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
+        <li>@Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
         <li>@Html(messages("nisp.main.inflation"))</li>
         @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
     </ul>
     <h2 class="heading-medium" id="mostYouCanGet">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
     <p>@Html(messages("nisp.main.cantImprove"))</p>
-    <p>@Html(messages("nisp.main.context.reachMax.needToPay", (LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
+    <p>@Html(messages("nisp.main.context.reachMax.needToPay", (langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
     <a href='@routes.NIRecordController.showFull.url'>@Html(messages("nisp.main.showyourrecord"))</a>
 
     @if(isAbroad) {
@@ -119,7 +114,7 @@ authDetails: AuthDetails, messages: Messages)
     }
 
     @if(statePension.statePensionAgeUnderConsideration) {
-        @statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+        @statePensionAgeUnderConsideration(langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
     @if(statePension.contractedOut) {
@@ -127,7 +122,7 @@ authDetails: AuthDetails, messages: Messages)
     }
 
     @if(customerAge > Constants.deferralCutOffAge) {
-        @deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+        @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
     }
 
     @if(isPertaxUrl){<div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>}

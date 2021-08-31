@@ -17,27 +17,28 @@
 package uk.gov.hmrc.nisp.services
 
 import javax.inject.Inject
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.http.Status
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.models.citizen._
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class CitizenDetailsService @Inject()(citizenDetailsConnector: CitizenDetailsConnector)
-                                     (implicit val executor: ExecutionContext) {
+                                     (implicit val executor: ExecutionContext) extends Logging {
 
   def retrievePerson(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = {
     citizenDetailsConnector.connectToGetPersonDetails(nino) map ( citizen => Right(citizen)) recover {
       case ex: Upstream4xxResponse if ex.upstreamResponseCode == Status.LOCKED =>
-        Logger.warn(s"MCI Exclusion for $nino", ex)
+        logger.warn(s"MCI Exclusion for $nino", ex)
         Left(MCI_EXCLUSION)
       case ex: BadRequestException =>
-        Logger.error(s"Citizen Details: BadRequest for $nino", ex)
+        logger.error(s"Citizen Details: BadRequest for $nino", ex)
         Left(TECHNICAL_DIFFICULTIES)
       case ex: NotFoundException =>
-        Logger.error(s"Citizen Details: NotFound for $nino", ex)
+        logger.error(s"Citizen Details: NotFound for $nino", ex)
         Left(NOT_FOUND)
     }
   }

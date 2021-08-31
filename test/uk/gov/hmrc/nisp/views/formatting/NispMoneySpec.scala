@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.views.formatting
 
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class NispMoneySpec extends UnitSpec{
   "pounds" should {
