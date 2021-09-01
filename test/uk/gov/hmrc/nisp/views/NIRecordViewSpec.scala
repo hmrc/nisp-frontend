@@ -135,13 +135,17 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
 
   "Render Ni Record UR banner" should {
 
-    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
-
     "render UR banner on page before no thanks is clicked" in {
+
+      lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+
       val urResearchURL = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
       val urBanner =  doc.getElementsByClass("full-width-banner__title")
       val urBannerHref =  doc.getElementById("fullWidthBannerLink")
       val urDismissedText = doc.getElementById("fullWidthBannerDismissText")
+
+      println(doc.toString)
+
       assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
       assert(urBannerHref.text() == urResearchURL)
       assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
