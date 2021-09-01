@@ -21,7 +21,6 @@ object AppDependencies {
       "org.pegdown" % "pegdown" % "1.6.0",
       "org.jsoup" % "jsoup" % "1.10.2",
       "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0",
-      //"uk.gov.hmrc" %% "hmrctest" % "3.10.0-play-26",
       "org.mockito" % "mockito-core" % "3.1.0",
       "com.github.tomakehurst" % "wiremock-jre8" % "2.27.0",
       "com.vladsch.flexmark" % "flexmark-all" % "0.35.10"
