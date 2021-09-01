@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -26,10 +25,11 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class GARedirectControllerSpec  extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite with Injecting{
+class GARedirectControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
 
   private implicit val fakeRequest = FakeRequest("GET", "/redirect")
 
@@ -45,7 +45,7 @@ class GARedirectControllerSpec  extends PlaySpec with MockitoSugar with GuiceOne
   "GET /redirect" should {
     "return 200" in {
       val result = testGARedirectController.show(fakeRequest)
-      status(result) mustBe Status.OK
+      status(result) shouldBe Status.OK
     }
   }
 }

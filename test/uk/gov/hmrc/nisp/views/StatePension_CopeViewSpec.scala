@@ -17,13 +17,10 @@
 package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.lang3.StringEscapeUtils
-
-import java.time.LocalDate
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
@@ -48,9 +45,10 @@ import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
-class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
+class StatePension_CopeViewSpec extends HtmlSpec with
   ScalaFutures with Injecting {
 
   val mockUserNino = TestAccountBuilder.regularNino

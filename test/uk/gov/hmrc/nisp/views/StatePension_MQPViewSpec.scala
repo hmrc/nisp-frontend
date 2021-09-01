@@ -18,8 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.lang3.StringEscapeUtils
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
-import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito.{mock, reset, when}
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -45,7 +44,7 @@ import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.Future
 
-class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"
   val expectedPensionCreditOverviewLink = "https://www.gov.uk/pension-credit/overview"

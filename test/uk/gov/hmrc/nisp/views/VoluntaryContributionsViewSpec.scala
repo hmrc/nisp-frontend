@@ -18,10 +18,9 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.DateTime
 import org.scalatest._
-import org.scalatest.mockito.MockitoSugar
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
@@ -31,10 +30,9 @@ import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeParti
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.html.nirecordVoluntaryContributions
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import play.api.inject.bind
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class VoluntaryContributionsViewSpec extends HtmlSpec with MockitoSugar with BeforeAndAfter with Injecting {
+class VoluntaryContributionsViewSpec extends HtmlSpec with BeforeAndAfter with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)

@@ -16,13 +16,10 @@
 
 package uk.gov.hmrc.nisp.services
 
-import java.time.LocalDate
-
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
@@ -33,13 +30,14 @@ import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse, UpstreamErrorRespon
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.nisp.utils.UnitSpec
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
+import java.time.LocalDate
 import scala.concurrent.Future
 import scala.util.Random
 
-class NationalInsuranceServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures with GuiceOneAppPerSuite
+class NationalInsuranceServiceSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite
 with BeforeAndAfterEach with Injecting {
 
   def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino

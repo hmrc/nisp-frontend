@@ -16,15 +16,11 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.joda.time.DateTime
-import java.time.{LocalDate, LocalDateTime}
-
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.when
-import org.scalatest.{BeforeAndAfterEach, PrivateMethodTester}
+import org.mockito.Mockito.{mock, when}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatest.{BeforeAndAfterEach, PrivateMethodTester}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
@@ -33,10 +29,11 @@ import uk.gov.hmrc.nisp.helpers.TestAccountBuilder._
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class StatePensionServiceSpec extends UnitSpec with MockitoSugar with ScalaFutures with BeforeAndAfterEach with PrivateMethodTester {
+class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndAfterEach with PrivateMethodTester {
 
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))

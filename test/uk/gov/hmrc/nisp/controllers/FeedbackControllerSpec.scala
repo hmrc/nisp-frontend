@@ -19,8 +19,6 @@ package uk.gov.hmrc.nisp.controllers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.Status
@@ -32,13 +30,14 @@ import play.twirl.api.Html
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever, FakeTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
-class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
+class FeedbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
   val fakeRequest = FakeRequest("GET", "/")
   val mockApplicationConfig = mock[ApplicationConfig]
   val mockHttp = mock[HttpClient]
@@ -68,7 +67,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("serviceIdentifier")
 
       val result = testFeedbackController.show(fakeRequest)
-      status(result) mustBe Status.OK
+      status(result) shouldBe Status.OK
     }
 
     "capture the referer in the session on initial session on the feedback load" in {
@@ -76,7 +75,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("serviceIdentifier")
 
       val result = testFeedbackController.show(fakeRequest.withHeaders("Referer" -> "Blah"))
-      status(result) mustBe Status.OK
+      status(result) shouldBe Status.OK
     }
   }
 
@@ -88,7 +87,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakePostRequest)
-      redirectLocation(result) mustBe Some(routes.FeedbackController.showThankYou.url)
+      redirectLocation(result) shouldBe Some(routes.FeedbackController.showThankYou.url)
     }
 
     "return form with errors for invalid selections" in {
@@ -100,7 +99,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         Future.successful(HttpResponse(Status.BAD_REQUEST, "<p>:^(</p>")))
 
       val result = testFeedbackController.submit(fakePostRequest)
-      status(result) mustBe Status.BAD_REQUEST
+      status(result) shouldBe Status.BAD_REQUEST
     }
 
     "return error for other http code back from contact-frontend" in {
@@ -108,7 +107,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         (any(), any(),any())).thenReturn(
         Future.successful(HttpResponse(418, "")))
       val result = testFeedbackController.submit(fakePostRequest)
-      status(result) mustBe Status.INTERNAL_SERVER_ERROR
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
     "return internal server error when there is an empty form" in {
@@ -117,7 +116,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakeRequest)
-      status(result) mustBe Status.INTERNAL_SERVER_ERROR
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
   }
 
@@ -127,7 +126,7 @@ class FeedbackControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       when(mockView(any(), any())(any(), any())).thenReturn(Html(""))
       
       val result = testFeedbackController.showThankYou(fakeRequest)
-      status(result) mustBe Status.OK
+      status(result) shouldBe Status.OK
     }
   }
 }

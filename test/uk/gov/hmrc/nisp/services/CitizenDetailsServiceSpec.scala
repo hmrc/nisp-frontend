@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.nisp.services
 
-import java.time.LocalDate
-
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
@@ -33,11 +31,11 @@ import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsError, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.utils.UnitSpec
-import org.mockito.Mockito.{reset, when}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
+import java.time.LocalDate
 import scala.concurrent.Future
-class CitizenDetailsServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with ScalaFutures with
+class CitizenDetailsServiceSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with
   GuiceOneAppPerSuite with Injecting {
 
   val nino: Nino = TestAccountBuilder.regularNino

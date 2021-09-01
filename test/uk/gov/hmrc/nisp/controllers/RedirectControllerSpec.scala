@@ -24,9 +24,10 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
-class RedirectControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
+class RedirectControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -38,7 +39,7 @@ class RedirectControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
     "redirect to /check-your-state-pension" in {
       val request = FakeRequest("GET", "/checkmystatepension")
       val result = Helpers.route(app ,request).get
-      redirectLocation(result) mustBe Some("/check-your-state-pension")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension")
     }
   }
 
@@ -46,7 +47,7 @@ class RedirectControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
     "redirect to /check-your-state-pension + query string" in {
       val request = FakeRequest("GET", "/checkmystatepension?p=123&q=456")
       val result = Helpers.route(app, request).get
-      redirectLocation(result) mustBe Some("/check-your-state-pension?p=123&q=456")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension?p=123&q=456")
     }
   }
 
@@ -54,7 +55,7 @@ class RedirectControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
     "redirect to /check-your-state-pension/account" in {
       val request = FakeRequest("GET", "/checkmystatepension/account")
       val result = Helpers.route(app, request).get
-      redirectLocation(result) mustBe Some("/check-your-state-pension/account")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 
@@ -62,7 +63,7 @@ class RedirectControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
     "redirect to /check-your-state-pension/account" in {
       val request = FakeRequest("GET", "/checkmystatepension/account?p=123&q=456")
       val result = Helpers.route(app, request).get
-      redirectLocation(result) mustBe Some("/check-your-state-pension/account?p=123&q=456")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account?p=123&q=456")
     }
   }
 
@@ -70,7 +71,7 @@ class RedirectControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
     "redirect to /check-your-state-pension/account" in {
       val request = FakeRequest("GET", "/checkmystatepension//account")
       val result = Helpers.route(app, request).get
-      redirectLocation(result) mustBe Some("/check-your-state-pension/account")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 }

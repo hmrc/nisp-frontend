@@ -16,14 +16,11 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import java.time.LocalDate
-
+import com.github.tomakehurst.wiremock.client.WireMock._
 import org.mockito.Mockito
-import org.mockito.Mockito.reset
-import com.github.tomakehurst.wiremock.client.WireMock.{equalTo, forbidden, get, getRequestedFor, matching, ok, urlEqualTo}
+import org.mockito.Mockito.{mock, reset}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -32,15 +29,16 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeSessionCache, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.WireMockHelper
+import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.nisp.utils.UnitSpec
 
-class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with MockitoSugar with GuiceOneAppPerSuite with
+import java.time.LocalDate
+
+class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
   Injecting with BeforeAndAfterEach with WireMockHelper {
 
   implicit val headerCarrier = HeaderCarrier()

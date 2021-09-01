@@ -18,8 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{reset, when}
-import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito.{mock, reset, when}
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
@@ -51,7 +50,7 @@ import java.util.UUID
 import scala.concurrent.Future
 
 
-class NIRecordViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+class NIRecordViewSpec extends HtmlSpec with Injecting {
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer

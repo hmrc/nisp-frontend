@@ -16,13 +16,9 @@
 
 package uk.gov.hmrc.nisp.views
 
-import java.util.UUID
 import org.apache.commons.lang3.StringEscapeUtils
-
-import java.time.LocalDate
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
-import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito.{mock, reset, when}
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -44,9 +40,11 @@ import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.Future
 
-class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+class StatePensionViewSpec extends HtmlSpec with Injecting {
 
   val fakeRequest = FakeRequest()
 

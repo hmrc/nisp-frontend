@@ -16,12 +16,8 @@
 
 package uk.gov.hmrc.nisp.views
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import org.joda.time.DateTime
 import org.jsoup.nodes.Document
-import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -31,7 +27,10 @@ import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeTempl
 import uk.gov.hmrc.nisp.views.html.excluded_cope
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class ExclusionCopeViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
