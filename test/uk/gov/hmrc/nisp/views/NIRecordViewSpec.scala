@@ -131,6 +131,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
     val niRecord = nIRecordRegular.copy(qualifyingYearsPriorTo1975 = -3)
     when(mockNationalInsuranceService.getSummary(mockAny())(mockAny())).
       thenReturn(Future.successful(Right(niRecord)))
+
+    when(mockAppConfig.showUrBanner).thenReturn(true)
+    when(mockAppConfig.urRecruitmentLinkURL).thenReturn("https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183")
   }
 
   "Render Ni Record UR banner" should {
@@ -143,8 +146,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       val urBanner =  doc.getElementsByClass("full-width-banner__title")
       val urBannerHref =  doc.getElementById("fullWidthBannerLink")
       val urDismissedText = doc.getElementById("fullWidthBannerDismissText")
-
-      println(doc.toString)
 
       assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
       assert(urBannerHref.text() == urResearchURL)
