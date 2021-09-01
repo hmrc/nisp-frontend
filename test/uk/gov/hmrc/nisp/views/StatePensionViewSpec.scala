@@ -46,6 +46,8 @@ import scala.concurrent.Future
 
 class StatePensionViewSpec extends HtmlSpec with Injecting {
 
+  val urResearchURL = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
+
   val fakeRequest = FakeRequest()
 
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
@@ -149,6 +151,9 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 reducedRateElection = false
               )
               )))
+
+            when(mockAppConfig.showUrBanner).thenReturn(true)
+            when(mockAppConfig.urRecruitmentLinkURL).thenReturn(urResearchURL)
           }
 
           lazy val doc =
@@ -170,7 +175,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
             mockSetup
             val request = statePensionController.show()(generateFakeRequest)
             val source = asDocument(contentAsString(request))
-            val urResearchURL = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
             val urBanner =  source.getElementsByClass("full-width-banner__title")
             val urBannerHref =  source.getElementById("fullWidthBannerLink")
             val urDismissedText = source.getElementById("fullWidthBannerDismissText")

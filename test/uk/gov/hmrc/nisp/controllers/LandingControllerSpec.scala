@@ -271,7 +271,10 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       charset(result) shouldBe Some("utf-8")
     }
     "load the landing page in welsh" in {
+      when(mockApplicationConfig.isWelshEnabled).thenReturn(true)
+
       val result = verifyLandingController.show(fakeRequestWelsh)
+
       contentAsString(result) should include("data-journey-click=\"checkmystatepension:language: cy\"")
     }
   }
