@@ -25,7 +25,6 @@ object AppDependencies {
       "com.github.tomakehurst" % "wiremock-jre8" % "2.27.0",
       "com.vladsch.flexmark" % "flexmark-all" % "0.35.10"
   ).map(_ % "test,it")
-
   val all: Seq[ModuleID] = compile ++ test
 }
 

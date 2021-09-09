@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import play.api.http.{Status => HttpStatus}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig

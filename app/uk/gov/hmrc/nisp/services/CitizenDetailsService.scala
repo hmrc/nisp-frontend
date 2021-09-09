@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.services
 
 import javax.inject.Inject
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.http.Status
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException, Upstream4xxResponse}
