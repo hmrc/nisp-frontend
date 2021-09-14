@@ -33,7 +33,7 @@
 @anchor(text: String, url: String) = {<a href="@url" target="_blank">@text</a>}
 
 
-@main(MainTemplateParams(pageTitle = Some(Messages("global.page.not.found.error.title")))) {
+@main(MainTemplateParams(pageTitle = Some(Messages("global.page.not.found.error.title")), browserTitle = Some(Messages("global.page.not.found.error.title")))) {
 
 <p>@messages("global.page.not.found.error.check.web.address.correct")</p>
 <p>@messages("global.page.not.found.error.check.web.address.full")</p>

@@ -163,7 +163,7 @@ class StatePensionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
           }
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(doc, "article.content__body>h1.titleWithPAgeInfo", "nisp.main.h1.title")
+            assertEqualsMessage(doc, "article.content__body h1.titleWithPAgeInfo", "nisp.main.h1.title")
           }
 
           "render page with UR banner" in {

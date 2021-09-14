@@ -38,52 +38,58 @@
 
 @(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages)
 
-@sidebar = {
-<div class="helpline-sidebar">
-    <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
-
-    <p>@messages("nisp.nirecord.helpline.number")</p>
-
-    <p>@messages("nisp.nirecord.helpline.textNumber")</p>
-
-    <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
-
-    <p class="backlink copeback"><a href="@{routes.StatePensionController.show().url}">@messages("nisp.back")</a>
-    </p>
-
-</div>
-}
 
 @defining(Some(user)) { implicit userOption =>
 @main(MainTemplateParams(
     userLoggedIn = true,
-    browserTitle = Some(messages("nisp.main.title")),
-    pageTitle = Some(messages("nisp.cope.youWereContractedOut")),
-    sidebarLinks = Some(sidebar)
+    browserTitle = Some(messages("nisp.cope.youWereContractedOut")),
+    articleClasses = Some("fullwidth")
 )) {
 
-<p>@Html(messages("nisp.cope.inThePast"))</p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <h1>@messages("nisp.cope.youWereContractedOut")</h1>
 
-<p>@messages("nisp.cope.why")</p>
-<ul class="list-bullet">
-    <li>@Html(messages("nisp.cope.why.bullet1"))</li>
-    <li>@Html(messages("nisp.cope.why.bullet2"))</li>
-</ul>
-<p>@messages("nisp.cope.copeequivalent")</p>
-<h2 class="heading-medium">@messages("nisp.cope.title2")</h2>
-<p>@Html(messages("nisp.cope.table.estimate.title"))<span class="bold-intext">@NispMoney.pounds(copeEstimate) @messages("nisp.main.chart.week")</span>.
-</p>
-<p>@Html(messages("nisp.cope.definition"))</p>
-<p>@Html(messages("nisp.cope.definition.mostcases"))</p>
-<ul class="list-bullet">
-    <li>@Html(messages("nisp.cope.definition.mostcases.bullet1"))</li>
-    <li>@Html(messages("nisp.cope.definition.mostcases.bullet2"))</li>
-</ul>
+            <p>@Html(messages("nisp.cope.inThePast"))</p>
 
-<p>@Html(messages("nisp.cope.workplace"))</p>
+            <p>@messages("nisp.cope.why")</p>
+            <ul class="list-bullet">
+                <li>@Html(messages("nisp.cope.why.bullet1"))</li>
+                <li>@Html(messages("nisp.cope.why.bullet2"))</li>
+            </ul>
+            <p>@messages("nisp.cope.copeequivalent")</p>
+            <h2 class="heading-medium">@messages("nisp.cope.title2")</h2>
+            <p>@Html(messages("nisp.cope.table.estimate.title"))<span class="bold-intext">@NispMoney.pounds(copeEstimate) @messages("nisp.main.chart.week")</span>.
+            </p>
+            <p>@Html(messages("nisp.cope.definition"))</p>
+            <p>@Html(messages("nisp.cope.definition.mostcases"))</p>
+            <ul class="list-bullet">
+                <li>@Html(messages("nisp.cope.definition.mostcases.bullet1"))</li>
+                <li>@Html(messages("nisp.cope.definition.mostcases.bullet2"))</li>
+            </ul>
 
-<p>@Html(messages("nisp.main.cope.linkTitle"))</p>
-<p class="backlink"><a href="@{routes.StatePensionController.show().url}">@messages("nisp.back")</a>
-</p>
-}
+            <p>@Html(messages("nisp.cope.workplace"))</p>
+
+            <p>@Html(messages("nisp.main.cope.linkTitle"))</p>
+            <p class="backlink"><a href="@{routes.StatePensionController.show().url}">@messages("nisp.back")</a>
+            </p>
+
+        </div>
+
+        <div class="column-one-third">
+            <div class="helpline-sidebar" >
+                <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
+
+                <p>@messages("nisp.nirecord.helpline.number")</p>
+
+                <p>@messages("nisp.nirecord.helpline.textNumber")</p>
+
+                <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
+
+                <p class="backlink copeback"><a href="@{routes.StatePensionController.show().url}">@messages("nisp.back")</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    }
 }
