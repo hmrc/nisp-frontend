@@ -1510,22 +1510,22 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           "render page with text  'You’ll reach State Pension age on ' " in {
             mockSetup
             val sMessage = Messages("nisp.main.description.mqp")
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>p", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "article.content__body>div:nth-child(2)>div>div>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2017. ' " in {
             mockSetup
             val sMessage = Dates.formatDate(LocalDate.of(2017, 5, 4)) + "."
-            assertEqualsValue(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>p>span", sMessage)
+            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(2)>div>div>p>span", sMessage)
           }
 
           "render page with text 'By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.notPossible")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div:nth-child(2)>div>div>p:nth-child(2)", "nisp.mqp.notPossible")
           }
 
           "render page with text 'What you can do next" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(3)", "nisp.mqp.doNext")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
           }
 
           /*overseas message*/
@@ -1737,17 +1737,17 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           "render page with text  'You’ll reach State Pension age on ' " in {
             mockSetup
             val sMessage = Messages("nisp.main.description.mqp")
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>p", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>div>div>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
             mockSetup
             val sMessage = Dates.formatDate(LocalDate.of(2018, 5, 4)) + "."
-            assertEqualsValue(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>p>span", sMessage)
+            assertEqualsValue(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>div>div>p>span", sMessage)
           }
 
           "render page with text 'By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.possible")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>div>div>p:nth-child(2)", "nisp.mqp.possible")
           }
 
           "render page with text 'What you can do next" in {
