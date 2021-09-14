@@ -14,21 +14,15 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, NispAuthedUser}
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.models.enums.Scenario
+@import uk.gov.hmrc.nisp.models.{SPChartModel, StatePension}
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.nisp.models.enums.Scenario
-@import uk.gov.hmrc.nisp.utils.LanguageHelper
-@import play.api.Application
-@import uk.gov.hmrc.nisp.controllers.routes
-
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
-@import uk.gov.hmrc.nisp.controllers.auth.AuthDetails
-
-@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@import uk.gov.hmrc.play.language.LanguageUtils
+@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 @import scala.concurrent.ExecutionContext
 
@@ -43,7 +37,8 @@
     deferral: includes.deferral,
     fillGapsMQP: includes.fillGapsMQP,
     reached: includes.reached,
-    statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration
+    statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration,
+    langUtils: LanguageUtils
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -105,7 +100,7 @@
             </details>
 
             <div class="highlighted-event govuk-box-highlight">
-                <p>@messages("nisp.main.basedOn") <span class="nowrap">@LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate). </span>
+                <p>@messages("nisp.main.basedOn") <span class="nowrap">@langUtils.Dates.formatDate(statePension.pensionDate). </span>
                    <span class="nowrap">@messages("nisp.main.caveats")
                     @messages("nisp.is")</span>
                 </p>
@@ -120,7 +115,7 @@
                 <p>@messages("nisp.main.caveats")</p>
                 <ul class="list-bullet">
                     <li>@Html(messages("nisp.main.notAGuarantee"))</li>
-                    <li>@Html(messages("nisp.main.isBased", LanguageHelper.langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
+                    <li>@Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
                     <li>@Html(messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)))</li>
                     <li>@Html(messages("nisp.main.inflation"))</li>
                     @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
@@ -190,7 +185,7 @@
                 }
 
                 @if(statePension.statePensionAgeUnderConsideration) {
-                    @statePensionAgeUnderConsideration(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+                    @statePensionAgeUnderConsideration(langUtils.Dates.formatDate(statePension.pensionDate))
                 }
 
                 @if(statePension.contractedOut) {
@@ -198,7 +193,7 @@
                 }
 
                 @if(customerAge > Constants.deferralCutOffAge) {
-                    @deferral(LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate))
+                    @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
                 }
 
                 @if(isPertaxUrl) {

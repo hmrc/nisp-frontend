@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.scalatest.mockito.MockitoSugar
 import play.api.test.{FakeRequest, Injecting}
-import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
@@ -26,7 +24,7 @@ import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.locked_out
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class LockedOutViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+class LockedOutViewSpec extends HtmlSpec with Injecting {
 
   val fakeRequest = FakeRequest("GET", "/")
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
@@ -43,12 +41,12 @@ class LockedOutViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       val title = source.title()
       val expected = messages("nisp.iv.failure.lockedout.title") + Constants.titleSplitter +
         messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")
-      title must include(expected)
+      title should include(expected)
     }
 
     "assert correct heading title on page" in {
       val title = source.getElementsByTag("h1").get(0).toString
-      title must include(messages("nisp.iv.failure.lockedout.title"))
+      title should include(messages("nisp.iv.failure.lockedout.title"))
     }
   }
 }

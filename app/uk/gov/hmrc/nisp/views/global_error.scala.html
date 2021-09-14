@@ -14,20 +14,21 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.controllers.CustomLanguageController
+@import uk.gov.hmrc.nisp.controllers.{LanguageService, routes}
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+@import uk.gov.hmrc.play.views.html.layouts.Article
 @import uk.gov.hmrc.renderer.TemplateRenderer
-@import play.api.Play
-
-@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
 @import scala.concurrent.ExecutionContext
 
-@this(templateRenderer: TemplateRenderer)(
-   implicit ec: ExecutionContext,
-   formPartialRetriever: FormPartialRetriever
+@this(
+    templateRenderer: TemplateRenderer,
+    languageService: LanguageService,
+    article: Article
+)(
+    implicit ec: ExecutionContext,
+    formPartialRetriever: FormPartialRetriever
 )
 
 @(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig)(implicit request: Request[_], messages: Messages)
@@ -38,10 +39,8 @@
     <p>@message</p>
 }
 
-@clc = @{ Play.current.injector.instanceOf[CustomLanguageController] }
-
 @mainContentHeader = {
-     @language_selection(clc.languageMap, clc.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
+     @language_selection(languageService.languageMap, languageService.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
 }
 
 @linkElems = @{
@@ -63,7 +62,7 @@
 }
 
 @{
-     templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, uiLayouts.article(mainContent, false, None), Map[String, Any](
+     templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, article(mainContent, false, None), Map[String, Any](
           "pageTitle" -> pageTitle,
            "linkElems" -> linkElems,
           "scriptElems" -> None,

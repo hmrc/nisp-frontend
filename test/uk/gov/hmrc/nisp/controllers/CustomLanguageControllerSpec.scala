@@ -24,7 +24,7 @@ import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class CustomLanguageControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 

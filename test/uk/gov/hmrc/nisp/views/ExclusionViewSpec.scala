@@ -16,10 +16,7 @@
 
 package uk.gov.hmrc.nisp.views
 
-import java.time.LocalDate
-
 import org.joda.time.DateTime
-import org.scalatest.mockito.MockitoSugar
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
@@ -28,17 +25,20 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.nisp.views.html.{excluded_dead, excluded_mci, excluded_sp}
+import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+import java.time.LocalDate
+
+class ExclusionViewSpec extends HtmlSpec with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
+  lazy val langUtils = inject[LanguageUtils]
 
 
   "Exclusion Dead" should {
@@ -100,7 +100,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     }
     "render page with heading  'You’ll reach State Pension age on 6 sep 2019' " in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2019, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6)), null, null)
 
     }
 
@@ -126,7 +126,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -148,7 +148,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     }
     "render page with heading  'You’ll reach State Pension age on 6 sep 2019' " in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2019, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6)), null, null)
 
     }
 
@@ -174,7 +174,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -196,7 +196,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     }
     "render page with heading  'You’ll reach State Pension age on 6 Sep 2019' " in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2019, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6)), null, null)
 
     }
 
@@ -222,7 +222,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "render page with text  'Youll reach State Pension age on 6 Sep 2019. Under government proposals this may increase by up to a year.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2019, 9, 6)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(6)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6)))
     }
   }
 
@@ -308,7 +308,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     "render page with heading  You reached State Pension age on 6 September 2015 when you were 70 " in {
 
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.haveReached", Dates.formatDate(LocalDate.of(2015, 9, 6)), (70).toString, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.haveReached", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), (70).toString, null)
     }
     "render page with message  'if you have not already started claiming your state pension you can putoff...' " in {
 
@@ -329,7 +329,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -351,7 +351,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     "render page with heading  You reached State Pension age on 6 September 2015 when you were 70 " in {
 
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.haveReached", Dates.formatDate(LocalDate.of(2015, 9, 6)), (70).toString, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.haveReached", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), (70).toString, null)
     }
     "render page with message  'if you have not already started claiming your state pension you can putoff...' " in {
 
@@ -372,7 +372,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -393,7 +393,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     "render page with heading  You reached State Pension age on 6 September 2015 when you were 70 " in {
 
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.haveReached", Dates.formatDate(LocalDate.of(2015, 9, 6)), (70).toString, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.haveReached", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), (70).toString, null)
     }
     "render page with message  'if you have not already started claiming your state pension you can putoff...' " in {
 
@@ -414,7 +414,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -432,7 +432,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     "render page with text  You will reach your  State Pension age on 6 September 2015" in {
 
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
     }
     "render page with text  We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this." in {
 
@@ -457,7 +457,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -475,7 +475,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     "render page with text  You will reach your  State Pension age on 6 September 2015" in {
 
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
     }
     "render page with text  We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this." in {
 
@@ -500,7 +500,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -518,7 +518,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
 
     "render page with text  You will reach your  State Pension age on 6 September 2015" in {
 
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
     }
     "render page with text  We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this." in {
 
@@ -543,7 +543,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>p:nth-child(7)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -560,12 +560,12 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "render page with heading  'You’ll reach State Pension age on' " in {
-      val sDate = Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", sDate, null, null)
     }
 
     "render page with text - You will reach your  State Pension age on 6 September 2015" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
     }
 
     "render page with text  We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab)." in {
@@ -600,7 +600,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -617,12 +617,12 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "render page with heading  'You’ll reach State Pension age on' " in {
-      val sDate = Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", sDate, null, null)
     }
 
     "render page with text - You will reach your  State Pension age on 6 September 2015" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
     }
 
     "render page with text  We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab)." in {
@@ -654,7 +654,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 
@@ -671,12 +671,12 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "render page with heading  'You’ll reach State Pension age on' " in {
-      val sDate = Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
       assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>h2.heading-medium", "nisp.excluded.willReach", sDate, null, null)
     }
 
     "render page with text - You will reach your  State Pension age on 6 September 2015" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
+      assertContainsDynamicMessage(htmlAccountDoc, "h2.heading-medium", "nisp.excluded.willReach", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)), null, null)
     }
 
     "render page with text  We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab)." in {
@@ -709,7 +709,7 @@ class ExclusionViewSpec extends HtmlSpec with MockitoSugar with Injecting {
     }
 
     "not render page with text  'Youll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2015, 9, 6)))
+      assertPageDoesNotContainDynamicMessage(htmlAccountDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)))
     }
   }
 

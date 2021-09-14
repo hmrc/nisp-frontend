@@ -16,31 +16,28 @@
 
 package uk.gov.hmrc.nisp.views
 
-import java.util.Locale
 import akka.util.Timeout
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
-import play.api.test.{FakeRequest, Helpers, Injecting}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeNispHeaderCarrierForPartialsConverter, FakePartialRetriever, FakeTemplateRenderer}
+import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.util.Locale
 import scala.concurrent.duration._
 
-trait HtmlSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach with MockitoSugar {
+trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   implicit val request = FakeRequest()
   implicit val defaultAwaitTimeout: Timeout = 5.seconds

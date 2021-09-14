@@ -17,13 +17,10 @@
 package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.lang3.StringEscapeUtils
-import java.time.LocalDate
-
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
@@ -42,15 +39,16 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.nisp.utils.LanguageHelper.langUtils.Dates
 import uk.gov.hmrc.nisp.views.html.statepension_cope
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
-class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
+class StatePension_CopeViewSpec extends HtmlSpec with
   ScalaFutures with Injecting {
 
   val mockUserNino = TestAccountBuilder.regularNino
@@ -69,6 +67,8 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
   val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
   val mockMetricsService: MetricsService = mock[MetricsService]
   val mockSessionCache: SessionCache = mock[SessionCache]
+  
+  lazy val langUtils = inject[LanguageUtils]
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
@@ -146,7 +146,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
       assertElemetsOwnMessage(htmlAccountDoc, "article.content__body>div>div>div:nth-child(4)>p", "nisp.main.basedOn")
     }
     "render page with text  '18 july 2012' " in {
-      assertEqualsValue(htmlAccountDoc, "article.content__body>div>div>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", Dates.formatDate(LocalDate.of(2021, 7, 18)) + ".")
+      assertEqualsValue(htmlAccountDoc, "article.content__body>div>div>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18)) + ".")
     }
     "render page with text  'Your forecast is' " in {
       val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
@@ -189,7 +189,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
     }
     "render page with text 'If you’re working you may still need to pay National Insurance contributions until 18 " +
       "July 2021 as they fund other state benefits and the NHS.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div>div>p:nth-child(12)", "nisp.main.context.reachMax.needToPay", Dates.formatDate(LocalDate.of(2021, 7, 18)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div>div>p:nth-child(12)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18)))
     }
     "render page with link  'View your National Insurence Record'" in {
       assertEqualsMessage(htmlAccountDoc, "article.content__body>div>div>a:nth-child(13)", "nisp.main.showyourrecord")
@@ -212,7 +212,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with MockitoSugar with
     }
 
     "render page with text  'You can put off claiming your State Pension from 18 July 2021. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div>div>p:nth-child(18)", "nisp.main.puttingOff.line1", Dates.formatDate(LocalDate.of(2021, 7, 18)))
+      assertContainsDynamicMessage(htmlAccountDoc, "article.content__body>div>div>p:nth-child(18)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18)))
     }
 
     "render page with link 'More on putting off claiming (opens in new tab)'" in {

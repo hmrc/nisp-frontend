@@ -26,7 +26,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class TimeSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
   val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])

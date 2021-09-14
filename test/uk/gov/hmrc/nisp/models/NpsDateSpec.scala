@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.models
 import org.joda.time.LocalDate
 import play.api.libs.json.{JsNull, JsString, Json}
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class NpsDateSpec extends UnitSpec {
   "NpsDate" when {

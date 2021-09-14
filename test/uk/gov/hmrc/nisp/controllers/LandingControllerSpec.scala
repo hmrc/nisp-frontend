@@ -16,14 +16,10 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.time.LocalDate
-import java.util.{Locale, UUID}
-
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -38,12 +34,15 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.VerifyAuthActionImpl
 import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
+import java.util.{Locale, UUID}
 import scala.concurrent.Future
 
-class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
+class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
 
   implicit val fakeRequest = FakeRequest("GET", "/")
   val fakeRequestWelsh = FakeRequest("GET", "/cymraeg")
@@ -75,24 +74,24 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
   "GET /" should {
     "return 200" in {
       val result = verifyLandingController.show(fakeRequest)
-      status(result) mustBe OK
+      status(result) shouldBe OK
     }
 
     "return HTML" in {
       val result = verifyLandingController.show(fakeRequest)
-      Helpers.contentType(result) mustBe Some("text/html")
-      charset(result) mustBe Some("utf-8")
+      Helpers.contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
 
     "load the landing page" in {
       val result = verifyLandingController.show(fakeRequest)
-      contentAsString(result) must include("Your State Pension forecast is provided for your information only and the " +
+      contentAsString(result) should include("Your State Pension forecast is provided for your information only and the " +
         "service does not offer financial advice. When planning for your retirement, you should seek professional advice.")
     }
 
     "have a start button" in {
       val result = verifyLandingController.show(fakeRequest)
-      contentAsString(result) must include("Continue")
+      contentAsString(result) should include("Continue")
     }
 
     "return IVLanding page" in {
@@ -100,7 +99,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
 
       val result = verifyLandingController.show(fakeRequest)
       val doc = Jsoup.parse( contentAsString(result))
-      doc.getElementById("landing-signin-heading").text mustBe messages("nisp.landing.signin.heading")
+      doc.getElementById("landing-signin-heading").text shouldBe messages("nisp.landing.signin.heading")
     }
 
     "return non-IV landing page when switched on" in {
@@ -108,7 +107,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
 
       val result = verifyLandingController.show(fakeRequest)
       val doc = Jsoup.parse( contentAsString(result))
-      doc.getElementById("eligibility-heading").text mustBe messages("nisp.landing.eligibility.heading")
+      doc.getElementById("eligibility-heading").text shouldBe messages("nisp.landing.eligibility.heading")
     }
   }
 
@@ -131,7 +130,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
 
       val verifyLandingController = verifyAuthBasedInjector.instanceOf[LandingController]
       val result = verifyLandingController.verifySignIn(fakeRequest)
-      redirectLocation(result) mustBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
+      redirectLocation(result) shouldBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
     }
 
     "redirect to account page when signed in" in {
@@ -140,7 +139,7 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
       ))
 
-      redirectLocation(result) mustBe Some("/check-your-state-pension/account")
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 
@@ -150,8 +149,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         val result = verifyLandingController.showNotAuthorised(None)(fakeRequest)
 
 
-        status(result) mustBe UNAUTHORIZED
-        contentAsString(result) must include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+        contentAsString(result) should include("We cannot confirm your identity")
       }
 
       "show generic not_authorised template for FailedMatching journey" in {
@@ -162,8 +161,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) mustBe UNAUTHORIZED
-        contentAsString(result) must include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+        contentAsString(result) should include("We cannot confirm your identity")
       }
 
       "show generic not_authorised template for InsufficientEvidence journey" in {
@@ -174,8 +173,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) mustBe UNAUTHORIZED
-        contentAsString(result) must include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+        contentAsString(result) should include("We cannot confirm your identity")
       }
 
       "show generic not_authorised template for Incomplete journey" in {
@@ -186,8 +185,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) mustBe UNAUTHORIZED
-        contentAsString(result) must include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+        contentAsString(result) should include("We cannot confirm your identity")
       }
 
       "show generic not_authorised template for PreconditionFailed journey" in {
@@ -198,8 +197,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) mustBe UNAUTHORIZED
-        contentAsString(result) must include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+        contentAsString(result) should include("We cannot confirm your identity")
       }
 
       "show generic not_authorised template for UserAborted journey" in {
@@ -210,8 +209,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) mustBe UNAUTHORIZED
-        contentAsString(result) must include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+        contentAsString(result) should include("We cannot confirm your identity")
       }
     }
 
@@ -223,8 +222,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       )
 
       val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-      status(result) mustBe INTERNAL_SERVER_ERROR
-      contentAsString(result) must include("This online service is experiencing technical difficulties.")
+      status(result) shouldBe INTERNAL_SERVER_ERROR
+      contentAsString(result) should include("This online service is experiencing technical difficulties.")
     }
 
     "show locked_out template for LockedOut journey" in {
@@ -235,8 +234,8 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       )
 
       val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-      status(result) mustBe LOCKED
-      contentAsString(result) must include("You have reached the maximum number of attempts to confirm your identity.")
+      status(result) shouldBe LOCKED
+      contentAsString(result) should include("You have reached the maximum number of attempts to confirm your identity.")
     }
 
     "show timeout template for Timeout journey" in {
@@ -247,15 +246,15 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
       )
 
       val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-      status(result) mustBe UNAUTHORIZED
-      contentAsString(result) must include("Your session has ended because you have not done anything for 15 minutes.")
+      status(result) shouldBe UNAUTHORIZED
+      contentAsString(result) should include("Your session has ended because you have not done anything for 15 minutes.")
     }
 
     "show 2FA failure page when no journey ID specified" in {
       val result = verifyLandingController.showNotAuthorised(None)(fakeRequest)
-      status(result) mustBe UNAUTHORIZED
-      contentAsString(result) must include("We cannot confirm your identity")
-      contentAsString(result) must not include "If you cannot confirm your identity and you have a query you can"
+      status(result) shouldBe UNAUTHORIZED
+      contentAsString(result) should include("We cannot confirm your identity")
+      contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
     }
   }
 
@@ -263,17 +262,20 @@ class LandingControllerSpec extends PlaySpec with MockitoSugar with BeforeAndAft
     implicit val lang = Lang("cy")
     "return 200" in {
       val result = verifyLandingController.show(fakeRequestWelsh)
-      status(result) mustBe OK
+      status(result) shouldBe OK
     }
 
     "return HTML" in {
       val result = verifyLandingController.show(fakeRequestWelsh)
-      Helpers.contentType(result) mustBe Some("text/html")
-      charset(result) mustBe Some("utf-8")
+      Helpers.contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
     "load the landing page in welsh" in {
+      when(mockApplicationConfig.isWelshEnabled).thenReturn(true)
+
       val result = verifyLandingController.show(fakeRequestWelsh)
-      contentAsString(result) must include("data-journey-click=\"checkmystatepension:language: cy\"")
+
+      contentAsString(result) should include("data-journey-click=\"checkmystatepension:language: cy\"")
     }
   }
 }

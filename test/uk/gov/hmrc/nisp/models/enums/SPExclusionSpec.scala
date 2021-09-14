@@ -18,14 +18,14 @@ package uk.gov.hmrc.nisp.models.enums
 
 import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.nisp.models.Exclusion
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class SPExclusionSpec extends UnitSpec {
 
   "SP Exclusion" when {
     "serialised into JSON" should {
       "output Dead when Dead is formatted" in {
-        Json.toJson(Exclusion.Dead) shouldBe JsString("Dead")
+        Json.toJson[Exclusion](Exclusion.Dead) shouldBe JsString("Dead")
       }
 
       "parse Dead when Dead is read" in {

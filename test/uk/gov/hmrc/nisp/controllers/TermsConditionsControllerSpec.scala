@@ -25,10 +25,11 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class TermsConditionsControllerSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting {
+class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 
   val fakeRequest = FakeRequest("GET", "/")
 
@@ -45,26 +46,26 @@ class TermsConditionsControllerSpec extends PlaySpec with GuiceOneAppPerSuite wi
 
     "return 200" in {
       val result = termsConditionController.show(fakeRequest)
-      status(result) mustBe Status.OK
+      status(result) shouldBe Status.OK
     }
 
     "return HTML" in {
       val result = termsConditionController.show(fakeRequest)
-      contentType(result) mustBe Some("text/html")
-      charset(result) mustBe Some("utf-8")
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
 
     "load the T&Cs page without back link" in {
       val result = contentAsString(termsConditionController.show(fakeRequest))
-      result must include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
-      result must not include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
+      result should include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
+      result should not include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
     }
 
     "load the T&Cs page with back link" in {
       val fakeRequest = FakeRequest("GET", "/?showBackLink=true")
       val result = contentAsString(termsConditionController.show(fakeRequest))
-      result must include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
-      result must include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
+      result should include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
+      result should include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
     }
 
   }
@@ -73,16 +74,16 @@ class TermsConditionsControllerSpec extends PlaySpec with GuiceOneAppPerSuite wi
 
     "return 200 with flag value" in {
       val result = termsConditionController.show(fakeRequest)
-      status(result) mustBe Status.OK
-      contentAsString(result) must include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
-      contentAsString(result) must not include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
+      status(result) shouldBe Status.OK
+      contentAsString(result) should include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
+      contentAsString(result) should not include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
     }
 
     "load the T&Cs page with back link" in {
       val fakeRequest = FakeRequest("GET", "/?showBackLink=true")
       val result = contentAsString(termsConditionController.show(fakeRequest))
-      result must include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
-      result must include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
+      result should include("The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free.")
+      result should include("<p class=\"backlink\"><a href=\"/check-your-state-pension/account\">Back</a></p>")
     }
 
   }

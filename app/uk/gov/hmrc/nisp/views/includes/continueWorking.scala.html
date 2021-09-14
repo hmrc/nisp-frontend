@@ -14,22 +14,22 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
-@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.nisp.utils.LanguageHelper
-@import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.models.enums.Scenario
+@import uk.gov.hmrc.nisp.models.{SPChartModel, StatePension}
+@import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.nisp.views.html.includes.chart
+@import uk.gov.hmrc.play.language.LanguageUtils
 
-@this(chart: chart)
+@this(chart: chart, langUtils: LanguageUtils)
+
 @(statePension: StatePension, yearsToContributeUntilPensionAge: Int, currentChart: SPChartModel, forecastChart: SPChartModel)(implicit messages: Messages)
 
 @if(statePension.mqpScenario.isDefined)  {
 
     <h2 class="heading-medium" id="mostYouCanGet"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
     <p>@messages("nisp.main.context.willReach")</p>
-    <p>@Html(messages("nisp.main.context.reachMax.needToPay", LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)))</p>
+    <p>@Html(messages("nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(statePension.pensionDate)))</p>
 
 } else {
 
@@ -73,11 +73,11 @@
     <h2 class="heading-medium" id="mostYouCanGet"> @NispMoney.pounds(forecastChart.amountModel.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
     @if(statePension.amounts.forecast.yearsToWork != yearsToContributeUntilPensionAge) {
         <p>@messages("nisp.main.context.willReach")</p>
-        <p>@Html(messages("nisp.main.context.reachMax.needToPay", (LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
+        <p>@Html(messages("nisp.main.context.reachMax.needToPay", (langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
     }
 
     @if(statePension.amounts.forecast.yearsToWork == yearsToContributeUntilPensionAge){
-    <p>@Html(messages("nisp.main.after", LanguageHelper.langUtils.Dates.formatDate(statePension.pensionDate)))</p>
+    <p>@Html(messages("nisp.main.after", langUtils.Dates.formatDate(statePension.pensionDate)))</p>
     }
 }
 

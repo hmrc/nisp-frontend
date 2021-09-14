@@ -1,36 +1,33 @@
 package controllers
 
-import java.time.LocalDate
-import java.util.UUID
-
+import com.github.tomakehurst.wiremock.client.WireMock._
 import it_utils.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, WiremockHelper}
-import com.github.tomakehurst.wiremock.client.WireMock.{forbidden, get, notFound, ok, post, serviceUnavailable, urlEqualTo}
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils.currentTimeMillis
-import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.test.Helpers.{status => getStatus, _}
-import play.api.test.Helpers.route
 import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.test.FakeRequest
+import play.api.test.Helpers.{route, status => getStatus, _}
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationSuccessResponse
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, NationalInsuranceTaxYear, StatePension, StatePensionAmountForecast, StatePensionAmountMaximum, StatePensionAmountRegular, StatePensionAmounts}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
+
+import java.time.LocalDate
+import java.util.UUID
 
 class LandingControllerISpec extends WordSpec
   with Matchers
   with GuiceOneAppPerSuite
   with WiremockHelper
   with ScalaFutures
-  with MockitoSugar
   with BeforeAndAfterEach {
 
   implicit val formats: Format[IdentityVerificationSuccessResponse] = Json.format[IdentityVerificationSuccessResponse]

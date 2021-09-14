@@ -16,17 +16,14 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.scalatest.mockito.MockitoSugar
 import play.api.test.{FakeRequest, Injecting}
-import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class TermsAndConditionsViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+class TermsAndConditionsViewSpec extends HtmlSpec with Injecting {
 
   val fakeRequest = FakeRequest("GET", "/")
 
@@ -44,17 +41,17 @@ class TermsAndConditionsViewSpec extends HtmlSpec with MockitoSugar with Injecti
       val title = source.title()
       val expected = messages("nisp.tandcs.title") + Constants.titleSplitter +
         messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")
-      title must include(expected)
+      title should include(expected)
     }
 
     "assert correct heading title on page" in {
       val title = source.getElementsByTag("h1").get(0).toString
-      title must include(messages("nisp.tandcs.title"))
+      title should include(messages("nisp.tandcs.title"))
     }
 
     "assert correct heading level 2 on page" in {
       val title = source.getElementsByTag("h2").get(0).toString
-      title must include(messages("nisp.tandcs.heading"))
+      title should include(messages("nisp.tandcs.heading"))
     }
   }
 }
