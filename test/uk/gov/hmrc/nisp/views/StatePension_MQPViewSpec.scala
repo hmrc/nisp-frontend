@@ -1525,14 +1525,14 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text 'What you can do next" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(2)", "nisp.mqp.doNext")
           }
 
           /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div>div>p:nth-child(4)", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "article.content__body>div>div>p:nth-child(3)", "nisp.main.overseas")
           }
           /*Ends*/
 
@@ -1550,55 +1550,55 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with text 'You do not have any years on your record that do not count towards your pension.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(5)", "nisp.mqp.years.dontCount.zero")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(4)", "nisp.mqp.years.dontCount.zero")
           }
           "render page with link  'View your National Insurence Record'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(6)>a", "nisp.main.showyourrecord")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(5)>a", "nisp.main.showyourrecord")
           }
           "render page with href link  'View your National Insurence Record'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord")
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(5)>a", "/check-your-state-pension/account/nirecord")
           }
 
           "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(LocalDate.of(2017, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(6)", "nisp.mqp.afterSpa", Dates.formatDate(LocalDate.of(2017, 5, 4)))
           }
 
           "render page with text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.mqp.forecastChanges")) + " ."
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>p:nth-child(8)", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>p:nth-child(7)", sMessage)
           }
           "render page with href text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(8)>a", "nisp.legal.termsAndCondition")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(7)>a", "nisp.legal.termsAndCondition")
           }
           "render page with href link  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(8)>a", "/check-your-state-pension/terms-and-conditions?showBackLink=true")
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(7)>a", "/check-your-state-pension/terms-and-conditions?showBackLink=true")
           }
 
           "render page with link 'What else you can do'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(9)", "nisp.mqp.whatElse")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(8)", "nisp.mqp.whatElse")
           }
           "render page with link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)", "nisp.mqp.pensionCredit")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(9)", "nisp.mqp.pensionCredit")
           }
           "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)>a", expectedPensionCreditOverviewLink)
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(9)>a", expectedPensionCreditOverviewLink)
           }
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(11)>a", expectedMoneyServiceLink)
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)>a", expectedMoneyServiceLink)
           }
 
         }
@@ -1656,22 +1656,22 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(11)>a", expectedMoneyServiceLink)
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)>a", expectedMoneyServiceLink)
           }
 
           // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(11)", "nisp.spa.under.consideration.title")
           }
 
           "render page with text  'Youll reach State Pension age on 4 May 2017. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2017, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(12)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2017, 5, 4)))
           }
         }
 
@@ -1731,35 +1731,35 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
           }
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h1.heading-large", "nisp.main.h1.title")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
           }
 
           "render page with text  'You’ll reach State Pension age on ' " in {
             mockSetup
             val sMessage = Messages("nisp.main.description.mqp")
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>div>div>p", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>div:nth-child(1)>p", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
             mockSetup
             val sMessage = Dates.formatDate(LocalDate.of(2018, 5, 4)) + "."
-            assertEqualsValue(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>div>div>p>span", sMessage)
+            assertEqualsValue(nonForeignDoc, "article.content__body>div>div>div:nth-child(1)>p>span", sMessage)
           }
 
           "render page with text 'By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>div:nth-child(2)>div>div>p:nth-child(2)", "nisp.mqp.possible")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>div:nth-child(1)>p:nth-child(2)", "nisp.mqp.possible")
           }
 
           "render page with text 'What you can do next" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(3)", "nisp.mqp.doNext")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(2)", "nisp.mqp.doNext")
           }
 
           /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div>div>p:nth-child(4)", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "article.content__body>div>div>p:nth-child(3)", "nisp.main.overseas")
           }
           /*Ends*/
 
@@ -1779,47 +1779,47 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
             " Filling some of these years may get you some State Pension.  '" in {
             mockSetup
             val sMessage = Messages("nisp.mqp.years.dontCount.plural", Time.years(2).toString()) + " " + Messages("nisp.mqp.filling.may.plural")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(5)", sMessage)
+            assertEqualsValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(4)", sMessage)
           }
           "render page with link  'Gaps in your record and the cost of filling them'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(6)>a", "nisp.main.context.fillGaps.viewGapsAndCost")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(5)>a", "nisp.main.context.fillGaps.viewGapsAndCost")
           }
           "render page with href link  'View your National Insurence Record'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord/gaps")
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(5)>a", "/check-your-state-pension/account/nirecord/gaps")
           }
 
           "render page with text  'After State Pension age, 4 May 2018 you no longer pay National Insurance contributions.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(7)", "nisp.mqp.afterSpa", Dates.formatDate(LocalDate.of(2018, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(6)", "nisp.mqp.afterSpa", Dates.formatDate(LocalDate.of(2018, 5, 4)))
           }
 
           "render page with href text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.mqp.forecastChanges")) + " ."
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>p:nth-child(8)", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "article.content__body>div>div>p:nth-child(7)", sMessage)
           }
 
           "render page with link 'What else you can do'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(9)", "nisp.mqp.whatElse")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(8)", "nisp.mqp.whatElse")
           }
           "render page with link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)", "nisp.mqp.pensionCredit")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(9)", "nisp.mqp.pensionCredit")
           }
           "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)>a", expectedPensionCreditOverviewLink)
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(9)>a", expectedPensionCreditOverviewLink)
           }
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(11)>a", expectedMoneyServiceLink)
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)>a", expectedMoneyServiceLink)
           }
         }
 
@@ -1875,22 +1875,22 @@ class StatePension_MQPViewSpec extends HtmlSpec with MockitoSugar with Injecting
 
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(11)>a", expectedMoneyServiceLink)
+            assertLinkHasValue(nonForeignDoc, "article.content__body>div>div>p:nth-child(10)>a", expectedMoneyServiceLink)
           }
 
           // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+            assertEqualsMessage(nonForeignDoc, "article.content__body>div>div>h2:nth-child(11)", "nisp.spa.under.consideration.title")
           }
 
           "render page with text  'Youll reach State Pension age on 4 May 2018. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(13)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2018, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>div>div>p:nth-child(12)", "nisp.spa.under.consideration.detail", Dates.formatDate(LocalDate.of(2018, 5, 4)))
           }
         }
       }
