@@ -16,15 +16,12 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.html.landing
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 class LandingViewSpec extends HtmlSpec {
 
@@ -40,13 +37,13 @@ class LandingViewSpec extends HtmlSpec {
     val title = document.title()
     val expected = messages("nisp.landing.title") + Constants.titleSplitter +
       messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")
-    title must include(expected)
+    title should include(expected)
   }
 
   "return correct title on the landing page" in {
     val html = inject[landing]
     val document = asDocument(html.apply().toString)
     val title = document.title()
-    title must include(messages("nisp.landing.title"))
+    title should include(messages("nisp.landing.title"))
   }
 }

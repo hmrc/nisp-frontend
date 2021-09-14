@@ -16,12 +16,9 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.time.LocalDate
-import java.util.UUID
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
@@ -37,15 +34,16 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessing
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.DateProvider
+import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.Future
 
-class NIRecordControllerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
+class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService = mock[StatePensionService]

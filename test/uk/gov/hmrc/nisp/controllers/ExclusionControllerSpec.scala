@@ -16,13 +16,9 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.util.UUID
-import java.time.LocalDate
-
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
@@ -35,13 +31,15 @@ import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.Future
 
-class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with Injecting with BeforeAndAfterEach {
+class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   val fakeRequest = FakeRequest()
   val mockStatePensionService = mock[StatePensionService]

@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{RETURNS_DEEP_STUBS, when}
+import org.mockito.stubbing.Answer
+import org.mockito.{ArgumentMatchers, Mockito}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -27,16 +28,14 @@ import uk.gov.hmrc.nisp.helpers.FakeSessionCache
 import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
-import uk.gov.hmrc.play.test.UnitSpec
-import play.api.http.Status.OK
+import uk.gov.hmrc.nisp.utils.{JsonDepersonaliser, UnitSpec}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
-class BackendConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
+class BackendConnectorSpec extends UnitSpec with ScalaFutures {
 
   val mockHttp: HttpClient = mock[HttpClient]
   val mockMetricsService = mock[MetricsService](RETURNS_DEEP_STUBS)

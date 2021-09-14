@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.utils
 
 import play.api.libs.json._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import scala.util.{Failure, Success}
 

@@ -21,9 +21,6 @@ import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-//TODO temp object until views are injected
-object ApplicationConfig extends ApplicationConfig(Play.current.configuration, new ServicesConfig(Play.current.configuration))
-
 class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig){
  import servicesConfig._
 

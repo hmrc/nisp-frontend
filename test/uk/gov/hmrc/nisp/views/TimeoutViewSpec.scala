@@ -16,14 +16,12 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.scalatest.mockito.MockitoSugar
-import play.api.test.Helpers._
 import play.api.test.Injecting
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class TimeoutViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+class TimeoutViewSpec extends HtmlSpec with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
@@ -38,32 +36,32 @@ class TimeoutViewSpec extends HtmlSpec with MockitoSugar with Injecting {
       val title = source.title()
       val expected = "Some(" + messages("nisp.iv.failure.timeout.title") + Constants.titleSplitter +
         messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk") + ")"
-      title must include(expected)
+      title should include(expected)
     }
 
     "assert correct heading title on page" in {
       val heading = source.getElementsByTag("h1").get(0).toString
-      heading must include(messages("nisp.iv.failure.timeout.title"))
+      heading should include(messages("nisp.iv.failure.timeout.title"))
     }
 
     "assert correct paragraph one text on page" in {
       val paragraph = source.getElementsByTag("p").get(1).toString
-      paragraph must include(messages("nisp.iv.failure.timeout.message"))
+      paragraph should include(messages("nisp.iv.failure.timeout.message"))
     }
 
     "assert correct paragraph two text on page" in {
       val paragraph = source.getElementsByTag("p").get(2).toString
-      paragraph must include(messages("nisp.iv.failure.timeout.data"))
+      paragraph should include(messages("nisp.iv.failure.timeout.data"))
     }
 
     "assert correct button text on page" in {
       val button = source.getElementsByClass("button").text
-      button must include(messages("nisp.iv.failure.timeout.button"))
+      button should include(messages("nisp.iv.failure.timeout.button"))
     }
 
     "assert correct href on the start again button" in {
       val buttonHref = source.getElementsByClass("button").attr("href")
-      buttonHref must include("/check-your-state-pension/account")
+      buttonHref should include("/check-your-state-pension/account")
     }
   }
 }

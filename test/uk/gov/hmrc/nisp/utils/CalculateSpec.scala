@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.utils
 
 import java.time.LocalDate
 import uk.gov.hmrc.nisp.models.StatePensionAmountRegular
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class CalculateSpec extends UnitSpec {
 

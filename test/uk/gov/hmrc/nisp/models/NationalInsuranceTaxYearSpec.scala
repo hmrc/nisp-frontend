@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.models
 
 import java.time.LocalDate
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class NationalInsuranceTaxYearSpec extends UnitSpec {
   "currentDateAfterCutOff" when {

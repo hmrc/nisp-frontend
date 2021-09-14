@@ -21,9 +21,10 @@ import play.api.inject.{Injector, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl, VerifyAuthActionImpl}
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
-class NispModuleSpec extends PlaySpec {
+class NispModuleSpec extends UnitSpec {
 
   val identityVerificationProp = "microservice.services.features.identityVerification"
 
@@ -38,7 +39,7 @@ class NispModuleSpec extends PlaySpec {
           )
           .injector()
 
-        injector.instanceOf[AuthAction] mustBe an[AuthActionImpl]
+        injector.instanceOf[AuthAction] shouldBe an[AuthActionImpl]
       }
     }
     "bind an instance of VerifyAuthActionImpl" when {
@@ -51,7 +52,7 @@ class NispModuleSpec extends PlaySpec {
           )
           .injector()
 
-        injector.instanceOf[AuthAction] mustBe a[VerifyAuthActionImpl]
+        injector.instanceOf[AuthAction] shouldBe a[VerifyAuthActionImpl]
       }
     }
   }

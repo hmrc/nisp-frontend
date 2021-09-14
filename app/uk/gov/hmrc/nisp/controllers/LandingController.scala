@@ -60,7 +60,7 @@ class LandingController @Inject()(identityVerificationConnector: IdentityVerific
 
   def verifySignIn: Action[AnyContent] = verifyAuthAction {
     implicit request =>
-      Redirect(routes.StatePensionController.show())
+      Redirect(routes.StatePensionController.show)
   }
 
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>

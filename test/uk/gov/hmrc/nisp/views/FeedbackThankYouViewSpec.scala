@@ -19,7 +19,6 @@ package uk.gov.hmrc.nisp.views
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -30,7 +29,7 @@ import uk.gov.hmrc.nisp.views.html.feedback_thankyou
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+class FeedbackThankYouViewSpec extends HtmlSpec with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = mock[CachedStaticHtmlPartialRetriever]
 
@@ -47,7 +46,7 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar with Injecting
   "FeedbackThankYou" should {
 
     "assert correct page title" in {
-      source.toString must include(messages("nisp.feedback.title"))
+      source.toString should include(messages("nisp.feedback.title"))
     }
 
     "assert correct html displayed from partialURL call" in {
@@ -56,7 +55,7 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar with Injecting
         .thenReturn(Html("<p> Mock partial content </p>"))
 
       val content = source.toString
-      content must include("<p> Mock partial content </p>")
+      content should include("<p> Mock partial content </p>")
       verify(cachedStaticHtmlPartialRetriever, times(1)).getPartialContent(
         url = ArgumentMatchers.eq(partialUrl),
         any(), any())(any(), any())
@@ -67,7 +66,7 @@ class FeedbackThankYouViewSpec extends HtmlSpec with MockitoSugar with Injecting
         .thenReturn(Html("<p> Mock partial content </p>"))
       val redirect = source.getElementById("Start").attr("href")
 
-      redirect must include("/check-your-state-pension/account")
+      redirect should include("/check-your-state-pension/account")
     }
   }
 }

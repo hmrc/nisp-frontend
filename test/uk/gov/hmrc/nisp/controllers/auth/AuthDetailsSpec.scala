@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.controllers.auth
 import org.joda.time.DateTime
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class AuthDetailsSpec extends UnitSpec {
 

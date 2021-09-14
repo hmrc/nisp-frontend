@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.nodes.Document
-import org.scalatest.mockito.MockitoSugar
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -32,7 +31,7 @@ import uk.gov.hmrc.nisp.views.html.excluded_cope_failed
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class ExclusionCopeFailedViewSpec extends HtmlSpec with MockitoSugar with Injecting {
+class ExclusionCopeFailedViewSpec extends HtmlSpec with Injecting {
 
   implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,

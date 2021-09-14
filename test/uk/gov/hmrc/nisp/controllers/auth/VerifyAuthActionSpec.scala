@@ -17,13 +17,10 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import akka.util.Timeout
-import java.time.LocalDate
-
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.{reset, spy, verify, when}
+import org.mockito.Mockito.{mock, reset, spy, verify, when}
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.Status.{OK, SEE_OTHER}
@@ -45,14 +42,15 @@ import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeParti
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.play.test.UnitSpec
 
+import java.time.LocalDate
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
-class VerifyAuthActionSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
+class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
   class BrokenAuthConnector(exception: Throwable) extends AuthConnector {
     override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
       Future.failed(exception)

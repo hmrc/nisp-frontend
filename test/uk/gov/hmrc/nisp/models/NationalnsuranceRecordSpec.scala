@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.models
 
 import java.time.LocalDate
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 
 class NationalnsuranceRecordSpec extends UnitSpec {

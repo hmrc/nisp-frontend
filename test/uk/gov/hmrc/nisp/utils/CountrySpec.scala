@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class CountrySpec extends UnitSpec {
   "isAbroad" should {

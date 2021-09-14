@@ -18,9 +18,8 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, urlEqualTo}
 import org.mockito.Mockito
-import org.mockito.Mockito.reset
+import org.mockito.Mockito.{mock, reset}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -32,13 +31,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.WireMockHelper
+import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.io.Source
 
-class IdentityVerificationConnectorSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with ScalaFutures
+class IdentityVerificationConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with ScalaFutures
   with Injecting with BeforeAndAfterEach with WireMockHelper {
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
