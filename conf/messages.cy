@@ -149,7 +149,7 @@ nisp.excluded.dead.openingtime.saturday = 08:00 - 16:00, Dydd Sadwrn
 nisp.excluded.dead.openingtime.holidays = Ar gau ar Ddydd Sul ac ar wyliau’r banc
 
 nisp.excluded.isleOfMan.sp.line1 = Rydym yn methu cyfrifo eich Pensiwn y Wladwriaeth, oherwydd bod Llywodraeth Ynys Manaw ar hyn o bryd yn ymgymryd ag adolygiad o’i gynllun Pensiwn Ymddeol. Ni fydd yn mabwysiadu’r diwygiadau newydd i Bensiwn y Wladwriaeth.
-nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i <a href="https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (agor mewn tab newydd)</a>.
+nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i <a href="https://www.gov.im/categories/benefits-and-financial-support/pensions/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (agor mewn tab newydd)</a>.
 nisp.excluded.isleOfMan.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol oherwydd bod gennych gyfraniadau o Ynys Manaw.
 
 nisp.excluded.mwrre.sp = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth oherwydd eich bod wedi <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)</a>.
