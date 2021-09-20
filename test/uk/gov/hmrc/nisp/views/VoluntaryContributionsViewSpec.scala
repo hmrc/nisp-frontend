@@ -141,7 +141,7 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with BeforeAndAfter with I
     }
 
     "render page with href value of link 'GOV.IM – Retirement Pension (opens in new window)'" in {
-      assertLinkHasValue(htmlAccountDoc, "#nir-external-link", "https://www.gov.im/categories/benefits-and-financial-support/social-security-benefits/retirement-and-pensions/retirement-pension/")
+      assertLinkHasValue(htmlAccountDoc, "#nir-external-link", "https://www.gov.im/categories/benefits-and-financial-support/pensions/")
     }
 
     "render page with href value of link 'Money advice service'" in {
