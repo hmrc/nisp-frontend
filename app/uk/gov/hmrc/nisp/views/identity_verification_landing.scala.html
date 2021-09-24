@@ -33,7 +33,7 @@
 )
 @()(implicit messages: Messages, request: Request[_])
 
-@main(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")))) {
+@main(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")), browserTitle = Some(messages("nisp.landing.title")))) {
 
 
 

@@ -42,19 +42,6 @@
 isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser,
 authDetails: AuthDetails, messages: Messages)
 
-@sidebar = {
-<div class="helpline-sidebar" >
-
-    <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
-
-    <p>@messages("nisp.nirecord.helpline.number")</p>
-
-    <p>@messages("nisp.nirecord.helpline.textNumber")</p>
-
-    <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
-
-</div>
-}
 
 @analyticsAdditionalJs(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, partialRetriever: CachedStaticHtmlPartialRetriever) = @{
     Map[String, Any](
@@ -82,50 +69,67 @@ authDetails: AuthDetails, messages: Messages)
 @main(MainTemplateParams(
     userLoggedIn = true,
     browserTitle = Some(messages("nisp.main.title")),
-    pageInfo = Some(user.name.getOrElse("")),
-    pageTitle = Some(messages("nisp.main.h1.title")),
-    h1Class = Some("titleWithPAgeInfo"),
-    sidebarLinks = Some(sidebar),
+    articleClasses = Some("fullwidth"),
     showUrBanner = true
 )) {
 
-    <p>@messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
 
-    <div class="highlighted-event govuk-box-highlight">
-        <p>@messages("nisp.main.basedOn") <span class="nowrap">@langUtils.Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@messages("nisp.main.caveats") @messages("nisp.is")</span></p>
-        <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")</em></p>
-        <p>@NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
-        @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")</p>
+            <div class="page-info">@user.name.getOrElse("")</div>
+            <h1 class="titleWithPageInfo">@messages("nisp.main.h1.title")</h1>
+
+            <p>@messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
+
+            <div class="highlighted-event govuk-box-highlight">
+                <p>@messages("nisp.main.basedOn") <span class="nowrap">@langUtils.Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@messages("nisp.main.caveats") @messages("nisp.is")</span></p>
+                <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")</em></p>
+                <p>@NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
+                @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")</p>
+            </div>
+            <p>@messages("nisp.main.caveats")</p>
+            <ul class="list-bullet">
+                <li>@Html(messages("nisp.main.notAGuarantee"))</li>
+                <li>@Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
+                <li>@Html(messages("nisp.main.inflation"))</li>
+                @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
+            </ul>
+            <h2 class="heading-medium" id="mostYouCanGet">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
+            <p>@Html(messages("nisp.main.cantImprove"))</p>
+            <p>@Html(messages("nisp.main.context.reachMax.needToPay", (langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
+            <a href='@routes.NIRecordController.showFull.url'>@Html(messages("nisp.main.showyourrecord"))</a>
+
+            @if(isAbroad) {
+                @abroad()
+            }
+
+            @if(statePension.statePensionAgeUnderConsideration) {
+                @statePensionAgeUnderConsideration(langUtils.Dates.formatDate(statePension.pensionDate))
+            }
+
+            @if(statePension.contractedOut) {
+                @contractedOut()
+            }
+
+            @if(customerAge > Constants.deferralCutOffAge) {
+                @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
+            }
+
+            @if(isPertaxUrl){<div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>}
+        </div>
+
+        <div class="column-one-third">
+            <div class="helpline-sidebar" >
+                <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
+
+                <p>@messages("nisp.nirecord.helpline.number")</p>
+
+                <p>@messages("nisp.nirecord.helpline.textNumber")</p>
+
+                <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
+
+            </div>
+        </div>
     </div>
-    <p>@messages("nisp.main.caveats")</p>
-    <ul class="list-bullet">
-        <li>@Html(messages("nisp.main.notAGuarantee"))</li>
-        <li>@Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
-        <li>@Html(messages("nisp.main.inflation"))</li>
-        @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
-    </ul>
-    <h2 class="heading-medium" id="mostYouCanGet">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
-    <p>@Html(messages("nisp.main.cantImprove"))</p>
-    <p>@Html(messages("nisp.main.context.reachMax.needToPay", (langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
-    <a href='@routes.NIRecordController.showFull.url'>@Html(messages("nisp.main.showyourrecord"))</a>
-
-    @if(isAbroad) {
-        @abroad()
-    }
-
-    @if(statePension.statePensionAgeUnderConsideration) {
-        @statePensionAgeUnderConsideration(langUtils.Dates.formatDate(statePension.pensionDate))
-    }
-
-    @if(statePension.contractedOut) {
-        @contractedOut()
-    }
-
-    @if(customerAge > Constants.deferralCutOffAge) {
-        @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
-    }
-
-    @if(isPertaxUrl){<div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>}
-
   }
 }

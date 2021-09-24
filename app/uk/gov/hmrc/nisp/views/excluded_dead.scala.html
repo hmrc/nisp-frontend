@@ -49,9 +49,9 @@
 
 @main(
     MainTemplateParams(
-        Some(messages("nisp.main.title")),
         userLoggedIn = true,
-        pageTitle = Some(messages("nisp.excluded.title"))
+        pageTitle = Some(messages("nisp.excluded.title")),
+        browserTitle = Some(messages("nisp.excluded.title"))
     ),
     Some(request.authDetails)
 ) {

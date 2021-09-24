@@ -68,10 +68,8 @@ h2.summary {
 
 }
 
-.mainpage {
-  @media only screen and (min-width: 640px) {
-    width: 63.666%;
-  }
+.mainpage, .fullwidth {
+  width: 100%;
 }
 
 .nowrap {
@@ -80,6 +78,7 @@ h2.summary {
 
 .helpline-sidebar {
   border-top: 10px solid $govuk-blue;
+  margin-top: 2em;
 }
 
 .backlink {

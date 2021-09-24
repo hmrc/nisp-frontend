@@ -35,7 +35,7 @@
 
 @main(MainTemplateParams(
   articleClasses = Some("mainpage"),
-  pageTitle= Some(messages("global.error.InternalServerError500.title")), h1Class = Some("heading-xlarge")
+  pageTitle= Some(messages("global.error.InternalServerError500.title")), browserTitle= Some(messages("global.error.InternalServerError500.title")), h1Class = Some("heading-xlarge")
 )) {
   <p>@messages("global.error.InternalServerError500.message")</p>
 }

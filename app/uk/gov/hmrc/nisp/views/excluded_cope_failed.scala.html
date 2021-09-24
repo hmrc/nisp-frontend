@@ -34,7 +34,7 @@
 
 @()(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
 
-@main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
+@main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.excluded.cope.failed.h1")),
             pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage")),
     Some(request.authDetails)
 ) {

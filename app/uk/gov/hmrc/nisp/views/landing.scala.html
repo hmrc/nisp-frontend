@@ -33,7 +33,7 @@
 )
 @()( implicit messages: Messages, request: Request[_])
 
-@main(MainTemplateParams(pageTitle = Some(messages("nisp.landing.title")))) {
+@main(MainTemplateParams(pageTitle = Some(messages("nisp.landing.title")), browserTitle = Some(messages("nisp.landing.title")))) {
 
   <div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>
   
