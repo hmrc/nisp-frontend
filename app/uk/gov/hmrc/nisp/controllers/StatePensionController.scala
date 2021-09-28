@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.controllers
 
 import java.time.LocalDate
-
 import com.google.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -32,7 +31,7 @@ import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.Calculate._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
-import uk.gov.hmrc.nisp.views.html._
+import uk.gov.hmrc.nisp.views.html.{sessionTimeout, statepension, statepension_cope, statepension_forecastonly, statepension_mqp}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -54,7 +53,8 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                                       (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                        val formPartialRetriever: FormPartialRetriever,
                                        val templateRenderer: TemplateRenderer,
-                                       executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
+                                       executor: ExecutionContext,
+                                       appConfig: ApplicationConfig) extends NispFrontendController(mcc) with I18nSupport {
 
   def showCope: Action[AnyContent] = authenticate.async {
     implicit request =>

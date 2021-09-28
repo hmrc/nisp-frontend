@@ -19,6 +19,13 @@ val excludedPackages = Seq[String](
   "uk.gov.hmrc.BuildInfo"
 )
 
+TwirlKeys.templateImports ++= Seq(
+  "uk.gov.hmrc.govukfrontend.views.html.components._",
+  "uk.gov.hmrc.govukfrontend.views.html.helpers._",
+  "uk.gov.hmrc.hmrcfrontend.views.html.components._",
+  "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
+)
+
 lazy val scoverageSettings = {
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),

@@ -14,12 +14,10 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 
-@this(p: P, h2: H2, link: Link)
+@this()
 
-@(statePensionDate: String)(implicit messages: Messages)
+@(content: Content, elmId: Option[String] = None, classes: Option[String] = None)
 
-@h2("nisp.main.puttingOff")
-@p(Text(messages("nisp.main.puttingOff.line1", statePensionDate)))
-<a href="https://www.gov.uk/deferring-state-pension" class="govuk-link" target="_blank" rel="external">@messages("nisp.main.puttingOff.linkTitle")</a>
+<p @if(elmId.isDefined){ id="@{elmId.get}"} class="govuk-body @classes.getOrElse("")" )>@content.asHtml</p>

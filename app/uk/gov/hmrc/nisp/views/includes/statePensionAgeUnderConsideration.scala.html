@@ -14,8 +14,10 @@
  * limitations under the License.
  *@
 
-@this()
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents._
+
+@this(h2: H2, p: P)
 @(statePensionDate: String)(implicit messages: Messages)
 
-<h2 class="heading-medium">@messages("nisp.spa.under.consideration.title")</h2>
-<p>@Html(messages("nisp.spa.under.consideration.detail", statePensionDate))</p>
+@h2("nisp.spa.under.consideration.title")
+@p(Text(messages("nisp.spa.under.consideration.detail", statePensionDate)))

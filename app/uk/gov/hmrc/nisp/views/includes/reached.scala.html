@@ -18,19 +18,20 @@
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.play.language.LanguageUtils
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents._
 
-@this(langUtils: LanguageUtils)
+@this(langUtils: LanguageUtils, p: P, h2: H2, link: Link)
 
 @(statePension: StatePension)(implicit messages: Messages )
 
-<p>@messages("nisp.main.caveats")</p>
-<ul class="list-bullet">
-    <li>@Html(messages("nisp.main.notAGuarantee"))</li>
-    <li>@Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
-    <li>@Html(messages("nisp.main.inflation"))</li>
-    @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
+@p(Text(messages("nisp.main.caveats")))
+<ul class="govuk-list govuk-list--bullet">
+    <li>@messages("nisp.main.notAGuarantee")</li>
+    <li>@messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo))</li>
+    <li>@messages("nisp.main.inflation")</li>
+    @if(statePension.pensionSharingOrder) {<li>@messages("nisp.main.psod")</li>}
 </ul>
-<h2 class="heading-medium" id="mostYouCanGet"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
-<p>@messages("nisp.main.cantImprove")</p>
-<p>@Html(messages("nisp.main.context.reachMax.needToPay", (langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
-<a href='@routes.NIRecordController.showFull.url'>@messages("nisp.main.showyourrecord")</a>
+<h2 class="govuk-heading-m" id="mostYouCanGet"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.mostYouCanGet")</h2>
+@p(Text(messages("nisp.main.cantImprove")))
+@p(Text(messages("nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(statePension.pensionDate).toString())))
+@link(link = routes.NIRecordController.showFull.url, messageKey = "nisp.main.showyourrecord")
