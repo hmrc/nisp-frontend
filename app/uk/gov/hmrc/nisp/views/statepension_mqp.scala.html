@@ -22,13 +22,19 @@
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, details, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main,
+    newMain: mainNew,
     statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration,
-    langUtils: LanguageUtils
+    langUtils: LanguageUtils,
+    p: P,
+    h1: H1,
+    h2: H2,
+    details: details,
+    link: Link
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -44,18 +50,17 @@
   customerAge: Int,
   isPertaxUrl: Boolean,
   yearsToContributeUntilPensionAge: Int
-)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages)
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages, appConfig: ApplicationConfig)
 
 @sidebar = {
-<div class="helpline-sidebar" >
-    <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
+<div class="helpline-sidebar govuk-!-padding-top-8">
+    @h2("nisp.nirecord.helpline.getHelp")
 
-    <p>@messages("nisp.nirecord.helpline.number")</p>
+    @p(Text(messages("nisp.nirecord.helpline.number")))
 
-    <p>@messages("nisp.nirecord.helpline.textNumber")</p>
+    @p(Text(messages("nisp.nirecord.helpline.textNumber")))
 
-    <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
-
+    @p(Text(messages("nisp.nirecord.helpline.openTimes")), classes = Some("govuk-body-s"))
 </div>
 }
 
@@ -78,38 +83,35 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-@main(MainTemplateParams(
-    userLoggedIn = true,
-    browserTitle = Some(messages("nisp.main.title")),
-    pageTitle = Some(messages("nisp.main.h1.title")),
-    sidebarLinks = Some(sidebar)
-)) {
+
+@newMain(pageTitle = messages("nisp.main.title"), sidebar = Some(sidebar)){
 
     <div class="panel-indent panel-border-wide panel-indent--info">
-        <p>@Html(messages("nisp.main.description.mqp")) <span class="nowrap">@langUtils.Dates.formatDate(statePension.pensionDate). </span></p>
+        @p(HtmlContent(s"""${messages("nisp.main.description.mqp")}
+                        <span class="nowrap">
+                            ${langUtils.Dates.formatDate(statePension.pensionDate)}.
+                        </span>"""))
 
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
-                <p>@messages("nisp.mqp.possible")</p>
+                @p(Text(messages("nisp.mqp.possible")))
             }
             @if(mqp == CantGet) {
-                <p>@Html(messages("nisp.mqp.notPossible"))</p>
+                @p(HtmlContent(messages("nisp.mqp.notPossible")))
             }
         }
     </div>
 
     <!-- WHAT YOU CAN DO NEXT -->
 
-    <h2 class="heading-medium">@messages("nisp.mqp.doNext")</h2>
-    <p>
-        @if(isAbroad) {
-            @Html(messages("nisp.main.overseas"))
-        } else {
-            @Html(messages("nisp.mqp.overseas"))
-        }
-    </p>
+    @h2("nisp.mqp.doNext")
+    @if(isAbroad) {
+        @p(HtmlContent(messages("nisp.main.overseas")))
+    } else {
+        @p(HtmlContent(messages("nisp.mqp.overseas")))
+    }
 
-    <p>
+    <p class="govuk-body">
         @if(numberOfPayableGaps > 1) {
             @messages("nisp.mqp.years.dontCount.plural", Time.years(numberOfPayableGaps))
         } else {
@@ -141,25 +143,25 @@
 
     </p>
 
-    <p>
+    <p class="govuk-body">
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
-                <a href='@routes.NIRecordController.showGaps.url'>@Html(messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
+                @link(link = routes.NIRecordController.showGaps.url, messageKey = "nisp.main.context.fillGaps.viewGapsAndCost")
             }
             @if(mqp == CantGet) {
-                <a href='@routes.NIRecordController.showFull.url'>@messages("nisp.main.showyourrecord")</a>
+                @link(link = routes.NIRecordController.showFull.url, messageKey = "nisp.main.showyourrecord")
             }
         }
     </p>    
    
-    <p>@Html(messages("nisp.mqp.afterSpa", langUtils.Dates.formatDate(statePension.pensionDate)))</p>
-    <p>@messages("nisp.legal.mqp.forecastChanges") <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>@messages("nisp.legal.termsAndCondition")</a>.</p>
+    @p(HtmlContent(messages("nisp.mqp.afterSpa", langUtils.Dates.formatDate(statePension.pensionDate))))
+    <p class="govuk-body">@messages("nisp.legal.mqp.forecastChanges") <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>@messages("nisp.legal.termsAndCondition")</a>.</p>
 
     <!-- WHAT ELSE YOU CAN DO -->
 
-    <h2 class="heading-medium">@messages("nisp.mqp.whatElse")</h2>
-    <p>@Html(messages("nisp.mqp.pensionCredit"))</p>
-    <p>@Html(messages("nisp.mqp.moneyAdvice"))</p>
+    @h2("nisp.mqp.whatElse")
+    @p(HtmlContent(messages("nisp.mqp.pensionCredit")))
+    @p(HtmlContent(messages("nisp.mqp.moneyAdvice")))
 
     @if(isPertaxUrl) {<div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>}
 

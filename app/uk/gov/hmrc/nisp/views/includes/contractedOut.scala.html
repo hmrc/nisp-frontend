@@ -15,11 +15,10 @@
  *@
 
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2}
 
-@this()
+@this(p: P, h2: H2)
 @()(implicit messages: Messages)
 
-<h2 class="heading-medium">@messages("nisp.cope.title1")</h2>
-<p>@Html(messages("nisp.cope.likeMostPeople", routes.StatePensionController.showCope.url))</p>
-
-+
+@h2(msg="nisp.cope.title1")
+@p(HtmlContent(messages("nisp.cope.likeMostPeople", routes.StatePensionController.showCope.url)))

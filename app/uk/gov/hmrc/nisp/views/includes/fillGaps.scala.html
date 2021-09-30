@@ -17,16 +17,17 @@
 @import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.html.includes.spChart
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
-@this(spChart: spChart)
+@this(spChart: spChart, p: P, h2: H2, link: Link)
 @(statePension: StatePension, numberOfGaps: Int, personalMaximumChart: SPChartModel)(implicit messages: Messages)
-<h2 class="heading-medium">@messages("nisp.main.context.fillGaps.improve.title")</h2>
+@h2(msg="nisp.main.context.fillGaps.improve.title")
     @if(numberOfGaps == 1) {
-        <p>@messages("nisp.main.context.fillgaps.para1.singular")</p>
+        @p(Text(messages("nisp.main.context.fillgaps.para1.singular")))
         @spChart(Html(messages("nisp.main.context.fillgaps.chart.onlyone")), personalMaximumChart)
         } else {
-        <p>@messages("nisp.main.context.fillgaps.para1.plural")</p>
-        <ul class="list-bullet">
+        @p(Text(messages("nisp.main.context.fillgaps.para1.plural")))
+        <ul class="govuk-list govuk-list--bullet">
             <li>@messages("nisp.main.context.fillgaps.bullet1")</li>
 
             @if(statePension.amounts.maximum.gapsToFill == 1) {
@@ -39,4 +40,4 @@
         @spChart(Html(messages("nisp.main.context.fillgaps.chart.plural", statePension.amounts.maximum.gapsToFill)), personalMaximumChart)
     }
     }
-<a href='@routes.NIRecordController.showGaps.url'>@Html(messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
+@link(link = routes.NIRecordController.showGaps.url, messageKey = "nisp.main.context.fillGaps.viewGapsAndCost")

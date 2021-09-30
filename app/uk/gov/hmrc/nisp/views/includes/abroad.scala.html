@@ -14,9 +14,11 @@
  * limitations under the License.
  *@
 
-@this()
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.P
+
+@this(p: P)
 @()(implicit messages: Messages)
 
 <div class="panel-indent">
-    <p>@Html(messages("nisp.main.overseas"))</p>
+    @p(HtmlContent(messages("nisp.main.overseas")))
 </div>

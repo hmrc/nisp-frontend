@@ -68,11 +68,16 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   private val pertaxFrontendService: String = baseUrl("pertax-frontend")
   val pertaxFrontendUrl: String = configuration.getOptional[String]("breadcrumb-service.url").getOrElse("")
   val breadcrumbPartialUrl: String = s"$pertaxFrontendService/personal-account/integration/main-content-header"
+  val pertaxMessagesUrl: String = s"$pertaxFrontendUrl/messages"
+  val pertaxDetailsUrl: String = s"$pertaxFrontendUrl/personal-details"
+  val pertaxPreferencesUrl: String = s"$pertaxFrontendUrl/preferences"
+  val trackProgressUrl: String = configuration.getOptional[String]("track-link.url").getOrElse("")
   val showFullNI: Boolean = getConfBool("features.fullNIrecord", false)
   val futureProofPersonalMax: Boolean = getConfBool("features.future-proof.personalMax", false)
   val isWelshEnabled: Boolean = getConfBool("features.welsh-translation", false)
   val feedbackFrontendUrl: String = loadConfig("feedback-frontend.url")
   val futurePensionUrl: String = configuration.getOptional[String]("future-pension-link.url").getOrElse("")
+  val urBannerUrl: String = configuration.getOptional[String]("urBanner.link").getOrElse("")
 
   val citizenDetailsServiceUrl: String = baseUrl("citizen-details")
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")

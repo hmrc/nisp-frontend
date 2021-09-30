@@ -15,10 +15,11 @@
  *@
 
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
-@this()
+@this(p: P, h2: H2, link: Link)
 @()(implicit messages: Messages)
 
-    <h2 class="heading-medium">@messages("nisp.main.context.fillGaps.improve.title")</h2>
-    <p>@Html(messages("nisp.main.context.improve.para1.plural"))</p>
-    <a href='@routes.NIRecordController.showGaps.url'>@messages("nisp.main.context.fillGaps.viewGaps")</a>
+    @h2(msg="nisp.main.context.fillGaps.improve.title")
+    @p(Text(messages("nisp.main.context.improve.para1.plural")))
+    @link(link=routes.NIRecordController.showGaps.url, messageKey = "nisp.main.context.fillGaps.viewGaps")

@@ -20,13 +20,14 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.html.includes.spChart
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
-@this(spChart: spChart)
+@this(spChart: spChart, p: P, h2: H2, link: Link)
 @(statePension: StatePension, personalMaximumChart: SPChartModel)(implicit messages: Messages)
 
-<h2 class="heading-medium">@messages("nisp.main.context.fillGaps.improve.title")</h2>
+@h2(msg="nisp.main.context.fillGaps.improve.title")
 
-<p>@messages("nisp.main.context.fillgaps.para1.futurePersonalMax")</p>
+@p(Text(messages("nisp.main.context.fillgaps.para1.futurePersonalMax")))
 @spChart(Html(messages("nisp.main.context.fillgaps.chart.maxamount")), personalMaximumChart)
 
-<a href='@routes.NIRecordController.showGaps.url'>@Html(messages("nisp.main.context.fillGaps.viewGapsAndCost"))</a>
+@link(link = routes.NIRecordController.showGaps.url, messageKey = "nisp.main.context.fillGaps.viewGapsAndCost")

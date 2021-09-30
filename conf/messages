@@ -1,3 +1,4 @@
+
 #***********
 # General
 #***********
@@ -55,10 +56,10 @@ nisp.main.week = a week
 nisp.main.month = a month
 nisp.main.year = a year
 nisp.main.notAGuarantee = is not a guarantee and is based on the current law
-nisp.main.isBased = is based on your National Insurance record up to {0}
+nisp.main.isBased = is based on your National Insurance record up to <span class="nowrap">{0}</span>
 nisp.main.inflation = does not include any increase due to inflation
 nisp.main.psod = does not include the pension sharing order you have in effect
-nisp.main.after = After State Pension age, {0}, you no longer pay National Insurance contributions.
+nisp.main.after = After State Pension age, <span class="nowrap">{0}</span>, you no longer pay National Insurance contributions.
 nisp.main.basedOn = You can get your State Pension on
 nisp.national.insurance.number = National Insurance number
 nisp.print.this.ni.record = Print this National Insurance record

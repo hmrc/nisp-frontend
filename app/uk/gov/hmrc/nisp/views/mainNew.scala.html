@@ -18,6 +18,8 @@
 @import views.html.helper.CSPNonce
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
 
 
 @this(
@@ -47,24 +49,24 @@
 @headBlock = {
     @headScripts
     <meta name="format-detection" content="telephone=no" />
-    <link rel="stylesheet" href='@controllers.routes.Assets.versioned("stylesheets/nisp.scss")'/>
+    <link rel="stylesheet" href='@controllers.routes.Assets.versioned("stylesheets/nisp.css")'/>
 }
 
 @beforeContent = {
     @accountMenu(AccountMenu(
         accountHome = AccountHome(
-            href = "#account-home",
+            href = appConfig.pertaxFrontendUrl,
             active = true
         ),
         messages = AccountMessages(
-            href = "#messages"
+            href = appConfig.pertaxMessagesUrl
         ),
         checkProgress = CheckProgress(
-            href = "#check-progress"
+            href = appConfig.trackProgressUrl
         ),
-        paperlessSettings = PaperlessSettings("#paperless-settings"),
-        personalDetails = PersonalDetails("#personal-details"),
-        signOut = SignOut("#sign-out")
+        paperlessSettings = PaperlessSettings(appConfig.pertaxPreferencesUrl),
+        personalDetails = PersonalDetails(appConfig.pertaxDetailsUrl),
+        signOut = SignOut(routes.StatePensionController.signOut.url)
     ))
     @hmrcLanguageSelectHelper()
 
@@ -77,7 +79,6 @@
     beforeContent
     content
 }
-
 
 @scripts = {
  <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
@@ -96,10 +97,12 @@
 @govukLayout(
     pageTitle = Some(fullTitle),
     headBlock = Some(hmrcHead(Some(headBlock))),
-    headerBlock = Some(hmrcStandardHeader(serviceName = Some(messages("nisp.title")))),
+    headerBlock = Some( hmrcStandardHeader(serviceName = Some(messages("nisp.title")),
+                        userResearchBanner = Some(UserResearchBanner(url = appConfig.urBannerUrl))
+)),
     beforeContentBlock = Some(hmrcHead(Some(beforeContent))),
     scriptsBlock = Some(hmrcScripts(Some(scripts))),
-    footerBlock = Some(hmrcStandardFooter()),
+    footerBlock = Some(hmrcStandardFooter(accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)))),
     mainContentLayout = Some(sidebar match {
         case Some(sidebarHtml) => twoThirdsOneThirdMainContent(sidebarHtml)
         case None => twoThirdsMainContent(_)

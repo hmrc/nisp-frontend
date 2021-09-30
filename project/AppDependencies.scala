@@ -3,7 +3,6 @@ import sbt._
 object AppDependencies {
 
   private val playVersion = "play-28"
-  private val hmrcHost = "uk.gov.hmrc"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "play-partials" % "8.2.0-play-28",
@@ -18,8 +17,8 @@ object AppDependencies {
     "uk.gov.hmrc" %% "local-template-renderer"  % "2.15.0-play-28",
     "com.typesafe.play" %% "play-json-joda" % "2.8.1",
     "com.jsuereth" %% "scala-arm" % "2.0",
-    hmrcHost        %% "play-frontend-hmrc"         % s"0.83.0-$playVersion",
-    hmrcHost        %% "govuk-template"             % s"5.68.0-$playVersion"
+    "uk.gov.hmrc"        %% "play-frontend-hmrc"         % s"0.90.0-$playVersion",
+    "uk.gov.hmrc"  %% "govuk-template"             % s"5.69.0-$playVersion"
   )
 
   val test = Seq(

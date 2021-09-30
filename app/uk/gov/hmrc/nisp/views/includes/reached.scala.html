@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents._
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
 @this(langUtils: LanguageUtils, p: P, h2: H2, link: Link)
 
@@ -27,7 +27,7 @@
 @p(Text(messages("nisp.main.caveats")))
 <ul class="govuk-list govuk-list--bullet">
     <li>@messages("nisp.main.notAGuarantee")</li>
-    <li>@messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo))</li>
+    <li>@Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
     <li>@messages("nisp.main.inflation")</li>
     @if(statePension.pensionSharingOrder) {<li>@messages("nisp.main.psod")</li>}
 </ul>

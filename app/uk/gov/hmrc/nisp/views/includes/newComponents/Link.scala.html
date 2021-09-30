@@ -21,5 +21,6 @@
         messagesArgs: Seq[String] = Seq.empty,
         attrTarget: Boolean = false,
         id: Option[String] = None)(implicit messages: Messages)
-
-<a href="@link" class="govuk-link" @id.map(x => s"id=$x") @if(attrTarget) { target="_blank" rel="noopener noreferrer"}>@messages(messageKey, messagesArgs)</a>
+<p class="govuk-body govuk-!-margin-bottom-3">
+    <a href="@link" class="govuk-link" @id.map(x => s"id=$x") @if(attrTarget) { target="_blank" rel="noopener noreferrer"}>@messages(messageKey, messagesArgs)</a>
+</p>

@@ -22,7 +22,7 @@
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents._
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, details}
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 
@@ -45,9 +45,7 @@
     p: P,
     h1: H1,
     h2: H2,
-    details: details,
-    panel: panel,
-    list: list
+    details: details
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -69,13 +67,15 @@
 )(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages, appConfig: ApplicationConfig)
 
 @sidebar = {
+<div class="helpline-sidebar govuk-!-padding-top-8">
     @h2("nisp.nirecord.helpline.getHelp")
 
-    @p(Text(messages("nisp.nirecord.helpline.number")), classes = Some("govuk-body-s"))
+    @p(Text(messages("nisp.nirecord.helpline.number")))
 
-    @p(Text(messages("nisp.nirecord.helpline.textNumber")), classes = Some("govuk-body-s"))
+    @p(Text(messages("nisp.nirecord.helpline.textNumber")))
 
-    @p(Text(messages("nisp.nirecord.helpline.openTimes")), classes = Some("govuk-body-xs"))
+    @p(Text(messages("nisp.nirecord.helpline.openTimes")), classes = Some("govuk-body-s"))
+</div>
 }
 
 @analyticsAdditionalJs = @{
@@ -96,22 +96,6 @@
     )
 }
 
-@listValues = @{
-if(statePension.pensionSharingOrder){
-Seq("nisp.main.notAGuarantee",
-messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)),
-messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)),
-"nisp.main.inflation",
-"nisp.main.psod"
-)
-} else {
-Seq("nisp.main.notAGuarantee",
-messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)),
-messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)),
-"nisp.main.inflation"
-)
-}}
-
 @defining(Some(user)) { implicit userOption =>
 
 
@@ -122,22 +106,35 @@ messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast
 
     @details(summary = messages("nisp.show.nino"), content = user.nino.toString)
 
-@panel(content = Some(HtmlContent("""   <p><strong>You can get your State Pension on 6 September 2022.<br>Your forecast is</strong></p>
-                                        <h2>£187.55 a week</h2>
-                                        <p> <strong>£815.51 a month, £9,786.09 a year</strong>
-                                        </p>
-                        """)))
+<div class="govuk-panel govuk-panel--confirmation">
+    <div class="govuk-panel__body">
+        @messages("nisp.main.basedOn")
+        <span class="nowrap">
+            @langUtils.Dates.formatDate(statePension.pensionDate)
+        </span>
+        <span class="nowrap">@messages("nisp.main.caveats")
+            @messages("nisp.is")
+        </span>
+    </div>
+    <h1 class="govuk-panel__title">
+        @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")
+    </h1>
+    <div class="govuk-panel__body">
+        @NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
+        @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")
+    </div>
+</div>
 
     @if(statePension.mqpScenario.isDefined)  {
 
         @p(Text(messages("nisp.main.caveats")))
 
         <ul class="govuk-list govuk-list--bullet">
-            <li>@Html(messages("nisp.main.notAGuarantee"))</li>
+            <li>@messages("nisp.main.notAGuarantee")</li>
             <li>@Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
-            <li>@Html(messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork)))</li>
-            <li>@Html(messages("nisp.main.inflation"))</li>
-            @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
+            <li>@messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast.yearsToWork))</li>
+            <li>@messages("nisp.main.inflation")</li>
+            @if(statePension.pensionSharingOrder) {<li>@messages("nisp.main.psod")</li>}
         </ul>
         @if(statePension.numberOfQualifyingYears > 0) {
             @p(Text(messages("nisp.mqp.youCurrentlyHave", Time.years(statePension.numberOfQualifyingYears),Constants.minimumQualifyingYearsNSP)))
@@ -147,7 +144,7 @@ messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast
 
         @if(!isAbroad) {
             <div class="panel-indent">
-                @p(Text(messages("nisp.mqp.overseas")))
+                @p(HtmlContent(messages("nisp.mqp.overseas")))
             </div>
         }
 
@@ -174,10 +171,10 @@ messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast
 
         @if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
             @p(Text(messages("nisp.main.caveats")))
-            <ul class="govuk-list govuk-list--bullet">
-                <li>@Html(messages("nisp.main.notAGuarantee"))</li>
-                <li>@Html(messages("nisp.main.inflation"))</li>
-                @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
+            <ul class="govuk-list govuk-body govuk-list--bullet">
+                <li>messages("nisp.main.notAGuarantee")</li>
+                <li>(messages("nisp.main.inflation")</li>
+                @if(statePension.pensionSharingOrder) {<li>messages("nisp.main.psod")</li>}
             </ul>
             @h2("nisp.main.continueContribute")
 
@@ -196,8 +193,12 @@ messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast
         }
 
     }
-<br><br>
-    <p class="govuk-body">@messages("nisp.legal.forecastChanges") <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>@messages("nisp.legal.termsAndCondition")</a>.</p>
+
+    <p class="govuk-body">@messages("nisp.legal.forecastChanges")
+        <a href='@routes.TermsConditionsController.show.url?showBackLink=true'>
+            @messages("nisp.legal.termsAndCondition")
+        </a>.
+    </p>
 
 
     @if(isAbroad) {
@@ -220,7 +221,11 @@ messages("nisp.mqp.howManyToContribute",Time.years(statePension.amounts.forecast
         <div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>
     }
 
-    <p id="print-sp-link"><a href="javascript:window.print();" data-journey-click="link - click:Your State Pension summary:Print your State Pension summary" class="govuk-link">@messages("nisp.print.your.state.pension.summary")</a></p>
+    <p id="print-sp-link">
+        <a href="javascript:window.print();" data-journey-click="link - click:Your State Pension summary:Print your State Pension summary" class="govuk-link">
+            @messages("nisp.print.your.state.pension.summary")
+        </a>
+    </p>
 
   }
 }

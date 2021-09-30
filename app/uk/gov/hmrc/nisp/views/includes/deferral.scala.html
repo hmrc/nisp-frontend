@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents._
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
 @this(p: P, h2: H2, link: Link)
 
@@ -22,4 +22,4 @@
 
 @h2("nisp.main.puttingOff")
 @p(Text(messages("nisp.main.puttingOff.line1", statePensionDate)))
-<a href="https://www.gov.uk/deferring-state-pension" class="govuk-link" target="_blank" rel="external">@messages("nisp.main.puttingOff.linkTitle")</a>
+@link(link = "https://www.gov.uk/deferring-state-pension", messageKey = "nisp.main.puttingOff.linkTitle", attrTarget = true)

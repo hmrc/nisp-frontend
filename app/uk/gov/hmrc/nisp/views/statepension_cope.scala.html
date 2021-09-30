@@ -22,68 +22,75 @@
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
-
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main
+    newMain: mainNew,
+    p: P,
+    h2: H2,
+    link: Link
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
     formPartialRetriever: FormPartialRetriever
 )
 
-@(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages)
+@(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages, appConfig: ApplicationConfig)
 
 @sidebar = {
-<div class="helpline-sidebar">
-    <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
+<div class="helpline-sidebar govuk-!-padding-top-8">
+    @h2("nisp.nirecord.helpline.getHelp")
 
-    <p>@messages("nisp.nirecord.helpline.number")</p>
+    @p(Text(messages("nisp.nirecord.helpline.number")))
 
-    <p>@messages("nisp.nirecord.helpline.textNumber")</p>
+    @p(Text(messages("nisp.nirecord.helpline.textNumber")))
 
-    <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
+    @p(Text(messages("nisp.nirecord.helpline.openTimes")), classes = Some("govuk-body-s"))
 
-    <p class="backlink copeback"><a href="@{routes.StatePensionController.show.url}">@messages("nisp.back")</a>
-    </p>
+    @p(HtmlContent(s"""${link(link=routes.StatePensionController.show.url, messageKey="nisp.back")}"""),
+        classes=Some("backlink copeback"))
 
 </div>
 }
 
 @defining(Some(user)) { implicit userOption =>
-@main(MainTemplateParams(
-    userLoggedIn = true,
-    browserTitle = Some(messages("nisp.main.title")),
-    pageTitle = Some(messages("nisp.cope.youWereContractedOut")),
-    sidebarLinks = Some(sidebar)
-)) {
+@newMain(pageTitle = messages("nisp.main.title"), sidebar = Some(sidebar)){
 
-<p>@Html(messages("nisp.cope.inThePast"))</p>
+    @p(HtmlContent(messages("nisp.cope.inThePast")))
 
-<p>@messages("nisp.cope.why")</p>
-<ul class="list-bullet">
-    <li>@Html(messages("nisp.cope.why.bullet1"))</li>
-    <li>@Html(messages("nisp.cope.why.bullet2"))</li>
-</ul>
-<p>@messages("nisp.cope.copeequivalent")</p>
-<h2 class="heading-medium">@messages("nisp.cope.title2")</h2>
-<p>@Html(messages("nisp.cope.table.estimate.title"))<span class="bold-intext">@NispMoney.pounds(copeEstimate) @messages("nisp.main.chart.week")</span>.
-</p>
-<p>@Html(messages("nisp.cope.definition"))</p>
-<p>@Html(messages("nisp.cope.definition.mostcases"))</p>
-<ul class="list-bullet">
-    <li>@Html(messages("nisp.cope.definition.mostcases.bullet1"))</li>
-    <li>@Html(messages("nisp.cope.definition.mostcases.bullet2"))</li>
-</ul>
+    @p(Text(messages("nisp.cope.why")))
 
-<p>@Html(messages("nisp.cope.workplace"))</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@Html(messages("nisp.cope.why.bullet1"))</li>
+        <li>@Html(messages("nisp.cope.why.bullet2"))</li>
+    </ul>
 
-<p>@Html(messages("nisp.main.cope.linkTitle"))</p>
-<p class="backlink"><a href="@{routes.StatePensionController.show.url}">@messages("nisp.back")</a>
-</p>
+    @p(Text(messages("nisp.cope.copeequivalent")))
+
+    @h2("nisp.cope.title2")
+
+    @p(HtmlContent(s"""${messages("nisp.cope.table.estimate.title")}
+        <span class="bold-intext">
+            ${NispMoney.pounds(copeEstimate)} ${messages("nisp.main.chart.week")}
+        </span>.
+    """))
+
+    @p(HtmlContent(messages("nisp.cope.definition")))
+    @p(HtmlContent(messages("nisp.cope.definition.mostcases")))
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@Html(messages("nisp.cope.definition.mostcases.bullet1"))</li>
+        <li>@Html(messages("nisp.cope.definition.mostcases.bullet2"))</li>
+    </ul>
+
+    @p(HtmlContent(messages("nisp.cope.workplace")))
+
+    @p(HtmlContent(messages("nisp.main.cope.linkTitle")))
+
+    <p class="backlink govuk-link"><a href="@{routes.StatePensionController.show.url}">@messages("nisp.back")</a>
+    </p>
 }
 }

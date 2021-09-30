@@ -22,16 +22,21 @@
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main,
+    newMain: mainNew,
     abroad: includes.abroad,
     contractedOut: includes.contractedOut,
     deferral: includes.deferral,
     statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration,
-    langUtils: LanguageUtils
+    langUtils: LanguageUtils,
+    p: P,
+    h2: H2,
+    link: Link
 )(
     implicit ec: ExecutionContext,
     partialRetriever: CachedStaticHtmlPartialRetriever,
@@ -40,19 +45,17 @@
 
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
 isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser,
-authDetails: AuthDetails, messages: Messages)
+authDetails: AuthDetails, messages: Messages, appConfig: ApplicationConfig)
 
 @sidebar = {
-<div class="helpline-sidebar" >
+<div class="helpline-sidebar govuk-!-padding-top-8">
+    @h2("nisp.nirecord.helpline.getHelp")
 
-    <h2>@messages("nisp.nirecord.helpline.getHelp")</h2>
+    @p(Text(messages("nisp.nirecord.helpline.number")))
 
-    <p>@messages("nisp.nirecord.helpline.number")</p>
+    @p(Text(messages("nisp.nirecord.helpline.textNumber")))
 
-    <p>@messages("nisp.nirecord.helpline.textNumber")</p>
-
-    <p class="font-xsmall">@messages("nisp.nirecord.helpline.openTimes")</p>
-
+    @p(Text(messages("nisp.nirecord.helpline.openTimes")), classes = Some("govuk-body-s"))
 </div>
 }
 
@@ -79,35 +82,41 @@ authDetails: AuthDetails, messages: Messages)
 @pageTitle = { @messages("nisp.main.h1.title") }
 
 @defining(Some(user)) { implicit userOption =>
-@main(MainTemplateParams(
-    userLoggedIn = true,
-    browserTitle = Some(messages("nisp.main.title")),
-    pageInfo = Some(user.name.getOrElse("")),
-    pageTitle = Some(messages("nisp.main.h1.title")),
-    h1Class = Some("titleWithPAgeInfo"),
-    sidebarLinks = Some(sidebar),
-    showUrBanner = true
-)) {
+@newMain(pageTitle = messages("nisp.main.title"), sidebar = Some(sidebar)){
 
-    <p>@messages("nisp.national.insurance.number")<span class="display-block bold">@user.nino</span></p>
+    @p(HtmlContent(s"""${messages("nisp.national.insurance.number")}<span class="display-block bold">s${user.nino}</span>"""))
 
-    <div class="highlighted-event govuk-box-highlight">
-        <p>@messages("nisp.main.basedOn") <span class="nowrap">@langUtils.Dates.formatDate(statePension.pensionDate). </span> <span class="nowrap">@messages("nisp.main.caveats") @messages("nisp.is")</span></p>
-        <p><em>@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")</em></p>
-        <p>@NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
-        @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")</p>
+    <div class="govuk-panel govuk-panel--confirmation">
+        <div class="govuk-panel__body">
+            @messages("nisp.main.basedOn")
+            <span class="nowrap">
+                @langUtils.Dates.formatDate(statePension.pensionDate)
+            </span>
+            <span class="nowrap">@messages("nisp.main.caveats")
+                @messages("nisp.is")
+            </span>
+        </div>
+        <h1 class="govuk-panel__title">
+            @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")
+        </h1>
+        <div class="govuk-panel__body">
+            @NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
+            @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")
+        </div>
     </div>
-    <p>@messages("nisp.main.caveats")</p>
-    <ul class="list-bullet">
+
+    @p(Text(messages("nisp.main.caveats")))
+    <ul class="govuk-list govuk-list--bullet">
         <li>@Html(messages("nisp.main.notAGuarantee"))</li>
         <li>@Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))</li>
         <li>@Html(messages("nisp.main.inflation"))</li>
         @if(statePension.pensionSharingOrder) {<li>@Html(messages("nisp.main.psod"))</li>}
     </ul>
-    <h2 class="heading-medium" id="mostYouCanGet">@NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @Html(messages("nisp.main.mostYouCanGet"))</h2>
-    <p>@Html(messages("nisp.main.cantImprove"))</p>
-    <p>@Html(messages("nisp.main.context.reachMax.needToPay", (langUtils.Dates.formatDate(statePension.pensionDate)).toString()))</p>
-    <a href='@routes.NIRecordController.showFull.url'>@Html(messages("nisp.main.showyourrecord"))</a>
+
+    <h2 class="govuk-heading-m" id="mostYouCanGet"> @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.mostYouCanGet")</h2>
+    @p(HtmlContent(messages("nisp.main.cantImprove")))
+    @p(HtmlContent(messages("nisp.main.context.reachMax.needToPay", (langUtils.Dates.formatDate(statePension.pensionDate)).toString())))
+    @link(link = routes.NIRecordController.showFull.url, messageKey = "nisp.main.showyourrecord")
 
     @if(isAbroad) {
         @abroad()
