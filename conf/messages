@@ -39,7 +39,7 @@ nisp.landing.eligibility.heading = You can use this service if you’re
 nisp.landing.eligibility1 = a man born after 5 April 1951
 nisp.landing.eligibility2 = a woman born after 5 April 1953
 nisp.landing.noteligible.heading = If you were born before these dates
-nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pension-centre" rel="external" data-journey-click="checkmystatepension:external:landingfuturepensioncentre">Future Pension Centre</a> to get a statement of your current pension by post.
+nisp.landing.noteligible = Contact the <a href="https://www.gov.uk/future-pension-centre" rel="external noopener noreferrer" data-journey-click="checkmystatepension:external:landingfuturepensioncentre">Future Pension Centre</a> to get a statement of your current pension by post.
 
 #**********************
 # Main page messages
@@ -80,7 +80,7 @@ nisp.main.chart.estimateIfYouContinue.single = Forecast if you contribute anothe
 nisp.main.chart.estimateIfYouContinue.plural = Forecast if you contribute another {0} years before <span class="nowrap">5 April {1}</span>
 nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in year up to <span class="nowrap">5 April 2016</span>
 
-nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">As you are living or working overseas (opens in new tab)</a>, you may be entitled to a State Pension from the country you are living or working in.
+nisp.main.overseas = <a rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">As you are living or working overseas (opens in new tab)</a>, you may be entitled to a State Pension from the country you are living or working in.
 nisp.legal.forecastChanges = Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the
 nisp.legal.termsAndCondition = terms and conditions
 nisp.legal.mqp.forecastChanges = These details may be different if there are any changes to your National Insurance information. There is more about this in the
@@ -132,16 +132,16 @@ nisp.excluded.mci.howToContact.weekdays = 8am to 8pm, Monday to Friday
 nisp.excluded.mci.howToContact.saturday = 8am to 4pm Saturdays
 nisp.excluded.mci.howToContact.sunday = 9am to 5pm Sundays
 nisp.excluded.mci.howToContact.bankholiday = Closed bank holidays.
-nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/call-charges" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Find out about call charges (opens in a new window)</a>
+nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/call-charges" rel="external noopener noreferrer" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Find out about call charges (opens in a new window)</a>
 
 nisp.excluded.title = You are unable to use this service
 
 nisp.excluded.amountdissonance = We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this.
 
-nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a> to get an estimate of your State Pension, based on your current National Insurance record.
+nisp.excluded.contactFuturePensionCentre = In the meantime, you can <a href="https://www.gov.uk/future-pension-centre" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">contact the Future Pension Centre (opens in new tab)</a> to get an estimate of your State Pension, based on your current National Insurance record.
 
-nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
-nisp.excluded.contactNationalInsuranceHelplineIom = To get a copy of your UK National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
+nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
+nisp.excluded.contactNationalInsuranceHelplineIom = To get a copy of your UK National Insurance record so far, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">contact the National Insurance helpline (opens in new tab)</a>.
 
 nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
 nisp.excluded.dead.openingtime = Opening times:
@@ -151,18 +151,18 @@ nisp.excluded.dead.openingtime.holidays = Closed Sundays and bank holidays
 
 
 nisp.excluded.isleOfMan.sp.line1 = We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.
-nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/pensions/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
+nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit <a href="https://www.gov.im/categories/benefits-and-financial-support/pensions/" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (opens in new tab)</a>.
 nisp.excluded.isleOfMan.ni = We’re unable to show your National Insurance record as you have contributions from the Isle of Man.
 
-nisp.excluded.mwrre.sp = We’re unable to calculate your State Pension forecast as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
-nisp.excluded.mwrre.ni = We’re currently unable to show your National Insurance Record as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
+nisp.excluded.mwrre.sp = We’re unable to calculate your State Pension forecast as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
+nisp.excluded.mwrre.ni = We’re currently unable to show your National Insurance Record as you have <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:mwrre">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>.
 nisp.excluded.mwrre.improve = Help us improve this service
 nisp.excluded.mwrre.futureResearch = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
 nisp.excluded.mwrre.signOut = Sign out and leave feedback
 
 nisp.excluded.overseas = We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad.
 
-nisp.excluded.spa = If you have not already started <a href="https://www.gov.uk/claim-state-pension-online" rel="external" data-journey-click="checkmystatepension:external:claimstatepension">claiming your State Pension</a>, you can <a href="https://www.gov.uk/deferring-state-pension" rel="external" data-journey-click="checkmystatepension:external:deferstatepension" target="_blank">put off claiming your State Pension (opens in new tab)</a> and this may mean you get extra State Pension when you do want to claim it.
+nisp.excluded.spa = If you have not already started <a href="https://www.gov.uk/claim-state-pension-online" rel="external noopener noreferrer" data-journey-click="checkmystatepension:external:claimstatepension">claiming your State Pension</a>, you can <a href="https://www.gov.uk/deferring-state-pension" rel="external noopener noreferrer" data-journey-click="checkmystatepension:external:deferstatepension" target="_blank">put off claiming your State Pension (opens in new tab)</a> and this may mean you get extra State Pension when you do want to claim it.
 
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
@@ -355,7 +355,7 @@ nisp.main.description.mqp = You’ll reach State Pension age on
 nisp.mqp.notPossible = By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.
 nisp.mqp.possible = By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.
 nisp.mqp.doNext = What you can do next
-nisp.mqp.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">If you have lived or worked overseas (opens in new tab)</a>, your time abroad may help you make up the 10 years you need to get any State Pension.
+nisp.mqp.overseas = <a rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">If you have lived or worked overseas (opens in new tab)</a>, your time abroad may help you make up the 10 years you need to get any State Pension.
 nisp.mqp.years.dontCount.single = You also have a year on your record which does not count towards your pension because you did not contribute enough National Insurance.
 nisp.mqp.years.dontCount.plural = You also have {0} on your record which do not count towards your pension because you did not contribute enough National Insurance.
 nisp.mqp.years.dontCount.zero = You do not have any years on your record that do not count towards your pension.
@@ -366,8 +366,8 @@ nisp.mqp.filling.may.plural = Filling some of these years may get you some State
 
 nisp.mqp.afterSpa = After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.whatElse = What else you can do
-nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
-nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
+nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
+nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
 
 nisp.mqp.howManyToContribute = assumes that you’ll contribute another {0}
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
@@ -403,14 +403,14 @@ nisp.cope.title2 = Contracted Out Pension Equivalent (COPE)
 nisp.cope.workplace = The total amount of pension paid by your workplace or personal pension schemes will depend on the scheme and on any investment choices.
 nisp.cope.table.estimate.title = Your COPE estimate is
 
-nisp.main.cope.linkTitle = Find out more about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE and contracting out (opens in new tab)</a>.
+nisp.main.cope.linkTitle = Find out more about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE and contracting out (opens in new tab)</a>.
 
 #******************************
 # Not authorised IV messages
 #******************************
 
 nisp.iv.failure.otherways.heading = Other ways to get a statement
-nisp.iv.failure.otherways.text = If you cannot use the online service contact the <a href="https://www.gov.uk/future-pension-centre" rel="external">Future Pension centre</a>.
+nisp.iv.failure.otherways.text = If you cannot use the online service contact the <a href="https://www.gov.uk/future-pension-centre" rel="external noopener noreferrer">Future Pension centre</a>.
 
 nisp.iv.failure.general.title = We cannot confirm your identity
 nisp.iv.failure.general.youcan = You can:

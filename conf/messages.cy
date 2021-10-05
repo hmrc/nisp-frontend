@@ -38,7 +38,7 @@ nisp.landing.eligibility.heading = Gallwch ddefnyddio’r gwasanaeth hwn os ydyc
 nisp.landing.eligibility1 = dyn a aned ar ôl 5 Ebrill 1951
 nisp.landing.eligibility2 = dynes a aned ar ôl 5 Ebrill 1953
 nisp.landing.noteligible.heading = Os cawsoch eich geni cyn y dyddiadau hyn
-nisp.landing.noteligible = Cysylltwch â <a href="https://www.gov.uk/future-pension-centre" rel="external" data-journey-click="checkmystatepension:external:landingfuturepensioncentre">Canolfan Pensiwn y Dyfodol</a> i gael datganiad o’ch pensiwn presennol drwy’r post.
+nisp.landing.noteligible = Cysylltwch â <a href="https://www.gov.uk/future-pension-centre" rel="external noopener noreferrer" data-journey-click="checkmystatepension:external:landingfuturepensioncentre">Canolfan Pensiwn y Dyfodol</a> i gael datganiad o’ch pensiwn presennol drwy’r post.
 
 #**********************
 # Main page messages
@@ -79,7 +79,7 @@ nisp.main.chart.estimateIfYouContinue.single = Rhagolwg os byddwch yn cyfrannu a
 nisp.main.chart.estimateIfYouContinue.plural = Rhagolwg os byddwch yn cyfrannu am {0} o flynyddoedd cyn <span class="nowrap">5 Ebrill {1}</span>
 nisp.main.chart.estimateIfYouContinue2016 = Rhagolwg os byddwch yn cyfrannu digon mewn blwyddyn hyd at <span class="nowrap">5 Ebrill 2016</span>
 
-nisp.main.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">Gan eich bod yn byw neu weithio dramor (agor mewn tab newydd)</a>, efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o’r wlad rydych yn byw neu weithio ynddi.
+nisp.main.overseas = <a rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">Gan eich bod yn byw neu weithio dramor (agor mewn tab newydd)</a>, efallai y bydd gennych hawl i Bensiwn y Wladwriaeth o’r wlad rydych yn byw neu weithio ynddi.
 nisp.legal.forecastChanges = Gallai eich rhagolwg fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y
 nisp.legal.termsAndCondition = telerau ac amodau
 nisp.legal.mqp.forecastChanges = Gallai’r manylion fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y
@@ -131,16 +131,16 @@ nisp.excluded.mci.howToContact.weekdays = 8am i 8pm, Dydd Llun i Dydd Gwener
 nisp.excluded.mci.howToContact.saturday = 8am i 4pm, Dydd Sadwrn
 nisp.excluded.mci.howToContact.sunday =	9am i 5pm, Dydd Sul
 nisp.excluded.mci.howToContact.bankholiday = Ar gau ar wyliau’r banc.
-nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/costau-galwadau" rel="external" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)</a>
+nisp.excluded.mci.howToContact.link = <a href="https://www.gov.uk/costau-galwadau" rel="external noopener noreferrer" target="_blank" data-journey-click="checkyourstatepension:external:callcharges">Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)</a>
 
 nisp.excluded.title = Rydych yn methu defnyddio’r gwasanaeth
 
 nisp.excluded.amountdissonance = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth ar hyn o bryd ac rydym yn gweithio i gywiro hyn.
 
-nisp.excluded.contactFuturePensionCentre = Yn y cyfamser, gallwch <a href="https://www.gov.uk/future-pension-centre" rel="external" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">gysylltu â Chanolfan Bensiwn y Dyfodol (agor mewn tab newydd)</a> i gael amcangyfrif o’ch Pensiwn y Wladwriaeth, yn seiliedig ar eich cofnod Yswiriant Gwladol presennol.
+nisp.excluded.contactFuturePensionCentre = Yn y cyfamser, gallwch <a href="https://www.gov.uk/future-pension-centre" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:futurepensioncentre">gysylltu â Chanolfan Bensiwn y Dyfodol (agor mewn tab newydd)</a> i gael amcangyfrif o’ch Pensiwn y Wladwriaeth, yn seiliedig ar eich cofnod Yswiriant Gwladol presennol.
 
-nisp.excluded.contactNationalInsuranceHelpline = I gael copi o’ch cofnod Yswiriant Gwladol hyd yn hyn, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)</a>.
-nisp.excluded.contactNationalInsuranceHelplineIom = I gael copi o’ch cofnod Yswiriant Gwladol y DU hyd yn hyn, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)</a>.
+nisp.excluded.contactNationalInsuranceHelpline = I gael copi o’ch cofnod Yswiriant Gwladol hyd yn hyn, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)</a>.
+nisp.excluded.contactNationalInsuranceHelplineIom = I gael copi o’ch cofnod Yswiriant Gwladol y DU hyd yn hyn, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancehelpline">cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)</a>.
 
 nisp.excluded.dead = Cysylltwch â llinell gymorth Yswiriant Gwladol CThEM ar 0300 200 1900.
 nisp.excluded.dead.openingtime = Oriau agor:
@@ -149,18 +149,18 @@ nisp.excluded.dead.openingtime.saturday = 08:00 - 16:00, Dydd Sadwrn
 nisp.excluded.dead.openingtime.holidays = Ar gau ar Ddydd Sul ac ar wyliau’r banc
 
 nisp.excluded.isleOfMan.sp.line1 = Rydym yn methu cyfrifo eich Pensiwn y Wladwriaeth, oherwydd bod Llywodraeth Ynys Manaw ar hyn o bryd yn ymgymryd ag adolygiad o’i gynllun Pensiwn Ymddeol. Ni fydd yn mabwysiadu’r diwygiadau newydd i Bensiwn y Wladwriaeth.
-nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i <a href="https://www.gov.im/categories/benefits-and-financial-support/pensions/" rel="external" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (agor mewn tab newydd)</a>.
+nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i <a href="https://www.gov.im/categories/benefits-and-financial-support/pensions/" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:iom">GOV.IM – Retirement Pension (agor mewn tab newydd)</a>.
 nisp.excluded.isleOfMan.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol oherwydd bod gennych gyfraniadau o Ynys Manaw.
 
-nisp.excluded.mwrre.sp = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth oherwydd eich bod wedi <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)</a>.
-nisp.excluded.mwrre.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol ar hyn o bryd oherwydd eich bod wedi <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external" target="_blank" data-journey-click="checkmystatepension:external:mwrre">talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)</a>.
+nisp.excluded.mwrre.sp = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth oherwydd eich bod wedi <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:mwrre">talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)</a>.
+nisp.excluded.mwrre.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol ar hyn o bryd oherwydd eich bod wedi <a href="https://www.gov.uk/reduced-national-insurance-married-women" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:mwrre">talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)</a>.
 nisp.excluded.mwrre.improve = Helpwch ni i wella’r gwasanaeth hwn
 nisp.excluded.mwrre.futureResearch = Os hoffech gymryd rhan mewn unrhyw ymchwil yn y dyfodol i ni gael darganfod beth yr hoffai pobl yn eich amgylchiadau chi gael gwybod, a fyddech yn gadael eich manylion cyswllt pan fyddwch yn allgofnodi.
 nisp.excluded.mwrre.signOut = Allgofnodi a gadael adborth
 
 nisp.excluded.overseas = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth y DU oherwydd eich bod wedi byw neu weithio dramor.
 
-nisp.excluded.spa = Os nad ydych eisoes wedi dechrau <a href="https://www.gov.uk/claim-state-pension-online" rel="external" data-journey-click="checkmystatepension:external:claimstatepension">hawlio eich Pensiwn y Wladwriaeth</a>, gallwch <a href="https://www.gov.uk/deferring-state-pension" rel="external" data-journey-click="checkmystatepension:external:deferstatepension" target="_blank">oedi gwneud cais am eich Pensiwn y Wladwriaeth (agor mewn tab newydd)</a> a gallai hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan rydych eisiau gwneud cais amdano.
+nisp.excluded.spa = Os nad ydych eisoes wedi dechrau <a href="https://www.gov.uk/claim-state-pension-online" rel="external noopener noreferrer" data-journey-click="checkmystatepension:external:claimstatepension">hawlio eich Pensiwn y Wladwriaeth</a>, gallwch <a href="https://www.gov.uk/deferring-state-pension" rel="external noopener noreferrer" data-journey-click="checkmystatepension:external:deferstatepension" target="_blank">oedi gwneud cais am eich Pensiwn y Wladwriaeth (agor mewn tab newydd)</a> a gallai hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan rydych eisiau gwneud cais amdano.
 nisp.excluded.niRecordIntro = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol sy’n cyfri tuag at eich Pensiwn y Wladwriaeth ac edrych am unrhyw fylchau.
 nisp.excluded.niRecordIntroUK = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol y DU sy’n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
 nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
@@ -359,7 +359,7 @@ nisp.main.description.mqp = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar
 nisp.mqp.notPossible = Erbyn yr amser hyn, ni fyddwch yn gallu cael y 10 mlynedd sydd ei angen ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.possible = Erbyn yr amser hyn, ni fydd gennych y 10 mlynedd sydd ei angen ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.doNext = Beth allwch chi ei wneud nesaf
-nisp.mqp.overseas = <a rel="external" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">Os ydych wedi byw neu weithio dramor (agor mewn tab newydd)</a>, efallai bydd eich amser dramor yn helpu i wneud i fyny’r 10 mlynedd rydych ei angen i gael unrhyw Bensiwn y Wladwriaeth.
+nisp.mqp.overseas = <a rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:workingoverseas" href="https://www.gov.uk/new-state-pension/living-and-working-overseas">Os ydych wedi byw neu weithio dramor (agor mewn tab newydd)</a>, efallai bydd eich amser dramor yn helpu i wneud i fyny’r 10 mlynedd rydych ei angen i gael unrhyw Bensiwn y Wladwriaeth.
 
 nisp.mqp.years.dontCount.single = Hefyd mae gennych flwyddyn ar eich cofnod sydd ddim yn cyfri tuag at eich pensiwn oherwydd na wnaethoch gyfrannu digon o Yswiriant Gwladol.
 nisp.mqp.years.dontCount.plural = Hefyd mae gennych {0} ar eich cofnod sydd ddim yn cyfri tuag at eich pensiwn oherwydd na wnaethoch gyfrannu digon o Yswiriant Gwladol.
@@ -370,8 +370,8 @@ nisp.mqp.filling.may.single = Efallai bydd llenwi un flwyddyn yn rhoi ychydig o 
 nisp.mqp.filling.may.plural = Efallai bydd llenwi rhai o’r blynyddoedd hyn yn rhoi ychydig o Bensiwn y Wladwriaeth i chi.
 nisp.mqp.afterSpa = Ar ôl oedran Pensiwn y Wladwriaeth, {0} ni fyddwch bellach yn talu cyfraniadau Yswiriant Gwladol.
 nisp.mqp.whatElse = Beth arall allwch chi ei wneud
-nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael <a href="https://www.gov.uk/credyd-pensiwn" rel="external" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Credyd Pensiwn (agor mewn tab newydd)</a> os yw eich incwm mewn ymddeoliad yn isel.
-nisp.mqp.moneyAdvice = Cysylltwch â’r <a href="https://www.moneyadviceservice.org.uk/cy" rel="external" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)</a> am gyngor di-duedd ac am ddim.
+nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael <a href="https://www.gov.uk/credyd-pensiwn" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Credyd Pensiwn (agor mewn tab newydd)</a> os yw eich incwm mewn ymddeoliad yn isel.
+nisp.mqp.moneyAdvice = Cysylltwch â’r <a href="https://www.moneyadviceservice.org.uk/cy" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)</a> am gyngor di-duedd ac am ddim.
 
 nisp.mqp.howManyToContribute = yn cymryd eich bod yn cyfrannu {0} arall
 nisp.mqp.youCurrentlyHaveZero = Nid oes gennych unrhyw flynyddoedd ar eich cofnod ac rydych angen o leiaf {0} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
@@ -407,7 +407,7 @@ nisp.cope.title2 = Pensiwn Cyfwerth Wedi’i Eithrio (COPE)
 nisp.cope.workplace = Bydd cyfanswm y pensiwn a delir gan eich cynlluniau pensiwn gwaith neu bersonol yn dibynnu ar y cynllun ac ar unrhyw ddewisiadau buddsoddi.
 nisp.cope.table.estimate.title = Eich amcangyfrif COPE yw
 
-nisp.main.cope.linkTitle =  Darganfyddwch fwy am <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE ac eithrio allan (agor mewn tab newydd)</a>.
+nisp.main.cope.linkTitle =  Darganfyddwch fwy am <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE ac eithrio allan (agor mewn tab newydd)</a>.
 
 
 #******************************
@@ -415,7 +415,7 @@ nisp.main.cope.linkTitle =  Darganfyddwch fwy am <a href="https://www.gov.uk/gov
 #******************************
 
 nisp.iv.failure.otherways.heading = Ffyrdd eraill o gael datganiad
-nisp.iv.failure.otherways.text = Os na allwch ddefnyddio’r gwasanaeth ar-lein cysylltwch â <a href="https://www.gov.uk/future-pension-centre" rel="external">Canolfan Bensiwn y Dyfodol</a>.
+nisp.iv.failure.otherways.text = Os na allwch ddefnyddio’r gwasanaeth ar-lein cysylltwch â <a href="https://www.gov.uk/future-pension-centre" rel="external noopener noreferrer">Canolfan Bensiwn y Dyfodol</a>.
 
 nisp.iv.failure.general.title = Ni allwn gadarnhau pwy ydych
 nisp.iv.failure.general.youcan = Gallwch wneud y canlynol:
