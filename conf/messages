@@ -191,12 +191,12 @@ nisp.excluded.cope.failed.telephone.line2 = Telephone from outside UK: +44 (0)19
 nisp.excluded.cope.failed.telephone.line3 = Welsh language telephone: 0800 731 0453
 
 nisp.excluded.cope.failed.textphone.h3 = Textphone
-nisp.excluded.cope.failed.textphone.line1 = Textphone: 0800 731 0176
+nisp.excluded.cope.failed.textphone.line1 = Textphone: 0800 731 017693
 nisp.excluded.cope.failed.textphone.line2 = Textphone from outside UK: +44 (0)191 218 2051
 nisp.excluded.cope.failed.textphone.line3 = Welsh language textphone: 0800 731 0456
 
 nisp.excluded.cope.failed.relayUK.h3 = Relay UK
-nisp.excluded.cope.failed.relayUK.line1 = If you cannot hear or speak on the phone, use <a href="https://www.relayuk.bt.com/" target="_blank">Relay UK</a>:
+nisp.excluded.cope.failed.relayUK.line1 = If you cannot hear or speak on the phone, use <a href="https://www.relayuk.bt.com/" rel="noopener noreferrer" target="_blank">Relay UK</a>:
 nisp.excluded.cope.failed.relayUK.line2 = 18001 then 0800 731 0175
 
 nisp.excluded.cope.failed.britishSignLanguage.h3 = British Sign Language
