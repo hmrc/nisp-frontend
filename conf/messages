@@ -367,7 +367,7 @@ nisp.mqp.filling.may.plural = Filling some of these years may get you some State
 nisp.mqp.afterSpa = After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.whatElse = What else you can do
 nisp.mqp.pensionCredit = You may be eligible for <a href="https://www.gov.uk/pension-credit/overview" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:pensioncredit">Pension Credit (opens in new tab)</a> if your retirement income is low.
-nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
+nisp.mqp.moneyAdvice = Contact the <a href="https://www.moneyadviceservice.org.uk/en" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">Money Advice Service (opens in new tab)</a> for free impartial advice.
 
 nisp.mqp.howManyToContribute = assumes that you’ll contribute another {0}
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
@@ -403,7 +403,7 @@ nisp.cope.title2 = Contracted Out Pension Equivalent (COPE)
 nisp.cope.workplace = The total amount of pension paid by your workplace or personal pension schemes will depend on the scheme and on any investment choices.
 nisp.cope.table.estimate.title = Your COPE estimate is
 
-nisp.main.cope.linkTitle = Find out more about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE and contracting out (opens in new tab)</a>.
+nisp.main.cope.linkTitle = Find out more about <a href="https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:contractedout">COPE and contracting out (opens in new tab)</a>.
 
 #******************************
 # Not authorised IV messages
