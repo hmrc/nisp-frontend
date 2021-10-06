@@ -43,8 +43,9 @@
     sidebar: Option[Html] = None,
     headScripts: Option[Html] = None,
     showBackLink: Boolean = false,
-    sessionExpiredPage: Boolean = false
-)(content: Html)(implicit request: RequestHeader, messages: Messages, appConfig: ApplicationConfig)
+    sessionExpiredPage: Boolean = false,
+    appConfig: ApplicationConfig
+)(content: Html)(implicit request: RequestHeader, messages: Messages)
 
 @headBlock = {
     @headScripts

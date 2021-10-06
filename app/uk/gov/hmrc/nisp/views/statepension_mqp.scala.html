@@ -42,15 +42,16 @@
 )
 
 @(
-  statePension: StatePension,
-  numberOfGaps: Int,
-  numberOfPayableGaps: Int,
-  numberOfYearsMissing: Int,
-  isAbroad: Boolean,
-  customerAge: Int,
-  isPertaxUrl: Boolean,
-  yearsToContributeUntilPensionAge: Int
-)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages, appConfig: ApplicationConfig)
+    statePension: StatePension,
+    numberOfGaps: Int,
+    numberOfPayableGaps: Int,
+    numberOfYearsMissing: Int,
+    isAbroad: Boolean,
+    customerAge: Int,
+    isPertaxUrl: Boolean,
+    yearsToContributeUntilPensionAge: Int,
+    appConfig: ApplicationConfig
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages)
 
 @sidebar = {
 <div class="helpline-sidebar govuk-!-padding-top-8">
@@ -84,7 +85,9 @@
 
 @defining(Some(user)) { implicit userOption =>
 
-@newMain(pageTitle = messages("nisp.main.title"), sidebar = Some(sidebar)){
+@newMain(pageTitle = messages("nisp.main.title"), sidebar = Some(sidebar), appConfig = appConfig){
+
+    @h1("nisp.main.h1.title", elmId=Some("mainTitle"))
 
     <div class="panel-indent panel-border-wide panel-indent--info">
         @p(HtmlContent(s"""${messages("nisp.main.description.mqp")}
@@ -104,7 +107,7 @@
 
     <!-- WHAT YOU CAN DO NEXT -->
 
-    @h2("nisp.mqp.doNext")
+    @h2("nisp.mqp.doNext", elmId=Some("doNext"))
     @if(isAbroad) {
         @p(HtmlContent(messages("nisp.main.overseas")))
     } else {
@@ -159,7 +162,7 @@
 
     <!-- WHAT ELSE YOU CAN DO -->
 
-    @h2("nisp.mqp.whatElse")
+    @h2("nisp.mqp.whatElse", elmId=Some("whatElse"))
     @p(HtmlContent(messages("nisp.mqp.pensionCredit")))
     @p(HtmlContent(messages("nisp.mqp.moneyAdvice")))
 

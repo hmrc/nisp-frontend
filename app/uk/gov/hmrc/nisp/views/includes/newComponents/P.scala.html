@@ -20,4 +20,4 @@
 
 @(content: Content, elmId: Option[String] = None, classes: Option[String] = None)
 
-<p @if(elmId.isDefined){ id="@{elmId.get}"} class="govuk-body @classes.getOrElse("")" )>@content.asHtml</p>
+<p @if(elmId.isDefined){ id="@{elmId.get}"} class="govuk-body @classes.getOrElse("")">@content.asHtml</p>

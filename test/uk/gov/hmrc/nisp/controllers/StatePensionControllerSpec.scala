@@ -174,6 +174,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(statePensionResponse))
         )
 
+        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should not include ("£80.38")
       }
@@ -217,6 +219,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(statePensionCopeResponse))
         )
 
+        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("You’ve been in a contracted-out pension scheme")
       }
@@ -227,6 +231,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(statePensionCopeResponse))
         )
+
+        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
 
         val result = statePensionController.showCope()(generateFakeRequest)
         contentAsString(result) should include("You were contracted out")
@@ -242,6 +248,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
           Future.successful(Right(statePensionResponse))
         )
+
+        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
 
         val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
@@ -260,6 +268,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
         )
 
+        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         val result = statePensionController.show()(generateFakeRequest)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
@@ -275,6 +285,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
           Future.successful(Right(statePensionResponse))
         )
+
+        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
 
         val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
@@ -293,6 +305,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
           Future.successful(Right(statePensionResponse))
         )
+
+        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
 
         val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
@@ -329,6 +343,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(statePensionVariation2))
         )
 
+        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         val result = statePensionController.show()(generateFakeRequest)
         contentAsString(result) should include("10 years needed on your National Insurance record to get any State Pension")
       }
@@ -346,6 +362,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
             Future.successful(Right(statePensionResponseVariation3))
           )
+
+          when(mockAppConfig.urBannerUrl).thenReturn("/foo")
 
           val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have years on your National Insurance record where you did not contribute enough.")
@@ -375,6 +393,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
             Future.successful(Right(statePensionResponseVariation3))
           )
 
+          when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
           val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.")
           contentAsString(result) should include("The most you can get by filling this year in your record is")
@@ -393,6 +413,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
             Future.successful(Right(statePensionResponseVariation3))
           )
+
+          when(mockAppConfig.urBannerUrl).thenReturn("/foo")
 
           val result = statePensionController.show()(generateFakeRequest)
           contentAsString(result) should include("You have shortfalls in your National Insurance record that you can fill and make count towards your State Pension.")

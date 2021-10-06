@@ -63,8 +63,9 @@
     hidePersonalMaxYears: Boolean,
     customerAge: Int,
     isAbroad: Boolean,
-    yearsToContributeUntilPensionAge: Int
-)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages, appConfig: ApplicationConfig)
+    yearsToContributeUntilPensionAge: Int,
+    appConfig: ApplicationConfig
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages)
 
 @sidebar = {
 <div class="helpline-sidebar govuk-!-padding-top-8">
@@ -99,10 +100,10 @@
 @defining(Some(user)) { implicit userOption =>
 
 
-@newMain(pageTitle = messages("nisp.main.title"), sidebar = Some(sidebar)){
+@newMain(pageTitle = messages("nisp.main.title"), sidebar = Some(sidebar), appConfig = appConfig){
 
     @p(content = Text(user.name.getOrElse("")), classes = Some("govuk-!-margin-bottom-0"))
-    @h1("nisp.main.h1.title")
+    @h1("nisp.main.h1.title", elmId=Some("mainTitle"))
 
     @details(summary = messages("nisp.show.nino"), content = user.nino.toString)
 
@@ -110,15 +111,15 @@
     <div class="govuk-panel__body">
         @messages("nisp.main.basedOn")
         <span class="nowrap">
-            @langUtils.Dates.formatDate(statePension.pensionDate)
+            @langUtils.Dates.formatDate(statePension.pensionDate).
         </span>
         <span class="nowrap">@messages("nisp.main.caveats")
             @messages("nisp.is")
         </span>
     </div>
-    <h1 class="govuk-panel__title">
+    <h2 class="govuk-panel__title">
         @NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) @messages("nisp.main.week")
-    </h1>
+    </h2>
     <div class="govuk-panel__body">
         @NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) @messages("nisp.main.month"),
         @NispMoney.pounds(statePension.amounts.forecast.annualAmount) @messages("nisp.main.year")
@@ -172,11 +173,11 @@
         @if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
             @p(Text(messages("nisp.main.caveats")))
             <ul class="govuk-list govuk-body govuk-list--bullet">
-                <li>messages("nisp.main.notAGuarantee")</li>
-                <li>(messages("nisp.main.inflation")</li>
+                <li>@messages("nisp.main.notAGuarantee")</li>
+                <li>@messages("nisp.main.inflation")</li>
                 @if(statePension.pensionSharingOrder) {<li>messages("nisp.main.psod")</li>}
             </ul>
-            @h2("nisp.main.continueContribute")
+            @h2("nisp.main.continueContribute", elmId=Some("continueContribute"))
 
             @spChart(Html(messages("nisp.main.chart.lastprocessed.title", statePension.earningsIncludedUpTo.getYear().toString())), currentChart)
             @if(statePension.amounts.protectedPayment) {

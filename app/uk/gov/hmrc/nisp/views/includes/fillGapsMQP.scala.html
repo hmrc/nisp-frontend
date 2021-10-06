@@ -20,6 +20,6 @@
 @this(p: P, h2: H2, link: Link)
 @()(implicit messages: Messages)
 
-    @h2(msg="nisp.main.context.fillGaps.improve.title")
+    @h2(msg="nisp.main.context.fillGaps.improve.title", elmId=Some("improveForecast"))
     @p(Text(messages("nisp.main.context.improve.para1.plural")))
     @link(link=routes.NIRecordController.showGaps.url, messageKey = "nisp.main.context.fillGaps.viewGaps")

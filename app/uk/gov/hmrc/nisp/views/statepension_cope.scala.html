@@ -22,7 +22,7 @@
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
 @import play.api.Application
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link}
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 
@@ -31,6 +31,7 @@
 @this(
     newMain: mainNew,
     p: P,
+    h1: H1,
     h2: H2,
     link: Link
 )(
@@ -39,7 +40,7 @@
     formPartialRetriever: FormPartialRetriever
 )
 
-@(copeEstimate: BigDecimal, isPertaxUrl:Boolean)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages, appConfig: ApplicationConfig)
+@(copeEstimate: BigDecimal, isPertaxUrl:Boolean, appConfig: ApplicationConfig)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages)
 
 @sidebar = {
 <div class="helpline-sidebar govuk-!-padding-top-8">
@@ -58,7 +59,9 @@
 }
 
 @defining(Some(user)) { implicit userOption =>
-@newMain(pageTitle = messages("nisp.main.title"), sidebar = Some(sidebar)){
+@newMain(pageTitle = messages("nisp.cope.youWereContractedOut"), sidebar = Some(sidebar), appConfig = appConfig){
+
+    @h1("nisp.cope.youWereContractedOut", elmId=Some("mainTitle"))
 
     @p(HtmlContent(messages("nisp.cope.inThePast")))
 
@@ -71,7 +74,7 @@
 
     @p(Text(messages("nisp.cope.copeequivalent")))
 
-    @h2("nisp.cope.title2")
+    @h2("nisp.cope.title2", elmId=Some("title2"))
 
     @p(HtmlContent(s"""${messages("nisp.cope.table.estimate.title")}
         <span class="bold-intext">

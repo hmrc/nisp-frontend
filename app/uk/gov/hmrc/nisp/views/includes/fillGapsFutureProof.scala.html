@@ -25,7 +25,7 @@
 @this(spChart: spChart, p: P, h2: H2, link: Link)
 @(statePension: StatePension, personalMaximumChart: SPChartModel)(implicit messages: Messages)
 
-@h2(msg="nisp.main.context.fillGaps.improve.title")
+@h2(msg="nisp.main.context.fillGaps.improve.title", elmId=Some("improveForecast"))
 
 @p(Text(messages("nisp.main.context.fillgaps.para1.futurePersonalMax")))
 @spChart(Html(messages("nisp.main.context.fillgaps.chart.maxamount")), personalMaximumChart)

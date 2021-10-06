@@ -24,5 +24,4 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 abstract class NispFrontendController(mcc: MessagesControllerComponents) extends FrontendController(mcc) {
   implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever
   implicit val formPartialRetriever: FormPartialRetriever
-  implicit val templateRenderer: TemplateRenderer
 }

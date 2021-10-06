@@ -34,7 +34,6 @@ import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html.{sessionTimeout, statepension, statepension_cope, statepension_forecastonly, statepension_mqp}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.ExecutionContext
 
@@ -52,9 +51,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                                        statePensionView: statepension)
                                       (implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
                                        val formPartialRetriever: FormPartialRetriever,
-                                       val templateRenderer: TemplateRenderer,
-                                       executor: ExecutionContext,
-                                       appConfig: ApplicationConfig) extends NispFrontendController(mcc) with I18nSupport {
+                                       executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport {
 
   def showCope: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -65,7 +62,8 @@ class StatePensionController @Inject()(authenticate: AuthAction,
           case Right(statePension) if statePension.contractedOut =>
             Ok(statePensionCope(
               statePension.amounts.cope.weeklyAmount,
-              isPertax
+              isPertax,
+              applicationConfig
             ))
           case _ => Redirect(routes.StatePensionController.show)
         }
@@ -128,7 +126,8 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                   user.livesAbroad,
                   calculateAge(user.dateOfBirth, LocalDate.now),
                   isPertax,
-                  yearsToContributeUntilPensionAge
+                  yearsToContributeUntilPensionAge,
+                  applicationConfig
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
               } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
 
@@ -139,7 +138,8 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                   calculateAge(user.dateOfBirth, LocalDate.now),
                   user.livesAbroad,
                   isPertax,
-                  yearsToContributeUntilPensionAge
+                  yearsToContributeUntilPensionAge,
+                  applicationConfig
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
 
               } else {
@@ -160,7 +160,8 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                   hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
                   calculateAge(user.dateOfBirth, LocalDate.now),
                   user.livesAbroad,
-                  yearsToContributeUntilPensionAge
+                  yearsToContributeUntilPensionAge,
+                  applicationConfig
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
               }
 

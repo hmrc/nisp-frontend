@@ -20,5 +20,5 @@
 @this(p: P, h2: H2)
 @()(implicit messages: Messages)
 
-@h2(msg="nisp.cope.title1")
+@h2(msg="nisp.cope.title1", elmId=Some("contractedOut"))
 @p(HtmlContent(messages("nisp.cope.likeMostPeople", routes.StatePensionController.showCope.url)))

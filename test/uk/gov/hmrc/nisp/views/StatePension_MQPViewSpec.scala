@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.lang3.StringEscapeUtils
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{mock, reset, when}
 import play.api.i18n.Messages
 import play.api.inject.bind
@@ -48,6 +49,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
   val expectedMoneyServiceLink = "https://www.moneyadviceservice.org.uk/en"
   val expectedPensionCreditOverviewLink = "https://www.gov.uk/pension-credit/overview"
+  val urResearchURL = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
+
 
   def generateFakeRequest = FakeRequest().withSession(
     SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
@@ -97,6 +100,14 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
     super.beforeEach()
     reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
     when(mockPertaxHelper.isFromPertax(ArgumentMatchers.any())).thenReturn(Future.successful(false))
+    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
+    when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
+    when(mockAppConfig.pertaxMessagesUrl).thenReturn("/foo")
+    when(mockAppConfig.trackProgressUrl).thenReturn("/foo")
+    when(mockAppConfig.pertaxPreferencesUrl).thenReturn("/foo")
+    when(mockAppConfig.pertaxDetailsUrl).thenReturn("/foo")
+    when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
+
   }
 
   lazy val controller = standardInjector.instanceOf[StatePensionController]
@@ -160,79 +171,80 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           mockSetup
           assertElementContainsText(nonForeignDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
         }
+
         "render page with heading  'Your State Pension' " in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "article.content__body>h1.titleWithPAgeInfo", "nisp.main.h1.title")
+          assertEqualsMessage(nonForeignDoc, "#mainTitle", "nisp.main.h1.title")
         }
 
         "render page with text  'You can get your State Pension on' " in {
           mockSetup
-          assertElemetsOwnMessage(nonForeignDoc, "article.content__body>div.highlighted-event>p", "nisp.main.basedOn")
+          assertElemetsOwnMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1)", "nisp.main.basedOn")
         }
         "render page with text  '7 june 2020' " in {
           mockSetup
-          assertEqualsValue(nonForeignDoc, "article.content__body>div.highlighted-event>p:nth-child(1)>span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
+          assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
         }
         "render page with text  'Your forecast is' " in {
           mockSetup
           val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-          assertEqualsValue(nonForeignDoc, "article.content__body>div.highlighted-event>p:nth-child(1)>span:nth-child(2)", sMessage)
+          assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div > span:nth-child(2)", sMessage)
         }
 
         "render page with text  '£150.71 a week" in {
           mockSetup
           val sWeek = "£150.71 " + Messages("nisp.main.week")
-          assertEqualsValue(nonForeignDoc, "article.content__body>div.highlighted-event>p:nth-child(2)>em", sWeek)
+          assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > h2", sWeek)
         }
         "render page with text  ' £590.10 a month, £7,081.15 a year '" in {
           mockSetup
           val sForecastAmount = "£590.10 " + Messages("nisp.main.month") + ", £7,081.15 " + Messages("nisp.main.year")
-          assertEqualsValue(nonForeignDoc, "article.content__body>div.highlighted-event>p:nth-child(3)", sForecastAmount)
+          assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(3)", sForecastAmount)
         }
-        "render page with text  ' Your forcaste '" in {
+        "render page with text  ' Your forecast '" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "article.content__body p:nth-child(5)", "nisp.main.caveats")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(2)", "nisp.main.caveats")
         }
         "render page with text  ' is not a guarantee and is based on the current law '" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "article.content__body ul.list-bullet li:nth-child(1)", "nisp.main.notAGuarantee")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(1)", "nisp.main.notAGuarantee")
         }
         "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
           mockSetup
-          assertContainsDynamicMessage(nonForeignDoc, "article.content__body ul.list-bullet li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
+          assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
         }
         "render page with text  ' does not include any increase due to inflation '" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "article.content__body ul.list-bullet li:nth-child(3)", "nisp.main.inflation")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(3)", "nisp.main.inflation")
         }
 
         "render page with Heading  ' £155.55 is the most you can get'" in {
           mockSetup
           val sMaxCanGet = "£150.71 " + Messages("nisp.main.mostYouCanGet")
-          assertEqualsValue(nonForeignDoc, "article.content__body h2", sMaxCanGet)
+          assertEqualsValue(nonForeignDoc, "#mostYouCanGet", sMaxCanGet)
         }
         "render page with text  'You cannot improve your forecast any further.'" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "article.content__body p:nth-child(8)", "nisp.main.cantImprove")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(3)", "nisp.main.cantImprove")
         }
         "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
           mockSetup
-          assertContainsDynamicMessage(foreignDoc, "article.content__body p:nth-child(9)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+          assertContainsDynamicMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
         }
-        "render page with link  'View your National Insurence Record'" in {
+        "render page with link  'View your National Insurance Record'" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(10)", "nisp.main.showyourrecord")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(5) > a", "nisp.main.showyourrecord")
         }
         "render page with href link  'View your National Insurence Record'" in {
           mockSetup
-          assertLinkHasValue(foreignDoc, "article.content__body>a:nth-child(10)", "/check-your-state-pension/account/nirecord")
+          assertLinkHasValue(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(5) > a", "/check-your-state-pension/account/nirecord")
         }
 
         /*overseas message*/
         "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
           "State Pension from the country you are living or working in.'" in {
           mockSetup
-          assertEqualsMessage(foreignDoc, "article.content__body div.panel-indent p", "nisp.main.overseas")
+          assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
         }
         /*Ends*/
 
@@ -248,41 +260,41 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
         }
         /*Ends*/
 
-        "render page with heading  'Putting of claiming'" in {
+        "render page with heading  'Putting off claiming'" in {
           mockSetup
-          assertEqualsMessage(foreignDoc, "article.content__body h2:nth-child(12)", "nisp.main.puttingOff")
+          assertEqualsMessage(foreignDoc, "#puttingOff", "nisp.main.puttingOff")
         }
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
           mockSetup
-          assertContainsDynamicMessage(foreignDoc, "article.content__body p:nth-child(13)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+          assertContainsDynamicMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
           mockSetup
-          assertEqualsMessage(foreignDoc, "article.content__body a:nth-child(14)", "nisp.main.puttingOff.linkTitle")
+          assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7) > a", "nisp.main.puttingOff.linkTitle")
         }
         "render page with href link 'More on putting off claiming (opens in new tab)'" in {
           mockSetup
-          assertLinkHasValue(foreignDoc, "article.content__body a:nth-child(14)", "https://www.gov.uk/deferring-state-pension")
+          assertLinkHasValue(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7) > a", "https://www.gov.uk/deferring-state-pension")
         }
 
         /*Side bar help*/
         "render page with heading  'Get help'" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-one-third > div > h2", "nisp.nirecord.helpline.getHelp")
         }
         "render page with text  'Helpline 0800 731 0181'" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-one-third > div > p:nth-child(2)", "nisp.nirecord.helpline.number")
         }
         "render page with text  'Textphone 0800 731 0176'" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-one-third > div > p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
         }
         "render page with text  'Monday to Friday: 8am to 6pm'" in {
           mockSetup
-          assertEqualsMessage(nonForeignDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
+          assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-one-third > div > p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
         }
       }
 
@@ -330,46 +342,43 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
             )))
         }
 
-        lazy val nonForeignDoc =
-          asDocument(contentAsString(controller.show()(FakeRequest())))
-
         lazy val foreignDoc =
           asDocument(contentAsString(abroadUserController.show()(FakeRequest())))
 
         "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
           "State Pension from the country you are living or working in.'" in {
           mockSetup
-          assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(11)>p", "nisp.main.overseas")
+          assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
         }
 
         "render page with heading  'Proposed change to your State Pension age'" in {
           mockSetup
-          assertEqualsMessage(foreignDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+          assertEqualsMessage(foreignDoc, "#proposedChange", "nisp.spa.under.consideration.title")
         }
 
         "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
           mockSetup
-          assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+          assertContainsDynamicMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
         }
 
         //deferral message
-        "render page with heading  'Putting of claiming'" in {
+        "render page with heading  'Putting off claiming'" in {
           mockSetup
-          assertEqualsMessage(foreignDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+          assertEqualsMessage(foreignDoc, "#puttingOff", "nisp.main.puttingOff")
         }
 
         "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
           mockSetup
-          assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+          assertContainsDynamicMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
         }
 
         "render page with link 'More on putting off claiming (opens in new tab)'" in {
           mockSetup
-          assertEqualsMessage(foreignDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+          assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8) > a", "nisp.main.puttingOff.linkTitle")
         }
         "render page with href link 'More on putting off claiming (opens in new tab)'" in {
           mockSetup
-          assertLinkHasValue(foreignDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+          assertLinkHasValue(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8) > a", "https://www.gov.uk/deferring-state-pension")
         }
       }
 
@@ -431,88 +440,90 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           }
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h1.titleWithPAgeInfo", "nisp.main.h1.title")
+            assertEqualsMessage(nonForeignDoc, "#mainTitle", "nisp.main.h1.title")
           }
 
           "render page with text  'You can get your State Pension on' " in {
             mockSetup
-            assertElemetsOwnMessage(nonForeignDoc, "article.content__body>div:nth-child(4)>p", "nisp.main.basedOn")
+            assertElemetsOwnMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1)", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             mockSetup
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£137.86 a week" in {
             mockSetup
             val sWeek = "£137.86 " + Messages("nisp.main.week")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > h2", sWeek)
           }
           "render page with text  ' £599.44 a month, £7,193.34 a year '" in {
             mockSetup
             val sForecastAmount = "£599.44 " + Messages("nisp.main.month") + ", £7,193.34 " + Messages("nisp.main.year")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(3)", sForecastAmount)
           }
-          "render page with text  ' Your forcaste '" in {
+          "render page with text  ' Your forecast '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(5)", "nisp.main.caveats")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-child(5)", "nisp.main.caveats")
           }
           "render page with text  ' is not a guarantee and is based on the current law '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(1)", "nisp.main.notAGuarantee")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(4)", "nisp.main.inflation")
           }
+
           "render page with text  ' You currently have 4 years on your record and you need at least 10 years to get any State Pension. '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.youCurrentlyHave", Time.years(4).toString(), Constants.minimumQualifyingYearsNSP.toString(), null)
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(3)", "nisp.mqp.youCurrentlyHave", Time.years(4).toString(), Constants.minimumQualifyingYearsNSP.toString(), null)
           }
 
           "render page with Heading  ' You can improve your forecast'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>h2:nth-child(8)", "nisp.main.context.fillGaps.improve.title")
+            assertEqualsMessage(foreignDoc, "#improveForecast", "nisp.main.context.fillGaps.improve.title")
           }
+
           "render page with text  'You have years on your record where you did not contribute enough National Insurance and you can make up the shortfall. " +
             "This will make these years count towards your pension and may improve your forecast.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>p:nth-child(9)", "nisp.main.context.improve.para1.plural")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4)", "nisp.main.context.improve.para1.plural")
           }
           "render page with link  'View gaps in your record'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>a:nth-child(10)", "nisp.main.context.fillGaps.viewGaps")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(5) > a", "nisp.main.context.fillGaps.viewGaps")
           }
           "render page with href link  'View gaps in your record'" in {
             mockSetup
-            assertLinkHasValue(foreignDoc, "article.content__body>a:nth-child(10)", "/check-your-state-pension/account/nirecord/gaps")
+            assertLinkHasValue(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(5) > a", "/check-your-state-pension/account/nirecord/gaps")
           }
 
           "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
-            assertElemetsOwnText(foreignDoc, "article.content__body>p:nth-child(11)", sMessage)
+            assertElemetsOwnText(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6)", sMessage)
           }
 
           /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(12)>p", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
           }
           /*Ends*/
 
@@ -528,41 +539,41 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           }
           /*Ends*/
 
-          "render page with heading 'Putting of claiming'" in {
+          "render page with heading 'Putting off claiming'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(13)", "nisp.main.puttingOff")
+            assertEqualsMessage(nonForeignDoc, "#puttingOff", "nisp.main.puttingOff")
           }
 
           "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(14)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(15)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8) > a", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>a:nth-child(15)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8) > a", "https://www.gov.uk/deferring-state-pension")
           }
 
           /*Side bar help*/
           "render page with heading 'Get help'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "aside.sidebar >div.helpline-sidebar>h2", "nisp.nirecord.helpline.getHelp")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-one-third > div > h2", "nisp.nirecord.helpline.getHelp")
           }
           "render page with text 'Helpline 0800 731 0181'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(2)", "nisp.nirecord.helpline.number")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-one-third > div > p:nth-child(2)", "nisp.nirecord.helpline.number")
           }
           "render page with text 'Textphone 0800 731 0176'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-one-third > div > p:nth-child(3)", "nisp.nirecord.helpline.textNumber")
           }
           "render page with text 'Monday to Friday: 8am to 6pm'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "aside.sidebar >div.helpline-sidebar>p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-one-third > div > p:nth-child(4)", "nisp.nirecord.helpline.openTimes")
           }
         }
 
@@ -620,38 +631,38 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(12)>p", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
           }
 
           // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(13)", "nisp.spa.under.consideration.title")
+            assertEqualsMessage(nonForeignDoc, "#proposedChange", "nisp.spa.under.consideration.title")
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(14)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           //deferral message
-          "render page with heading  'Putting of claiming'" in {
+          "render page with heading  'Putting off claiming'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(15)", "nisp.main.puttingOff")
+            assertEqualsMessage(nonForeignDoc, "#puttingOff", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(16)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(17)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>a:nth-child(17)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", "https://www.gov.uk/deferring-state-pension")
           }
         }
 
@@ -711,57 +722,57 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           }
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h1.titleWithPAgeInfo", "nisp.main.h1.title")
+            assertEqualsMessage(nonForeignDoc, "#mainTitle", "nisp.main.h1.title")
           }
 
           "render page with text  'You can get your State Pension on' " in {
             mockSetup
-            assertElemetsOwnMessage(nonForeignDoc, "article.content__body>div:nth-child(4)>p", "nisp.main.basedOn")
+            assertElemetsOwnMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1)", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             mockSetup
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£155.65 a week" in {
             mockSetup
             val sWeek = "£155.65 " + Messages("nisp.main.week")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > h2", sWeek)
           }
           "render page with text  ' £599.44 a month, £7,193.34 a year '" in {
             mockSetup
             val sForecastAmount = "£599.44 " + Messages("nisp.main.month") + ", £7,193.34 " + Messages("nisp.main.year")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(3)", sForecastAmount)
           }
-          "render page with text  ' Your forcaste '" in {
+          "render page with text  ' Your forecast '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(5)", "nisp.main.caveats")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-child(5)", "nisp.main.caveats")
           }
           "render page with text  ' is not a guarantee and is based on the current law '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(1)", "nisp.main.notAGuarantee")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(4)", "nisp.main.inflation")
           }
           "render page with text  ' You currently have 4 years on your record and you need at least 10 years to get any State Pension. '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.youCurrentlyHave", Time.years(4).toString(), Constants.minimumQualifyingYearsNSP.toString(), null)
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(3)", "nisp.mqp.youCurrentlyHave", Time.years(4).toString(), Constants.minimumQualifyingYearsNSP.toString(), null)
           }
 
           "render page with Heading  '£155.65 is the most you can get'" in {
@@ -772,32 +783,32 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           "render page with text  'You cannot improve your forecast any further.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>p:nth-child(9)", "nisp.main.context.willReach")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
             mockSetup
-            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(5)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
-          "render page with link  'View your National Insurence Record'" in {
+          "render page with link  'View your National Insurance Record'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>a:nth-child(11)", "nisp.main.showyourrecord")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6) > a", "nisp.main.showyourrecord")
           }
-          "render page with href link 'View your National Insurence Record'" in {
+          "render page with href link 'View your National Insurance Record'" in {
             mockSetup
-            assertLinkHasValue(foreignDoc, "article.content__body>a:nth-child(11)", "/check-your-state-pension/account/nirecord")
+            assertLinkHasValue(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6) > a", "/check-your-state-pension/account/nirecord")
           }
 
           "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
-            assertElemetsOwnText(foreignDoc, "article.content__body>p:nth-child(12)", sMessage)
+            assertElemetsOwnText(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7)", sMessage)
           }
 
           /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
           }
 
           "Not render page with heading 'Proposed change to your State Pension age'" in {
@@ -810,23 +821,23 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
             assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
-          "render page with heading 'Putting of claiming'" in {
+          "render page with heading 'Putting off claiming'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+            assertEqualsMessage(nonForeignDoc, "#puttingOff", "nisp.main.puttingOff")
           }
 
           "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", "https://www.gov.uk/deferring-state-pension")
           }
         }
 
@@ -884,36 +895,36 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
           }
 
           "render page with heading  'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(14)", "nisp.spa.under.consideration.title")
+            assertEqualsMessage(nonForeignDoc, "#proposedChange", "nisp.spa.under.consideration.title")
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
-          "render page with heading  'Putting of claiming'" in {
+          "render page with heading  'Putting off claiming'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(16)", "nisp.main.puttingOff")
+            assertEqualsMessage(nonForeignDoc, "#puttingOff", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(18)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(10) > a", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>a:nth-child(18)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(10) > a", "https://www.gov.uk/deferring-state-pension")
           }
         }
 
@@ -973,57 +984,57 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           }
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h1.titleWithPAgeInfo", "nisp.main.h1.title")
+            assertEqualsMessage(nonForeignDoc, "#mainTitle", "nisp.main.h1.title")
           }
 
           "render page with text  'You can get your State Pension on' " in {
             mockSetup
-            assertElemetsOwnMessage(nonForeignDoc, "article.content__body>div:nth-child(4)>p", "nisp.main.basedOn")
+            assertElemetsOwnMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1)", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             mockSetup
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£155.65 a week" in {
             mockSetup
             val sWeek = "£155.65 " + Messages("nisp.main.week")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > h2", sWeek)
           }
           "render page with text  ' £599.44 a month, £7,193.34 a year '" in {
             mockSetup
             val sForecastAmount = "£599.44 " + Messages("nisp.main.month") + ", £7,193.34 " + Messages("nisp.main.year")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(3)", sForecastAmount)
           }
-          "render page with text  ' Your forcaste '" in {
+          "render page with text  ' Your forecast '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(5)", "nisp.main.caveats")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-child(5)", "nisp.main.caveats")
           }
           "render page with text  ' is not a guarantee and is based on the current law '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(1)", "nisp.main.notAGuarantee")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(4)", "nisp.main.inflation")
           }
           "render page with text  'You do not have any years on your record and you need at least 10 years to get any State Pension. '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP.toString())
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(3)", "nisp.mqp.youCurrentlyHaveZero", Constants.minimumQualifyingYearsNSP.toString())
           }
 
           "render page with Heading  '£155.65 is the most you can get'" in {
@@ -1032,34 +1043,34 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
             assertEqualsValue(nonForeignDoc, "#mostYouCanGet", sMessage)
           }
 
-          "render page with text  'You cannot improve your forecast any further, unless you choose to put off claimimg'" in {
+          "render page with text  'You cannot improve your forecast any further, unless you choose to put off claiming'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>p:nth-child(9)", "nisp.main.context.willReach")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
             mockSetup
-            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(5)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
-          "render page with link  'View your National Insurence Record'" in {
+          "render page with link  'View your National Insurance Record'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>a:nth-child(11)", "nisp.main.showyourrecord")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6) > a", "nisp.main.showyourrecord")
           }
           "render page with href link  'View your National Insurence Record'" in {
             mockSetup
-            assertLinkHasValue(foreignDoc, "article.content__body>a:nth-child(11)", "/check-your-state-pension/account/nirecord")
+            assertLinkHasValue(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6) > a", "/check-your-state-pension/account/nirecord")
           }
 
           "render page with href text  'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
-            assertElemetsOwnText(foreignDoc, "article.content__body>p:nth-child(12)", sMessage)
+            assertElemetsOwnText(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7)", sMessage)
           }
 
           /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
           }
           /*Ends*/
 
@@ -1075,23 +1086,23 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           }
           /*Ends*/
 
-          "render page with heading 'Putting of claiming'" in {
+          "render page with heading 'Putting off claiming'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+            assertEqualsMessage(nonForeignDoc, "#puttingOff", "nisp.main.puttingOff")
           }
 
           "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", "https://www.gov.uk/deferring-state-pension")
           }
         }
 
@@ -1149,36 +1160,36 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
           }
 
           "render page with heading  'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(14)", "nisp.spa.under.consideration.title")
+            assertEqualsMessage(nonForeignDoc, "#proposedChange", "nisp.spa.under.consideration.title")
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
-          "render page with heading  'Putting of claiming'" in {
+          "render page with heading  'Putting off claiming'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(16)", "nisp.main.puttingOff")
+            assertEqualsMessage(nonForeignDoc, "#puttingOff", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(18)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(10) > a", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>a:nth-child(18)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(10) > a", "https://www.gov.uk/deferring-state-pension")
           }
         }
 
@@ -1237,58 +1248,58 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           }
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h1.titleWithPAgeInfo", "nisp.main.h1.title")
+            assertEqualsMessage(nonForeignDoc, "#mainTitle", "nisp.main.h1.title")
           }
 
           "render page with text  'You can get your State Pension on' " in {
             mockSetup
-            assertElemetsOwnMessage(nonForeignDoc, "article.content__body>div:nth-child(4)>p", "nisp.main.basedOn")
+            assertElemetsOwnMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1", "nisp.main.basedOn")
           }
           "render page with text  '7 june 2020' " in {
             mockSetup
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(1)", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)) + ".")
           }
           "render page with text  'Your forecast is' " in {
             mockSetup
             val sMessage = Messages("nisp.main.caveats") + " " + Messages("nisp.is")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(1)>span:nth-child(2)", sMessage)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(1) > span:nth-child(2)", sMessage)
           }
 
           "render page with text  '£155.65 a week" in {
             mockSetup
             val sWeek = "£155.65 " + Messages("nisp.main.week")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(2)>em", sWeek)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > h2", sWeek)
           }
           "render page with text  ' £599.44 a month, £7,193.34 a year '" in {
             mockSetup
             val sForecastAmount = "£599.44 " + Messages("nisp.main.month") + ", £7,193.34 " + Messages("nisp.main.year")
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(4)>p:nth-child(3)", sForecastAmount)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div > div:nth-child(3)", sForecastAmount)
           }
-          "render page with text  ' Your forcaste '" in {
+          "render page with text  ' Your forecast '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(5)", "nisp.main.caveats")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-child(5", "nisp.main.caveats")
           }
           "render page with text  ' is not a guarantee and is based on the current law '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(1)", "nisp.main.notAGuarantee")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(1)", "nisp.main.notAGuarantee")
           }
           "render page with text  ' is based on your National Insurance record up to 5 April 2016 '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(2)", "nisp.main.isBased", langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5)))
           }
           "render page with text  ' assumes that you’ll contribute another 4 years '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(3)", "nisp.mqp.howManyToContribute", Time.years(4))
           }
 
           "render page with text  ' does not include any increase due to inflation '" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>ul:nth-child(6)>li:nth-child(4)", "nisp.main.inflation")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > ul > li:nth-child(4)", "nisp.main.inflation")
           }
 
           "render page with text  ' You currently have 9 years on your record and you need at least 10 years to get any State Pension. '" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.youCurrentlyHave", Time.years(9).toString(), Constants.minimumQualifyingYearsNSP.toString(), null)
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(3)", "nisp.mqp.youCurrentlyHave", Time.years(9).toString(), Constants.minimumQualifyingYearsNSP.toString(), null)
           }
 
           "render page with Heading  '£155.65 is the most you can get'" in {
@@ -1297,34 +1308,34 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
             assertEqualsValue(nonForeignDoc, "#mostYouCanGet", sMessage)
           }
 
-          "render page with text  'You cannot improve your forecast any further, unless you choose to put off claimimg'" in {
+          "render page with text  'You cannot improve your forecast any further, unless you choose to put off claiming'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>p:nth-child(9)", "nisp.main.context.willReach")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4)", "nisp.main.context.willReach")
           }
           "render page with text  'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
             mockSetup
-            assertContainsDynamicMessage(foreignDoc, "article.content__body>p:nth-child(10)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(5)", "nisp.main.context.reachMax.needToPay", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
-          "render page with link  'View your National Insurence Record'" in {
+          "render page with link  'View your National Insurance Record'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>a:nth-child(11)", "nisp.main.showyourrecord")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6) > a", "nisp.main.showyourrecord")
           }
-          "render page with href link 'View your National Insurence Record'" in {
+          "render page with href link 'View your National Insurance Record'" in {
             mockSetup
-            assertLinkHasValue(foreignDoc, "article.content__body>a:nth-child(11)", "/check-your-state-pension/account/nirecord")
+            assertLinkHasValue(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6) > a", "/check-your-state-pension/account/nirecord")
           }
 
           "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions''" in {
             mockSetup
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
-            assertElemetsOwnText(foreignDoc, "article.content__body>p:nth-child(12)", sMessage)
+            assertElemetsOwnText(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7)", sMessage)
           }
 
           /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
           }
           /*Ends*/
 
@@ -1339,23 +1350,23 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
             assertPageDoesNotContainDynamicMessage(nonForeignDoc, "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
-          "render page with heading  'Putting of claiming'" in {
+          "render page with heading  'Putting off claiming'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(14)", "nisp.main.puttingOff")
+            assertEqualsMessage(nonForeignDoc, "#puttingOff", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(16)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>a:nth-child(16)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", "https://www.gov.uk/deferring-state-pension")
           }
         }
 
@@ -1412,36 +1423,36 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           "render page with text  'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>div.panel-indent:nth-child(13)>p", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div.panel-indent > p", "nisp.main.overseas")
           }
 
           "render page with heading  'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(14)", "nisp.spa.under.consideration.title")
+            assertEqualsMessage(nonForeignDoc, "#proposedChange", "nisp.spa.under.consideration.title")
           }
 
           "render page with text  'Youll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(15)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
-          "render page with heading  'Putting of claiming'" in {
+          "render page with heading  'Putting off claiming'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(16)", "nisp.main.puttingOff")
+            assertEqualsMessage(nonForeignDoc, "#puttingOff", "nisp.main.puttingOff")
           }
 
           "render page with text  'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(17)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9)", "nisp.main.puttingOff.line1", langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7)))
           }
 
           "render page with link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>a:nth-child(18)", "nisp.main.puttingOff.linkTitle")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(10) > a", "nisp.main.puttingOff.linkTitle")
           }
           "render page with href link 'More on putting off claiming (opens in new tab)'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>a:nth-child(18)", "https://www.gov.uk/deferring-state-pension")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(10) > a", "https://www.gov.uk/deferring-state-pension")
           }
         }
       }
@@ -1504,35 +1515,35 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           }
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
+            assertEqualsMessage(nonForeignDoc, "#mainTitle", "nisp.main.h1.title")
           }
 
           "render page with text  'You’ll reach State Pension age on ' " in {
             mockSetup
             val sMessage = Messages("nisp.main.description.mqp")
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>div:nth-child(2)>p", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div:nth-child(2) > p:nth-child(1)", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2017. ' " in {
             mockSetup
             val sMessage = langUtils.Dates.formatDate(LocalDate.of(2017, 5, 4)) + "."
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div:nth-child(2) > p:nth-child(1) > span", sMessage)
           }
 
           "render page with text 'By this time, you will not be able to get the 10 years needed on your National Insurance record to get any State Pension.' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.notPossible")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div:nth-child(2) > p:nth-child(2)", "nisp.mqp.notPossible")
           }
 
           "render page with text 'What you can do next" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
+            assertEqualsMessage(nonForeignDoc, "#doNext", "nisp.mqp.doNext")
           }
 
           /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>p:nth-child(4)", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(1)", "nisp.main.overseas")
           }
           /*Ends*/
 
@@ -1550,55 +1561,55 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           "render page with text 'You do not have any years on your record that do not count towards your pension.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(5)", "nisp.mqp.years.dontCount.zero")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(2)", "nisp.mqp.years.dontCount.zero")
           }
-          "render page with link  'View your National Insurence Record'" in {
+          "render page with link  'View your National Insurance Record'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(6)>a", "nisp.main.showyourrecord")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4) > a", "nisp.main.showyourrecord")
           }
-          "render page with href link  'View your National Insurence Record'" in {
+          "render page with href link  'View your National Insurance Record'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4) > a", "/check-your-state-pension/account/nirecord")
           }
 
           "render page with text  'After State Pension age, 4 May 2017 you no longer pay National Insurance contributions.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", langUtils.Dates.formatDate(LocalDate.of(2017, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6)", "nisp.mqp.afterSpa", langUtils.Dates.formatDate(LocalDate.of(2017, 5, 4)))
           }
 
           "render page with text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.mqp.forecastChanges")) + " ."
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>p:nth-child(8)", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7)", sMessage)
           }
           "render page with href text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(8)>a", "nisp.legal.termsAndCondition")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7) > a", "nisp.legal.termsAndCondition")
           }
           "render page with href link  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(8)>a", "/check-your-state-pension/terms-and-conditions?showBackLink=true")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7) > a", "/check-your-state-pension/terms-and-conditions?showBackLink=true")
           }
 
           "render page with link 'What else you can do'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(9)", "nisp.mqp.whatElse")
+            assertEqualsMessage(nonForeignDoc, "#whatElse", "nisp.mqp.whatElse")
           }
           "render page with link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(10)", "nisp.mqp.pensionCredit")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.mqp.pensionCredit")
           }
           "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(10)>a", expectedPensionCreditOverviewLink)
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8) > a", expectedPensionCreditOverviewLink)
           }
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", expectedMoneyServiceLink)
           }
 
         }
@@ -1656,22 +1667,22 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", expectedMoneyServiceLink)
           }
 
           // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+            assertEqualsMessage(nonForeignDoc, "#proposedChange", "nisp.spa.under.consideration.title")
           }
 
           "render page with text  'Youll reach State Pension age on 4 May 2017. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2017, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(10)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2017, 5, 4)))
           }
         }
 
@@ -1731,35 +1742,35 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           }
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h1.heading-large", "nisp.main.h1.title")
+            assertEqualsMessage(nonForeignDoc, "#mainTitle", "nisp.main.h1.title")
           }
 
           "render page with text  'You’ll reach State Pension age on ' " in {
             mockSetup
             val sMessage = Messages("nisp.main.description.mqp")
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>div:nth-child(2)>p", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div:nth-child(2) > p:nth-child(1)", sMessage)
           }
           "render page with text  'You’ll reach State Pension age on 4 May 2018. ' " in {
             mockSetup
             val sMessage = langUtils.Dates.formatDate(LocalDate.of(2018, 5, 4)) + "."
-            assertEqualsValue(nonForeignDoc, "article.content__body>div:nth-child(2)>p>span", sMessage)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div:nth-child(2) > p:nth-child(1) > span", sMessage)
           }
 
           "render page with text 'By this time, you will not have the 10 years needed on your National Insurance record to get any State Pension.' " in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>div:nth-child(2)>p:nth-child(2)", "nisp.mqp.possible")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > div:nth-child(2) > p:nth-child(2)", "nisp.mqp.possible")
           }
 
           "render page with text 'What you can do next" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(3)", "nisp.mqp.doNext")
+            assertEqualsMessage(nonForeignDoc, "#doNext", "nisp.mqp.doNext")
           }
 
           /*overseas message*/
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
             mockSetup
-            assertEqualsMessage(foreignDoc, "article.content__body>p:nth-child(4)", "nisp.main.overseas")
+            assertEqualsMessage(foreignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(1)", "nisp.main.overseas")
           }
           /*Ends*/
 
@@ -1779,47 +1790,47 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
             " Filling some of these years may get you some State Pension.  '" in {
             mockSetup
             val sMessage = Messages("nisp.mqp.years.dontCount.plural", Time.years(2).toString()) + " " + Messages("nisp.mqp.filling.may.plural")
-            assertEqualsValue(nonForeignDoc, "article.content__body>p:nth-child(5)", sMessage)
+            assertEqualsValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(2)", sMessage)
           }
           "render page with link  'Gaps in your record and the cost of filling them'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(6)>a", "nisp.main.context.fillGaps.viewGapsAndCost")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4) > a", "nisp.main.context.fillGaps.viewGapsAndCost")
           }
-          "render page with href link  'View your National Insurence Record'" in {
+          "render page with href link  'View your National Insurance Record'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(6)>a", "/check-your-state-pension/account/nirecord/gaps")
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(4) > a", "/check-your-state-pension/account/nirecord/gaps")
           }
 
           "render page with text  'After State Pension age, 4 May 2018 you no longer pay National Insurance contributions.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(7)", "nisp.mqp.afterSpa", langUtils.Dates.formatDate(LocalDate.of(2018, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(6)", "nisp.mqp.afterSpa", langUtils.Dates.formatDate(LocalDate.of(2018, 5, 4)))
           }
 
           "render page with href text  'These details may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
             val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.mqp.forecastChanges")) + " ."
-            assertElemetsOwnText(nonForeignDoc, "article.content__body>p:nth-child(8)", sMessage)
+            assertElemetsOwnText(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(7)", sMessage)
           }
 
           "render page with link 'What else you can do'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(9)", "nisp.mqp.whatElse")
+            assertEqualsMessage(nonForeignDoc, "#whatElse", "nisp.mqp.whatElse")
           }
           "render page with link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(10)", "nisp.mqp.pensionCredit")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)", "nisp.mqp.pensionCredit")
           }
           "render page with href link 'You may be eligible for Pension Credit (opens in new tab)  if your retirement income is low'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(10)>a", expectedPensionCreditOverviewLink)
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(8)> a", expectedPensionCreditOverviewLink)
           }
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", expectedMoneyServiceLink)
           }
         }
 
@@ -1875,22 +1886,22 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           "render page with link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>p:nth-child(11)", "nisp.mqp.moneyAdvice")
+            assertEqualsMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9)", "nisp.mqp.moneyAdvice")
           }
           "render page with href link 'Contact the Money Advice Service (opens in new tab)  for free impartial advice.'" in {
             mockSetup
-            assertLinkHasValue(nonForeignDoc, "article.content__body>p:nth-child(11)>a", expectedMoneyServiceLink)
+            assertLinkHasValue(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(9) > a", expectedMoneyServiceLink)
           }
 
           // SPA under consideration message
           "render page with heading  'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(nonForeignDoc, "article.content__body>h2:nth-child(12)", "nisp.spa.under.consideration.title")
+            assertEqualsMessage(nonForeignDoc, "#proposedChange", "nisp.spa.under.consideration.title")
           }
 
           "render page with text  'Youll reach State Pension age on 4 May 2018. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(nonForeignDoc, "article.content__body>p:nth-child(13)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2018, 5, 4)))
+            assertContainsDynamicMessage(nonForeignDoc, "#main-content > div > div.govuk-grid-column-two-thirds > p:nth-of-type(10)", "nisp.spa.under.consideration.detail", langUtils.Dates.formatDate(LocalDate.of(2018, 5, 4)))
           }
         }
       }

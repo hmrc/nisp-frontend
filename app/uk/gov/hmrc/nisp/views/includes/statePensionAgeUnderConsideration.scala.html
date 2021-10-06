@@ -19,5 +19,5 @@
 @this(h2: H2, p: P)
 @(statePensionDate: String)(implicit messages: Messages)
 
-@h2("nisp.spa.under.consideration.title")
-@p(Text(messages("nisp.spa.under.consideration.detail", statePensionDate)))
+@h2("nisp.spa.under.consideration.title", elmId=Some("proposedChange"))
+@p(HtmlContent(messages("nisp.spa.under.consideration.detail", statePensionDate)))

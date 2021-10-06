@@ -20,6 +20,6 @@
 
 @(statePensionDate: String)(implicit messages: Messages)
 
-@h2("nisp.main.puttingOff")
+@h2("nisp.main.puttingOff", elmId = Some("puttingOff"))
 @p(Text(messages("nisp.main.puttingOff.line1", statePensionDate)))
 @link(link = "https://www.gov.uk/deferring-state-pension", messageKey = "nisp.main.puttingOff.linkTitle", attrTarget = true)

@@ -40,7 +40,7 @@
         <li>@messages("nisp.main.inflation")</li>
         @if(statePension.pensionSharingOrder) {<li>@messages("nisp.main.psod")</li>}
     </ul>
-    @h2(msg="nisp.main.continueContribute")
+    @h2(msg="nisp.main.continueContribute", elmId=Some("continueContribute"))
     @chart(Html(messages("nisp.main.chart.lastprocessed.title",statePension.earningsIncludedUpTo.getYear().toString())),
     currentChart.width, Html(s"${NispMoney.pounds(currentChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"))
 

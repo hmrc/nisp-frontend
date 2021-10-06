@@ -21,7 +21,7 @@
 
 @this(spChart: spChart, p: P, h2: H2, link: Link)
 @(statePension: StatePension, numberOfGaps: Int, personalMaximumChart: SPChartModel)(implicit messages: Messages)
-@h2(msg="nisp.main.context.fillGaps.improve.title")
+@h2(msg="nisp.main.context.fillGaps.improve.title", elmId = Some("improveForecast"))
     @if(numberOfGaps == 1) {
         @p(Text(messages("nisp.main.context.fillgaps.para1.singular")))
         @spChart(Html(messages("nisp.main.context.fillgaps.chart.onlyone")), personalMaximumChart)

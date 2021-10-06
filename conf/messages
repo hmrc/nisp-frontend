@@ -465,7 +465,7 @@ error.email = Enter a valid email address
 #***********************
 nisp.home.banner.recruitment.link = Help improve digital services by joining the HMRC user panel (opens in new window)
 nisp.home.banner.recruitment.reject = No thanks
-nisp.home.banner.recruitment.title = Help improve 
+nisp.home.banner.recruitment.title = Help improve HMRC services
 nisp.home.banner.recruitment.url = <a href="http://gov.uk">GOV.UK</a>
 
 global.error.InternalServerError500.title = Sorry, there is a problem with the service
