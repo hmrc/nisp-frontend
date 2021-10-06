@@ -50,7 +50,7 @@ user: NispAuthedUser)
 }
 
     @main(MainTemplateParams(
-        browserTitle = Some(messages("nisp.nirecord.title")),
+        browserTitle = Some(messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
         userLoggedIn = true,
         pageInfo = Some(user.name.getOrElse("")),
         printableDocument = true,
