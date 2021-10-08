@@ -200,11 +200,11 @@ nisp.excluded.cope.failed.relayUK.line1 = If you cannot hear or speak on the pho
 nisp.excluded.cope.failed.relayUK.line2 = 18001 then 0800 731 0175
 
 nisp.excluded.cope.failed.britishSignLanguage.h3 = British Sign Language
-nisp.excluded.cope.failed.britishSignLanguage.line1 = <a href="https://dwppensionforecasting.signvideo.net/" rel="noopener noreferrer" target="_blank">Video relay service</a> for British Sign Language (BSL) users - <a href="https://www.youtube.com/watch?v=Osx7FFxFpNY" target="_blank">check you can use this service</a>.
+nisp.excluded.cope.failed.britishSignLanguage.line1 = <a href="https://dwppensionforecasting.signvideo.net/" rel="noopener noreferrer" target="_blank">Video relay service</a> for British Sign Language (BSL) users - <a href="https://www.youtube.com/watch?v=Osx7FFxFpNY" rel="noopener noreferrer" target="_blank">check you can use this service</a>.
 
 nisp.excluded.cope.failed.openingTimes.h3 = Opening Times
 nisp.excluded.cope.failed.openingTimes.line1 = Monday to Friday, 8:30am to 3:30pm
-nisp.excluded.cope.failed.openingTimes.line2 = <a href="https://www.gov.uk/call-charges" target="_blank">Find out about the call charges</a>
+nisp.excluded.cope.failed.openingTimes.line2 = <a href="https://www.gov.uk/call-charges" rel="noopener noreferrer" target="_blank">Find out about the call charges</a>
 
 
 #**********************
