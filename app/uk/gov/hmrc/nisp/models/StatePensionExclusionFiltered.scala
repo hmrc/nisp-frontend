@@ -46,7 +46,6 @@ case class StatePensionExclusionFilteredWithCopeDate(
   previousAvailableDate: Option[LocalDate] = None
 ) extends StatePensionExcl with CopeData
 
-
 object StatePensionExclusionFiltered {
   implicit val statePensionExclusionFilteredFormats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
 }

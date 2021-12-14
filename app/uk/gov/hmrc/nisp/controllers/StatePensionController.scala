@@ -62,7 +62,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
       pertaxHelper.isFromPertax.flatMap { isPertax =>
 
         statePensionService.getSummary(user.nino) map {
-          case Right(statePension) if statePension.contractedOut =>
+          case Right(Right(statePension)) if statePension.contractedOut =>
             Ok(statePensionCope(
               statePension.amounts.cope.weeklyAmount,
               isPertax
@@ -101,7 +101,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
           nationalInsuranceResponse <- nationalInsuranceResponseF
         } yield {
           (statePensionResponse, nationalInsuranceResponse) match {
-            case (Right(statePension), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+            case (Right(Right(statePension)), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
               auditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
@@ -109,7 +109,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
               ))
               Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
 
-            case (Right(statePension), Right(nationalInsuranceRecord)) =>
+            case (Right(Right(statePension)), Right(nationalInsuranceRecord)) =>
 
               sendAuditEvent(statePension, user, request.authDetails)
 
@@ -164,11 +164,11 @@ class StatePensionController @Inject()(authenticate: AuthAction,
                 )).withSession(storeUserInfoInSession(user, statePension.contractedOut))
               }
 
-            case (Left(statePensionExclusion), _) =>
+            case (Right(Left(statePensionExclusion)), _) =>
               auditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
-                statePensionExclusion.exclusion
+                statePensionExclusion
               ))
               Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
             case _ => throw new RuntimeException("StatePensionController: SP and NIR are unmatchable. This is probably a logic error.")

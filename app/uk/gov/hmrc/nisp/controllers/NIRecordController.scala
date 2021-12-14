@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
 import java.time.LocalDate
+
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.domain.Nino
@@ -27,6 +28,7 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessingFailed
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, StatePensionExclusionFiltered}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
@@ -123,11 +125,11 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
               Redirect(routes.NIRecordController.showFull)
             } else {
               val finalRelevantStartYear = statePensionResponse match {
-                case Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _)) |
-                     Left(StatePensionExclusionFilteredWithCopeDate(_, _, _)) => None
-                case Left(spExclusion: StatePensionExclusionFiltered) => Some(spExclusion.finalRelevantStartYear
+                case Right(Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _))) |
+                     Right(Left(CopeStatePensionExclusion(_, _, _))) => None
+                case Right(Left(spExclusion: StatePensionExclusionFiltered)) => Some(spExclusion.finalRelevantStartYear
                   .getOrElse(throw new RuntimeException(s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion")))
-                case Right(sp) => Some(sp.finalRelevantStartYear)
+                case Right(Right(sp)) => Some(sp.finalRelevantStartYear)
               }
 
               finalRelevantStartYear.map { finalRelevantStartYear =>

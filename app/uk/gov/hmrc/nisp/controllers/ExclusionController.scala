@@ -21,7 +21,9 @@ import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}
+import uk.gov.hmrc.nisp.errorHandler.ErrorHandler
 import uk.gov.hmrc.nisp.models.Exclusion._
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.CopeStatePensionExclusion
 import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
@@ -40,7 +42,8 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     excludedSp: excluded_sp,
                                     excludedDead: excluded_dead,
                                     excludedMci: excluded_mci,
-                                    excludedNi: excluded_ni)
+                                    excludedNi: excluded_ni,
+                                    errorHandler: ErrorHandler)
                                    (implicit val executor: ExecutionContext,
                                     implicit val formPartialRetriever: FormPartialRetriever,
                                     val templateRenderer: TemplateRenderer,
@@ -59,9 +62,9 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
         nationalInsurance <- nationalInsuranceF
       ) yield {
         statePension match {
-          case Right(sp) if sp.reducedRateElection =>
+          case Right(Right(sp)) if sp.reducedRateElection =>
             Ok(excludedSp(MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), canSeeNIRecord = false, None))
-          case Left(statePensionExclusionFiltered: StatePensionExclusionFiltered) =>
+          case Right(Left(statePensionExclusionFiltered: StatePensionExclusionFiltered)) =>
             if (statePensionExclusionFiltered.exclusion == Dead)
               Ok(excludedDead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge))
             else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
@@ -76,12 +79,13 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                 nationalInsurance.isRight,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
-          case Left(spExclusion: StatePensionExclusionFilteredWithCopeDate) =>
+          case Right(Left(spExclusion: CopeStatePensionExclusion)) =>
             if(spExclusion.previousAvailableDate.exists(_.isBefore(spExclusion.copeAvailableDate))) {
               Ok(excludedCopeExtendedView(spExclusion.copeAvailableDate))
             } else {
               Ok(excludedCopeView(spExclusion.copeAvailableDate))
             }
+          case Left(error) => InternalServerError(errorHandler.internalServerErrorTemplate)
           case _ =>
             logger.warn("User accessed/exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show)

@@ -18,20 +18,67 @@ package uk.gov.hmrc.nisp.models
 
 
 import java.time.LocalDate
-import play.api.libs.json.{Json, OFormat}
+
+import play.api.libs.json.{Format, JsError, JsResult, JsSuccess, JsValue, Json, JsonValidationError, OFormat}
 import uk.gov.hmrc.time.TaxYear
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 
-case class StatePensionExclusion(
-                                  exclusionReasons: List[Exclusion],
-                                 pensionAge: Option[Int] = None,
-                                 pensionDate: Option[LocalDate] = None,
-                                 statePensionAgeUnderConsideration: Option[Boolean] = None) {
-  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
-}
+trait StatePensionExclusion extends Exclusion
 
 object StatePensionExclusion {
-  implicit val formats: OFormat[StatePensionExclusion] = Json.format[StatePensionExclusion]
+  case class OkStatePensionExclusion(
+                                      exclusionReasons: List[Exclusion],
+                                      pensionAge: Option[Int] = None,
+                                      pensionDate: Option[LocalDate] = None,
+                                      statePensionAgeUnderConsideration: Option[Boolean] = None) extends StatePensionExclusion {
+    val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
+  }
+
+  object OkStatePensionExclusion {
+    implicit val formats: OFormat[OkStatePensionExclusion] = Json.format[OkStatePensionExclusion]
+  }
+
+  case class CopeStatePensionExclusion(exclusion: Exclusion, copeAvailableDate: LocalDate, previousAvailableDate: Option[LocalDate])
+    extends StatePensionExclusion
+
+  object CopeStatePensionExclusion {
+    implicit val formats: OFormat[CopeStatePensionExclusion] = Json.format[CopeStatePensionExclusion]
+  }
+
+  case class StatePensionExclusionFiltered(
+                                            exclusion: Exclusion,
+                                            pensionAge: Option[Int] = None,
+                                            pensionDate: Option[LocalDate] = None,
+                                            statePensionAgeUnderConsideration: Option[Boolean] = None
+                                          ) extends StatePensionExclusion {
+    val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
+  }
+
+  object StatePensionExclusionFiltered {
+    implicit val formats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
+  }
+
+  implicit object StatePensionExclusionFormats extends Format[StatePensionExclusion] {
+    override def reads(json: JsValue): JsResult[StatePensionExclusion] = {
+      if (json.validate[OkStatePensionExclusion].isSuccess) JsSuccess(json.as[OkStatePensionExclusion])
+      else if (json.validate[CopeStatePensionExclusion].isSuccess) JsSuccess(json.as[CopeStatePensionExclusion])
+      else if (json.validate[StatePensionExclusionFiltered].isSuccess) JsSuccess(json.as[StatePensionExclusionFiltered])
+      else JsError(JsonValidationError("Unable to parse json as StatePensionExclusion"))
+    }
+
+    override def writes(spExclusion: StatePensionExclusion): JsValue = {
+      spExclusion match {
+        case okStatePensionExclusion: OkStatePensionExclusion => OkStatePensionExclusion.formats.writes(okStatePensionExclusion)
+        case copeStatePensionExclusion: CopeStatePensionExclusion => CopeStatePensionExclusion.formats.writes(copeStatePensionExclusion)
+        case statePensionExclusionFiltered: StatePensionExclusionFiltered =>
+          StatePensionExclusionFiltered.formats.writes(statePensionExclusionFiltered)
+      }
+    }
+  }
 }
+
+
+
+
 
