@@ -26,11 +26,17 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeAuthActionWithNino @Inject()(val parser: BodyParsers.Default,
-                                       val executionContext: ExecutionContext,
-                                       ninoContainer: NinoContainer) extends AuthAction {
-  override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(AuthenticatedRequest(request, NispAuthedUserFixture.user(ninoContainer.nino),
-      AuthDetails(ConfidenceLevel.L200, Some("GGW"), LoginTimes(DateTime.now, None))))
-  }
+class FakeAuthActionWithNino @Inject() (
+  val parser: BodyParsers.Default,
+  val executionContext: ExecutionContext,
+  ninoContainer: NinoContainer
+) extends AuthAction {
+  override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] =
+    block(
+      AuthenticatedRequest(
+        request,
+        NispAuthedUserFixture.user(ninoContainer.nino),
+        AuthDetails(ConfidenceLevel.L200, Some("GGW"), LoginTimes(DateTime.now, None))
+      )
+    )
 }

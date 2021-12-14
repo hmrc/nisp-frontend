@@ -19,6 +19,5 @@ package uk.gov.hmrc.nisp.controllers.auth
 import play.api.mvc.{Request, WrappedRequest}
 import uk.gov.hmrc.domain.Nino
 
-case class ExcludedAuthenticatedRequest[A](request: Request[A],
-                                           nino: Nino,
-                                           authDetails: AuthDetails) extends WrappedRequest[A](request)
+case class ExcludedAuthenticatedRequest[A](request: Request[A], nino: Nino, authDetails: AuthDetails)
+    extends WrappedRequest[A](request)

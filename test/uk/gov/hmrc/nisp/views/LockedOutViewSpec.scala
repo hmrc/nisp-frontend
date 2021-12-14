@@ -22,25 +22,23 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.locked_out
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 class LockedOutViewSpec extends HtmlSpec with Injecting {
 
-  val fakeRequest = FakeRequest("GET", "/")
-  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+  val fakeRequest                   = FakeRequest("GET", "/")
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"
-  lazy val html = inject[locked_out]
-  lazy val source = asDocument(html().toString)
+  lazy val html                   = inject[locked_out]
+  lazy val source                 = asDocument(html().toString)
 
   "LockedOutView" should {
 
     "assert correct page title" in {
-      val title = source.title()
-      val expected = messages("nisp.iv.failure.lockedout.title") + Constants.titleSplitter +
-        messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")
+      val title    = source.title()
+      val expected = messages("nisp.iv.failure.lockedout.title") + Constants.titleSplitter + messages(
+        "nisp.title.extension"
+      ) + Constants.titleSplitter + messages("nisp.gov-uk")
       title should include(expected)
     }
 

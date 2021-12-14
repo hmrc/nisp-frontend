@@ -23,16 +23,16 @@ import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 
 case class NationalInsuranceRecord(
-                                    qualifyingYears: Int,
-                                    qualifyingYearsPriorTo1975: Int,
-                                    numberOfGaps: Int,
-                                    numberOfGapsPayable: Int,
-                                    dateOfEntry: Option[LocalDate],
-                                    homeResponsibilitiesProtection: Boolean,
-                                    earningsIncludedUpTo: LocalDate,
-                                    taxYears: List[NationalInsuranceTaxYear],
-                                    reducedRateElection:Boolean
-                                  )
+  qualifyingYears: Int,
+  qualifyingYearsPriorTo1975: Int,
+  numberOfGaps: Int,
+  numberOfGapsPayable: Int,
+  dateOfEntry: Option[LocalDate],
+  homeResponsibilitiesProtection: Boolean,
+  earningsIncludedUpTo: LocalDate,
+  taxYears: List[NationalInsuranceTaxYear],
+  reducedRateElection: Boolean
+)
 
 object NationalInsuranceRecord {
 
@@ -49,10 +49,10 @@ object NationalInsuranceRecord {
       (JsPath \ "earningsIncludedUpTo").read[LocalDate] and
       (JsPath \ "_embedded" \ "taxYears").read[JsValue].map {
         case obj: JsObject => List(obj.as[NationalInsuranceTaxYear])
-        case other => other.as[List[NationalInsuranceTaxYear]]
+        case other         => other.as[List[NationalInsuranceTaxYear]]
       } and
       readNullableBoolean(JsPath \ "reducedRateElection")
-    ) (NationalInsuranceRecord.apply _)
+  )(NationalInsuranceRecord.apply _)
 
   implicit val writes: Writes[NationalInsuranceRecord] = (
     (JsPath \ "qualifyingYears").write[Int] and
@@ -64,7 +64,7 @@ object NationalInsuranceRecord {
       (JsPath \ "earningsIncludedUpTo").write[LocalDate] and
       (JsPath \ "_embedded" \ "taxYears").write[List[NationalInsuranceTaxYear]] and
       (JsPath \ "reducedRateElection").write[Boolean]
-    ) (unlift(NationalInsuranceRecord.unapply))
+  )(unlift(NationalInsuranceRecord.unapply))
 
   implicit val formats: Format[NationalInsuranceRecord] = Format(reads, writes)
 }

@@ -28,41 +28,44 @@ import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord, StatePension
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
 
-class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
-                                        (implicit executor: ExecutionContext){
+class NationalInsuranceService @Inject() (nationalInsuranceConnector: NationalInsuranceConnectorImpl)(implicit
+  executor: ExecutionContext
+) {
 
-  final val ExclusionCodeDead = "EXCLUSION_DEAD"
-  final val ExclusionCodeManualCorrespondence = "EXCLUSION_MANUAL_CORRESPONDENCE"
-  final val ExclusionCodeIsleOfMan = "EXCLUSION_ISLE_OF_MAN"
-  final val ExclusionCodeMarriedWomen = "EXCLUSION_MARRIED_WOMENS_REDUCED_RATE"
-  final val ExclusionCodeCopeProcessing: String = "EXCLUSION_COPE_PROCESSING"
+  final val ExclusionCodeDead                         = "EXCLUSION_DEAD"
+  final val ExclusionCodeManualCorrespondence         = "EXCLUSION_MANUAL_CORRESPONDENCE"
+  final val ExclusionCodeIsleOfMan                    = "EXCLUSION_ISLE_OF_MAN"
+  final val ExclusionCodeMarriedWomen                 = "EXCLUSION_MARRIED_WOMENS_REDUCED_RATE"
+  final val ExclusionCodeCopeProcessing: String       = "EXCLUSION_COPE_PROCESSING"
   final val ExclusionCodeCopeProcessingFailed: String = "EXCLUSION_COPE_PROCESSING_FAILED"
-  final val ExclusionErrorCode = 403
+  final val ExclusionErrorCode                        = 403
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] = {
-    nationalInsuranceConnector.getNationalInsurance(nino)
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[Exclusion, NationalInsuranceRecord]] =
+    nationalInsuranceConnector
+      .getNationalInsurance(nino)
       .map { ni =>
         if (ni.reducedRateElection) Left(Exclusion.MarriedWomenReducedRateElection)
-        else Right(
-          ni.copy(
-            taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
-            qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
+        else
+          Right(
+            ni.copy(
+              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
+              qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
+            )
           )
-        )
       }
       .recover {
-        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead) =>
+        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeDead)         =>
           Left(Exclusion.Dead)
-        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeManualCorrespondence) =>
+        case Upstream4xxResponse(message, ExclusionErrorCode, _, _)
+            if message.contains(ExclusionCodeManualCorrespondence) =>
           Left(Exclusion.ManualCorrespondenceIndicator)
-        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeIsleOfMan) =>
+        case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeIsleOfMan)    =>
           Left(Exclusion.IsleOfMan)
         case Upstream4xxResponse(message, ExclusionErrorCode, _, _) if message.contains(ExclusionCodeMarriedWomen) =>
           Left(Exclusion.MarriedWomenReducedRateElection)
-        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(ExclusionCodeCopeProcessingFailed) =>
+        case ex @ WithStatusCode(FORBIDDEN) if ex.getMessage.contains(ExclusionCodeCopeProcessingFailed)           =>
           Left(Exclusion.CopeProcessingFailed)
-        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(ExclusionCodeCopeProcessing) =>
+        case ex @ WithStatusCode(FORBIDDEN) if ex.getMessage.contains(ExclusionCodeCopeProcessing)                 =>
           Left(Exclusion.CopeProcessing)
       }
-  }
 }

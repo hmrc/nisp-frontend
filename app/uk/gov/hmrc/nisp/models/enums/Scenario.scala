@@ -19,17 +19,17 @@ package uk.gov.hmrc.nisp.models.enums
 import play.api.libs.json._
 
 object Scenario extends Enumeration {
-    type Scenario = Value
+  type Scenario = Value
 
-    val Reached = Value
-    val ContinueWorkingMax = Value
-    val ContinueWorkingNonMax = Value
-    val FillGaps = Value
-    val ForecastOnly = Value
-    val CantGetPension = Value
+  val Reached               = Value
+  val ContinueWorkingMax    = Value
+  val ContinueWorkingNonMax = Value
+  val FillGaps              = Value
+  val ForecastOnly          = Value
+  val CantGetPension        = Value
 
-    implicit val formats = new Format[Scenario] {
-        def reads(json: JsValue): JsResult[Scenario] = JsSuccess(Scenario.withName(json.as[String]) )
-        def writes(scenario: Scenario): JsValue = JsString(scenario.toString)
-    }
- }
+  implicit val formats = new Format[Scenario] {
+    def reads(json: JsValue): JsResult[Scenario] = JsSuccess(Scenario.withName(json.as[String]))
+    def writes(scenario: Scenario): JsValue      = JsString(scenario.toString)
+  }
+}

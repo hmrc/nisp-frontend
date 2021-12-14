@@ -16,6 +16,14 @@
 
 @this()
 
-@(msg: String, classes: Option[String] = None, elmId: Option[String] = None, args: Seq[String] = Seq.empty)(implicit messages: Messages)
+@(
+  args: Seq[String] = Seq.empty,
+  classes: Option[String] = None,
+  elmId: Option[String] = None,
+  msg: String,
+  specId: Option[String] = None,
+)(implicit messages: Messages)
 
-<h2 @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-heading-m")">@messages(msg, args)</h2>
+<h2 @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-heading-m")"@if(specId){ data-spec="@specId"}>
+  @Html(messages(msg, args))
+</h2>

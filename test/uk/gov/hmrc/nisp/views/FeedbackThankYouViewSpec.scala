@@ -34,14 +34,15 @@ class FeedbackThankYouViewSpec extends HtmlSpec with Injecting {
   implicit val cachedStaticHtmlPartialRetriever = mock[CachedStaticHtmlPartialRetriever]
 
   val partialUrl = "partialUrl"
-  def html = inject[feedback_thankyou]
-  def source = asDocument(html(partialUrl, "/check-your-state-pension/account").toString)
+  def html       = inject[feedback_thankyou]
+  def source     = asDocument(html(partialUrl, "/check-your-state-pension/account").toString)
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[CachedStaticHtmlPartialRetriever].toInstance(cachedStaticHtmlPartialRetriever),
       bind[TemplateRenderer].to(FakeTemplateRenderer)
-    ).build()
+    )
+    .build()
 
   "FeedbackThankYou" should {
 
@@ -56,9 +57,8 @@ class FeedbackThankYouViewSpec extends HtmlSpec with Injecting {
 
       val content = source.toString
       content should include("<p> Mock partial content </p>")
-      verify(cachedStaticHtmlPartialRetriever, times(1)).getPartialContent(
-        url = ArgumentMatchers.eq(partialUrl),
-        any(), any())(any(), any())
+      verify(cachedStaticHtmlPartialRetriever, times(1))
+        .getPartialContent(url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
     }
 
     "assert correct href on the start again button" in {

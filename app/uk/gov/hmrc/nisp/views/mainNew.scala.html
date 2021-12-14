@@ -14,94 +14,77 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
-@import views.html.helper.CSPNonce
+@import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
-
+@import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.{AccountMenu, SignOut, _}
 
 @this(
-    govukLayout: GovukLayout,
-    hmrcStandardHeader: HmrcStandardHeader,
-    hmrcStandardFooter: HmrcStandardFooter,
-    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
-    hmrcHead: hmrcHead,
-    hmrcTimeoutDialogHelper: hmrcTimeoutDialogHelper,
-    scripts: HmrcScripts,
-    twoThirdsOneThirdMainContent: TwoThirdsOneThirdMainContent,
-    twoThirdsMainContent: TwoThirdsMainContent,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-    govukBackLink: GovukBackLink,
-    accountMenu: hmrcAccountMenu,
-    hmrcScripts: HmrcScripts
-)
+  hmrcLayout: HmrcLayout,
+  hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
+  hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
+  twoThirdsOneThirdMainContent: TwoThirdsOneThirdMainContent,
+  twoThirdsMainContent: TwoThirdsMainContent,
+  govukBackLink: GovukBackLink,
+  hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
+  appConfig: ApplicationConfig,
+  hmrcAccountMenu: HmrcAccountMenu
+)(implicit accountMenuConfig: AccountMenuConfig)
 
 @(
-    pageTitle: String,
-    sidebar: Option[Html] = None,
-    headScripts: Option[Html] = None,
-    showBackLink: Boolean = false,
-    sessionExpiredPage: Boolean = false
-)(content: Html)(implicit request: RequestHeader, messages: Messages, appConfig: ApplicationConfig)
+  pageTitle: String,
+  sidebar: Option[Html] = None,
+  showBackLink: Boolean = false,
+  sessionExpiredPage: Boolean = false,
+)(content: Html)(implicit request: RequestHeader, messages: Messages)
 
 @headBlock = {
-    @headScripts
-    <meta name="format-detection" content="telephone=no" />
-    <link rel="stylesheet" href='@controllers.routes.Assets.versioned("stylesheets/nisp.scss")'/>
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="stylesheet" href='@controllers.routes.Assets.versioned("stylesheets/nisp.css")'/>
 }
 
 @beforeContent = {
-    @accountMenu(AccountMenu(
-        accountHome = AccountHome(
-            href = "#account-home",
-            active = true
-        ),
-        messages = AccountMessages(
-            href = "#messages"
-        ),
-        checkProgress = CheckProgress(
-            href = "#check-progress"
-        ),
-        paperlessSettings = PaperlessSettings("#paperless-settings"),
-        personalDetails = PersonalDetails("#personal-details"),
-        signOut = SignOut("#sign-out")
-    ))
-    @hmrcLanguageSelectHelper()
-
-    @if(showBackLink) {
-        @govukBackLink(BackLink(href = "#", content = Text(messages("nisp.back")), attributes = Map("id" -> "back-link")))
-    }
+  @hmrcAccountMenu(AccountMenu(
+    signOut = SignOut(href = routes.StatePensionController.signOut.url),
+    language = if(messages.lang.code == "cy") Cy else En
+  ).withUrlsFromConfig())
 }
 
-@contentBlock = @{
-    beforeContent
-    content
+@contentBlock = {
+  @content
+  <br>
+  @hmrcReportTechnicalIssue(ReportTechnicalIssue(
+    serviceId = appConfig.contactFormServiceIdentifier,
+    language = if(messages.lang.code == "cy") Cy else En,
+    referrerUrl = Some(request.uri),
+    baseUrl = Some(appConfig.reportAProblemNonJSUrl)
+  ))
 }
-
 
 @scripts = {
- <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
- <script src='@controllers.routes.Assets.versioned("lib/hmrc-frontend/hmrc/all.js")'></script>
- <script src='@controllers.routes.Assets.versioned("javascript/html5shiv.min.js")'></script>
- <script src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
- <script src='@controllers.routes.Assets.versioned("javascript/nirecord.js")'></script>
- <script src='@controllers.routes.Assets.versioned("javascript/urBannerClose.js")'></script>
- <script src='@controllers.routes.Assets.versioned("javascript/polyfill.js")'></script>
+  <script src='@controllers.routes.Assets.versioned("javascript/jquery.js")'></script>
+  <script src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
+  <script src='@controllers.routes.Assets.versioned("javascript/nirecord.js")'></script>
 }
 
 @fullTitle = @{
-    pageTitle + " - " + messages("nisp.title.extension") + " - " + messages("nisp.gov-uk")
+  pageTitle + " - " + messages("nisp.title.extension") + " - " + messages("nisp.gov-uk")
 }
 
-@govukLayout(
-    pageTitle = Some(fullTitle),
-    headBlock = Some(hmrcHead(Some(headBlock))),
-    headerBlock = Some(hmrcStandardHeader(serviceName = Some(messages("nisp.title")))),
-    beforeContentBlock = Some(hmrcHead(Some(beforeContent))),
-    scriptsBlock = Some(hmrcScripts(Some(scripts))),
-    footerBlock = Some(hmrcStandardFooter()),
-    mainContentLayout = Some(sidebar match {
-        case Some(sidebarHtml) => twoThirdsOneThirdMainContent(sidebarHtml)
-        case None => twoThirdsMainContent(_)
-    })
+
+@hmrcLayout(
+  pageTitle = Some(fullTitle),
+  serviceName = Some(messages("nisp.title")),
+  isWelshTranslationAvailable = true,
+  userResearchBannerUrl = Some(appConfig.urBannerUrl),
+  accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)),
+  displayHmrcBanner = false,
+  additionalHeadBlock = Some(headBlock),
+  additionalScriptsBlock  = Some(scripts),
+  beforeContentBlock = Some(beforeContent),
+  mainContentLayout = Some(sidebar match {
+    case Some(sidebarHtml) => twoThirdsOneThirdMainContent(sidebarHtml)
+    case None => twoThirdsMainContent(_)
+})
 )(contentBlock)

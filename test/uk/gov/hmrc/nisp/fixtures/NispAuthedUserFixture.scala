@@ -29,13 +29,14 @@ object NispAuthedUserFixture {
 
     val citizenDetailsResponse: CitizenDetailsResponse = TestAccountBuilder.directJsonResponse(nino, "citizen-details")
 
-    NispAuthedUser(nino,
-      dateOfBirth =  citizenDetailsResponse.person.dateOfBirth,
-      name = UserName(Name(citizenDetailsResponse.person.firstName,
-                      citizenDetailsResponse.person.lastName)),
+    NispAuthedUser(
+      nino,
+      dateOfBirth = citizenDetailsResponse.person.dateOfBirth,
+      name = UserName(Name(citizenDetailsResponse.person.firstName, citizenDetailsResponse.person.lastName)),
       address = citizenDetailsResponse.address,
       None,
-      isSa = false)
+      isSa = false
+    )
   }
 
 }

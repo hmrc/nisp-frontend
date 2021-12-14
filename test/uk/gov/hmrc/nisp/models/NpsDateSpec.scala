@@ -31,10 +31,10 @@ class NpsDateSpec extends UnitSpec {
 
     "JSON serialisation" should {
       "return JSString in correct format" in {
-        Json.toJson(NpsDate(new LocalDate(2015,1,1))) shouldBe JsString("01/01/2015")
+        Json.toJson(NpsDate(new LocalDate(2015, 1, 1))) shouldBe JsString("01/01/2015")
       }
       "deserialise works" in {
-        Json.fromJson[NpsDate](JsString("01/01/2015")).get shouldBe NpsDate(new LocalDate(2015,1,1))
+        Json.fromJson[NpsDate](JsString("01/01/2015")).get shouldBe NpsDate(new LocalDate(2015, 1, 1))
       }
     }
 
@@ -46,7 +46,8 @@ class NpsDateSpec extends UnitSpec {
 
     "taxYearStartDate" should {
       "return tax year start date" in {
-        NpsDate.taxYearStartDate(2015) shouldBe NpsDate(2015, Constants.taxYearsStartEndMonth, Constants.taxYearStartDay)
+        NpsDate
+          .taxYearStartDate(2015) shouldBe NpsDate(2015, Constants.taxYearsStartEndMonth, Constants.taxYearStartDay)
       }
     }
   }

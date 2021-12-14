@@ -22,18 +22,14 @@ import scala.util.Try
 
 object JsonDepersonaliser {
 
-  def depersonalise(json: JsValue): Try[String] = {
+  def depersonalise(json: JsValue): Try[String] =
     Try(Json.prettyPrint(depersonaliseValue(json)))
-  }
 
   def depersonaliseObject(obj: JsObject): JsObject = {
 
     val underlying: Map[String, JsValue] = (for {
       (key, value) <- obj.fields
-    }
-    yield {
-      (key, depersonaliseValue(value))
-    }).toMap
+    } yield (key, depersonaliseValue(value))).toMap
 
     JsObject(underlying)
 
@@ -43,17 +39,13 @@ object JsonDepersonaliser {
 
     val value: Seq[JsValue] = for {
       value <- array.value
-    }
-    yield {
-      depersonaliseValue(value)
-    }
+    } yield depersonaliseValue(value)
 
     JsArray(value)
 
   }
 
-  def depersonaliseValue(value: JsValue): JsValue = {
-
+  def depersonaliseValue(value: JsValue): JsValue =
     value match {
       case v: JsArray   => depersonaliseArray(v)
       case _: JsBoolean => JsBoolean(false)
@@ -63,14 +55,10 @@ object JsonDepersonaliser {
       case JsNull       => JsNull
     }
 
-  }
-
-  def depersonaliseString(string: String): String = {
+  def depersonaliseString(string: String): String =
     string.replaceAll("[0-9]", "1").replaceAll("[a-zA-Z]", "a")
-  }
 
-  def depersonaliseNumber(number: BigDecimal): BigDecimal = {
+  def depersonaliseNumber(number: BigDecimal): BigDecimal =
     BigDecimal.apply(number.toString().replaceAll("[0-9]", "1"))
-  }
 
 }

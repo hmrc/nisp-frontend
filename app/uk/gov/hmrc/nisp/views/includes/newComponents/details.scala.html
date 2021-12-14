@@ -14,14 +14,22 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.html.components._
-
 @this(govukDetails : GovukDetails)
 
-@(summary: String, content: String)
+@(
+  attributes: Map[String, String] = Map.empty,
+  content: Content,
+  summary: String,
+)
 
+@attrValues = @{
+  attributes.map{
+    case(key, value) => key + "=" + value
+  }
+}
 
 @govukDetails(Details(
-summary = Text(summary),
-content = Text(content)
+  attributes = attributes,
+  summary = Text(summary),
+  content = content
 ))

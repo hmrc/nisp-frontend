@@ -22,11 +22,11 @@ object MQPScenario extends Enumeration {
   type MQPScenario = Value
 
   val ContinueWorking = Value
-  val CantGet = Value
-  val CanGetWithGaps = Value
+  val CantGet         = Value
+  val CanGetWithGaps  = Value
 
   implicit val formats = new Format[MQPScenario] {
-    def reads(json: JsValue): JsResult[MQPScenario] = JsSuccess(MQPScenario.withName(json.as[String]) )
-    def writes(MQPScenario: MQPScenario): JsValue = JsString(MQPScenario.toString)
+    def reads(json: JsValue): JsResult[MQPScenario] = JsSuccess(MQPScenario.withName(json.as[String]))
+    def writes(MQPScenario: MQPScenario): JsValue   = JsString(MQPScenario.toString)
   }
 }

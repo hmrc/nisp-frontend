@@ -15,11 +15,31 @@
  *@
 
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
-@this()
+@this(
+  p: P,
+  h2: H2,
+  link: Link
+)
 @()(implicit messages: Messages)
 
-<h2 class="heading-medium">@messages("nisp.cope.title1")</h2>
-<p>@Html(messages("nisp.cope.likeMostPeople", routes.StatePensionController.showCope.url))</p>
+@h2(
+  elmId = Some("contractedOut"),
+  msg = "nisp.cope.title1",
+  specId = Some("contracted_out__h2_1")
+)
 
-+
+@p(
+  content = HtmlContent(
+    messages("nisp.cope.likeMostPeople",
+      link(
+        fullStop = true,
+        inParagraph = true,
+        link = routes.StatePensionController.showCope.url,
+        messageKey="nisp.cope.likeMostPeople.linktext",
+        specId = Some("contracted_out__link1")
+      )
+  )),
+  specId = Some("contracted_out__p1")
+)

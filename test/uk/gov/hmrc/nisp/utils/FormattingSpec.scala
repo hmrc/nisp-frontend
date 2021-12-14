@@ -16,9 +16,6 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import uk.gov.hmrc.nisp.utils.UnitSpec
-
-
 class FormattingSpec extends UnitSpec {
   "startYearToTaxYear" when {
     "input is 1999" should {

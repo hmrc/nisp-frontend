@@ -14,14 +14,16 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
-
 @this()
 
-@(listItems: Seq[String], elmId: Option[String] = None, classes: Option[String] = None)(implicit messages: Messages)
+@(
+  args: Seq[String] = Seq.empty,
+  classes: Option[String] = None,
+  elmId: Option[String] = None,
+  msg: String,
+  specId: Option[String] = None,
+)(implicit messages: Messages)
 
-<ul class="govuk-list govuk-list--bullet">
- @for(item <- listItems){
- <li>@messages(item)</li>
-}
-</ul>
+<h3 @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-heading-s")"@if(specId){ data-spec="@specId"}>
+  @Html(messages(msg, args))
+</h3>

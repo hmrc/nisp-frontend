@@ -35,15 +35,15 @@ object Exclusion {
   implicit object ExclusionFormat extends Format[Exclusion] {
     override def reads(json: JsValue): JsResult[Exclusion] = json match {
       case JsString("MarriedWomenReducedRateElection") => JsSuccess(Exclusion.MarriedWomenReducedRateElection)
-      case JsString("ContractedOut") => JsSuccess(Exclusion.ContractedOut)
-      case JsString("Dead") => JsSuccess(Exclusion.Dead)
-      case JsString("IsleOfMan") => JsSuccess(Exclusion.IsleOfMan)
-      case JsString("AmountDissonance") => JsSuccess(Exclusion.AmountDissonance)
-      case JsString("PostStatePensionAge") => JsSuccess(Exclusion.PostStatePensionAge)
-      case JsString("ManualCorrespondenceIndicator") => JsSuccess(Exclusion.ManualCorrespondenceIndicator)
-      case JsString("CopeProcessing") => JsSuccess(Exclusion.CopeProcessing)
-      case JsString("CopeProcessingFailed") => JsSuccess(Exclusion.CopeProcessingFailed)
-      case _ => JsError("Exclusion not valid!")
+      case JsString("ContractedOut")                   => JsSuccess(Exclusion.ContractedOut)
+      case JsString("Dead")                            => JsSuccess(Exclusion.Dead)
+      case JsString("IsleOfMan")                       => JsSuccess(Exclusion.IsleOfMan)
+      case JsString("AmountDissonance")                => JsSuccess(Exclusion.AmountDissonance)
+      case JsString("PostStatePensionAge")             => JsSuccess(Exclusion.PostStatePensionAge)
+      case JsString("ManualCorrespondenceIndicator")   => JsSuccess(Exclusion.ManualCorrespondenceIndicator)
+      case JsString("CopeProcessing")                  => JsSuccess(Exclusion.CopeProcessing)
+      case JsString("CopeProcessingFailed")            => JsSuccess(Exclusion.CopeProcessingFailed)
+      case _                                           => JsError("Exclusion not valid!")
     }
 
     override def writes(ex: Exclusion): JsValue = JsString(ex.toString)

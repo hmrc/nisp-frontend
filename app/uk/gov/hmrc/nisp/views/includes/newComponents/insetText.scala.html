@@ -14,14 +14,16 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.html.components._
+@this()
 
-@this(govukPanel : GovukPanel)
+@(
+  args: Seq[String] = Seq.empty,
+  classes: Option[String] = None,
+  content: HtmlContent,
+  elmId: Option[String] = None,
+  specId: Option[String] = None,
+)(implicit messages: Messages)
 
-@(title: Option[Content] = None, content: Option[Content] = None)
-
-
-@govukPanel(Panel(
-title = title.getOrElse(Text("")),
-content = content.getOrElse(Text(""))
-))
+<div @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-inset-text")"@if(specId){ data-spec="@specId"}>
+  @content.asHtml
+</div>

@@ -20,7 +20,6 @@ import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
@@ -33,10 +32,8 @@ import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.controllers.auth.VerifyAuthActionImpl
-import uk.gov.hmrc.nisp.helpers.{FakeTemplateRenderer, _}
+import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.UnitSpec
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 import java.time.LocalDate
 import java.util.{Locale, UUID}
@@ -44,30 +41,31 @@ import scala.concurrent.Future
 
 class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
 
-  implicit val fakeRequest = FakeRequest("GET", "/")
-  val fakeRequestWelsh = FakeRequest("GET", "/cymraeg")
-  val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
+  implicit val fakeRequest                           = FakeRequest("GET", "/")
+  val fakeRequestWelsh                               = FakeRequest("GET", "/cymraeg")
+  val urResearchURL                                  =
+    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
+  val mockApplicationConfig: ApplicationConfig       = mock[ApplicationConfig]
   val mockIVConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
 
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-
-  override def fakeApplication(): Application = GuiceApplicationBuilder().
-    overrides(
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
-      bind[TemplateRenderer].toInstance(templateRenderer),
       bind[VerifyAuthActionImpl].to[FakeVerifyAuthAction]
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockApplicationConfig, mockIVConnector)
+    when(mockApplicationConfig.urBannerUrl).thenReturn(urResearchURL)
+    when(mockApplicationConfig.pertaxFrontendUrl).thenReturn("/pert")
+    when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+    when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
 
   val verifyLandingController = inject[LandingController]
-
 
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
@@ -80,13 +78,15 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     "return HTML" in {
       val result = verifyLandingController.show(fakeRequest)
       Helpers.contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      charset(result)             shouldBe Some("utf-8")
     }
 
     "load the landing page" in {
       val result = verifyLandingController.show(fakeRequest)
-      contentAsString(result) should include("Your State Pension forecast is provided for your information only and the " +
-        "service does not offer financial advice. When planning for your retirement, you should seek professional advice.")
+      contentAsString(result) should include(
+        "Your State Pension forecast is provided for your information only and the " +
+          "service does not offer financial advice. When planning for your retirement, you should seek professional advice."
+      )
     }
 
     "have a start button" in {
@@ -98,7 +98,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       when(mockApplicationConfig.identityVerification).thenReturn(true)
 
       val result = verifyLandingController.show(fakeRequest)
-      val doc = Jsoup.parse( contentAsString(result))
+      val doc    = Jsoup.parse(contentAsString(result))
       doc.getElementById("landing-signin-heading").text shouldBe messages("nisp.landing.signin.heading")
     }
 
@@ -106,7 +106,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       when(mockApplicationConfig.identityVerification).thenReturn(false)
 
       val result = verifyLandingController.show(fakeRequest)
-      val doc = Jsoup.parse( contentAsString(result))
+      val doc    = Jsoup.parse(contentAsString(result))
       doc.getElementById("eligibility-heading").text shouldBe messages("nisp.landing.eligibility.heading")
     }
   }
@@ -115,29 +115,30 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     "redirect to verify" in {
       val mockAuthConnector = mock[AuthConnector]
 
-      val verifyAuthBasedInjector = GuiceApplicationBuilder().
-        overrides(
+      val verifyAuthBasedInjector = GuiceApplicationBuilder()
+        .overrides(
           bind[IdentityVerificationConnector].toInstance(mockIVConnector),
-          bind[FormPartialRetriever].to[FakePartialRetriever],
-          bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
-          bind[FormPartialRetriever].to[FakePartialRetriever],
-          bind[AuthConnector].toInstance(mockAuthConnector),
-          bind[TemplateRenderer].toInstance(templateRenderer)
-        ).injector()
+          bind[AuthConnector].toInstance(mockAuthConnector)
+        )
+        .injector()
 
       when(mockAuthConnector.authorise(mockAny(), mockAny())(mockAny(), mockAny()))
         .thenReturn(Future.failed(MissingBearerToken("Missing Bearer Token!")))
 
       val verifyLandingController = verifyAuthBasedInjector.instanceOf[LandingController]
-      val result = verifyLandingController.verifySignIn(fakeRequest)
-      redirectLocation(result) shouldBe Some("http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount")
+      val result                  = verifyLandingController.verifySignIn(fakeRequest)
+      redirectLocation(result) shouldBe Some(
+        "http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount"
+      )
     }
 
     "redirect to account page when signed in" in {
-      val result = verifyLandingController.verifySignIn(FakeRequest().withSession(
-        SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-        SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
-      ))
+      val result = verifyLandingController.verifySignIn(
+        FakeRequest().withSession(
+          SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+          SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+        )
+      )
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
@@ -148,8 +149,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       "journey Id is None" in {
         val result = verifyLandingController.showNotAuthorised(None)(fakeRequest)
 
-
-        status(result) shouldBe UNAUTHORIZED
+        status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
 
@@ -161,7 +161,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) shouldBe UNAUTHORIZED
+        status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
 
@@ -173,7 +173,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) shouldBe UNAUTHORIZED
+        status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
 
@@ -185,7 +185,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) shouldBe UNAUTHORIZED
+        status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
 
@@ -197,7 +197,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) shouldBe UNAUTHORIZED
+        status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
 
@@ -209,7 +209,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         )
 
         val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-        status(result) shouldBe UNAUTHORIZED
+        status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
     }
@@ -222,7 +222,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       )
 
       val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-      status(result) shouldBe INTERNAL_SERVER_ERROR
+      status(result)        shouldBe INTERNAL_SERVER_ERROR
       contentAsString(result) should include("This online service is experiencing technical difficulties.")
     }
 
@@ -234,8 +234,10 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       )
 
       val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-      status(result) shouldBe LOCKED
-      contentAsString(result) should include("You have reached the maximum number of attempts to confirm your identity.")
+      status(result)        shouldBe LOCKED
+      contentAsString(result) should include(
+        "You have reached the maximum number of attempts to confirm your identity."
+      )
     }
 
     "show timeout template for Timeout journey" in {
@@ -246,13 +248,15 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       )
 
       val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
-      status(result) shouldBe UNAUTHORIZED
-      contentAsString(result) should include("Your session has ended because you have not done anything for 15 minutes.")
+      status(result)        shouldBe UNAUTHORIZED
+      contentAsString(result) should include(
+        "Your session has ended because you have not done anything for 15 minutes."
+      )
     }
 
     "show 2FA failure page when no journey ID specified" in {
       val result = verifyLandingController.showNotAuthorised(None)(fakeRequest)
-      status(result) shouldBe UNAUTHORIZED
+      status(result)        shouldBe UNAUTHORIZED
       contentAsString(result) should include("We cannot confirm your identity")
       contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
     }
@@ -268,14 +272,14 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     "return HTML" in {
       val result = verifyLandingController.show(fakeRequestWelsh)
       Helpers.contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      charset(result)             shouldBe Some("utf-8")
     }
     "load the landing page in welsh" in {
       when(mockApplicationConfig.isWelshEnabled).thenReturn(true)
 
       val result = verifyLandingController.show(fakeRequestWelsh)
 
-      contentAsString(result) should include("data-journey-click=\"checkmystatepension:language: cy\"")
+      contentAsString(result) should include("data-journey-click=\"link - click:lang-select:Cymraeg\"")
     }
   }
 }

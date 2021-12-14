@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.views.formatting
 
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
-class NispMoneySpec extends UnitSpec{
+class NispMoneySpec extends UnitSpec {
   "pounds" should {
     "return HTML with £100 for value 100" in {
       NispMoney.pounds(100).toString().endsWith("&pound;100") shouldBe true

@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{mock, reset, when}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -44,20 +44,26 @@ import java.util.UUID
 import scala.concurrent.Future
 
 class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
-  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-  val mockStatePensionService: StatePensionService = mock[StatePensionService]
-  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
-  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
-  val mockDateProvider: DateProvider = mock[DateProvider]
+  val mockStatePensionService: StatePensionService           = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
+  val mockDateProvider: DateProvider                         = mock[DateProvider]
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
+  implicit val templateRenderer: TemplateRenderer                = FakeTemplateRenderer
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockNationalInsuranceService, mockStatePensionService, mockAppConfig, mockPertaxHelper,
-      mockAuditConnector, mockDateProvider)
+    reset(
+      mockNationalInsuranceService,
+      mockStatePensionService,
+      mockAppConfig,
+      mockPertaxHelper,
+      mockAuditConnector,
+      mockDateProvider
+    )
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -72,13 +78,14 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[TemplateRenderer].toInstance(templateRenderer),
       bind[DateProvider].toInstance(mockDateProvider)
-    ).build()
+    )
+    .build()
 
-  val fakeRequest = FakeRequest()
+  val fakeRequest        = FakeRequest()
   val niRecordController = inject[NIRecordController]
 
   def generateFakeRequest = FakeRequest().withSession(
-    SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
+    SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
 
@@ -93,17 +100,54 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0, 0, 0))
-        ,64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017-18",
+        30,
+        false,
+        155.65,
+        false,
+        false
+      )
 
-      val expectedNationalInsuranceRecord = NationalInsuranceRecord(40, 39, 2, 1, Some(LocalDate.of(1973, 7, 7)),
-        false, LocalDate.of(2016, 4, 5),
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        40,
+        39,
+        2,
+        1,
+        Some(LocalDate.of(1973, 7, 7)),
+        false,
+        LocalDate.of(2016, 4, 5),
         List(
           NationalInsuranceTaxYear("2015-16", true, 12345.45, 0, 0, 0, 0, None, None, false, false),
-          NationalInsuranceTaxYear("2014-15", false, 123, 1, 1, 1, 456.58, Some(LocalDate.of(2019, 4, 5)),
-            Some(LocalDate.of(2023, 4, 5)), false, false),
-          NationalInsuranceTaxYear("1999-00", false, 2, 5, 0, 1, 111.11, Some(LocalDate.of(2019, 4, 5)),
-            Some(LocalDate.of(2023, 4, 5)), false, false)
+          NationalInsuranceTaxYear(
+            "2014-15",
+            false,
+            123,
+            1,
+            1,
+            1,
+            456.58,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            false,
+            false
+          ),
+          NationalInsuranceTaxYear(
+            "1999-00",
+            false,
+            2,
+            5,
+            0,
+            1,
+            111.11,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            false,
+            false
+          )
         ),
         false
       )
@@ -123,24 +167,39 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "return full page for user without gaps" in {
-
-      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -8, 0, 0, Some(LocalDate.of(1975, 8, 1)),
-        false, LocalDate.of(2016, 4, 5),
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -8,
+        0,
+        0,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2016, 4, 5),
         List(
-          NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None , None, false, false),
+          NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false),
           NationalInsuranceTaxYear("2014-15", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
         ),
-        false)
+        false
+      )
 
       val expectedStatePensionResponse = StatePension(
         LocalDate.of(2016, 4, 5),
-          StatePensionAmounts(false,
-            StatePensionAmountRegular(133.41,580.1,6961.14),
-            StatePensionAmountForecast(3,146.76,638.14,7657.73),
-            StatePensionAmountMaximum(3,0,155.65,676.8,8121.59),
-            StatePensionAmountRegular(0,0,0)),
-          64,
-          LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+        StatePensionAmounts(
+          false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017-18",
+        30,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceRecord))
@@ -165,38 +224,65 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       val result = niRecordController
-        .showGaps(fakeRequest.withSession(
-          SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
-        ))
+        .showGaps(
+          fakeRequest.withSession(
+            SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+            SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+          )
+        )
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
   }
 
   "GET /account/nirecord (full)" should {
+
     "return gaps page for user with gaps" in {
 
-      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 10, 4, Some(LocalDate.of(1975, 8, 1)),
-        false, LocalDate.of(2014, 4, 5),
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -3,
+        10,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2014, 4, 5),
         List(
-          NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60,
+          NationalInsuranceTaxYear(
+            "2013-14",
+            false,
+            0,
+            0,
+            0,
+            0,
+            704.60,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true, false)
+            true,
+            false
+          )
         ),
-        false)
+        false
+      )
 
       val expectedStatePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),
-        StatePensionAmounts(false,
+        StatePensionAmounts(
+          false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0, 0, 0)),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
         64,
         LocalDate.of(2018, 7, 6),
-        "2017-18", 30, false, 155.65, false, false)
+        "2017-18",
+        30,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceRecord))
@@ -213,20 +299,37 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "return full page for user without gaps" in {
-      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -8, 0, 0, Some(LocalDate.of(1975, 8, 1)),
-        false, LocalDate.of(2016, 4, 5),
-        List(NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)),
-        false)
 
-      val expectedStatePension = StatePension(LocalDate.of(2016, 4, 5),
-        StatePensionAmounts(false,
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -8,
+        0,
+        0,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2016, 4, 5),
+        List(NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)),
+        false
+      )
+
+      val expectedStatePension = StatePension(
+        LocalDate.of(2016, 4, 5),
+        StatePensionAmounts(
+          false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
-          StatePensionAmountForecast(3,146.76, 638.14, 7657.73),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0, 0, 0)),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
         64,
         LocalDate.of(2018, 7, 6),
-        "2017-18", 30, false, 155.65, false, false)
+        "2017-18",
+        30,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceRecord))
@@ -251,29 +354,54 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       val result = niRecordController
-        .showFull(fakeRequest.withSession(
-          SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
-        ))
+        .showFull(
+          fakeRequest.withSession(
+            SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+            SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+          )
+        )
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
   }
 
   "GET /account/nirecord/gapsandhowtocheck" should {
+
     "return how to check page for authenticated user" in {
 
-      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 10, 4, Some(LocalDate.of(1975, 8, 1)),
-      false, LocalDate.of(2014, 4, 5),
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -3,
+        10,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2014, 4, 5),
         List(
-          NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60, Some(LocalDate.of(2019, 4, 5)),
-          Some(LocalDate.of(2023, 4, 5)), true, false)
-        )
-        ,false)
+          NationalInsuranceTaxYear(
+            "2013-14",
+            false,
+            0,
+            0,
+            0,
+            0,
+            704.60,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            true,
+            false
+          )
+        ),
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceRecord))
       )
+
+      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+      when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+      when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
       val result = niRecordController
         .showGapsAndHowToCheckThem(generateFakeRequest)
@@ -281,34 +409,70 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "return hrp message for hrp user" in {
-      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 6, 4, Some(LocalDate.of(1975,8 , 1)),
-        true, LocalDate.of(2016, 4,5),
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -3,
+        6,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        true,
+        LocalDate.of(2016, 4, 5),
         List(
           NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
         ),
-        false)
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceRecord))
       )
 
+      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+      when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+      when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+
       val result = niRecordController.showGapsAndHowToCheckThem(generateFakeRequest)
-      contentAsString(result) should include("Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010.")
+      contentAsString(result) should include(
+        "Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010."
+      )
     }
 
     "do not return hrp message for non hrp user" in {
 
-      val expectedNationalInsuranceRecord = NationalInsuranceRecord(28, -3, 10, 4, Some(LocalDate.of(1975,8 ,1)),
-      false, LocalDate.of(2014, 4, 5),
-      List(
-        NationalInsuranceTaxYear("2013-14", false, 0, 0, 0, 0, 704.60, Some(LocalDate.of(2019, 4, 5)),
-        Some(LocalDate.of(2023, 4, 5)), true, false)
-      ),
-      false)
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -3,
+        10,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2014, 4, 5),
+        List(
+          NationalInsuranceTaxYear(
+            "2013-14",
+            false,
+            0,
+            0,
+            0,
+            0,
+            704.60,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            true,
+            false
+          )
+        ),
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceRecord))
       )
+
+      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+      when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+      when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
       val result = niRecordController.showGapsAndHowToCheckThem(generateFakeRequest)
       contentAsString(result) should not include
@@ -317,30 +481,52 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   }
 
   "GET /account/nirecord/voluntarycontribs" should {
+
     "return how to check page for authenticated user" in {
+      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+      when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+      when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+
       val result = niRecordController.showVoluntaryContributions(generateFakeRequest)
       contentAsString(result) should include("Voluntary contributions")
     }
   }
 
   "GET /account/nirecord (full)" should {
+
     "return NI record page with details for full years - when showFullNI is true" in {
-      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, -8, 0, 0, Some(LocalDate.of(1975, 8, 1)),
-        false, LocalDate.of(2016, 4, 5),
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(
+        28,
+        -8,
+        0,
+        0,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2016, 4, 5),
         List(
           NationalInsuranceTaxYear("2015-16", false, 2430.24, 0, 0, 52, 0, None, None, false, false)
         ),
-        false)
+        false
+      )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2016, 4, 5),
-        StatePensionAmounts(false,
+        StatePensionAmounts(
+          false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0,0,0)
+          StatePensionAmountRegular(0, 0, 0)
         ),
-        64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017-18",
+        30,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceResponse))
@@ -359,22 +545,38 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
     "return NI record page with no details for full years - when showFullNI is false" in {
 
-      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, -8, 0, 0, Some(LocalDate.of(1975, 8, 1)),
-        false, LocalDate.of(2016, 4, 5),
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(
+        28,
+        -8,
+        0,
+        0,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2016, 4, 5),
         List(
           NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
         ),
-        false)
+        false
+      )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2016, 4, 5),
-        StatePensionAmounts(false,
+        StatePensionAmounts(
+          false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0,0,0)
+          StatePensionAmountRegular(0, 0, 0)
         ),
-        64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017-18",
+        30,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceResponse))
@@ -392,18 +594,37 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "return NI record page when number of qualifying years is 0" in {
-      val expectedNationalInsuranceResponse = NationalInsuranceRecord(0, 0, 0, 0, Some(LocalDate.of(1975, 8, 1)),
-        false, LocalDate.of(2016, 4, 5), List.empty[NationalInsuranceTaxYear], false)
+
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(
+        0,
+        0,
+        0,
+        0,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2016, 4, 5),
+        List.empty[NationalInsuranceTaxYear],
+        false
+      )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2016, 4, 5),
-        StatePensionAmounts(false,
+        StatePensionAmounts(
+          false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0,0,0)
+          StatePensionAmountRegular(0, 0, 0)
         ),
-        64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017-18",
+        30,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceResponse))
@@ -422,25 +643,66 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   }
 
   "GET /account/nirecord (Gaps)" should {
+
     "return NI record page - gap details should not show shortfall may increase messages - if current date is after 5 April 2019" in {
-      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 6, 4, Some(LocalDate.of(1975, 8, 1)),
-        true, LocalDate.of(2014, 4, 5),
+
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(
+        28,
+        28,
+        6,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        true,
+        LocalDate.of(2014, 4, 5),
         List(
-          NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 0, Some(LocalDate.of(2019, 4, 5))
-            ,Some(LocalDate.of(2024, 4, 5)), true, false),
-          NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2018, 4, 5))
-            ,Some(LocalDate.of(2023, 4, 5)), true, false)
-        ), false)
+          NationalInsuranceTaxYear(
+            "2013-14",
+            false,
+            2430.24,
+            0,
+            0,
+            0,
+            0,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2024, 4, 5)),
+            true,
+            false
+          ),
+          NationalInsuranceTaxYear(
+            "2012-13",
+            false,
+            2430.24,
+            0,
+            0,
+            0,
+            722.8,
+            Some(LocalDate.of(2018, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            true,
+            false
+          )
+        ),
+        false
+      )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2014, 4, 5),
-        StatePensionAmounts(false,
+        StatePensionAmounts(
+          false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0,0,0)
+          StatePensionAmountRegular(0, 0, 0)
         ),
-        64, LocalDate.of(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+        64,
+        LocalDate.of(2050, 7, 6),
+        "2050-51",
+        25,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceResponse))
@@ -454,28 +716,68 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       when(mockAppConfig.showFullNI).thenReturn(false)
 
       val result = niRecordController.showGaps(generateFakeRequest)
-      contentAsString(result) should not include ("shortfall may increase")
+      contentAsString(result) should not include "shortfall may increase"
     }
 
     "return NI record page - gap details should show shortfall may increase messages - if current date is before 5 April 2019" in {
-      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 6, 4, Some(LocalDate.of(1975, 8, 1)),
-        true, LocalDate.of(2014, 4, 5),
+
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(
+        28,
+        28,
+        6,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        true,
+        LocalDate.of(2014, 4, 5),
         List(
-          NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2019, 4, 5))
-            ,Some(LocalDate.of(2024, 4, 5)), true, false),
-          NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2018, 4, 5))
-            ,Some(LocalDate.of(2023, 4, 5)), true, false)
-        ), false)
+          NationalInsuranceTaxYear(
+            "2013-14",
+            false,
+            2430.24,
+            0,
+            0,
+            0,
+            722.8,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2024, 4, 5)),
+            true,
+            false
+          ),
+          NationalInsuranceTaxYear(
+            "2012-13",
+            false,
+            2430.24,
+            0,
+            0,
+            0,
+            722.8,
+            Some(LocalDate.of(2018, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            true,
+            false
+          )
+        ),
+        false
+      )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2014, 4, 5),
-        StatePensionAmounts(false,
+        StatePensionAmounts(
+          false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0,0,0)
+          StatePensionAmountRegular(0, 0, 0)
         ),
-        64, LocalDate.of(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+        64,
+        LocalDate.of(2050, 7, 6),
+        "2050-51",
+        25,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceResponse))
@@ -494,24 +796,64 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "return NI record page - gap details should show shortfall may increase messages - if current date is same 5 April 2019" in {
-      val expectedNationalInsuranceResponse = NationalInsuranceRecord(28, 28, 6, 4, Some(LocalDate.of(1975, 8, 1)),
-        true, LocalDate.of(2014, 4, 5),
+
+      val expectedNationalInsuranceResponse = NationalInsuranceRecord(
+        28,
+        28,
+        6,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        true,
+        LocalDate.of(2014, 4, 5),
         List(
-          NationalInsuranceTaxYear("2013-14", false, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2019, 4, 5))
-            ,Some(LocalDate.of(2024, 4, 5)), true, false),
-          NationalInsuranceTaxYear("2012-13", false, 2430.24, 0, 0, 0, 722.8, Some(LocalDate.of(2018, 4, 5))
-            ,Some(LocalDate.of(2023, 4, 5)), true, false)
-        ), false)
+          NationalInsuranceTaxYear(
+            "2013-14",
+            false,
+            2430.24,
+            0,
+            0,
+            0,
+            722.8,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2024, 4, 5)),
+            true,
+            false
+          ),
+          NationalInsuranceTaxYear(
+            "2012-13",
+            false,
+            2430.24,
+            0,
+            0,
+            0,
+            722.8,
+            Some(LocalDate.of(2018, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            true,
+            false
+          )
+        ),
+        false
+      )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2014, 4, 5),
-        StatePensionAmounts(false,
+        StatePensionAmounts(
+          false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0,0,0)
+          StatePensionAmountRegular(0, 0, 0)
         ),
-        64, LocalDate.of(2050, 7, 6), "2050-51", 25, false, 155.65, false, false)
+        64,
+        LocalDate.of(2050, 7, 6),
+        "2050-51",
+        25,
+        false,
+        155.65,
+        false,
+        false
+      )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
         Future.successful(Right(expectedNationalInsuranceResponse))
@@ -524,14 +866,15 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2019, 4, 5))
       when(mockAppConfig.showFullNI).thenReturn(false)
 
-
       val result = niRecordController.showGaps(generateFakeRequest)
       contentAsString(result) should include("shortfall may increase")
     }
   }
 
   "showPre75Years" when {
+
     "the date of entry is the sixteenth birthday" should {
+
       "return true for 5th April 1975" in {
         val date = LocalDate.of(1975, 4, 5)
         niRecordController.showPre1975Years(Some(date), date.minusYears(16), 0) shouldBe true
@@ -544,32 +887,33 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "the date of entry and sixteenth are different" should {
+
       "return true for 16th: 5th April 1970, Date of entry: 5th April 1975" in {
-        val dob = LocalDate.of(1970, 4, 5).minusYears(16)
+        val dob   = LocalDate.of(1970, 4, 5).minusYears(16)
         val entry = LocalDate.of(1975, 4, 5)
         niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe true
       }
 
       "return true for 16th: 5th April 1970, Date of entry: 6th April 1975" in {
-        val dob = LocalDate.of(1970, 4, 5).minusYears(16)
+        val dob   = LocalDate.of(1970, 4, 5).minusYears(16)
         val entry = LocalDate.of(1975, 4, 6)
         niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe false
       }
 
       "return true for 16th: 5th April 1975, Date of entry: 5th April 1970" in {
-        val dob = LocalDate.of(1975, 4, 5).minusYears(16)
+        val dob   = LocalDate.of(1975, 4, 5).minusYears(16)
         val entry = LocalDate.of(1970, 4, 5)
         niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe true
       }
 
       "return true for 16th: 6th April 1975, Date of entry: 5th April 1970" in {
-        val dob = LocalDate.of(1975, 4, 6).minusYears(16)
+        val dob   = LocalDate.of(1975, 4, 6).minusYears(16)
         val entry = LocalDate.of(1970, 4, 5)
         niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe false
       }
 
       "return false for 16th: 10th July 1983, Date of Entry: 16th October 1977" in {
-        val dob = LocalDate.of(1983, 7, 10).minusYears(16)
+        val dob   = LocalDate.of(1983, 7, 10).minusYears(16)
         val entry = LocalDate.of(1977, 10, 16)
         niRecordController.showPre1975Years(Some(entry), dob, 0) shouldBe false
       }
@@ -577,6 +921,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "there is no date of entry" should {
+
       "return false for 16th birthday: 6th April 1975" in {
         val dob = LocalDate.of(1975, 4, 6).minusYears(16)
         niRecordController.showPre1975Years(None, dob, 0) shouldBe false
@@ -591,18 +936,21 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   }
 
   "generateTableList" when {
+
     "start and end are the same" should {
-      "return a list wuith one string of that year" in {
+
+      "return a list with one string of that year" in {
         val start = "2015-16"
-        val end = "2015-16"
+        val end   = "2015-16"
         niRecordController.generateTableList(start, end) shouldBe List("2015-16")
       }
     }
 
     "the start is less then the end" should {
+
       "throw an illegal argument exception" in {
-        val start = "2014-15"
-        val end = "2015-16"
+        val start  = "2014-15"
+        val end    = "2015-16"
         val caught = intercept[IllegalArgumentException] {
           niRecordController.generateTableList(start, end)
         }
@@ -611,9 +959,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "the inputs are not dates" should {
+
       "throw exception for start" in {
-        val start = "hello"
-        val end = "2014-15"
+        val start  = "hello"
+        val end    = "2014-15"
         val caught = intercept[IllegalArgumentException] {
           niRecordController.generateTableList(start, end)
         }
@@ -621,8 +970,8 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       }
 
       "throw exception for end" in {
-        val start = "2015-16"
-        val end = "hello"
+        val start  = "2015-16"
+        val end    = "hello"
         val caught = intercept[IllegalArgumentException] {
           niRecordController.generateTableList(start, end)
         }
@@ -632,21 +981,22 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
 
     "the end is greater than the start" should {
+
       "return a list of two adjacent dates" in {
         val start = "2016-17"
-        val end = "2015-16"
+        val end   = "2015-16"
         niRecordController.generateTableList(start, end) shouldBe Seq("2016-17", "2015-16")
       }
 
       "return a list of three dates" in {
         val start = "2016-17"
-        val end = "2014-15"
+        val end   = "2014-15"
         niRecordController.generateTableList(start, end) shouldBe Seq("2016-17", "2015-16", "2014-15")
       }
 
       "return a full NI Record" in {
         val start = "2016-17"
-        val end = "1975-76"
+        val end   = "1975-76"
         niRecordController.generateTableList(start, end) shouldBe Seq(
           "2016-17",
           "2015-16",
@@ -696,6 +1046,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   }
 
   "redirect to State Pension page" in {
+
     val statePensionExclusionResponse = StatePension(
       LocalDate.of(2015, 4, 5),
       StatePensionAmounts(
@@ -703,22 +1054,60 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         StatePensionAmountRegular(133.41, 580.1, 6961.14),
         StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
         StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-        StatePensionAmountRegular(0, 0, 0))
-      ,64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false)
+        StatePensionAmountRegular(0, 0, 0)
+      ),
+      64,
+      LocalDate.of(2018, 7, 6),
+      "2017-18",
+      30,
+      false,
+      155.65,
+      false,
+      false
+    )
 
-    val expectedNationalInsuranceRecord = NationalInsuranceRecord(40, 39, 2, 1, Some(LocalDate.of(1973, 7, 7)),
-      false, LocalDate.of(2016, 4, 5),
+    val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+      40,
+      39,
+      2,
+      1,
+      Some(LocalDate.of(1973, 7, 7)),
+      false,
+      LocalDate.of(2016, 4, 5),
       List(
         NationalInsuranceTaxYear("2015-16", true, 12345.45, 0, 0, 0, 0, None, None, false, false),
-        NationalInsuranceTaxYear("2014-15", false, 123, 1, 1, 1, 456.58, Some(LocalDate.of(2019, 4, 5)),
-          Some(LocalDate.of(2023, 4, 5)), false, false),
-        NationalInsuranceTaxYear("1999-00", false, 2, 5, 0, 1, 111.11, Some(LocalDate.of(2019, 4, 5)),
-          Some(LocalDate.of(2023, 4, 5)), false, false)
+        NationalInsuranceTaxYear(
+          "2014-15",
+          false,
+          123,
+          1,
+          1,
+          1,
+          456.58,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          false,
+          false
+        ),
+        NationalInsuranceTaxYear(
+          "1999-00",
+          false,
+          2,
+          5,
+          0,
+          1,
+          111.11,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          false,
+          false
+        )
       ),
       false
     )
 
-    val copeExclusionResponse = StatePensionExclusionFilteredWithCopeDate(CopeProcessing, LocalDate.of(2023, 4, 5), None)
+    val copeExclusionResponse =
+      StatePensionExclusionFilteredWithCopeDate(CopeProcessing, LocalDate.of(2023, 4, 5), None)
 
     when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
       Future.successful(Right(expectedNationalInsuranceRecord))
@@ -733,18 +1122,46 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     status(result) shouldBe SEE_OTHER
   }
 
-
   "throw an exception when the response is an exclusion without finalRelevantStartYear" in {
+
     val statePensionExclusionResponse = StatePensionExclusionFiltered(CopeProcessing, None, None, None)
 
-    val expectedNationalInsuranceRecord = NationalInsuranceRecord(40, 39, 2, 1, Some(LocalDate.of(1973, 7, 7)),
-      false, LocalDate.of(2016, 4, 5),
+    val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+      40,
+      39,
+      2,
+      1,
+      Some(LocalDate.of(1973, 7, 7)),
+      false,
+      LocalDate.of(2016, 4, 5),
       List(
         NationalInsuranceTaxYear("2015-16", true, 12345.45, 0, 0, 0, 0, None, None, false, false),
-        NationalInsuranceTaxYear("2014-15", false, 123, 1, 1, 1, 456.58, Some(LocalDate.of(2019, 4, 5)),
-          Some(LocalDate.of(2023, 4, 5)), false, false),
-        NationalInsuranceTaxYear("1999-00", false, 2, 5, 0, 1, 111.11, Some(LocalDate.of(2019, 4, 5)),
-          Some(LocalDate.of(2023, 4, 5)), false, false)
+        NationalInsuranceTaxYear(
+          "2014-15",
+          false,
+          123,
+          1,
+          1,
+          1,
+          456.58,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          false,
+          false
+        ),
+        NationalInsuranceTaxYear(
+          "1999-00",
+          false,
+          2,
+          5,
+          0,
+          1,
+          111.11,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          false,
+          false
+        )
       ),
       false
     )

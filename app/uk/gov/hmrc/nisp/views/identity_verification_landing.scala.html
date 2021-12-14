@@ -14,56 +14,82 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
-@import play.api.Application
-
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, fullWidth, insetText}
 
 @this(
-    main: unauthenticatedMain
-)(
-    implicit ec: ExecutionContext,
-    partialRetriever: CachedStaticHtmlPartialRetriever,
-    formPartialRetriever: FormPartialRetriever
+  newMain: unauthenticatedMain,
+  p: P,
+  h1: H1,
+  h2: H2,
+  link: Link,
+  insetText: insetText,
+  govukButton: GovukButton,
+  govukInsetText: GovukInsetText,
+  fullLayout: fullWidth
 )
 @()(implicit messages: Messages, request: Request[_])
 
-@main(MainTemplateParams(articleEnabled=false, hideNavBar = true, h1Class = Some("heading-xlarge"), pageTitle = Some(messages("nisp.landing.title")))) {
+@newMain(
+  pageTitle = messages("nisp.landing.title"),
+  optCustomLayout = Some(fullLayout(_))
+) {
 
-
-
-<div class="grid-wrapper">
-    <div class="grid-2-3">
-        <div class="panel-indent">@Html(messages("nisp.landing.estimateprovided"))</div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      @h1(
+        classes = Some("govuk-heading-xl"),
+        msg = "nisp.landing.title",
+        specId = Some("identity_verification_landing_h1")
+      )
+      @insetText(
+        content = HtmlContent(messages("nisp.landing.estimateprovided"))
+      )
     </div>
-</div>
+  </div>
 
-<div class="grid-wrapper sign-in-grid">
-    <h2 id="landing-signin-heading" class="heading-medium">@messages("nisp.landing.signin.heading")</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      @h2(
+        elmId = Some("landing-signin-heading"),
+        msg = "nisp.landing.signin.heading",
+        specId = Some("identity_verification_landing_h2_1")
+      )
+      <div class="inner-block">
+        @p(
+          content = Text(messages("nisp.landing.signin.gg")),
+          specId = Some("identity_verification_landing_p1")
+        )
 
-    <div class="grid grid-1-2 left">
-        <div class="inner-block">
-            <p>@Html(messages("nisp.landing.signin.gg"))</p>
-            <a id="continue" href='@routes.StatePensionController.show.url' data-journey-click="checkmystatepension:landing:ivcontinue" role="button" tabindex="0" class="button">@messages("nisp.continue")</a>
+        @govukButton(Button(
+          attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue"),
+          content = Text(messages("nisp.continue")),
+          href = Some(routes.StatePensionController.show.url)
+        ))
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <div class="inner-block panel-indent">
+        @p(
+          content = HtmlContent(messages("nisp.landing.signin.verify",
+            link(
+              fullStop = true,
+              inParagraph = true,
+              link = routes.LandingController.verifySignIn.url,
+              messageKey = "nisp.landing.signin.verify.linktext",
+              specId = Some("identity_verification_landing_link")
+            ))
+          ),
+          specId = Some("identity_verification_landing_p2")
+        )
+        <div class="verify-block">
+          <img src='@controllers.routes.Assets.versioned("images/verify-logo-inline.png")' class="verify-logo" alt="" />
+          <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">@messages("nisp.gov-uk")</div>
+          <div class="govuk-body">@messages("nisp.verify")</div>
         </div>
+      </div>
     </div>
-
-    <div class="grid grid-1-2">
-        <div class="inner-block">
-            <p>@Html(messages("nisp.landing.signin.verify",routes.LandingController.verifySignIn.url))</p>
-            <div class="verify-block">
-                <img src='@controllers.routes.Assets.versioned("images/verify-logo-inline.png")' class="verify-logo" alt='@messages("nisp.gov-uk-verify")' />
-                <strong>@messages("nisp.gov-uk")</strong>
-                <br/>
-                @messages("nisp.verify")
-            </div>
-        </div>
-    </div>
-</div>
+  </div>
 
 }

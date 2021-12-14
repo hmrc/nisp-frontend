@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.services
 
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{mock, reset, when}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -35,13 +35,18 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 
 import java.time.LocalDate
 import scala.concurrent.Future
-class CitizenDetailsServiceSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with
-  GuiceOneAppPerSuite with Injecting {
 
-  val nino: Nino = TestAccountBuilder.regularNino
-  val noNameNino: Nino = TestAccountBuilder.noNameNino
-  val nonExistentNino: Nino = TestAccountBuilder.nonExistentNino
-  val badRequestNino: Nino = TestAccountBuilder.blankNino
+class CitizenDetailsServiceSpec
+    extends UnitSpec
+    with BeforeAndAfterEach
+    with ScalaFutures
+    with GuiceOneAppPerSuite
+    with Injecting {
+
+  val nino: Nino                  = TestAccountBuilder.regularNino
+  val noNameNino: Nino            = TestAccountBuilder.noNameNino
+  val nonExistentNino: Nino       = TestAccountBuilder.nonExistentNino
+  val badRequestNino: Nino        = TestAccountBuilder.blankNino
   val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -49,7 +54,8 @@ class CitizenDetailsServiceSpec extends UnitSpec with BeforeAndAfterEach with Sc
       bind[CitizenDetailsConnector].toInstance(mockCitizenDetailsConnector),
       bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -67,8 +73,9 @@ class CitizenDetailsServiceSpec extends UnitSpec with BeforeAndAfterEach with Sc
         Future.successful(citizenDetailsResponseForNino(nino))
       )
 
-      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
-      whenReady(person) {p =>
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
+        citizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
+      whenReady(person) { p =>
         p.isRight shouldBe true
       }
     }
@@ -78,8 +85,9 @@ class CitizenDetailsServiceSpec extends UnitSpec with BeforeAndAfterEach with Sc
         Future.failed(new NotFoundException(""))
       )
 
-      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(nonExistentNino)(new HeaderCarrier())
-      whenReady(person) {p =>
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
+        citizenDetailsService.retrievePerson(nonExistentNino)(new HeaderCarrier())
+      whenReady(person) { p =>
         p.isLeft shouldBe true
       }
     }
@@ -89,20 +97,24 @@ class CitizenDetailsServiceSpec extends UnitSpec with BeforeAndAfterEach with Sc
         Future.failed(new BadRequestException(""))
       )
 
-      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(badRequestNino)(new HeaderCarrier())
-      whenReady(person) {p =>
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
+        citizenDetailsService.retrievePerson(badRequestNino)(new HeaderCarrier())
+      whenReady(person) { p =>
         p.isLeft shouldBe true
       }
     }
 
     "return a Failed Future for a 5XX error" in {
-      when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(TestAccountBuilder.internalServerError))(mockAny())).thenReturn(
+      when(
+        mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(TestAccountBuilder.internalServerError))(mockAny())
+      ).thenReturn(
         Future.failed(new Upstream5xxResponse("CRITICAL FAILURE", 500, 500))
       )
 
-      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(TestAccountBuilder.internalServerError)(new HeaderCarrier())
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
+        citizenDetailsService.retrievePerson(TestAccountBuilder.internalServerError)(new HeaderCarrier())
       whenReady(person.failed) { ex =>
-        ex shouldBe a [Upstream5xxResponse]
+        ex shouldBe a[Upstream5xxResponse]
       }
     }
 
@@ -111,10 +123,13 @@ class CitizenDetailsServiceSpec extends UnitSpec with BeforeAndAfterEach with Sc
         Future.successful(citizenDetailsResponseForNino(nino))
       )
 
-      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
-      whenReady(person) {p =>
-        p.right.map(_.person.copy(nino = nino)) shouldBe Right(Citizen(nino, Some("AHMED"), Some("BRENNAN"), LocalDate.of(1954, 3, 9)))
-        p.right.get.person.getNameFormatted shouldBe Some("AHMED BRENNAN")
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
+        citizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
+      whenReady(person) { p =>
+        p.right.map(_.person.copy(nino = nino)) shouldBe Right(
+          Citizen(nino, Some("AHMED"), Some("BRENNAN"), LocalDate.of(1954, 3, 9))
+        )
+        p.right.get.person.getNameFormatted     shouldBe Some("AHMED BRENNAN")
       }
     }
 
@@ -123,9 +138,15 @@ class CitizenDetailsServiceSpec extends UnitSpec with BeforeAndAfterEach with Sc
         Future.successful(citizenDetailsResponseForNino(noNameNino))
       )
 
-      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] = citizenDetailsService.retrievePerson(noNameNino)(new HeaderCarrier())
-      whenReady(person) {p =>
-        p shouldBe Right(CitizenDetailsResponse(Citizen(noNameNino, None, None, LocalDate.of(1954, 3, 9)), Some(Address(Some("GREAT BRITAIN")))))
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
+        citizenDetailsService.retrievePerson(noNameNino)(new HeaderCarrier())
+      whenReady(person) { p =>
+        p                                   shouldBe Right(
+          CitizenDetailsResponse(
+            Citizen(noNameNino, None, None, LocalDate.of(1954, 3, 9)),
+            Some(Address(Some("GREAT BRITAIN")))
+          )
+        )
         p.right.get.person.getNameFormatted shouldBe None
       }
     }

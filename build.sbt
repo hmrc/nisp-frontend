@@ -21,23 +21,24 @@ val excludedPackages = Seq[String](
 
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.govukfrontend.views.html.components._",
-  "uk.gov.hmrc.govukfrontend.views.html.helpers._",
   "uk.gov.hmrc.hmrcfrontend.views.html.components._",
   "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
 )
 
-lazy val scoverageSettings = {
+lazy val scoverageSettings =
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
     ScoverageKeys.coverageMinimum := 88.23,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true
   )
-}
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory, SbtWeb): _*)
-  .settings(publishingSettings,
+  .enablePlugins(
+    Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory, SbtWeb): _*
+  )
+  .settings(
+    publishingSettings,
     playSettings,
     scoverageSettings,
     PlayKeys.playDefaultPort := 9234,
