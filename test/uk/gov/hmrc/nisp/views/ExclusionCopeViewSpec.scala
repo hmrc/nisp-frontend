@@ -51,14 +51,6 @@ class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
-    when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
-    when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
-    when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-  }
-
   val excludedCopeView = inject[excluded_cope]
   val today: LocalDate = LocalDate.now()
 

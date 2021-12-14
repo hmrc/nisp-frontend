@@ -53,14 +53,6 @@ class ExclusionCopeFailedViewSpec extends HtmlSpec with Injecting {
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
-    when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
-    when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
-    when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-  }
-
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure("future-pension-link.url" -> "pensionUrl")
     .overrides(
