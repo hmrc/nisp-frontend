@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.models
 
 import play.api.libs.json.Json
 
-case class SPAgeModel (age: Int, date: NpsDate)
+case class SPAgeModel(age: Int, date: NpsDate)
 
 object SPAgeModel {
   implicit val formats = Json.format[SPAgeModel]

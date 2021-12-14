@@ -21,7 +21,7 @@ import java.time.{LocalDate, ZoneId}
 import javax.inject.Singleton
 
 @Singleton
-class DateProvider{
+class DateProvider {
   val currentDate: LocalDate = LocalDate.now(ZoneId.of("Europe/London"))
 
 }

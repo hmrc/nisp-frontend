@@ -1,0 +1,143 @@
+{
+  "[javascript]": {
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.useTabStops": false
+  },
+  "[scala]": {
+    "editor.defaultFormatter": "scalameta.metals",
+    "editor.detectIndentation": true,
+    "editor.insertSpaces": true,
+    "editor.useTabStops": false
+  },
+  "[scss]": {
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.useTabStops": false
+  },
+  "cSpell.userWords": [
+    "amountdissonance",
+    "cachable",
+    "checkmystatepension",
+    "contractedout",
+    "depersonaliser",
+    "deserialise",
+    "designatory",
+    "distributables",
+    "excl",
+    "exclusionni",
+    "flexmark",
+    "forecastonly",
+    "gapsandhowtocheck",
+    "govuk",
+    "guice",
+    "hmrc",
+    "insuarance",
+    "joda",
+    "jsoup",
+    "lede",
+    "mdtp",
+    "mockito",
+    "mustache",
+    "mwrre",
+    "nino",
+    "ninos",
+    "nirecord",
+    "nirecordpage",
+    "nisp",
+    "nonjs",
+    "notfull",
+    "pageheading",
+    "pegdown",
+    "pertax",
+    "printlink",
+    "referer",
+    "resp",
+    "sassify",
+    "scalafmt",
+    "scalastyle",
+    "scalatestplus",
+    "scoverage",
+    "signin",
+    "signout",
+    "statepension",
+    "textphone",
+    "thankyou",
+    "typesafe",
+    "voluntarycontribs",
+    "wiremock",
+    "wiremock",
+    "womens"
+  ],
+  "css.validate": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.markdownlint": true
+  },
+  "editor.detectIndentation": false,
+  "editor.fontFamily": "'SF Mono', 'Fira Code', 'Operator Mono', 'Source Code Pro', Inconsolata, Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 18,
+  "editor.fontWeight": "400",
+  "editor.formatOnPaste": true,
+  "editor.lineHeight": 25,
+  "editor.linkedEditing": true,
+  "editor.multiCursorModifier": "alt",
+  "editor.renderWhitespace": "all",
+  "editor.rulers": [
+    70,
+    80
+  ],
+  "editor.scrollBeyondLastLine": true,
+  "editor.showFoldingControls": "always",
+  "editor.snippetSuggestions": "top",
+  "editor.suggestSelection": "first",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "bounded",
+  "files.autoSave": "onFocusChange",
+  "files.watcherExclude": {
+    "**/target": true
+  },
+  "javascript.validate.enable": false,
+  "markdownlint.config": {
+    "default": true,
+    "MD003": {
+      "style": "atx"
+    },
+    "MD013": false,
+    "MD024": {
+      "siblings_only": true
+    },
+    "MD029": false,
+    "MD031": false,
+    "MD032": false,
+    "MD033": {
+      "allowed_elements": [
+        "a",
+        "abbr",
+        "caption",
+        "cite",
+        "code",
+        "del",
+        "figcaption",
+        "figure",
+        "img",
+        "kbd",
+        "mark",
+        "table",
+        "tbody",
+        "td",
+        "tfoot",
+        "th",
+        "thead",
+        "tr"
+      ]
+    },
+    "MD041": false
+  },
+  "scss.validate": false,
+  "stylelint.enable": true,
+  "trailing-spaces.highlightCurrentLine": true,
+  "trailing-spaces.logLevel": "none",
+  "trailing-spaces.trimOnSave": true
+}

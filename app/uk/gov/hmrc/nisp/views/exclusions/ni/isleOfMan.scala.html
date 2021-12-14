@@ -14,9 +14,12 @@
  * limitations under the License.
  *@
 
-@import play.api.i18n.Messages
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
 
-@this()
+@this(
+  p: P,
+  link: Link
+)
 @()(implicit messages: Messages)
 
 @****************************@
@@ -27,6 +30,22 @@
 @*                          *@
 @****************************@
 
-    <p> @Html(messages("nisp.excluded.isleOfMan.ni")) </p>
-    <p> @Html(messages("nisp.excluded.contactNationalInsuranceHelplineIom")) </p>
+@p(
+  content = Text(messages("nisp.excluded.isleOfMan.ni")),
+  specId = Some("exclusion_isleOfMan_ni__p1")
+)
 
+@p(
+  content = HtmlContent(messages(
+    "nisp.excluded.contactNationalInsuranceHelplineIom") +
+  link(
+    attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
+    attrTarget = true,
+    fullStop = true,
+    inParagraph = true,
+    link = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
+    messageKey = "nisp.excluded.contactNationalInsuranceHelplineIom.link",
+    specId = Some("exclusion_isleOfMan_ni__link1"),
+  )),
+  specId = Some("exclusion_isleOfMan_ni__p2")
+)

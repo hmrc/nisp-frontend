@@ -23,10 +23,9 @@ case class UserName(name: Name) {
   override def toString: String =
     s"${name.name.getOrElse("")} ${name.lastName.getOrElse("")}".trim
 
-  def getOrElse(defaultName: String): String = {
+  def getOrElse(defaultName: String): String =
     name match {
       case Name(None, None) => defaultName
-      case _ => this.toString
+      case _                => this.toString
     }
-  }
 }

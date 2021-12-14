@@ -18,6 +18,13 @@
 
 @this()
 
-@(content: Content, elmId: Option[String] = None, classes: Option[String] = None)
+@(
+  classes: Option[String] = None,
+  content: Content,
+  elmId: Option[String] = None,
+  specId: Option[String] = None,
+)
 
-<p @if(elmId.isDefined){ id="@{elmId.get}"} class="govuk-body @classes.getOrElse("")" )>@content.asHtml</p>
+<p @if(elmId.isDefined){ id="@{elmId.get}"} class="@classes.getOrElse("govuk-body")"@if(specId){ data-spec="@specId"}>
+  @content.asHtml
+</p>

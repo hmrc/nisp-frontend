@@ -21,26 +21,24 @@ import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 class TermsAndConditionsViewSpec extends HtmlSpec with Injecting {
 
   val fakeRequest = FakeRequest("GET", "/")
 
-  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"
-  lazy val html = inject[uk.gov.hmrc.nisp.views.html.termsAndConditions]
-  lazy val source = asDocument(html(true).toString)
+  lazy val html                   = inject[uk.gov.hmrc.nisp.views.html.termsAndConditions]
+  lazy val source                 = asDocument(html(true).toString)
 
   "TermsAndConditions" should {
 
     "assert correct page title" in {
-      val title = source.title()
-      val expected = messages("nisp.tandcs.title") + Constants.titleSplitter +
-        messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")
+      val title    = source.title()
+      val expected = messages("nisp.tandcs.title") + Constants.titleSplitter + messages(
+        "nisp.title.extension"
+      ) + Constants.titleSplitter + messages("nisp.gov-uk")
       title should include(expected)
     }
 
@@ -55,4 +53,3 @@ class TermsAndConditionsViewSpec extends HtmlSpec with Injecting {
     }
   }
 }
-

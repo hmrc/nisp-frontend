@@ -19,165 +19,274 @@
 @import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-
 @import java.time.LocalDate
 @import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, details, insetText, NispPageHeading}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
 @this(
-    main: main,
-    nirecordtaxyear: includes.nirecordtaxyear,
-    nirecordtaxyearNoFull: includes.nirecordtaxyearNoFull
-)(
-    implicit ec: ExecutionContext,
-    partialRetriever: CachedStaticHtmlPartialRetriever,
-    formPartialRetriever: FormPartialRetriever
+  newMain: main,
+  nirecordtaxyear: includes.nirecordtaxyear,
+  nirecordtaxyearNoFull: includes.nirecordtaxyearNoFull,
+  p: P,
+  h1: H1,
+  h2: H2,
+  link: Link,
+  details: details,
+  insetText: insetText,
+  govukPanel: GovukPanel,
+  nispPageHeading: NispPageHeading
 )
+@(
+  tableList: Seq[String],
+  niRecord: NationalInsuranceRecord,
+  gapsOnlyView: Boolean,
+  recordHasEnded: Boolean,
+  yearsToContribute: Int,
+  finalRelevantEndYear: Int,
+  showPre1975Years: Boolean,
+  authenticationProvider: String,
+  showFullNI: Boolean,
+  currentDate: LocalDate
+)(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
-@(tableList: Seq[String], niRecord: NationalInsuranceRecord, gapsOnlyView: Boolean, recordHasEnded: Boolean,
-yearsToContribute: Int, finalRelevantEndYear: Int, showPre1975Years: Boolean, authenticationProvider: String,
-showFullNI: Boolean, currentDate: LocalDate)(implicit messages: Messages,
-request: AuthenticatedRequest[_],
-user: NispAuthedUser)
+@newMain(
+  pageTitle = if(user.livesAbroad) messages("nisp.nirecord.heading.uk") else messages("nisp.nirecord.heading")
+) {
 
-
-@analyticsAdditionalJs = @{
-    Map[String, Any](
-        "qualifyingYears" -> niRecord.qualifyingYears,
-        "payableGaps" -> niRecord.numberOfGapsPayable,
-        "yearsToContribute" -> yearsToContribute,
-        "authenticationProvider" -> authenticationProvider
+    @nispPageHeading(
+      text = if(user.livesAbroad) messages("nisp.nirecord.heading.uk") else messages("nisp.nirecord.heading"),
+      section = messages(user.name.getOrElse("")),
+      context = messages(user.name.getOrElse("")),
+      specId = Some("nirecordpage__pageheading")
     )
-}
 
-    @main(MainTemplateParams(
-        browserTitle = Some(messages("nisp.nirecord.title")),
-        userLoggedIn = true,
-        pageInfo = Some(user.name.getOrElse("")),
-        printableDocument = true,
-        pageTitle = Some(messages(if(user.livesAbroad) "nisp.nirecord.heading.uk" else "nisp.nirecord.heading")),
-        h1Class = Some("titleWithPageInfo"),
-        showUrBanner = true
-    )) {
+    @details(
+      attributes = Map(
+        "data-spec" -> "nirecordpage__details__nino"
+      ),
+      content = Text(user.nino.toString),
+      summary = messages("nisp.show.nino")
+    )
 
-<details id="nino">
-    <summary data-journey-click="accordion - click:Your National Insurance record:Show your National Insurance number"><span class="summary">@messages("nisp.show.nino")</span></summary>
-    <div class="panel">
-        <p class="bold">@user.nino</p>
-    </div>
-</details>
+    @p(
+      content = Text(messages("nisp.nirecord.summary.youhave")),
+      specId = Some("nirecordpage__p1")
+    )
 
+    <ul class="govuk-list govuk-list--bullet"
+      data-spec="nirecordpage__ul__qualifying_years">
+      <li data-spec="nirecordpage__ul__qualifying_years__li1">
+      @if(niRecord.qualifyingYears != 1) {
+        @messages(
+          "nisp.nirecord.summary.fullContributions",
+          niRecord.qualifyingYears
+        )
+      } else {
+        @messages(
+          "nisp.nirecord.summary.fullContributions.single",
+          niRecord.qualifyingYears
+        )
+      }
+      </li>
 
+      @if(!recordHasEnded) {
+      <li data-spec="nirecordpage__ul__qualifying_years__li2">
+      @if(yearsToContribute != 1) {
+        @messages(
+          "nisp.nirecord.summary.yearsRemaining",
+          yearsToContribute,
+          finalRelevantEndYear.toString
+        )
+      } else {
+        @messages(
+          "nisp.nirecord.summary.yearsRemaining.single",
+          yearsToContribute,
+          finalRelevantEndYear.toString
+        )
+      }
+      </li>
+      }
 
+      @if(niRecord.numberOfGaps > 0) {
+      <li data-spec="nirecordpage__ul__qualifying_years__li3">
+      @if(niRecord.numberOfGaps != 1) {
+        @messages(
+          "nisp.nirecord.summary.gaps",
+          niRecord.numberOfGaps
+        )
+      } else {
+        @messages(
+          "nisp.nirecord.summary.gaps.single",
+          niRecord.numberOfGaps
+        )
+      }
+      </li>
+      }
+    </ul>
 
+    @if(!gapsOnlyView) {
 
-<p>@messages("nisp.nirecord.summary.youhave")</p>
-<ul class="list-bullet">
-    <li>
-    @if(niRecord.qualifyingYears != 1) {
-        @messages("nisp.nirecord.summary.fullContributions", niRecord.qualifyingYears)
+      @if(niRecord.numberOfGaps == 0) {
+        @insetText(
+          content = HtmlContent(
+            messages("nisp.nirecord.youdonothaveanygaps")
+          ),
+          specId = Some("nirecordpage__inset_text1")
+        )
+      }
+
+      @if(niRecord.numberOfGaps > 0) {
+        @insetText(
+          content = HtmlContent(
+            link(
+              fullStop = true,
+              inParagraph = true,
+              link = routes.NIRecordController.showGaps.url,
+              messageKey = "nisp.nirecord.showgaps",
+              messagesArgs = Seq("niRecord.numberOfGaps"),
+              specId = Some("nirecordpage__inset_text2__link")
+            )
+          ),
+          specId = Some("nirecordpage__inset_text2")
+        )
+      }
+
     } else {
-        @messages("nisp.nirecord.summary.fullContributions.single", niRecord.qualifyingYears)
+
+      @insetText(
+        content = HtmlContent(
+          link(
+            fullStop = true,
+            link = routes.NIRecordController.showFull.url,
+            messageKey = "nisp.nirecord.showfull",
+              specId = Some("nirecordpage__inset_text3__link")
+          )
+        ),
+        specId = Some("nirecordpage__inset_text3")
+      )
+
     }
-    </li>
 
-    @if(!recordHasEnded) {
-        <li>@if(yearsToContribute != 1) {
-                @messages("nisp.nirecord.summary.yearsRemaining", yearsToContribute, finalRelevantEndYear.toString)
-            } else {
-                @messages("nisp.nirecord.summary.yearsRemaining.single", yearsToContribute, finalRelevantEndYear.toString)
-            }
-        </li>
-    }
-
-    @if(niRecord.numberOfGaps > 0) {
-        <li>
-        @if(niRecord.numberOfGaps != 1) {
-            @messages("nisp.nirecord.summary.gaps", niRecord.numberOfGaps)
-        } else {
-            @messages("nisp.nirecord.summary.gaps.single", niRecord.numberOfGaps)
-        }
-        </li>
-    }
-</ul>
-
-
-
-@if(!gapsOnlyView){
-    @if(niRecord.numberOfGaps == 0) {
-        <p>@messages("nisp.nirecord.youdonothaveanygaps")</p>
-    }
-    @if(niRecord.numberOfGaps > 0){
-        <p class="panel-indent panel-border-wide panel-info"><a href="@routes.NIRecordController.showGaps.url">@Html(messages("nisp.nirecord.showgaps",niRecord.numberOfGaps))</a></p>
-    }
-} else {
-    <p class="panel-indent panel-border-wide panel-info"><a href="@routes.NIRecordController.showFull.url">@Html(messages("nisp.nirecord.showfull"))</a></p>
-}
-
-<dl class="accordion">
-
+    <dl class="accordion">
     @if(gapsOnlyView) {
-        @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
-            <dt>
-                <div class="ni-wrapper">
-                    <div class="ni-years"> @tableList.head </div>
-                    <div class="inactive">@messages("nisp.nirecord.unavailableyear")</div>
-                </div>
-            </dt>
+
+      @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
+      <dt>
+        <div class="ni-wrapper">
+          <div class="ni-years">
+            @tableList.head
+          </div>
+          <div class="inactive">
+            @messages("nisp.nirecord.unavailableyear")
+          </div>
+        </div>
+      </dt>
+      }
+
+      @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying)) {
+        @if(showFullNI) {
+          @nirecordtaxyear(niTaxYear, currentDate)
+        } else{
+          @nirecordtaxyearNoFull(niTaxYear, currentDate)
         }
-        @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying)){
-            @if(showFullNI){ @nirecordtaxyear(niTaxYear, currentDate) }else{ @nirecordtaxyearNoFull(niTaxYear, currentDate)}
-        }
+      }
+
     } else {
-        @if(niRecord.taxYears.isEmpty) {
+
+      @if(niRecord.taxYears.isEmpty) {
+
+        <dt>
+          <div class="ni-wrapper">
+            <div class="ni-years">
+              @tableList.head
+            </div>
+            <div class="inactive">
+              @messages("nisp.nirecord.unavailableyear")
+            </div>
+          </div>
+        </dt>
+
+      } else {
+
+        @for(tableYear <- tableList) {
+
+          @niRecord.taxYears.find(p => p.taxYear == tableYear).map { taxYear =>
+
+            @if(showFullNI) {
+              @nirecordtaxyear(taxYear, currentDate)
+            } else {
+              @nirecordtaxyearNoFull(taxYear, currentDate)
+            }
+
+          }.getOrElse {
+
             <dt>
-                <div class="ni-wrapper">
-                    <div class="ni-years"> @tableList.head </div>
-                    <div class="inactive">@messages("nisp.nirecord.unavailableyear")</div>
+              <div class="ni-wrapper">
+                <div class="ni-years">
+                  @tableYear
                 </div>
+                <div class="inactive">
+                  @messages("nisp.nirecord.unavailableyear")
+                </div>
+              </div>
             </dt>
-        } else {
 
-            @for(tableYear <- tableList) {
-
-                @niRecord.taxYears.find(p => p.taxYear == tableYear).map { taxYear =>
-
-                    @if(showFullNI) {
-                        @nirecordtaxyear(taxYear, currentDate)
-                    } else {
-                        @nirecordtaxyearNoFull(taxYear, currentDate)
-                    }
-
-                }.getOrElse {
-                    <dt>
-                        <div class="ni-wrapper">
-                            <div class="ni-years"> @tableYear </div>
-                            <div class="inactive">@messages("nisp.nirecord.unavailableyear")</div>
-                        </div>
-                    </dt>
-                }
-
-            }
-
-            @if(showPre1975Years) {
-                <dt>
-                    <div class="ni-wrapper">
-                        <div class="ni-years">@messages("nisp.nirecord.pre75Years")</div>
-                        @if(niRecord.qualifyingYearsPriorTo1975 > 0) {
-                            <div class="ni-full">@Html(messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))</div>
-                        } else {
-                            <div class="ni-full">@Html(messages("nisp.nirecord.pre75QualifyingYearsZero"))</div>
-                        }
-                    </div>
-                </dt>
-            }
+          }
         }
+
+        @if(showPre1975Years) {
+
+          <dt>
+            <div class="ni-wrapper">
+              <div class="ni-years">
+                @messages("nisp.nirecord.pre75Years")
+              </div>
+                @if(niRecord.qualifyingYearsPriorTo1975 > 0) {
+                  <div class="ni-full">
+                    @Html(messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))
+                  </div>
+                } else {
+                  <div class="ni-full">
+                    @Html(messages("nisp.nirecord.pre75QualifyingYearsZero"))
+                  </div>
+                }
+            </div>
+          </dt>
+
+        }
+      }
     }
-</dl>
+    </dl>
 
-<span id="current-language" class="visuallyhidden" aria-hidden="true">@{messages.lang.code}</span>
+  @p(
+    elmId = Some("print-ni-link"),
+    content = HtmlContent(
+      link(
+        attrs = Map("data-journey-click" -> "link - click:Your National Insurance record:Print this National Insurance record"),
+        classes = Some("printlink"),
+        inParagraph = true,
+        link = "javascript:window.print();",
+        messageKey = "nisp.print.this.ni.record",
+      specId = Some("nirecordpage__printlink_l")
+    )),
+    specId = Some("nirecordpage__printlink_p")
+  )
 
-<p id="print-ni-link"><a href="javascript:window.print();" data-journey-click="link - click:Your National Insurance record:Print this National Insurance record">@messages("nisp.print.this.ni.record")</a></p>
+  @p(
+    classes = Some("govuk-body backlink"),
+    content = HtmlContent(
+      link(
+        inParagraph = true,
+        link = "javascript:window.history.back();",
+        messageKey = "nisp.back",
+        specId = Some("nirecordpage__backlink_l")
+    )),
+    specId = Some("nirecordpage__backlink_p")
+  )
 
-<p class="backlink"><a href="javascript:window.history.back();">@messages("nisp.back")</a></p>
+  <span id="current-language" class="govuk-visually-hidden" aria-hidden="true">
+    @{messages.lang.code}
+  </span>
 
 }

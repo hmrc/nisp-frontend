@@ -37,12 +37,16 @@ import java.time.LocalDate
 import scala.concurrent.Future
 import scala.util.Random
 
-class NationalInsuranceServiceSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite
-with BeforeAndAfterEach with Injecting {
+class NationalInsuranceServiceSpec
+    extends UnitSpec
+    with ScalaFutures
+    with GuiceOneAppPerSuite
+    with BeforeAndAfterEach
+    with Injecting {
 
   def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
 
-  implicit val headerCarrier = HeaderCarrier()
+  implicit val headerCarrier         = HeaderCarrier()
   val mockNationalInsuranceConnector = mock[NationalInsuranceConnectorImpl]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -50,7 +54,8 @@ with BeforeAndAfterEach with Injecting {
       bind[NationalInsuranceConnectorImpl].toInstance(mockNationalInsuranceConnector),
       bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -119,7 +124,7 @@ with BeforeAndAfterEach with Injecting {
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(mockNationalInsuranceRecord))
 
-        nationalInsuranceService.getSummary(generateNino).isRight shouldBe true
+        nationalInsuranceService.getSummary(generateNino).isRight   shouldBe true
         nationalInsuranceService.getSummary(generateNino).right.get shouldBe a[NationalInsuranceRecord]
       }
 
@@ -135,47 +140,49 @@ with BeforeAndAfterEach with Injecting {
 
       "return the tax years in descending order" in {
 
-        val jumbledRecord = mockNationalInsuranceRecord.copy(taxYears = List(
-          NationalInsuranceTaxYear(
-            taxYear = "2014-15",
-            qualifying = false,
-            classOneContributions = 123,
-            classTwoCredits = 1,
-            classThreeCredits = 1,
-            otherCredits = 1,
-            classThreePayable = 456.58,
-            classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
-            classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
-            payable = false,
-            underInvestigation = false
-          ),
-          NationalInsuranceTaxYear(
-            taxYear = "1999-00",
-            qualifying = false,
-            classOneContributions = 2,
-            classTwoCredits = 5,
-            classThreeCredits = 0,
-            otherCredits = 1,
-            classThreePayable = 111.11,
-            classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
-            classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
-            payable = false,
-            underInvestigation = false
-          ),
-          NationalInsuranceTaxYear(
-            taxYear = "2015-16",
-            qualifying = true,
-            classOneContributions = 12345.45,
-            classTwoCredits = 0,
-            classThreeCredits = 0,
-            otherCredits = 0,
-            classThreePayable = 0,
-            classThreePayableBy = None,
-            classThreePayableByPenalty = None,
-            payable = false,
-            underInvestigation = false
+        val jumbledRecord = mockNationalInsuranceRecord.copy(taxYears =
+          List(
+            NationalInsuranceTaxYear(
+              taxYear = "2014-15",
+              qualifying = false,
+              classOneContributions = 123,
+              classTwoCredits = 1,
+              classThreeCredits = 1,
+              otherCredits = 1,
+              classThreePayable = 456.58,
+              classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+              classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
+              payable = false,
+              underInvestigation = false
+            ),
+            NationalInsuranceTaxYear(
+              taxYear = "1999-00",
+              qualifying = false,
+              classOneContributions = 2,
+              classTwoCredits = 5,
+              classThreeCredits = 0,
+              otherCredits = 1,
+              classThreePayable = 111.11,
+              classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+              classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
+              payable = false,
+              underInvestigation = false
+            ),
+            NationalInsuranceTaxYear(
+              taxYear = "2015-16",
+              qualifying = true,
+              classOneContributions = 12345.45,
+              classTwoCredits = 0,
+              classThreeCredits = 0,
+              otherCredits = 0,
+              classThreePayable = 0,
+              classThreePayableBy = None,
+              classThreePayableByPenalty = None,
+              payable = false,
+              underInvestigation = false
+            )
           )
-        ))
+        )
 
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(jumbledRecord))
@@ -192,11 +199,16 @@ with BeforeAndAfterEach with Injecting {
       "return a Left Dead Exclusion" in {
 
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
-          .thenReturn(Future.failed(new Upstream4xxResponse(
-            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
-            upstreamResponseCode = 403,
-            reportAs = 500
-          )))
+          .thenReturn(
+            Future.failed(
+              new Upstream4xxResponse(
+                message =
+                  "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
+                upstreamResponseCode = 403,
+                reportAs = 500
+              )
+            )
+          )
 
         whenReady(nationalInsuranceService.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.Dead)
@@ -208,11 +220,16 @@ with BeforeAndAfterEach with Injecting {
       "return a Left MCI Exclusion" in {
 
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
-          .thenReturn(Future.failed(new Upstream4xxResponse(
-            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-            upstreamResponseCode = 403,
-            reportAs = 500
-          )))
+          .thenReturn(
+            Future.failed(
+              new Upstream4xxResponse(
+                message =
+                  "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+                upstreamResponseCode = 403,
+                reportAs = 500
+              )
+            )
+          )
 
         whenReady(nationalInsuranceService.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.ManualCorrespondenceIndicator)
@@ -224,11 +241,16 @@ with BeforeAndAfterEach with Injecting {
       "return a Left Isle of Man Exclusion" in {
 
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
-          .thenReturn(Future.failed(new Upstream4xxResponse(
-            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-            upstreamResponseCode = 403,
-            reportAs = 500
-          )))
+          .thenReturn(
+            Future.failed(
+              new Upstream4xxResponse(
+                message =
+                  "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+                upstreamResponseCode = 403,
+                reportAs = 500
+              )
+            )
+          )
 
         whenReady(nationalInsuranceService.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.IsleOfMan)
@@ -240,11 +262,16 @@ with BeforeAndAfterEach with Injecting {
       "return a Left MWRRE Exclusion" in {
 
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
-          .thenReturn(Future.failed(new Upstream4xxResponse(
-            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-            upstreamResponseCode = 403,
-            reportAs = 500
-          )))
+          .thenReturn(
+            Future.failed(
+              new Upstream4xxResponse(
+                message =
+                  "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
+                upstreamResponseCode = 403,
+                reportAs = 500
+              )
+            )
+          )
 
         whenReady(nationalInsuranceService.getSummary(generateNino)) { ex =>
           ex shouldBe Left(Exclusion.MarriedWomenReducedRateElection)
@@ -280,14 +307,12 @@ with BeforeAndAfterEach with Injecting {
         reducedRateElection = true
       )
 
-
-
       "return a Left(Exclusion)" in {
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(mockNationalInsuranceRecord))
 
         val niSummary = nationalInsuranceService.getSummary(generateNino)
-        niSummary.isLeft shouldBe true
+        niSummary.isLeft   shouldBe true
         niSummary.left.get shouldBe a[Exclusion]
       }
 
@@ -297,10 +322,14 @@ with BeforeAndAfterEach with Injecting {
 
       "return Left(CopeProcessing)" in {
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
-          .thenReturn(Future.failed(UpstreamErrorResponse(
-            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING\"}'",
-            statusCode = 403
-          )))
+          .thenReturn(
+            Future.failed(
+              UpstreamErrorResponse(
+                message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING\"}'",
+                statusCode = 403
+              )
+            )
+          )
 
         val result = nationalInsuranceService.getSummary(generateNino)
         result.futureValue shouldBe Left(Exclusion.CopeProcessing)
@@ -308,10 +337,15 @@ with BeforeAndAfterEach with Injecting {
 
       "return Left(CopeProcessingFailed)" in {
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
-          .thenReturn(Future.failed(UpstreamErrorResponse(
-            message = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'",
-            statusCode = 403
-          )))
+          .thenReturn(
+            Future.failed(
+              UpstreamErrorResponse(
+                message =
+                  "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'",
+                statusCode = 403
+              )
+            )
+          )
 
         val result = nationalInsuranceService.getSummary(generateNino)
         result.futureValue shouldBe Left(Exclusion.CopeProcessingFailed)

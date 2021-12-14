@@ -36,12 +36,15 @@ trait BackendConnector {
   val metricsService: MetricsService
   implicit val executionContext: ExecutionContext
 
-  protected def retrieveFromCache[A](api: APIType, url: String, headers: Seq[(String, String)] = Seq())(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
+  protected def retrieveFromCache[A](api: APIType, url: String, headers: Seq[(String, String)] = Seq())(implicit
+    hc: HeaderCarrier,
+    formats: Format[A]
+  ): Future[A] = {
     val keystoreTimerContext = metricsService.keystoreReadTimer.time()
 
     val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
-    sessionCacheF.onFailure {
-      case _ => metricsService.keystoreReadFailed.inc()
+    sessionCacheF.onFailure { case _ =>
+      metricsService.keystoreReadFailed.inc()
     }
     sessionCacheF.flatMap { keystoreResult =>
       keystoreTimerContext.stop()
@@ -49,61 +52,65 @@ trait BackendConnector {
         case Some(data) =>
           metricsService.keystoreHitCounter.inc()
           Future.successful(data)
-        case None =>
+        case None       =>
           metricsService.keystoreMissCounter.inc()
-          connectToMicroservice[A](url, api, headers) map {
-            data: A => cacheResult(data, api.toString)
+          connectToMicroservice[A](url, api, headers) map { data: A =>
+            cacheResult(data, api.toString)
           }
       }
     }
   }
 
-  private def connectToMicroservice[A](urlToRead: String, apiType: APIType, headers: Seq[(String, String)] = Seq())(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
+  private def connectToMicroservice[A](
+    urlToRead: String,
+    apiType: APIType,
+    headers: Seq[(String, String)] = Seq()
+  )(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val timerContext = metricsService.startTimer(apiType)
 
     val httpResponseF = http.GET[HttpResponse](urlToRead, Seq(), headers)
-    httpResponseF onSuccess {
-      case _ => timerContext.stop()
+    httpResponseF onSuccess { case _ =>
+      timerContext.stop()
     }
-    httpResponseF onFailure {
-      case _ => metricsService.incrementFailedCounter(apiType)
+    httpResponseF onFailure { case _ =>
+      metricsService.incrementFailedCounter(apiType)
     }
-    httpResponseF.map {
-      httpResponse => httpResponse.json.validate[A].fold(
-        errs => {
-          val json = JsonDepersonaliser.depersonalise(httpResponse.json) match {
-            case Success(s) => s"Depersonalised JSON\n$s"
-            case Failure(e) => s"JSON could not be depersonalised\n${e.toString()}"
-          }
-          throw new JsonValidationException(s"Unable to deserialise $apiType: ${formatJsonErrors(errs)}\n$json")
-        },
-        valid => valid
-      )
+    httpResponseF.map { httpResponse =>
+      httpResponse.json
+        .validate[A]
+        .fold(
+          errs => {
+            val json = JsonDepersonaliser.depersonalise(httpResponse.json) match {
+              case Success(s) => s"Depersonalised JSON\n$s"
+              case Failure(e) => s"JSON could not be depersonalised\n${e.toString()}"
+            }
+            throw new JsonValidationException(s"Unable to deserialise $apiType: ${formatJsonErrors(errs)}\n$json")
+          },
+          valid => valid
+        )
     }
   }
 
-  private def cacheResult[A](a:A,name: String)(implicit hc: HeaderCarrier, formats: Format[A]): A = {
+  private def cacheResult[A](a: A, name: String)(implicit hc: HeaderCarrier, formats: Format[A]): A = {
     val timerContext = metricsService.keystoreWriteTimer.time()
-    val cacheF = sessionCache.cache[A](name, a)
-    cacheF.onSuccess {
-      case _ => timerContext.stop()
+    val cacheF       = sessionCache.cache[A](name, a)
+    cacheF.onSuccess { case _ =>
+      timerContext.stop()
     }
-    cacheF.onFailure {
-      case _ => metricsService.keystoreWriteFailed.inc()
+    cacheF.onFailure { case _ =>
+      metricsService.keystoreWriteFailed.inc()
     }
     a
   }
 
-  private def formatJsonErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): String = {
+  private def formatJsonErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): String =
     errors.map(p => p._1 + " - " + p._2.map(e => removeJson(e.message)).mkString(",")).mkString(" | ")
-  }
 
-  private def removeJson(message: String): String = {
+  private def removeJson(message: String): String =
     message.indexOf("{") match {
-      case i if i != -1  => message.substring(0, i - 1) + " [JSON removed]"
-      case _ => message
+      case i if i != -1 => message.substring(0, i - 1) + " [JSON removed]"
+      case _            => message
     }
-  }
 
   private[connectors] class JsonValidationException(message: String) extends Exception(message)
 }

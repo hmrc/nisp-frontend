@@ -14,62 +14,160 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
-@import uk.gov.hmrc.play.partials._
-@import uk.gov.hmrc.nisp.config.ApplicationConfig
-
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, H3, Link, insetText}
 
 @this(
-    appConfig: ApplicationConfig,
-    main: unauthenticatedMain
-)(
-    implicit ec: ExecutionContext,
-    partialRetriever: CachedStaticHtmlPartialRetriever,
-    formPartialRetriever: FormPartialRetriever
+  main: main,
+  p: P,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  link: Link,
+  insetText: insetText
 )
-
 @()(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
 
-@main(MainTemplateParams(userLoggedIn = true, browserTitle = Some(messages("nisp.main.title")),
-            pageTitle = Some(messages("nisp.excluded.cope.failed.h1")), articleClasses = Some("mainpage")),
-    Some(request.authDetails)
+@main(
+  pageTitle = messages("nisp.excluded.cope.failed.h1")
 ) {
-    <div>
-        <div class="panel-indent">@Html(messages("nisp.excluded.cope.failed"))</div>
 
-        <h2>@messages("nisp.excluded.cope.failed.h2")</h2>
+  @h1(
+    elmId = Some("mainTitle"),
+    msg = "nisp.excluded.cope.failed.h1",
+    specId = Some("excluded_cope_failed__h1")
+  )
 
-        <h3>@messages("nisp.excluded.cope.failed.telephone.h3")</h3>
-        <p>
-            @messages("nisp.excluded.cope.failed.telephone.line1")<br>
-            @messages("nisp.excluded.cope.failed.telephone.line2")<br>
-            @messages("nisp.excluded.cope.failed.telephone.line3")
-        </p>
+  @insetText(
+    content = HtmlContent(messages(
+      "nisp.excluded.cope.failed"
+    )),
+    specId = Some("excluded_cope_failed__inset_text1")
+  )
 
-        <h3>@messages("nisp.excluded.cope.failed.textphone.h3")</h3>
-        <p>
-            @messages("nisp.excluded.cope.failed.textphone.line1")<br>
-            @messages("nisp.excluded.cope.failed.textphone.line2")<br>
-            @messages("nisp.excluded.cope.failed.textphone.line3")
-        </p>
+  @h2(
+    msg = "nisp.excluded.cope.failed.h2",
+    specId = Some("excluded_cope_failed__h2_1")
+  )
 
-        <h3>@messages("nisp.excluded.cope.failed.relayUK.h3")</h3>
-        <p>
-            @Html(messages("nisp.excluded.cope.failed.relayUK.line1"))<br>
-            @messages("nisp.excluded.cope.failed.relayUK.line2")
-        </p>
+  @h3(
+    msg = "nisp.excluded.cope.failed.telephone.h3",
+    specId = Some("excluded_cope_failed__h3_1")
+  )
 
-        <h3>@messages("nisp.excluded.cope.failed.britishSignLanguage.h3")</h3>
-        <p>@Html(messages("nisp.excluded.cope.failed.britishSignLanguage.line1"))</p>
+  @p(
+    content = Text(messages(
+      "nisp.excluded.cope.failed.telephone.line1"
+    )),
+    specId = Some("excluded_cope__p1")
+  )
 
-        <h3>@messages("nisp.excluded.cope.failed.openingTimes.h3")</h3>
-        <p>
-            @messages("nisp.excluded.cope.failed.openingTimes.line1")<br>
-            @Html(messages("nisp.excluded.cope.failed.openingTimes.line2"))
-        </p>
-    </div>
+  @p(
+    content = Text(messages(
+      "nisp.excluded.cope.failed.telephone.line2"
+    )),
+    specId = Some("excluded_cope__p2")
+  )
+
+  @p(
+    content = Text(messages(
+      "nisp.excluded.cope.failed.telephone.line3"
+    )),
+    specId = Some("excluded_cope__p3")
+  )
+
+  @h3(
+    msg = "nisp.excluded.cope.failed.textphone.h3",
+    specId = Some("excluded_cope_failed__h3_2")
+  )
+
+  @p(
+    content = Text(messages(
+      "nisp.excluded.cope.failed.textphone.line1"
+    )),
+    specId = Some("excluded_cope__p4")
+  )
+
+  @p(
+    content = Text(messages(
+      "nisp.excluded.cope.failed.textphone.line2"
+    )),
+    specId = Some("excluded_cope__p5")
+  )
+
+  @p(
+    content = Text(messages(
+      "nisp.excluded.cope.failed.textphone.line3"
+    )),
+    specId = Some("excluded_cope__p6")
+  )
+
+  @h3(
+    msg = "nisp.excluded.cope.failed.relayUK.h3",
+    specId = Some("excluded_cope_failed__h3_3")
+  )
+
+  @p(
+    content = HtmlContent(messages(
+      "nisp.excluded.cope.failed.relayUK.text",
+      link(
+        attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+        attrTarget = true,
+        inParagraph = true,
+        link = "https://www.relayuk.bt.com/",
+        messageKey = "nisp.excluded.cope.failed.relayUK.linktext",
+        specId = Some("excluded_cope__link1")
+      )
+    )),
+    specId = Some("excluded_cope__p7")
+  )
+
+  @h3(
+    msg = "nisp.excluded.cope.failed.britishSignLanguage.h3",
+    specId = Some("excluded_cope_failed__h3_4")
+  )
+
+  @p(
+    content = HtmlContent(messages(
+      "nisp.excluded.cope.failed.britishSignLanguage.text",
+      link(
+        attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+        attrTarget = true,
+        inParagraph = true,
+        link = "https://dwppensionforecasting.signvideo.net/",
+        messageKey = "nisp.excluded.cope.failed.britishSignLanguage.linktext0",
+        specId = Some("excluded_cope__link2")
+      ),
+      link(
+        attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+        attrTarget = true,
+        fullStop = true,
+        inParagraph = true,
+        link = "https://www.youtube.com/watch?v=Osx7FFxFpNY",
+        messageKey = "nisp.excluded.cope.failed.britishSignLanguage.linktext1",
+        specId = Some("excluded_cope__link3")
+      )
+    )),
+    specId = Some("excluded_cope__p8")
+  )
+
+  @h3(
+    msg = "nisp.excluded.cope.failed.openingTimes.h3",
+    specId = Some("excluded_cope_failed__h3_5")
+  )
+
+  @p(
+    content = Text(messages(
+      "nisp.excluded.cope.failed.openingTimes.line1"
+    )),
+    specId = Some("excluded_cope__p9")
+  )
+
+  @link(
+    attrTarget = true,
+    fullStop = true,
+    link = "https://www.gov.uk/call-charges",
+    messageKey = "nisp.excluded.cope.failed.openingTimes.linktext",
+    specId = Some("excluded_cope__link4")
+  )
 }

@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.mockito.Mockito
-import org.mockito.Mockito.{mock, reset}
+import org.mockito.Mockito.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -37,8 +37,13 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 
 import java.time.LocalDate
 
-class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
-  Injecting with BeforeAndAfterEach with WireMockHelper {
+class NationalInsuranceConnectorImplSpec
+    extends UnitSpec
+    with ScalaFutures
+    with GuiceOneAppPerSuite
+    with Injecting
+    with BeforeAndAfterEach
+    with WireMockHelper {
 
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
@@ -56,7 +61,8 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
     )
     .configure(
       "microservice.services.national-insurance.port" -> server.port()
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -68,7 +74,8 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
   "getNationalInsuranceRecord" when {
 
     "there is a regular user" should {
-      lazy val nationalInsuranceRecord = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
+      lazy val nationalInsuranceRecord =
+        await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
 
       val jsonPayload = TestAccountBuilder.getRawJson(
         TestAccountBuilder.regularNino,
@@ -216,7 +223,9 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
     "there is a Dead Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
-        val json = Json.toJson("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"""")
+        val json = Json.toJson(
+          """{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline""""
+        )
 
         server.stubFor(
           get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAll}"))
@@ -225,7 +234,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
         whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll).failed) {
           case ex: Upstream4xxResponse =>
-            ex.upstreamResponseCode shouldBe 403
+            ex.upstreamResponseCode               shouldBe 403
             ex.message.contains("EXCLUSION_DEAD") shouldBe true
         }
       }
@@ -234,7 +243,9 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
     "there is a MCI Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
 
-        val json = Json.toJson("""{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline"""")
+        val json = Json.toJson(
+          """{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline""""
+        )
 
         server.stubFor(
           get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAllButDead}"))
@@ -243,7 +254,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
         whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead).failed) {
           case ex: Upstream4xxResponse =>
-            ex.upstreamResponseCode shouldBe 403
+            ex.upstreamResponseCode                                shouldBe 403
             ex.message.contains("EXCLUSION_MANUAL_CORRESPONDENCE") shouldBe true
         }
       }
@@ -251,7 +262,9 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
     "there is a IOM Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
-        val json = Json.toJson("""{"code":"EXCLUSION_ISLE_OF_MAN","message":"The customer needs to contact the National Insurance helpline"""")
+        val json = Json.toJson(
+          """{"code":"EXCLUSION_ISLE_OF_MAN","message":"The customer needs to contact the National Insurance helpline""""
+        )
 
         server.stubFor(
           get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAllButDeadMCI}"))
@@ -260,7 +273,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
         whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI).failed) {
           case ex: Upstream4xxResponse =>
-            ex.upstreamResponseCode shouldBe 403
+            ex.upstreamResponseCode                      shouldBe 403
             ex.message.contains("EXCLUSION_ISLE_OF_MAN") shouldBe true
         }
       }
@@ -268,17 +281,18 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
     "there is a MWRRE Exclusion" should {
       "return a failed future with a 403 response code with a relevant message" in {
-        val json = Json.toJson("""{"code":"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE","message":"The customer needs to contact the National Insurance helpline"""")
+        val json = Json.toJson(
+          """{"code":"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE","message":"The customer needs to contact the National Insurance helpline""""
+        )
 
         server.stubFor(
           get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedMwrre}"))
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedMwrre
-        ).failed) {
+        whenReady(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedMwrre).failed) {
           case ex: Upstream4xxResponse =>
-            ex.upstreamResponseCode shouldBe 403
+            ex.upstreamResponseCode                                      shouldBe 403
             ex.message.contains("EXCLUSION_MARRIED_WOMENS_REDUCED_RATE") shouldBe true
         }
       }

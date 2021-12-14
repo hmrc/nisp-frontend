@@ -14,36 +14,68 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import play.api.Application
-@import uk.gov.hmrc.renderer.TemplateRenderer
-
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, P, Link}
 
 @this(
- main: unauthenticatedMain
-)(
- implicit ec: ExecutionContext,
- formPartialRetriever: FormPartialRetriever
+  main: main,
+  h1: H1,
+  p: P,
+  link: Link
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@anchor(text: String, url: String) = {<a href="@url" target="_blank">@text</a>}
+@anchor(
+  text: String,
+  url: String
+) = {<a href="@url" target="_blank">@text</a>}
 
+@main(
+  pageTitle = messages("global.page.not.found.error.title")
+) {
 
-@main(MainTemplateParams(pageTitle = Some(Messages("global.page.not.found.error.title")))) {
+  @h1(
+    msg = "global.page.not.found.error.title",
+    specId = Some("page_not_found_template__h1")
+  )
 
-<p>@messages("global.page.not.found.error.check.web.address.correct")</p>
-<p>@messages("global.page.not.found.error.check.web.address.full")</p>
-<p>@messages("global.page.not.found.error.your.options")</p>
-<ul class="list list-bullet">
- <li>@Html(messages("global.page.not.found.error.contact.future.pension.centre.text",
-  anchor(messages("global.page.not.found.error.contact.future.pension.centre.link.text"), messages("global.page.not.found.error.contact.future.pension.centre.link"))))</li>
- <li>@Html(messages("global.page.not.found.error.contact.ni.helpline.text",
-  anchor(messages("global.page.not.found.error.contact.ni.helpline.link.text"), messages("global.page.not.found.error.contact.ni.helpline.link"))))</li>
-</ul>
+  @p(
+    content = Text(messages(
+      "global.page.not.found.error.check.web.address.correct"
+    )),
+    specId = Some("page_not_found_template__p1")
+  )
 
+  @p(
+    content = Text(messages(
+      "global.page.not.found.error.check.web.address.full"
+    )),
+    specId = Some("page_not_found_template__p2")
+  )
 
+  @p(
+    content = Text(messages(
+      "global.page.not.found.error.your.options"
+    )),
+    specId = Some("page_not_found_template__p3")
+  )
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>@Html(
+      messages(
+        "global.page.not.found.error.contact.future.pension.centre.text",
+        anchor(
+          messages("global.page.not.found.error.contact.future.pension.centre.link.text"),
+          messages("global.page.not.found.error.contact.future.pension.centre.link")
+      )))
+    </li>
+    <li>@Html(
+      messages(
+        "global.page.not.found.error.contact.ni.helpline.text",
+        anchor(
+          messages("global.page.not.found.error.contact.ni.helpline.link.text"),
+          messages("global.page.not.found.error.contact.ni.helpline.link")
+      )))
+    </li>
+  </ul>
 }

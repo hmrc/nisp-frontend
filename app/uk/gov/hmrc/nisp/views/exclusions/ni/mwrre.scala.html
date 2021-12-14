@@ -14,9 +14,12 @@
  * limitations under the License.
  *@
 
-@import play.api.i18n.Messages
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
 
-@this()
+@this(
+  p: P,
+  link: Link
+)
 @()(implicit messages: Messages)
 
 @************************************************@
@@ -26,5 +29,34 @@
 @*                                              *@
 @************************************************@
 
-    <p> @Html(messages("nisp.excluded.mwrre.ni")) </p>
-    <p> @Html(messages("nisp.excluded.contactNationalInsuranceHelpline")) </p>
+@p(
+  content = HtmlContent(messages(
+    "nisp.excluded.mwrre.ni",
+    link(
+      attrs = Map("data-journey-click" -> "checkmystatepension:external:mwrre"),
+      attrTarget = true,
+      fullStop = true,
+      inParagraph = true,
+      link = "https://www.gov.uk/reduced-national-insurance-married-women",
+      messageKey = "nisp.excluded.mwrre.ni.link",
+      specId = Some("exclusions__ni__mwrre__link1")
+    )
+  )),
+  specId = Some("exclusions__ni__mwrre__p1")
+)
+
+@p(
+  content = HtmlContent(messages(
+    "nisp.excluded.contactNationalInsuranceHelpline",
+    link(
+      attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
+      attrTarget = true,
+      fullStop = true,
+      inParagraph = true,
+      link = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
+      messageKey = "nisp.excluded.contactNationalInsuranceHelpline.link",
+      specId = Some("exclusions__ni__mwrre__link2")
+    )
+  )),
+  specId = Some("exclusions__ni__mwrre__p2")
+)

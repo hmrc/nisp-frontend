@@ -19,10 +19,14 @@ package uk.gov.hmrc.nisp.builders
 import java.time.LocalDate
 import uk.gov.hmrc.nisp.models.NationalInsuranceTaxYear
 
-
 object NationalInsuranceTaxYearBuilder {
-  def apply(taxYear: String, qualifying: Boolean = true, payable: Boolean = false ,underInvestigation :Boolean): NationalInsuranceTaxYear = {
-    if(qualifying) {
+  def apply(
+    taxYear: String,
+    qualifying: Boolean = true,
+    payable: Boolean = false,
+    underInvestigation: Boolean
+  ): NationalInsuranceTaxYear =
+    if (qualifying) {
       NationalInsuranceTaxYear(
         taxYear,
         true,
@@ -45,11 +49,10 @@ object NationalInsuranceTaxYearBuilder {
         classThreeCredits = 1,
         otherCredits = 1,
         classThreePayable = 755.56,
-        classThreePayableBy = Some( LocalDate.of(2019, 4, 5)),
-        classThreePayableByPenalty = Some( LocalDate.of(2023, 4, 5)),
+        classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+        classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
         payable = payable,
         underInvestigation = underInvestigation
       )
     }
-  }
 }

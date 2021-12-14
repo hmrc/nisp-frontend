@@ -23,10 +23,11 @@ object EitherReads {
     Reads[Either[A, B]] { json =>
       A.reads(json) match {
         case JsSuccess(value, path) => JsSuccess(Left(value), path)
-        case JsError(e1) => B.reads(json) match {
-          case JsSuccess(value, path) => JsSuccess(Right(value), path)
-          case JsError(e2) => JsError(JsError.merge(e1, e2))
-        }
+        case JsError(e1)            =>
+          B.reads(json) match {
+            case JsSuccess(value, path) => JsSuccess(Right(value), path)
+            case JsError(e2)            => JsError(JsError.merge(e1, e2))
+          }
       }
     }
 }

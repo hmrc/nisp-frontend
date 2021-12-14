@@ -14,74 +14,169 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
-@import play.api.Application
-
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
-
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
-
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, H3, details, Link, insetText}
 
 @this(
-    main: main
-)(
-    implicit ec: ExecutionContext,
-    partialRetriever: CachedStaticHtmlPartialRetriever,
-    formPartialRetriever: FormPartialRetriever
+  main: main,
+  p: P,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  link: Link,
+  details: details,
+  insetText: insetText
 )
 
 @(homeResponsibilitiesProtection: Boolean)(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
 @defining(Some(user)) { implicit userOption =>
-@main(MainTemplateParams(
-    browserTitle = Some(messages("nisp.nirecord.gapsinyourrecord.title")),
-    pageTitle = Some(messages("nisp.nirecord.gapsinyourrecord.heading")),
-    userLoggedIn = true,
-    sidebarLinks = None
-)) {
 
-<p class="lede">@Html(messages("nisp.nirecord.gapsinyourrecord.title.message"))</p>
+  @main(
+    pageTitle = messages("nisp.nirecord.gapsinyourrecord.title")
+  ) {
 
-<p>@messages("nisp.nirecord.gapsinyourrecord.listheader")</p>
-<ul class="list-bullet">
-    <li>@messages("nisp.nirecord.gapsinyourrecord.line1")</li>
-    <li>@messages("nisp.nirecord.gapsinyourrecord.line2")</li>
-    <li>@messages("nisp.nirecord.gapsinyourrecord.line3")</li>
-    <li>@messages("nisp.nirecord.gapsinyourrecord.line4")</li>
-    <li>@messages("nisp.nirecord.gapsinyourrecord.line5")</li>
-</ul>
+    @h1(
+      elmId = Some("heading-1"),
+      msg = "nisp.nirecord.gapsinyourrecord.heading",
+      specId = Some("ni_record_gaps_and_how_to_check_them__h1")
+    )
 
-<h2 class="heading-medium">@messages("nisp.nirecord.gapsinyourrecord.howtocheckrecord")</h2>
-<h3>@messages("nisp.nirecord.gapsinyourrecord.paidemployment.title")</h3>
-<p>@Html(messages("nisp.nirecord.gapsinyourrecord.paidemployment.desc"))</p>
+    @p(
+      content = HtmlContent(messages(
+        "nisp.nirecord.gapsinyourrecord.title.message"
+      )),
+      specId = Some("ni_record_gaps_and_how_to_check_them__p1")
+    )
 
-<details class="helptext">
-    <summary class="summary-list-item">
-        <span class="summary">@messages("nisp.nirecord.gapsinyourrecord.donothavep60.title")</span>
-    </summary>
-    <div class="panel-indent">
-        <p>@Html(messages("nisp.nirecord.gapsinyourrecord.donothavep60.desc"))</p>
-    </div>
-</details>
+    @p(
+      content = Text(messages(
+        "nisp.nirecord.gapsinyourrecord.listheader"
+      )),
+      specId = Some("ni_record_gaps_and_how_to_check_them__p2")
+    )
 
-<h3>@messages("nisp.nirecord.gapsinyourrecord.selfemployment.title")</h3>
-<p>@Html(messages("nisp.nirecord.gapsinyourrecord.selfemployment.desc"))</p>
-<h2 class="heading-medium">@messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.title")</h2>
-<p>@Html(messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1"))</p>
-<p>@messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1")<br/>@messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2")<br/>@messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3")<br/>@messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4")</p>
+    <ul class="govuk-list govuk-list--bullet" data-spec="ni_record_gaps_and_how_to_check_them__ul">
+      <li data-spec="ni_record_gaps_and_how_to_check_them__ul__li1">
+        @messages("nisp.nirecord.gapsinyourrecord.line1")
+      </li>
+      <li data-spec="ni_record_gaps_and_how_to_check_them__ul__li2">
+        @messages("nisp.nirecord.gapsinyourrecord.line2")
+      </li>
+      <li data-spec="ni_record_gaps_and_how_to_check_them__ul__li3">
+        @messages("nisp.nirecord.gapsinyourrecord.line3")
+      </li>
+      <li data-spec="ni_record_gaps_and_how_to_check_them__ul__li4">
+        @messages("nisp.nirecord.gapsinyourrecord.line4")
+      </li>
+      <li data-spec="ni_record_gaps_and_how_to_check_them__ul__li5">
+        @messages("nisp.nirecord.gapsinyourrecord.line5")
+      </li>
+    </ul>
 
-<h2 class="heading-medium">@messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title")</h2>
-<p>@Html(messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc"))</p>
-@if(homeResponsibilitiesProtection) {
-    <div class="panel-indent">
-        <p>@Html(messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp"))</p>
-    </div>
-}
-<p><a href="https://www.gov.uk/national-insurance-credits/eligibility" rel="external" target="_blank" data-journey-click="checkmystatepension:external:nationalinsurancecredits">@messages("nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link")</a></p>
-<div class="backlink"><a href="@{routes.NIRecordController.showGaps.url}">@messages("nisp.back")</a></div>
-}
+    @h2(
+      elmId = Some("heading-2"),
+      msg = "nisp.nirecord.gapsinyourrecord.howtocheckrecord",
+      specId = Some("ni_record_gaps_and_how_to_check_them__h2_1")
+    )
+
+    @h3(
+      elmId = Some("heading-3"),
+      msg = "nisp.nirecord.gapsinyourrecord.paidemployment.title",
+      specId = Some("ni_record_gaps_and_how_to_check_them__h3_1")
+    )
+
+    @p(
+      content = HtmlContent(messages(
+        "nisp.nirecord.gapsinyourrecord.paidemployment.desc"
+      )),
+      specId = Some("ni_record_gaps_and_how_to_check_them__p3")
+    )
+
+    @details(
+      attributes = Map(
+        "data-spec" -> "ni_record_gaps_and_how_to_check_them__details__do_not_have_p60"
+      ),
+      content = Text(messages(
+        "nisp.nirecord.gapsinyourrecord.donothavep60.desc"
+      )),
+      summary = messages("nisp.nirecord.gapsinyourrecord.donothavep60.title")
+    )
+
+    @h3(
+      elmId = Some("heading-4"),
+      msg = "nisp.nirecord.gapsinyourrecord.selfemployment.title",
+      specId = Some("ni_record_gaps_and_how_to_check_them__h3_2")
+    )
+
+    @p(
+      content = HtmlContent(messages(
+        "nisp.nirecord.gapsinyourrecord.selfemployment.desc"
+      )),
+      specId = Some("ni_record_gaps_and_how_to_check_them__p4")
+    )
+
+    @h2(
+      elmId = Some("heading-5"),
+      msg = "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.title",
+      specId = Some("ni_record_gaps_and_how_to_check_them__h2_2")
+    )
+
+    @p(
+      content = HtmlContent(messages(
+        "nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.line1"
+      )),
+      specId = Some("ni_record_gaps_and_how_to_check_them__p5")
+    )
+
+    @p(
+      content = HtmlContent(s"""
+      ${messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr1")}
+      <br/>
+      ${messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr2")}
+      <br/>
+      ${messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr3")}
+      <br/>
+      ${messages("nisp.nirecord.gapsinyourrecord.ifyouhaveevidence.addr4")}
+    """),
+      specId = Some("ni_record_gaps_and_how_to_check_them__p6")
+    )
+
+    @h2(
+      elmId = Some("heading-6"),
+      msg = "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title",
+      specId = Some("ni_record_gaps_and_how_to_check_them__h2_3")
+    )
+
+    @p(
+      content = HtmlContent(messages(
+        "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc"
+      )),
+      specId = Some("ni_record_gaps_and_how_to_check_them__p7")
+    )
+
+    @if(homeResponsibilitiesProtection) {
+      @insetText(
+        content = HtmlContent(messages(
+          "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp"
+        ))
+      )
+    }
+
+    @link(
+      attrTarget = true,
+      link = "https://www.gov.uk/national-insurance-credits/eligibility",
+      messageKey = "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link",
+      specId = Some("ni_record_gaps_and_how_to_check_them__link1")
+    )
+
+    @link(
+      link = routes.NIRecordController.showGaps.url,
+      messageKey = "nisp.back",
+      specId = Some("ni_record_gaps_and_how_to_check_them__link2")
+    )
+
+  }
 }

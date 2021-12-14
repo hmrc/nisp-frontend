@@ -24,21 +24,57 @@ class NationalInsuranceTaxYearSpec extends UnitSpec {
 
     "the current date is before the payableBy date" should {
       "return false" in {
-        val taxYear = NationalInsuranceTaxYear("", false, 0, 0, 0, 0, 123.45, Some(LocalDate.of(2019, 4, 5)), Some(LocalDate.of(2023, 4, 5)), true, false)
+        val taxYear = NationalInsuranceTaxYear(
+          "",
+          false,
+          0,
+          0,
+          0,
+          0,
+          123.45,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          true,
+          false
+        )
         taxYear.currentDateAfterCutOff(LocalDate.of(2019, 4, 4)) shouldBe false
       }
     }
 
     "the current date is equal to the payableBy date" should {
       "return false" in {
-        val taxYear = NationalInsuranceTaxYear("", false, 0, 0, 0, 0, 123.45, Some(LocalDate.of(2019, 4, 5)), Some(LocalDate.of(2023, 4, 5)), true, false)
+        val taxYear = NationalInsuranceTaxYear(
+          "",
+          false,
+          0,
+          0,
+          0,
+          0,
+          123.45,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          true,
+          false
+        )
         taxYear.currentDateAfterCutOff(LocalDate.of(2019, 4, 5)) shouldBe false
       }
     }
 
     "the current date is after to the payableBy date" should {
       "return true" in {
-        val taxYear = NationalInsuranceTaxYear("", false, 0, 0, 0, 0, 123.45, Some(LocalDate.of(2019, 4, 5)), Some(LocalDate.of(2023, 4, 5)), true, false)
+        val taxYear = NationalInsuranceTaxYear(
+          "",
+          false,
+          0,
+          0,
+          0,
+          0,
+          123.45,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          true,
+          false
+        )
         taxYear.currentDateAfterCutOff(LocalDate.of(2019, 4, 6)) shouldBe true
       }
     }
@@ -52,7 +88,8 @@ class NationalInsuranceTaxYearSpec extends UnitSpec {
 
     "the payable date is missing and the year is payable" should {
       "return true" in {
-        val taxYear = NationalInsuranceTaxYear("", false, 0, 0, 0, 0, 123.45, None, Some(LocalDate.of(2023, 4, 5)), true, false)
+        val taxYear =
+          NationalInsuranceTaxYear("", false, 0, 0, 0, 0, 123.45, None, Some(LocalDate.of(2023, 4, 5)), true, false)
         taxYear.currentDateAfterCutOff(LocalDate.of(2020, 4, 6)) shouldBe true
       }
     }

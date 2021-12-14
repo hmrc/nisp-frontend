@@ -198,7 +198,7 @@
 
 @{
     templateRenderer.renderDefaultTemplate(config.frontendTemplatePath, article, Map[String, Any](
-        "pageTitle" -> mainTemplateParams.pageTitle.map{x => x + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")},
+        "pageTitle" -> mainTemplateParams.browserTitle.map{x => x + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")},
         "linkElems" -> linkElems,
         "scriptElems" -> scriptElement,
         "inlineScript" -> inlineScript,

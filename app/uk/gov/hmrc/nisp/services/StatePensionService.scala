@@ -30,44 +30,45 @@ import uk.gov.hmrc.time.CurrentTaxYear
 import scala.util.matching.Regex
 import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
-                                   (implicit executor: ExecutionContext) extends CurrentTaxYear {
+class StatePensionService @Inject() (statePensionConnector: StatePensionConnector)(implicit executor: ExecutionContext)
+    extends CurrentTaxYear {
 
-  val exclusionCodeDead: String = "EXCLUSION_DEAD"
+  val exclusionCodeDead: String                 = "EXCLUSION_DEAD"
   val exclusionCodeManualCorrespondence: String = "EXCLUSION_MANUAL_CORRESPONDENCE"
-  val exclusionCodeCopeProcessing: String = "EXCLUSION_COPE_PROCESSING"
+  val exclusionCodeCopeProcessing: String       = "EXCLUSION_COPE_PROCESSING"
   val exclusionCodeCopeProcessingFailed: String = "EXCLUSION_COPE_PROCESSING_FAILED"
 
-
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExcl, StatePension]] = {
-    statePensionConnector.getStatePension(nino)
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[StatePensionExcl, StatePension]] =
+    statePensionConnector
+      .getStatePension(nino)
       .map {
         case Right(statePension) => Right(statePension)
 
-        case Left(spExclusion) => Left(StatePensionExclusionFiltered(
-          filterExclusions(spExclusion.exclusionReasons),
-          spExclusion.pensionAge,
-          spExclusion.pensionDate,
-          spExclusion.statePensionAgeUnderConsideration
-        ))
+        case Left(spExclusion) =>
+          Left(
+            StatePensionExclusionFiltered(
+              filterExclusions(spExclusion.exclusionReasons),
+              spExclusion.pensionAge,
+              spExclusion.pensionDate,
+              spExclusion.statePensionAgeUnderConsideration
+            )
+          )
       }
       .recover {
-        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeDead) =>
+        case ex @ WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeDead)                 =>
           Left(StatePensionExclusionFiltered(Exclusion.Dead))
-        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeManualCorrespondence) =>
+        case ex @ WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeManualCorrespondence) =>
           Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))
-        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeCopeProcessingFailed) =>
+        case ex @ WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeCopeProcessingFailed) =>
           Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed))
-        case ex@WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeCopeProcessing) =>
+        case ex @ WithStatusCode(FORBIDDEN) if ex.getMessage.contains(exclusionCodeCopeProcessing)       =>
           Left(getCopeExclusionWithRegex(ex.getMessage))
       }
-  }
 
-  def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int = {
+  def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int =
     finalRelevantYearStart - taxYearFor(earningsIncludedUpTo).startYear
-  }
 
-  private[services] def filterExclusions(exclusions: List[Exclusion]): Exclusion = {
+  private[services] def filterExclusions(exclusions: List[Exclusion]): Exclusion =
     if (exclusions.contains(Exclusion.Dead)) {
       Exclusion.Dead
     } else if (exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
@@ -83,17 +84,21 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
     } else {
       throw new RuntimeException(s"Un-accounted for exclusion in NispConnectionNI: $exclusions")
     }
-  }
 
   private def getCopeExclusionWithRegex(copeResponse: String): StatePensionExclusionFilteredWithCopeDate = {
-    val copeRegex: Regex = """(?:.*)(?:'\{"code":"EXCLUSION_COPE_PROCESSING","copeDataAvailableDate":\")(\d{4}-\d{2}-\d{2})(?:(?:\",\"previousAvailableDate\":\"(\d{4}-\d{2}-\d{2}))?)(?:\"}')""".r
+    val copeRegex: Regex =
+      """(?:.*)(?:'\{"code":"EXCLUSION_COPE_PROCESSING","copeDataAvailableDate":\")(\d{4}-\d{2}-\d{2})(?:(?:\",\"previousAvailableDate\":\"(\d{4}-\d{2}-\d{2}))?)(?:\"}')""".r
 
     copeResponse match {
-      case copeRegex(copeAvailableDate, null) =>
+      case copeRegex(copeAvailableDate, null)                      =>
         StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, LocalDate.parse(copeAvailableDate), None)
       case copeRegex(copeAvailableDate, copePreviousAvailableDate) =>
-        StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, LocalDate.parse(copeAvailableDate), Some(LocalDate.parse(copePreviousAvailableDate)))
-      case _ => throw new Exception("COPE date not matched with regex!")
+        StatePensionExclusionFilteredWithCopeDate(
+          Exclusion.CopeProcessing,
+          LocalDate.parse(copeAvailableDate),
+          Some(LocalDate.parse(copePreviousAvailableDate))
+        )
+      case _                                                       => throw new Exception("COPE date not matched with regex!")
     }
   }
 

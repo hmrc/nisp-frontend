@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.config
 
-import org.scalatestplus.play.PlaySpec
 import play.api.inject.{Injector, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl, VerifyAuthActionImpl}

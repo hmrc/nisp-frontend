@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.utils
 
 import play.api.libs.json._
-import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import scala.util.{Failure, Success}
 
@@ -27,7 +26,7 @@ class JsonDepersonaliserSpec extends UnitSpec {
     "when number is 1234567890" should {
       "should return 1111111111" in {
         val TestNumber = 1234567890
-        val Expected = 1111111111
+        val Expected   = 1111111111
         JsonDepersonaliser.depersonaliseNumber(BigDecimal.apply(TestNumber)) shouldBe BigDecimal.apply(Expected)
       }
     }
@@ -62,10 +61,10 @@ class JsonDepersonaliserSpec extends UnitSpec {
   "depersonaliseValue" when {
     "when value is an array" should {
       "should depersonalise all eleemnts" in {
-        val TestNumber = 99
+        val TestNumber           = 99
         val DepersonalisedNumber = 11
-        val array = JsArray(Seq(JsNumber(TestNumber), JsString("xyz")))
-        val expected = JsArray(Seq(JsNumber(DepersonalisedNumber), JsString("aaa")))
+        val array                = JsArray(Seq(JsNumber(TestNumber), JsString("xyz")))
+        val expected             = JsArray(Seq(JsNumber(DepersonalisedNumber), JsString("aaa")))
         JsonDepersonaliser.depersonaliseValue(array) shouldBe expected
       }
     }
@@ -84,7 +83,7 @@ class JsonDepersonaliserSpec extends UnitSpec {
 
     "when value is a number" should {
       "should depersonalise the number" in {
-        val TestNumber = 99
+        val TestNumber           = 99
         val DepersonalisedNumber = 11
         JsonDepersonaliser.depersonaliseValue(JsNumber(TestNumber)) shouldBe JsNumber(DepersonalisedNumber)
       }
@@ -92,7 +91,7 @@ class JsonDepersonaliserSpec extends UnitSpec {
 
     "when value is an object" should {
       "should depersonalise all attributes" in {
-        val obj = JsObject(Map("firstName" -> JsString("John"), "lastName" -> JsString("Doe")))
+        val obj      = JsObject(Map("firstName" -> JsString("John"), "lastName" -> JsString("Doe")))
         val expected = JsObject(Map("firstName" -> JsString("aaaa"), "lastName" -> JsString("aaa")))
         JsonDepersonaliser.depersonaliseValue(obj) shouldBe expected
       }
@@ -132,7 +131,7 @@ class JsonDepersonaliserSpec extends UnitSpec {
   "depersonalise" when {
     "when passed an object" should {
       "should succeed and return depersonalised JSON" in {
-        val obj = JsObject(Map("firstName" -> JsString("John"), "lastName" -> JsString("Doe")))
+        val obj      = JsObject(Map("firstName" -> JsString("John"), "lastName" -> JsString("Doe")))
         val expected = JsObject(Map("firstName" -> JsString("aaaa"), "lastName" -> JsString("aaa")))
         JsonDepersonaliser.depersonalise(obj) shouldBe Success(Json.prettyPrint(expected))
       }
@@ -140,10 +139,10 @@ class JsonDepersonaliserSpec extends UnitSpec {
 
     "when passed an array" should {
       "should succeed and return a depersonalised representation of the array" in {
-        val TestNumber = 99
+        val TestNumber           = 99
         val DepersonalisedNumber = 11
-        val array = JsArray(Seq(JsNumber(TestNumber), JsString("xyz")))
-        val expected = JsArray(Seq(JsNumber(DepersonalisedNumber), JsString("aaa")))
+        val array                = JsArray(Seq(JsNumber(TestNumber), JsString("xyz")))
+        val expected             = JsArray(Seq(JsNumber(DepersonalisedNumber), JsString("aaa")))
         JsonDepersonaliser.depersonalise(array) shouldBe Success(Json.prettyPrint(expected))
       }
     }

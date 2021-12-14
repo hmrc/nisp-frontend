@@ -20,14 +20,17 @@ import java.time.LocalDate
 import play.api.libs.json._
 import uk.gov.hmrc.domain.Nino
 
-case class Citizen(nino: Nino, firstName: Option[String] = None, lastName: Option[String] = None,
-                   dateOfBirth: LocalDate) {
-  def getNameFormatted: Option[String] = {
+case class Citizen(
+  nino: Nino,
+  firstName: Option[String] = None,
+  lastName: Option[String] = None,
+  dateOfBirth: LocalDate
+) {
+  def getNameFormatted: Option[String] =
     (firstName, lastName) match {
       case (Some(firstName), Some(lastName)) => Some("%s %s".format(firstName, lastName))
-      case _ => None
+      case _                                 => None
     }
-  }
 }
 
 object Citizen {

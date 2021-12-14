@@ -24,28 +24,27 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.domain.Nino
 
-
 import scala.concurrent.{ExecutionContext, Future}
 
 //TODO[Testing] this class needs testing
-class CitizenDetailsConnector @Inject()(http: HttpClient,
-                                        metricsService: MetricsService,
-                                        appConfig: ApplicationConfig
-                                        )(implicit executionContext: ExecutionContext) {
+class CitizenDetailsConnector @Inject() (
+  http: HttpClient,
+  metricsService: MetricsService,
+  appConfig: ApplicationConfig
+)(implicit executionContext: ExecutionContext) {
 
   val serviceUrl: String = appConfig.citizenDetailsServiceUrl
 
   def connectToGetPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
 
     val context = metricsService.citizenDetailsTimer.time()
-    val result = http.GET[HttpResponse](s"$serviceUrl/citizen-details/$nino/designatory-details").map {
+    val result  = http.GET[HttpResponse](s"$serviceUrl/citizen-details/$nino/designatory-details").map {
       context.stop()
       _.json.as[CitizenDetailsResponse]
     }
 
-    result onFailure {
-      case _: Exception =>
-        metricsService.citizenDetailsFailedCounter.inc()
+    result onFailure { case _: Exception =>
+      metricsService.citizenDetailsFailedCounter.inc()
     }
 
     result

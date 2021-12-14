@@ -14,9 +14,26 @@
  * limitations under the License.
  *@
 
-@this()
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.insetText
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.Link
+
+@this(
+  insetText: insetText,
+  link: Link
+)
 @()(implicit messages: Messages)
 
-<div class="panel-indent">
-    <p>@Html(messages("nisp.main.overseas"))</p>
-</div>
+@insetText(
+  content = HtmlContent(
+    messages("nisp.main.overseas.text",
+      link(
+        attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
+        attrTarget = true,
+        inParagraph = true,
+        link = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
+        messageKey = "nisp.main.overseas.linktext",
+        specId = Some("abroad__inset_text__link1")
+      )
+  )),
+  specId = Some("abroad__inset_text_1")
+)

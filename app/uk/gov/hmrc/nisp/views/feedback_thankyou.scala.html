@@ -17,14 +17,12 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import play.api.Application
-
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 
 @import scala.concurrent.ExecutionContext
 
 @this(
- main: unauthenticatedMain
+ main: feedbackMain
 )(
  implicit ec: ExecutionContext,
  cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
