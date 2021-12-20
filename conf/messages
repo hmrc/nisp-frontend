@@ -170,23 +170,23 @@ nisp.excluded.haveReached = You reached State Pension age on {0}
 nisp.excluded.willReach = You’ll reach State Pension age on <span class="nowrap">{0}</span>
 nisp.nirecord.summary.youhave = You have:
 
-nisp.excluded.cope.processing.h1 = Sorry, we are unable to calculate your forecast at the moment
+nisp.excluded.cope.processing.h1 = Sorry, we are currently working on your National Insurance record
 nisp.excluded.cope.processing = Our Specialist Team is checking your National Insurance record to ensure your State Pension forecast is accurate.
-nisp.excluded.cope.processing.manualWork = This kind of manual work is routinely done to make sure information is up to date.
+nisp.excluded.cope.processing.manualWork = This kind of manual work is routinely done to make sure your information is up to date.
 
-nisp.excluded.cope.extended.h1 = Sorry, we are still working on updates to your forecast
+nisp.excluded.cope.extended.h1 = Sorry, we are still working on your National Insurance record
 nisp.excluded.cope.extended = Our Specialist Team is checking your National Insurance record to ensure your State Pension forecast is accurate and up to date.
 nisp.excluded.cope.extended.backlog = Unfortunately, there is a backlog of work to manually process and it is taking longer to complete.
 
-nisp.excluded.cope.returnDate = Your State Pension forecast will be available on {0}.
+nisp.excluded.cope.returnDate = Your National Insurance record will be available on {0}.
 
-nisp.excluded.cope.failed.h1 = Sorry, we cannot show your forecast online
-nisp.excluded.cope.failed = To get a forecast you need to call and we will post one out to you.
+nisp.excluded.cope.failed.h1 = Sorry, we cannot show your National Insurance record online
+nisp.excluded.cope.failed = To get your record you need to call and we will post one out to you.
 
-nisp.excluded.cope.failed.h2 = Get a forecast sent to you
+nisp.excluded.cope.failed.h2 = Get your record sent to you
 
 nisp.excluded.cope.failed.telephone.h3 = Telephone
-nisp.excluded.cope.failed.telephone.line1 = Telephone: 0800 731 0175
+nisp.excluded.cope.failed.telephone.line1 = Telephone: 0300 200 3500
 nisp.excluded.cope.failed.telephone.line2 = Telephone from outside UK: +44 (0)191 218 3600
 nisp.excluded.cope.failed.telephone.line3 = Welsh language telephone: 0800 731 0453
 
@@ -197,13 +197,13 @@ nisp.excluded.cope.failed.textphone.line3 = Welsh language textphone: 0800 731 0
 
 nisp.excluded.cope.failed.relayUK.h3 = Relay UK
 nisp.excluded.cope.failed.relayUK.line1 = If you cannot hear or speak on the phone, use <a href="https://www.relayuk.bt.com/" rel="noopener noreferrer" target="_blank">Relay UK</a>:
-nisp.excluded.cope.failed.relayUK.line2 = 18001 then 0800 731 0175
+nisp.excluded.cope.failed.relayUK.line2 = 18001 then 0300 200 3500
 
 nisp.excluded.cope.failed.britishSignLanguage.h3 = British Sign Language
-nisp.excluded.cope.failed.britishSignLanguage.line1 = <a href="https://dwppensionforecasting.signvideo.net/" rel="noopener noreferrer" target="_blank">Video relay service</a> for British Sign Language (BSL) users - <a href="https://www.youtube.com/watch?v=Osx7FFxFpNY" rel="noopener noreferrer" target="_blank">check you can use this service</a>.
+nisp.excluded.cope.failed.britishSignLanguage.line1 = <a href="https://dwppensionforecasting.signvideo.net/" rel="noopener noreferrer" target="_blank">Video relay service</a> for British Sign Language (BSL) users, provided by the Royal Association for Deaf people.
 
 nisp.excluded.cope.failed.openingTimes.h3 = Opening Times
-nisp.excluded.cope.failed.openingTimes.line1 = Monday to Friday, 8:30am to 3:30pm
+nisp.excluded.cope.failed.openingTimes.line1 = Monday to Friday, 8.00am to 6.00pm
 nisp.excluded.cope.failed.openingTimes.line2 = <a href="https://www.gov.uk/call-charges" rel="noopener noreferrer" target="_blank">Find out about the call charges</a>
 
 

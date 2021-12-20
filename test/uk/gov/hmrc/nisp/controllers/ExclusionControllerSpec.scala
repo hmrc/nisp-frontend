@@ -75,9 +75,9 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
   val mwrreMessagingNI = "We’re currently unable to show your National Insurance Record as you have <a href=\"https://www.gov.uk/reduced-national-insurance-married-women\" rel=\"external noopener noreferrer\" target=\"_blank\" data-journey-click=\"checkmystatepension:external:mwrre\">paid a reduced rate of National Insurance as a married woman (opens in new tab)</a>."
   val abroadMessaging = "We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad."
   val spaUnderConsiderationMessaging = "Proposed change to your State Pension age"
-  val copeProcessingHeader = "Sorry, we are unable to calculate your forecast at the moment"
-  val copeProcessingExtendedHeader = "Sorry, we are still working on updates to your forecast"
-  val copeFailedHeader = "Sorry, we cannot show your forecast online"
+  val copeProcessingHeader = "Sorry, we are currently working on your National Insurance record"
+  val copeProcessingExtendedHeader = "Sorry, we are still working on your National Insurance record"
+  val copeFailedHeader = "Sorry, we cannot show your National Insurance record online"
 
   "GET /exclusion" should {
 

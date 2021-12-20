@@ -46,11 +46,6 @@ class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
     assertEqualsMessage(view, "h1", "nisp.excluded.cope.processing.h1")
   }
 
-  "render correct indent-panel div with text" in {
-    assert(view.getElementsByClass("panel-indent").size() == 1)
-    assertEqualsMessage(view, ".panel-indent", "nisp.excluded.cope.processing")
-  }
-
   "render correct p tag with text" in {
     assertContainsDynamicMessage(view, "article p:last-of-type",
       "nisp.excluded.cope.returnDate",
