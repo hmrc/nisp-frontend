@@ -16,19 +16,23 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import java.util.UUID
-
-import play.api.libs.json.{Format, JsPath, JsonValidationError}
+import cats.data.EitherT
+import play.api.http.Status
+import play.api.libs.json._
+import uk.gov.hmrc.http.HttpErrorFunctions.{is4xx, is5xx}
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.nisp.models.StatePensionExclusion
 import uk.gov.hmrc.nisp.models.enums.APIType._
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
+import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
 
 trait BackendConnector {
+
+//  type HttpEitherResponse[A] = EitherT[Future, UpstreamErrorResponse, A]
+//  type Exclusion[A] = EitherT[HttpEitherResponse, StatePensionExclusion, A]
 
   def http: HttpClient
   def serviceUrl: String
@@ -36,10 +40,34 @@ trait BackendConnector {
   val metricsService: MetricsService
   implicit val executionContext: ExecutionContext
 
-  protected def retrieveFromCache[A](api: APIType, url: String, headers: Seq[(String, String)] = Seq())(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
+  implicit def reads[A: Reads]: Reads[Either[StatePensionExclusion, A]] = eitherReads[StatePensionExclusion, A]
+  implicit def writes[A: Writes]: Writes[Either[StatePensionExclusion, A]] = Writes[Either[StatePensionExclusion, A]] {
+    case Left(exclusion) => Json.toJson(exclusion)
+    case Right(a) => Json.toJson(a)
+  }
+
+  implicit def formats[A: Format] = Format[Either[StatePensionExclusion, A]](reads[A], writes[A])
+
+  implicit def httpReads[A: Reads]: HttpReads[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] =
+    new HttpReads[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] {
+      def reportAsStatus(statusCode: Int): Int = {
+        if (is4xx(statusCode)) Status.INTERNAL_SERVER_ERROR else Status.BAD_GATEWAY
+      }
+
+      override def read(method: String, url: String, response: HttpResponse): Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]] = {
+        response.status match {
+          case Status.FORBIDDEN => Right(response.json.as[Either[StatePensionExclusion, A]])
+          case status if is4xx(status) || is5xx(status) => Left(UpstreamErrorResponse(response.body, response.status, reportAsStatus(status)))
+          case _ => Right(response.json.as[Either[StatePensionExclusion, A]])
+        }
+      }
+    }
+
+  protected def retrieveFromCache[A](api: APIType, url: String, headers: Seq[(String, String)] = Seq())
+                                    (implicit hc: HeaderCarrier, formats: Format[A]): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] = {
     val keystoreTimerContext = metricsService.keystoreReadTimer.time()
 
-    val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
+    val sessionCacheF = sessionCache.fetchAndGetEntry[Either[StatePensionExclusion, A]](api.toString)
     sessionCacheF.onFailure {
       case _ => metricsService.keystoreReadFailed.inc()
     }
@@ -48,43 +76,35 @@ trait BackendConnector {
       keystoreResult match {
         case Some(data) =>
           metricsService.keystoreHitCounter.inc()
-          Future.successful(data)
+          Future.successful(Right(data))
         case None =>
           metricsService.keystoreMissCounter.inc()
-          connectToMicroservice[A](url, api, headers) map {
-            data: A => cacheResult(data, api.toString)
+          connectToMicroservice(url, api, headers) map {
+            case Right(right) => Right(cacheResult(right, api.toString))
+            case errorResponse => errorResponse
           }
       }
     }
   }
 
-  private def connectToMicroservice[A](urlToRead: String, apiType: APIType, headers: Seq[(String, String)] = Seq())(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
+  private def connectToMicroservice[A](urlToRead: String, apiType: APIType, headers: Seq[(String, String)] = Seq())
+                                      (implicit hc: HeaderCarrier, formats: Format[A]): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] = {
     val timerContext = metricsService.startTimer(apiType)
 
-    val httpResponseF = http.GET[HttpResponse](urlToRead, Seq(), headers)
+    val httpResponseF = http.GET[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]](urlToRead, Seq(), headers)
     httpResponseF onSuccess {
       case _ => timerContext.stop()
     }
     httpResponseF onFailure {
       case _ => metricsService.incrementFailedCounter(apiType)
     }
-    httpResponseF.map {
-      httpResponse => httpResponse.json.validate[A].fold(
-        errs => {
-          val json = JsonDepersonaliser.depersonalise(httpResponse.json) match {
-            case Success(s) => s"Depersonalised JSON\n$s"
-            case Failure(e) => s"JSON could not be depersonalised\n${e.toString()}"
-          }
-          throw new JsonValidationException(s"Unable to deserialise $apiType: ${formatJsonErrors(errs)}\n$json")
-        },
-        valid => valid
-      )
-    }
+    httpResponseF
   }
 
-  private def cacheResult[A](a:A,name: String)(implicit hc: HeaderCarrier, formats: Format[A]): A = {
+  private def cacheResult[A](a:Either[StatePensionExclusion, A], name: String)
+                            (implicit hc: HeaderCarrier, formats: Format[A]): Either[StatePensionExclusion, A] = {
     val timerContext = metricsService.keystoreWriteTimer.time()
-    val cacheF = sessionCache.cache[A](name, a)
+    val cacheF = sessionCache.cache[Either[StatePensionExclusion, A]](name, a)
     cacheF.onSuccess {
       case _ => timerContext.stop()
     }

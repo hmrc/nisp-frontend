@@ -101,7 +101,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
           nationalInsuranceResponse <- nationalInsuranceResponseF
         } yield {
           (statePensionResponse, nationalInsuranceResponse) match {
-            case (Right(Right(statePension)), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+            case (Right(Right(statePension)), Right(Left(nationalInsuranceExclusion))) if statePension.reducedRateElection =>
               auditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
@@ -109,7 +109,7 @@ class StatePensionController @Inject()(authenticate: AuthAction,
               ))
               Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
 
-            case (Right(Right(statePension)), Right(nationalInsuranceRecord)) =>
+            case (Right(Right(statePension)), Right(Right(nationalInsuranceRecord))) =>
 
               sendAuditEvent(statePension, user, request.authDetails)
 

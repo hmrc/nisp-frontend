@@ -30,26 +30,3 @@ trait CopeData {
   def copeAvailableDate: LocalDate
   def previousAvailableDate: Option[LocalDate]
 }
-
-case class StatePensionExclusionFiltered(
-  exclusion: Exclusion,
-  pensionAge: Option[Int] = None,
-  pensionDate: Option[LocalDate] = None,
-  statePensionAgeUnderConsideration: Option[Boolean] = None
-) extends StatePensionExcl {
-  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
-}
-
-case class StatePensionExclusionFilteredWithCopeDate(
-  exclusion: Exclusion,
-  copeAvailableDate: LocalDate,
-  previousAvailableDate: Option[LocalDate] = None
-) extends StatePensionExcl with CopeData
-
-object StatePensionExclusionFiltered {
-  implicit val statePensionExclusionFilteredFormats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
-}
-
-object StatePensionExclusionFilteredWithCopeDate {
-  implicit val copeDataFormats: OFormat[StatePensionExclusionFilteredWithCopeDate] = Json.format[StatePensionExclusionFilteredWithCopeDate]
-}

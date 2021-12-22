@@ -59,11 +59,23 @@ object StatePensionExclusion {
     implicit val formats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
   }
 
+  case class StatePensionExclusionFilteredWithCopeDate(
+                                                        exclusion: Exclusion,
+                                                        copeAvailableDate: LocalDate,
+                                                        previousAvailableDate: Option[LocalDate] = None
+                                                      ) extends StatePensionExclusion
+
+
+  object StatePensionExclusionFilteredWithCopeDate {
+    implicit val copeDataFormats: OFormat[StatePensionExclusionFilteredWithCopeDate] = Json.format[StatePensionExclusionFilteredWithCopeDate]
+  }
+
   implicit object StatePensionExclusionFormats extends Format[StatePensionExclusion] {
     override def reads(json: JsValue): JsResult[StatePensionExclusion] = {
       if (json.validate[OkStatePensionExclusion].isSuccess) JsSuccess(json.as[OkStatePensionExclusion])
       else if (json.validate[CopeStatePensionExclusion].isSuccess) JsSuccess(json.as[CopeStatePensionExclusion])
       else if (json.validate[StatePensionExclusionFiltered].isSuccess) JsSuccess(json.as[StatePensionExclusionFiltered])
+      else if (json.validate[StatePensionExclusionFilteredWithCopeDate].isSuccess) JsSuccess(json.as[StatePensionExclusionFilteredWithCopeDate])
       else JsError(JsonValidationError("Unable to parse json as StatePensionExclusion"))
     }
 
@@ -73,6 +85,8 @@ object StatePensionExclusion {
         case copeStatePensionExclusion: CopeStatePensionExclusion => CopeStatePensionExclusion.formats.writes(copeStatePensionExclusion)
         case statePensionExclusionFiltered: StatePensionExclusionFiltered =>
           StatePensionExclusionFiltered.formats.writes(statePensionExclusionFiltered)
+        case statePensionExclusionFilteredWithCopeDate: StatePensionExclusionFilteredWithCopeDate =>
+          StatePensionExclusionFilteredWithCopeDate.copeDataFormats.writes(statePensionExclusionFilteredWithCopeDate)
       }
     }
   }

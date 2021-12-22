@@ -120,7 +120,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
         statePensionResponse <- statePensionResponseF
       } yield {
         nationalInsuranceRecordResponse match {
-          case Right(niRecord) =>
+          case Right(Right(niRecord)) =>
             if (gapsOnlyView && niRecord.numberOfGaps < 1) {
               Redirect(routes.NIRecordController.showFull)
             } else {
@@ -158,7 +158,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
 
               }.getOrElse(Redirect(routes.ExclusionController.showSP))
             }
-          case Left(exclusion) =>
+          case Right(Left(exclusion)) =>
             auditConnector.sendEvent(AccountExclusionEvent(
               nino.nino,
               request.nispAuthedUser.name,
@@ -173,7 +173,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
     implicit request =>
       implicit val user: NispAuthedUser = request.nispAuthedUser
       nationalInsuranceService.getSummary(user.nino) map {
-        case Right(niRecord) =>
+        case Right(Right(niRecord)) =>
           Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
         case Left(_) =>
           Redirect(routes.ExclusionController.showNI)

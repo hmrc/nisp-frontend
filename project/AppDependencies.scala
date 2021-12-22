@@ -14,7 +14,8 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % "1.9.0-play-28",
     "uk.gov.hmrc" %% "local-template-renderer"  % "2.15.0-play-28",
     "com.typesafe.play" %% "play-json-joda" % "2.6.10",
-    "com.jsuereth" %% "scala-arm" % "2.0"
+    "com.jsuereth" %% "scala-arm" % "2.0",
+    "org.typelevel" %% "cats-core" % "2.3.0"
   )
 
   val test = Seq(
