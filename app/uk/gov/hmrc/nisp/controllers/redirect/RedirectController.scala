@@ -23,13 +23,13 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.Future
 
-class RedirectController @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc)  {
+class RedirectController @Inject() (cc: MessagesControllerComponents) extends FrontendController(cc) {
 
   def redirectToHome(path: String): Action[AnyContent] = Action.async { implicit request =>
     val newPath = path match {
-      case "" => ""
+      case ""                     => ""
       case p if p.startsWith("/") => p
-      case p => "/" + p
+      case p                      => "/" + p
     }
     Future.successful(Redirect(Constants.baseUrl + newPath, request.queryString, MOVED_PERMANENTLY))
   }

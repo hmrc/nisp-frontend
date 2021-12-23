@@ -38,10 +38,10 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.concurrent.Future
 
 class FeedbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
-  val fakeRequest = FakeRequest("GET", "/")
+  val fakeRequest           = FakeRequest("GET", "/")
   val mockApplicationConfig = mock[ApplicationConfig]
-  val mockHttp = mock[HttpClient]
-  val mockView = mock[feedback_thankyou]
+  val mockHttp              = mock[HttpClient]
+  val mockView              = mock[feedback_thankyou]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -52,7 +52,8 @@ class FeedbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[HeaderCarrierForPartialsConverter].toInstance(FakeNispHeaderCarrierForPartialsConverter),
       bind[feedback_thankyou].toInstance(mockView)
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -80,11 +81,11 @@ class FeedbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   }
 
   "POST /feedback" should {
-    val fakePostRequest = FakeRequest("POST", "/check-your-state-pension/feedback").withFormUrlEncodedBody("test" -> "test")
+    val fakePostRequest =
+      FakeRequest("POST", "/check-your-state-pension/feedback").withFormUrlEncodedBody("test" -> "test")
     "return form with thank you for valid selections" in {
-      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())
-        (any(), any(),any())).thenReturn(
-        Future.successful(HttpResponse(Status.OK, "1234")))
+      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())(any(), any(), any()))
+        .thenReturn(Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakePostRequest)
       redirectLocation(result) shouldBe Some(routes.FeedbackController.showThankYou.url)
@@ -94,26 +95,23 @@ class FeedbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       when(mockApplicationConfig.contactFrontendPartialBaseUrl).thenReturn("baseUrl")
       when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("serviceIdentifier")
 
-      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())
-        (any(), any(),any())).thenReturn(
-        Future.successful(HttpResponse(Status.BAD_REQUEST, "<p>:^(</p>")))
+      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())(any(), any(), any()))
+        .thenReturn(Future.successful(HttpResponse(Status.BAD_REQUEST, "<p>:^(</p>")))
 
       val result = testFeedbackController.submit(fakePostRequest)
       status(result) shouldBe Status.BAD_REQUEST
     }
 
     "return error for other http code back from contact-frontend" in {
-      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())
-        (any(), any(),any())).thenReturn(
-        Future.successful(HttpResponse(418, "")))
+      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())(any(), any(), any()))
+        .thenReturn(Future.successful(HttpResponse(418, "")))
       val result = testFeedbackController.submit(fakePostRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
     "return internal server error when there is an empty form" in {
-      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())
-        (any(), any(),any())).thenReturn(
-        Future.successful(HttpResponse(Status.OK, "1234")))
+      when(mockHttp.POSTForm[HttpResponse](any(), any(), any())(any(), any(), any()))
+        .thenReturn(Future.successful(HttpResponse(Status.OK, "1234")))
 
       val result = testFeedbackController.submit(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -122,9 +120,9 @@ class FeedbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
   "GET /feedback/thankyou" should {
     "should return the thank you page" in {
-      
+
       when(mockView(any(), any())(any(), any())).thenReturn(Html(""))
-      
+
       val result = testFeedbackController.showThankYou(fakeRequest)
       status(result) shouldBe Status.OK
     }

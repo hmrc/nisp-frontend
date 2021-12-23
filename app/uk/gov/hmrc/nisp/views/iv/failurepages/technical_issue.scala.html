@@ -14,37 +14,44 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
-@import play.api.Application
-
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
-
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.main
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1}
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukButton
 
 @this(
- main: unauthenticatedMain
-)(
- implicit ec: ExecutionContext,
- partialRetriever: CachedStaticHtmlPartialRetriever,
- formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
+  main: main,
+  h1: H1,
+  p: P,
+  govukButton: GovukButton
 )
-@()(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@main(MainTemplateParams(
- articleClasses = Some("mainpage"),
- pageTitle = Some(messages("nisp.iv.failure.technical.title")),
- browserTitle = Some(messages("nisp.iv.failure.technical.title")),
- h1Class = Some("heading-xlarge")
-)) {
+@()(implicit messages: Messages, request: Request[_])
 
-<p class="lede">@messages("nisp.iv.failure.technical.message")</p>
+@main(
+  pageTitle = messages("nisp.iv.failure.technical.title")
+) {
 
-<p>@messages("nisp.iv.failure.technical.tryagain")</p>
+  @h1(
+    classes = Some("govuk-heading-xl"),
+    msg = "nisp.iv.failure.technical.title",
+    specId = Some("nisp_iv_technical_issue_h1")
+  )
 
-<a href="@routes.StatePensionController.show.url" class="button">@messages("nisp.iv.failure.technical.button")</a>
+  @p(
+    content = Text(messages("nisp.iv.failure.technical.message")),
+    classes = Some("govuk-body-l"),
+    specId = Some("nisp_iv_technical_issue_p1")
+  )
+
+  @p(
+    content = Text(messages("nisp.iv.failure.technical.tryagain")),
+    specId = Some("nisp_iv_technical_issue_p2")
+  )
+
+  @govukButton(Button(
+    href = Some(routes.StatePensionController.show.url),
+    content = Text(messages("nisp.iv.failure.technical.button"))
+  ))
 
 }

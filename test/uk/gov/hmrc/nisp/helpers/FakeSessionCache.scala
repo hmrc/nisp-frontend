@@ -23,14 +23,19 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object FakeSessionCache extends SessionCache {
 
-  override def defaultSource: String = ???
-  override def baseUri: String = ???
-  override def domain: String = ???
+  override def defaultSource: String                      = ???
+  override def baseUri: String                            = ???
+  override def domain: String                             = ???
   override def http: HttpGet with HttpPut with HttpDelete = ???
 
-  override def fetchAndGetEntry[T](key: String)(implicit hc: HeaderCarrier, rds: Reads[T],ec:ExecutionContext): Future[Option[T]] =
+  override def fetchAndGetEntry[T](
+    key: String
+  )(implicit hc: HeaderCarrier, rds: Reads[T], ec: ExecutionContext): Future[Option[T]] =
     Future.successful(None)
 
-  override def cache[A](formId: String, body: A)(implicit wts: Writes[A], hc: HeaderCarrier,ec:ExecutionContext): Future[CacheMap] = Future.successful(CacheMap("", Map()))
+  override def cache[A](formId: String, body: A)(implicit
+    wts: Writes[A],
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[CacheMap] = Future.successful(CacheMap("", Map()))
 }
-

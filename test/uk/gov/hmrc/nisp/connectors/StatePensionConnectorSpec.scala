@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.mockito.Mockito
-import org.mockito.Mockito.{mock, reset}
+import org.mockito.Mockito.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -38,8 +38,13 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 
 import java.time.LocalDate
 
-class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
-  Injecting with BeforeAndAfterEach with WireMockHelper {
+class StatePensionConnectorSpec
+    extends UnitSpec
+    with ScalaFutures
+    with GuiceOneAppPerSuite
+    with Injecting
+    with BeforeAndAfterEach
+    with WireMockHelper {
 
   implicit val headerCarrier = HeaderCarrier()
 
@@ -47,7 +52,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
-  val uuidRegex =  """[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"""
+  val uuidRegex         = """[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"""
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -58,7 +63,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     )
     .configure(
       "microservice.services.state-pension.port" -> server.port()
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -80,19 +86,26 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino)) { statePension =>
-        statePension shouldBe Right(StatePension(
-          LocalDate.of(2015, 4, 5),
-          StatePensionAmounts(
+        statePension shouldBe Right(
+          StatePension(
+            LocalDate.of(2015, 4, 5),
+            StatePensionAmounts(
+              false,
+              StatePensionAmountRegular(133.41, 580.1, 6961.14),
+              StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+              StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+              StatePensionAmountRegular(0, 0, 0)
+            ),
+            64,
+            LocalDate.of(2018, 7, 6),
+            "2017-18",
+            30,
             false,
-            StatePensionAmountRegular(133.41, 580.1, 6961.14),
-            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
-            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-            StatePensionAmountRegular(0, 0, 0)
-          ),
-          64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65,
-          false,
-          false
-        ))
+            155.65,
+            false,
+            false
+          )
+        )
       }
 
       server.verify(
@@ -104,24 +117,29 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
 
     "return a failed Future 403 with a Dead message for all exclusion" in {
 
-      val json = Json.toJson("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"""")
+      val json = Json.toJson(
+        """{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline""""
+      )
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAll}"))
-          .willReturn(forbidden()
-            .withBody(json.toString)
+          .willReturn(
+            forbidden()
+              .withBody(json.toString)
           )
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAll).failed) {
         case ex: Upstream4xxResponse =>
-          ex.upstreamResponseCode shouldBe 403
+          ex.upstreamResponseCode               shouldBe 403
           ex.message.contains("EXCLUSION_DEAD") shouldBe true
       }
     }
 
     "return a failed Future 403 with a MCI message for all exclusion but dead" in {
-      val json = Json.toJson("""{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline"""")
+      val json = Json.toJson(
+        """{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline""""
+      )
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAllButDead}"))
@@ -130,7 +148,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead).failed) {
         case ex: Upstream4xxResponse =>
-          ex.upstreamResponseCode shouldBe 403
+          ex.upstreamResponseCode                                shouldBe 403
           ex.message.contains("EXCLUSION_MANUAL_CORRESPONDENCE") shouldBe true
       }
     }
@@ -145,154 +163,168 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDeadMCI)) { result =>
-        result shouldBe Left(StatePensionExclusion(
-          List(
-            Exclusion.PostStatePensionAge,
-            Exclusion.AmountDissonance,
-            Exclusion.MarriedWomenReducedRateElection,
-            Exclusion.IsleOfMan
-          ),
-          pensionAge = Some(65),
-          pensionDate = Some(LocalDate.of(2017, 7, 18)),
-          statePensionAgeUnderConsideration = Some(false)
-        ))
+        result shouldBe Left(
+          StatePensionExclusion(
+            List(
+              Exclusion.PostStatePensionAge,
+              Exclusion.AmountDissonance,
+              Exclusion.MarriedWomenReducedRateElection,
+              Exclusion.IsleOfMan
+            ),
+            pensionAge = Some(65),
+            pensionDate = Some(LocalDate.of(2017, 7, 18)),
+            statePensionAgeUnderConsideration = Some(false)
+          )
+        )
       }
     }
 
     "return the state pension age flag as true for a user with Amount Dis exclusion with a true flag for incoming State Pension Age Under Consideration" in {
 
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
-          List(
-            Exclusion.AmountDissonance
-          ),
-          pensionAge = Some(65),
-          pensionDate = Some(LocalDate.of(2017, 7, 18)),
-          statePensionAgeUnderConsideration = Some(true)
-        ))
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)) {
+        result =>
+          result shouldBe Left(
+            StatePensionExclusion(
+              List(
+                Exclusion.AmountDissonance
+              ),
+              pensionAge = Some(65),
+              pensionDate = Some(LocalDate.of(2017, 7, 18)),
+              statePensionAgeUnderConsideration = Some(true)
+            )
+          )
       }
     }
 
     "return the state pension age flag as true for a user with IOM exclusion with a true flag for incoming State Pension Age Under Consideration" in {
 
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionIoMNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionIoMNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
-          List(
-            Exclusion.IsleOfMan
-          ),
-          pensionAge = Some(65),
-          pensionDate = Some(LocalDate.of(2017, 7, 18)),
-          statePensionAgeUnderConsideration = Some(true)
-        ))
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) {
+        result =>
+          result shouldBe Left(
+            StatePensionExclusion(
+              List(
+                Exclusion.IsleOfMan
+              ),
+              pensionAge = Some(65),
+              pensionDate = Some(LocalDate.of(2017, 7, 18)),
+              statePensionAgeUnderConsideration = Some(true)
+            )
+          )
       }
     }
 
     "return the state pension age flag as true for a user with MWRRE exclusion with a true flag for incoming State Pension Age Under Consideration" in {
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
-          List(
-            Exclusion.MarriedWomenReducedRateElection
-          ),
-          pensionAge = Some(65),
-          pensionDate = Some(LocalDate.of(2017, 7, 18)),
-          statePensionAgeUnderConsideration = Some(true)
-        ))
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)) {
+        result =>
+          result shouldBe Left(
+            StatePensionExclusion(
+              List(
+                Exclusion.MarriedWomenReducedRateElection
+              ),
+              pensionAge = Some(65),
+              pensionDate = Some(LocalDate.of(2017, 7, 18)),
+              statePensionAgeUnderConsideration = Some(true)
+            )
+          )
       }
     }
 
     "return the state pension age flag as true for a user with Over SPA exclusion with a true flag for incoming State Pension Age Under Consideration" in {
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
-          List(
-            Exclusion.PostStatePensionAge
-          ),
-          pensionAge = Some(65),
-          pensionDate = Some(LocalDate.of(2017, 7, 18)),
-          statePensionAgeUnderConsideration = Some(true)
-        ))
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)) {
+        result =>
+          result shouldBe Left(
+            StatePensionExclusion(
+              List(
+                Exclusion.PostStatePensionAge
+              ),
+              pensionAge = Some(65),
+              pensionDate = Some(LocalDate.of(2017, 7, 18)),
+              statePensionAgeUnderConsideration = Some(true)
+            )
+          )
       }
     }
 
     "return the state pension age flag as true for a user with Multiple exclusions with a true flag for incoming State Pension Age Under Consideration" in {
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
-          List(
-            Exclusion.PostStatePensionAge,
-            Exclusion.AmountDissonance,
-            Exclusion.MarriedWomenReducedRateElection,
-            Exclusion.IsleOfMan
-          ),
-          pensionAge = Some(65),
-          pensionDate = Some(LocalDate.of(2017, 7, 18)),
-          statePensionAgeUnderConsideration = Some(true)
-        ))
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)) {
+        result =>
+          result shouldBe Left(
+            StatePensionExclusion(
+              List(
+                Exclusion.PostStatePensionAge,
+                Exclusion.AmountDissonance,
+                Exclusion.MarriedWomenReducedRateElection,
+                Exclusion.IsleOfMan
+              ),
+              pensionAge = Some(65),
+              pensionDate = Some(LocalDate.of(2017, 7, 18)),
+              statePensionAgeUnderConsideration = Some(true)
+            )
+          )
       }
     }
 
     "return the state pension age flag as none for a user with exclusion with no flag for incoming State Pension Age Under Consideration" in {
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
-          List(
-            Exclusion.IsleOfMan
-          ),
-          pensionAge = Some(65),
-          pensionDate = Some(LocalDate.of(2017, 7, 18)),
-          statePensionAgeUnderConsideration = None
-        ))
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) {
+        result =>
+          result shouldBe Left(
+            StatePensionExclusion(
+              List(
+                Exclusion.IsleOfMan
+              ),
+              pensionAge = Some(65),
+              pensionDate = Some(LocalDate.of(2017, 7, 18)),
+              statePensionAgeUnderConsideration = None
+            )
+          )
       }
     }
   }

@@ -35,12 +35,14 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
-                               cds: CitizenDetailsService,
-                               val parser: BodyParsers.Default,
-                               val executionContext: ExecutionContext,
-                               applicationConfig: ApplicationConfig)
-                               extends AuthAction with AuthorisedFunctions {
+class AuthActionImpl @Inject() (
+  override val authConnector: AuthConnector,
+  cds: CitizenDetailsService,
+  val parser: BodyParsers.Default,
+  val executionContext: ExecutionContext,
+  applicationConfig: ApplicationConfig
+) extends AuthAction
+    with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -53,54 +55,62 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
         case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) ~ optTrustedHelper =>
           val useNino = optTrustedHelper.fold(nino)(_.principalNino)
           cds.retrievePerson(Nino(useNino)).flatMap {
-            case Right(cdr) =>
+            case Right(cdr)                   =>
               val hasSa: Boolean = optTrustedHelper.fold(enrolments.exists(_.key == "IR-SA"))(_ => false)
               val name: UserName = UserName(Name(cdr.person.firstName, cdr.person.lastName))
-              block(AuthenticatedRequest(request,
-                NispAuthedUser(Nino(useNino),
-                  cdr.person.dateOfBirth,
-                  name,
-                  cdr.address,
-                  optTrustedHelper,
-                  hasSa),
-                AuthDetails(confidenceLevel, credentials.map(_.providerType), loginTimes)))
+              block(
+                AuthenticatedRequest(
+                  request,
+                  NispAuthedUser(Nino(useNino), cdr.person.dateOfBirth, name, cdr.address, optTrustedHelper, hasSa),
+                  AuthDetails(confidenceLevel, credentials.map(_.providerType), loginTimes)
+                )
+              )
             case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
-            case Left(NOT_FOUND) => throw new InternalServerException("User not found")
-            case Left(MCI_EXCLUSION) =>
+            case Left(NOT_FOUND)              => throw new InternalServerException("User not found")
+            case Left(MCI_EXCLUSION)          =>
               if (request.path.contains("nirecord")) {
                 Future.successful(Redirect(routes.ExclusionController.showNI))
               } else {
                 Future.successful(Redirect(routes.ExclusionController.showSP))
               }
           }
-        case _ => throw new RuntimeException("Can't find credentials for user")
+        case _                                                                                                   => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case _: NoActiveSession => Redirect(
-        applicationConfig.ggSignInUrl,
-        Map(
-          "continue" -> Seq(applicationConfig.postSignInRedirectUrl),
-          "origin" -> Seq("nisp-frontend"),
-          "accountType" -> Seq("individual")
-        ))
-      case _: InsufficientConfidenceLevel => Redirect(
-        applicationConfig.ivUpliftUrl,
-        Map(
-          "origin" -> Seq("NISP"),
-          "completionURL" -> Seq(applicationConfig.postSignInRedirectUrl),
-          "failureURL" -> Seq(applicationConfig.notAuthorisedRedirectUrl),
-          "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
-        ))
+      case _: NoActiveSession             =>
+        Redirect(
+          applicationConfig.ggSignInUrl,
+          Map(
+            "continue"    -> Seq(applicationConfig.postSignInRedirectUrl),
+            "origin"      -> Seq("nisp-frontend"),
+            "accountType" -> Seq("individual")
+          )
+        )
+      case _: InsufficientConfidenceLevel =>
+        Redirect(
+          applicationConfig.ivUpliftUrl,
+          Map(
+            "origin"          -> Seq("NISP"),
+            "completionURL"   -> Seq(applicationConfig.postSignInRedirectUrl),
+            "failureURL"      -> Seq(applicationConfig.notAuthorisedRedirectUrl),
+            "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
+          )
+        )
     }
   }
 }
 
-trait AuthAction extends ActionBuilder[AuthenticatedRequest, AnyContent] with ActionFunction[Request, AuthenticatedRequest]
+trait AuthAction
+    extends ActionBuilder[AuthenticatedRequest, AnyContent]
+    with ActionFunction[Request, AuthenticatedRequest]
 
-class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
-                                     cds: CitizenDetailsService,
-                                     val parser: BodyParsers.Default,
-                                     val executionContext: ExecutionContext,
-                                     applicationConfig: ApplicationConfig) extends AuthAction with AuthorisedFunctions {
+class VerifyAuthActionImpl @Inject() (
+  override val authConnector: AuthConnector,
+  cds: CitizenDetailsService,
+  val parser: BodyParsers.Default,
+  val executionContext: ExecutionContext,
+  applicationConfig: ApplicationConfig
+) extends AuthAction
+    with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -111,32 +121,29 @@ class VerifyAuthActionImpl @Inject()(override val authConnector: AuthConnector,
         case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) ~ optTrustedHelper =>
           val useNino = optTrustedHelper.fold(nino)(_.principalNino)
           cds.retrievePerson(Nino(useNino)).flatMap {
-            case Right(cdr) =>
+            case Right(cdr)                   =>
               val hasSa: Boolean = optTrustedHelper.fold(enrolments.exists(_.key == "IR-SA"))(_ => false)
               val name: UserName = UserName(Name(cdr.person.firstName, cdr.person.lastName))
-              block(AuthenticatedRequest(request,
-                NispAuthedUser(Nino(useNino),
-                  cdr.person.dateOfBirth,
-                  name,
-                  cdr.address,
-                  optTrustedHelper,
-                  hasSa),
-                AuthDetails(confidenceLevel, credentials.map(_.providerType), loginTimes)))
+              block(
+                AuthenticatedRequest(
+                  request,
+                  NispAuthedUser(Nino(useNino), cdr.person.dateOfBirth, name, cdr.address, optTrustedHelper, hasSa),
+                  AuthDetails(confidenceLevel, credentials.map(_.providerType), loginTimes)
+                )
+              )
             case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
-            case Left(NOT_FOUND) => throw new InternalServerException("User not found")
-            case Left(MCI_EXCLUSION) =>
+            case Left(NOT_FOUND)              => throw new InternalServerException("User not found")
+            case Left(MCI_EXCLUSION)          =>
               if (request.path.contains("nirecord")) {
                 Future.successful(Redirect(routes.ExclusionController.showNI))
               } else {
                 Future.successful(Redirect(routes.ExclusionController.showSP))
               }
           }
-        case _ => throw new RuntimeException("Can't find credentials for user")
-      } recover {
-      case _: NoActiveSession |
-           _: InsufficientConfidenceLevel |
-           _: UnsupportedAuthProvider => Redirect(applicationConfig.verifySignIn, parameters).withSession(
-        SessionKeys.redirect -> applicationConfig.postSignInRedirectUrl,
+        case _                                                                                                   => throw new RuntimeException("Can't find credentials for user")
+      } recover { case _: NoActiveSession | _: InsufficientConfidenceLevel | _: UnsupportedAuthProvider =>
+      Redirect(applicationConfig.verifySignIn, parameters).withSession(
+        SessionKeys.redirect    -> applicationConfig.postSignInRedirectUrl,
         SessionKeys.loginOrigin -> "YSP"
       )
     }

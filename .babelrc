@@ -1,0 +1,14 @@
+{
+  "env": {
+    "e2e": {
+      "plugins": [
+        "istanbul"
+      ]
+    },
+    "test": {
+      "plugins": [
+        "@babel/plugin-transform-modules-commonjs"
+      ]
+    }
+  }
+}

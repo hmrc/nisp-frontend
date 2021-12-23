@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, urlEqualTo}
 import org.mockito.Mockito
-import org.mockito.Mockito.{mock, reset}
+import org.mockito.Mockito.reset
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -36,13 +36,18 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 
 import scala.io.Source
 
-class IdentityVerificationConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with ScalaFutures
-  with Injecting with BeforeAndAfterEach with WireMockHelper {
+class IdentityVerificationConnectorSpec
+    extends UnitSpec
+    with GuiceOneAppPerSuite
+    with ScalaFutures
+    with Injecting
+    with BeforeAndAfterEach
+    with WireMockHelper {
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   import IdentityVerificationSuccessResponse._
 
-  val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
+  val mockMetricService     = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
   val mockApplicationConfig = mock[ApplicationConfig]
 
   override def beforeEach(): Unit = {
@@ -58,35 +63,39 @@ class IdentityVerificationConnectorSpec extends UnitSpec with GuiceOneAppPerSuit
     )
     .configure(
       "microservice.services.identity-verification.port" -> server.port()
-    ).build()
+    )
+    .build()
 
   lazy val identityVerificationConnector = inject[IdentityVerificationConnector]
 
   val possibleJournies = Map(
-    "success-journey-id" -> "test/resources/identity-verification/success.json",
-    "incomplete-journey-id" -> "test/resources/identity-verification/incomplete.json",
-    "failed-matching-journey-id" -> "test/resources/identity-verification/failed-matching.json",
+    "success-journey-id"               -> "test/resources/identity-verification/success.json",
+    "incomplete-journey-id"            -> "test/resources/identity-verification/incomplete.json",
+    "failed-matching-journey-id"       -> "test/resources/identity-verification/failed-matching.json",
     "insufficient-evidence-journey-id" -> "test/resources/identity-verification/insufficient-evidence.json",
-    "locked-out-journey-id" -> "test/resources/identity-verification/locked-out.json",
-    "user-aborted-journey-id" -> "test/resources/identity-verification/user-aborted.json",
-    "timeout-journey-id" -> "test/resources/identity-verification/timeout.json",
-    "technical-issue-journey-id" -> "test/resources/identity-verification/technical-issue.json",
-    "precondition-failed-journey-id" -> "test/resources/identity-verification/precondition-failed.json",
-    "invalid-journey-id" -> "test/resources/identity-verification/invalid-result.json",
-    "invalid-fields-journey-id" -> "test/resources/identity-verification/invalid-fields.json",
-    "failed-iv-journey-id" -> "test/resources/identity-verification/failed-iv.json"
+    "locked-out-journey-id"            -> "test/resources/identity-verification/locked-out.json",
+    "user-aborted-journey-id"          -> "test/resources/identity-verification/user-aborted.json",
+    "timeout-journey-id"               -> "test/resources/identity-verification/timeout.json",
+    "technical-issue-journey-id"       -> "test/resources/identity-verification/technical-issue.json",
+    "precondition-failed-journey-id"   -> "test/resources/identity-verification/precondition-failed.json",
+    "invalid-journey-id"               -> "test/resources/identity-verification/invalid-result.json",
+    "invalid-fields-journey-id"        -> "test/resources/identity-verification/invalid-fields.json",
+    "failed-iv-journey-id"             -> "test/resources/identity-verification/failed-iv.json"
   )
 
   def mockJourneyId(journeyId: String): Unit = {
     val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
     server.stubFor(
       get(urlEqualTo(s"/mdtp/journey/journeyId/$journeyId"))
-      .willReturn(ok(Json.parse(fileContents).toString())))
+        .willReturn(ok(Json.parse(fileContents).toString()))
+    )
   }
 
   def identityVerificationResponse(journeyId: String, ivResponse: String): Assertion = {
     mockJourneyId(journeyId)
-    await(identityVerificationConnector.identityVerificationResponse(journeyId)) shouldBe IdentityVerificationSuccessResponse(ivResponse)
+    await(
+      identityVerificationConnector.identityVerificationResponse(journeyId)
+    ) shouldBe IdentityVerificationSuccessResponse(ivResponse)
   }
 
   "return success when identityVerification returns success" in {
@@ -136,9 +145,9 @@ class IdentityVerificationConnectorSpec extends UnitSpec with GuiceOneAppPerSuit
   "return failed future for invalid json fields" in {
     val journeyId = "invalid-fields-journey-id"
     mockJourneyId(journeyId)
-    val result = identityVerificationConnector.identityVerificationResponse(journeyId)
+    val result    = identityVerificationConnector.identityVerificationResponse(journeyId)
     ScalaFutures.whenReady(result) { e =>
-      e shouldBe a [IdentityVerificationErrorResponse]
+      e shouldBe a[IdentityVerificationErrorResponse]
     }
   }
 }

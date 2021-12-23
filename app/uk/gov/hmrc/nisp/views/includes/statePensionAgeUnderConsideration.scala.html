@@ -14,8 +14,24 @@
  * limitations under the License.
  *@
 
-@this()
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2}
+
+@this(
+  h2: H2,
+  p: P
+)
 @(statePensionDate: String)(implicit messages: Messages)
 
-<h2 class="heading-medium">@messages("nisp.spa.under.consideration.title")</h2>
-<p>@Html(messages("nisp.spa.under.consideration.detail", statePensionDate))</p>
+@h2(
+  elmId = Some("proposedChange"),
+  msg = "nisp.spa.under.consideration.title",
+  specId = Some("state_pension_age_under_consideration__h2_1")
+)
+
+@p(
+  content = HtmlContent(messages(
+    "nisp.spa.under.consideration.detail",
+    statePensionDate
+  )),
+  specId = Some("state_pension_age_under_consideration__p1")
+)

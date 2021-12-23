@@ -14,110 +14,167 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.nisp.controllers.routes
-@import play.api.Application
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
-
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, H3, details, Link}
 
 @import scala.concurrent.ExecutionContext
 
 @this(
-    main: main,
-    config: ApplicationConfig
-)(
-    implicit ec: ExecutionContext,
-    partialRetriever: CachedStaticHtmlPartialRetriever,
-    formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
+  main: main,
+  config: ApplicationConfig,
+  p: P,
+  h1: H1,
+  h2: H2,
+  details: details,
+  link: Link
 )
 
 @()(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
 @defining(Some(user)) { implicit userOption =>
-@main(MainTemplateParams(
-    browserTitle = Some(messages("nisp.nirecord.voluntarycontributions.title")),
-    pageTitle = Some(messages("nisp.nirecord.voluntarycontributions.heading")),
-    userLoggedIn = true,
-    sidebarLinks = None)
-) {
 
-  <p class="lede">@messages("nisp.nirecord.voluntarycontributions.title.message")</p>
-  <h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.1") </h2>
-  <p>@messages("nisp.nirecord.voluntarycontributions.h2title.1.message")&nbsp;<a href="@routes.StatePensionController.show.url">@messages("nisp.nirecord.voluntarycontributions.h2title.1.link1")</a>.</p>
+  @main(
+    pageTitle = messages("nisp.nirecord.voluntarycontributions.title")
+  ) {
 
-  <h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.2")</h2>
-  <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.message")</p>
-  <details class="helptext">
-      <summary class="summary-list-item">
-          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.title")</span>
+    @h1(
+      elmId = Some("heading-1"),
+      msg = "nisp.nirecord.voluntarycontributions.heading",
+      specId = Some("ni_record_voluntary_contributions_h1")
+    )
+
+    @p(
+      content = Text(messages(
+        "nisp.nirecord.voluntarycontributions.title.message"
+      )),
+      specId = Some("ni_record_voluntary_contributions_p1")
+    )
+
+    @h2(
+      elmId = Some("heading-2"),
+      msg = "nisp.nirecord.voluntarycontributions.h2title.1",
+      specId = Some("ni_record_voluntary_contributions_h2_1")
+    )
+
+    @p(
+      content = HtmlContent(s"""
+      ${messages(
+        "nisp.nirecord.voluntarycontributions.h2title.1.message"
+        )}
+      ${link(
+          link = routes.StatePensionController.show.url,
+          messageKey = "nisp.nirecord.voluntarycontributions.h2title.1.link1",
+          inParagraph = true,
+          specId = Some("ni_record_voluntary_contributions_link1")
+        )
+      }"""),
+      specId = Some("ni_record_voluntary_contributions_p2")
+    )
+
+    @h2(
+      elmId = Some("heading-3"),
+      msg = "nisp.nirecord.voluntarycontributions.h2title.2",
+      specId = Some("ni_record_voluntary_contributions_h2_2")
+    )
+
+    @p(
+      classes = Some("govuk-body-l"),
+      content = Text(messages("nisp.nirecord.voluntarycontributions.h2title.2.message")),
+      specId = Some("ni_record_voluntary_contributions_p3")
+    )
+
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.title")</span>
       </summary>
-      <div class="panel-indent">
-          <p>@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")</p>
-          <ul class="list-bullet">
-              <li>
-
-                @if(messages.lang.language == "cy") {
-                <a href="@{config.citizenAdviceLinkCy}" id="citizenAdviceLink" tabindex="-1" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
-              } else {
-                <a href="@{config.citizenAdviceLinkEn}" id="citizenAdviceLink" tabindex="-1" rel="external noopener noreferrer" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
-              }
-              </li>
-              <li>
-                @if(messages.lang.language == "cy"){
-                  <a href="@{config.moneyAdviceLinkCy}" id="moneyAdviceLink" rel="external noopener noreferrer" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external noopener noreferrer:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
-                } else {
-                  <a href="@{config.moneyAdviceLinkEn}" id="moneyAdviceLink" rel="external noopener noreferrer" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external noopener noreferrer:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
-                }
-              </li>
-              <li>
-                <a href="@{config.pensionWiseLink}" id="pensionWiseLink" rel="external noopener noreferrer" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external noopener noreferrer:pensionwise">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2")</a>
-                &nbsp;<span id="pensionAdviceText">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")</span>
-              </li>
-          </ul>
+      <div class="govuk-details__text">
+        @p(
+          content = Text(messages("nisp.nirecord.voluntarycontributions.h2title.2.help.message")),
+          specId = Some("ni_record_voluntary_contributions_p4")
+        )
+        <ul class="govuk-list govuk-list--bullet">
+          <li>
+            @if(messages.lang.language == "cy") {
+              <a href="@{config.citizenAdviceLinkCy}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
+            } else {
+              <a href="@{config.citizenAdviceLinkEn}" id="citizenAdviceLink" tabindex="-1" rel="external" target="_blank" data-journey-click="checkmystatepension:external:citizenadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link3")</a>
+            }
+          </li>
+          <li>
+            @if(messages.lang.language == "cy"){
+              <a href="@{config.moneyAdviceLinkCy}" id="moneyAdviceLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
+            } else {
+              <a href="@{config.moneyAdviceLinkEn}" id="moneyAdviceLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:moneyadvice">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link1")</a>
+            }
+          </li>
+          <li>
+            <a href="@{config.pensionWiseLink}" id="pensionWiseLink" rel="external" tabindex="-1" target="_blank" data-journey-click="checkmystatepension:external:pensionwise">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2")</a>
+            <span id="pensionAdviceText">@messages("nisp.nirecord.voluntarycontributions.h2title.2.help.link2.message")</span>
+          </li>
+        </ul>
       </div>
-  </details>
+    </details>
 
-  <h2 class="heading-medium">@messages("nisp.nirecord.voluntarycontributions.h2title.3")</h2>
-  <details class="helptext">
-      <summary class="summary-list-item">
-          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1")</span>
+    @h2(
+      elmId = Some("heading-4"),
+      msg = "nisp.nirecord.voluntarycontributions.h2title.3",
+      specId = Some("ni_record_voluntary_contributions_h2_3")
+    )
+
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1")</span>
       </summary>
-      <div class="panel-indent">
-          <p>@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading")</p>
-          <ul class="list-bullet">
-              <li>@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1")</li>
-              <li>@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2")</li>
-          </ul>
+      <div class="govuk-details__text">
+        <p>@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.heading")</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message1")</li>
+          <li>@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle1.message2")</li>
+      </ul>
       </div>
-  </details>
-  <details class="helptext">
-      <summary class="summary-list-item">
-          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2")</span>
+    </details>
+
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2")</span>
       </summary>
-      <div class="panel-indent">
-          <p>@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message")</p>
+      <div class="govuk-details__text">
+        @p(
+          content = Text(messages(
+            "nisp.nirecord.voluntarycontributions.h2title.3.linktitle2.message"
+          )),
+          specId = Some("ni_record_voluntary_contributions_p5")
+        )
       </div>
-  </details>
+    </details>
 
-  <details class="helptext">
-      <summary class="summary-list-item">
-          <span class="summary">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")</span>
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3")</span>
       </summary>
-      <div class="panel-indent">
-          <p id="IOM-message">@messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1")</p>
-          <a href="@{config.isleManLink}" tabindex="-1" rel="external noopener noreferrer" target="_blank" id="nir-external-link" data-journey-click="checkmystatepension:external:iom">
-            @messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.link")
-          </a>
+      <div class="govuk-details__text">
+        @p(
+          content = Text(messages(
+            "nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1"
+          )),
+          elmId = Some("IOM-message"),
+          specId = Some("ni_record_voluntary_contributions_p6")
+        )
+        <a href="@{config.isleManLink}" tabindex="-1" rel="external" target="_blank" id="nir-external-link" data-journey-click="checkmystatepension:external:iom">
+          @messages("nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.link")
+        </a>
       </div>
-  </details>
+    </details>
 
+    @link(
+      link = routes.NIRecordController.showGaps.url,
+      messageKey = "nisp.back",
+      specId = Some("ni_record_voluntary_contributions_link_last")
+    )
 
-  <div class="backlink"><a href="@{routes.NIRecordController.showGaps.url}">@messages("nisp.back")</a>
-  </div>
-
+  }
 }
-}
+

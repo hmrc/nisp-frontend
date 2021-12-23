@@ -14,251 +14,84 @@
  * limitations under the License.
  *@
 
-@import org.joda.time.DateTime
-@import play.twirl.api.Html
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
-@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
-@import uk.gov.hmrc.nisp.controllers.{LanguageService, routes}
-@import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.play.views.helpers.AttorneyRegime
-@import uk.gov.hmrc.play.views.html.layouts.{Article, AttorneyBanner, Sidebar, TrackingConsentSnippet}
-@import uk.gov.hmrc.renderer.TemplateRenderer
-
-@import java.time.LocalDateTime
-@import scala.concurrent.ExecutionContext
-@import scala.util.Random
+@import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.{AccountMenu, SignOut, _}
+@import uk.gov.hmrc.nisp.controllers.routes
 
 @this(
-    config: ApplicationConfig,
-    trackingCodeSnippet: TrackingConsentSnippet,
-    languageService: LanguageService,
-    articleView: Article,
-    attorneyBannerView: AttorneyBanner,
-    sidebarView: Sidebar,
-    langUtils: LanguageUtils
-)(
-    implicit ec: ExecutionContext,
-    formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,
-    templateRenderer: TemplateRenderer
-)
+  hmrcLayout: HmrcLayout,
+  hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
+  hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
+  twoThirdsOneThirdMainContent: TwoThirdsOneThirdMainContent,
+  twoThirdsMainContent: TwoThirdsMainContent,
+  hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+  govukBackLink: GovukBackLink,
+  hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
+  appConfig: ApplicationConfig,
+  hmrcAccountMenu: HmrcAccountMenu
+)(implicit accountMenuConfig: AccountMenuConfig)
 
 @(
-    mainTemplateParams: MainTemplateParams
-)(
-    mainContent: Html
-)(
-    implicit
-        request: AuthenticatedRequest[_],
-        messages: Messages
-)
+  pageTitle: String,
+  sidebar: Option[Html] = None,
+  showBackLink: Boolean = false,
+  sessionExpiredPage: Boolean = false,
+  hideNavBar: Boolean = false,
+  optCustomLayout: Option[Html => Html] = None,
+  extendedTitle: Boolean = true,
+  showUrBanner: Boolean = true
+)(content: Html)(implicit request: RequestHeader, messages: Messages)
 
-@toLocalDateTime(date: Option[DateTime]) = @{
-   date.map { dateTime =>
-    LocalDateTime.of(dateTime.getYear, dateTime.getMonthOfYear, dateTime.getDayOfMonth, 0, 0, 0)
-}}
-
-
-
-@mustacheCheck(str: String) = @{
-    if(str.trim=="") false else str
+@headBlock = {
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="stylesheet" href='@controllers.routes.Assets.versioned("stylesheets/nisp.css")'/>
 }
 
-@attorneyBanner = @{
-  request.nispAuthedUser.trustedHelper.map{ helper =>
-      attorneyBannerView(Some(helper.principalName), helper.returnLinkUrl, AttorneyRegime.standAlone)
+@beforeContent = {
+  @if(!hideNavBar){
+    @hmrcAccountMenu(AccountMenu(
+      signOut = SignOut(href = routes.StatePensionController.signOut.url),
+      language = if(messages.lang.code == "cy") Cy else En
+    ).withUrlsFromConfig())
   }
+  @hmrcLanguageSelectHelper()
+}
+@contentBlock = {
+  @content
+  <br>
+  @hmrcReportTechnicalIssue(ReportTechnicalIssue(
+    serviceId = appConfig.contactFormServiceIdentifier,
+    language = if(messages.lang.code == "cy") Cy else En,
+    referrerUrl = Some(request.uri),
+    baseUrl = Some(appConfig.reportAProblemNonJSUrl)
+  ))
 }
 
-@contentWithTitle = {
-    @mainTemplateParams.pageInfo.map { pageInfo =>
-        <div class="page-info">@Html(pageInfo)</div>
-    }
-    @mainTemplateParams.pageTitle.map { title =>
-        <h1 class=@headerClass> @Html(title) </h1>
-    }
-
-    @mainContent
+@scripts = {
+  <script src='@controllers.routes.Assets.versioned("javascript/jquery.js")'></script>
+  <script src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
+  <script src='@controllers.routes.Assets.versioned("javascript/nirecord.js")'></script>
 }
 
-
-@linkElems = @{
-    Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
-}
-
-@inlineScript = @{
-    trackingCodeSnippet()
-}
-
-@scriptElement = @{
-    Seq(
-        Map("url" -> controllers.routes.Assets.versioned("javascript/app.js")),
-        Map("url" -> controllers.routes.Assets.versioned("javascript/nirecord.js")),
-        Map("url" -> controllers.routes.Assets.versioned("javascript/urBannerClose.js")),
-        Map("url" -> controllers.routes.Assets.versioned("javascript/polyfill.js"))
-    )
+@fullTitle = @{
+  pageTitle + " - " + messages("nisp.title.extension") + " - " + messages("nisp.gov-uk")
 }
 
 
-@links = @{
-    if(mainTemplateParams.articleEnabled) {
-       Map("url" -> routes.StatePensionController.signOut , "text" -> messages("nisp.signOut"))
-    }
-}
-
-@ninoChanceGenerator = @{
-    try{
-        val hash = request.nispAuthedUser.nino.nino.hashCode()
-        val rand = new Random(hash)
-        (rand.nextFloat() * 100 > 80)
-    }catch{
-        case _ => true
-    }
-}
-
-@navTitle = @{
-    if(mainTemplateParams.showTitleHeaderNav) {
-         messages("nisp.title")
-    } else {
-        None
-    }
-}
-
-@actingAttorneyBanner = {
-}
-
-@checkForUrCookie = @{
-    !request.cookies.exists(x => x.name == "cysp-nisp-urBannerHide")
-}
-
-@getHelpForm = {
-    @formPartialRetriever.getPartialContent(s"${config.contactFrontendPartialBaseUrl}/contact/problem_reports")
-}
-
-@sidebar = {
-    @if(mainTemplateParams.sidebarLinks.isDefined) {
-        @if(mainTemplateParams.sidebarClasses.isDefined) {
-            @sidebarView(mainTemplateParams.sidebarLinks.get, Some(s"sidebar ${mainTemplateParams.sidebarClasses.get}"))
-        } else {
-            @sidebarView(mainTemplateParams.sidebarLinks.get, Some("sidebar"))
-        }
-    }
-}
-
-@mainContentHeader = {
- @if(config.isWelshEnabled){
-     @language_selection(languageService.languageMap, languageService.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
-    }
-}
-
-
-@urBanner = @{
-    val fullTitle = Messages("nisp.home.banner.recruitment.title")
-    if(mainTemplateParams.showUrBanner && config.showUrBanner && checkForUrCookie){
-        Map("fullWidthBannerTitle" -> fullTitle,
-            "fullWidthBannerText" -> messages("nisp.home.banner.recruitment.link"),
-            "fullWidthBannerLink" -> config.urRecruitmentLinkURL,
-            "fullWidthBannerDismissText" -> messages("nisp.home.banner.recruitment.reject"),
-            "fullWidthBannerGaAction" -> config.GaEventAction)
-    }else{Map()}
-}
-
-@betaHeaderEnable = @{
-    false
-}
-
-@article = @{
-
-    if(mainTemplateParams.articleEnabled) {
-          articleView(contentWithTitle, false, mainTemplateParams.articleClasses)
-    } else {
-          contentWithTitle
-    }
-
-}
-
-@previouslyLoggedInAt = @{
-    val msg = langUtils.Dates.formatEasyReadingTimestamp(
-toLocalDateTime(request.authDetails.loginTimes.previousLogin), "")
-    mustacheCheck(msg)
-}
-
-@showLastLogInStatus = @{
-    if(mainTemplateParams.articleEnabled) {
-        true
-    } else {
-        false
-    }
-}
-
-@userDisplayName = @{
-     mustacheCheck( request.nispAuthedUser.name.name.name.getOrElse("") )
-}
-
-@termsAndConditionFooterLink = @{
-     Map("url" -> routes.TermsConditionsController.show.url , "text" -> messages("nisp.tandcs.title"))
-}
-
-@isWelsh = @{
-    if(messages.lang.code == "cy"){
-        true
-    }
-    else {
-        false
-    }
-}
-
-@printable = @{
-    if(mainTemplateParams.printableDocument) {
-        "printable"
-    }
-}
-
-@headerClass = @{
-    mainTemplateParams.h1Class.getOrElse("heading-large")
-}
-
-@{
-    templateRenderer.renderDefaultTemplate(config.frontendTemplatePath, article, Map[String, Any](
-        "pageTitle" -> mainTemplateParams.browserTitle.map{x => x + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")},
-        "linkElems" -> linkElems,
-        "scriptElems" -> scriptElement,
-        "inlineScript" -> inlineScript,
-        "assetsPath" -> config.assetsPrefix,
-
-        "mainContentHeader" -> mainContentHeader,
-        "accessibilityFooterUrl" -> config.accessibilityStatementUrl(request.uri),
-        "isGovernmentGateway" -> request.authDetails.isGG,
-        "isVerify" -> request.authDetails.isVerify,
-        "isSa" -> request.nispAuthedUser.isSa,
-        "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
-        "hideAccountMenu" -> mainTemplateParams.hideNavBar,
-
-        "ssoUrl" -> config.ssoUrl,
-
-        "betaBanner" -> betaHeaderEnable,
-        "feedbackIdentifier" -> config.contactFormServiceIdentifier,
-        "includeHMRCBranding" -> true,
-
-        "showLastLogInStatus" ->  showLastLogInStatus,
-        "userDisplayName" ->      userDisplayName,
-        "previouslyLoggedInAt" -> previouslyLoggedInAt,
-
-        "getHelpForm" -> getHelpForm,
-        "actingAttorneyBanner" -> actingAttorneyBanner,
-
-        "navTitle" -> navTitle,
-        "navLinks" -> links,
-        "hasNavLinks" -> mainTemplateParams.showTitleHeaderNav,
-        "sidebar" -> sidebar,
-        "termsAndConditionFooterLink" -> termsAndConditionFooterLink,
-
-        "optimizelyProjectId" -> "8451981545",
-        "isWelsh" -> isWelsh,
-        "actingAttorneyBanner" -> attorneyBanner
-    ) ++ urBanner
-      ++ Map[String,Any](
-        "bodyClass" -> printable)
-      )
-}
+@hmrcLayout(
+  pageTitle = Some(if(extendedTitle){fullTitle}else{pageTitle}),
+  serviceName = Some(messages("nisp.title")),
+  isWelshTranslationAvailable = true,
+  userResearchBannerUrl = if(showUrBanner)Some(appConfig.urBannerUrl) else None,
+  accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)),
+  displayHmrcBanner = false,
+  additionalHeadBlock = Some(headBlock),
+  beforeContentBlock = Some(beforeContent),
+  additionalScriptsBlock  = Some(scripts),
+  mainContentLayout = Some(sidebar match {
+    case Some(sidebarHtml) => twoThirdsOneThirdMainContent(sidebarHtml)
+    case None => optCustomLayout.getOrElse(twoThirdsMainContent(_))
+})
+)(contentBlock)

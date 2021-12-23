@@ -22,25 +22,24 @@ import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 
 case class NationalInsuranceTaxYear(
-                                     taxYear: String,
-                                     qualifying: Boolean,
-                                     classOneContributions: BigDecimal,
-                                     classTwoCredits: Int,
-                                     classThreeCredits: Int,
-                                     otherCredits: Int,
-                                     classThreePayable: BigDecimal,
-                                     classThreePayableBy: Option[LocalDate],
-                                     classThreePayableByPenalty: Option[LocalDate],
-                                     payable: Boolean,
-                                     underInvestigation: Boolean
-                                   ) {
+  taxYear: String,
+  qualifying: Boolean,
+  classOneContributions: BigDecimal,
+  classTwoCredits: Int,
+  classThreeCredits: Int,
+  otherCredits: Int,
+  classThreePayable: BigDecimal,
+  classThreePayableBy: Option[LocalDate],
+  classThreePayableByPenalty: Option[LocalDate],
+  payable: Boolean,
+  underInvestigation: Boolean
+) {
 
-  def currentDateAfterCutOff(currentDate: LocalDate): Boolean = {
+  def currentDateAfterCutOff(currentDate: LocalDate): Boolean =
     classThreePayableBy match {
       case Some(classThreeDate) => currentDate.isAfter(classThreeDate)
-      case None => payable
+      case None                 => payable
     }
-  }
 
 }
 

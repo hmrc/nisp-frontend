@@ -24,13 +24,13 @@ import uk.gov.hmrc.nisp.utils.UnitSpec
 class AuthDetailsSpec extends UnitSpec {
 
   val confidenceLevel = ConfidenceLevel.L200
-  val loginTimes = LoginTimes(new DateTime(), None)
+  val loginTimes      = LoginTimes(new DateTime(), None)
 
   "isGG" should {
     "return true" when {
       "the auth provider contains the GG flag" in {
         val authProvider = Some("GovernmentGateway")
-        val authDetails = AuthDetails(confidenceLevel, authProvider, loginTimes)
+        val authDetails  = AuthDetails(confidenceLevel, authProvider, loginTimes)
 
         authDetails.isGG shouldBe true
       }
@@ -39,7 +39,7 @@ class AuthDetailsSpec extends UnitSpec {
     "return false" when {
       "the auth provider does not contain the GG flag" in {
         val authProviderNonGG = Some("Verify")
-        val authDetails = AuthDetails(confidenceLevel, authProviderNonGG, loginTimes)
+        val authDetails       = AuthDetails(confidenceLevel, authProviderNonGG, loginTimes)
 
         authDetails.isGG shouldBe false
       }
@@ -50,7 +50,7 @@ class AuthDetailsSpec extends UnitSpec {
     "return true" when {
       "the auth provider contains the verify flag" in {
         val authProvider = Some("Verify")
-        val authDetails = AuthDetails(confidenceLevel, authProvider, loginTimes)
+        val authDetails  = AuthDetails(confidenceLevel, authProvider, loginTimes)
 
         authDetails.isVerify shouldBe true
       }
@@ -59,7 +59,7 @@ class AuthDetailsSpec extends UnitSpec {
     "return false" when {
       "the auth provider does not contain the verify flag" in {
         val authProviderNonGG = Some("GovernmentGateway")
-        val authDetails = AuthDetails(confidenceLevel, authProviderNonGG, loginTimes)
+        val authDetails       = AuthDetails(confidenceLevel, authProviderNonGG, loginTimes)
 
         authDetails.isVerify shouldBe false
       }

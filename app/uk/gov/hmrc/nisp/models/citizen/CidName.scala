@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.models.citizen
 
-import play.api.libs.json.{Json, Format}
+import play.api.libs.json.{Format, Json}
 
 case class CidName(firstName: Option[String], lastName: Option[String])
 

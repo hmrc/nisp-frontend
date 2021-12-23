@@ -17,25 +17,21 @@
 package uk.gov.hmrc.nisp.views
 
 import play.api.test.Injecting
-import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 class TimeoutViewSpec extends HtmlSpec with Injecting {
 
-  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-
   val feedbackFrontendUrl: String = "/foo"
-  lazy val html = inject[uk.gov.hmrc.nisp.views.html.iv.failurepages.timeout]
-  lazy val source = asDocument(html().toString)
+  lazy val html                   = inject[uk.gov.hmrc.nisp.views.html.iv.failurepages.timeout]
+  lazy val source                 = asDocument(html().toString)
 
   "TimeoutView" should {
 
     "assert correct page title" in {
-      val title = source.title()
-      val expected = "Some(" + messages("nisp.iv.failure.timeout.title") + Constants.titleSplitter +
-        messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk") + ")"
+      val title    = source.title()
+      val expected = messages("nisp.iv.failure.timeout.title") + Constants.titleSplitter + messages(
+        "nisp.title.extension"
+      ) + Constants.titleSplitter + messages("nisp.gov-uk")
       title should include(expected)
     }
 
@@ -45,22 +41,22 @@ class TimeoutViewSpec extends HtmlSpec with Injecting {
     }
 
     "assert correct paragraph one text on page" in {
-      val paragraph = source.getElementsByTag("p").get(1).toString
+      val paragraph = source.getElementsByTag("p").get(0).toString
       paragraph should include(messages("nisp.iv.failure.timeout.message"))
     }
 
     "assert correct paragraph two text on page" in {
-      val paragraph = source.getElementsByTag("p").get(2).toString
+      val paragraph = source.getElementsByTag("p").get(1).toString
       paragraph should include(messages("nisp.iv.failure.timeout.data"))
     }
 
     "assert correct button text on page" in {
-      val button = source.getElementsByClass("button").text
+      val button = source.getElementsByClass("govuk-button").text
       button should include(messages("nisp.iv.failure.timeout.button"))
     }
 
     "assert correct href on the start again button" in {
-      val buttonHref = source.getElementsByClass("button").attr("href")
+      val buttonHref = source.getElementsByClass("govuk-button").attr("href")
       buttonHref should include("/check-your-state-pension/account")
     }
   }

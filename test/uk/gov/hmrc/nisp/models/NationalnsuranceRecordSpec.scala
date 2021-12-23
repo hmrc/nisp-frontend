@@ -20,14 +20,13 @@ import java.time.LocalDate
 import play.api.libs.json.Json
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
-
 class NationalnsuranceRecordSpec extends UnitSpec {
 
   "NationalInsuranceRecord" when {
     "there are no years" should {
       "parse the json correctly" in {
-        Json.parse(
-          """
+        Json
+          .parse("""
             |{
             |  "_links": {
             |    "self": {
@@ -46,7 +45,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |  },
             |  "reducedRateElection": false
             |}
-          """.stripMargin).as[NationalInsuranceRecord] shouldBe
+          """.stripMargin)
+          .as[NationalInsuranceRecord] shouldBe
           NationalInsuranceRecord(
             qualifyingYears = 0,
             qualifyingYearsPriorTo1975 = 0,
@@ -63,8 +63,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
 
     "there is no date of entry" should {
       "parse the json correctly" in {
-        Json.parse(
-          """
+        Json
+          .parse("""
             |{
             |  "_links": {
             |    "self": {
@@ -82,7 +82,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |  },
             |  "reducedRateElection": false
             |}
-          """.stripMargin).as[NationalInsuranceRecord] shouldBe
+          """.stripMargin)
+          .as[NationalInsuranceRecord] shouldBe
           NationalInsuranceRecord(
             qualifyingYears = 0,
             qualifyingYearsPriorTo1975 = 0,
@@ -99,8 +100,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
 
     "there is only one year" should {
       "parse the json correctly" in {
-        Json.parse(
-          """
+        Json
+          .parse("""
             |{
             |  "_links": {
             |    "self": {
@@ -136,7 +137,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |  },
             |  "reducedRateElection": false
             |}
-          """.stripMargin).as[NationalInsuranceRecord] shouldBe
+          """.stripMargin)
+          .as[NationalInsuranceRecord] shouldBe
           NationalInsuranceRecord(
             qualifyingYears = 1,
             qualifyingYearsPriorTo1975 = 0,
@@ -145,19 +147,21 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             dateOfEntry = Some(LocalDate.of(2015, 5, 4)),
             homeResponsibilitiesProtection = false,
             earningsIncludedUpTo = LocalDate.of(2017, 4, 5),
-            List(NationalInsuranceTaxYear(
-              "2016-17",
-              true,
-              0,
-              0,
-              0,
-              52,
-              0,
-              None,
-              None,
-              false,
-              false
-            )),
+            List(
+              NationalInsuranceTaxYear(
+                "2016-17",
+                true,
+                0,
+                0,
+                0,
+                52,
+                0,
+                None,
+                None,
+                false,
+                false
+              )
+            ),
             reducedRateElection = false
           )
       }
@@ -165,8 +169,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
 
     "there is multiple years" should {
       "parse the json correctly" in {
-        Json.parse(
-          """
+        Json
+          .parse("""
             |{
             |  "_links": {
             |    "self": {
@@ -222,7 +226,8 @@ class NationalnsuranceRecordSpec extends UnitSpec {
             |    ]
             |  }
             |}
-          """.stripMargin).as[NationalInsuranceRecord] shouldBe
+          """.stripMargin)
+          .as[NationalInsuranceRecord] shouldBe
           NationalInsuranceRecord(
             qualifyingYears = 1,
             qualifyingYearsPriorTo1975 = 0,

@@ -14,40 +14,57 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import play.api.Application
-@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
-
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.main
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, H2, P, Link}
 
 @this(
- main: unauthenticatedMain,
- partialRetriever: CachedStaticHtmlPartialRetriever,
- formPartialRetriever: FormPartialRetriever
-)(
- implicit ec: ExecutionContext
+  main: main,
+  h1: H1,
+  h2: H2,
+  p: P,
+  link: Link
 )
 
-@()(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()(implicit messages: Messages, request: Request[_])
 
-@main(MainTemplateParams(
- articleClasses = Some("mainpage"),
- pageTitle = Some(messages("nisp.iv.failure.lockedout.title")),
- browserTitle = Some(messages("nisp.iv.failure.lockedout.title")),
- h1Class = Some("heading-xlarge")
-)) {
+@main(
+  pageTitle = messages("nisp.iv.failure.lockedout.title")
+) {
 
+  @h1(
+    classes = Some("govuk-heading-xl"),
+    msg = "nisp.iv.failure.lockedout.title",
+    specId = Some("nisp_iv_failure_lockedout_h1")
+  )
 
-<p class="lede">@messages("nisp.iv.failure.lockedout.intro")</p>
+  @p(
+    content = Text(messages("nisp.iv.failure.lockedout.intro")),
+    classes = Some("govuk-body-l"),
+    specId = Some("nisp_iv_failure_lockedout_p1")
+  )
 
-<p>@messages("nisp.iv.failure.lockedout.tryagain")</p>
+  @p(
+    content = Text(messages("nisp.iv.failure.lockedout.tryagain")),
+    specId = Some("nisp_iv_failure_lockedout_p2")
+  )
 
-<h2 class="heading-medium">@messages("nisp.iv.failure.otherways.heading")</h2>
+  @h2(
+    msg = "nisp.iv.failure.otherways.heading",
+    specId = Some("nisp_iv_failure_lockedout_h2_1")
+  )
 
-<p>@Html(messages("nisp.iv.failure.otherways.text"))</p>
-
+  @p(
+    content = HtmlContent(messages(
+      "nisp.iv.failure.otherways.text") +
+      link(
+        attrTarget = true,
+        fullStop = true,
+        inParagraph = true,
+        link = "https://www.gov.uk/future-pension-centre",
+        messageKey = "nisp.iv.failure.otherways.link",
+        specId = Some("nisp_iv_failure_lockedout_link1"),
+      )
+    ),
+    specId = Some("nisp_iv_failure_lockedout_p3")
+  )
 }

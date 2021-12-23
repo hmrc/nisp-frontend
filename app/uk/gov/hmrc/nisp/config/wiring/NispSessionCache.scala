@@ -21,8 +21,8 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.http.HttpClient
 
-class NispSessionCache @Inject()(appConfig: ApplicationConfig, val http: HttpClient) extends SessionCache {
+class NispSessionCache @Inject() (appConfig: ApplicationConfig, val http: HttpClient) extends SessionCache {
   override val defaultSource: String = appConfig.appName
-  override val baseUri = appConfig.sessionCacheURL
-  override val domain = appConfig.sessionCacheDomain
+  override val baseUri               = appConfig.sessionCacheURL
+  override val domain                = appConfig.sessionCacheDomain
 }

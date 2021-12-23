@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.models.citizen
 import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.domain.Nino
 
-case class CitizenDetailsRequest(ninos:Set[Nino])
-object CitizenDetailsRequest{
+case class CitizenDetailsRequest(ninos: Set[Nino])
+object CitizenDetailsRequest {
   implicit val formats: Format[CitizenDetailsRequest] = Json.format[CitizenDetailsRequest]
 }

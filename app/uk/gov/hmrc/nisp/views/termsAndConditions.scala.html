@@ -14,49 +14,107 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import play.api.Application
 @import uk.gov.hmrc.nisp.controllers.routes
-
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link}
 
 @this(
- main: unauthenticatedMain,
- partialRetriever: CachedStaticHtmlPartialRetriever,
- formPartialRetriever: FormPartialRetriever
-)(
- implicit ec: ExecutionContext
+  main: main,
+  p: P,
+  h1: H1,
+  h2: H2,
+  link: Link
 )
 
 @(showBackLink : Boolean)(implicit messages: Messages, request: Request[_])
 
-@main(MainTemplateParams(
- browserTitle = Some(messages("nisp.tandcs.title")),
- pageTitle = Some(messages("nisp.tandcs.title")),
- sidebarLinks = None,
- hideNavBar = true
-)) {
+@main(
+  pageTitle = messages("nisp.tandcs.title"),
+  hideNavBar = true
+) {
 
-<h2 class="heading-medium">@messages("nisp.tandcs.heading")</h2>
-<p>@Html(messages("nisp.tandcs.use"))</p>
-<p>@Html(messages("nisp.tandcs.information"))</p>
-<p>@Html(messages("nisp.tandcs.service"))</p>
-<p>@Html(messages("nisp.tandcs.rely"))</p>
-<p>@Html(messages("nisp.tandcs.responsibility"))</p>
-<p>@Html(messages("nisp.tandcs.licence")) <a
-        href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/"
-        target="_blank" rel="external noopener noreferrer" data-journey-click="checkmystatepension:external:crowncopyright">@messages("nisp.tandcs.crownCopyright")</a>.
-</p>
-<p>@Html(messages("nisp.tandcs.liability"))</p>
-<p>@Html(messages("nisp.tandcs.links"))</p>
-<p>@Html(messages("nisp.tandcs.law"))</p>
-<p>@Html(messages("nisp.tandcs.operated"))</p>
-<p>@Html(messages("nisp.tandcs.thanks"))</p>
+  @h1(
+    elmId = Some("heading-1"),
+    msg = "nisp.tandcs.title",
+    specId = Some("terms_and_conditions__h1")
+  )
 
-@if(showBackLink){
-   <p class="backlink"><a href="@{routes.StatePensionController.show.url}">@messages("nisp.back")</a></p>
-}
+  @h2(
+    elmId = Some("heading-2"),
+    msg = "nisp.tandcs.heading",
+    specId = Some("terms_and_conditions__h2_1")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.use")),
+    specId = Some("terms_and_conditions__p1")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.information")),
+    specId = Some("terms_and_conditions__p2")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.service")),
+    specId = Some("terms_and_conditions__p3")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.rely")),
+    specId = Some("terms_and_conditions__p4")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.responsibility")),
+    specId = Some("terms_and_conditions__p5")
+  )
+
+  @p(
+    content = HtmlContent(messages(
+      "nisp.tandcs.licence") +
+      link(
+        link = "http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/",
+        messageKey = "nisp.tandcs.crownCopyright",
+        attrTarget = true,
+        fullStop = true,
+        attrs = Map("data-journey-click" -> "checkmystatepension:external:crowncopyright"),
+        inParagraph = true,
+        specId = Some("terms_and_conditions__link1")
+      )),
+    specId = Some("terms_and_conditions__p6")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.liability")),
+    specId = Some("terms_and_conditions__p7")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.links")),
+    specId = Some("terms_and_conditions__p8")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.law")),
+    specId = Some("terms_and_conditions__p9")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.operated")),
+    specId = Some("terms_and_conditions__p10")
+  )
+
+  @p(
+    content = Text(messages("nisp.tandcs.thanks")),
+    specId = Some("terms_and_conditions__p11")
+  )
+
+  @if(showBackLink) {
+    @link(
+      id = Some("back"),
+      link = routes.StatePensionController.show.url,
+      messageKey = "nisp.back",
+      specId = Some("terms_and_conditions__backlink")
+    )
+  }
 }

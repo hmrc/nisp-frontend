@@ -18,7 +18,5 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import play.api.mvc.{Request, WrappedRequest}
 
-case class AuthenticatedRequest[A](request: Request[A],
-                                   nispAuthedUser: NispAuthedUser,
-                                   authDetails: AuthDetails
-                                  ) extends WrappedRequest[A](request)
+case class AuthenticatedRequest[A](request: Request[A], nispAuthedUser: NispAuthedUser, authDetails: AuthDetails)
+    extends WrappedRequest[A](request)

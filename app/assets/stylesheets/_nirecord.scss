@@ -2,17 +2,24 @@
 
 
 .ni-action {
-  float: left;
-  text-align: right;
-  width: 40%;
-  @media only screen and (max-width: 640px) {
-    width: 30%;
+  display: none;
+
+  .js-enabled & {
+    display: block;
+    float: left;
+    text-align: right;
+    width: 40%;
+
+    @media only screen and (max-width: 640px) {
+      width: 30%;
+    }
   }
 }
 
 .ni-years {
   float: left;
   width: 25%;
+
   @media only screen and (max-width: 640px) {
     width: 35%;
   }
@@ -23,11 +30,13 @@
   width: 35%;
 }
 
-.inactive, .ni-full {
+.inactive,
+.ni-full {
   float: right;
   width:75%;
+
   @media only screen and (max-width: 640px) {
-      width: 65%;
+    width: 65%;
   }
 }
 
@@ -36,38 +45,40 @@
   display: block;
   font-size: 16px;
   margin-bottom: 5px;
-  padding: 0 0 0 25%;
-  
+  padding: 0 0 0 20%;
+
   @media only screen and (max-width: 640px) {
     padding: 0;
   }
-  
+
   .contributions-header {
     font-weight: 700;
-    color: $secondary-text-colour;
     margin: 25px 0 0 0;
-   }
+  }
 }
 
 .accordion {
   border-top: none;
   overflow: hidden;
+
   dd {
     padding-bottom: 5px;
+
     p {
       font-size: 16px;
       margin-top: 5px;
+
       @media only screen and (max-width: 640px) {
         font-size: 14px;
       }
+
       .contributions-header {
         font-weight: 700;
-        color: $secondary-text-colour;
         margin: 25px 0 0 0;
       }
     }
   }
-   
+
   dt {
     border-top: 1px solid $border-colour;
   }
@@ -79,10 +90,10 @@
 }
 
 .ni-wrapper {
-  display: inline-block;
   clear: both;
-  width: 100%;
+  display: inline-block;
   padding: 18px 0 5px 0;
+  width: 100%;
 }
 
 
@@ -90,6 +101,7 @@
 aside {
   padding-top: 30px;
   width: 30%;
+
   h2 {
     font-weight: bold;
   }
@@ -98,12 +110,14 @@ aside {
 ul.listbullets {
   list-style-type: disc;
   padding-left: 20px;
+
   li {
     font-size: 16px;
   }
 }
 
-.inactive, .full-inactive {
+.inactive,
+.full-inactive {
   color: $secondary-text-colour;
 }
 
@@ -129,30 +143,30 @@ ul.listbullets {
 
 
 .page-info {
-    color: $grey-1;
-    font-size: 18px;
+  font-size: 18px;
 }
 
 @media only screen and (min-width: 641px) {
-    .page-info {
-        font-size: 27px;
-        margin-bottom: 5px;
-    }
+  .page-info {
+    font-size: 27px;
+    margin-bottom: 5px;
+  }
 }
 
 .titleWithPageInfo {
-    margin-top: 0;
-    margin-bottom: 1.5em;
+  margin-bottom: 1.5em;
+  margin-top: 0;
 }
 
-#print-sp-link, #print-ni-link {
-    background: transparent no-repeat 0 50%;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASAgMAAAAvVbb5AAAACVBMVEX///////8KDAwmYEUdAAAAAXRSTlMAQObYZgAAADBJREFUCFtjYOBa1cDAoBkKJFYCCSYwEYpCrAICZCI0FEhkrURmQRRnrYRpW7WqAQAlGR86Ip1rwwAAAABJRU5ErkJggg==");
-    padding: 0.5em 0 0.5em 28px;
-    zoom:1;
-    margin-top: 1em;
+.js-enabled #print-sp-link,
+.js-enabled #print-ni-link {
+  background: transparent no-repeat 0 50%;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASAgMAAAAvVbb5AAAACVBMVEX///////8KDAwmYEUdAAAAAXRSTlMAQObYZgAAADBJREFUCFtjYOBa1cDAoBkKJFYCCSYwEYpCrAICZCI0FEhkrURmQRRnrYRpW7WqAQAlGR86Ip1rwwAAAABJRU5ErkJggg==");
+  margin-top: 1em;
+  padding: 0.5em 0 0.5em 28px;
+  zoom:1;
 }
 
 .panel-indent {
-    margin: 2em 0;
+  margin: 2em 0;
 }

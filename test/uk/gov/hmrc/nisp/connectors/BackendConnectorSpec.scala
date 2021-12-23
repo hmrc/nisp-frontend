@@ -17,8 +17,7 @@
 package uk.gov.hmrc.nisp.connectors
 
 import org.mockito.Mockito.{RETURNS_DEEP_STUBS, when}
-import org.mockito.stubbing.Answer
-import org.mockito.{ArgumentMatchers, Mockito}
+import org.mockito.ArgumentMatchers
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.OK
 import play.api.libs.json.Json
@@ -34,22 +33,24 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-
 class BackendConnectorSpec extends UnitSpec with ScalaFutures {
 
   val mockHttp: HttpClient = mock[HttpClient]
-  val mockMetricsService = mock[MetricsService](RETURNS_DEEP_STUBS)
+  val mockMetricsService   = mock[MetricsService](RETURNS_DEEP_STUBS)
 
   object BackendConnectorImpl extends BackendConnector {
-    override def http: HttpClient = mockHttp
-    override def sessionCache: SessionCache = FakeSessionCache
-    override def serviceUrl: String = "national-insurance"
-    override val metricsService: MetricsService = mockMetricsService
+    override def http: HttpClient                            = mockHttp
+    override def sessionCache: SessionCache                  = FakeSessionCache
+    override def serviceUrl: String                          = "national-insurance"
+    override val metricsService: MetricsService              = mockMetricsService
     override implicit val executionContext: ExecutionContext = global
 
     def getNationalInsurance()(implicit headerCarrier: HeaderCarrier): Future[NationalInsuranceRecord] = {
       val urlToRead = s"$serviceUrl/ni"
-      retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead)(headerCarrier, NationalInsuranceRecord.formats)
+      retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead)(
+        headerCarrier,
+        NationalInsuranceRecord.formats
+      )
     }
   }
 
@@ -58,33 +59,37 @@ class BackendConnectorSpec extends UnitSpec with ScalaFutures {
   "connectToMicroservice" should {
     "should return depersonalised JSON" in {
       val json = Json.obj(
-        "qualifyingYearsPriorTo1975" -> 0,
-        "numberOfGaps" -> 6,
-        "numberOfGapsPayable" -> 4,
-        "dateOfEntry" -> "1975-08-01",
+        "qualifyingYearsPriorTo1975"     -> 0,
+        "numberOfGaps"                   -> 6,
+        "numberOfGapsPayable"            -> 4,
+        "dateOfEntry"                    -> "1975-08-01",
         "homeResponsibilitiesProtection" -> false,
-        "earningsIncludedUpTo" -> "2016-04-05",
-        "_embedded" -> Json.obj(
+        "earningsIncludedUpTo"           -> "2016-04-05",
+        "_embedded"                      -> Json.obj(
           "taxYears" -> Json.arr()
         )
       )
 
-      val depersonalisedJson =  JsonDepersonaliser.depersonalise(json) match {
+      val depersonalisedJson = JsonDepersonaliser.depersonalise(json) match {
         case Success(s) => s
         case Failure(_) => fail()
       }
 
       val response = Future(HttpResponse(OK, json, Map.empty[String, Seq[String]]))
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.eq("national-insurance/ni"), ArgumentMatchers.any(), ArgumentMatchers.any())
-        (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+      when(
+        mockHttp.GET[HttpResponse](
+          ArgumentMatchers.eq("national-insurance/ni"),
+          ArgumentMatchers.any(),
+          ArgumentMatchers.any()
+        )(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+      )
         .thenReturn(response)
 
       val future: Future[NationalInsuranceRecord] = BackendConnectorImpl.getNationalInsurance()
 
-      whenReady(future.failed) {
-        t: Throwable =>
-          t.getMessage.contains(depersonalisedJson) shouldBe true
-          t.getMessage.contains("2016-04-05") shouldBe false
+      whenReady(future.failed) { t: Throwable =>
+        t.getMessage.contains(depersonalisedJson) shouldBe true
+        t.getMessage.contains("2016-04-05")       shouldBe false
       }
     }
   }

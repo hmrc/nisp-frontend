@@ -32,70 +32,76 @@ sealed trait StatePensionAmount {
   val annualAmount: BigDecimal
 }
 
-case class StatePensionAmountRegular(weeklyAmount: BigDecimal,
-                                     monthlyAmount: BigDecimal,
-                                     annualAmount: BigDecimal) extends StatePensionAmount
+case class StatePensionAmountRegular(weeklyAmount: BigDecimal, monthlyAmount: BigDecimal, annualAmount: BigDecimal)
+    extends StatePensionAmount
 
 object StatePensionAmountRegular {
   implicit val formats = Json.format[StatePensionAmountRegular]
 }
 
-case class StatePensionAmountForecast(yearsToWork: Int,
-                                      weeklyAmount: BigDecimal,
-                                      monthlyAmount: BigDecimal,
-                                      annualAmount: BigDecimal) extends StatePensionAmount {
-}
+case class StatePensionAmountForecast(
+  yearsToWork: Int,
+  weeklyAmount: BigDecimal,
+  monthlyAmount: BigDecimal,
+  annualAmount: BigDecimal
+) extends StatePensionAmount {}
 
 object StatePensionAmountForecast {
   implicit val formats = Json.format[StatePensionAmountForecast]
 }
 
-case class StatePensionAmountMaximum(yearsToWork: Int,
-                                     gapsToFill: Int,
-                                     weeklyAmount: BigDecimal,
-                                     monthlyAmount: BigDecimal,
-                                     annualAmount: BigDecimal) extends StatePensionAmount
+case class StatePensionAmountMaximum(
+  yearsToWork: Int,
+  gapsToFill: Int,
+  weeklyAmount: BigDecimal,
+  monthlyAmount: BigDecimal,
+  annualAmount: BigDecimal
+) extends StatePensionAmount
 
 object StatePensionAmountMaximum {
   implicit val formats = Json.format[StatePensionAmountMaximum]
 }
 
-case class StatePensionAmounts(protectedPayment: Boolean,
-                               current: StatePensionAmountRegular,
-                               forecast: StatePensionAmountForecast,
-                               maximum: StatePensionAmountMaximum,
-                               cope: StatePensionAmountRegular)
+case class StatePensionAmounts(
+  protectedPayment: Boolean,
+  current: StatePensionAmountRegular,
+  forecast: StatePensionAmountForecast,
+  maximum: StatePensionAmountMaximum,
+  cope: StatePensionAmountRegular
+)
 
 object StatePensionAmounts {
   implicit val formats = Json.format[StatePensionAmounts]
 }
 
-case class StatePension(earningsIncludedUpTo: LocalDate,
-                        amounts: StatePensionAmounts,
-                        pensionAge: Int,
-                        pensionDate: LocalDate,
-                        finalRelevantYear: String,
-                        numberOfQualifyingYears: Int,
-                        pensionSharingOrder: Boolean,
-                        currentFullWeeklyPensionAmount: BigDecimal,
-                        reducedRateElection: Boolean,
-                        statePensionAgeUnderConsideration: Boolean) {
+case class StatePension(
+  earningsIncludedUpTo: LocalDate,
+  amounts: StatePensionAmounts,
+  pensionAge: Int,
+  pensionDate: LocalDate,
+  finalRelevantYear: String,
+  numberOfQualifyingYears: Int,
+  pensionSharingOrder: Boolean,
+  currentFullWeeklyPensionAmount: BigDecimal,
+  reducedRateElection: Boolean,
+  statePensionAgeUnderConsideration: Boolean
+) {
 
   lazy val contractedOut: Boolean = amounts.cope.weeklyAmount > 0
 
   lazy val forecastScenario: Scenario = {
     if (amounts.maximum.weeklyAmount == 0) {
       Scenario.CantGetPension
-    } else if(amounts.maximum.weeklyAmount > amounts.forecast.weeklyAmount) {
+    } else if (amounts.maximum.weeklyAmount > amounts.forecast.weeklyAmount) {
       Scenario.FillGaps
     } else {
-      if(amounts.forecast.weeklyAmount > amounts.current.weeklyAmount) {
+      if (amounts.forecast.weeklyAmount > amounts.current.weeklyAmount) {
 
         if (amounts.forecast.weeklyAmount >= currentFullWeeklyPensionAmount)
           Scenario.ContinueWorkingMax
         else Scenario.ContinueWorkingNonMax
 
-      } else if(amounts.forecast.weeklyAmount == amounts.current.weeklyAmount) {
+      } else if (amounts.forecast.weeklyAmount == amounts.current.weeklyAmount) {
         Scenario.Reached
       } else {
         Scenario.ForecastOnly
@@ -120,7 +126,7 @@ case class StatePension(earningsIncludedUpTo: LocalDate,
   }
 
   lazy val finalRelevantStartYear: Int = Integer.parseInt(finalRelevantYear.substring(0, 4))
-  lazy val finalRelevantEndYear: Int = finalRelevantStartYear + 1
+  lazy val finalRelevantEndYear: Int   = finalRelevantStartYear + 1
 }
 
 object StatePension {
@@ -129,16 +135,16 @@ object StatePension {
 
   implicit val reads: Reads[StatePension] = (
     (JsPath \ "earningsIncludedUpTo").read[LocalDate] and
-    (JsPath \ "amounts").read[StatePensionAmounts] and
-    (JsPath \ "pensionAge").read[Int] and
-    (JsPath \ "pensionDate").read[LocalDate] and
-    (JsPath \ "finalRelevantYear").read[String] and
-    (JsPath \ "numberOfQualifyingYears").read[Int] and
-    (JsPath \ "pensionSharingOrder").read[Boolean] and
-    (JsPath \ "currentFullWeeklyPensionAmount").read[BigDecimal] and
-    readNullableBoolean(JsPath \ "reducedRateElection") and
-    readNullableBoolean(JsPath \ "statePensionAgeUnderConsideration")
-  ) (StatePension.apply _)
+      (JsPath \ "amounts").read[StatePensionAmounts] and
+      (JsPath \ "pensionAge").read[Int] and
+      (JsPath \ "pensionDate").read[LocalDate] and
+      (JsPath \ "finalRelevantYear").read[String] and
+      (JsPath \ "numberOfQualifyingYears").read[Int] and
+      (JsPath \ "pensionSharingOrder").read[Boolean] and
+      (JsPath \ "currentFullWeeklyPensionAmount").read[BigDecimal] and
+      readNullableBoolean(JsPath \ "reducedRateElection") and
+      readNullableBoolean(JsPath \ "statePensionAgeUnderConsideration")
+  )(StatePension.apply _)
 
   implicit val writes = Json.writes[StatePension]
 }
