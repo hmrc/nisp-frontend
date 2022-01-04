@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,15 +34,15 @@ object Exclusion {
 
   implicit object ExclusionFormat extends Format[Exclusion] {
     override def reads(json: JsValue): JsResult[Exclusion] = json match {
-      case JsString("MarriedWomenReducedRateElection") => JsSuccess(Exclusion.MarriedWomenReducedRateElection)
-      case JsString("ContractedOut") => JsSuccess(Exclusion.ContractedOut)
-      case JsString("Dead") => JsSuccess(Exclusion.Dead)
-      case JsString("IsleOfMan") => JsSuccess(Exclusion.IsleOfMan)
-      case JsString("AmountDissonance") => JsSuccess(Exclusion.AmountDissonance)
-      case JsString("PostStatePensionAge") => JsSuccess(Exclusion.PostStatePensionAge)
-      case JsString("ManualCorrespondenceIndicator") => JsSuccess(Exclusion.ManualCorrespondenceIndicator)
-      case JsString("CopeProcessing") => JsSuccess(Exclusion.CopeProcessing)
-      case JsString("CopeProcessingFailed") => JsSuccess(Exclusion.CopeProcessingFailed)
+      case JsString("EXCLUSION_MARRIED_WOMEN_REDUCED_RATE_ELECTION") => JsSuccess(Exclusion.MarriedWomenReducedRateElection)
+      case JsString("EXCLUSION_CONTRACTED_OUT") => JsSuccess(Exclusion.ContractedOut)
+      case JsString("EXCLUSION_DEAD") => JsSuccess(Exclusion.Dead)
+      case JsString("EXCLUSION_ISLE_OF_MAN") => JsSuccess(Exclusion.IsleOfMan)
+      case JsString("EXCLUSION_AMOUNT_DISSONANCE") => JsSuccess(Exclusion.AmountDissonance)
+      case JsString("EXCLUSION_POST_STATE_PENSION_AGE") => JsSuccess(Exclusion.PostStatePensionAge)
+      case JsString("EXCLUSION_MANUAL_CORRESPONDENCE_INDICATOR") => JsSuccess(Exclusion.ManualCorrespondenceIndicator)
+      case JsString("EXCLUSION_COPE_PROCESSING") => JsSuccess(Exclusion.CopeProcessing)
+      case JsString("EXCLUSION_COPE_PROCESSING_FAILED") => JsSuccess(Exclusion.CopeProcessingFailed)
       case _ => JsError("Exclusion not valid!")
     }
 

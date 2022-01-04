@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,12 @@ object StatePensionExclusion {
     implicit val formats: OFormat[OkStatePensionExclusion] = Json.format[OkStatePensionExclusion]
   }
 
+  case class ForbiddenStatePensionExclusion(code: Exclusion, message: String) extends StatePensionExclusion
+
+  object ForbiddenStatePensionExclusion {
+    implicit val formats: OFormat[ForbiddenStatePensionExclusion] = Json.format[ForbiddenStatePensionExclusion]
+  }
+
   case class CopeStatePensionExclusion(exclusion: Exclusion, copeAvailableDate: LocalDate, previousAvailableDate: Option[LocalDate])
     extends StatePensionExclusion
 
@@ -72,8 +78,11 @@ object StatePensionExclusion {
 
   implicit object StatePensionExclusionFormats extends Format[StatePensionExclusion] {
     override def reads(json: JsValue): JsResult[StatePensionExclusion] = {
+      println(s"\n\n\n\njson = $json\n\n\n")
+      println(s"\n\n\n\n${json.validate[CopeStatePensionExclusion]}\n\n\n")
       if (json.validate[OkStatePensionExclusion].isSuccess) JsSuccess(json.as[OkStatePensionExclusion])
       else if (json.validate[CopeStatePensionExclusion].isSuccess) JsSuccess(json.as[CopeStatePensionExclusion])
+      else if (json.validate[ForbiddenStatePensionExclusion].isSuccess) JsSuccess(json.as[ForbiddenStatePensionExclusion])
       else if (json.validate[StatePensionExclusionFiltered].isSuccess) JsSuccess(json.as[StatePensionExclusionFiltered])
       else if (json.validate[StatePensionExclusionFilteredWithCopeDate].isSuccess) JsSuccess(json.as[StatePensionExclusionFilteredWithCopeDate])
       else JsError(JsonValidationError("Unable to parse json as StatePensionExclusion"))
@@ -83,6 +92,8 @@ object StatePensionExclusion {
       spExclusion match {
         case okStatePensionExclusion: OkStatePensionExclusion => OkStatePensionExclusion.formats.writes(okStatePensionExclusion)
         case copeStatePensionExclusion: CopeStatePensionExclusion => CopeStatePensionExclusion.formats.writes(copeStatePensionExclusion)
+        case forbiddenStatePensionExclusion: ForbiddenStatePensionExclusion =>
+          ForbiddenStatePensionExclusion.formats.writes(forbiddenStatePensionExclusion)
         case statePensionExclusionFiltered: StatePensionExclusionFiltered =>
           StatePensionExclusionFiltered.formats.writes(statePensionExclusionFiltered)
         case statePensionExclusionFilteredWithCopeDate: StatePensionExclusionFilteredWithCopeDate =>

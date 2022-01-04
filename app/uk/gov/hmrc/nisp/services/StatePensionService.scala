@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse.WithStatusCode
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, OkStatePensionExclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.time.CurrentTaxYear
 
@@ -44,6 +44,8 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
       .map {
         case Right(Left(CopeStatePensionExclusion(exclusionReason, copeAvailableDate, previousAvailableDate))) =>
           Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusionReason, copeAvailableDate, previousAvailableDate)))
+        case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
+          Right(Left(StatePensionExclusionFiltered(exclusion)))
         case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
           Right(Left(StatePensionExclusionFiltered(filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))
         case Right(Right(statePension)) => Right(Right(statePension))

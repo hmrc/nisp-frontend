@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,6 @@ import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 import scala.concurrent.{ExecutionContext, Future}
 
 trait BackendConnector {
-
-//  type HttpEitherResponse[A] = EitherT[Future, UpstreamErrorResponse, A]
-//  type Exclusion[A] = EitherT[HttpEitherResponse, StatePensionExclusion, A]
 
   def http: HttpClient
   def serviceUrl: String

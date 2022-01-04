@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessingFailed
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, StatePensionExclusionFiltered}
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
