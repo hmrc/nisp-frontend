@@ -45,6 +45,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         case Right(Left(CopeStatePensionExclusion(exclusionReason, copeAvailableDate, previousAvailableDate))) =>
           Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusionReason, copeAvailableDate, previousAvailableDate)))
         case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
+          println(s"\n\n\nexclusion = $exclusion\n\n\n\n")
           Right(Left(StatePensionExclusionFiltered(exclusion)))
         case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
           Right(Left(StatePensionExclusionFiltered(filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))

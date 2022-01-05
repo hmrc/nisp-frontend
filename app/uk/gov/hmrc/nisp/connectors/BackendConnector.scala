@@ -64,7 +64,7 @@ trait BackendConnector {
                                     (implicit hc: HeaderCarrier, formats: Format[A]): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] = {
     val keystoreTimerContext = metricsService.keystoreReadTimer.time()
 
-    val sessionCacheF = sessionCache.fetchAndGetEntry[Either[StatePensionExclusion, A]](api.toString)
+    val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
     sessionCacheF.onFailure {
       case _ => metricsService.keystoreReadFailed.inc()
     }
@@ -73,11 +73,12 @@ trait BackendConnector {
       keystoreResult match {
         case Some(data) =>
           metricsService.keystoreHitCounter.inc()
-          Future.successful(Right(data))
+          Future.successful(Right(Right(data)))
         case None =>
           metricsService.keystoreMissCounter.inc()
           connectToMicroservice(url, api, headers) map {
-            case Right(right) => Right(cacheResult(right, api.toString))
+            case Right(Right(right)) => Right(Right(cacheResult(right, api.toString)))
+            case Right(left) => Right(left)
             case errorResponse => errorResponse
           }
       }
@@ -98,10 +99,10 @@ trait BackendConnector {
     httpResponseF
   }
 
-  private def cacheResult[A](a:Either[StatePensionExclusion, A], name: String)
-                            (implicit hc: HeaderCarrier, formats: Format[A]): Either[StatePensionExclusion, A] = {
+  private def cacheResult[A](a: A, name: String)
+                            (implicit hc: HeaderCarrier, formats: Format[A]): A = {
     val timerContext = metricsService.keystoreWriteTimer.time()
-    val cacheF = sessionCache.cache[Either[StatePensionExclusion, A]](name, a)
+    val cacheF = sessionCache.cache[A](name, a)
     cacheF.onSuccess {
       case _ => timerContext.stop()
     }

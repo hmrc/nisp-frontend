@@ -18,11 +18,10 @@ package uk.gov.hmrc.nisp.models
 
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-import play.api.libs.json.{Format, JsError, JsResult, JsSuccess, JsValue, Json, JsonValidationError, OFormat}
+import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue, Json, JsonValidationError, OFormat, Reads, Writes}
 import uk.gov.hmrc.time.TaxYear
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
 
 trait StatePensionExclusion extends Exclusion
 
@@ -36,19 +35,29 @@ object StatePensionExclusion {
   }
 
   object OkStatePensionExclusion {
+    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
+      date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+    }
+
+    implicit val dateFormats: Format[LocalDate] = Format[LocalDate](Reads.localDateReads("yyyy-MM-dd"), dateWrites)
     implicit val formats: OFormat[OkStatePensionExclusion] = Json.format[OkStatePensionExclusion]
   }
 
-  case class ForbiddenStatePensionExclusion(code: Exclusion, message: String) extends StatePensionExclusion
+  case class ForbiddenStatePensionExclusion(code: Exclusion, message: Option[String]) extends StatePensionExclusion
 
   object ForbiddenStatePensionExclusion {
     implicit val formats: OFormat[ForbiddenStatePensionExclusion] = Json.format[ForbiddenStatePensionExclusion]
   }
 
-  case class CopeStatePensionExclusion(exclusion: Exclusion, copeAvailableDate: LocalDate, previousAvailableDate: Option[LocalDate])
+  case class CopeStatePensionExclusion(code: Exclusion, copeDataAvailableDate: LocalDate, previousAvailableDate: Option[LocalDate])
     extends StatePensionExclusion
 
   object CopeStatePensionExclusion {
+    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
+      date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+    }
+
+    implicit val dateFormats: Format[LocalDate] = Format[LocalDate](Reads.localDateReads("yyyy-MM-dd"), dateWrites)
     implicit val formats: OFormat[CopeStatePensionExclusion] = Json.format[CopeStatePensionExclusion]
   }
 
@@ -62,24 +71,34 @@ object StatePensionExclusion {
   }
 
   object StatePensionExclusionFiltered {
+    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
+      date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+    }
+
+    implicit val dateFormats: Format[LocalDate] = Format[LocalDate](Reads.localDateReads("yyyy-MM-dd"), dateWrites)
     implicit val formats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
   }
 
   case class StatePensionExclusionFilteredWithCopeDate(
                                                         exclusion: Exclusion,
-                                                        copeAvailableDate: LocalDate,
+                                                        copeDataAvailableDate: LocalDate,
                                                         previousAvailableDate: Option[LocalDate] = None
                                                       ) extends StatePensionExclusion
 
 
   object StatePensionExclusionFilteredWithCopeDate {
+    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
+      date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+    }
+
+    implicit val dateFormats: Format[LocalDate] = Format[LocalDate](Reads.localDateReads("yyyy-MM-dd"), dateWrites)
     implicit val copeDataFormats: OFormat[StatePensionExclusionFilteredWithCopeDate] = Json.format[StatePensionExclusionFilteredWithCopeDate]
   }
 
   implicit object StatePensionExclusionFormats extends Format[StatePensionExclusion] {
     override def reads(json: JsValue): JsResult[StatePensionExclusion] = {
       println(s"\n\n\n\njson = $json\n\n\n")
-      println(s"\n\n\n\n${json.validate[CopeStatePensionExclusion]}\n\n\n")
+      println(s"\n\n\n\nparsed = ${json.validate[ForbiddenStatePensionExclusion]}\n\n\n")
       if (json.validate[OkStatePensionExclusion].isSuccess) JsSuccess(json.as[OkStatePensionExclusion])
       else if (json.validate[CopeStatePensionExclusion].isSuccess) JsSuccess(json.as[CopeStatePensionExclusion])
       else if (json.validate[ForbiddenStatePensionExclusion].isSuccess) JsSuccess(json.as[ForbiddenStatePensionExclusion])
