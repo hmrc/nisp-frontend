@@ -16,8 +16,11 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import java.time.LocalDate
+import java.util.UUID
+
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{mock, reset, when}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -34,10 +37,6 @@ import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import java.time.LocalDate
-import java.util.UUID
-
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 
 import scala.concurrent.Future
 
@@ -606,6 +605,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
           Future.successful(Right(Right(nationalInsuranceRecord))))
+        
 
         val result = testExclusionController.showSP()(FakeRequest())
 

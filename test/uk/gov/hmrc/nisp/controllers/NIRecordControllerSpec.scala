@@ -16,8 +16,11 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import java.time.LocalDate
+import java.util.UUID
+
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{mock, reset, when}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -38,10 +41,6 @@ import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import java.time.LocalDate
-import java.util.UUID
-
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 
 import scala.concurrent.Future
 

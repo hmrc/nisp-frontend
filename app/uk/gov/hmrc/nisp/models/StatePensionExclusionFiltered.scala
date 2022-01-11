@@ -17,16 +17,24 @@
 package uk.gov.hmrc.nisp.models
 
 import java.time.LocalDate
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.time.TaxYear
-import play.api.libs.json.JodaReads._
-import play.api.libs.json.JodaWrites._
 
-trait StatePensionExcl {
+import uk.gov.hmrc.time.TaxYear
+
+trait StatePensionExclusionFilter {
   def exclusion: Exclusion
 }
 
-trait CopeData {
-  def copeAvailableDate: LocalDate
-  def previousAvailableDate: Option[LocalDate]
+case class StatePensionExclusionFiltered(
+                                          exclusion: Exclusion,
+                                          pensionAge: Option[Int] = None,
+                                          pensionDate: Option[LocalDate] = None,
+                                          statePensionAgeUnderConsideration: Option[Boolean] = None
+                                        ) extends StatePensionExclusionFilter {
+  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
 }
+
+case class StatePensionExclusionFilteredWithCopeDate(
+                                                      exclusion: Exclusion,
+                                                      copeDataAvailableDate: LocalDate,
+                                                      previousAvailableDate: Option[LocalDate] = None
+                                                    ) extends StatePensionExclusionFilter

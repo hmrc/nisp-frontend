@@ -47,8 +47,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import java.time.LocalDate
 import java.util.UUID
 
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.StatePensionExclusionFiltered
-
 import scala.concurrent.Future
 
 

@@ -16,15 +16,13 @@
 
 package uk.gov.hmrc.nisp.services
 
-import com.google.inject.Inject
-import java.time.{LocalDate, LocalDateTime, ZoneId}
+import java.time.{LocalDate, ZoneId}
 
-import play.api.http.Status._
+import com.google.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.UpstreamErrorResponse.WithStatusCode
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.time.CurrentTaxYear
 
@@ -39,18 +37,17 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
   val exclusionCodeCopeProcessingFailed: String = "EXCLUSION_COPE_PROCESSING_FAILED"
 
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, StatePension]]] = {
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]] = {
     statePensionConnector.getStatePension(nino)
       .map {
         case Right(Left(CopeStatePensionExclusion(exclusionReason, copeAvailableDate, previousAvailableDate))) =>
           Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusionReason, copeAvailableDate, previousAvailableDate)))
         case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
-          println(s"\n\n\nexclusion = $exclusion\n\n\n\n")
           Right(Left(StatePensionExclusionFiltered(exclusion)))
         case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
           Right(Left(StatePensionExclusionFiltered(filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))
         case Right(Right(statePension)) => Right(Right(statePension))
-        case errorResponse => errorResponse
+        case Left(errorResponse) => Left(errorResponse)
       }
   }
 

@@ -61,49 +61,13 @@ object StatePensionExclusion {
     implicit val formats: OFormat[CopeStatePensionExclusion] = Json.format[CopeStatePensionExclusion]
   }
 
-  case class StatePensionExclusionFiltered(
-                                            exclusion: Exclusion,
-                                            pensionAge: Option[Int] = None,
-                                            pensionDate: Option[LocalDate] = None,
-                                            statePensionAgeUnderConsideration: Option[Boolean] = None
-                                          ) extends StatePensionExclusion {
-    val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
-  }
 
-  object StatePensionExclusionFiltered {
-    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
-      date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-    }
-
-    implicit val dateFormats: Format[LocalDate] = Format[LocalDate](Reads.localDateReads("yyyy-MM-dd"), dateWrites)
-    implicit val formats: OFormat[StatePensionExclusionFiltered] = Json.format[StatePensionExclusionFiltered]
-  }
-
-  case class StatePensionExclusionFilteredWithCopeDate(
-                                                        exclusion: Exclusion,
-                                                        copeDataAvailableDate: LocalDate,
-                                                        previousAvailableDate: Option[LocalDate] = None
-                                                      ) extends StatePensionExclusion
-
-
-  object StatePensionExclusionFilteredWithCopeDate {
-    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
-      date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-    }
-
-    implicit val dateFormats: Format[LocalDate] = Format[LocalDate](Reads.localDateReads("yyyy-MM-dd"), dateWrites)
-    implicit val copeDataFormats: OFormat[StatePensionExclusionFilteredWithCopeDate] = Json.format[StatePensionExclusionFilteredWithCopeDate]
-  }
 
   implicit object StatePensionExclusionFormats extends Format[StatePensionExclusion] {
     override def reads(json: JsValue): JsResult[StatePensionExclusion] = {
-      println(s"\n\n\n\njson = $json\n\n\n")
-      println(s"\n\n\n\nparsed = ${json.validate[ForbiddenStatePensionExclusion]}\n\n\n")
       if (json.validate[OkStatePensionExclusion].isSuccess) JsSuccess(json.as[OkStatePensionExclusion])
       else if (json.validate[CopeStatePensionExclusion].isSuccess) JsSuccess(json.as[CopeStatePensionExclusion])
       else if (json.validate[ForbiddenStatePensionExclusion].isSuccess) JsSuccess(json.as[ForbiddenStatePensionExclusion])
-      else if (json.validate[StatePensionExclusionFiltered].isSuccess) JsSuccess(json.as[StatePensionExclusionFiltered])
-      else if (json.validate[StatePensionExclusionFilteredWithCopeDate].isSuccess) JsSuccess(json.as[StatePensionExclusionFilteredWithCopeDate])
       else JsError(JsonValidationError("Unable to parse json as StatePensionExclusion"))
     }
 
@@ -113,10 +77,6 @@ object StatePensionExclusion {
         case copeStatePensionExclusion: CopeStatePensionExclusion => CopeStatePensionExclusion.formats.writes(copeStatePensionExclusion)
         case forbiddenStatePensionExclusion: ForbiddenStatePensionExclusion =>
           ForbiddenStatePensionExclusion.formats.writes(forbiddenStatePensionExclusion)
-        case statePensionExclusionFiltered: StatePensionExclusionFiltered =>
-          StatePensionExclusionFiltered.formats.writes(statePensionExclusionFiltered)
-        case statePensionExclusionFilteredWithCopeDate: StatePensionExclusionFilteredWithCopeDate =>
-          StatePensionExclusionFilteredWithCopeDate.copeDataFormats.writes(statePensionExclusionFilteredWithCopeDate)
       }
     }
   }

@@ -30,7 +30,7 @@ import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 import java.time.LocalDate
 
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

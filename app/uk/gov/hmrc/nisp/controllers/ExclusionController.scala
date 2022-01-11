@@ -23,8 +23,8 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}
 import uk.gov.hmrc.nisp.errorHandler.ErrorHandler
 import uk.gov.hmrc.nisp.models.Exclusion._
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
-import uk.gov.hmrc.nisp.models.Exclusion
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.CopeStatePensionExclusion
+import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
