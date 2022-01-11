@@ -605,7 +605,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
           Future.successful(Right(Right(nationalInsuranceRecord))))
-        
 
         val result = testExclusionController.showSP()(FakeRequest())
 

@@ -23,12 +23,13 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
-import uk.gov.hmrc.nisp.models.{Exclusion, _}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.time.CurrentTaxYear
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
+class StatePensionService @Inject()(statePensionConnector: StatePensionConnector,
+                                    exclusionService: ExclusionService)
                                    (implicit executor: ExecutionContext) extends CurrentTaxYear {
 
   val exclusionCodeDead: String = "EXCLUSION_DEAD"
@@ -45,7 +46,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
           Right(Left(StatePensionExclusionFiltered(exclusion)))
         case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
-          Right(Left(StatePensionExclusionFiltered(filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))
+          Right(Left(StatePensionExclusionFiltered(exclusionService.filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))
         case Right(Right(statePension)) => Right(Right(statePension))
         case Left(errorResponse) => Left(errorResponse)
       }
@@ -53,24 +54,6 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
 
   def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int = {
     finalRelevantYearStart - taxYearFor(earningsIncludedUpTo).startYear
-  }
-
-  private[services] def filterExclusions(exclusions: List[Exclusion]): Exclusion = {
-    if (exclusions.contains(Exclusion.Dead)) {
-      Exclusion.Dead
-    } else if (exclusions.contains(Exclusion.ManualCorrespondenceIndicator)) {
-      Exclusion.ManualCorrespondenceIndicator
-    } else if (exclusions.contains(Exclusion.PostStatePensionAge)) {
-      Exclusion.PostStatePensionAge
-    } else if (exclusions.contains(Exclusion.AmountDissonance)) {
-      Exclusion.AmountDissonance
-    } else if (exclusions.contains(Exclusion.IsleOfMan)) {
-      Exclusion.IsleOfMan
-    } else if (exclusions.contains(Exclusion.MarriedWomenReducedRateElection)) {
-      Exclusion.MarriedWomenReducedRateElection
-    } else {
-      throw new RuntimeException(s"Un-accounted for exclusion in NispConnectionNI: $exclusions")
-    }
   }
 
   override def now: () => LocalDate = () => LocalDate.now(ZoneId.of("Europe/London"))

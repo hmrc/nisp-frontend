@@ -17,17 +17,13 @@
 package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
-import play.api.http.Status
-import play.api.libs.json.{Format, Json, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse, UpstreamErrorResponse}
-import uk.gov.hmrc.http.HttpErrorFunctions.{is4xx, is5xx}
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePension, StatePensionExclusion}
-import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.enums.APIType
+import uk.gov.hmrc.nisp.models.{StatePension, StatePensionExclusion}
+import uk.gov.hmrc.nisp.services.MetricsService
 
 import scala.concurrent.{ExecutionContext, Future}
 

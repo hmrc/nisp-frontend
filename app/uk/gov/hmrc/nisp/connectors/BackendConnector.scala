@@ -111,17 +111,4 @@ trait BackendConnector {
     }
     a
   }
-
-  private def formatJsonErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): String = {
-    errors.map(p => p._1 + " - " + p._2.map(e => removeJson(e.message)).mkString(",")).mkString(" | ")
-  }
-
-  private def removeJson(message: String): String = {
-    message.indexOf("{") match {
-      case i if i != -1  => message.substring(0, i - 1) + " [JSON removed]"
-      case _ => message
-    }
-  }
-
-  private[connectors] class JsonValidationException(message: String) extends Exception(message)
 }
