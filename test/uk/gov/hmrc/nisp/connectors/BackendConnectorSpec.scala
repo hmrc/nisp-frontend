@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.helpers.FakeSessionCache
-import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusion}
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.{JsonDepersonaliser, UnitSpec}
@@ -46,17 +46,18 @@ class BackendConnectorSpec extends UnitSpec with ScalaFutures {
     override def serviceUrl: String = "national-insurance"
     override val metricsService: MetricsService = mockMetricsService
     override implicit val executionContext: ExecutionContext = global
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    def getNationalInsurance()(implicit headerCarrier: HeaderCarrier): Future[NationalInsuranceRecord] = {
+    def getNationalInsurance()(implicit headerCarrier: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]] = {
       val urlToRead = s"$serviceUrl/ni"
-      retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead)(headerCarrier, NationalInsuranceRecord.formats)
+      retrieveFromCache(APIType.NationalInsurance, urlToRead)(headerCarrier, NationalInsuranceRecord.formats)
     }
   }
 
   implicit val headerCarrier = HeaderCarrier()
 
   "connectToMicroservice" should {
-    "should return depersonalised JSON" in {
+    "should return UpstreamErrorResponse and failed future" in {
       val json = Json.obj(
         "qualifyingYearsPriorTo1975" -> 0,
         "numberOfGaps" -> 6,
@@ -69,21 +70,16 @@ class BackendConnectorSpec extends UnitSpec with ScalaFutures {
         )
       )
 
-      val depersonalisedJson =  JsonDepersonaliser.depersonalise(json) match {
-        case Success(s) => s
-        case Failure(_) => fail()
-      }
-
       val response = Future(HttpResponse(OK, json, Map.empty[String, Seq[String]]))
       when(mockHttp.GET[HttpResponse](ArgumentMatchers.eq("national-insurance/ni"), ArgumentMatchers.any(), ArgumentMatchers.any())
         (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(response)
 
-      val future: Future[NationalInsuranceRecord] = BackendConnectorImpl.getNationalInsurance()
+      val future: Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]] =
+        BackendConnectorImpl.getNationalInsurance()
 
       whenReady(future.failed) {
         t: Throwable =>
-          t.getMessage.contains(depersonalisedJson) shouldBe true
           t.getMessage.contains("2016-04-05") shouldBe false
       }
     }

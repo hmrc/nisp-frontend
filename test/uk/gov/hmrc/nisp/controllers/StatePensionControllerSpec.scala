@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +36,11 @@ import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-
 import java.time.LocalDate
 import java.util.UUID
+
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.StatePensionExclusionFiltered
+
 import scala.concurrent.Future
 
 class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
@@ -167,11 +169,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(nationalInsuranceRecord))
+          Future.successful(Right(Right(nationalInsuranceRecord)))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(statePensionResponse))
+          Future.successful(Right(Right(statePensionResponse)))
         )
 
         val result = statePensionController.show()(generateFakeRequest)
@@ -182,11 +184,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Left(Exclusion.Dead))
+          Future.successful(Right(Left(Exclusion.Dead)))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
+          Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
         )
 
         val result = statePensionController
@@ -210,11 +212,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         )
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(expectedNationalInsuranceRecord))
+          Future.successful(Right(Right((expectedNationalInsuranceRecord))))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(statePensionCopeResponse))
+          Future.successful(Right(Right(statePensionCopeResponse)))
         )
 
         val result = statePensionController.show()(generateFakeRequest)
@@ -225,7 +227,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(statePensionCopeResponse))
+          Future.successful(Right(Right(statePensionCopeResponse)))
         )
 
         val result = statePensionController.showCope()(generateFakeRequest)
@@ -236,11 +238,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
-          Future.successful(Right(nationalInsuranceRecord))
+          Future.successful(Right(Right(nationalInsuranceRecord)))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
-          Future.successful(Right(statePensionResponse))
+          Future.successful(Right(Right(statePensionResponse)))
         )
 
         val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
@@ -253,11 +255,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Left(Exclusion.MarriedWomenReducedRateElection))
+          Future.successful(Right(Left(Exclusion.MarriedWomenReducedRateElection)))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
+          Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
         )
 
         val result = statePensionController.show()(generateFakeRequest)
@@ -269,11 +271,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
-          Future.successful(Right(nationalInsuranceRecord))
+          Future.successful(Right(Right(nationalInsuranceRecord)))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
-          Future.successful(Right(statePensionResponse))
+          Future.successful(Right(Right(statePensionResponse)))
         )
 
         val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
@@ -287,11 +289,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
-          Future.successful(Right(nationalInsuranceRecord))
+          Future.successful(Right(Right(nationalInsuranceRecord)))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
-          Future.successful(Right(statePensionResponse))
+          Future.successful(Right(Right(statePensionResponse)))
         )
 
         val statePensionController = abroadUserInjector.instanceOf[StatePensionController]
@@ -305,7 +307,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(statePensionVariation2))
+          Future.successful(Right(Right(statePensionVariation2)))
         )
 
         val result = statePensionController.showCope()(generateFakeRequest)
@@ -322,11 +324,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         )
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(expectedNationalInsuranceRecord))
+          Future.successful(Right(Right(expectedNationalInsuranceRecord)))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(statePensionVariation2))
+          Future.successful(Right(Right(statePensionVariation2)))
         )
 
         val result = statePensionController.show()(generateFakeRequest)
@@ -340,11 +342,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
           when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-            Future.successful(Right(nationaInsuranceRecordVariant2))
+            Future.successful(Right(Right(nationaInsuranceRecordVariant2)))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-            Future.successful(Right(statePensionResponseVariation3))
+            Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 
           val result = statePensionController.show()(generateFakeRequest)
@@ -368,11 +370,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           )
 
           when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-            Future.successful(Right(expectedNationalInsuranceRecord))
+            Future.successful(Right(Right(expectedNationalInsuranceRecord)))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-            Future.successful(Right(statePensionResponseVariation3))
+            Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 
           val result = statePensionController.show()(generateFakeRequest)
@@ -387,11 +389,11 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           when(mockAppConfig.futureProofPersonalMax).thenReturn(true)
 
           when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-            Future.successful(Right(nationaInsuranceRecordVariant2))
+            Future.successful(Right(Right(nationaInsuranceRecordVariant2)))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-            Future.successful(Right(statePensionResponseVariation3))
+            Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 
           val result = statePensionController.show()(generateFakeRequest)

@@ -126,7 +126,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
             } else {
               val finalRelevantStartYear = statePensionResponse match {
                 case Right(Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _))) |
-                     Right(Left(CopeStatePensionExclusion(_, _, _))) => None
+                     Right(Left(StatePensionExclusionFilteredWithCopeDate(_, _, _))) => None
                 case Right(Left(spExclusion: StatePensionExclusionFiltered)) => Some(spExclusion.finalRelevantStartYear
                   .getOrElse(throw new RuntimeException(s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion")))
                 case Right(Right(sp)) => Some(sp.finalRelevantStartYear)

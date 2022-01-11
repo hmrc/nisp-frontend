@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP :  Personal Max" should {
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
@@ -131,10 +131,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 reducedRateElection = false,
                 statePensionAgeUnderConsideration = false
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
@@ -150,7 +150,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
 
             when(mockAppConfig.showUrBanner).thenReturn(true)
             when(mockAppConfig.urRecruitmentLinkURL).thenReturn(urResearchURL)
@@ -385,7 +385,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
@@ -403,10 +403,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 reducedRateElection = false,
                 statePensionAgeUnderConsideration = true
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
@@ -422,7 +422,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
           }
 
           lazy val doc =
@@ -478,7 +478,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = true,
@@ -496,10 +496,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 false,
                 false
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
@@ -515,7 +515,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
           }
 
           lazy val doc =
@@ -708,7 +708,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = true,
@@ -726,10 +726,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 reducedRateElection = false,
                 statePensionAgeUnderConsideration = true
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
@@ -745,7 +745,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
           }
 
           lazy val doc =
@@ -802,7 +802,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
@@ -820,10 +820,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 false,
                 false
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
@@ -839,7 +839,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
           }
 
           lazy val doc =
@@ -1009,7 +1009,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
@@ -1027,10 +1027,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 reducedRateElection = false,
                 statePensionAgeUnderConsideration = true
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
@@ -1046,7 +1046,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
           }
 
           lazy val doc =
@@ -1107,7 +1107,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
@@ -1125,10 +1125,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 false,
                 false
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 0,
@@ -1144,7 +1144,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
 
           }
 
@@ -1298,7 +1298,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
@@ -1316,10 +1316,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 reducedRateElection = false,
                 statePensionAgeUnderConsideration = true
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 0,
@@ -1335,7 +1335,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
           }
 
           lazy val doc =
@@ -1393,7 +1393,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
@@ -1411,10 +1411,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 false,
                 false
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
@@ -1430,7 +1430,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
           }
 
           lazy val doc =
@@ -1581,7 +1581,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(StatePension(
+              .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
                   protectedPayment = false,
@@ -1599,10 +1599,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 reducedRateElection = false,
                 statePensionAgeUnderConsideration = true
               )
-              )))
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
                 numberOfGaps = 2,
@@ -1618,7 +1618,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 ),
                 reducedRateElection = false
               )
-              )))
+              ))))
 
           }
 
@@ -1677,7 +1677,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         def mockSetup = {
           when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-            .thenReturn(Future.successful(Right(StatePension(
+            .thenReturn(Future.successful(Right(Right(StatePension(
               LocalDate.of(2016, 4, 5),
               amounts = StatePensionAmounts(
                 protectedPayment = false,
@@ -1695,10 +1695,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               false,
               false
             )
-            )))
+            ))))
 
           when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+            .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 0,
@@ -1714,7 +1714,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               ),
               reducedRateElection = false
             )
-            )))
+            ))))
         }
 
         lazy val doc =
@@ -1846,7 +1846,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         def mockSetup = {
           when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-            .thenReturn(Future.successful(Right(StatePension(
+            .thenReturn(Future.successful(Right(Right(StatePension(
               LocalDate.of(2016, 4, 5),
               amounts = StatePensionAmounts(
                 protectedPayment = false,
@@ -1864,10 +1864,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               reducedRateElection = false,
               statePensionAgeUnderConsideration = true
             )
-            )))
+            ))))
 
           when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-            .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+            .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
               numberOfGaps = 0,
@@ -1883,7 +1883,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               ),
               reducedRateElection = false
             )
-            )))
+            ))))
         }
 
         lazy val doc =

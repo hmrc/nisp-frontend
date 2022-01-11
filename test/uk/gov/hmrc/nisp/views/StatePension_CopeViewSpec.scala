@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with
     def mockSetup = {
 
       when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-        .thenReturn(Future.successful(Right(StatePension(
+        .thenReturn(Future.successful(Right(Right(StatePension(
           LocalDate.of(2014, 4, 5),
           StatePensionAmounts(
             false,
@@ -108,10 +108,10 @@ class StatePension_CopeViewSpec extends HtmlSpec with
             StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
             StatePensionAmountRegular(50, 217.41, 2608.93))
           ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
-        )))
+        ))))
 
       when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-        .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 11,
           qualifyingYearsPriorTo1975 = 0,
           numberOfGaps = 2,
@@ -127,7 +127,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with
           ),
           reducedRateElection = false
         )
-        )))
+        ))))
 
     }
 

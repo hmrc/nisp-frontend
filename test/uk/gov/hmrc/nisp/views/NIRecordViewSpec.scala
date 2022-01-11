@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,9 +44,11 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-
 import java.time.LocalDate
 import java.util.UUID
+
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.StatePensionExclusionFiltered
+
 import scala.concurrent.Future
 
 
@@ -108,7 +110,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       .thenReturn(4)
 
     when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-      .thenReturn(Future.successful(Right(StatePension(
+      .thenReturn(Future.successful(Right(Right(StatePension(
         LocalDate.of(2015, 4, 5),
         amounts = StatePensionAmounts(
           protectedPayment = false,
@@ -126,11 +128,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
         reducedRateElection = false,
         statePensionAgeUnderConsideration = false
       )
-      )))
+      ))))
 
     val niRecord = nIRecordRegular.copy(qualifyingYearsPriorTo1975 = -3)
     when(mockNationalInsuranceService.getSummary(mockAny())(mockAny())).
-      thenReturn(Future.successful(Right(niRecord)))
+      thenReturn(Future.successful(Right(Right(niRecord))))
 
     when(mockAppConfig.showUrBanner).thenReturn(true)
     when(mockAppConfig.urRecruitmentLinkURL).thenReturn("https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183")
@@ -556,7 +558,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
-        .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 1,
           qualifyingYearsPriorTo1975 = 5,
           numberOfGaps = 0,
@@ -571,15 +573,15 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           ),
           reducedRateElection = false
         )
-        )))
+        ))))
 
       when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-        .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
           Some(LocalDate.of(2020, 3, 6))
         )
-        )))
+        ))))
     }
 
     /*Check side border :summary */
@@ -634,7 +636,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
-        .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 2,
           qualifyingYearsPriorTo1975 = 0,
           numberOfGaps = 1,
@@ -649,15 +651,15 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           ),
           reducedRateElection = false
         )
-        )))
+        ))))
 
       when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-        .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
           Some(LocalDate.of(2020, 3, 6))
         )
-        )))
+        ))))
     }
 
 
@@ -723,7 +725,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
-        .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 2,
           qualifyingYearsPriorTo1975 = 0,
           numberOfGaps = 1,
@@ -738,18 +740,18 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           ),
           reducedRateElection = false
         )
-        )))
+        ))))
 
       when(mockStatePensionService.yearsToContributeUntilPensionAge(mockAny(), mockAny()))
         .thenReturn(1)
 
       when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-        .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
           Some(LocalDate.of(2018, 3, 6))
         )
-        )))
+        ))))
     }
 
     /*Check side border :summary */
@@ -860,7 +862,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
 
     def mockSetup = {
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
-        .thenReturn(Future.successful(Right(NationalInsuranceRecord(
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 2,
           qualifyingYearsPriorTo1975 = 0,
           numberOfGaps = 1,
@@ -875,18 +877,18 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           ),
           reducedRateElection = false
         )
-        )))
+        ))))
 
       when(mockStatePensionService.yearsToContributeUntilPensionAge(mockAny(), mockAny()))
         .thenReturn(1)
 
       when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-        .thenReturn(Future.successful(Left(StatePensionExclusionFiltered(
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
           Some(LocalDate.of(2018, 3, 6))
         )
-        )))
+        ))))
     }
 
     "render with correct page title" in {

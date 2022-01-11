@@ -35,6 +35,7 @@ object Exclusion {
   implicit object ExclusionFormat extends Format[Exclusion] {
     override def reads(json: JsValue): JsResult[Exclusion] = json match {
       case JsString("EXCLUSION_MARRIED_WOMEN_REDUCED_RATE_ELECTION") => JsSuccess(Exclusion.MarriedWomenReducedRateElection)
+      case JsString("MarriedWomenReducedRateElection") => JsSuccess(Exclusion.MarriedWomenReducedRateElection)
       case JsString("EXCLUSION_CONTRACTED_OUT") => JsSuccess(Exclusion.ContractedOut)
       case JsString("EXCLUSION_DEAD") => JsSuccess(Exclusion.Dead)
       case JsString("EXCLUSION_ISLE_OF_MAN") => JsSuccess(Exclusion.IsleOfMan)

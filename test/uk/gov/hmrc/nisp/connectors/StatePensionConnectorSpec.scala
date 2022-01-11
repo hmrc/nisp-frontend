@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,9 @@ import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-
 import java.time.LocalDate
+
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 
 class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
   Injecting with BeforeAndAfterEach with WireMockHelper {
@@ -80,7 +81,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino)) { statePension =>
-        statePension shouldBe Right(StatePension(
+        statePension shouldBe Right(Right(StatePension(
           LocalDate.of(2015, 4, 5),
           StatePensionAmounts(
             false,
@@ -92,7 +93,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65,
           false,
           false
-        ))
+        )))
       }
 
       server.verify(
@@ -104,7 +105,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
 
     "return a failed Future 403 with a Dead message for all exclusion" in {
 
-      val json = Json.toJson("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"""")
+      val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAll}"))
@@ -113,25 +114,31 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           )
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAll).failed) {
-        case ex: Upstream4xxResponse =>
-          ex.upstreamResponseCode shouldBe 403
-          ex.message.contains("EXCLUSION_DEAD") shouldBe true
+      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAll))
+
+      result.map {
+        spExclusion =>
+          val exclusion = spExclusion.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+
+          exclusion.code shouldBe Exclusion.Dead
       }
     }
 
     "return a failed Future 403 with a MCI message for all exclusion but dead" in {
-      val json = Json.toJson("""{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline"""")
+      val json = Json.parse("""{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline"}""")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAllButDead}"))
           .willReturn(forbidden().withBody(json.toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead).failed) {
-        case ex: Upstream4xxResponse =>
-          ex.upstreamResponseCode shouldBe 403
-          ex.message.contains("EXCLUSION_MANUAL_CORRESPONDENCE") shouldBe true
+      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead))
+
+      result.map {
+        spExclusion =>
+          val exclusion = spExclusion.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+
+          exclusion.code shouldBe Exclusion.ManualCorrespondenceIndicator
       }
     }
 
@@ -145,17 +152,17 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDeadMCI)) { result =>
-        result shouldBe Left(StatePensionExclusion(
+        result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge,
             Exclusion.AmountDissonance,
             Exclusion.MarriedWomenReducedRateElection,
             Exclusion.IsleOfMan
           ),
-          pensionAge = Some(65),
-          pensionDate = Some(LocalDate.of(2017, 7, 18)),
-          statePensionAgeUnderConsideration = Some(false)
-        ))
+          Some(65),
+          Some(LocalDate.of(2017, 7, 18)),
+          Some(false)
+        )))
       }
     }
 
@@ -171,14 +178,14 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
+        result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.AmountDissonance
           ),
           pensionAge = Some(65),
           pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = Some(true)
-        ))
+        )))
       }
     }
 
@@ -194,14 +201,14 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
+        result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.IsleOfMan
           ),
           pensionAge = Some(65),
           pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = Some(true)
-        ))
+        )))
       }
     }
 
@@ -216,14 +223,14 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
+        result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.MarriedWomenReducedRateElection
           ),
           pensionAge = Some(65),
           pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = Some(true)
-        ))
+        )))
       }
     }
 
@@ -238,14 +245,14 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
+        result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge
           ),
           pensionAge = Some(65),
           pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = Some(true)
-        ))
+        )))
       }
     }
 
@@ -260,7 +267,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
+        result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge,
             Exclusion.AmountDissonance,
@@ -270,7 +277,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           pensionAge = Some(65),
           pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = Some(true)
-        ))
+        )))
       }
     }
 
@@ -285,14 +292,14 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { result =>
-        result shouldBe Left(StatePensionExclusion(
+        result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.IsleOfMan
           ),
           pensionAge = Some(65),
           pensionDate = Some(LocalDate.of(2017, 7, 18)),
           statePensionAgeUnderConsideration = None
-        ))
+        )))
       }
     }
   }
