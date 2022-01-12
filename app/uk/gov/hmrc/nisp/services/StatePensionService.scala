@@ -32,12 +32,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
                                    (implicit executor: ExecutionContext) extends CurrentTaxYear {
 
-  val exclusionCodeDead: String = "EXCLUSION_DEAD"
-  val exclusionCodeManualCorrespondence: String = "EXCLUSION_MANUAL_CORRESPONDENCE"
-  val exclusionCodeCopeProcessing: String = "EXCLUSION_COPE_PROCESSING"
-  val exclusionCodeCopeProcessingFailed: String = "EXCLUSION_COPE_PROCESSING_FAILED"
-
-
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]] = {
     statePensionConnector.getStatePension(nino)
       .map {
