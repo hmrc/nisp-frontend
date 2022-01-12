@@ -178,8 +178,10 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "return the connector response with PostStatePensionAge exclusion for all the exclusions except MCI and Dead" in {
+      val spResponse = statePensionResponse[OkStatePensionExclusion](excludedAllButDeadMCI)
+
       when(mockStatePensionConnector.getStatePension(mockEQ(excludedAllButDeadMCI))(mockAny())).thenReturn(
-        Future.successful(Right(Left(statePensionResponse[StatePensionExclusion](excludedAllButDeadMCI))))
+        Future.successful(Right(Left(spResponse)))
       )
 
       statePensionService.getSummary(excludedAllButDeadMCI).futureValue shouldBe Right(Left(StatePensionExclusionFiltered(
@@ -227,8 +229,10 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "return the connector response for a user with exclusion with a true flag for State Pension Age Under Consideration" in {
+      val spResponse = statePensionResponse[OkStatePensionExclusion](spaUnderConsiderationExclusionIoMNino)
+
       when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationExclusionIoMNino))(mockAny())).thenReturn(
-        Future.successful(Right(Left(statePensionResponse[OkStatePensionExclusion](spaUnderConsiderationExclusionIoMNino))))
+        Future.successful(Right(Left(spResponse)))
       )
 
       statePensionService.getSummary(spaUnderConsiderationExclusionIoMNino).futureValue shouldBe Right(Left(StatePensionExclusionFiltered(
@@ -240,8 +244,10 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "return the connector response for a user with exclusion with no flag for State Pension Age Under Consideration" in {
+      val spResponse = statePensionResponse[StatePensionExclusion](spaUnderConsiderationExclusionNoFlagNino)
+
       when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationExclusionNoFlagNino))(mockAny())).thenReturn(
-        Future.successful(Right(Left(statePensionResponse[StatePensionExclusion](spaUnderConsiderationExclusionNoFlagNino))))
+        Future.successful(Right(Left(spResponse)))
       )
 
       statePensionService.getSummary(spaUnderConsiderationExclusionNoFlagNino).futureValue shouldBe Right(Left(StatePensionExclusionFiltered(

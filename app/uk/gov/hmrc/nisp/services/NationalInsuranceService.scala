@@ -22,11 +22,11 @@ import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord}
+import uk.gov.hmrc.nisp.utils.ExclusionHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl,
-                                         exclusionService: ExclusionService)
+class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
                                         (implicit executor: ExecutionContext) {
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[Exclusion, NationalInsuranceRecord]]] = {
@@ -46,7 +46,7 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
         case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
           Right(Left(exclusion))
         case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
-          Right(Left(exclusionService.filterExclusions(exclusions)))
+          Right(Left(ExclusionHelper.filterExclusions(exclusions)))
         case Left(errorResponse) => Left(errorResponse)
       }
   }

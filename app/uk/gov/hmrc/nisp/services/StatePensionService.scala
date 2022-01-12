@@ -24,12 +24,12 @@ import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.utils.ExclusionHelper
 import uk.gov.hmrc.time.CurrentTaxYear
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionService @Inject()(statePensionConnector: StatePensionConnector,
-                                    exclusionService: ExclusionService)
+class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
                                    (implicit executor: ExecutionContext) extends CurrentTaxYear {
 
   val exclusionCodeDead: String = "EXCLUSION_DEAD"
@@ -46,7 +46,7 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
         case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
           Right(Left(StatePensionExclusionFiltered(exclusion)))
         case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
-          Right(Left(StatePensionExclusionFiltered(exclusionService.filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))
+          Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))
         case Right(Right(statePension)) => Right(Right(statePension))
         case Left(errorResponse) => Left(errorResponse)
       }

@@ -205,9 +205,9 @@ with BeforeAndAfterEach with Injecting {
 
         result.map {
           excl =>
-            val exclusion = excl.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = excl.left.get
 
-            exclusion.code shouldBe Exclusion.Dead
+            exclusion shouldBe Exclusion.Dead
         }
       }
     }
@@ -224,9 +224,9 @@ with BeforeAndAfterEach with Injecting {
 
         result.map {
           excl =>
-            val exclusion = excl.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = excl.left.get
 
-            exclusion.code shouldBe Exclusion.ManualCorrespondenceIndicator
+            exclusion shouldBe Exclusion.ManualCorrespondenceIndicator
         }
       }
     }
@@ -243,9 +243,9 @@ with BeforeAndAfterEach with Injecting {
 
         result.map {
           excl =>
-            val exclusion = excl.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = excl.left.get
 
-            exclusion.code shouldBe Exclusion.IsleOfMan
+            exclusion shouldBe Exclusion.IsleOfMan
         }
       }
     }
@@ -262,9 +262,9 @@ with BeforeAndAfterEach with Injecting {
 
         result.map {
           excl =>
-            val exclusion = excl.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = excl.left.get
 
-            exclusion.code shouldBe Exclusion.MarriedWomenReducedRateElection
+            exclusion shouldBe Exclusion.MarriedWomenReducedRateElection
         }
       }
     }
@@ -321,7 +321,7 @@ with BeforeAndAfterEach with Injecting {
 
         val result = nationalInsuranceService.getSummary(generateNino)
 
-        result.futureValue
+        result.futureValue shouldBe Right(Left(Exclusion.CopeProcessing))
       }
 
       "return Left(CopeProcessingFailed)" in {
@@ -332,7 +332,7 @@ with BeforeAndAfterEach with Injecting {
 
         val result = nationalInsuranceService.getSummary(generateNino)
 
-        result.futureValue shouldBe Right(Left(ForbiddenStatePensionExclusion(Exclusion.CopeProcessingFailed, None)))
+        result.futureValue shouldBe Right(Left(Exclusion.CopeProcessingFailed))
       }
     }
   }
