@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.utils
 object Constants {
 
   val GovernmentGatewayId = "GovernmentGateway"
-  val VerifyProviderId = "Verify"
+  val VerifyProviderId    = "Verify"
 
   // scalastyle:off magic.number
   val baseUrl = "/check-your-state-pension"
@@ -30,28 +30,28 @@ object Constants {
 
   val finishedPageUrl = s"$baseUrl/finished"
 
-  val taxYearStartDay = 6
-  val taxYearEndDay = 5
+  val taxYearStartDay       = 6
+  val taxYearEndDay         = 5
   val taxYearsStartEndMonth = 4
 
   val minimumQualifyingYearsNSP = 10
 
-  val NAME = "customerName"
-  val NINO = "customerNino"
+  val NAME          = "customerName"
+  val NINO          = "customerNino"
   val CONTRACTEDOUT = "contractedOutFlag"
-  val PERTAX = "customerPERTAX"
+  val PERTAX        = "customerPERTAX"
 
   val ninoWithoutSuffixLength: Int = 8
 
   val shortYearStartCharacter = 2
-  val shortYearEndCharacter = 4
-  val verify = "verify"
-  val iv = "iv"
-  val chartWidthMinimum = 31
-  val deferralCutOffAge = 53
+  val shortYearEndCharacter   = 4
+  val verify                  = "verify"
+  val iv                      = "iv"
+  val chartWidthMinimum       = 31
+  val deferralCutOffAge       = 53
 
   val niRecordStartYear = 1975
-  val niRecordMinAge = 16
+  val niRecordMinAge    = 16
 
   var yearStringLength = 4
 

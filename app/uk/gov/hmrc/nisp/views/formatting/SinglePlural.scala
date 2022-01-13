@@ -17,10 +17,9 @@
 package uk.gov.hmrc.nisp.views.formatting
 
 object SinglePlural {
-  def displaySingleOrPluralString(valueMatch: Int, textSingle: String, textPlural: String): String = {
+  def displaySingleOrPluralString(valueMatch: Int, textSingle: String, textPlural: String): String =
     valueMatch match {
       case 1 => textSingle
       case _ => textPlural
     }
-  }
 }

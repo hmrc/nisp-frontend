@@ -15,15 +15,20 @@
  *@
 
 @this()
-@(chartTitle: Html, chartWidth: Int, innerText: Html)(implicit messages: Messages )
+@(
+  chartTitle: Html,
+  chartWidth: Int,
+  innerText: Html,
+  specId: Option[String] = None
+)(implicit messages: Messages )
 
-<div class="chart-block">
-    <span>@chartTitle</span>
-    <div class="graph">
-        <div>
-             <span class="amount" style="width:@chartWidth%">
-                 <span>@innerText</span>
-            </span>
-        </div>
+<div class="chart-block" data-component="nisp_chart"@if(specId){ data-spec="@specId"}>
+  <p class="govuk-body govuk-!-margin-bottom-2" data-component="nisp_chart__title">@chartTitle</p>
+  <div class="graph">
+    <div>
+      <span class="amount" style="width:@chartWidth%">
+        <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0" data-component="nisp_chart__inner_text">@innerText</span>
+      </span>
     </div>
+  </div>
 </div>

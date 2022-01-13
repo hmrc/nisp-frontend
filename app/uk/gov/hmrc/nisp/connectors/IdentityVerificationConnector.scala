@@ -31,41 +31,44 @@ case class IdentityVerificationErrorResponse(cause: Throwable) extends IdentityV
 case class IdentityVerificationSuccessResponse(result: String) extends IdentityVerificationResponse
 
 object IdentityVerificationSuccessResponse {
-  val Success = "Success"
-  val Incomplete = "Incomplete"
-  val FailedMatching = "FailedMatching"
+  val Success              = "Success"
+  val Incomplete           = "Incomplete"
+  val FailedMatching       = "FailedMatching"
   val InsufficientEvidence = "InsufficientEvidence"
-  val LockedOut = "LockedOut"
-  val UserAborted = "UserAborted"
-  val Timeout = "Timeout"
-  val TechnicalIssue = "TechnicalIssue"
-  val PreconditionFailed = "PreconditionFailed"
-  val FailedIV = "FailedIV"
+  val LockedOut            = "LockedOut"
+  val UserAborted          = "UserAborted"
+  val Timeout              = "Timeout"
+  val TechnicalIssue       = "TechnicalIssue"
+  val PreconditionFailed   = "PreconditionFailed"
+  val FailedIV             = "FailedIV"
 }
 
-class IdentityVerificationConnector @Inject()(http: HttpClient,
-                                              metricsService: MetricsService,
-                                              appConfig: ApplicationConfig)
-                                             (implicit ec: ExecutionContext) {
+class IdentityVerificationConnector @Inject() (
+  http: HttpClient,
+  metricsService: MetricsService,
+  appConfig: ApplicationConfig
+)(implicit ec: ExecutionContext) {
 
   val serviceUrl: String = appConfig.identityVerificationServiceUrl
 
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
 
-  def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResponse] = {
-    val context = metricsService.identityVerificationTimer.time()
+  def identityVerificationResponse(
+    journeyId: String
+  )(implicit hc: HeaderCarrier): Future[IdentityVerificationResponse] = {
+    val context  = metricsService.identityVerificationTimer.time()
     val ivFuture = http.GET[HttpResponse](url(journeyId)).map { httpResponse =>
       context.stop()
       val result = (httpResponse.json \ "result").as[String]
       IdentityVerificationSuccessResponse(result)
     } recover {
-       case _: NotFoundException =>
+      case _: NotFoundException                    =>
         metricsService.identityVerificationFailedCounter.inc()
         IdentityVerificationNotFoundResponse
-       case Upstream4xxResponse(_, FORBIDDEN, _, _) =>
+      case Upstream4xxResponse(_, FORBIDDEN, _, _) =>
         metricsService.identityVerificationFailedCounter.inc()
         IdentityVerificationForbiddenResponse
-      case e: Throwable =>
+      case e: Throwable                            =>
         metricsService.identityVerificationFailedCounter.inc()
         IdentityVerificationErrorResponse(e)
     }

@@ -50,12 +50,11 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
   extends NispFrontendController(mcc) with I18nSupport with Logging {
 
-  def showSP: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      implicit val authDetails: AuthDetails = request.authDetails
+  def showSP: Action[AnyContent] = authenticate.async { implicit request =>
+    implicit val authDetails: AuthDetails = request.authDetails
 
-      val statePensionF = statePensionService.getSummary(request.nino)
-      val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
+    val statePensionF      = statePensionService.getSummary(request.nino)
+    val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
 
       for (
         statePension <- statePensionF;

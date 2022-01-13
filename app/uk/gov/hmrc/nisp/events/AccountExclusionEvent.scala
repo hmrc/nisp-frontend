@@ -24,10 +24,11 @@ object AccountExclusionEvent {
     new AccountExclusionEvent(nino, name.toString, spExclusion)
 }
 class AccountExclusionEvent(nino: String, name: String, spExclusion: Exclusion)(implicit hc: HeaderCarrier)
-  extends NispBusinessEvent("Exclusion",
-  Map(
-    "nino" -> nino,
-    "ExclusionReasons" -> spExclusion.toString,
-    "Name" -> name
-  )
-)
+    extends NispBusinessEvent(
+      "Exclusion",
+      Map(
+        "nino"             -> nino,
+        "ExclusionReasons" -> spExclusion.toString,
+        "Name"             -> name
+      )
+    )

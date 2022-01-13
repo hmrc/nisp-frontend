@@ -21,7 +21,6 @@ import java.time.LocalDate
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.OkStatePensionExclusion
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
-
 class StatePensionExclusionSpec extends UnitSpec {
 
   "finalRelevantStartYear" when {
@@ -66,8 +65,5 @@ class StatePensionExclusionSpec extends UnitSpec {
         OkStatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(LocalDate.of(2020, 4, 5)), Some(false)).finalRelevantStartYear shouldBe Some(2018)
       }
     }
-
-
   }
-
 }

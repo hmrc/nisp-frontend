@@ -23,11 +23,12 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
-class LocalTemplateRenderer @Inject()(appConfig: ApplicationConfig,
-                                      http: HttpClient)(implicit val executionContext: ExecutionContext) extends TemplateRenderer {
+class LocalTemplateRenderer @Inject() (appConfig: ApplicationConfig, http: HttpClient)(implicit
+  val executionContext: ExecutionContext
+) extends TemplateRenderer {
   override val templateServiceBaseUrl = appConfig.frontEndTemplateProviderBaseUrl
   override val refreshAfter: Duration = 10 minutes
-  private implicit val hc = HeaderCarrier()
+  private implicit val hc             = HeaderCarrier()
 
   override def fetchTemplate(path: String): Future[String] = http.GET(path).map(_.body)
 }

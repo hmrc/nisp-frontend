@@ -23,13 +23,15 @@ import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen.Address
 import uk.gov.hmrc.nisp.utils.Country
 
-final case class NispAuthedUser(nino: Nino,
-                          dateOfBirth: LocalDate,
-                          name: UserName,
-                          address: Option[Address],
-                          trustedHelper: Option[TrustedHelper],
-                          isSa: Boolean) {
+final case class NispAuthedUser(
+  nino: Nino,
+  dateOfBirth: LocalDate,
+  name: UserName,
+  address: Option[Address],
+  trustedHelper: Option[TrustedHelper],
+  isSa: Boolean
+) {
 
-  lazy val livesAbroad: Boolean = address.fold(false)( co => co.country.exists(Country.isAbroad))
+  lazy val livesAbroad: Boolean = address.fold(false)(co => co.country.exists(Country.isAbroad))
 
 }

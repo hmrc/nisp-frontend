@@ -24,10 +24,17 @@ import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction, ExcludedAuthenticatedRequest}
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeExcludedAuthAction @Inject()(val parser: BodyParsers.Default,
-                                       val executionContext: ExecutionContext) extends ExcludedAuthAction  {
-  override def invokeBlock[A](request: Request[A], block: ExcludedAuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(ExcludedAuthenticatedRequest(request, TestAccountBuilder.regularNino,
-      AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))))
-  }
+class FakeExcludedAuthAction @Inject() (val parser: BodyParsers.Default, val executionContext: ExecutionContext)
+    extends ExcludedAuthAction {
+  override def invokeBlock[A](
+    request: Request[A],
+    block: ExcludedAuthenticatedRequest[A] => Future[Result]
+  ): Future[Result] =
+    block(
+      ExcludedAuthenticatedRequest(
+        request,
+        TestAccountBuilder.regularNino,
+        AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))
+      )
+    )
 }

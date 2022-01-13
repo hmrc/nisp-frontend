@@ -20,21 +20,21 @@ import com.google.inject.Inject
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.views.html.{global_error, page_not_found_template, service_error_500}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
-class ErrorHandler @Inject()(applicationConfig: ApplicationConfig, serviceError500: service_error_500, pageNotFound: page_not_found_template,
-                             globalError: global_error)
-                            (implicit templateRenderer: TemplateRenderer,
-                             formPartialRetriever: FormPartialRetriever,
-                             partialRetriever: CachedStaticHtmlPartialRetriever,
-                             val messagesApi: MessagesApi) extends FrontendErrorHandler {
+class ErrorHandler @Inject() (
+  serviceError500: service_error_500,
+  pageNotFound: page_not_found_template,
+  globalError: global_error
+)(implicit
+  val messagesApi: MessagesApi
+) extends FrontendErrorHandler {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-    globalError(pageTitle, heading, message, applicationConfig)
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
+    request: Request[_]
+  ): Html =
+    globalError(pageTitle, heading, message)
 
   override def internalServerErrorTemplate(implicit request: Request[_]): Html = serviceError500()
 

@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
-@import play.api.i18n.Messages
 @import uk.gov.hmrc.nisp.views.html.exclusions.viewExclusions
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.P
 
-@this(viewExclusions: viewExclusions)
+@this(viewExclusions: viewExclusions, p: P)
 @()(implicit messages: Messages)
 
 @********************************************@
@@ -28,11 +28,25 @@
 @********************************************@
 
 @viewExclusions() {
-    <p>@Html(messages("nisp.excluded.dead"))</p>
-    <p>@messages("nisp.excluded.dead.openingtime")</p>
-    <ul class="bullets">
-    <li>@messages("nisp.excluded.dead.openingtime.weekdays")</li>
-    <li>@messages("nisp.excluded.dead.openingtime.saturday")</li>
-    <li>@messages("nisp.excluded.dead.openingtime.holidays")</li>
-    </ul>
+  @p(
+    content = Text(messages("nisp.excluded.dead")),
+    specId = Some("exclusions__dead__p1")
+  )
+
+  @p(
+    content = Text(messages("nisp.excluded.dead.openingtime")),
+    specId = Some("exclusions__dead__p2")
+  )
+
+  <ul class="govuk-list govuk-list--bullet" data-spec="exclusions__dead__ul__opening_time">
+    <li data-spec="exclusions__dead__ul__opening_time__li1">
+      @messages("nisp.excluded.dead.openingtime.weekdays")
+    </li>
+    <li data-spec="exclusions__dead__ul__opening_time__li2">
+      @messages("nisp.excluded.dead.openingtime.saturday")
+    </li>
+    <li data-spec="exclusions__dead__ul__opening_time__li3">
+      @messages("nisp.excluded.dead.openingtime.holidays")
+    </li>
+  </ul>
 }

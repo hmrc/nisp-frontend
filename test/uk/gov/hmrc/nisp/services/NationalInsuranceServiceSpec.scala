@@ -36,15 +36,20 @@ import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
+import java.time.LocalDate
 import scala.concurrent.Future
 import scala.util.Random
 
-class NationalInsuranceServiceSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite
-with BeforeAndAfterEach with Injecting {
+class NationalInsuranceServiceSpec
+    extends UnitSpec
+    with ScalaFutures
+    with GuiceOneAppPerSuite
+    with BeforeAndAfterEach
+    with Injecting {
 
   def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
 
-  implicit val headerCarrier = HeaderCarrier()
+  implicit val headerCarrier         = HeaderCarrier()
   val mockNationalInsuranceConnector = mock[NationalInsuranceConnectorImpl]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -124,7 +129,7 @@ with BeforeAndAfterEach with Injecting {
         nationalInsuranceService.getSummary(generateNino).isRight shouldBe true
         nationalInsuranceService.getSummary(generateNino).right.get.map {
           nir =>
-          nir shouldBe a[NationalInsuranceRecord]
+            nir shouldBe a[NationalInsuranceRecord]
         }
       }
 
@@ -140,47 +145,49 @@ with BeforeAndAfterEach with Injecting {
 
       "return the tax years in descending order" in {
 
-        val jumbledRecord = mockNationalInsuranceRecord.copy(taxYears = List(
-          NationalInsuranceTaxYear(
-            taxYear = "2014-15",
-            qualifying = false,
-            classOneContributions = 123,
-            classTwoCredits = 1,
-            classThreeCredits = 1,
-            otherCredits = 1,
-            classThreePayable = 456.58,
-            classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
-            classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
-            payable = false,
-            underInvestigation = false
-          ),
-          NationalInsuranceTaxYear(
-            taxYear = "1999-00",
-            qualifying = false,
-            classOneContributions = 2,
-            classTwoCredits = 5,
-            classThreeCredits = 0,
-            otherCredits = 1,
-            classThreePayable = 111.11,
-            classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
-            classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
-            payable = false,
-            underInvestigation = false
-          ),
-          NationalInsuranceTaxYear(
-            taxYear = "2015-16",
-            qualifying = true,
-            classOneContributions = 12345.45,
-            classTwoCredits = 0,
-            classThreeCredits = 0,
-            otherCredits = 0,
-            classThreePayable = 0,
-            classThreePayableBy = None,
-            classThreePayableByPenalty = None,
-            payable = false,
-            underInvestigation = false
+        val jumbledRecord = mockNationalInsuranceRecord.copy(taxYears =
+          List(
+            NationalInsuranceTaxYear(
+              taxYear = "2014-15",
+              qualifying = false,
+              classOneContributions = 123,
+              classTwoCredits = 1,
+              classThreeCredits = 1,
+              otherCredits = 1,
+              classThreePayable = 456.58,
+              classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+              classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
+              payable = false,
+              underInvestigation = false
+            ),
+            NationalInsuranceTaxYear(
+              taxYear = "1999-00",
+              qualifying = false,
+              classOneContributions = 2,
+              classTwoCredits = 5,
+              classThreeCredits = 0,
+              otherCredits = 1,
+              classThreePayable = 111.11,
+              classThreePayableBy = Some(LocalDate.of(2019, 4, 5)),
+              classThreePayableByPenalty = Some(LocalDate.of(2023, 4, 5)),
+              payable = false,
+              underInvestigation = false
+            ),
+            NationalInsuranceTaxYear(
+              taxYear = "2015-16",
+              qualifying = true,
+              classOneContributions = 12345.45,
+              classTwoCredits = 0,
+              classThreeCredits = 0,
+              otherCredits = 0,
+              classThreePayable = 0,
+              classThreePayableBy = None,
+              classThreePayableByPenalty = None,
+              payable = false,
+              underInvestigation = false
+            )
           )
-        ))
+        )
 
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Right(Right(jumbledRecord))))
@@ -296,8 +303,6 @@ with BeforeAndAfterEach with Injecting {
         ),
         reducedRateElection = true
       )
-
-
 
       "return a Left(Exclusion)" in {
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))

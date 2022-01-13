@@ -29,37 +29,56 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
-class ExcludedAuthActionImpl @Inject()(val parser: BodyParsers.Default,
-                                       val authConnector: AuthConnector,
-                                       applicationConfig: ApplicationConfig,
-                                       val executionContext: ExecutionContext)
-                                       extends ExcludedAuthAction with AuthorisedFunctions {
+class ExcludedAuthActionImpl @Inject() (
+  val parser: BodyParsers.Default,
+  val authConnector: AuthConnector,
+  applicationConfig: ApplicationConfig,
+  val executionContext: ExecutionContext
+) extends ExcludedAuthAction
+    with AuthorisedFunctions {
 
-  override def invokeBlock[A](request: Request[A], block: ExcludedAuthenticatedRequest[A] => Future[Result]): Future[Result] = {
+  override def invokeBlock[A](
+    request: Request[A],
+    block: ExcludedAuthenticatedRequest[A] => Future[Result]
+  ): Future[Result] = {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    implicit val hc: HeaderCarrier    = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     implicit val ec: ExecutionContext = executionContext
 
     authorised(ConfidenceLevel.L200)
       .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials and Retrievals.loginTimes) {
         case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes =>
-          block(ExcludedAuthenticatedRequest(request,
-            Nino(nino),
-            AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes))
+          block(
+            ExcludedAuthenticatedRequest(
+              request,
+              Nino(nino),
+              AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)
+            )
           )
-        case _ => throw new RuntimeException("Can't find credentials for user")
+        case _                                                       => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case _: NoActiveSession => Redirect(applicationConfig.ggSignInUrl, Map("continue" -> Seq(applicationConfig.postSignInRedirectUrl),
-        "origin" -> Seq("nisp-frontend"), "accountType" -> Seq("individual")))
+      case _: NoActiveSession             =>
+        Redirect(
+          applicationConfig.ggSignInUrl,
+          Map(
+            "continue"    -> Seq(applicationConfig.postSignInRedirectUrl),
+            "origin"      -> Seq("nisp-frontend"),
+            "accountType" -> Seq("individual")
+          )
+        )
       case _: InsufficientConfidenceLevel => Redirect(ivUpliftURI.toURL.toString)
     }
   }
 
-  lazy val ivUpliftURI: URI = new URI(s"${applicationConfig.ivUpliftUrl}?origin=NISP&" +
-    s"completionURL=${URLEncoder.encode(applicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
-    s"failureURL=${URLEncoder.encode(applicationConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
-    s"&confidenceLevel=200")
+  lazy val ivUpliftURI: URI = new URI(
+    s"${applicationConfig.ivUpliftUrl}?origin=NISP&" +
+      s"completionURL=${URLEncoder.encode(applicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
+      s"failureURL=${URLEncoder.encode(applicationConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
+      s"&confidenceLevel=200"
+  )
 
 }
 
-trait ExcludedAuthAction extends ActionBuilder[ExcludedAuthenticatedRequest, AnyContent] with ActionFunction[Request, ExcludedAuthenticatedRequest]
+trait ExcludedAuthAction
+    extends ActionBuilder[ExcludedAuthenticatedRequest, AnyContent]
+    with ActionFunction[Request, ExcludedAuthenticatedRequest]

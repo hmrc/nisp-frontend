@@ -22,21 +22,21 @@ import org.scalatest.Matchers
 import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 
 case class EqualsAuthenticatedRequest(n: AuthenticatedRequest[_])
-  extends ArgumentMatcher[AuthenticatedRequest[_]] with Matchers {
+    extends ArgumentMatcher[AuthenticatedRequest[_]]
+    with Matchers {
 
   class LocalPrettifier extends Prettifier {
-    override def apply(o: Any): String = {
+    override def apply(o: Any): String =
       o match {
         case request: AuthenticatedRequest[_] =>
           s"AuthenticatedRequest { request: ${request.request}, nispAuthedUser: ${request.nispAuthedUser}, authDetails: ${request.authDetails}"
-        case _ => o.toString
+        case _                                => o.toString
       }
-    }
   }
 
-  override implicit def convertToAnyShouldWrapper[AuthenticatedRequest]
-  (o: AuthenticatedRequest)
-  (implicit pos: source.Position, prettifier: Prettifier): AnyShouldWrapper[AuthenticatedRequest] =
+  override implicit def convertToAnyShouldWrapper[AuthenticatedRequest](
+    o: AuthenticatedRequest
+  )(implicit pos: source.Position, prettifier: Prettifier): AnyShouldWrapper[AuthenticatedRequest] =
     new AnyShouldWrapper(o, pos, new LocalPrettifier)
 
   override def matches(argument: AuthenticatedRequest[_]): Boolean = {

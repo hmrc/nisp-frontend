@@ -18,8 +18,18 @@
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.nisp.views.html.includes.chart
 
-@this(chart: chart)
-@(chartTitle: Html, spChartModel: SPChartModel)(implicit messages: Messages )
+@this(
+  chart: chart
+)
+@(
+  chartTitle: Html,
+  spChartModel: SPChartModel,
+  specId: Option[String] = None
+)(implicit messages: Messages )
 
-@chart(chartTitle, spChartModel.width,
-Html(s"${NispMoney.pounds(spChartModel.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"))
+@chart(
+  chartTitle = chartTitle,
+  chartWidth = spChartModel.width,
+  innerText = Html(s"${NispMoney.pounds(spChartModel.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+  specId = specId
+)

@@ -15,45 +15,30 @@
  *@
 
 @import uk.gov.hmrc.nisp.models.Exclusion
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.views.html.exclusions
 @import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
-
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.H1
 
 @this(
-    main: unauthenticatedMain,
-    dead: exclusions.dead
-)(
-    implicit ec: ExecutionContext,
-    partialRetriever: CachedStaticHtmlPartialRetriever,
-    formPartialRetriever: FormPartialRetriever
+  main: main,
+  dead: exclusions.dead,
+  h1: H1
 )
 
 @(exclusion: Exclusion, statePensionAge: Option[Int])(
-    implicit messages: Messages,
-    request: ExcludedAuthenticatedRequest[_]
+  implicit messages: Messages,
+  request: ExcludedAuthenticatedRequest[_]
 )
 
-@analyticsAdditionalJs = @{
-    Map[String, Any](
-    "nispExclusionType" -> exclusion.toString,
-    "statePensionAge" -> statePensionAge,
-    "authProvider" -> request.authDetails.authProvider,
-    "confidenceLevel" -> request.authDetails.confidenceLevel
-    )
-}
-
 @main(
-    MainTemplateParams(
-        userLoggedIn = true,
-        pageTitle = Some(messages("nisp.excluded.title")),
-        browserTitle = Some(messages("nisp.excluded.title"))
-    ),
-    Some(request.authDetails)
+  pageTitle = messages("nisp.excluded.title")
 ) {
-        @dead()
-    }
+
+  @h1(
+    elmId = Some("mainTitle"),
+    msg = "nisp.excluded.title",
+    specId = Some("excluded_dead__h1")
+  )
+
+  @dead()
+}

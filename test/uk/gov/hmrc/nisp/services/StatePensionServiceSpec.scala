@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.services
 
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito.{mock, when}
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfterEach, PrivateMethodTester}
@@ -37,12 +37,12 @@ import scala.concurrent.Future
 
 class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndAfterEach with PrivateMethodTester {
 
-  implicit val defaultPatience =
+  implicit val defaultPatience  =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
   val mockStatePensionConnector = mock[StatePensionConnector]
 
   val statePensionService = new StatePensionService(mockStatePensionConnector)(global) {
-    override def now: () => LocalDate = () =>  LocalDate.of(2016, 11, 1)
+    override def now: () => LocalDate = () => LocalDate.of(2016, 11, 1)
   }
 
   def statePensionResponse[A](nino: Nino)(implicit fjs: Reads[A]): A = jsonResponseByType(nino, "state-pension")
@@ -106,7 +106,8 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "transform the COPE Failed 403 into a CopeProcessingFailed exclusion" in {
-      val copeResponseProcessingFailed: String = "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'"
+      val copeResponseProcessingFailed: String =
+        "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'"
 
       when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny()))
         .thenReturn(Future.successful(

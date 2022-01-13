@@ -1,5 +1,4 @@
 @media print {
-
   .printable {
     visibility: hidden;
   }
@@ -9,8 +8,8 @@
   }
 
   .printable .content__body {
-    width: 100%;
     float: none;
+    width: 100%;
   }
 
   .printable #skipto {
@@ -21,11 +20,11 @@
   }
 
   .printable .content__body a, .printable .panel-indent {
-     display: none;
+    display: none;
   }
 
   .printable .content__body .accordion a {
-     display: inline;
+    display: inline;
   }
 
   .printable .mainpage a {

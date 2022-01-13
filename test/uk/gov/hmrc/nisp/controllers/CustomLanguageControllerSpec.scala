@@ -18,21 +18,16 @@ package uk.gov.hmrc.nisp.controllers
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class CustomLanguageControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
-    ).build()
+    .overrides()
+    .build()
 
   val testLanguageController = inject[CustomLanguageController]
 
@@ -40,16 +35,16 @@ class CustomLanguageControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
-      val result = testLanguageController.switchToLanguage("english")(request.withHeaders("Referer" -> "myUrl"))
+      val result  = testLanguageController.switchToLanguage("english")(request.withHeaders("Referer" -> "myUrl"))
       cookies(result).get("PLAY_LANG").map(_.value) shouldBe Some("en")
-      redirectLocation(result).get shouldBe "myUrl"
+      redirectLocation(result).get                  shouldBe "myUrl"
     }
 
     "redirect to Welsh translated start page if Welsh language is selected" in {
       val request = FakeRequest()
-      val result = testLanguageController.switchToLanguage("cymraeg")(request.withHeaders("Referer" -> "myUrl"))
+      val result  = testLanguageController.switchToLanguage("cymraeg")(request.withHeaders("Referer" -> "myUrl"))
       cookies(result).get("PLAY_LANG").map(_.value) shouldBe Some("cy")
-      redirectLocation(result).get shouldBe "myUrl"
+      redirectLocation(result).get                  shouldBe "myUrl"
     }
 
   }

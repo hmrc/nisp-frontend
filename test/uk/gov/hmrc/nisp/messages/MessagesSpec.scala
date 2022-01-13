@@ -35,35 +35,34 @@ import scala.io.{BufferedSource, Source}
 
 class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 
-  val englishMessages: Set[String] = createMessageSet(new File(".", "conf/messages"))
-  val welshMessages: Set[String] = createMessageSet(new File(".", "conf/messages.cy"))
+  val englishMessages: Set[String]  = createMessageSet(new File(".", "conf/messages"))
+  val welshMessages: Set[String]    = createMessageSet(new File(".", "conf/messages.cy"))
   lazy val messagesApi: MessagesApi = inject[MessagesApi]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
-    ).build()
+    )
+    .build()
 
-  def createMessageSet(file: File): Set[String] = {
+  def createMessageSet(file: File): Set[String] =
     if (file.exists()) {
-      val properties = new Properties()
+      val properties                                       = new Properties()
       val managedResource: ManagedResource[BufferedSource] = managed(Source.fromURI(file.toURI))
       managedResource.acquireAndGet(bufferedSource => properties.load(bufferedSource.bufferedReader()))
       properties.stringPropertyNames().toSet
-    }
-    else {
+    } else {
       throw new FileNotFoundException("Messages file cannot be loaded")
     }
-  }
 
   def listMissingMessageKeys(header: String, missingKeys: Set[String]) =
-    missingKeys.toList.sorted.mkString(s"$header\n", "\n", "\n"*2)
+    missingKeys.toList.sorted.mkString(s"$header\n", "\n", "\n" * 2)
 
   "Application" should {
     "have the correct message configs" in {
       messagesApi.messages.size shouldBe 4
-      messagesApi.messages.keys should contain theSameElementsAs List("en", "cy", "default", "default.play")
+      messagesApi.messages.keys   should contain theSameElementsAs List("en", "cy", "default", "default.play")
     }
   }
 
@@ -75,7 +74,12 @@ class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 
   "English messages" should {
     "have the same keys as the welsh messages" in {
-      withClue(listMissingMessageKeys("The following message keys are missing from English Set:", welshMessages.diff(englishMessages))) {
+      withClue(
+        listMissingMessageKeys(
+          "The following message keys are missing from English Set:",
+          welshMessages.diff(englishMessages)
+        )
+      ) {
         assert(englishMessages equals welshMessages)
       }
     }
@@ -83,7 +87,12 @@ class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 
   "Welsh message" should {
     "have the same keys as the english messages" in {
-      withClue(listMissingMessageKeys("The following message keys are missing from Welsh Set:", englishMessages.diff(welshMessages))) {
+      withClue(
+        listMissingMessageKeys(
+          "The following message keys are missing from Welsh Set:",
+          englishMessages.diff(welshMessages)
+        )
+      ) {
         assert(welshMessages equals englishMessages)
       }
     }

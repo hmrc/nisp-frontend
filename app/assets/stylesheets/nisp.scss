@@ -1,4 +1,3 @@
-
 /**
  * CONTENTS
  *
@@ -16,23 +15,27 @@
  *
  * Survey form styling
  */
- 
-$breadcrumb: '/check-your-state-pension/assets/images/icons/breadcrumb-separator.png';
 
-@import 'colours';
+$breadcrumb: "/check-your-state-pension/assets/images/icons/breadcrumb-separator.png";
 
-@import 'focus';
+@import "colours";
+@import "focus";
+@import "palette";
+@import "nirecord";
+@import "print";
 
-@import 'palette';
+$light-bg-chart-bar: #c1dfe4;
 
-@import 'nirecord';
-
-@import 'urBanner.css';
-
-@import 'print';
-
-$light-bg-chart-bar:#C1DFE4;
-
+/**
+ * Things that need the font:
+ **/
+.accordion,
+.page-info,
+.backlink,
+.printlink,
+.graph .amount {
+  font-family: "GDS Transport", Arial, sans-serif;
+}
 
 /*------------------------------------*\
     #General Section
@@ -44,6 +47,7 @@ $light-bg-chart-bar:#C1DFE4;
 
 h2.heading-medium {
   margin-top: 1.875em !important;
+
   @media only screen and (max-width: 640px) {
     font-size: 18px;
   }
@@ -54,26 +58,27 @@ h2.summary {
 }
 
 .grid-wrapper {
-    margin: 0;
+  margin: 0;
 }
 
 .top-title-heading {
   margin-bottom: 0;
   margin-top: 0.5em;
 }
-.heading-bottom-margin{
-@media only screen and (max-width: 640px) {
-   margin-bottom: .5em;
-  }
 
+.heading-bottom-margin {
+  @media only screen and (max-width: 640px) {
+    margin-bottom: 0.5em;
+  }
 }
 
-.mainpage, .fullwidth {
+.mainpage,
+.fullwidth {
   width: 100%;
 }
 
 .nowrap {
-  white-space:nowrap;
+  white-space: nowrap;
 }
 
 .helpline-sidebar {
@@ -94,37 +99,43 @@ h2.summary {
 #global-breadcrumb {
   border-bottom: 0;
   padding-bottom: 0;
+
   nav ol li {
-    background-image:url($breadcrumb)
+    background-image: url($breadcrumb);
   }
+
   ol {
-    padding: .75em 0 .55em;
+    padding: 0.75em 0 0.55em;
+
     li a:focus {
       outline: 3px solid #ffbf47;
     }
   }
 }
 
-.service-info-p,  div.last-login>p {
+.service-info-p,
+div.last-login > p {
   color: $grey-1;
+  font-family: nta, Arial, sans-serif;
   font-size: 16px;
-  font-family: nta,Arial,sans-serif;
   font-weight: 300;
   line-height: 1.25;
-  text-transform: none;
   margin-bottom: 5px;
+  text-transform: none;
 }
 
 .logo {
-    display: none;
+  display: none;
 }
 
 /*------------------------------------*\
     #Landing Page
 \*------------------------------------*/
 
-div.panel-indent{
-  margin: 30px 15px 45px 0;
+div.panel-indent {
+  border-left: 4px solid #b1b4b6;
+  margin: 20px 10px 45px 0;
+  padding: 10px 0 10px 15px;
 }
 
 #content #continue {
@@ -132,21 +143,21 @@ div.panel-indent{
 }
 
 .verify-logo {
-  height: 50px;
   float: left;
+  height: 50px;
   margin-right: 10px;
 }
 
 .verify-block {
-  text-transform: uppercase;
   font-size: 26px;
   line-height: 26px;
+  text-transform: uppercase;
 }
 
 .sign-in-grid .grid .inner-block {
   margin: 0;
-  padding-right: 30px;
   padding-left: 30px;
+  padding-right: 30px;
 
   @media only screen and (max-width: 640px) {
     padding: 0;
@@ -166,55 +177,74 @@ div.panel-indent{
     #Amount Box
 \*------------------------------------*/
 .govuk-box-highlight {
-  color: #fff;
   background: $panel-green;
+  color: #fff;
 }
 
 .account-menu__link:focus {
   border-bottom-color: white;
 }
 
-.highlighted-event, .govuk-box-highlight {
-  padding:1.75em 0.75em 1.25em 0.75em;
+.highlighted-event,
+.govuk-box-highlight {
   margin: 1.5em 0 1em;
+  padding: 1.75em 0.75em 1.25em 0.75em;
 
   @media only screen and (max-width: 640px) {
-    padding: 0.5em 0.5em 0.25em 0.75em;
     margin: 0 -15px;
-   }
+    padding: 0.5em 0.5em 0.25em 0.75em;
+  }
 
   p {
     color: $page-colour;
+    font-size: 24px;
     font-weight: 800;
     line-height: 1.25;
     margin: 0;
     padding: 0;
-    font-size: 24px;
+
     @media only screen and (max-width: 640px) {
       font-size: 20px;
     }
+
     em {
-      padding: 0.2em 0px 0.1em;
       display: block;
       font-size: 80px;
-      line-height: 1;
       font-style: normal;
-      margin-bottom: 0;
       font-weight: 800;
-          @media only screen and (max-width: 800px) {
-                   font-size: 53px;
-                   margin: 0;
-                 }
+      line-height: 1;
+      margin-bottom: 0;
+      padding: 0.2em 0px 0.1em;
+
+      @media only screen and (max-width: 800px) {
+        font-size: 53px;
+        margin: 0;
+      }
+
       @media only screen and (max-width: 640px) {
         font-size: 43px;
         margin: 0;
       }
+
       @media only screen and (max-width: 320px) {
         font-size: 33px;
         margin: 0;
       }
     }
- }
+  }
+}
+
+.nisp-forecast__weekly {
+  font-size: 36px;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.11111;
+}
+
+.nisp-forecast__longterm {
+  font-size: 24px;
+  font-size: 1.5rem;
+  line-height: 1.25;
 }
 
 /*----------------------------------*\
@@ -223,76 +253,89 @@ div.panel-indent{
 
 .chart-block {
   clear: both;
-  margin-top: 25px;
   margin-bottom: 80px;
+  margin-top: 25px;
+
   span.graph-title {
-    font-weight: 800;
     font-size: 19px;
+    font-weight: 800;
+
     @media only screen and (max-width: 640px) {
       font-size: 16px;
     }
   }
+
   .footnote {
-    float:left;
-    margin-top: -15px;
+    float: left;
     margin-bottom: 25px;
+    margin-top: -15px;
   }
 }
 
-.graph
-{
+.graph {
   float: left;
-  width: 100%;
   margin-top: -2px;
+  width: 100%;
 
   div {
-    position: relative;
-    display: block;
     background: $light-bg-chart-bar;
+    display: block;
     height: 37px;
+    position: relative;
+
     @media only screen and (max-width: 640px) {
       height: 27px;
       margin-left: 0;
     }
-    .amount
-    {
-      display: block;
-      height: 100%;
+
+    .amount {
       background: $panel-green;
-      line-height: 1.6em;
-      color: $page-colour;
-      text-align: right;
+      color: $page-colour !important;
+      display: block;
+      font-family: "GDS Transport", Arial, sans-serif;
       font-size: 1.3em;
-      font-weight: 800;
-      @media only screen and (max-width:972px) {
-         min-width:46%;
+      height: 100%;
+      line-height: 1.75;
+      text-align: right;
+
+      @media only screen and (max-width: 972px) {
+        min-width: 46%;
       }
-      @media only screen and (min-width: 782px) and (max-width:948px) {
-         min-width:48%;
+
+      @media only screen and (min-width: 782px) and (max-width: 948px) {
+        min-width: 48%;
       }
-      @media only screen and (min-width: 702px) and (max-width:781px) {
-         min-width:54%;
+
+      @media only screen and (min-width: 702px) and (max-width: 781px) {
+        min-width: 54%;
       }
-      @media only screen and (min-width: 641px) and (max-width:701px) {
-          min-width:60%;
+
+      @media only screen and (min-width: 641px) and (max-width: 701px) {
+        min-width: 60%;
       }
+
       @media only screen and (max-width: 640px) {
         font-size: 1em;
         line-height: 2em;
       }
+
       @media only screen and (max-width: 407px) {
-         min-width:40%;
+        min-width: 40%;
       }
+
       @media only screen and (max-width: 398px) {
-          min-width:42%;
+        min-width: 42%;
       }
-      @media only screen and (max-width : 370px) and (min-width: 321px) {
-          min-width:50%;
+
+      @media only screen and (max-width: 370px) and (min-width: 321px) {
+        min-width: 50%;
       }
-      @media only screen and (max-width : 320px) {
-           min-width:60%;
+
+      @media only screen and (max-width: 320px) {
+        min-width: 60%;
       }
-      & > * {
+
+      > * {
         padding-right: 10px;
       }
     }
@@ -305,12 +348,14 @@ div.panel-indent{
 
 .copeback {
   display: none;
+
   @media only screen and (max-width: 640px) {
-      display: inline-block;
+    display: inline-block;
   }
 }
-.bold-intext{
-  font-weight:bold;
+
+.bold-intext {
+  font-weight: bold;
 }
 
 /*------------------------------------*\
@@ -342,83 +387,107 @@ input[name="email"] {
   margin-bottom: 20px;
 }
 
-.align-right{
-  text-align : right;
+.align-right {
+  text-align: right;
 }
 
-.summary-list-item{
-   display : list-item;
+.summary-list-item {
+  display: list-item;
 }
 
 .summary-list-item:focus {
-  outline: 3px solid transparent;
-  color: #0b0c0c;
   background-color: #fd0;
   -webkit-box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
   box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+  color: #0b0c0c;
+  outline: 3px solid transparent;
   text-decoration: none;
 }
 
-.lang-select{
+.lang-select {
   border-bottom: 0px;
   float: right;
+  font-weight: 300;
+  line-height: 1.25;
   padding: 0.65em 0px;
   text-align: right;
-  width: 100%;
-  line-height: 1.25;
-  font-weight: 300;
   text-transform: none;
+  width: 100%;
 }
 
 input:focus {
-    outline: 3px solid #ffdd00;
+  outline: 3px solid #ffdd00;
 }
 
 a:focus {
-    background-color: #ffdd00;
-    outline: 3px solid #ffdd00;
-    color: #0b0c0c !important;
+  background-color: #ffdd00;
+  color: #0b0c0c !important;
+  outline: 3px solid #ffdd00;
 }
 
 .button:focus {
-  border-bottom-color: black;
-  color: #0b0c0c;
   background-color: #fd0;
+  border-bottom-color: black;
   -webkit-box-shadow: 0 2px 0 #0b0c0c;
   box-shadow: 0 2px 0 #0b0c0c;
+  color: #0b0c0c;
   outline: none;
 }
 
 .error-summary {
-    border: 5px solid #d4351c;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    padding: 20px 15px 15px
+  border: 5px solid #d4351c;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  padding: 20px 15px 15px;
 }
 
 .common-error {
-    color: #d4351c;
-    font-weight: bold;
+  color: #d4351c;
+  font-weight: bold;
 }
 
 .form-group-error {
-    border-left: 4px solid #d4351c;
+  border-left: 4px solid #d4351c;
 }
 
 input.form-control-error[type="text"] {
-    border: 4px solid #d4351c;
+  border: 4px solid #d4351c;
 }
 
 .error-summary .error-summary-list a {
-    color: #d4351c;
-    font-weight: bold;
-    text-decoration: underline;
+  color: #d4351c;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.nino,
+h1 + details .govuk-details__text,
+.hmrc-page-heading + .govuk-details .govuk-details__text {
+  font-variant-numeric: tabular-nums;
 }
 
 #nino {
-    margin-bottom: 3rem;
+  margin-bottom: 3rem;
+}
+
+.banner-panel-close {
+  background-color: #005ea5;
+  color: #fff;
+  display: none;
 }
 
 .banner-links {
-    color: #005ea5;
+  color: #005ea5;
+}
+
+.backlink,
+.printlink,
+#print-sp-link {
+  display: none;
+  visibility: hidden;
+
+  .js-enabled & {
+    display: block;
+    visibility: visible;
+  }
 }

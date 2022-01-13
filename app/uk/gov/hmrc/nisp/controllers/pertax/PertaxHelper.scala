@@ -23,18 +23,18 @@ import uk.gov.hmrc.nisp.utils.Constants._
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 
-class PertaxHelper @Inject()(sessionCache: SessionCache,
-                             metricsService: MetricsService)
-                            (implicit ec: ExecutionContext){
+class PertaxHelper @Inject() (sessionCache: SessionCache, metricsService: MetricsService)(implicit
+  ec: ExecutionContext
+) {
 
   def setFromPertax(implicit hc: HeaderCarrier): Unit = {
     val timerContext = metricsService.keystoreWriteTimer.time()
-    val cacheF = sessionCache.cache(PERTAX, true)
-    cacheF.onSuccess {
-      case _ => timerContext.stop()
+    val cacheF       = sessionCache.cache(PERTAX, true)
+    cacheF.onSuccess { case _ =>
+      timerContext.stop()
     }
-    cacheF.onFailure {
-      case _ => metricsService.keystoreWriteFailed.inc()
+    cacheF.onFailure { case _ =>
+      metricsService.keystoreWriteFailed.inc()
     }
   }
 
@@ -44,14 +44,13 @@ class PertaxHelper @Inject()(sessionCache: SessionCache,
       keystoreTimerContext.stop()
       keystoreResult match {
         case Some(isPertax) => metricsService.keystoreHitCounter.inc(); isPertax
-        case None =>
+        case None           =>
           metricsService.keystoreMissCounter.inc()
           false
       }
-    } recover {
-      case _ =>
-        metricsService.keystoreReadFailed.inc()
-        false
+    } recover { case _ =>
+      metricsService.keystoreReadFailed.inc()
+      false
     }
   }
 }

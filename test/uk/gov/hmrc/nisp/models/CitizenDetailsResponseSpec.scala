@@ -22,25 +22,27 @@ import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
-
 class CitizenDetailsResponseSpec extends UnitSpec {
-    "Citizen" should {
+  "Citizen" should {
 
-      val nino = TestAccountBuilder.regularNino
-      val citizenDetailsResponse = CitizenDetailsResponse(
-        Citizen(
-          nino,
-          Some("AHMED"),
-          Some("BRENNAN"),
-          LocalDate.of(1954, 3, 9)
-        ),
-        Some(Address(
+    val nino                   = TestAccountBuilder.regularNino
+    val citizenDetailsResponse = CitizenDetailsResponse(
+      Citizen(
+        nino,
+        Some("AHMED"),
+        Some("BRENNAN"),
+        LocalDate.of(1954, 3, 9)
+      ),
+      Some(
+        Address(
           country = Some("USA")
-        ))
+        )
       )
+    )
 
-      "parse correctly when date of birth is a date" in {
-        Json.parse(
+    "parse correctly when date of birth is a date" in {
+      Json
+        .parse(
           s"""
             |{
             |  "person":{
@@ -65,11 +67,13 @@ class CitizenDetailsResponseSpec extends UnitSpec {
             |  }
             |}
           """.stripMargin
-        ).as[CitizenDetailsResponse] shouldBe citizenDetailsResponse
-      }
+        )
+        .as[CitizenDetailsResponse] shouldBe citizenDetailsResponse
+    }
 
-      "parse correctly when date of birth is a long" in {
-        Json.parse(
+    "parse correctly when date of birth is a long" in {
+      Json
+        .parse(
           s"""
              |{
              |  "person":{
@@ -94,7 +98,8 @@ class CitizenDetailsResponseSpec extends UnitSpec {
              |  }
              |}
           """.stripMargin
-        ).as[CitizenDetailsResponse] shouldBe citizenDetailsResponse
-      }
+        )
+        .as[CitizenDetailsResponse] shouldBe citizenDetailsResponse
     }
+  }
 }

@@ -34,6 +34,7 @@ import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeParti
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+
 import java.time.LocalDate
 
 import uk.gov.hmrc.nisp.models.Exclusion
@@ -70,7 +71,8 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
   "getNationalInsuranceRecord" when {
 
     "there is a regular user" should {
-      lazy val nationalInsuranceRecord = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
+      lazy val nationalInsuranceRecord =
+        await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
 
       val jsonPayload = TestAccountBuilder.getRawJson(
         TestAccountBuilder.regularNino,

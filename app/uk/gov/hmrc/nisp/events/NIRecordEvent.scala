@@ -19,20 +19,44 @@ package uk.gov.hmrc.nisp.events
 import uk.gov.hmrc.http.HeaderCarrier
 
 object NIRecordEvent {
-  def apply(nino: String, yearsToContribute: Int, qualifyingYears: Int, nonQualifyingYears: Int, fillableGaps: Int, nonFillableGaps: Int, pre75Years: Int)(implicit hc: HeaderCarrier): NIRecordEvent =
-    new NIRecordEvent(nino, yearsToContribute, qualifyingYears, nonQualifyingYears, fillableGaps, nonFillableGaps, pre75Years)
+  def apply(
+    nino: String,
+    yearsToContribute: Int,
+    qualifyingYears: Int,
+    nonQualifyingYears: Int,
+    fillableGaps: Int,
+    nonFillableGaps: Int,
+    pre75Years: Int
+  )(implicit hc: HeaderCarrier): NIRecordEvent =
+    new NIRecordEvent(
+      nino,
+      yearsToContribute,
+      qualifyingYears,
+      nonQualifyingYears,
+      fillableGaps,
+      nonFillableGaps,
+      pre75Years
+    )
 }
 
-class NIRecordEvent(nino: String, yearsToContribute: Int, qualifyingYears: Int, nonQualifyingYears: Int, fillableGaps: Int, nonFillableGaps: Int,
-                    pre75Years: Int)(implicit hc: HeaderCarrier)
-  extends NispBusinessEvent("NIRecord",
-    Map(
-      "nino" -> nino,
-      "yearsToContribute" -> yearsToContribute.toString,
-      "qualifyingYears" -> qualifyingYears.toString,
-      "nonQualifyingYears" -> nonQualifyingYears.toString,
-      "fillableGaps" -> fillableGaps.toString,
-      "nonFillableGaps" -> nonFillableGaps.toString,
-      "pre75Years" -> pre75Years.toString
+class NIRecordEvent(
+  nino: String,
+  yearsToContribute: Int,
+  qualifyingYears: Int,
+  nonQualifyingYears: Int,
+  fillableGaps: Int,
+  nonFillableGaps: Int,
+  pre75Years: Int
+)(implicit hc: HeaderCarrier)
+    extends NispBusinessEvent(
+      "NIRecord",
+      Map(
+        "nino"               -> nino,
+        "yearsToContribute"  -> yearsToContribute.toString,
+        "qualifyingYears"    -> qualifyingYears.toString,
+        "nonQualifyingYears" -> nonQualifyingYears.toString,
+        "fillableGaps"       -> fillableGaps.toString,
+        "nonFillableGaps"    -> nonFillableGaps.toString,
+        "pre75Years"         -> pre75Years.toString
+      )
     )
-  )

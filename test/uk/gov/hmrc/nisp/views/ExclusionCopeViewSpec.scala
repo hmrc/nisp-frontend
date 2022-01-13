@@ -18,24 +18,38 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.DateTime
 import org.jsoup.nodes.Document
+import org.mockito.Mockito.when
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeTemplateRenderer, TestAccountBuilder}
+import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.views.html.excluded_cope
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
 
-  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
-  implicit val fakeRequest = ExcludedAuthenticatedRequest(FakeRequest(), TestAccountBuilder.regularNino,
-    AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None)))
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val urResearchURL                    =
+    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
+
+  implicit val fakeRequest = ExcludedAuthenticatedRequest(
+    FakeRequest(),
+    TestAccountBuilder.regularNino,
+    AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None))
+  )
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
+    when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
+    when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+    when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+  }
 
   val excludedCopeView = inject[excluded_cope]
   val today: LocalDate = LocalDate.now()
@@ -43,17 +57,28 @@ class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
   lazy val view: Document = asDocument(contentAsString(excludedCopeView(today)))
 
   "render correct h1" in {
-    assertEqualsMessage(view, "h1", "nisp.excluded.cope.processing.h1")
+    assertEqualsMessage(
+      view,
+      "[data-spec='excluded_cope__h1']",
+      "nisp.excluded.cope.processing.h1"
+    )
   }
 
   "render correct indent-panel div with text" in {
-    assert(view.getElementsByClass("panel-indent").size() == 1)
-    assertEqualsMessage(view, ".panel-indent", "nisp.excluded.cope.processing")
+    assert(view.getElementsByClass("govuk-inset-text").size() == 1)
+    assertEqualsMessage(
+      view,
+      "[data-spec='excluded_cope__inset_text']",
+      "nisp.excluded.cope.processing"
+    )
   }
 
   "render correct p tag with text" in {
-    assertContainsDynamicMessage(view, "article p:last-of-type",
+    assertContainsDynamicMessage(
+      view,
+      "[data-spec='excluded_cope__p2']",
       "nisp.excluded.cope.returnDate",
-      today.format(DateTimeFormatter.ofPattern("d MMMM y")))
+      today.format(DateTimeFormatter.ofPattern("d MMMM y"))
+    )
   }
 }

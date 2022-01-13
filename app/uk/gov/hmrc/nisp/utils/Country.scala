@@ -18,26 +18,24 @@ package uk.gov.hmrc.nisp.utils
 
 object Country {
 
-  def isAbroad(countryName: String): Boolean = {
-
+  def isAbroad(countryName: String): Boolean =
     countryName match {
-      case GREAT_BRITAIN => false
-      case ISLE_OF_MAN=> false
-      case ENGLAND => false
-      case SCOTLAND => false
-      case WALES => false
+      case GREAT_BRITAIN    => false
+      case ISLE_OF_MAN      => false
+      case ENGLAND          => false
+      case SCOTLAND         => false
+      case WALES            => false
       case NORTHERN_IRELAND => false
-      case NOT_SPECIFIED  => false
-      case _ => true
+      case NOT_SPECIFIED    => false
+      case _                => true
     }
-  }
 
-  final val GREAT_BRITAIN = "GREAT BRITAIN"
-  final val ISLE_OF_MAN = "ISLE OF MAN"
-  final val ENGLAND = "ENGLAND"
-  final val SCOTLAND = "SCOTLAND"
-  final val WALES = "WALES"
+  final val GREAT_BRITAIN    = "GREAT BRITAIN"
+  final val ISLE_OF_MAN      = "ISLE OF MAN"
+  final val ENGLAND          = "ENGLAND"
+  final val SCOTLAND         = "SCOTLAND"
+  final val WALES            = "WALES"
   final val NORTHERN_IRELAND = "NORTHERN IRELAND"
-  final val NOT_SPECIFIED = "NOT SPECIFIED OR NOT USED"
+  final val NOT_SPECIFIED    = "NOT SPECIFIED OR NOT USED"
 
 }

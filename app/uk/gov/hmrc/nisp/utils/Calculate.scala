@@ -21,29 +21,37 @@ import uk.gov.hmrc.nisp.models.{SPChartModel, StatePensionAmount}
 
 object Calculate {
 
-  def calculateChartWidths(current: StatePensionAmount, forecast: StatePensionAmount, personalMaximum: StatePensionAmount): (SPChartModel, SPChartModel, SPChartModel) = {
+  def calculateChartWidths(
+    current: StatePensionAmount,
+    forecast: StatePensionAmount,
+    personalMaximum: StatePensionAmount
+  ): (SPChartModel, SPChartModel, SPChartModel) =
     // scalastyle:off magic.number
     if (personalMaximum.weeklyAmount > forecast.weeklyAmount) {
-      val currentChart = SPChartModel((current.weeklyAmount / personalMaximum.weeklyAmount * 100).toInt.max(Constants.chartWidthMinimum), current)
-      val forecastChart = SPChartModel((forecast.weeklyAmount / personalMaximum.weeklyAmount * 100).toInt.max(Constants.chartWidthMinimum), forecast)
+      val currentChart     = SPChartModel(
+        (current.weeklyAmount / personalMaximum.weeklyAmount * 100).toInt.max(Constants.chartWidthMinimum),
+        current
+      )
+      val forecastChart    = SPChartModel(
+        (forecast.weeklyAmount / personalMaximum.weeklyAmount * 100).toInt.max(Constants.chartWidthMinimum),
+        forecast
+      )
       val personalMaxChart = SPChartModel(100, personalMaximum)
       (currentChart, forecastChart, personalMaxChart)
     } else {
       if (forecast.weeklyAmount > current.weeklyAmount) {
         val currentPercentage = (current.weeklyAmount / forecast.weeklyAmount * 100).toInt
-        val currentChart = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), current)
-        val forecastChart = SPChartModel(100, forecast)
+        val currentChart      = SPChartModel(currentPercentage.max(Constants.chartWidthMinimum), current)
+        val forecastChart     = SPChartModel(100, forecast)
         (currentChart, forecastChart, forecastChart)
       } else {
-        val currentChart = SPChartModel(100, current)
+        val currentChart  = SPChartModel(100, current)
         val forecastChart = SPChartModel((forecast.weeklyAmount / current.weeklyAmount * 100).toInt, forecast)
         (currentChart, forecastChart, forecastChart)
       }
     }
-  }
 
-  def calculateAge(dateOfBirth: LocalDate, currentDate: LocalDate): Int = {
+  def calculateAge(dateOfBirth: LocalDate, currentDate: LocalDate): Int =
     Period.between(dateOfBirth, currentDate).getYears
-  }
 
 }

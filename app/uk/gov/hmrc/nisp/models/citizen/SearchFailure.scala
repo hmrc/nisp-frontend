@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nisp.models.citizen
 
-import play.api.libs.json.{Json, Format}
+import play.api.libs.json.{Format, Json}
 
-case class SearchFailure(nino:String,statusCode:Int,message:Option[String]=Some(""))
+case class SearchFailure(nino: String, statusCode: Int, message: Option[String] = Some(""))
 
-object SearchFailure{
-  implicit val formats : Format[SearchFailure] = Json.format[SearchFailure]
+object SearchFailure {
+  implicit val formats: Format[SearchFailure] = Json.format[SearchFailure]
 }

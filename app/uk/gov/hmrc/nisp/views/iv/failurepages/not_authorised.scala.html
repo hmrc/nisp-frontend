@@ -14,42 +14,65 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link}
 @import uk.gov.hmrc.nisp.views.html.main
-@import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import play.api.Application
-
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.nisp.views.html.unauthenticatedMain
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 
-@import scala.concurrent.ExecutionContext
 
 @this(
-  main: unauthenticatedMain,
-  config: ApplicationConfig
-)(
-  implicit ec: ExecutionContext,
-  partialRetriever: CachedStaticHtmlPartialRetriever,
-  formPartialRetriever: FormPartialRetriever
+  main: main,
+  p: P,
+  h1: H1,
+  h2: H2,
+  link: Link,
+  appConfig: ApplicationConfig
 )
 
-@(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_])
 
-@main(MainTemplateParams(
- articleClasses = Some("mainpage"),
- pageTitle= Some(messages("nisp.iv.failure.general.title")),
- h1Class = Some("heading-xlarge"),
- browserTitle= Some(messages("nisp.iv.failure.general.title"))
-)) {
+@main(pageTitle = messages("nisp.iv.failure.general.title")) {
 
-<p class="margin-bottom">@messages("nisp.iv.failure.general.youcan")</p>
+  @h1(
+    classes = Some("govuk-heading-xl"),
+    msg = "nisp.iv.failure.general.title",
+    specId = Some("nisp_iv_failure_not_authorised_h1")
+  )
 
-<ul class="list list-bullet">
- <li><a id="confirm-identity-link" href=@config.postSignInRedirectUrl>@messages("nisp.iv.failure.general.confirmIdentityAgain")</a></li>
- <li><a id="contact-HMRC-link" href="https://www.gov.uk/contact-hmrc" data-journey-click=checkmystatepension:external:helpline>@messages("nisp.iv.failure.general.contactHMRC")</a></li>
- <li><a id="contact-pension-link" href="https://www.gov.uk/future-pension-centre" data-journey-click=checkmystatepension:external:pensioncentre>@messages("nisp.iv.failure.general.contactFuturePension")</a></li>
-</ul>
+  @p(
+    content = Text(messages("nisp.iv.failure.general.youcan")),
+    specId = Some("nisp_iv_failure_not_authorised_p1")
+  )
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>
+      @link(
+        id = Some("confirm-identity-link"),
+        inParagraph = true,
+        link = appConfig.postSignInRedirectUrl,
+        messageKey = "nisp.iv.failure.general.confirmIdentityAgain",
+        specId = Some("nisp_iv_failure_not_authorised_link1"),
+      )
+    </li>
+    <li>
+      @link(
+        attrs = Map("data-journey-click" -> "checkmystatepension:external:helpline"),
+        id = Some("contact-HMRC-link"),
+        inParagraph = true,
+        link = "https://www.gov.uk/contact-hmrc",
+        messageKey = "nisp.iv.failure.general.contactHMRC",
+        specId = Some("nisp_iv_failure_not_authorised_link2")
+      )
+    </li>
+    <li>
+      @link(
+        attrs = Map("data-journey-click" -> "checkmystatepension:external:pensioncentre"),
+        id = Some("contact-pension-link"),
+        inParagraph = true,
+        link = "https://www.gov.uk/future-pension-centre",
+        messageKey = "nisp.iv.failure.general.contactFuturePension",
+        specId = Some("nisp_iv_failure_not_authorised_link_3")
+      )
+    </li>
+  </ul>
 
 }

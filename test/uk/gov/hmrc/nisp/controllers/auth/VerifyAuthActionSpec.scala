@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.controllers.auth
 import akka.util.Timeout
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.{mock, reset, spy, verify, when}
+import org.mockito.Mockito.{reset, spy, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -52,21 +52,25 @@ import scala.language.postfixOps
 
 class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
   class BrokenAuthConnector(exception: Throwable) extends AuthConnector {
-    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+    ): Future[A] =
       Future.failed(exception)
   }
 
-  type AuthRetrievalType = Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
+  type AuthRetrievalType =
+    Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val mockApplicationConfig = mock[ApplicationConfig]
-  val mockCitizenDetailsService = mock[CitizenDetailsService]
+  val mockApplicationConfig            = mock[ApplicationConfig]
+  val mockCitizenDetailsService        = mock[CitizenDetailsService]
 
-  val nino: String = new Generator().nextNino.nino
-  val fakeLoginTimes = LoginTimes(DateTime.now(), None)
-  val credentials = Credentials("providerId", "providerType")
-  val citizen: Citizen = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
-  val address: Address = Address(Some("Country"))
+  val nino: String                                   = new Generator().nextNino.nino
+  val fakeLoginTimes                                 = LoginTimes(DateTime.now(), None)
+  val credentials                                    = Credentials("providerId", "providerType")
+  val citizen: Citizen                               = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
+  val address: Address                               = Address(Some("Country"))
   val citizenDetailsResponse: CitizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -76,15 +80,22 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
       bind[CitizenDetailsService].toInstance(mockCitizenDetailsService),
       bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuthConnector, mockApplicationConfig, mockCitizenDetailsService)
   }
 
-  def makeRetrievalResults(ninoOption: Option[String] = Some(nino), enrolments: Enrolments = Enrolments(Set.empty), trustedHelper: Option[TrustedHelper] = None): Future[AuthRetrievalType] =
-    Future.successful(ninoOption ~ ConfidenceLevel.L500 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper)
+  def makeRetrievalResults(
+    ninoOption: Option[String] = Some(nino),
+    enrolments: Enrolments = Enrolments(Set.empty),
+    trustedHelper: Option[TrustedHelper] = None
+  ): Future[AuthRetrievalType] =
+    Future.successful(
+      ninoOption ~ ConfidenceLevel.L500 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper
+    )
 
   object Stubs {
     def successBlock(request: AuthenticatedRequest[_]): Future[Result] = Future.successful(Ok)
@@ -104,19 +115,23 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
         when(mockCitizenDetailsService.retrievePerson(any())(any()))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-        val stubs = spy(Stubs)
+        val stubs   = spy(Stubs)
         val request = FakeRequest("", "")
-        val result = authAction.invokeBlock(request, stubs.successBlock)
+        val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
 
-        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-          NispAuthedUser(Nino(nino),
+        val expectedAuthenticatedRequest = AuthenticatedRequest(
+          request,
+          NispAuthedUser(
+            Nino(nino),
             citizen.dateOfBirth,
             UserName(Name(citizen.firstName, citizen.lastName)),
             citizenDetailsResponse.address,
             None,
-            isSa = false),
-          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes))
+            isSa = false
+          ),
+          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes)
+        )
         verify(stubs).successBlock(expectedAuthenticatedRequest)
       }
 
@@ -130,23 +145,27 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
         val stubs = spy(Stubs)
 
         val request = FakeRequest("", "")
-        val result = authAction.invokeBlock(request, stubs.successBlock)
+        val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
 
-        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-          NispAuthedUser(Nino(nino),
+        val expectedAuthenticatedRequest = AuthenticatedRequest(
+          request,
+          NispAuthedUser(
+            Nino(nino),
             citizen.dateOfBirth,
             UserName(Name(citizen.firstName, citizen.lastName)),
             citizenDetailsResponse.address,
             None,
-            isSa = true),
-          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes))
+            isSa = true
+          ),
+          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes)
+        )
         verify(stubs).successBlock(expectedAuthenticatedRequest)
       }
 
       "the user details is a trusted helper" in {
         val trustedHelperNino = new Generator().nextNino.nino
-        val trustedHelper = TrustedHelper("pName", "aName", "link", trustedHelperNino)
+        val trustedHelper     = TrustedHelper("pName", "aName", "link", trustedHelperNino)
 
         when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
           .thenReturn(makeRetrievalResults(trustedHelper = Some(trustedHelper)))
@@ -157,17 +176,21 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
         val stubs = spy(Stubs)
 
         val request = FakeRequest("", "")
-        val result = authAction.invokeBlock(request, stubs.successBlock)
+        val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
 
-        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-          NispAuthedUser(Nino(trustedHelperNino),
+        val expectedAuthenticatedRequest = AuthenticatedRequest(
+          request,
+          NispAuthedUser(
+            Nino(trustedHelperNino),
             citizen.dateOfBirth,
             UserName(Name(citizen.firstName, citizen.lastName)),
             citizenDetailsResponse.address,
             Some(trustedHelper),
-            isSa = false),
-          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes))
+            isSa = false
+          ),
+          AuthDetails(ConfidenceLevel.L500, Some("providerType"), fakeLoginTimes)
+        )
         verify(stubs).successBlock(expectedAuthenticatedRequest)
       }
     }
@@ -175,7 +198,7 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
     "redirect to Verify" when {
 
       val redirectUrl = "postSigninRedirectUrl"
-      val verifyUrl = "verifyUrl"
+      val verifyUrl   = "verifyUrl"
 
       "no session" when {
         "verifySigninContinue is true" in {
@@ -187,7 +210,7 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           when(mockApplicationConfig.verifySignInContinue).thenReturn(true)
 
           val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-          status(result) shouldBe SEE_OTHER
+          status(result)             shouldBe SEE_OTHER
           redirectLocation(result).get should startWith("verifyUrl?continue=postSigninRedirectUrl")
         }
 
@@ -200,7 +223,7 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           when(mockApplicationConfig.verifySignInContinue).thenReturn(false)
 
           val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-          status(result) shouldBe SEE_OTHER
+          status(result)             shouldBe SEE_OTHER
           redirectLocation(result).get should startWith(verifyUrl)
         }
       }
@@ -214,20 +237,20 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
         when(mockApplicationConfig.verifySignInContinue).thenReturn(false)
 
         val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-        status(result) shouldBe SEE_OTHER
+        status(result)             shouldBe SEE_OTHER
         redirectLocation(result).get should startWith(verifyUrl)
       }
 
       "auth provider is not Verify" in {
         when(mockAuthConnector.authorise(any(), any())(any(), any()))
-        .thenReturn(Future.failed(UnsupportedAuthProvider()))
+          .thenReturn(Future.failed(UnsupportedAuthProvider()))
 
         when(mockApplicationConfig.verifySignIn).thenReturn(verifyUrl)
         when(mockApplicationConfig.postSignInRedirectUrl).thenReturn(redirectUrl)
         when(mockApplicationConfig.verifySignInContinue).thenReturn(false)
 
         val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-        status(result) shouldBe SEE_OTHER
+        status(result)             shouldBe SEE_OTHER
         redirectLocation(result).get should startWith(verifyUrl)
       }
     }
@@ -271,7 +294,7 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
 
         val result = authAction.invokeBlock(FakeRequest("", "a-uri-with-nirecord"), Stubs.successBlock)
-        status(result) shouldBe SEE_OTHER
+        status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
       }
     }
@@ -284,7 +307,7 @@ class VerifyAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
         .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
 
       val result = authAction.invokeBlock(FakeRequest("", "a-non-ni-record-uri"), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
+      status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
     }
   }

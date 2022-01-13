@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.helpers
 import uk.gov.hmrc.domain.Nino
 
 sealed trait NinoContainer {
- val nino: Nino
+  val nino: Nino
 }
 
 object RegularNinoContainer extends NinoContainer {

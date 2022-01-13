@@ -24,15 +24,15 @@ import uk.gov.hmrc.nisp.controllers.auth._
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class NispModule extends Module {
-    override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
-        Seq(bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
-            bind[SessionCache].to[NispSessionCache],
-            bind[TemplateRenderer].to[LocalTemplateRenderer],
-            if(configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)){
-                bind[AuthAction].to[AuthActionImpl]
-            }else{
-                bind[AuthAction].to[VerifyAuthActionImpl]
-            }
-        )
-    }
+  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
+    Seq(
+      bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
+      bind[SessionCache].to[NispSessionCache],
+      bind[TemplateRenderer].to[LocalTemplateRenderer],
+      if (configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)) {
+        bind[AuthAction].to[AuthActionImpl]
+      } else {
+        bind[AuthAction].to[VerifyAuthActionImpl]
+      }
+    )
 }

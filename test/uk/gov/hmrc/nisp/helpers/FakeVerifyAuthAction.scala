@@ -25,9 +25,13 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 
 import scala.concurrent.Future
 
-class FakeVerifyAuthAction extends VerifyAuthActionImpl(null, null, null, null, null){
-  override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    block(AuthenticatedRequest(request, NispAuthedUserFixture.user(TestAccountBuilder.regularNino),
-      AuthDetails(ConfidenceLevel.L500, Some("IDA"), LoginTimes(DateTime.now, None))))
-  }
+class FakeVerifyAuthAction extends VerifyAuthActionImpl(null, null, null, null, null) {
+  override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] =
+    block(
+      AuthenticatedRequest(
+        request,
+        NispAuthedUserFixture.user(TestAccountBuilder.regularNino),
+        AuthDetails(ConfidenceLevel.L500, Some("IDA"), LoginTimes(DateTime.now, None))
+      )
+    )
 }

@@ -20,18 +20,13 @@ import com.google.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.views.html.termsAndConditions
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
-class TermsConditionsController @Inject()(mcc: MessagesControllerComponents, termsAndConditions: termsAndConditions)
-                                         (implicit val formPartialRetriever: FormPartialRetriever,
-                                          val templateRenderer: TemplateRenderer,
-                                          val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
-  extends NispFrontendController(mcc) with I18nSupport {
+class TermsConditionsController @Inject() (mcc: MessagesControllerComponents, termsAndConditions: termsAndConditions)
+    extends NispFrontendController(mcc)
+    with I18nSupport {
 
-  def show: Action[AnyContent] = Action{
-    implicit request =>
-      val showBackLink = request.queryString.get("showBackLink").fold(false)(_.head.toBoolean)
-      Ok(termsAndConditions(showBackLink))
+  def show: Action[AnyContent] = Action { implicit request =>
+    val showBackLink = request.queryString.get("showBackLink").fold(false)(_.head.toBoolean)
+    Ok(termsAndConditions(showBackLink))
   }
 }

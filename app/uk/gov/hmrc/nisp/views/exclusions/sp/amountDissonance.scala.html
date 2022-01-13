@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import play.api.i18n.Messages
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.P
 
-@this()
+@this(p: P)
 @()(implicit messages: Messages)
 
 @********************************************@
@@ -26,4 +26,7 @@
 @*                                          *@
 @********************************************@
 
-<p> @Html(messages("nisp.excluded.amountdissonance")) </p>
+@p(
+  content = Text(messages("nisp.excluded.amountdissonance")),
+  specId = Some("exclusions__sp__amountdissonance__p1")
+)

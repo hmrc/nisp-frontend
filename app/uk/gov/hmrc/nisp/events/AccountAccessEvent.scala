@@ -22,10 +22,18 @@ import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 import uk.gov.hmrc.http.HeaderCarrier
 
 object AccountAccessEvent {
-  def apply(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,
-            statePensionForecast: BigDecimal, dateOfBirth: LocalDate, name: String,
-            contractedOutFlag: Boolean = false, forecastScenario: Scenario, copeAmount: BigDecimal,
-            authenticationProvider: String)(implicit hc: HeaderCarrier): AccountAccessEvent =
+  def apply(
+    nino: String,
+    statePensionAge: LocalDate,
+    statePensionAmount: BigDecimal,
+    statePensionForecast: BigDecimal,
+    dateOfBirth: LocalDate,
+    name: String,
+    contractedOutFlag: Boolean = false,
+    forecastScenario: Scenario,
+    copeAmount: BigDecimal,
+    authenticationProvider: String
+  )(implicit hc: HeaderCarrier): AccountAccessEvent =
     new AccountAccessEvent(
       nino,
       statePensionAge,
@@ -39,20 +47,30 @@ object AccountAccessEvent {
       authenticationProvider
     )
 }
-class AccountAccessEvent(nino: String, statePensionAge: LocalDate, statePensionAmount: BigDecimal,
-                         statePensionForecast: BigDecimal, dateOfBirth: LocalDate, name: String, contractedOutFlag: Boolean, forecastScenario: Scenario,
-                         copeAmount: BigDecimal, authenticationProvider: String)(implicit hc: HeaderCarrier)
-  extends NispBusinessEvent("AccountPage",
-    Map(
-      "nino" -> nino,
-      "StatePensionAge" -> statePensionAge.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-      "StatePensionAmount" -> statePensionAmount.toString(),
-      "StatePensionForecast" -> statePensionForecast.toString(),
-      "DateOfBirth" -> dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-      "Name" -> name,
-      "ContractedOut" -> contractedOutFlag.toString,
-      "ForecastScenario" -> forecastScenario.toString,
-      "COPEAmount" -> copeAmount.toString(),
-      "AuthenticationProvider" -> authenticationProvider
+class AccountAccessEvent(
+  nino: String,
+  statePensionAge: LocalDate,
+  statePensionAmount: BigDecimal,
+  statePensionForecast: BigDecimal,
+  dateOfBirth: LocalDate,
+  name: String,
+  contractedOutFlag: Boolean,
+  forecastScenario: Scenario,
+  copeAmount: BigDecimal,
+  authenticationProvider: String
+)(implicit hc: HeaderCarrier)
+    extends NispBusinessEvent(
+      "AccountPage",
+      Map(
+        "nino"                   -> nino,
+        "StatePensionAge"        -> statePensionAge.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+        "StatePensionAmount"     -> statePensionAmount.toString(),
+        "StatePensionForecast"   -> statePensionForecast.toString(),
+        "DateOfBirth"            -> dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+        "Name"                   -> name,
+        "ContractedOut"          -> contractedOutFlag.toString,
+        "ForecastScenario"       -> forecastScenario.toString,
+        "COPEAmount"             -> copeAmount.toString(),
+        "AuthenticationProvider" -> authenticationProvider
+      )
     )
-)

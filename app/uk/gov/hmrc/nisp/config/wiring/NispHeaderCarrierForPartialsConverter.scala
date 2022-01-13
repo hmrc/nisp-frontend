@@ -16,9 +16,6 @@
 
 package uk.gov.hmrc.nisp.config.wiring
 
-import com.google.inject.Inject
-import uk.gov.hmrc.crypto.PlainText
-import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
 
 class NispHeaderCarrierForPartialsConverter extends HeaderCarrierForPartialsConverter

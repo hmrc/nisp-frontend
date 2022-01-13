@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.mockito.Mockito
-import org.mockito.Mockito.{mock, reset}
+import org.mockito.Mockito.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -35,6 +35,7 @@ import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+
 import java.time.LocalDate
 
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{ForbiddenStatePensionExclusion, OkStatePensionExclusion}
@@ -48,7 +49,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
-  val uuidRegex =  """[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"""
+  val uuidRegex         = """[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"""
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -59,7 +60,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     )
     .configure(
       "microservice.services.state-pension.port" -> server.port()
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -109,8 +111,9 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAll}"))
-          .willReturn(forbidden()
-            .withBody(json.toString)
+          .willReturn(
+            forbidden()
+              .withBody(json.toString)
           )
       )
 
@@ -168,9 +171,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
 
     "return the state pension age flag as true for a user with Amount Dis exclusion with a true flag for incoming State Pension Age Under Consideration" in {
 
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino}"))
@@ -191,9 +193,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
 
     "return the state pension age flag as true for a user with IOM exclusion with a true flag for incoming State Pension Age Under Consideration" in {
 
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionIoMNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionIoMNino}"))
@@ -213,9 +214,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     }
 
     "return the state pension age flag as true for a user with MWRRE exclusion with a true flag for incoming State Pension Age Under Consideration" in {
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino}"))
@@ -235,9 +235,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     }
 
     "return the state pension age flag as true for a user with Over SPA exclusion with a true flag for incoming State Pension Age Under Consideration" in {
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino}"))
@@ -257,9 +256,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     }
 
     "return the state pension age flag as true for a user with Multiple exclusions with a true flag for incoming State Pension Age Under Consideration" in {
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino}"))
@@ -282,9 +280,8 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     }
 
     "return the state pension age flag as none for a user with exclusion with no flag for incoming State Pension Age Under Consideration" in {
-      val expectedExclusion = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino,
-        "state-pension")
+      val expectedExclusion =
+        TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino, "state-pension")
 
       server.stubFor(
         get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino}"))

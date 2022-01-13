@@ -29,8 +29,8 @@ import uk.gov.hmrc.time.CurrentTaxYear
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionService @Inject()(statePensionConnector: StatePensionConnector)
-                                   (implicit executor: ExecutionContext) extends CurrentTaxYear {
+class StatePensionService @Inject() (statePensionConnector: StatePensionConnector)(implicit executor: ExecutionContext)
+    extends CurrentTaxYear {
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]] = {
     statePensionConnector.getStatePension(nino)
@@ -46,9 +46,8 @@ class StatePensionService @Inject()(statePensionConnector: StatePensionConnector
       }
   }
 
-  def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int = {
+  def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int =
     finalRelevantYearStart - taxYearFor(earningsIncludedUpTo).startYear
-  }
 
   override def now: () => LocalDate = () => LocalDate.now(ZoneId.of("Europe/London"))
 }

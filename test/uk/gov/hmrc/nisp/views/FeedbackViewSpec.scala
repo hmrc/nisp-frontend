@@ -32,30 +32,31 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class FeedbackViewSpec extends HtmlSpec with Injecting {
 
   val mockFormPartialRetriever: FormPartialRetriever = mock[FormPartialRetriever]
-  val partialUrl: String = "partialUrl"
+  val partialUrl: String                             = "partialUrl"
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[FormPartialRetriever].toInstance(mockFormPartialRetriever),
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
       bind[TemplateRenderer].to(FakeTemplateRenderer)
-    ).build()
+    )
+    .build()
 
   "Feedback page" should {
     "assert correct feedback title page" in {
-      val html = inject[feedback]
-      val source = asDocument(html(partialUrl, Some(Html("sdfgh")))(messages, request).toString)
-      val row = source.getElementsByTag("script").get(0).toString
+      val html     = inject[feedback]
+      val source   = asDocument(html(partialUrl, Some(Html("sdfgh")))(messages, request).toString)
+      val row      = source.getElementsByTag("script").get(0).toString
       val expected = messages("nisp.feedback.title")
       row should include(s"""document.title = "$expected"""")
     }
 
     "assert passed in formBody is displayed" in {
       val testHtml = "<p> test html </p>"
-      val html = inject[feedback]
-      html(partialUrl, Some(Html(testHtml)))(messages, request).toString should include (testHtml)
-      verify(mockFormPartialRetriever, times(0)).getPartialContent(
-        ArgumentMatchers.eq(partialUrl), any(), any())(any(),any())
+      val html     = inject[feedback]
+      html(partialUrl, Some(Html(testHtml)))(messages, request).toString should include(testHtml)
+      verify(mockFormPartialRetriever, times(0))
+        .getPartialContent(ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
     }
 
     "assert correct html displayed from partialURL call when formBody is not provided" in {
@@ -66,8 +67,8 @@ class FeedbackViewSpec extends HtmlSpec with Injecting {
 
       val html = inject[feedback]
       html(partialUrl, None)(messages, request).toString should include(expected)
-      verify(mockFormPartialRetriever, times(1)).getPartialContent(
-        url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
+      verify(mockFormPartialRetriever, times(1))
+        .getPartialContent(url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
     }
   }
 }

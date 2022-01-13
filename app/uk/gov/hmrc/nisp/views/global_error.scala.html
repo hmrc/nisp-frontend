@@ -14,70 +14,35 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.{LanguageService, routes}
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.play.views.html.layouts.Article
-@import uk.gov.hmrc.renderer.TemplateRenderer
-
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, P}
 
 @this(
-    templateRenderer: TemplateRenderer,
-    languageService: LanguageService,
-    article: Article
-)(
-    implicit ec: ExecutionContext,
-    formPartialRetriever: FormPartialRetriever
+  main: main,
+  h1: H1,
+  p: P
 )
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: ApplicationConfig)(implicit request: Request[_], messages: Messages)
+@(
+  pageTitle: String,
+  heading: String,
+  message: String
+)(implicit request: Request[_], messages: Messages)
 
-@mainContent = {
-    <h1 class="heading-xlarge">@heading</h1>
+@main(
+  pageTitle = pageTitle,
+  extendedTitle = false
+) {
 
-    <p>@message</p>
-}
+  @h1(
+    elmId = Some("heading-1"),
+    msg = heading,
+    specId = Some("global_error__h1")
+  )
 
-@mainContentHeader = {
-     @language_selection(languageService.languageMap, languageService.routeToSwitchLanguage, Some("align-right"), Some("checkmystatepension"))
-}
+  @p(
+    content = Text(message),
+    specId = Some("global_error__p1")
+  )
 
-@linkElems = @{
-    Map("url" -> controllers.routes.Assets.versioned("stylesheets/nisp.css"))
-}
-
-@sidebar = {}
-
-@getHelpForm = {
-    @formPartialRetriever.getPartialContent(s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
-}
-
-@termsAndConditionFooterLink = @{
-    Map("url" -> routes.TermsConditionsController.show.url , "text" -> messages("nisp.tandcs.title"))
-}
-
-@navTitle = @{
-    messages("nisp.title")
-}
-
-@{
-     templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, article(mainContent, false, None), Map[String, Any](
-          "pageTitle" -> pageTitle,
-           "linkElems" -> linkElems,
-          "scriptElems" -> None,
-          "mainContentHeader" -> mainContentHeader,
-          "ssoUrl" -> None,
-          "signOutUrl" -> Some(routes .StatePensionController.signOut),
-          "betaBanner" -> false,
-          "includeHMRCBranding" -> false,
-          "getHelpForm" -> getHelpForm,
-          "showLastLogInStatus" ->  false,
-          "navTitle" -> navTitle,
-          "sidebar" -> sidebar,
-          "navLinks" -> None,
-          "termsAndConditionFooterLink" -> termsAndConditionFooterLink
-
-          )
-     )
 }

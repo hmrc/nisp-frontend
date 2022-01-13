@@ -18,7 +18,8 @@ package uk.gov.hmrc.nisp.errorHandler
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.when
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
@@ -28,46 +29,46 @@ import play.api.mvc.Request
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
 import uk.gov.hmrc.nisp.utils.UnitSpec
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
-
 import java.util.Locale
 
-class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
+class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
-  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val request: Request[_] = FakeRequest()
 
   val mockApplicationConfig = mock[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[TemplateRenderer].toInstance(templateRenderer),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
       bind[ApplicationConfig].toInstance(mockApplicationConfig)
-    ).build()
+    )
+    .build()
 
-  val errorHandler = inject[ErrorHandler]
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    when(mockApplicationConfig.urBannerUrl).thenReturn("/urResearch")
+    when(mockApplicationConfig.pertaxFrontendUrl).thenReturn("/pert")
+    when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+    when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
+  }
+
+  val errorHandler                    = inject[ErrorHandler]
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   "standardErrorTemplate" must {
     "return the global error view" in {
-      val title = "testTitle"
+      val title   = "testTitle"
       val heading = "testHeading"
       val message = "testMessage"
 
       val standardErrorTemplate: Html = errorHandler.standardErrorTemplate(title, heading, message)
-      val doc: Document = Jsoup.parse(standardErrorTemplate.toString())
+      val doc: Document               = Jsoup.parse(standardErrorTemplate.toString())
 
-      val docTitle = doc.select("title").text()
-      val docHeading = doc.select("article > h1").text()
-      val docMessage = doc.select("article > p").text()
+      val docTitle   = doc.select("title").text()
+      val docHeading = doc.select("h1").text()
+      val docMessage = doc.select("p").text()
 
-      docTitle shouldBe title
+      docTitle   shouldBe title
       docHeading shouldBe heading
       docMessage shouldBe message
     }
@@ -76,7 +77,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
   "internalServerErrorTemplate" must {
     "return the service error 500 view" in {
       val serverErrorTemplate: Html = errorHandler.internalServerErrorTemplate
-      val doc: Document = Jsoup.parse(serverErrorTemplate.toString())
+      val doc: Document             = Jsoup.parse(serverErrorTemplate.toString())
 
       val docTitle = doc.select("title").text()
       docTitle should include(messages("global.error.InternalServerError500.title"))
@@ -86,7 +87,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
   "notFoundTemplate" must {
     "return the page not found view" in {
       val notFoundTemplate: Html = errorHandler.notFoundTemplate
-      val doc: Document = Jsoup.parse(notFoundTemplate.toString())
+      val doc: Document          = Jsoup.parse(notFoundTemplate.toString())
 
       val docTitle = doc.select("title").text()
       docTitle should include(messages("global.page.not.found.error.title"))

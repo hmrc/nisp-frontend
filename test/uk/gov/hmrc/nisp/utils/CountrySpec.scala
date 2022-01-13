@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import uk.gov.hmrc.nisp.utils.UnitSpec
-
 class CountrySpec extends UnitSpec {
   "isAbroad" should {
     "should return true if the Country is not in the UK" in {
@@ -25,27 +23,27 @@ class CountrySpec extends UnitSpec {
     }
 
     "should return false if the Country is GREAT BRITAIN" in {
-     Country.isAbroad("GREAT BRITAIN") shouldBe false
+      Country.isAbroad("GREAT BRITAIN") shouldBe false
     }
 
     "should return false if the Country is ISLE OF MAN" in {
-     Country.isAbroad("ISLE OF MAN") shouldBe false
+      Country.isAbroad("ISLE OF MAN") shouldBe false
     }
 
     "should return false if the Country is NORTHERN IRELAND" in {
-     Country.isAbroad("NORTHERN IRELAND") shouldBe false
+      Country.isAbroad("NORTHERN IRELAND") shouldBe false
     }
 
     "should return false if the Country is ENGLAND" in {
-     Country.isAbroad("ENGLAND") shouldBe false
+      Country.isAbroad("ENGLAND") shouldBe false
     }
 
     "should return false if the Country is SCOTLAND" in {
-     Country.isAbroad("SCOTLAND") shouldBe false
+      Country.isAbroad("SCOTLAND") shouldBe false
     }
 
     "should return false if the Country is WALES" in {
-     Country.isAbroad("WALES") shouldBe false
+      Country.isAbroad("WALES") shouldBe false
     }
 
     "should return false if the Country is NOT SPECIFIED OR NOT USED" in {

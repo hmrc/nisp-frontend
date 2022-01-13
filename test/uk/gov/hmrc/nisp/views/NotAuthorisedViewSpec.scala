@@ -22,31 +22,29 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.not_authorised
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 class NotAuthorisedViewSpec extends HtmlSpec with Injecting {
 
   val fakeRequest = FakeRequest("GET", "/")
 
-  implicit val cachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"
-  lazy val html = inject[not_authorised]
-  lazy val source = asDocument(html().toString)
+  lazy val html                   = inject[not_authorised]
+  lazy val source                 = asDocument(html().toString)
 
   "NotAuthorised View" should {
 
     "assert correct page title" in {
-      val title = source.title()
-      val expected = messages("nisp.iv.failure.general.title") + Constants.titleSplitter +
-        messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk")
+      val title    = source.title()
+      val expected = messages("nisp.iv.failure.general.title") + Constants.titleSplitter + messages(
+        "nisp.title.extension"
+      ) + Constants.titleSplitter + messages("nisp.gov-uk")
       title should include(expected)
     }
 
     "assert correct paragraph text on page" in {
-      val paragraph = source.getElementsByTag("p").get(1).toString
+      val paragraph = source.getElementsByTag("p").get(0).toString
       paragraph should include(messages("nisp.iv.failure.general.youcan"))
     }
 

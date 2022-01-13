@@ -18,13 +18,16 @@ package uk.gov.hmrc.nisp.utils
 
 import java.time.LocalDate
 import uk.gov.hmrc.nisp.models.StatePensionAmountRegular
-import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class CalculateSpec extends UnitSpec {
 
   "calculate chart widths" should {
     def calculateCharts(currentAmount: BigDecimal, forecastAmount: BigDecimal, personalMax: BigDecimal) =
-      Calculate.calculateChartWidths(StatePensionAmountRegular(currentAmount, 0, 0), StatePensionAmountRegular(forecastAmount, 0, 0), StatePensionAmountRegular(personalMax, 0, 0))
+      Calculate.calculateChartWidths(
+        StatePensionAmountRegular(currentAmount, 0, 0),
+        StatePensionAmountRegular(forecastAmount, 0, 0),
+        StatePensionAmountRegular(personalMax, 0, 0)
+      )
 
     "current chart is 100 when current amount is higher" in {
       val (currentChart, _, _) = calculateCharts(70, 30, 0)
@@ -33,28 +36,28 @@ class CalculateSpec extends UnitSpec {
 
     "forecast chart is 100 when forecast amount is higher" in {
       val (_, forecastChart, personalMaxChart) = calculateCharts(70, 80, 80)
-      forecastChart.width shouldBe 100
+      forecastChart.width    shouldBe 100
       personalMaxChart.width shouldBe 100
     }
 
     "current chart and forecast chart are 100 when amounts are equal" in {
       val (currentChart, forecastChart, personalMaxChart) = calculateCharts(70, 70, 70)
-      currentChart.width shouldBe 100
-      forecastChart.width shouldBe 100
+      currentChart.width     shouldBe 100
+      forecastChart.width    shouldBe 100
       personalMaxChart.width shouldBe 100
     }
 
     "current chart is 66 when current amount is 2 and forecast is 3" in {
       val (currentChart, forecastChart, personalMaxChart) = calculateCharts(2, 3, 4)
-      currentChart.width shouldBe 50
-      forecastChart.width shouldBe 75
+      currentChart.width     shouldBe 50
+      forecastChart.width    shouldBe 75
       personalMaxChart.width shouldBe 100
     }
 
     "forecast chart is 30 when forecast amount is 4 and current is 13" in {
       val (currentChart, forecastChart, personalMaxChart) = calculateCharts(13, 4, 20)
-      forecastChart.width shouldBe 31
-      currentChart.width shouldBe 65
+      forecastChart.width    shouldBe 31
+      currentChart.width     shouldBe 65
       personalMaxChart.width shouldBe 100
     }
   }

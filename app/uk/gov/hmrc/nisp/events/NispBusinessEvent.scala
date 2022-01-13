@@ -22,12 +22,16 @@ import scala.util.Try
 import uk.gov.hmrc.http.{ForwardedFor, HeaderCarrier}
 
 abstract class NispBusinessEvent(auditType: String, detail: Map[String, String])(implicit hc: HeaderCarrier)
-  extends DataEvent(auditSource = "nisp-frontend", auditType = auditType, detail = detail, tags =
-    Map(
-      "clientIP" -> (hc.forwarded match {
-        case Some(ForwardedFor(someVal)) => Try(someVal.split(',').head).getOrElse("")
-        case None => ""
-      }),
-      "X-Request-ID" -> hc.requestId.map(_.value).getOrElse(""),
-      "X-Session-ID" -> hc.sessionId.map(_.value).getOrElse("")
-    ))
+    extends DataEvent(
+      auditSource = "nisp-frontend",
+      auditType = auditType,
+      detail = detail,
+      tags = Map(
+        "clientIP"     -> (hc.forwarded match {
+          case Some(ForwardedFor(someVal)) => Try(someVal.split(',').head).getOrElse("")
+          case None                        => ""
+        }),
+        "X-Request-ID" -> hc.requestId.map(_.value).getOrElse(""),
+        "X-Session-ID" -> hc.sessionId.map(_.value).getOrElse("")
+      )
+    )

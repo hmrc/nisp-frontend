@@ -18,5 +18,4 @@ package uk.gov.hmrc.nisp.helpers
 
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
 
-object FakeNispHeaderCarrierForPartialsConverter extends HeaderCarrierForPartialsConverter {
-}
+object FakeNispHeaderCarrierForPartialsConverter extends HeaderCarrierForPartialsConverter {}

@@ -19,9 +19,9 @@ package uk.gov.hmrc.nisp.models.enums
 object APIType extends Enumeration {
   type APIType = Value
 
-  val NI = Value
-  val SP = Value
-  val SchemeMembership = Value
-  val StatePension = Value
+  val NI                = Value
+  val SP                = Value
+  val SchemeMembership  = Value
+  val StatePension      = Value
   val NationalInsurance = Value
 }

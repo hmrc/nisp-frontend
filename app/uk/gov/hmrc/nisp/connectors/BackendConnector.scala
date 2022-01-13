@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import cats.data.EitherT
 import play.api.http.Status
 import play.api.libs.json._
 import uk.gov.hmrc.http.HttpErrorFunctions.{is4xx, is5xx}
@@ -65,8 +64,8 @@ trait BackendConnector {
     val keystoreTimerContext = metricsService.keystoreReadTimer.time()
 
     val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
-    sessionCacheF.onFailure {
-      case _ => metricsService.keystoreReadFailed.inc()
+    sessionCacheF.onFailure { case _ =>
+      metricsService.keystoreReadFailed.inc()
     }
     sessionCacheF.flatMap { keystoreResult =>
       keystoreTimerContext.stop()
@@ -102,12 +101,12 @@ trait BackendConnector {
   private def cacheResult[A](a: A, name: String)
                             (implicit hc: HeaderCarrier, formats: Format[A]): A = {
     val timerContext = metricsService.keystoreWriteTimer.time()
-    val cacheF = sessionCache.cache[A](name, a)
-    cacheF.onSuccess {
-      case _ => timerContext.stop()
+    val cacheF       = sessionCache.cache[A](name, a)
+    cacheF.onSuccess { case _ =>
+      timerContext.stop()
     }
-    cacheF.onFailure {
-      case _ => metricsService.keystoreWriteFailed.inc()
+    cacheF.onFailure { case _ =>
+      metricsService.keystoreWriteFailed.inc()
     }
     a
   }

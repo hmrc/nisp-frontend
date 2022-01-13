@@ -14,9 +14,12 @@
  * limitations under the License.
  *@
 
-@import play.api.i18n.Messages
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
 
-@this()
+@this(
+  p: P,
+  link: Link
+)
 @()(implicit messages: Messages)
 
 @****************************@
@@ -27,5 +30,23 @@
 @*                          *@
 @****************************@
 
-<p> @Html(messages("nisp.excluded.isleOfMan.sp.line1")) </p>
-<p> @Html(messages("nisp.excluded.isleOfMan.sp.line2")) </p>
+@p(
+  content = Text(messages("nisp.excluded.isleOfMan.sp.line1")),
+  specId = Some("exclusion_isleOfMan_sp__p1")
+)
+
+@p(
+  content = HtmlContent(messages(
+    "nisp.excluded.isleOfMan.sp.line2",
+    link(
+      attrs = Map("data-journey-click" -> "checkmystatepension:external:iom"),
+      attrTarget = true,
+      fullStop = true,
+      inParagraph = true,
+      link = "https://www.gov.im/categories/benefits-and-financial-support/pensions/",
+      messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",
+      specId = Some("exclusion_isleOfMan_sp__link1"),
+    )
+  )),
+  specId = Some("exclusion_isleOfMan_sp__p2")
+)

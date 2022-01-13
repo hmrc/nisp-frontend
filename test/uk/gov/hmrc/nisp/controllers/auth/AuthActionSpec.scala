@@ -49,25 +49,28 @@ import java.time.LocalDate
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
-
 class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   class BrokenAuthConnector(exception: Throwable) extends AuthConnector {
-    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+    ): Future[A] =
       Future.failed(exception)
   }
 
-  type AuthRetrievalType = Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
+  type AuthRetrievalType =
+    Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
 
-  val mockAuthConnector = mock[AuthConnector]
-  val mockApplicationConfig = mock[ApplicationConfig]
+  val mockAuthConnector         = mock[AuthConnector]
+  val mockApplicationConfig     = mock[ApplicationConfig]
   val mockCitizenDetailsService = mock[CitizenDetailsService]
 
-  val nino = new Generator().nextNino.nino
-  val fakeLoginTimes = LoginTimes(DateTime.now(), None)
-  val credentials = Credentials("providerId", "providerType")
-  val citizen = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
-  val address = Address(Some("Country"))
+  val nino                   = new Generator().nextNino.nino
+  val fakeLoginTimes         = LoginTimes(DateTime.now(), None)
+  val credentials            = Credentials("providerId", "providerType")
+  val citizen                = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
+  val address                = Address(Some("Country"))
   val citizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -77,25 +80,31 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
       bind[CitizenDetailsService].toInstance(mockCitizenDetailsService),
       bind[FormPartialRetriever].to[FakePartialRetriever],
       bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
-    ).build()
+    )
+    .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuthConnector, mockApplicationConfig, mockCitizenDetailsService)
   }
 
-  def makeRetrievalResults(ninoOption: Option[String] = Some(nino),
-                                   enrolments: Enrolments = Enrolments(Set.empty),
-                                   trustedHelper: Option[TrustedHelper] = None
-                                  ): Future[AuthRetrievalType] =
-    Future.successful(ninoOption ~ ConfidenceLevel.L200 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper)
+  def makeRetrievalResults(
+    ninoOption: Option[String] = Some(nino),
+    enrolments: Enrolments = Enrolments(Set.empty),
+    trustedHelper: Option[TrustedHelper] = None
+  ): Future[AuthRetrievalType] =
+    Future.successful(
+      ninoOption ~ ConfidenceLevel.L200 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper
+    )
 
   object Stubs {
     def successBlock(request: AuthenticatedRequest[_]): Future[Result] = Future.successful(Ok)
   }
 
-  val ggSignInUrlTail = "/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
-  val upliftUrlTail = "/mdtp/uplift?origin=NISP&completionURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failureURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised&confidenceLevel=200"
+  val ggSignInUrlTail           =
+    "/auth-login-stub/gg-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual"
+  val upliftUrlTail             =
+    "/mdtp/uplift?origin=NISP&completionURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failureURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised&confidenceLevel=200"
   implicit val timeout: Timeout = 5 seconds
 
   val authAction = inject[AuthActionImpl]
@@ -103,57 +112,68 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
   "GET /statepension" should {
     "invoke the block" when {
       "the user details can be retrieved without SA enrolment" in {
-        when(mockAuthConnector.authorise[AuthRetrievalType]
-          (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+        when(
+          mockAuthConnector
+            .authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
+        )
           .thenReturn(makeRetrievalResults())
 
         when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-        val stubs = spy(Stubs)
+        val stubs   = spy(Stubs)
         val request = FakeRequest("", "")
-        val result = authAction.invokeBlock(request, stubs.successBlock)
+        val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
 
-        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-          NispAuthedUser(Nino(nino),
+        val expectedAuthenticatedRequest = AuthenticatedRequest(
+          request,
+          NispAuthedUser(
+            Nino(nino),
             citizen.dateOfBirth,
             UserName(Name(citizen.firstName, citizen.lastName)),
             citizenDetailsResponse.address,
             None,
-            isSa = false),
-          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
-        verify(stubs).successBlock(
-          argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
+            isSa = false
+          ),
+          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes)
+        )
+        verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
       }
 
       "the user details can be retrieved withSA enrolment" in {
-        when(mockAuthConnector.authorise[AuthRetrievalType]
-          (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+        when(
+          mockAuthConnector
+            .authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
+        )
           .thenReturn(makeRetrievalResults(enrolments = Enrolments(Set(Enrolment("IR-SA")))))
 
         when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-        val stubs = spy(Stubs)
+        val stubs   = spy(Stubs)
         val request = FakeRequest("", "")
-        val result = authAction.invokeBlock(request, stubs.successBlock)
+        val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
 
-        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-          NispAuthedUser(Nino(nino),
+        val expectedAuthenticatedRequest = AuthenticatedRequest(
+          request,
+          NispAuthedUser(
+            Nino(nino),
             citizen.dateOfBirth,
             UserName(Name(citizen.firstName, citizen.lastName)),
             citizenDetailsResponse.address,
             None,
-            isSa = true),
-          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
+            isSa = true
+          ),
+          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes)
+        )
         verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
       }
 
       "the user details is a trusted helper" in {
         val trustedHelperNino = new Generator().nextNino.nino
-        val trustedHelper = TrustedHelper("pName", "aName", "link", trustedHelperNino)
+        val trustedHelper     = TrustedHelper("pName", "aName", "link", trustedHelperNino)
 
         when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
           .thenReturn(makeRetrievalResults(trustedHelper = Some(trustedHelper)))
@@ -161,26 +181,30 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
         when(mockCitizenDetailsService.retrievePerson(any())(any()))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-        val stubs = spy(Stubs)
+        val stubs   = spy(Stubs)
         val request = FakeRequest("", "")
-        val result = authAction.invokeBlock(request, stubs.successBlock)
+        val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
 
-        val expectedAuthenticatedRequest = AuthenticatedRequest(request,
-          NispAuthedUser(Nino(trustedHelperNino),
+        val expectedAuthenticatedRequest = AuthenticatedRequest(
+          request,
+          NispAuthedUser(
+            Nino(trustedHelperNino),
             citizen.dateOfBirth,
             UserName(Name(citizen.firstName, citizen.lastName)),
             citizenDetailsResponse.address,
             Some(trustedHelper),
-            isSa = false),
-          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes))
+            isSa = false
+          ),
+          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes)
+        )
         verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
       }
     }
     "redirect to sign in page when no session" in {
-      val ggSigninUrl = "ggSigninUrl"
+      val ggSigninUrl           = "ggSigninUrl"
       val postSignInRedirectUrl = "postSignInRedirectUrl"
-      val expectedUrl = s"$ggSigninUrl?continue=$postSignInRedirectUrl&origin=nisp-frontend&accountType=individual"
+      val expectedUrl           = s"$ggSigninUrl?continue=$postSignInRedirectUrl&origin=nisp-frontend&accountType=individual"
 
       when(mockAuthConnector.authorise(any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.failed(new SessionRecordNotFound))
@@ -189,7 +213,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
       when(mockApplicationConfig.postSignInRedirectUrl).thenReturn(postSignInRedirectUrl)
 
       val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
+      status(result)               shouldBe SEE_OTHER
       redirectLocation(result).get shouldBe expectedUrl
     }
 
@@ -197,24 +221,26 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
       when(mockAuthConnector.authorise(any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.failed(new InsufficientConfidenceLevel))
 
-      val ivUpliftUrl = "ivUpliftUrl"
-      val postSignInRedirectUrl = "postSignInRedirectUrl"
+      val ivUpliftUrl              = "ivUpliftUrl"
+      val postSignInRedirectUrl    = "postSignInRedirectUrl"
       val notAuthorisedRedirectUrl = "notAuthorisedRedirectUrl"
 
-      val expectedUrl = s"$ivUpliftUrl?origin=NISP&completionURL=$postSignInRedirectUrl&failureURL=$notAuthorisedRedirectUrl&confidenceLevel=200"
+      val expectedUrl =
+        s"$ivUpliftUrl?origin=NISP&completionURL=$postSignInRedirectUrl&failureURL=$notAuthorisedRedirectUrl&confidenceLevel=200"
 
       when(mockApplicationConfig.notAuthorisedRedirectUrl).thenReturn(notAuthorisedRedirectUrl)
       when(mockApplicationConfig.postSignInRedirectUrl).thenReturn(postSignInRedirectUrl)
       when(mockApplicationConfig.ivUpliftUrl).thenReturn(ivUpliftUrl)
 
       val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
+      status(result)               shouldBe SEE_OTHER
       redirectLocation(result).get shouldBe expectedUrl
     }
 
     "return error for not found user" in {
-      when(mockAuthConnector.authorise[AuthRetrievalType]
-        (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+      when(
+        mockAuthConnector.authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
+      )
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
@@ -225,8 +251,9 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
     }
 
     "return error for user without nino" in {
-      when(mockAuthConnector.authorise[AuthRetrievalType]
-        (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+      when(
+        mockAuthConnector.authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
+      )
         .thenReturn(makeRetrievalResults(ninoOption = None))
 
       val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
@@ -234,8 +261,9 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
     }
 
     "return error for technical difficulties" in {
-      when(mockAuthConnector.authorise[AuthRetrievalType]
-        (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+      when(
+        mockAuthConnector.authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
+      )
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
@@ -246,28 +274,30 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
     }
 
     "return redirect for exclusion when NI" in {
-      when(mockAuthConnector.authorise[AuthRetrievalType]
-        (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+      when(
+        mockAuthConnector.authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
+      )
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
 
       val result = authAction.invokeBlock(FakeRequest("", "a-uri-with-nirecord"), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
+      status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
 
     "return redirect for exclusion when not NI" in {
-      when(mockAuthConnector.authorise[AuthRetrievalType]
-        (any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
+      when(
+        mockAuthConnector.authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
+      )
         .thenReturn(makeRetrievalResults())
 
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
 
       val result = authAction.invokeBlock(FakeRequest("", "a-non-ni-record-uri"), Stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
+      status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
     }
   }

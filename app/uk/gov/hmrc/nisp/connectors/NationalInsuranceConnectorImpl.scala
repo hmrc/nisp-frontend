@@ -27,17 +27,19 @@ import uk.gov.hmrc.nisp.services.MetricsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NationalInsuranceConnectorImpl @Inject()(val http: HttpClient,
-                                               val sessionCache: SessionCache,
-                                               val appConfig: ApplicationConfig,
-                                               val metricsService: MetricsService,
-                                               val executionContext: ExecutionContext) extends BackendConnector{
+class NationalInsuranceConnectorImpl @Inject() (
+  val http: HttpClient,
+  val sessionCache: SessionCache,
+  val appConfig: ApplicationConfig,
+  val metricsService: MetricsService,
+  val executionContext: ExecutionContext
+) extends BackendConnector {
 
   val serviceUrl: String = appConfig.nationalInsuranceServiceUrl
 
   def getNationalInsurance(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]] = {
     val urlToRead = s"$serviceUrl/ni/$nino"
-    val header = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
+    val header    = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
     retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead, header)
   }
 }

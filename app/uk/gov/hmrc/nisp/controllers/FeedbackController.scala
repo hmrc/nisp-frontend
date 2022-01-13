@@ -31,21 +31,25 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import java.net.URLEncoder
 import scala.concurrent.{ExecutionContext, Future}
 
-class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
-                                   httpClient: HttpClient,
-                                   executionContext: ExecutionContext,
-                                   nispHeaderCarrierForPartialsConverter: HeaderCarrierForPartialsConverter,
-                                   mcc: MessagesControllerComponents,
-                                   feedbackThankYou: feedback_thankyou,
-                                   feedback: feedback)
-                                   (implicit val formPartialRetriever: FormPartialRetriever,
-                                    val templateRenderer: TemplateRenderer,
-                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
-                                    executor: ExecutionContext) extends NispFrontendController(mcc) with I18nSupport with Logging {
-
+class FeedbackController @Inject() (
+  applicationConfig: ApplicationConfig,
+  httpClient: HttpClient,
+  executionContext: ExecutionContext,
+  nispHeaderCarrierForPartialsConverter: HeaderCarrierForPartialsConverter,
+  mcc: MessagesControllerComponents,
+  feedbackThankYou: feedback_thankyou,
+  feedback: feedback
+)(implicit
+  val formPartialRetriever: FormPartialRetriever,
+  val templateRenderer: TemplateRenderer,
+  val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+  executor: ExecutionContext
+) extends NispFrontendController(mcc)
+    with I18nSupport
+    with Logging {
 
   def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
-  def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit.url
+  def localSubmitUrl(implicit request: Request[AnyContent]): String     = routes.FeedbackController.submit.url
 
   private val TICKET_ID = "ticketId"
 
@@ -59,38 +63,43 @@ class FeedbackController @Inject()(applicationConfig: ApplicationConfig,
   private def feedbackThankYouPartialUrl(ticketId: String)(implicit request: Request[AnyContent]) =
     s"${applicationConfig.contactFrontendPartialBaseUrl}/contact/beta-feedback/form/confirmation?ticketId=${urlEncode(ticketId)}"
 
-  def show: Action[AnyContent] = Action {
-    implicit request =>
-      (request.session.get(REFERER), request.headers.get(REFERER)) match {
-        case (None, Some(ref)) =>
-          Ok(feedback(feedbackFormPartialUrl, None)).withSession(request.session + (REFERER -> ref))
-        case _ =>
-          Ok(feedback(feedbackFormPartialUrl, None))
-      }
+  def show: Action[AnyContent] = Action { implicit request =>
+    (request.session.get(REFERER), request.headers.get(REFERER)) match {
+      case (None, Some(ref)) =>
+        Ok(feedback(feedbackFormPartialUrl, None)).withSession(request.session + (REFERER -> ref))
+      case _                 =>
+        Ok(feedback(feedbackFormPartialUrl, None))
+    }
   }
 
-  def submit: Action[AnyContent] = Action.async {
-    implicit request =>
-      request.body.asFormUrlEncoded.map { formData =>
-        httpClient.POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(rds = PartialsFormReads.readPartialsForm, hc = partialsReadyHeaderCarrier, ec = executionContext).map {
-          resp =>
+  def submit: Action[AnyContent] = Action.async { implicit request =>
+    request.body.asFormUrlEncoded
+      .map { formData =>
+        httpClient
+          .POSTForm[HttpResponse](feedbackHmrcSubmitPartialUrl, formData)(
+            rds = PartialsFormReads.readPartialsForm,
+            hc = partialsReadyHeaderCarrier,
+            ec = executionContext
+          )
+          .map { resp =>
             resp.status match {
-              case HttpStatus.OK => Redirect(routes.FeedbackController.showThankYou).withSession(request.session + (TICKET_ID -> resp.body))
+              case HttpStatus.OK          =>
+                Redirect(routes.FeedbackController.showThankYou).withSession(request.session + (TICKET_ID -> resp.body))
               case HttpStatus.BAD_REQUEST => BadRequest(feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
-              case status => logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
+              case status                 => logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
             }
-        }
-      }.getOrElse {
+          }
+      }
+      .getOrElse {
         logger.warn("Trying to submit an empty feedback form")
         Future.successful(InternalServerError)
       }
   }
 
-  def showThankYou: Action[AnyContent] = Action {
-    implicit request =>
-      val ticketId = request.session.get(TICKET_ID).getOrElse("N/A")
-      val referer = request.session.get(REFERER).getOrElse("/")
-      Ok(feedbackThankYou(feedbackThankYouPartialUrl(ticketId), referer)).withSession(request.session - REFERER)
+  def showThankYou: Action[AnyContent] = Action { implicit request =>
+    val ticketId = request.session.get(TICKET_ID).getOrElse("N/A")
+    val referer  = request.session.get(REFERER).getOrElse("/")
+    Ok(feedbackThankYou(feedbackThankYouPartialUrl(ticketId), referer)).withSession(request.session - REFERER)
   }
 
   private def urlEncode(value: String) = URLEncoder.encode(value, "UTF-8")
