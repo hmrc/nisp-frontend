@@ -16,11 +16,10 @@
 
 package uk.gov.hmrc.nisp.models
 
-import java.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.time.TaxYear
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
+
+import java.time.LocalDate
 
 case class StatePensionExclusion(
   exclusionReasons: List[Exclusion],

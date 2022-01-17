@@ -16,11 +16,9 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import java.util.UUID
-
 import play.api.libs.json.{Format, JsPath, JsonValidationError}
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.nisp.models.enums.APIType._
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.JsonDepersonaliser
@@ -64,7 +62,7 @@ trait BackendConnector {
   private def connectToMicroservice[A](
     urlToRead: String,
     apiType: APIType,
-    headers: Seq[(String, String)] = Seq()
+    headers: Seq[(String, String)]
   )(implicit hc: HeaderCarrier, formats: Format[A]): Future[A] = {
     val timerContext = metricsService.startTimer(apiType)
 

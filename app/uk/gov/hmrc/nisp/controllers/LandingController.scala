@@ -53,7 +53,7 @@ class LandingController @Inject() (
     }
   )
 
-  def verifySignIn: Action[AnyContent] = verifyAuthAction { implicit request =>
+  def verifySignIn: Action[AnyContent] = verifyAuthAction { _ =>
     Redirect(routes.StatePensionController.show)
   }
 

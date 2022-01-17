@@ -17,18 +17,17 @@
 package uk.gov.hmrc.nisp.services
 
 import com.google.inject.Inject
-import java.time.{LocalDate, LocalDateTime, ZoneId}
-
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.UpstreamErrorResponse.WithStatusCode
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
-import uk.gov.hmrc.nisp.models.{Exclusion, _}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.time.CurrentTaxYear
 
-import scala.util.matching.Regex
+import java.time.{LocalDate, ZoneId}
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.matching.Regex
 
 class StatePensionService @Inject() (statePensionConnector: StatePensionConnector)(implicit executor: ExecutionContext)
     extends CurrentTaxYear {

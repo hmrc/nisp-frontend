@@ -17,16 +17,14 @@
 package uk.gov.hmrc.nisp.services
 
 import com.google.inject.Inject
-import org.joda.time.LocalDate
 import play.api.http.Status.FORBIDDEN
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse.WithStatusCode
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
-import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
+import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.matching.Regex
 
 class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
                                         (implicit executor: ExecutionContext){

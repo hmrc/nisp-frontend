@@ -4,6 +4,11 @@ object AppDependencies {
 
   private val playVersion = "play-28"
 
+  private val silencerDependencies: Seq[ModuleID] = Seq(
+    compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.0" cross CrossVersion.full),
+    "com.github.ghik" % "silencer-lib" % "1.7.0" % Provided cross CrossVersion.full
+  )
+
   val compile = Seq(
     "uk.gov.hmrc"       %% "play-partials"                 % "8.2.0-play-28",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % "5.15.0",
@@ -29,5 +34,6 @@ object AppDependencies {
     "com.github.tomakehurst"  % "wiremock-jre8"      % "2.27.0",
     "com.vladsch.flexmark"    % "flexmark-all"       % "0.35.10"
   ).map(_ % "test,it")
-  val all: Seq[ModuleID] = compile ++ test
+
+  val all: Seq[ModuleID] = compile ++ test ++ silencerDependencies
 }
