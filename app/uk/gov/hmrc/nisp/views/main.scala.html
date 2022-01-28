@@ -19,6 +19,10 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.{AccountMenu, SignOut, _}
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@import uk.gov.hmrc.ptafrontend.views.html._
+@import includes.attorneyBanner
+@import views.html.helper.CSPNonce
 
 @this(
   hmrcLayout: HmrcLayout,
@@ -30,7 +34,10 @@
   govukBackLink: GovukBackLink,
   hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
   appConfig: ApplicationConfig,
-  hmrcAccountMenu: HmrcAccountMenu
+  hmrcAccountMenu: HmrcAccountMenu,
+  banner: attorneyBanner,
+  ptaHead: PtaHead,
+  ptaScripts: PtaScripts
 )(implicit accountMenuConfig: AccountMenuConfig)
 
 @(
@@ -42,11 +49,12 @@
   optCustomLayout: Option[Html => Html] = None,
   extendedTitle: Boolean = true,
   showUrBanner: Boolean = true
-)(content: Html)(implicit request: RequestHeader, messages: Messages)
+)(content: Html)(implicit request: Request[_], messages: Messages)
 
 @headBlock = {
   <meta name="format-detection" content="telephone=no" />
   <link rel="stylesheet" href='@controllers.routes.Assets.versioned("stylesheets/nisp.css")'/>
+  @ptaHead()
 }
 
 @beforeContent = {
@@ -56,8 +64,22 @@
       language = if(messages.lang.code == "cy") Cy else En
     ).withUrlsFromConfig())
   }
+
+  @attorneyBanner
+
   @hmrcLanguageSelectHelper()
 }
+
+@attorneyBanner = @{
+  request match {
+    case auth: AuthenticatedRequest[_] =>
+      auth.nispAuthedUser.trustedHelper.map{ helper =>
+        banner(helper)
+      }
+    case _ => None
+  }
+}
+
 @contentBlock = {
   @content
   <br>
@@ -73,6 +95,7 @@
   <script src='@controllers.routes.Assets.versioned("javascript/jquery.js")'></script>
   <script src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
   <script src='@controllers.routes.Assets.versioned("javascript/nirecord.js")'></script>
+  @ptaScripts()
 }
 
 @fullTitle = @{
@@ -83,6 +106,7 @@
 @hmrcLayout(
   pageTitle = Some(if(extendedTitle){fullTitle}else{pageTitle}),
   serviceName = Some(messages("nisp.title")),
+  nonce = CSPNonce.get,
   isWelshTranslationAvailable = true,
   userResearchBannerUrl = if(showUrBanner)Some(appConfig.urBannerUrl) else None,
   accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)),
