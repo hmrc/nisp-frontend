@@ -24,6 +24,5 @@
 
 @(helper: TrustedHelper)(implicit messages: Messages)
 
-<span id="attorneyBanner">
   @ptaAttorneyBanner(AttorneyBanner(name = helper.principalName, classes = "govuk-!-margin-top-2", accountUrl = helper.returnLinkUrl))
-</span>
+
