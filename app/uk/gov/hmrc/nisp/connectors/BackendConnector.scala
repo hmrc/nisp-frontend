@@ -77,7 +77,6 @@ trait BackendConnector {
           metricsService.keystoreMissCounter.inc()
           connectToMicroservice(url, api, headers) map {
             case Right(Right(right)) => Right(Right(cacheResult(right, api.toString)))
-            case Right(left) => Right(left)
             case errorResponse => errorResponse
           }
       }
