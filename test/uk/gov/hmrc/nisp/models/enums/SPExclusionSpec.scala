@@ -29,7 +29,7 @@ class SPExclusionSpec extends UnitSpec {
       }
 
       "parse Dead when Dead is read" in {
-        Json.fromJson[Exclusion](JsString("Dead")).get shouldBe Exclusion.Dead
+        Json.fromJson[Exclusion](JsString("EXCLUSION_DEAD")).get shouldBe Exclusion.Dead
       }
     }
   }

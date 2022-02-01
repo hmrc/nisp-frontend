@@ -55,20 +55,20 @@ class StatePensionController @Inject() (
 ) extends NispFrontendController(mcc)
     with I18nSupport {
 
-  def showCope: Action[AnyContent] = authenticate.async { implicit request =>
-    implicit val user: NispAuthedUser = request.nispAuthedUser
-    pertaxHelper.isFromPertax.flatMap { isPertax =>
-      statePensionService.getSummary(user.nino) map {
-        case Right(statePension) if statePension.contractedOut =>
-          Ok(
-            statePensionCope(
+  def showCope: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      implicit val user: NispAuthedUser = request.nispAuthedUser
+      pertaxHelper.isFromPertax.flatMap { isPertax =>
+
+        statePensionService.getSummary(user.nino) map {
+          case Right(Right(statePension)) if statePension.contractedOut =>
+            Ok(statePensionCope(
               statePension.amounts.cope.weeklyAmount,
               isPertax
-            )
-          )
-        case _                                                 => Redirect(routes.StatePensionController.show)
+            ))
+          case _ => Redirect(routes.StatePensionController.show)
+        }
       }
-    }
   }
 
   private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser, authDetails: AuthDetails)(implicit
@@ -96,22 +96,22 @@ class StatePensionController @Inject() (
       val statePensionResponseF      = statePensionService.getSummary(user.nino)
       val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
 
-      for {
-        statePensionResponse      <- statePensionResponseF
-        nationalInsuranceResponse <- nationalInsuranceResponseF
-      } yield (statePensionResponse, nationalInsuranceResponse) match {
-        case (Right(statePension), Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
-          auditConnector.sendEvent(
-            AccountExclusionEvent(
-              user.nino.nino,
-              user.name,
-              nationalInsuranceExclusion
-            )
-          )
-          Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
+        for {
+          statePensionResponse <- statePensionResponseF
+          nationalInsuranceResponse <- nationalInsuranceResponseF
+        } yield {
+          (statePensionResponse, nationalInsuranceResponse) match {
+            case (Right(Right(statePension)), Right(Left(nationalInsuranceExclusion))) if statePension.reducedRateElection =>
+              auditConnector.sendEvent(AccountExclusionEvent(
+                user.nino.nino,
+                user.name,
+                nationalInsuranceExclusion
+              ))
+              Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
 
-        case (Right(statePension), Right(nationalInsuranceRecord)) =>
-          sendAuditEvent(statePension, user, request.authDetails)
+            case (Right(Right(statePension)), Right(Right(nationalInsuranceRecord))) =>
+
+              sendAuditEvent(statePension, user, request.authDetails)
 
           val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
             statePension.earningsIncludedUpTo,
@@ -170,21 +170,17 @@ class StatePensionController @Inject() (
             ).withSession(storeUserInfoInSession(user, statePension.contractedOut))
           }
 
-        case (Left(statePensionExclusion), _) =>
-          auditConnector.sendEvent(
-            AccountExclusionEvent(
-              user.nino.nino,
-              user.name,
-              statePensionExclusion.exclusion
-            )
-          )
-          Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
-        case _                                =>
-          throw new RuntimeException(
-            "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
-          )
+            case (Right(Left(statePensionExclusion)), _) =>
+              auditConnector.sendEvent(AccountExclusionEvent(
+                user.nino.nino,
+                user.name,
+                statePensionExclusion.exclusion
+              ))
+              Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
+            case _ => throw new RuntimeException("StatePensionController: SP and NIR are unmatchable. This is probably a logic error.")
+          }
+        }
       }
-    }
   }
 
   def pta(): Action[AnyContent] = authenticate { implicit request =>

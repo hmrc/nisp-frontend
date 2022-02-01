@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
 import java.time.LocalDate
+
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.domain.Nino
@@ -32,28 +33,31 @@ import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.ExecutionContext
 
-class NIRecordController @Inject() (
-  auditConnector: AuditConnector,
-  authenticate: AuthAction,
-  nationalInsuranceService: NationalInsuranceService,
-  statePensionService: StatePensionService,
-  appConfig: ApplicationConfig,
-  pertaxHelper: PertaxHelper,
-  mcc: MessagesControllerComponents,
-  dateProvider: DateProvider,
-  niRecordPage: nirecordpage,
-  niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
-  nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
-)(implicit
-  ec: ExecutionContext
-) extends NispFrontendController(mcc)
-    with I18nSupport {
+class NIRecordController @Inject()(auditConnector: AuditConnector,
+                                   authenticate: AuthAction,
+                                   nationalInsuranceService: NationalInsuranceService,
+                                   statePensionService: StatePensionService,
+                                   appConfig: ApplicationConfig,
+                                   pertaxHelper: PertaxHelper,
+                                   mcc: MessagesControllerComponents,
+                                   dateProvider: DateProvider,
+                                   niRecordPage: nirecordpage,
+                                   niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
+                                   nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
+                                  )(implicit val formPartialRetriever: FormPartialRetriever,
+                                    val templateRenderer: TemplateRenderer,
+                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+                                    ec: ExecutionContext)
+  extends NispFrontendController(mcc) with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI
+
 
   def showFull: Action[AnyContent] = show(gapsOnlyView = false)
 
@@ -113,31 +117,24 @@ class NIRecordController @Inject() (
     implicit val user: NispAuthedUser = request.nispAuthedUser
     val nino                          = user.nino
 
-    val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
-    val statePensionResponseF      = statePensionService.getSummary(nino)
-    for {
-      nationalInsuranceRecordResponse <- nationalInsuranceResponseF
-      statePensionResponse            <- statePensionResponseF
-    } yield nationalInsuranceRecordResponse match {
-      case Right(niRecord) =>
-        if (gapsOnlyView && niRecord.numberOfGaps < 1) {
-          Redirect(routes.NIRecordController.showFull)
-        } else {
-          val finalRelevantStartYear = statePensionResponse match {
-            case Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _)) |
-                Left(StatePensionExclusionFilteredWithCopeDate(_, _, _)) =>
-              None
-            case Left(spExclusion: StatePensionExclusionFiltered) =>
-              Some(
-                spExclusion.finalRelevantStartYear
-                  .getOrElse(
-                    throw new RuntimeException(
-                      s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion"
-                    )
-                  )
-              )
-            case Right(sp)                                        => Some(sp.finalRelevantStartYear)
-          }
+      val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
+      val statePensionResponseF = statePensionService.getSummary(nino)
+      for {
+        nationalInsuranceRecordResponse <- nationalInsuranceResponseF
+        statePensionResponse <- statePensionResponseF
+      } yield {
+        nationalInsuranceRecordResponse match {
+          case Right(Right(niRecord)) =>
+            if (gapsOnlyView && niRecord.numberOfGaps < 1) {
+              Redirect(routes.NIRecordController.showFull)
+            } else {
+              val finalRelevantStartYear = statePensionResponse match {
+                case Right(Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _))) |
+                     Right(Left(StatePensionExclusionFilteredWithCopeDate(_, _, _))) => None
+                case Right(Left(spExclusion: StatePensionExclusionFiltered)) => Some(spExclusion.finalRelevantStartYear
+                  .getOrElse(throw new RuntimeException(s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion")))
+                case Right(Right(sp)) => Some(sp.finalRelevantStartYear)
+              }
 
           finalRelevantStartYear
             .map { finalRelevantStartYear =>
@@ -174,29 +171,28 @@ class NIRecordController @Inject() (
                 )
               )
 
+              }.getOrElse(Redirect(routes.ExclusionController.showSP))
             }
-            .getOrElse(Redirect(routes.ExclusionController.showSP))
+          case Right(Left(exclusion)) =>
+            auditConnector.sendEvent(AccountExclusionEvent(
+              nino.nino,
+              request.nispAuthedUser.name,
+              exclusion
+            ))
+            Redirect(routes.ExclusionController.showNI)
         }
-      case Left(exclusion) =>
-        auditConnector.sendEvent(
-          AccountExclusionEvent(
-            nino.nino,
-            request.nispAuthedUser.name,
-            exclusion
-          )
-        )
-        Redirect(routes.ExclusionController.showNI)
-    }
+      }
   }
 
-  def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async { implicit request =>
-    implicit val user: NispAuthedUser = request.nispAuthedUser
-    nationalInsuranceService.getSummary(user.nino) map {
-      case Right(niRecord) =>
-        Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
-      case Left(_)         =>
-        Redirect(routes.ExclusionController.showNI)
-    }
+  def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      implicit val user: NispAuthedUser = request.nispAuthedUser
+      nationalInsuranceService.getSummary(user.nino) map {
+        case Right(Right(niRecord)) =>
+          Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
+        case Left(_) =>
+          Redirect(routes.ExclusionController.showNI)
+      }
   }
 
   def showVoluntaryContributions: Action[AnyContent] = authenticate { implicit request =>

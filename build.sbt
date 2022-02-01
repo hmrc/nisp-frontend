@@ -53,5 +53,6 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest)(base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    parallelExecution in IntegrationTest := false
+    parallelExecution in IntegrationTest := false,
+    scalacOptions += "-Ypartial-unification"
   )

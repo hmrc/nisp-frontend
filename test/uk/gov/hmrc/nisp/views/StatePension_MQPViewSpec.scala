@@ -117,57 +117,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
         def mockSetup = {
           when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-            .thenReturn(
-              Future.successful(
-                Right(
-                  StatePension(
-                    LocalDate.of(2016, 4, 5),
-                    amounts = StatePensionAmounts(
-                      protectedPayment = false,
-                      StatePensionAmountRegular(151.71, 590.10, 7081.15),
-                      StatePensionAmountForecast(4, 150.71, 590.10, 7081.15),
-                      StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                      StatePensionAmountRegular(0, 0, 0)
-                    ),
-                    pensionAge = 67,
-                    LocalDate.of(2020, 6, 7),
-                    "2019-20",
-                    20,
-                    pensionSharingOrder = false,
-                    currentFullWeeklyPensionAmount = 155.65,
-                    false,
-                    false
-                  )
-                )
-              )
+            .thenReturn(Future.successful(Right(Right(StatePension(
+              LocalDate.of(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(151.71, 590.10, 7081.15),
+                StatePensionAmountForecast(4, 150.71, 590.10, 7081.15),
+                StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              LocalDate.of(2020, 6, 7),
+              "2019-20",
+              20,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65,
+              false,
+              false
             )
+            ))))
 
           when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-            .thenReturn(
-              Future.successful(
-                Right(
-                  NationalInsuranceRecord(
-                    qualifyingYears = 11,
-                    qualifyingYearsPriorTo1975 = 0,
-                    numberOfGaps = 1,
-                    numberOfGapsPayable = 1,
-                    Some(LocalDate.of(1954, 3, 6)),
-                    false,
-                    LocalDate.of(2017, 4, 5),
-                    List(
-                      NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                      NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                      NationalInsuranceTaxYearBuilder(
-                        "2013-14",
-                        qualifying = true,
-                        underInvestigation = false
-                      ) /*payable = true*/
-                    ),
-                    reducedRateElection = false
-                  )
-                )
-              )
+            .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+              qualifyingYears = 11,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 1,
+              numberOfGapsPayable = 1,
+              Some(LocalDate.of(1954, 3, 6)),
+              false,
+              LocalDate.of(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              ),
+              reducedRateElection = false
             )
+            ))))
         }
 
         "render with correct page title" in {
@@ -411,57 +398,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
         def mockSetup = {
           when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-            .thenReturn(
-              Future.successful(
-                Right(
-                  StatePension(
-                    LocalDate.of(2016, 4, 5),
-                    amounts = StatePensionAmounts(
-                      protectedPayment = false,
-                      StatePensionAmountRegular(151.71, 590.10, 7081.15),
-                      StatePensionAmountForecast(4, 150.71, 590.10, 7081.15),
-                      StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                      StatePensionAmountRegular(0, 0, 0)
-                    ),
-                    pensionAge = 67,
-                    LocalDate.of(2020, 6, 7),
-                    "2019-20",
-                    20,
-                    pensionSharingOrder = false,
-                    currentFullWeeklyPensionAmount = 155.65,
-                    reducedRateElection = false,
-                    statePensionAgeUnderConsideration = true
-                  )
-                )
-              )
+            .thenReturn(Future.successful(Right(Right(StatePension(
+              LocalDate.of(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(151.71, 590.10, 7081.15),
+                StatePensionAmountForecast(4, 150.71, 590.10, 7081.15),
+                StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              LocalDate.of(2020, 6, 7),
+              "2019-20",
+              20,
+              pensionSharingOrder = false,
+              currentFullWeeklyPensionAmount = 155.65,
+              reducedRateElection = false,
+              statePensionAgeUnderConsideration = true
             )
+            ))))
 
           when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-            .thenReturn(
-              Future.successful(
-                Right(
-                  NationalInsuranceRecord(
-                    qualifyingYears = 11,
-                    qualifyingYearsPriorTo1975 = 0,
-                    numberOfGaps = 1,
-                    numberOfGapsPayable = 1,
-                    Some(LocalDate.of(1954, 3, 6)),
-                    false,
-                    LocalDate.of(2017, 4, 5),
-                    List(
-                      NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                      NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                      NationalInsuranceTaxYearBuilder(
-                        "2013-14",
-                        qualifying = true,
-                        underInvestigation = false
-                      ) /*payable = true*/
-                    ),
-                    reducedRateElection = false
-                  )
-                )
-              )
+            .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+              qualifyingYears = 11,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 1,
+              numberOfGapsPayable = 1,
+              Some(LocalDate.of(1954, 3, 6)),
+              false,
+              LocalDate.of(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+              ),
+              reducedRateElection = false
             )
+            ))))
         }
 
         lazy val foreignDoc =
@@ -541,57 +515,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(111.71, 590.10, 7081.15),
-                        StatePensionAmountForecast(4, 137.86, 599.44, 7193.34),
-                        StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2020, 6, 7),
-                      "2019-20",
-                      4,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      false,
-                      false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 137.86, 599.44, 7193.34),
+                  StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                false,
+                false
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 4,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 2,
-                      numberOfGapsPayable = 2,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 2,
+                numberOfGapsPayable = 2,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -866,57 +827,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(111.71, 590.10, 7081.15),
-                        StatePensionAmountForecast(4, 137.86, 599.44, 7193.34),
-                        StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2020, 6, 7),
-                      "2019-20",
-                      4,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      reducedRateElection = false,
-                      statePensionAgeUnderConsideration = true
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 137.86, 599.44, 7193.34),
+                  StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = true
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 4,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 2,
-                      numberOfGapsPayable = 2,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 2,
+                numberOfGapsPayable = 2,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -999,57 +947,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(111.71, 590.10, 7081.15),
-                        StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
-                        StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2020, 6, 7),
-                      "2019-20",
-                      4,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      false,
-                      false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                  StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                false,
+                false
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 4,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 0,
-                      numberOfGapsPayable = 0,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 0,
+                numberOfGapsPayable = 0,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -1295,57 +1230,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(111.71, 590.10, 7081.15),
-                        StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
-                        StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2020, 6, 7),
-                      "2019-20",
-                      4,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      reducedRateElection = false,
-                      statePensionAgeUnderConsideration = true
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                  StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = true
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 4,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 0,
-                      numberOfGapsPayable = 0,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 0,
+                numberOfGapsPayable = 0,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -1426,57 +1348,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(111.71, 590.10, 7081.15),
-                        StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
-                        StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2020, 6, 7),
-                      "2019-20",
-                      0,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      false,
-                      false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                  StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                0,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                false,
+                false
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 0,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 1,
-                      numberOfGapsPayable = 1,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 0,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 1,
+                numberOfGapsPayable = 1,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -1722,57 +1631,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(111.71, 590.10, 7081.15),
-                        StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
-                        StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2020, 6, 7),
-                      "2019-20",
-                      0,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      reducedRateElection = false,
-                      statePensionAgeUnderConsideration = true
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                  StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                0,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = true
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 0,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 1,
-                      numberOfGapsPayable = 1,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 0,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 1,
+                numberOfGapsPayable = 1,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -1854,57 +1750,43 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(111.71, 590.10, 7081.15),
-                        StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
-                        StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2020, 6, 7),
-                      "2019-20",
-                      9,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      false,
-                      false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                  StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                9,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                false,
+                false
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 9,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 0,
-                      numberOfGapsPayable = 0,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 9,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 0,
+                numberOfGapsPayable = 0,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -1915,18 +1797,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           "render with correct page title" in {
             mockSetup
-            assertElementContainsText(
-              nonForeignDoc,
-              "head > title",
-              messages("nisp.main.h1.title")
-                + Constants.titleSplitter
-                + messages("nisp.title.extension")
-                + Constants.titleSplitter
-                + messages("nisp.gov-uk")
-            )
+            assertElementContainsText(nonForeignDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
           }
 
-          "render page with heading 'Your State Pension' " in {
+          "render page with heading  'Your State Pension' " in {
             mockSetup
             assertEqualsMessage(
               nonForeignDoc,
@@ -2152,57 +2026,43 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(111.71, 590.10, 7081.15),
-                        StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
-                        StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2020, 6, 7),
-                      "2019-20",
-                      9,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      reducedRateElection = false,
-                      statePensionAgeUnderConsideration = true
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(111.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 155.65, 599.44, 7193.34),
+                  StatePensionAmountMaximum(4, 1, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                9,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = true
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 9,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 0,
-                      numberOfGapsPayable = 0,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 9,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 0,
+                numberOfGapsPayable = 0,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -2286,57 +2146,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(0, 0, 0),
-                        StatePensionAmountForecast(0, 0, 0, 0),
-                        StatePensionAmountMaximum(0, 0, 0, 0, 0),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2017, 5, 4),
-                      "2016-17",
-                      4,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      false,
-                      false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(0, 0, 0),
+                  StatePensionAmountForecast(0, 0, 0, 0),
+                  StatePensionAmountMaximum(0, 0, 0, 0, 0),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2017, 5, 4),
+                "2016-17",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                false,
+                false
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 4,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 0,
-                      numberOfGapsPayable = 0,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 0,
+                numberOfGapsPayable = 0,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -2564,57 +2411,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(0, 0, 0),
-                        StatePensionAmountForecast(0, 0, 0, 0),
-                        StatePensionAmountMaximum(0, 0, 0, 0, 0),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2017, 5, 4),
-                      "2016-17",
-                      4,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      reducedRateElection = false,
-                      statePensionAgeUnderConsideration = true
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(0, 0, 0),
+                  StatePensionAmountForecast(0, 0, 0, 0),
+                  StatePensionAmountMaximum(0, 0, 0, 0, 0),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2017, 5, 4),
+                "2016-17",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = true
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 4,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 0,
-                      numberOfGapsPayable = 0,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 0,
+                numberOfGapsPayable = 0,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
 
           }
 
@@ -2672,57 +2506,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(0, 0, 0),
-                        StatePensionAmountForecast(0, 0, 0, 0),
-                        StatePensionAmountMaximum(2, 2, 12, 0, 0),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2018, 5, 4),
-                      "2017-18",
-                      4,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      false,
-                      false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(0, 0, 0),
+                  StatePensionAmountForecast(0, 0, 0, 0),
+                  StatePensionAmountMaximum(2, 2, 12, 0, 0),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2018, 5, 4),
+                "2017-18",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                false,
+                false
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 4,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 2,
-                      numberOfGapsPayable = 2,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 2,
+                numberOfGapsPayable = 2,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =
@@ -2944,57 +2765,44 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           def mockSetup = {
             when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    StatePension(
-                      LocalDate.of(2016, 4, 5),
-                      amounts = StatePensionAmounts(
-                        protectedPayment = false,
-                        StatePensionAmountRegular(0, 0, 0),
-                        StatePensionAmountForecast(0, 0, 0, 0),
-                        StatePensionAmountMaximum(2, 2, 12, 0, 0),
-                        StatePensionAmountRegular(0, 0, 0)
-                      ),
-                      pensionAge = 67,
-                      LocalDate.of(2018, 5, 4),
-                      "2017-18",
-                      4,
-                      pensionSharingOrder = false,
-                      currentFullWeeklyPensionAmount = 155.65,
-                      reducedRateElection = false,
-                      statePensionAgeUnderConsideration = true
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(0, 0, 0),
+                  StatePensionAmountForecast(0, 0, 0, 0),
+                  StatePensionAmountMaximum(2, 2, 12, 0, 0),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2018, 5, 4),
+                "2017-18",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 155.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = true
               )
+              ))))
 
             when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-              .thenReturn(
-                Future.successful(
-                  Right(
-                    NationalInsuranceRecord(
-                      qualifyingYears = 4,
-                      qualifyingYearsPriorTo1975 = 0,
-                      numberOfGaps = 2,
-                      numberOfGapsPayable = 2,
-                      Some(LocalDate.of(1954, 3, 6)),
-                      false,
-                      LocalDate.of(2017, 4, 5),
-                      List(
-                        NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                        NationalInsuranceTaxYearBuilder(
-                          "2013-14",
-                          qualifying = true,
-                          underInvestigation = false
-                        ) /*payable = true*/
-                      ),
-                      reducedRateElection = false
-                    )
-                  )
-                )
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 2,
+                numberOfGapsPayable = 2,
+                Some(LocalDate.of(1954, 3, 6)),
+                false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
               )
+              ))))
           }
 
           lazy val nonForeignDoc =

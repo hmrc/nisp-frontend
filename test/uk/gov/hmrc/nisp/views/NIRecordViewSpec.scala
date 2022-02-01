@@ -42,9 +42,12 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-
 import java.time.LocalDate
 import java.util.UUID
+
+import play.api.i18n.Messages
+import play.api.mvc.Cookie
+
 import scala.concurrent.Future
 
 class NIRecordViewSpec extends HtmlSpec with Injecting {
@@ -116,63 +119,35 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       .thenReturn(4)
 
     when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-      .thenReturn(
-        Future.successful(
-          Right(
-            StatePension(
-              LocalDate.of(2015, 4, 5),
-              amounts = StatePensionAmounts(
-                protectedPayment = false,
-                StatePensionAmountRegular(133.41, 580.1, 6961.14),
-                StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
-                StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-                StatePensionAmountRegular(0, 0, 0)
-              ),
-              pensionAge = 64,
-              LocalDate.of(2018, 7, 6),
-              "2017-18",
-              30,
-              pensionSharingOrder = false,
-              currentFullWeeklyPensionAmount = 155.65,
-              reducedRateElection = false,
-              statePensionAgeUnderConsideration = false
-            )
-          )
-        )
+      .thenReturn(Future.successful(Right(Right(StatePension(
+        LocalDate.of(2015, 4, 5),
+        amounts = StatePensionAmounts(
+          protectedPayment = false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        pensionAge = 64,
+        LocalDate.of(2018, 7, 6),
+        "2017-18",
+        30,
+        pensionSharingOrder = false,
+        currentFullWeeklyPensionAmount = 155.65,
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
+      ))))
 
     val niRecord = nIRecordRegular.copy(qualifyingYearsPriorTo1975 = -3)
-    when(mockNationalInsuranceService.getSummary(mockAny())(mockAny())).thenReturn(Future.successful(Right(niRecord)))
+    when(mockNationalInsuranceService.getSummary(mockAny())(mockAny())).
+      thenReturn(Future.successful(Right(Right(niRecord))))
 
     when(mockAppConfig.showUrBanner).thenReturn(true)
     when(mockAppConfig.urBannerUrl).thenReturn(
       "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
     )
   }
-
-//  "Render Ni Record UR banner" should {
-//
-//    "render UR banner on page before no thanks is clicked" in {
-//
-//      lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
-//
-//      val urResearchURL = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
-//      val urBanner =  doc.getElementsByClass("full-width-banner__title")
-//      val urDismissedText = doc.getElementsByClass("full-width-banner__close")
-//
-//      assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
-//      assert(urBannerHref.text() == urResearchURL)
-//      assert(urDismissedText.text() == Messages("nisp.home.banner.recruitment.reject"))
-//      assert(doc.getElementById("full-width-banner") != null)
-//    }
-//
-//    "not render when hide cookie is present" in {
-//      val result = controller.showFull(FakeRequest().withCookies(new Cookie("cysp-nisp-urBannerHide", "9999")))
-//      val doc = asDocument(contentAsString(result))
-//      assert(doc.getElementById("full-width-banner") == null)
-//    }
-//
-//  }
 
   "Render Ni Record to view all the years" should {
     /*Check side border :summary */
@@ -1101,45 +1076,30 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
-        .thenReturn(
-          Future.successful(
-            Right(
-              NationalInsuranceRecord(
-                qualifyingYears = 1,
-                qualifyingYearsPriorTo1975 = 5,
-                numberOfGaps = 0,
-                numberOfGapsPayable = 0,
-                Some(LocalDate.of(1954, 3, 6)),
-                false,
-                LocalDate.of(2016, 4, 5),
-                List(
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder(
-                    "2013-14",
-                    qualifying = false,
-                    payable = true,
-                    underInvestigation = false
-                  )
-                ),
-                reducedRateElection = false
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+          qualifyingYears = 1,
+          qualifyingYearsPriorTo1975 = 5,
+          numberOfGaps = 0,
+          numberOfGapsPayable = 0,
+          Some(LocalDate.of(1954, 3, 6)),
+          false,
+          LocalDate.of(2016, 4, 5),
+          List(
+            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true, underInvestigation = false)
+          ),
+          reducedRateElection = false
         )
+        ))))
 
       when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-        .thenReturn(
-          Future.successful(
-            Left(
-              StatePensionExclusionFiltered(
-                Exclusion.AmountDissonance,
-                Some(66),
-                Some(LocalDate.of(2020, 3, 6))
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
+          Exclusion.AmountDissonance,
+          Some(66),
+          Some(LocalDate.of(2020, 3, 6))
         )
+        ))))
     }
 
     /*Check side border :summary */
@@ -1241,45 +1201,30 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
-        .thenReturn(
-          Future.successful(
-            Right(
-              NationalInsuranceRecord(
-                qualifyingYears = 2,
-                qualifyingYearsPriorTo1975 = 0,
-                numberOfGaps = 1,
-                numberOfGapsPayable = 1,
-                Some(LocalDate.of(1954, 3, 6)),
-                false,
-                LocalDate.of(2015, 4, 5),
-                List(
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder(
-                    "2013-14",
-                    qualifying = false,
-                    payable = true,
-                    underInvestigation = false
-                  )
-                ),
-                reducedRateElection = false
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+          qualifyingYears = 2,
+          qualifyingYearsPriorTo1975 = 0,
+          numberOfGaps = 1,
+          numberOfGapsPayable = 1,
+          Some(LocalDate.of(1954, 3, 6)),
+          false,
+          LocalDate.of(2015, 4, 5),
+          List(
+            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true, underInvestigation = false)
+          ),
+          reducedRateElection = false
         )
+        ))))
 
       when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-        .thenReturn(
-          Future.successful(
-            Left(
-              StatePensionExclusionFiltered(
-                Exclusion.AmountDissonance,
-                Some(66),
-                Some(LocalDate.of(2020, 3, 6))
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
+          Exclusion.AmountDissonance,
+          Some(66),
+          Some(LocalDate.of(2020, 3, 6))
         )
+        ))))
     }
 
     /*Check side border :summary */
@@ -1399,47 +1344,33 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       when(mockAppConfig.showFullNI).thenReturn(true)
 
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
-        .thenReturn(
-          Future.successful(
-            Right(
-              NationalInsuranceRecord(
-                qualifyingYears = 2,
-                qualifyingYearsPriorTo1975 = 0,
-                numberOfGaps = 1,
-                numberOfGapsPayable = 1,
-                Some(LocalDate.of(1954, 3, 6)),
-                false,
-                LocalDate.of(2017, 4, 5),
-                List(
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
-                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = true, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder(
-                    "2013-14",
-                    qualifying = true,
-                    underInvestigation = false
-                  ) /*payable = true*/
-                ),
-                reducedRateElection = false
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+          qualifyingYears = 2,
+          qualifyingYearsPriorTo1975 = 0,
+          numberOfGaps = 1,
+          numberOfGapsPayable = 1,
+          Some(LocalDate.of(1954, 3, 6)),
+          false,
+          LocalDate.of(2017, 4, 5),
+          List(
+            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
+            NationalInsuranceTaxYearBuilder("2014-15", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+          ),
+          reducedRateElection = false
         )
+        ))))
 
       when(mockStatePensionService.yearsToContributeUntilPensionAge(mockAny(), mockAny()))
         .thenReturn(1)
 
       when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-        .thenReturn(
-          Future.successful(
-            Left(
-              StatePensionExclusionFiltered(
-                Exclusion.AmountDissonance,
-                Some(66),
-                Some(LocalDate.of(2018, 3, 6))
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
+          Exclusion.AmountDissonance,
+          Some(66),
+          Some(LocalDate.of(2018, 3, 6))
         )
+        ))))
     }
 
     /*Check side border :summary */
@@ -1624,47 +1555,33 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
 
     def mockSetup = {
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
-        .thenReturn(
-          Future.successful(
-            Right(
-              NationalInsuranceRecord(
-                qualifyingYears = 2,
-                qualifyingYearsPriorTo1975 = 0,
-                numberOfGaps = 1,
-                numberOfGapsPayable = 1,
-                Some(LocalDate.of(1954, 3, 6)),
-                false,
-                LocalDate.of(2017, 4, 5),
-                List(
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
-                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder(
-                    "2013-14",
-                    qualifying = false,
-                    underInvestigation = false
-                  ) /*payable = true*/
-                ),
-                reducedRateElection = false
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+          qualifyingYears = 2,
+          qualifyingYearsPriorTo1975 = 0,
+          numberOfGaps = 1,
+          numberOfGapsPayable = 1,
+          Some(LocalDate.of(1954, 3, 6)),
+          false,
+          LocalDate.of(2017, 4, 5),
+          List(
+            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
+            NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, underInvestigation = false) /*payable = true*/
+          ),
+          reducedRateElection = false
         )
+        ))))
 
       when(mockStatePensionService.yearsToContributeUntilPensionAge(mockAny(), mockAny()))
         .thenReturn(1)
 
       when(mockStatePensionService.getSummary(mockAny())(mockAny()))
-        .thenReturn(
-          Future.successful(
-            Left(
-              StatePensionExclusionFiltered(
-                Exclusion.AmountDissonance,
-                Some(66),
-                Some(LocalDate.of(2018, 3, 6))
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
+          Exclusion.AmountDissonance,
+          Some(66),
+          Some(LocalDate.of(2018, 3, 6))
         )
+        ))))
     }
 
     "render with correct page title" in {

@@ -17,20 +17,66 @@
 package uk.gov.hmrc.nisp.models
 
 import java.time.LocalDate
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.time.TaxYear
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
+import java.time.format.DateTimeFormatter
 
-case class StatePensionExclusion(
-  exclusionReasons: List[Exclusion],
-  pensionAge: Option[Int] = None,
-  pensionDate: Option[LocalDate] = None,
-  statePensionAgeUnderConsideration: Option[Boolean] = None
-) {
-  val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
-}
+import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue, Json, JsonValidationError, OFormat, Reads, Writes}
+import uk.gov.hmrc.time.TaxYear
+
+trait StatePensionExclusion extends Exclusion
 
 object StatePensionExclusion {
-  implicit val formats: OFormat[StatePensionExclusion] = Json.format[StatePensionExclusion]
+  case class OkStatePensionExclusion(
+                                      exclusionReasons: List[Exclusion],
+                                      pensionAge: Option[Int] = None,
+                                      pensionDate: Option[LocalDate] = None,
+                                      statePensionAgeUnderConsideration: Option[Boolean] = None) extends StatePensionExclusion {
+    val finalRelevantStartYear: Option[Int] = pensionDate.map(TaxYear.taxYearFor(_).back(1).startYear)
+  }
+
+  object OkStatePensionExclusion {
+    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
+      date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+    }
+
+    implicit val dateFormats: Format[LocalDate] = Format[LocalDate](Reads.localDateReads("yyyy-MM-dd"), dateWrites)
+    implicit val formats: OFormat[OkStatePensionExclusion] = Json.format[OkStatePensionExclusion]
+  }
+
+  case class ForbiddenStatePensionExclusion(code: Exclusion, message: Option[String]) extends StatePensionExclusion
+
+  object ForbiddenStatePensionExclusion {
+    implicit val formats: OFormat[ForbiddenStatePensionExclusion] = Json.format[ForbiddenStatePensionExclusion]
+  }
+
+  case class CopeStatePensionExclusion(code: Exclusion, copeDataAvailableDate: LocalDate, previousAvailableDate: Option[LocalDate])
+    extends StatePensionExclusion
+
+  object CopeStatePensionExclusion {
+    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
+      date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+    }
+
+    implicit val dateFormats: Format[LocalDate] = Format[LocalDate](Reads.localDateReads("yyyy-MM-dd"), dateWrites)
+    implicit val formats: OFormat[CopeStatePensionExclusion] = Json.format[CopeStatePensionExclusion]
+  }
+
+
+
+  implicit object StatePensionExclusionFormats extends Format[StatePensionExclusion] {
+    override def reads(json: JsValue): JsResult[StatePensionExclusion] = {
+      if (json.validate[OkStatePensionExclusion].isSuccess) JsSuccess(json.as[OkStatePensionExclusion])
+      else if (json.validate[CopeStatePensionExclusion].isSuccess) JsSuccess(json.as[CopeStatePensionExclusion])
+      else if (json.validate[ForbiddenStatePensionExclusion].isSuccess) JsSuccess(json.as[ForbiddenStatePensionExclusion])
+      else JsError(JsonValidationError("Unable to parse json as StatePensionExclusion"))
+    }
+
+    override def writes(spExclusion: StatePensionExclusion): JsValue = {
+      spExclusion match {
+        case okStatePensionExclusion: OkStatePensionExclusion => OkStatePensionExclusion.formats.writes(okStatePensionExclusion)
+        case copeStatePensionExclusion: CopeStatePensionExclusion => CopeStatePensionExclusion.formats.writes(copeStatePensionExclusion)
+        case forbiddenStatePensionExclusion: ForbiddenStatePensionExclusion =>
+          ForbiddenStatePensionExclusion.formats.writes(forbiddenStatePensionExclusion)
+      }
+    }
+  }
 }

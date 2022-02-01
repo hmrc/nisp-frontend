@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import java.time.LocalDate
+import java.util.UUID
+
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -39,8 +42,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-import java.time.LocalDate
-import java.util.UUID
 import scala.concurrent.Future
 
 class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
@@ -156,11 +157,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceRecord))
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(statePensionResponse))
+        Future.successful(Right(Right(statePensionResponse)))
       )
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
@@ -205,11 +206,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceRecord))
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePensionResponse))
+        Future.successful(Right(Right(expectedStatePensionResponse)))
       )
 
       val result = niRecordController.showGaps(generateFakeRequest)
@@ -219,11 +220,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     "redirect to exclusion for excluded user" in {
       // FIXME: add COPE
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Left(Exclusion.Dead))
+        Future.successful(Right(Left(Exclusion.Dead)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
+        Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
       val result = niRecordController
@@ -288,11 +289,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceRecord))
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePensionResponse))
+        Future.successful(Right(Right(expectedStatePensionResponse)))
       )
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
@@ -335,11 +336,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceRecord))
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePension))
+        Future.successful(Right(Right(expectedStatePension)))
       )
 
       val result = niRecordController.showFull(generateFakeRequest)
@@ -349,11 +350,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     "redirect to exclusion for excluded user" in {
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Left(Exclusion.Dead))
+        Future.successful(Right(Left(Exclusion.Dead)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
+        Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
       val result = niRecordController
@@ -399,7 +400,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceRecord))
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
       when(mockAppConfig.urBannerUrl).thenReturn("/foo")
@@ -428,7 +429,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceRecord))
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
       when(mockAppConfig.urBannerUrl).thenReturn("/foo")
@@ -470,7 +471,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceRecord))
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
       when(mockAppConfig.urBannerUrl).thenReturn("/foo")
@@ -532,11 +533,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceResponse))
+        Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePension))
+        Future.successful(Right(Right(expectedStatePension)))
       )
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
@@ -582,11 +583,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceResponse))
+        Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePension))
+        Future.successful(Right(Right(expectedStatePension)))
       )
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
@@ -630,11 +631,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceResponse))
+        Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePension))
+        Future.successful(Right(Right(expectedStatePension)))
       )
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
@@ -708,11 +709,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceResponse))
+        Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePension))
+        Future.successful(Right(Right(expectedStatePension)))
       )
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2019, 4, 6))
@@ -783,11 +784,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceResponse))
+        Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePension))
+        Future.successful(Right(Right(expectedStatePension)))
       )
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2019, 4, 4))
@@ -859,11 +860,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedNationalInsuranceResponse))
+        Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(expectedStatePension))
+        Future.successful(Right(Right(expectedStatePension)))
       )
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2019, 4, 5))
@@ -1113,11 +1114,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       StatePensionExclusionFilteredWithCopeDate(CopeProcessing, LocalDate.of(2023, 4, 5), None)
 
     when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-      Future.successful(Right(expectedNationalInsuranceRecord))
+      Future.successful(Right(Right(expectedNationalInsuranceRecord)))
     )
 
     when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-      Future.successful(Left(copeExclusionResponse))
+      Future.successful(Right(Left(copeExclusionResponse)))
     )
 
     val result: Future[Result] = niRecordController.showGaps(generateFakeRequest)
@@ -1170,11 +1171,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     )
 
     when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-      Future.successful(Right(expectedNationalInsuranceRecord))
+      Future.successful(Right(Right(expectedNationalInsuranceRecord)))
     )
 
     when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-      Future.successful(Left(StatePensionExclusionFiltered(Exclusion.Dead)))
+      Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
     )
 
     val caught = intercept[RuntimeException] {

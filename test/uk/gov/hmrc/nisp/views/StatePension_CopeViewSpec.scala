@@ -99,54 +99,38 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
   "Render State Pension view with Contracted out User" should {
 
     def mockSetup = {
+
       when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-        .thenReturn(
-          Future.successful(
-            Right(
-              StatePension(
-                LocalDate.of(2014, 4, 5),
-                StatePensionAmounts(
-                  false,
-                  StatePensionAmountRegular(46.38, 201.67, 2420.04),
-                  StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
-                  StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
-                  StatePensionAmountRegular(50, 217.41, 2608.93)
-                ),
-                64,
-                LocalDate.of(2021, 7, 18),
-                "2017-18",
-                30,
-                false,
-                155.65,
-                false,
-                false
-              )
-            )
-          )
-        )
+        .thenReturn(Future.successful(Right(Right(StatePension(
+          LocalDate.of(2014, 4, 5),
+          StatePensionAmounts(
+            false,
+            StatePensionAmountRegular(46.38, 201.67, 2420.04),
+            StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
+            StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
+            StatePensionAmountRegular(50, 217.41, 2608.93))
+          ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
+        ))))
 
       when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
-        .thenReturn(
-          Future.successful(
-            Right(
-              NationalInsuranceRecord(
-                qualifyingYears = 11,
-                qualifyingYearsPriorTo1975 = 0,
-                numberOfGaps = 2,
-                numberOfGapsPayable = 2,
-                Some(LocalDate.of(1954, 3, 6)),
-                false,
-                LocalDate.of(2017, 4, 5),
-                List(
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false)
-                ),
-                reducedRateElection = false
-              )
-            )
-          )
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+          qualifyingYears = 11,
+          qualifyingYearsPriorTo1975 = 0,
+          numberOfGaps = 2,
+          numberOfGapsPayable = 2,
+          Some(LocalDate.of(1954, 3, 6)),
+          false,
+          LocalDate.of(2017, 4, 5),
+          List(
+
+            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false)
+          ),
+          reducedRateElection = false
         )
+        ))))
+
     }
 
     lazy val result         = statePensionController.show()(AuthenticatedRequest(FakeRequest(), user, authDetails))
