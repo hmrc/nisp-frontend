@@ -105,7 +105,7 @@ class StatePensionController @Inject() (
               auditConnector.sendEvent(AccountExclusionEvent(
                 user.nino.nino,
                 user.name,
-                nationalInsuranceExclusion
+                nationalInsuranceExclusion.exclusion
               ))
               Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
 

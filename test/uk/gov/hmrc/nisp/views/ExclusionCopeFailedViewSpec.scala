@@ -29,9 +29,7 @@ import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
-import uk.gov.hmrc.nisp.views.html.excluded_cope_failed
-
-import scala.concurrent.Future
+import uk.gov.hmrc.nisp.views.html.excluded_cope_failed_sp
 
 class ExclusionCopeFailedViewSpec extends HtmlSpec with Injecting {
 
@@ -60,7 +58,7 @@ class ExclusionCopeFailedViewSpec extends HtmlSpec with Injecting {
     )
     .build()
 
-  val excludedCopeFailedView = inject[excluded_cope_failed]
+  val excludedCopeFailedView = inject[excluded_cope_failed_sp]
   val today: LocalDate       = LocalDate.now()
 
   lazy val view: Document = asDocument(contentAsString(excludedCopeFailedView()))

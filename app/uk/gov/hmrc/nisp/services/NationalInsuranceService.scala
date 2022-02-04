@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
-import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord}
+import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord, StatePensionExclusion, StatePensionExclusionFilter, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.utils.ExclusionHelper
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,11 +29,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
                                         (implicit executor: ExecutionContext) {
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[Exclusion, NationalInsuranceRecord]]] = {
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] = {
     nationalInsuranceConnector.getNationalInsurance(nino)
       .map {
         case Right(Right(ni)) => {
-          if (ni.reducedRateElection) Right(Left(Exclusion.MarriedWomenReducedRateElection))
+          if (ni.reducedRateElection) Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
           else Right(Right(
             ni.copy(
               taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
@@ -41,12 +41,12 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
             )
           ))
         }
-        case Right(Left(CopeStatePensionExclusion(exclusion, _, _))) =>
-          Right(Left(exclusion))
-        case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
-          Right(Left(exclusion))
         case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
-          Right(Left(ExclusionHelper.filterExclusions(exclusions)))
+          Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusions))))
+        case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
+          Right(Left(StatePensionExclusionFiltered(exclusion)))
+        case Right(Left(CopeStatePensionExclusion(exclusion, copeAvailableDate, previousDate))) =>
+          Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusion, copeAvailableDate, previousDate)))
         case Left(errorResponse) => Left(errorResponse)
       }
   }

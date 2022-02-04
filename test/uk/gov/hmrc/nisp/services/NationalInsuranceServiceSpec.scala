@@ -192,7 +192,7 @@ class NationalInsuranceServiceSpec
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Right(Right(jumbledRecord))))
 
-        whenReady(nationalInsuranceService.getSummary(generateNino)) { result: Either[UpstreamErrorResponse, Either[Exclusion, NationalInsuranceRecord]] =>
+        whenReady(nationalInsuranceService.getSummary(generateNino)) { result: Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]] =>
           result.map(_.map(_.taxYears shouldBe mockNationalInsuranceRecord.taxYears))
         }
 
@@ -214,7 +214,7 @@ class NationalInsuranceServiceSpec
           excl =>
             val exclusion = excl.left.get
 
-            exclusion shouldBe Exclusion.Dead
+            exclusion shouldBe StatePensionExclusionFiltered(Exclusion.Dead)
         }
       }
     }
@@ -233,7 +233,7 @@ class NationalInsuranceServiceSpec
           excl =>
             val exclusion = excl.left.get
 
-            exclusion shouldBe Exclusion.ManualCorrespondenceIndicator
+            exclusion shouldBe StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator)
         }
       }
     }
@@ -252,7 +252,7 @@ class NationalInsuranceServiceSpec
           excl =>
             val exclusion = excl.left.get
 
-            exclusion shouldBe Exclusion.IsleOfMan
+            exclusion shouldBe StatePensionExclusionFiltered(Exclusion.IsleOfMan)
         }
       }
     }
@@ -271,7 +271,7 @@ class NationalInsuranceServiceSpec
           excl =>
             val exclusion = excl.left.get
 
-            exclusion shouldBe Exclusion.MarriedWomenReducedRateElection
+            exclusion shouldBe StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)
         }
       }
     }
@@ -310,7 +310,7 @@ class NationalInsuranceServiceSpec
 
         val niSummary = nationalInsuranceService.getSummary(generateNino)
 
-        niSummary.futureValue shouldBe Right(Left(Exclusion.MarriedWomenReducedRateElection))
+        niSummary.futureValue shouldBe Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
 
       }
 
@@ -319,14 +319,16 @@ class NationalInsuranceServiceSpec
     "There is a cope exclusion" should {
 
       "return Left(CopeProcessing)" in {
+        val localDate = LocalDate.now()
+
         when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(
-            Right(Left(CopeStatePensionExclusion(Exclusion.CopeProcessing, LocalDate.now(), None))))
+            Right(Left(CopeStatePensionExclusion(Exclusion.CopeProcessing, localDate, None))))
           )
 
         val result = nationalInsuranceService.getSummary(generateNino)
 
-        result.futureValue shouldBe Right(Left(Exclusion.CopeProcessing))
+        result.futureValue shouldBe Right(Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, localDate)))
       }
 
       "return Left(CopeProcessingFailed)" in {
@@ -337,7 +339,7 @@ class NationalInsuranceServiceSpec
 
         val result = nationalInsuranceService.getSummary(generateNino)
 
-        result.futureValue shouldBe Right(Left(Exclusion.CopeProcessingFailed))
+        result.futureValue shouldBe Right(Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed)))
       }
     }
   }

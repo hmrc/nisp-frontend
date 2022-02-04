@@ -177,7 +177,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
             auditConnector.sendEvent(AccountExclusionEvent(
               nino.nino,
               request.nispAuthedUser.name,
-              exclusion
+              exclusion.exclusion
             ))
             Redirect(routes.ExclusionController.showNI)
         }

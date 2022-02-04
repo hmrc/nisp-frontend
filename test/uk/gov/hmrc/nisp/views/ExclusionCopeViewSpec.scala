@@ -26,7 +26,7 @@ import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
-import uk.gov.hmrc.nisp.views.html.excluded_cope
+import uk.gov.hmrc.nisp.views.html.excluded_cope_sp
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -51,7 +51,7 @@ class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
 
-  val excludedCopeView = inject[excluded_cope]
+  val excludedCopeView = inject[excluded_cope_sp]
   val today: LocalDate = LocalDate.now()
 
   lazy val view: Document = asDocument(contentAsString(excludedCopeView(today)))

@@ -184,11 +184,33 @@ nisp.excluded.cope.processing.h1 = Mae’n ddrwg gennym – ni allwn gyfrifo’c
 nisp.excluded.cope.processing = Mae ein tîm arbenigol yn gwirio’ch cofnod Yswiriant Gwladol er mwyn sicrhau bod y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth yn gywir.
 nisp.excluded.cope.processing.manualWork = Gwneir y math hwn o waith llaw fel mater o drefn, a hynny er mwyn gwneud yn siŵr bod yr wybodaeth yn gyfredol.
 
+nisp.excluded.cope.processing.ni.h1 = Mae’n ddrwg gennym, rydym wrthi’n gweithio ar eich cofnod Yswiriant Gwladol
+nisp.excluded.cope.returnDate.ni = Bydd eich cofnod Yswiriant Gwladol ar gael ar {0}.
+
 nisp.excluded.cope.extended.h1 = Mae’n ddrwg gennym – rydym yn dal i weithio ar ddiweddariadau i’ch rhagolwg
 nisp.excluded.cope.extended = Mae ein tîm arbenigol yn gwirio’ch cofnod Yswiriant Gwladol er mwyn sicrhau bod y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth yn gywir ac yn gyfredol.
 nisp.excluded.cope.extended.backlog = Yn anffodus, mae llwyth o waith i’w brosesu â llaw o hyd ac mae’n cymryd mwy o amser i’w gwblhau.
 
+nisp.excluded.cope.extended.ni.h1 = Mae’n ddrwg gennym, rydym yn dal i weithio ar eich cofnod Yswiriant Gwladol
+
+
 nisp.excluded.cope.returnDate = Bydd y rhagolwg ar gyfer eich Pensiwn y Wladwriaeth ar gael ar {0}.
+
+nisp.excluded.cope.failed.ni.h1 = Mae’n ddrwg gennym, ni allwn ddangos eich cofnod Yswiriant Gwladol ar-lein
+nisp.excluded.cope.failed.ni = I gael eich cofnod, bydd angen i chi ffonio a byddwn yn postio un atoch.
+nisp.excluded.cope.failed.ni.h2 = Trefnu i’ch cofnod gael ei anfon atoch
+
+nisp.excluded.cope.failed.ni.telephone.h3 = Ffôn
+nisp.excluded.cope.failed.ni.telephone.line1 = Ffôn: 0300 200 1900
+nisp.excluded.cope.failed.ni.telephone.line2 = Rhif ffôn o’r tu allan i’r DU: +44 (0)300 200 1900
+nisp.excluded.cope.failed.ni.telephone.line3 = Gwasanaeth Saesneg: 0300 200 3500
+
+nisp.excluded.cope.failed.ni.relayUK.text = Os na allwch glywed neu siarad ar y ffôn, gallwch ddefnyddio {0} drwy gyfrwng y Saesneg: 18001 yna 0300 200 3500
+
+nisp.excluded.cope.failed.ni.britishSignLanguage.textLink = gwasanaeth trosglwyddo fideo
+nisp.excluded.cope.failed.ni.britishSignLanguage.text = Darperir {0} ar gyfer defnyddwyr Iaith Arwyddion Prydain (BSL) gan Gymdeithas Frenhinol Pobl Fyddar.
+
+nisp.excluded.cope.failed.ni.openingTimes.line1 = Dydd Llun – Dydd Gwener, 08:30 – 17:00
 
 nisp.excluded.cope.failed.h1 = Mae’n ddrwg gennym – ni allwn ddangos eich rhagolwg ar-lein
 nisp.excluded.cope.failed = I gael rhagolwg, bydd angen i chi ffonio a byddwn yn anfon un atoch drwy’r post.

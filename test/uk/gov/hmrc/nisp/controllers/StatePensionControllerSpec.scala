@@ -246,7 +246,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(Left(Exclusion.Dead)))
+          Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
@@ -337,7 +337,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
-          Future.successful(Right(Left(Exclusion.MarriedWomenReducedRateElection)))
+          Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
         )
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(

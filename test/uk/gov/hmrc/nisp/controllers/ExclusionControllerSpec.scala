@@ -196,7 +196,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
         "return only the Dead Exclusion on /exclusion" in {
 
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.Dead)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -216,7 +216,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         "return only the Dead Exclusion on /exclusionni" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.Dead)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
           )
 
           val result = generateNIRequest
@@ -231,7 +231,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
       "The User has every exclusion except Dead" should {
         "return only the MCI Exclusion on /exclusion" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.ManualCorrespondenceIndicator)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -251,7 +251,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         "return only the MCI Exclusion on /exclusionni" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.ManualCorrespondenceIndicator)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))))
           )
 
           val result = generateNIRequest
@@ -266,7 +266,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
       "The User has every exclusion except Dead and MCI" should {
         "return only the Post SPA Exclusion on /exclusion" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.IsleOfMan)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -292,7 +292,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         "return only the Isle of Man Exclusion on /exclusionni" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.IsleOfMan)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
           val result = generateNIRequest
@@ -307,7 +307,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
       "The User has every exclusion except Dead, MCI and Post SPA" should {
         "return only the Amount Dissonance Exclusion on /exclusion" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.IsleOfMan)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -328,7 +328,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         "return only the Isle of Man Exclusion on /exclusionni" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.IsleOfMan)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
           val result = generateNIRequest
@@ -343,7 +343,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
       "The User has the Isle of Man, MWRRE and Abroad exclusions" should {
         "return only the Isle of Man Exclusion on /exclusion" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.IsleOfMan)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -364,7 +364,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         "return only the Isle of Man Exclusion on /exclusionni" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.IsleOfMan)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
           val result = generateNIRequest
@@ -398,7 +398,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           )
 
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.MarriedWomenReducedRateElection)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -420,7 +420,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         "return only the MWRRE Exclusion on /exclusionni" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.MarriedWomenReducedRateElection)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
           )
 
           val result = generateNIRequest
@@ -461,7 +461,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           )
 
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.MarriedWomenReducedRateElection)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
           )
 
           val result = testExclusionController.showSP()(
@@ -482,7 +482,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
         "return only the MWRRE Exclusion on /exclusionni" in {
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-            Future.successful(Right(Left(Exclusion.MarriedWomenReducedRateElection)))
+            Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
           )
 
           val result = generateNIRequest
