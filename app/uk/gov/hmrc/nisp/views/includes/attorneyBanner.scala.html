@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.nisp.models.enums
+@import uk.gov.hmrc.ptafrontend.views.html._
+@import uk.gov.hmrc.ptafrontend.viewmodels.attorneybanner.AttorneyBanner
+@import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 
-import play.api.libs.json.{JsString, Json}
-import uk.gov.hmrc.nisp.models.Exclusion
-import uk.gov.hmrc.nisp.utils.UnitSpec
+@this(
+  ptaAttorneyBanner: PtaAttorneyBanner
+)
 
-class SPExclusionSpec extends UnitSpec {
+@(helper: TrustedHelper)(implicit messages: Messages)
 
-  "SP Exclusion" when {
-    "serialised into JSON" should {
-      "output Dead when Dead is formatted" in {
-        Json.toJson[Exclusion](Exclusion.Dead) shouldBe JsString("Dead")
-      }
+  @ptaAttorneyBanner(AttorneyBanner(name = helper.principalName, classes = "govuk-!-margin-top-2", accountUrl = helper.returnLinkUrl))
 
-      "parse Dead when Dead is read" in {
-        Json.fromJson[Exclusion](JsString("EXCLUSION_DEAD")).get shouldBe Exclusion.Dead
-      }
-    }
-  }
-}
