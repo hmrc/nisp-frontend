@@ -31,23 +31,25 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
 
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[Exclusion, NationalInsuranceRecord]]] = {
     nationalInsuranceConnector.getNationalInsurance(nino)
-      .map {
-        case Right(Right(ni)) => {
-          if (ni.reducedRateElection) Right(Left(Exclusion.MarriedWomenReducedRateElection))
-          else Right(Right(
-            ni.copy(
-              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
-              qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
-            )
-          ))
+      .map { x =>
+        (x: @unchecked) match {
+          case Right(Right(ni)) => {
+            if (ni.reducedRateElection) Right(Left(Exclusion.MarriedWomenReducedRateElection))
+            else Right(Right(
+              ni.copy(
+                taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
+                qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
+              )
+            ))
+          }
+          case Right(Left(CopeStatePensionExclusion(exclusion, _, _))) =>
+            Right(Left(exclusion))
+          case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
+            Right(Left(exclusion))
+          case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
+            Right(Left(ExclusionHelper.filterExclusions(exclusions)))
+          case Left(errorResponse) => Left(errorResponse)
         }
-        case Right(Left(CopeStatePensionExclusion(exclusion, _, _))) =>
-          Right(Left(exclusion))
-        case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
-          Right(Left(exclusion))
-        case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
-          Right(Left(ExclusionHelper.filterExclusions(exclusions)))
-        case Left(errorResponse) => Left(errorResponse)
       }
   }
 }

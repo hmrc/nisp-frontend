@@ -20,7 +20,7 @@
   chartWidth: Int,
   innerText: Html,
   specId: Option[String] = None
-)(implicit messages: Messages )
+)
 
 <div class="chart-block" data-component="nisp_chart"@if(specId){ data-spec="@specId"}>
   <p class="govuk-body govuk-!-margin-bottom-2" data-component="nisp_chart__title">@chartTitle</p>

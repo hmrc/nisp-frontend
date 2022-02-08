@@ -90,7 +90,6 @@ class StatePensionController @Inject() (
 
   def show: Action[AnyContent] = authenticate.async { implicit request =>
     implicit val user: NispAuthedUser     = request.nispAuthedUser
-    implicit val authDetails: AuthDetails = request.authDetails
     pertaxHelper.isFromPertax.flatMap { isPertax =>
       val statePensionResponseF      = statePensionService.getSummary(user.nino)
       val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)

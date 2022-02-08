@@ -20,8 +20,11 @@ import com.google.inject.Inject
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.Constants._
+
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
+
+import scala.util.{Failure, Success}
 
 class PertaxHelper @Inject() (sessionCache: SessionCache, metricsService: MetricsService)(implicit
   ec: ExecutionContext
@@ -30,11 +33,9 @@ class PertaxHelper @Inject() (sessionCache: SessionCache, metricsService: Metric
   def setFromPertax(implicit hc: HeaderCarrier): Unit = {
     val timerContext = metricsService.keystoreWriteTimer.time()
     val cacheF       = sessionCache.cache(PERTAX, true)
-    cacheF.onSuccess { case _ =>
-      timerContext.stop()
-    }
-    cacheF.onFailure { case _ =>
-      metricsService.keystoreWriteFailed.inc()
+    cacheF.onComplete {
+      case Success(value) => timerContext.stop()
+      case Failure(exception) => metricsService.keystoreWriteFailed.inc()
     }
   }
 

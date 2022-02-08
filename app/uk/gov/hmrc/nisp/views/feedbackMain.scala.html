@@ -106,11 +106,6 @@
     !request.cookies.exists(x => x.name == "cysp-nisp-urBannerHide")
 }
 
-
-@generateChanceOnNino = @{
-
-}
-
 @getHelpForm = {
     @formPartialRetriever.getPartialContent(s"${config.contactFrontendPartialBaseUrl}/contact/problem_reports")
 }

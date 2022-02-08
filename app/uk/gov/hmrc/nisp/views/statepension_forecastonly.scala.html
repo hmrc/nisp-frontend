@@ -14,14 +14,13 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, NispAuthedUser}
+@import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, details, insetText, NispPageHeading, Panel}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, insetText, Panel}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
@@ -41,8 +40,7 @@
 )
 
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
-isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser,
-authDetails: AuthDetails, messages: Messages)
+isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages)
 
 @sidebar = {
   <div class="helpline-sidebar govuk-!-padding-top-8">
@@ -70,9 +68,7 @@ authDetails: AuthDetails, messages: Messages)
   </div>
 }
 
-@pageTitle = { @messages("nisp.main.h1.title") }
-
-@defining(Some(user)) { implicit userOption =>
+@defining(Some(user)) { _ =>
   @main(
     pageTitle = messages("nisp.main.title"),
     sidebar = Some(sidebar)
