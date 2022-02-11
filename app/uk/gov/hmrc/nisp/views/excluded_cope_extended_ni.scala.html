@@ -51,7 +51,7 @@ specId = None
   @p(
   content = Text(messages(
   "nisp.excluded.cope.returnDate.ni",
-  copeDataAvailableDate.format(dateFormatter)
+  copeDataAvailableDate.format(dateFormatter).replace(" ", "\u00a0")
   )),
   specId = Some("excluded_cope__p2")
   )

@@ -201,11 +201,11 @@ nisp.excluded.cope.failed.ni = To get your record you need to call and we will p
 nisp.excluded.cope.failed.ni.h2 = Get your record sent to you
 
 nisp.excluded.cope.failed.ni.telephone.h3 = Telephone
-nisp.excluded.cope.failed.ni.telephone.line1 = Telephone: 0300 200 3500
-nisp.excluded.cope.failed.ni.telephone.line2 = Telephone from outside UK: +44 (0)191 203 7010
-nisp.excluded.cope.failed.ni.telephone.line3 = Welsh language telephone: 0300 200 1900
+nisp.excluded.cope.failed.ni.telephone.line1 = Telephone: 0300&nbsp;200&nbsp;3500
+nisp.excluded.cope.failed.ni.telephone.line2 = Telephone from outside UK: +44&nbsp;(0)191&nbsp;203&nbsp;7010
+nisp.excluded.cope.failed.ni.telephone.line3 = Welsh language telephone: 0300&nbsp;200&nbsp;1900
 
-nisp.excluded.cope.failed.ni.relayUK.text = If you cannot hear or speak on the phone, use {0}: 18001 then 0300 200 3500.
+nisp.excluded.cope.failed.ni.relayUK.text = If you cannot hear or speak on the phone, use {0}: 18001 then 0300&nbsp;200&nbsp;3500.
 
 nisp.excluded.cope.failed.ni.britishSignLanguage.textLink = Video relay service
 nisp.excluded.cope.failed.ni.britishSignLanguage.text = {0} for British Sign Language (BSL) users, provided by the Royal Association for Deaf people.
@@ -218,17 +218,17 @@ nisp.excluded.cope.failed = To get a forecast you need to call and we will post 
 nisp.excluded.cope.failed.h2 = Get a forecast sent to you
 
 nisp.excluded.cope.failed.telephone.h3 = Telephone
-nisp.excluded.cope.failed.telephone.line1 = Telephone: 0800 731 0175.
-nisp.excluded.cope.failed.telephone.line2 = Telephone from outside UK: +44 (0)191 218 3600.
-nisp.excluded.cope.failed.telephone.line3 = Welsh language telephone: 0800 731 0453.
+nisp.excluded.cope.failed.telephone.line1 = Telephone: 0800&nbsp;731&nbsp;0175.
+nisp.excluded.cope.failed.telephone.line2 = Telephone from outside UK: +44&nbsp;(0)191&nbsp;218&nbsp;3600.
+nisp.excluded.cope.failed.telephone.line3 = Welsh language telephone: 0800&nbsp;731&nbsp;0453.
 
 nisp.excluded.cope.failed.textphone.h3 = Textphone
-nisp.excluded.cope.failed.textphone.line1 = Textphone: 0800 731 017693.
-nisp.excluded.cope.failed.textphone.line2 = Textphone from outside UK: +44 (0)191 218 2051.
-nisp.excluded.cope.failed.textphone.line3 = Welsh language textphone: 0800 731 0456.
+nisp.excluded.cope.failed.textphone.line1 = Textphone: 0800&nbsp;731&nbsp;017693.
+nisp.excluded.cope.failed.textphone.line2 = Textphone from outside UK: +44&nbsp;(0)191&nbsp;218&nbsp;2051.
+nisp.excluded.cope.failed.textphone.line3 = Welsh language textphone: 0800&nbsp;731&nbsp;0456.
 
 nisp.excluded.cope.failed.relayUK.h3 = Relay UK
-nisp.excluded.cope.failed.relayUK.text = If you cannot hear or speak on the phone, use {0}: 18001 then 0800 731 0175.
+nisp.excluded.cope.failed.relayUK.text = If you cannot hear or speak on the phone, use {0}: 18001 then 0800&nbsp;731&nbsp;0175.
 nisp.excluded.cope.failed.relayUK.linktext = Relay UK (opens in new tab)
 
 nisp.excluded.cope.failed.britishSignLanguage.h3 = British Sign Language

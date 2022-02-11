@@ -78,7 +78,7 @@ class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
       view,
       "[data-spec='excluded_cope__p2']",
       "nisp.excluded.cope.returnDate",
-      today.format(DateTimeFormatter.ofPattern("d MMMM y"))
+      today.format(DateTimeFormatter.ofPattern("d MMMM y")).replace(" ", "&nbsp;")
     )
   }
 }
