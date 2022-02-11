@@ -49,8 +49,7 @@ object StatePensionExclusion {
   }
 
   case class CopeStatePensionExclusion(code: Exclusion, copeDataAvailableDate: LocalDate, previousAvailableDate: Option[LocalDate])
-    extends StatePensionExclusion {
-  }
+    extends StatePensionExclusion
 
   object CopeStatePensionExclusion {
     val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
