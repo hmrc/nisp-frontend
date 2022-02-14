@@ -201,9 +201,9 @@ nisp.excluded.cope.failed.ni = I gael eich cofnod, bydd angen i chi ffonio a byd
 nisp.excluded.cope.failed.ni.h2 = Trefnu i’ch cofnod gael ei anfon atoch
 
 nisp.excluded.cope.failed.ni.telephone.h3 = Ffôn
-nisp.excluded.cope.failed.ni.telephone.line1 = Ffôn: 0300 200 1900
-nisp.excluded.cope.failed.ni.telephone.line2 = Rhif ffôn o’r tu allan i’r DU: +44 (0)300 200 1900
-nisp.excluded.cope.failed.ni.telephone.line3 = Gwasanaeth Saesneg: 0300 200 3500
+nisp.excluded.cope.failed.ni.telephone.line1 = Ffôn: 0300&nbsp;200&nbsp;1900
+nisp.excluded.cope.failed.ni.telephone.line2 = Rhif ffôn o’r tu allan i’r DU: +44&nbsp;(0)300&nbsp;200&nbsp;1900
+nisp.excluded.cope.failed.ni.telephone.line3 = Gwasanaeth Saesneg: 0300&nbsp;200&nbsp;3500
 
 nisp.excluded.cope.failed.ni.relayUK.text = Os na allwch glywed neu siarad ar y ffôn, gallwch ddefnyddio {0} drwy gyfrwng y Saesneg: 18001 yna 0300 200 3500
 
@@ -219,16 +219,16 @@ nisp.excluded.cope.failed.h2 = Cael rhagolwg wedi’i anfon atoch
 
 nisp.excluded.cope.failed.telephone.h3 = Rhif ffôn
 nisp.excluded.cope.failed.telephone.line1 = Rhif ffôn: 0800 731 0453.
-nisp.excluded.cope.failed.telephone.line2 = Rhif ffôn o’r tu allan i’r DU: +44 (0)191 218 3600.
-nisp.excluded.cope.failed.telephone.line3 = Gwasanaeth Cwsmeriaid Cymraeg CThEM: 0800 731 0453.
+nisp.excluded.cope.failed.telephone.line2 = Rhif ffôn o’r tu allan i’r DU: +44&nbsp;(0)191&nbsp;218&nbsp;3600.
+nisp.excluded.cope.failed.telephone.line3 = Gwasanaeth Cwsmeriaid Cymraeg CThEM: 0800&nbsp;731&nbsp;0453.
 
 nisp.excluded.cope.failed.textphone.h3 = Ffôn testun
-nisp.excluded.cope.failed.textphone.line1 = Ffôn testun: 0800 731 0456.
-nisp.excluded.cope.failed.textphone.line2 = Ffôn testun o’r tu allan i’r DU: +44 (0)191 218 2051.
-nisp.excluded.cope.failed.textphone.line3 = Ffôn testun Cymraeg: 0800 731 0456.
+nisp.excluded.cope.failed.textphone.line1 = Ffôn testun: 0800&nbsp;731&nbsp;0456.
+nisp.excluded.cope.failed.textphone.line2 = Ffôn testun o’r tu allan i’r DU: +44&nbsp;(0)191&nbsp;218&nbsp;2051.
+nisp.excluded.cope.failed.textphone.line3 = Ffôn testun Cymraeg: 0800&nbsp;731&nbsp;0456.
 
 nisp.excluded.cope.failed.relayUK.h3 = Relay UK
-nisp.excluded.cope.failed.relayUK.text = Os na allwch glywed neu siarad ar y ffôn, defnyddiwch {0}: 18001 yna 0800 731 0175.
+nisp.excluded.cope.failed.relayUK.text = Os na allwch glywed neu siarad ar y ffôn, defnyddiwch {0}: 18001 yna 0800&nbsp;731&nbsp;0175.
 nisp.excluded.cope.failed.relayUK.linktext = Relay UK (agor mewn tab newydd)
 
 nisp.excluded.cope.failed.britishSignLanguage.h3 = Iaith Arwyddion Prydain
