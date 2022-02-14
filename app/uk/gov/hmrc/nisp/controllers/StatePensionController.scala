@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.time.LocalDate
 import com.google.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -31,10 +30,10 @@ import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.Calculate._
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.utils.Constants._
-import uk.gov.hmrc.nisp.views.html.{sessionTimeout, statepension, statepension_cope, statepension_forecastonly, statepension_mqp}
+import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
 class StatePensionController @Inject() (
@@ -91,7 +90,6 @@ class StatePensionController @Inject() (
 
   def show: Action[AnyContent] = authenticate.async { implicit request =>
     implicit val user: NispAuthedUser     = request.nispAuthedUser
-    implicit val authDetails: AuthDetails = request.authDetails
     pertaxHelper.isFromPertax.flatMap { isPertax =>
       val statePensionResponseF      = statePensionService.getSummary(user.nino)
       val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
@@ -196,7 +194,7 @@ class StatePensionController @Inject() (
       (NINO          -> user.nino.nino) +
       (CONTRACTEDOUT -> contractedOut.toString)
 
-  def signOut: Action[AnyContent] = Action { implicit request =>
+  def signOut: Action[AnyContent] = Action { _ =>
     Redirect(applicationConfig.feedbackFrontendUrl).withNewSession
   }
 

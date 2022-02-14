@@ -14,8 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.views.formatting.Dates
-@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
+@import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link}
@@ -62,7 +61,7 @@
   </div>
 }
 
-@defining(Some(user)) { implicit userOption =>
+@defining(Some(user)) { _ =>
   @main(
     pageTitle = messages("nisp.cope.youWereContractedOut"),
     sidebar = Some(sidebar)

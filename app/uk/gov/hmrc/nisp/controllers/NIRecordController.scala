@@ -97,7 +97,6 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
     (sixteenthBirthdayDiff, dateOfEntryDiff) match {
       case (sb, Some(doe)) => sb.min(doe) > 0
       case (sb, _)         => sb > 0
-      case (_, Some(doe))  => doe > 0
       case _               => pre1975Years > 0
     }
   }
@@ -123,12 +122,12 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
         nationalInsuranceRecordResponse <- nationalInsuranceResponseF
         statePensionResponse <- statePensionResponseF
       } yield {
-        nationalInsuranceRecordResponse match {
+        (nationalInsuranceRecordResponse: @unchecked) match {
           case Right(Right(niRecord)) =>
             if (gapsOnlyView && niRecord.numberOfGaps < 1) {
               Redirect(routes.NIRecordController.showFull)
             } else {
-              val finalRelevantStartYear = statePensionResponse match {
+              val finalRelevantStartYear = (statePensionResponse: @unchecked) match {
                 case Right(Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _))) |
                      Right(Left(StatePensionExclusionFilteredWithCopeDate(_, _, _))) => None
                 case Right(Left(spExclusion: StatePensionExclusionFiltered)) => Some(spExclusion.finalRelevantStartYear
@@ -187,12 +186,13 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
   def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async {
     implicit request =>
       implicit val user: NispAuthedUser = request.nispAuthedUser
-      nationalInsuranceService.getSummary(user.nino) map {
+      nationalInsuranceService.getSummary(user.nino) map { x => (x: @unchecked) match {
         case Right(Right(niRecord)) =>
           Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
         case Left(_) =>
           Redirect(routes.ExclusionController.showNI)
       }
+    }
   }
 
   def showVoluntaryContributions: Action[AnyContent] = authenticate { implicit request =>

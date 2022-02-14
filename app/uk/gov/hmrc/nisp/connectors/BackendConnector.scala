@@ -27,6 +27,7 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 trait BackendConnector {
 
@@ -63,11 +64,7 @@ trait BackendConnector {
                                     (implicit hc: HeaderCarrier, formats: Format[A]): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] = {
     val keystoreTimerContext = metricsService.keystoreReadTimer.time()
 
-    val sessionCacheF = sessionCache.fetchAndGetEntry[A](api.toString)
-    sessionCacheF.onFailure { case _ =>
-      metricsService.keystoreReadFailed.inc()
-    }
-    sessionCacheF.flatMap { keystoreResult =>
+    sessionCache.fetchAndGetEntry[A](api.toString).flatMap { keystoreResult =>
       keystoreTimerContext.stop()
       keystoreResult match {
         case Some(data) =>
@@ -80,19 +77,23 @@ trait BackendConnector {
             case errorResponse => errorResponse
           }
       }
+    } recover {
+      case x => metricsService.keystoreReadFailed.inc(); throw x
     }
   }
 
-  private def connectToMicroservice[A](urlToRead: String, apiType: APIType, headers: Seq[(String, String)] = Seq())
+  private def connectToMicroservice[A](urlToRead: String, apiType: APIType, headers: Seq[(String, String)])
                                       (implicit hc: HeaderCarrier, formats: Format[A]): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] = {
     val timerContext = metricsService.startTimer(apiType)
 
     val httpResponseF = http.GET[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]](urlToRead, Seq(), headers)
-    httpResponseF onSuccess {
-      case _ => timerContext.stop()
-    }
-    httpResponseF onFailure {
-      case _ => metricsService.incrementFailedCounter(apiType)
+      .map { x =>
+        timerContext.stop()
+        x
+      } recover {
+      case x =>
+        metricsService.incrementFailedCounter(apiType)
+        throw x
     }
     httpResponseF
   }
@@ -100,12 +101,9 @@ trait BackendConnector {
   private def cacheResult[A](a: A, name: String)
                             (implicit hc: HeaderCarrier, formats: Format[A]): A = {
     val timerContext = metricsService.keystoreWriteTimer.time()
-    val cacheF       = sessionCache.cache[A](name, a)
-    cacheF.onSuccess { case _ =>
-      timerContext.stop()
-    }
-    cacheF.onFailure { case _ =>
-      metricsService.keystoreWriteFailed.inc()
+    sessionCache.cache[A](name, a).onComplete {
+      case Success(_) => timerContext.stop()
+      case Failure(_) => metricsService.keystoreWriteFailed.inc()
     }
     a
   }

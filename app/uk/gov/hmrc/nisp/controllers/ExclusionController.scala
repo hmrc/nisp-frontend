@@ -20,10 +20,9 @@ import com.google.inject.Inject
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.errorHandler.ErrorHandler
 import uk.gov.hmrc.nisp.models.Exclusion._
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.CopeStatePensionExclusion
 import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
@@ -51,8 +50,6 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
   extends NispFrontendController(mcc) with I18nSupport with Logging {
 
   def showSP: Action[AnyContent] = authenticate.async { implicit request =>
-    implicit val authDetails: AuthDetails = request.authDetails
-
     val statePensionF      = statePensionService.getSummary(request.nino)
     val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
 
@@ -94,7 +91,6 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
 
   def showNI: Action[AnyContent] = authenticate.async {
     implicit request =>
-      implicit val authDetails: AuthDetails = request.authDetails
       nationalInsuranceService.getSummary(request.nino).map {
         case Right(Left(CopeProcessing)) | Right(Left(CopeProcessingFailed)) =>
           Redirect(routes.ExclusionController.showSP)

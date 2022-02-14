@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.nisp.views.viewParams
 
-import play.api.Play
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 case class MainTemplateParams(
   browserTitle: Option[String] = None,

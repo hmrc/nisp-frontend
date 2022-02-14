@@ -16,15 +16,14 @@
 
 package uk.gov.hmrc.nisp.models
 
-import java.time.LocalDate
+import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads}
-import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
 import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
+import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.utils.Constants
-import play.api.libs.functional.syntax._
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
+
+import java.time.LocalDate
 
 sealed trait StatePensionAmount {
   val weeklyAmount: BigDecimal

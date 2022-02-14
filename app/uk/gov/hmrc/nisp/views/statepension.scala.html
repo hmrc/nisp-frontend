@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, NispAuthedUser}
+@import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.nisp.models.{SPChartModel, StatePension}
@@ -22,7 +22,6 @@
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, details, insetText, NispPageHeading, Panel}
-@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
 @this(
   main: main,
@@ -61,7 +60,7 @@
   isAbroad: Boolean,
   yearsToContributeUntilPensionAge: Int,
 
-)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages)
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages)
 
 @sidebar = {
   <div class="helpline-sidebar govuk-!-padding-top-8">
@@ -86,7 +85,7 @@
   </div>
 }
 
-@defining(Some(user)) { implicit userOption =>
+@defining(Some(user)) { _ =>
 
   @main(
     pageTitle = messages("nisp.main.title"),

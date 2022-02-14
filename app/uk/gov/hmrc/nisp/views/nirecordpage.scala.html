@@ -17,12 +17,8 @@
 @import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
-@import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
-@import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 @import java.time.LocalDate
-@import scala.concurrent.ExecutionContext
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, details, insetText, NispPageHeading}
-@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
 @this(
   newMain: main,
