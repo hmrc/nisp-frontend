@@ -20,8 +20,8 @@ import com.google.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
-import uk.gov.hmrc.nisp.models.{Exclusion, NationalInsuranceRecord, StatePensionExclusion, StatePensionExclusionFilter, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
+import uk.gov.hmrc.nisp.models.StatePensionExclusion._
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.utils.ExclusionHelper
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.views
 
 import org.joda.time.DateTime
 import org.jsoup.nodes.Document
-import org.mockito.Mockito.when
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -26,16 +25,12 @@ import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
-import uk.gov.hmrc.nisp.views.html.excluded_cope_sp
+import uk.gov.hmrc.nisp.views.html.excluded_cope_extended_sp
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
-
-  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
-  val urResearchURL                    =
-    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
+class ExclusionCopeExtendedSPViewSpec extends HtmlSpec with Injecting {
 
   implicit val fakeRequest = ExcludedAuthenticatedRequest(
     FakeRequest(),
@@ -43,37 +38,37 @@ class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
     AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None))
   )
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
-    when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
-    when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
-    when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-  }
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val today = LocalDate.now()
 
-  val excludedCopeView = inject[excluded_cope_sp]
-  val today: LocalDate = LocalDate.now()
-
-  lazy val view: Document = asDocument(contentAsString(excludedCopeView(today)))
+  val excludedCopeExtendedSPView = inject[excluded_cope_extended_sp]
+  lazy val view: Document = asDocument(contentAsString(excludedCopeExtendedSPView(today)))
 
   "render correct h1" in {
     assertEqualsMessage(
       view,
-      "[data-spec='excluded_cope__h1']",
-      "nisp.excluded.cope.processing.h1"
+      "[data-spec='excluded_cope_extended__h1']",
+      "nisp.excluded.cope.extended.h1"
     )
   }
 
-  "render correct indent-panel div with text" in {
-    assert(view.getElementsByClass("govuk-inset-text").size() == 1)
+  "render specialist team paragraph" in {
     assertEqualsMessage(
       view,
-      "[data-spec='excluded_cope__inset_text']",
-      "nisp.excluded.cope.processing"
+      "[data-spec='excluded_cope_extended__inset_text']",
+      "nisp.excluded.cope.extended"
     )
   }
 
-  "render correct p tag with text" in {
+  "render the backlog paragraph" in {
+    assertEqualsMessage(
+      view,
+      "[data-spec='excluded_cope__p1']",
+      "nisp.excluded.cope.extended.backlog"
+    )
+  }
+
+  "render the state pension forecast will be available paragraph" in {
     assertContainsDynamicMessage(
       view,
       "[data-spec='excluded_cope__p2']",
@@ -81,4 +76,5 @@ class ExclusionCopeViewSpec extends HtmlSpec with Injecting {
       today.format(DateTimeFormatter.ofPattern("d MMMM y")).replace(" ", "&nbsp;")
     )
   }
+
 }

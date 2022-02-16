@@ -31,7 +31,7 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequ
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.views.html.excluded_cope_failed_sp
 
-class ExclusionCopeFailedViewSpec extends HtmlSpec with Injecting {
+class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
   val urResearchURL                    =
