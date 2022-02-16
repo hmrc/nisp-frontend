@@ -23,5 +23,5 @@ import uk.gov.hmrc.nisp.views.html.gaRedirect
 class GARedirectController @Inject() (gaRedirect: gaRedirect, mcc: MessagesControllerComponents)
     extends NispFrontendController(mcc) {
 
-  def show: Action[AnyContent] = Action(implicit request => Ok(gaRedirect()).withNewSession)
+  def show: Action[AnyContent] = Action(_ => Ok(gaRedirect()).withNewSession)
 }

@@ -24,12 +24,6 @@
   summary: String,
 )
 
-@attrValues = @{
-  attributes.map{
-    case(key, value) => key + "=" + value
-  }
-}
-
 @govukDetails(Details(
   attributes = attributes,
   summary = Text(summary),

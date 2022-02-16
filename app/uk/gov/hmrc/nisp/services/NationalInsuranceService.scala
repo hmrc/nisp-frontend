@@ -48,6 +48,7 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
         case Right(Left(CopeStatePensionExclusion(exclusion, copeAvailableDate, previousDate))) =>
           Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusion, copeAvailableDate, previousDate)))
         case Left(errorResponse) => Left(errorResponse)
+
       }
   }
 }

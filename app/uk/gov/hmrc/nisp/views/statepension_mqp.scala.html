@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, NispAuthedUser}
+@import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.models.enums.MQPScenario._
@@ -43,7 +43,7 @@
   customerAge: Int,
   isPertaxUrl: Boolean,
   yearsToContributeUntilPensionAge: Int,
-)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, authDetails: AuthDetails, messages: Messages)
+)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages)
 
 @sidebar = {
   <div class="helpline-sidebar govuk-!-padding-top-8">
@@ -95,8 +95,7 @@
   }
 }
 
-@defining(Some(user)) { implicit userOption =>
-
+@defining(Some(user)) { _ =>
   @main(
     pageTitle = messages("nisp.main.title"),
     sidebar = Some(sidebar)

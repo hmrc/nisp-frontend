@@ -32,7 +32,7 @@ class StatePensionConnector @Inject()(val http: HttpClient,
                                       val metricsService: MetricsService,
                                       val executionContext: ExecutionContext,
                                       appConfig: ApplicationConfig
-                                     )(implicit ec: ExecutionContext) extends BackendConnector {
+                                     ) extends BackendConnector {
 
   val serviceUrl: String = appConfig.statePensionServiceUrl
 

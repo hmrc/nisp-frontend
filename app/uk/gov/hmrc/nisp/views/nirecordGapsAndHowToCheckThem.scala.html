@@ -32,7 +32,7 @@
 
 @(homeResponsibilitiesProtection: Boolean)(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
-@defining(Some(user)) { implicit userOption =>
+@defining(Some(user)) { _ =>
 
   @main(
     pageTitle = messages("nisp.nirecord.gapsinyourrecord.title")

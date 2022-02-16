@@ -18,7 +18,5 @@ package uk.gov.hmrc.nisp.controllers
 
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 abstract class NispFrontendController(mcc: MessagesControllerComponents) extends FrontendController(mcc)

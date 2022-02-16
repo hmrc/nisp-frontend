@@ -38,13 +38,14 @@ class CitizenDetailsConnector @Inject() (
   def connectToGetPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
 
     val context = metricsService.citizenDetailsTimer.time()
-    val result  = http.GET[HttpResponse](s"$serviceUrl/citizen-details/$nino/designatory-details").map {
-      context.stop()
-      _.json.as[CitizenDetailsResponse]
-    }
 
-    result onFailure { case _: Exception =>
-      metricsService.citizenDetailsFailedCounter.inc()
+    val result = http.GET[HttpResponse](s"$serviceUrl/citizen-details/$nino/designatory-details").map  {
+        context.stop()
+        _.json.as[CitizenDetailsResponse]
+    } recover {
+      case x =>
+        metricsService.citizenDetailsFailedCounter.inc()
+        throw x
     }
 
     result
