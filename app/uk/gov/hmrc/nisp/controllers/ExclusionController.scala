@@ -35,10 +35,13 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
                                     nationalInsuranceService: NationalInsuranceService,
                                     authenticate: ExcludedAuthAction,
                                     mcc: MessagesControllerComponents,
-                                    excludedCopeView: excluded_cope,
-                                    excludedCopeExtendedView: excluded_cope_extended,
-                                    excludedCopeFailedView: excluded_cope_failed,
+                                    excludedCopeView: excluded_cope_sp,
+                                    excludedCopeExtendedView: excluded_cope_extended_sp,
+                                    excludedCopeFailedView: excluded_cope_failed_sp,
                                     excludedSp: excluded_sp,
+                                    excludedCopeNi: excluded_cope_ni,
+                                    excludedCopeFailedNi: excluded_cope_failed_ni,
+                                    excludedCopeExtendedNi: excluded_cope_extended_ni,
                                     excludedDead: excluded_dead,
                                     excludedMci: excluded_mci,
                                     excludedNi: excluded_ni,
@@ -92,17 +95,19 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
   def showNI: Action[AnyContent] = authenticate.async {
     implicit request =>
       nationalInsuranceService.getSummary(request.nino).map {
-        case Right(Left(CopeProcessing)) | Right(Left(CopeProcessingFailed)) =>
-          Redirect(routes.ExclusionController.showSP)
-        case Right(Left(exclusion)) =>
-          if (exclusion == Dead) {
-            Ok(excludedDead(Exclusion.Dead, None))
-          }
-          else if (exclusion == Exclusion.ManualCorrespondenceIndicator) {
-            Ok(excludedMci(ManualCorrespondenceIndicator, None))
-          } else {
-            Ok(excludedNi(exclusion))
-          }
+        case Right(Left(StatePensionExclusionFilteredWithCopeDate(_, copeDataAvailableDate, previousAvailableDate)))
+          if (previousAvailableDate.isDefined) =>
+          Ok(excludedCopeExtendedNi(copeDataAvailableDate))
+        case Right(Left(StatePensionExclusionFilteredWithCopeDate(_, copeDataAvailableDate, _))) =>
+          Ok(excludedCopeNi(copeDataAvailableDate))
+        case Right(Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed, _, _, _))) =>
+          Ok(excludedCopeFailedNi())
+        case Right(Left(StatePensionExclusionFiltered(Exclusion.Dead, _, _, _))) =>
+          Ok(excludedDead(Exclusion.Dead, None))
+        case Right(Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator, _, _, _))) =>
+          Ok(excludedMci(ManualCorrespondenceIndicator, None))
+        case Right(Left(StatePensionExclusionFiltered(exclusion, _, _, _))) =>
+          Ok(excludedNi(exclusion))
         case _ =>
           logger.warn("User accessed /exclusion/nirecord as non-excluded user")
           Redirect(routes.NIRecordController.showGaps)

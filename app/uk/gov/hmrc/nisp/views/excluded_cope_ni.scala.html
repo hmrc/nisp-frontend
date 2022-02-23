@@ -1,0 +1,59 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import java.time.LocalDate
+@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
+@import java.time.format.DateTimeFormatter
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, insetText}
+
+@this(
+main: main,
+p: P,
+h1: H1,
+insetText: insetText
+)
+
+@(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
+
+@dateFormatter = @{ DateTimeFormatter.ofPattern("d MMMM y") }
+
+@main(
+pageTitle = messages("nisp.excluded.cope.processing.ni.h1")
+) {
+
+@h1(
+elmId = Some("mainTitle"),
+msg = "nisp.excluded.cope.processing.ni.h1",
+specId = Some("excluded_cope__h1")
+)
+
+<div>
+  @p(
+  content = Text(messages(
+  "nisp.excluded.cope.processing.manualWork"
+  )),
+  specId = Some("excluded_cope__p1")
+  )
+
+  @p(
+  content = Text(messages(
+  "nisp.excluded.cope.returnDate.ni",
+  copeDataAvailableDate.format(dateFormatter).replace(" ", "\u00a0")
+  )),
+  specId = Some("excluded_cope__p2")
+  )
+</div>
+}

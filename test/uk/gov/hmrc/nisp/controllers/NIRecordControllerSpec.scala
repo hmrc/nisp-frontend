@@ -220,7 +220,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     "redirect to exclusion for excluded user" in {
       // FIXME: add COPE
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(Left(Exclusion.Dead)))
+        Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -350,7 +350,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     "redirect to exclusion for excluded user" in {
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
-        Future.successful(Right(Left(Exclusion.Dead)))
+        Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
       when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
