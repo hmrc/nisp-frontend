@@ -17,9 +17,10 @@
 package uk.gov.hmrc.nisp.config
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReadsInstances.readEitherOf
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,5 +31,13 @@ class LocalTemplateRenderer @Inject() (appConfig: ApplicationConfig, http: HttpC
   override val refreshAfter: Duration = 10 minutes
   private implicit val hc             = HeaderCarrier()
 
-  override def fetchTemplate(path: String): Future[String] = http.GET(path).map(_.body)
+  override def fetchTemplate(path: String): Future[String] =
+    http
+      .GET[Either[UpstreamErrorResponse, HttpResponse]](path)
+      .map {
+        case Right(response) =>
+          response.body
+        case Left(error) =>
+          throw error
+      }
 }
