@@ -15,6 +15,7 @@
 *.iml
 *.ipr
 *.iws
+.bloop
 *~
 bin/
 cypress/fixtures/example.json
