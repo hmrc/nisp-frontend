@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, times, verify, when}
+import org.mockito.Mockito.{mock, reset, times, verify, when}
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -56,19 +56,19 @@ class FeedbackViewSpec extends HtmlSpec with Injecting {
       val html     = inject[feedback]
       html(partialUrl, Some(Html(testHtml)))(messages, request).toString should include(testHtml)
       verify(mockFormPartialRetriever, times(0))
-        .getPartialContentAsync(ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
+        .getPartialContent(ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
     }
 
     "assert correct html displayed from partialURL call when formBody is not provided" in {
       reset(mockFormPartialRetriever)
       val expected = "<p> Mock partial content </p>"
-      when(mockFormPartialRetriever.getPartialContentAsync(any(), any(), any())(any(), any()))
+      when(mockFormPartialRetriever.getPartialContent(any(), any(), any())(any(), any()))
         .thenReturn(Html(expected))
 
       val html = inject[feedback]
       html(partialUrl, None)(messages, request).toString should include(expected)
       verify(mockFormPartialRetriever, times(1))
-        .getPartialContentAsync(url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
+        .getPartialContent(url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
     }
   }
 }
