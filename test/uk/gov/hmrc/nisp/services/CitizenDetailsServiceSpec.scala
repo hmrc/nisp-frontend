@@ -70,7 +70,9 @@ class CitizenDetailsServiceSpec
   "CitizenDetailsService" should {
     "return something for valid NINO" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(nino))(mockAny())).thenReturn(
-        Future.successful(citizenDetailsResponseForNino(nino))
+        Future.successful(
+          Right(citizenDetailsResponseForNino(nino))
+        )
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
@@ -120,7 +122,9 @@ class CitizenDetailsServiceSpec
 
     "return correct name and Date of Birth for NINO" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(nino))(mockAny())).thenReturn(
-        Future.successful(citizenDetailsResponseForNino(nino))
+        Future.successful(
+          Right(citizenDetailsResponseForNino(nino))
+        )
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
@@ -135,7 +139,9 @@ class CitizenDetailsServiceSpec
 
     "return formatted name of None if Citizen returns without a name" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(noNameNino))(mockAny())).thenReturn(
-        Future.successful(citizenDetailsResponseForNino(noNameNino))
+        Future.successful(
+          Right(citizenDetailsResponseForNino(noNameNino))
+        )
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
