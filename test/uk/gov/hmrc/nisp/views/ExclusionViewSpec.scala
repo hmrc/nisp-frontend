@@ -457,10 +457,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
   }
 
   "Exclusion Manual Correspondence Indicator(MCI)" should {
-
-    implicit val authDetails =
-      AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))
-
     lazy val sResult = inject[excluded_mci]
 
     lazy val htmlAccountDoc = asDocument(sResult(Exclusion.ManualCorrespondenceIndicator, Some(40)).toString)

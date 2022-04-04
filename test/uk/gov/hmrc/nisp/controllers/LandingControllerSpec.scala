@@ -263,7 +263,6 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
   }
 
   "GET /cymraeg" must {
-    implicit val lang = Lang("cy")
     "return 200" in {
       val result = verifyLandingController.show(fakeRequestWelsh)
       status(result) shouldBe OK

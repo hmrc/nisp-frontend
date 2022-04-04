@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.controllers.auth
 import akka.util.Timeout
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.{mock, reset, spy, verify, when}
+import org.mockito.Mockito.{reset, spy, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application

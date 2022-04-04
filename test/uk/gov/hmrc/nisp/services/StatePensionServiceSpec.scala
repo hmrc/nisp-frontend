@@ -23,7 +23,7 @@ import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfterEach, PrivateMethodTester}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder._
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
@@ -106,9 +106,6 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "transform the COPE Failed 403 into a CopeProcessingFailed exclusion" in {
-      val copeResponseProcessingFailed: String =
-        "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'"
-
       when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny()))
         .thenReturn(Future.successful(
           Right(Left(ForbiddenStatePensionExclusion(Exclusion.CopeProcessingFailed, None)))))
