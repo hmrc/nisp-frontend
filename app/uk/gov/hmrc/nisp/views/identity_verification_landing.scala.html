@@ -50,7 +50,7 @@
   </div>
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
+    <div class="govuk-grid-column-two-thirds">
       @h2(
         elmId = Some("landing-signin-heading"),
         msg = "nisp.landing.signin.heading",
@@ -70,27 +70,6 @@
       </div>
     </div>
 
-    <div class="govuk-grid-column-one-half">
-      <div class="inner-block panel-indent">
-        @p(
-          content = HtmlContent(messages("nisp.landing.signin.verify",
-            link(
-              fullStop = true,
-              inParagraph = true,
-              link = routes.LandingController.verifySignIn.url,
-              messageKey = "nisp.landing.signin.verify.linktext",
-              specId = Some("identity_verification_landing_link")
-            ))
-          ),
-          specId = Some("identity_verification_landing_p2")
-        )
-        <div class="verify-block">
-          <img src='@controllers.routes.Assets.versioned("images/verify-logo-inline.png")' class="verify-logo" alt="" />
-          <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">@messages("nisp.gov-uk")</div>
-          <div class="govuk-body">@messages("nisp.verify")</div>
-        </div>
-      </div>
-    </div>
   </div>
 
 }
