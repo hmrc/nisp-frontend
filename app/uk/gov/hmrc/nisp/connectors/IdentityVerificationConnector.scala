@@ -18,10 +18,11 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
 import play.api.http.Status._
-import uk.gov.hmrc.http._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReadsInstances.readEitherOf
 import scala.concurrent.{ExecutionContext, Future}
 
 sealed trait IdentityVerificationResponse
@@ -57,22 +58,31 @@ class IdentityVerificationConnector @Inject() (
     journeyId: String
   )(implicit hc: HeaderCarrier): Future[IdentityVerificationResponse] = {
     val context  = metricsService.identityVerificationTimer.time()
-    val ivFuture = http.GET[HttpResponse](url(journeyId)).map { httpResponse =>
-      context.stop()
-      val result = (httpResponse.json \ "result").as[String]
-      IdentityVerificationSuccessResponse(result)
-    } recover {
-      case _: NotFoundException                    =>
-        metricsService.identityVerificationFailedCounter.inc()
-        IdentityVerificationNotFoundResponse
-      case Upstream4xxResponse(_, FORBIDDEN, _, _) =>
-        metricsService.identityVerificationFailedCounter.inc()
-        IdentityVerificationForbiddenResponse
-      case e: Throwable                            =>
-        metricsService.identityVerificationFailedCounter.inc()
-        IdentityVerificationErrorResponse(e)
-    }
-
-    ivFuture
+    http
+      .GET[Either[UpstreamErrorResponse, HttpResponse]](url(journeyId))
+      .transform { result =>
+        context.stop()
+        result
+      }
+      .map { 
+        case Right(response) =>
+          val result = (response.json \ "result").as[String]
+          IdentityVerificationSuccessResponse(result)
+        case Left(error) =>
+          metricsService.identityVerificationFailedCounter.inc()
+          error.statusCode match {
+            case NOT_FOUND =>
+              IdentityVerificationNotFoundResponse
+            case FORBIDDEN =>
+              IdentityVerificationForbiddenResponse
+            case status =>
+              IdentityVerificationErrorResponse(error)
+          }
+      }
+      .recover {
+        case error =>
+          metricsService.identityVerificationFailedCounter.inc()
+          IdentityVerificationErrorResponse(error)
+      }
   }
 }

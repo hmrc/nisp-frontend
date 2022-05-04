@@ -20,7 +20,7 @@ import javax.inject.Inject
 import play.api.Logging
 import play.api.http.Status
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.models.citizen._
 
@@ -33,15 +33,23 @@ class CitizenDetailsService @Inject() (citizenDetailsConnector: CitizenDetailsCo
   def retrievePerson(
     nino: Nino
   )(implicit hc: HeaderCarrier): Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
-    citizenDetailsConnector.connectToGetPersonDetails(nino) map (citizen => Right(citizen)) recover {
-      case ex: Upstream4xxResponse if ex.upstreamResponseCode == Status.LOCKED =>
-        logger.warn(s"MCI Exclusion for $nino", ex)
-        Left(MCI_EXCLUSION)
-      case ex: BadRequestException                                             =>
-        logger.error(s"Citizen Details: BadRequest for $nino", ex)
-        Left(TECHNICAL_DIFFICULTIES)
-      case ex: NotFoundException                                               =>
-        logger.error(s"Citizen Details: NotFound for $nino", ex)
-        Left(NOT_FOUND)
-    }
+    citizenDetailsConnector
+      .connectToGetPersonDetails(nino)
+      .map {
+        case Right(citizen) => Right(citizen)
+        case Left(error) => error.statusCode match {
+          case Status.LOCKED =>
+            logger.warn(s"MCI Exclusion for $nino", error)
+            Left(MCI_EXCLUSION)
+          case Status.NOT_FOUND =>
+            logger.error(s"Citizen Details: NotFound for $nino", error)
+            Left(NOT_FOUND)
+          case Status.BAD_REQUEST =>
+            logger.error(s"Citizen Details: BadRequest for $nino", error)
+            Left(TECHNICAL_DIFFICULTIES)
+          case status =>
+            logger.error(s"Citizen Details: $status status for $nino", error)
+            Left(TECHNICAL_DIFFICULTIES)
+        }
+      }
 }

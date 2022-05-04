@@ -16,20 +16,20 @@
 
 package uk.gov.hmrc.nisp.views
 
-  import org.joda.time.DateTime
-  import org.jsoup.nodes.Document
-  import org.mockito.Mockito.when
-  import play.api.test.Helpers.contentAsString
-  import play.api.test.{FakeRequest, Injecting}
-  import uk.gov.hmrc.auth.core.ConfidenceLevel
-  import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-  import uk.gov.hmrc.nisp.config.ApplicationConfig
-  import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
-  import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
-  import uk.gov.hmrc.nisp.views.html.excluded_cope_ni
+import org.joda.time.DateTime
+import org.jsoup.nodes.Document
+import org.mockito.Mockito.when
+import play.api.test.Helpers.contentAsString
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.LoginTimes
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
+import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
+import uk.gov.hmrc.nisp.views.html.excluded_cope_ni
 
-  import java.time.LocalDate
-  import java.time.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class ExclusionCopeNIViewSpec extends HtmlSpec with Injecting {
 

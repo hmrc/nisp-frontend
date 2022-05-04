@@ -18,6 +18,7 @@
 *.iws
 *.min.css
 *.min.css.map
+.bloop
 *~
 ~*.*
 bin/

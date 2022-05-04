@@ -22,11 +22,12 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.http.Status._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException, Upstream5xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsError, CitizenDetailsResponse}
@@ -70,7 +71,9 @@ class CitizenDetailsServiceSpec
   "CitizenDetailsService" should {
     "return something for valid NINO" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(nino))(mockAny())).thenReturn(
-        Future.successful(citizenDetailsResponseForNino(nino))
+        Future.successful(
+          Right(citizenDetailsResponseForNino(nino))
+        )
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
@@ -82,7 +85,7 @@ class CitizenDetailsServiceSpec
 
     "return None for bad NINO" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(nonExistentNino))(mockAny())).thenReturn(
-        Future.failed(new NotFoundException(""))
+        Future.successful(Left(UpstreamErrorResponse("NOT_FOUND", NOT_FOUND)))
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
@@ -94,7 +97,7 @@ class CitizenDetailsServiceSpec
 
     "return None for bad request" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(badRequestNino))(mockAny())).thenReturn(
-        Future.failed(new BadRequestException(""))
+        Future.successful(Left(UpstreamErrorResponse("BAD_REQUEST", BAD_REQUEST)))
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
@@ -108,19 +111,21 @@ class CitizenDetailsServiceSpec
       when(
         mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(TestAccountBuilder.internalServerError))(mockAny())
       ).thenReturn(
-        Future.failed(new Upstream5xxResponse("CRITICAL FAILURE", 500, 500))
+        Future.failed(UpstreamErrorResponse("CRITICAL FAILURE", 500))
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
         citizenDetailsService.retrievePerson(TestAccountBuilder.internalServerError)(new HeaderCarrier())
       whenReady(person.failed) { ex =>
-        ex shouldBe a[Upstream5xxResponse]
+        ex shouldBe a[UpstreamErrorResponse]
       }
     }
 
     "return correct name and Date of Birth for NINO" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(nino))(mockAny())).thenReturn(
-        Future.successful(citizenDetailsResponseForNino(nino))
+        Future.successful(
+          Right(citizenDetailsResponseForNino(nino))
+        )
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
@@ -135,7 +140,9 @@ class CitizenDetailsServiceSpec
 
     "return formatted name of None if Citizen returns without a name" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(noNameNino))(mockAny())).thenReturn(
-        Future.successful(citizenDetailsResponseForNino(noNameNino))
+        Future.successful(
+          Right(citizenDetailsResponseForNino(noNameNino))
+        )
       )
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
