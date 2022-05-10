@@ -107,7 +107,7 @@
 }
 
 @getHelpForm = {
-    @formPartialRetriever.getPartialContent(s"${config.contactFrontendPartialBaseUrl}/contact/problem_reports")
+    @formPartialRetriever.getPartialContentAsync(s"${config.contactFrontendPartialBaseUrl}/contact/problem_reports")
 }
 
 @sidebar = {

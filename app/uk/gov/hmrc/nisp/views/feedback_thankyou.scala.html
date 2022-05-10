@@ -34,7 +34,7 @@
 </script>
 
 @main(MainTemplateParams(showBetaBanner = false)) {
-    @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
+    @cachedStaticHtmlPartialRetriever.getPartialContentAsync(partialUrl)
     <a id="Start" href='@redirectUrl' role="button" tabindex="0" data-journey-click="checkmystatepension:feedback:return" class="button">@messages("nisp.goback")</a>
 }
 
