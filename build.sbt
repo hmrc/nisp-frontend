@@ -70,7 +70,10 @@ lazy val microservice = Project(appName, file("."))
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     majorVersion := 10,
-    scalacOptions ++= Seq("-P:silencer:pathFilters=routes"),
+    scalacOptions ++= Seq(
+      "-P:silencer:pathFilters=routes",
+      "-feature"
+    ),
     scalacOptions ++= suppressedImports
   )
   .configs(IntegrationTest)
