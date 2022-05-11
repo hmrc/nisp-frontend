@@ -48,6 +48,7 @@ import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialR
 import java.time.LocalDate
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
 
 class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 

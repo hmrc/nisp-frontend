@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.apache.commons.lang3.StringEscapeUtils
+import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
@@ -2455,9 +2455,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
           lazy val nonForeignDoc =
             asDocument(contentAsString(controller.show()(FakeRequest())))
 
-          lazy val foreignDoc =
-            asDocument(contentAsString(abroadUserController.show()(FakeRequest())))
-
           "render page with link 'Contact the Money Advice Service (opens in new tab) for free impartial advice.'" in {
             mockSetup
             assertEqualsValue(
@@ -2807,9 +2804,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
 
           lazy val nonForeignDoc =
             asDocument(contentAsString(controller.show()(FakeRequest())))
-
-          lazy val foreignDoc =
-            asDocument(contentAsString(abroadUserController.show()(FakeRequest())))
 
           "render page with link 'Contact the Money Advice Service (opens in new tab) for free impartial advice.'" in {
             mockSetup

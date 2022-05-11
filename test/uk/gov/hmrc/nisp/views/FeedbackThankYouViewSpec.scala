@@ -52,17 +52,17 @@ class FeedbackThankYouViewSpec extends HtmlSpec with Injecting {
 
     "assert correct html displayed from partialURL call" in {
       reset(cachedStaticHtmlPartialRetriever)
-      when(cachedStaticHtmlPartialRetriever.getPartialContent(ArgumentMatchers.anyString(), any(), any())(any(), any()))
+      when(cachedStaticHtmlPartialRetriever.getPartialContentAsync(ArgumentMatchers.anyString(), any(), any())(any(), any()))
         .thenReturn(Html("<p> Mock partial content </p>"))
 
       val content = source.toString
       content should include("<p> Mock partial content </p>")
       verify(cachedStaticHtmlPartialRetriever, times(1))
-        .getPartialContent(url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
+        .getPartialContentAsync(url = ArgumentMatchers.eq(partialUrl), any(), any())(any(), any())
     }
 
     "assert correct href on the start again button" in {
-      when(cachedStaticHtmlPartialRetriever.getPartialContent(ArgumentMatchers.anyString(), any(), any())(any(), any()))
+      when(cachedStaticHtmlPartialRetriever.getPartialContentAsync(ArgumentMatchers.anyString(), any(), any())(any(), any()))
         .thenReturn(Html("<p> Mock partial content </p>"))
       val redirect = source.getElementById("Start").attr("href")
 

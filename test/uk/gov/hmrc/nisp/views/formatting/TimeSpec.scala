@@ -21,7 +21,6 @@ import java.util.Locale
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import uk.gov.hmrc.nisp.utils.UnitSpec

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.apache.commons.lang3.StringEscapeUtils
+import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import play.api.i18n.Messages
@@ -886,7 +886,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
-            val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__legal__forecast_changes__p']",
@@ -1827,7 +1826,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
-            val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__legal__forecast_changes__p']",

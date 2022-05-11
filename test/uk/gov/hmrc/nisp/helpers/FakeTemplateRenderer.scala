@@ -21,6 +21,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.concurrent.duration._
 import scala.concurrent.Future
+import scala.language.postfixOps
 
 object FakeTemplateRenderer extends TemplateRenderer {
 
