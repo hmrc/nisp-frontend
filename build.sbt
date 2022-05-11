@@ -71,6 +71,7 @@ lazy val microservice = Project(appName, file("."))
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     majorVersion := 10,
     scalacOptions ++= Seq(
+      "-Xfatal-warnings",
       "-P:silencer:pathFilters=routes",
       "-feature"
     ),
