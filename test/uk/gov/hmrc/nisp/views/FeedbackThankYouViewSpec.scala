@@ -47,6 +47,8 @@ class FeedbackThankYouViewSpec extends HtmlSpec with Injecting {
   "FeedbackThankYou" should {
 
     "assert correct page title" in {
+      when(cachedStaticHtmlPartialRetriever.getPartialContentAsync(ArgumentMatchers.anyString(), any(), any())(any(), any()))
+        .thenReturn(Html("<p> Mock partial content </p>"))
       source.toString should include(messages("nisp.feedback.title"))
     }
 
