@@ -31,7 +31,6 @@ import uk.gov.hmrc.auth.core.{AuthConnector, MissingBearerToken}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.VerifyAuthActionImpl
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
@@ -52,7 +51,6 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     .overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[VerifyAuthActionImpl].to[FakeVerifyAuthAction]
     )
     .build()
 
@@ -95,52 +93,9 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     }
 
     "return IVLanding page" in {
-      when(mockApplicationConfig.identityVerification).thenReturn(true)
-
       val result = verifyLandingController.show(fakeRequest)
       val doc    = Jsoup.parse(contentAsString(result))
       doc.getElementById("landing-signin-heading").text shouldBe messages("nisp.landing.signin.heading")
-    }
-
-    "return non-IV landing page when switched on" in {
-      when(mockApplicationConfig.identityVerification).thenReturn(false)
-
-      val result = verifyLandingController.show(fakeRequest)
-      val doc    = Jsoup.parse(contentAsString(result))
-      doc.getElementById("eligibility-heading").text shouldBe messages("nisp.landing.eligibility.heading")
-    }
-  }
-
-  "GET /signin/verify" must {
-    "redirect to verify" in {
-      val mockAuthConnector = mock[AuthConnector]
-
-      val verifyAuthBasedInjector = GuiceApplicationBuilder()
-        .overrides(
-          bind[IdentityVerificationConnector].toInstance(mockIVConnector),
-          bind[AuthConnector].toInstance(mockAuthConnector)
-        )
-        .injector()
-
-      when(mockAuthConnector.authorise(mockAny(), mockAny())(mockAny(), mockAny()))
-        .thenReturn(Future.failed(MissingBearerToken("Missing Bearer Token!")))
-
-      val verifyLandingController = verifyAuthBasedInjector.instanceOf[LandingController]
-      val result                  = verifyLandingController.verifySignIn(fakeRequest)
-      redirectLocation(result) shouldBe Some(
-        "http://localhost:9949/auth-login-stub/verify-sign-in?continue=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount"
-      )
-    }
-
-    "redirect to account page when signed in" in {
-      val result = verifyLandingController.verifySignIn(
-        FakeRequest().withSession(
-          SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
-          SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
-        )
-      )
-
-      redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
   }
 
