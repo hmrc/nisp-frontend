@@ -27,15 +27,11 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers, Injecting}
-import uk.gov.hmrc.auth.core.{AuthConnector, MissingBearerToken}
-import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
-import java.time.LocalDate
-import java.util.{Locale, UUID}
+import java.util.Locale
 import scala.concurrent.Future
 
 class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
