@@ -45,11 +45,7 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val reportAProblemNonJSUrl        = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
   val showGovUkDonePage: Boolean    = configuration.getOptional[Boolean]("govuk-done-page.enabled").getOrElse(true)
   val govUkFinishedPageUrl: String  = loadConfig("govuk-done-page.url")
-  val identityVerification: Boolean = getConfBool("features.identityVerification", false)
 
-  val verifySignIn: String          = configuration.getOptional[String]("verify-sign-in.url").getOrElse("")
-  val verifySignInContinue: Boolean =
-    configuration.getOptional[Boolean]("verify-sign-in.submit-continue-url").getOrElse(false)
   val postSignInRedirectUrl         = configuration.getOptional[String]("login-callback.url").getOrElse("")
   val notAuthorisedRedirectUrl      = configuration.getOptional[String]("not-authorised-callback.url").getOrElse("")
   val ivUpliftUrl: String           = configuration.getOptional[String]("identity-verification-uplift.host").getOrElse("")

@@ -22,18 +22,15 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
-import uk.gov.hmrc.nisp.controllers.auth.VerifyAuthActionImpl
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
-import uk.gov.hmrc.nisp.views.html.{identity_verification_landing, landing}
+import uk.gov.hmrc.nisp.views.html.{identity_verification_landing}
 import scala.concurrent.{ExecutionContext, Future}
 
 class LandingController @Inject() (
   identityVerificationConnector: IdentityVerificationConnector,
   applicationConfig: ApplicationConfig,
-  verifyAuthAction: VerifyAuthActionImpl,
   mcc: MessagesControllerComponents,
   identityVerificationLanding: identity_verification_landing,
-  landing: landing,
   notAuthorised: not_authorised,
   technicalIssue: technical_issue,
   lockedOut: locked_out,
@@ -46,16 +43,8 @@ class LandingController @Inject() (
   val logger = Logger(this.getClass)
 
   def show: Action[AnyContent] = Action(implicit request =>
-    if (applicationConfig.identityVerification) {
-      Ok(identityVerificationLanding()).withNewSession
-    } else {
-      Ok(landing()).withNewSession
-    }
+    Ok(identityVerificationLanding()).withNewSession
   )
-
-  def verifySignIn: Action[AnyContent] = verifyAuthAction { _ =>
-    Redirect(routes.StatePensionController.show)
-  }
 
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     val result = journeyId map { id =>
