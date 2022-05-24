@@ -5,7 +5,9 @@ import it_utils.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, Fak
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils.currentTimeMillis
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
@@ -23,7 +25,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import java.time.LocalDate
 import java.util.UUID
 
-class LandingControllerISpec extends WordSpec
+class LandingControllerISpec extends AnyWordSpec
   with Matchers
   with GuiceOneAppPerSuite
   with WiremockHelper

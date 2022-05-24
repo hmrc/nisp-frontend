@@ -41,14 +41,19 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
             )
           ))
         }
+
         case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
           Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusions))))
+
         case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
           Right(Left(StatePensionExclusionFiltered(exclusion)))
+
         case Right(Left(CopeStatePensionExclusion(exclusion, copeAvailableDate, previousDate))) =>
           Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusion, copeAvailableDate, previousDate)))
+
         case Left(errorResponse) => Left(errorResponse)
 
+        case value => throw new NotImplementedError(s"Match not implemented for: $value")
       }
   }
 }

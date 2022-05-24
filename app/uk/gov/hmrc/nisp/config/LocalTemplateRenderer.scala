@@ -23,6 +23,7 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.HttpReadsInstances.readEitherOf
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
 
 class LocalTemplateRenderer @Inject() (appConfig: ApplicationConfig, http: HttpClient)(implicit
   val executionContext: ExecutionContext

@@ -45,9 +45,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import java.time.LocalDate
 import java.util.UUID
 
-import play.api.i18n.Messages
-import play.api.mvc.Cookie
-
 import scala.concurrent.Future
 
 class NIRecordViewSpec extends HtmlSpec with Injecting {

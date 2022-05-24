@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.views
 
 import akka.util.Timeout
-import org.apache.commons.lang3.StringEscapeUtils
+import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.BeforeAndAfterEach
