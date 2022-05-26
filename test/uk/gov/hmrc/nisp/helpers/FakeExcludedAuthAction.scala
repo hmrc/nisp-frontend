@@ -34,7 +34,7 @@ class FakeExcludedAuthAction @Inject() (val parser: BodyParsers.Default, val exe
       ExcludedAuthenticatedRequest(
         request,
         TestAccountBuilder.regularNino,
-        AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))
+        AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now, None))
       )
     )
 }

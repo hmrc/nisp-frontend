@@ -55,7 +55,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
 
   implicit val user: NispAuthedUser =
     NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, None, false)
-  val authDetails                   = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
+  val authDetails                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 

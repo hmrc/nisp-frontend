@@ -59,24 +59,24 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
 
-  val verifyLandingController = inject[LandingController]
+  val landingController = inject[LandingController]
 
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   "GET /" should {
     "return 200" in {
-      val result = verifyLandingController.show(fakeRequest)
+      val result = landingController.show(fakeRequest)
       status(result) shouldBe OK
     }
 
     "return HTML" in {
-      val result = verifyLandingController.show(fakeRequest)
+      val result = landingController.show(fakeRequest)
       Helpers.contentType(result) shouldBe Some("text/html")
       charset(result)             shouldBe Some("utf-8")
     }
 
     "load the landing page" in {
-      val result = verifyLandingController.show(fakeRequest)
+      val result = landingController.show(fakeRequest)
       contentAsString(result) should include(
         "Your State Pension forecast is provided for your information only and the " +
           "service does not offer financial advice. When planning for your retirement, you should seek professional advice."
@@ -84,12 +84,12 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     }
 
     "have a start button" in {
-      val result = verifyLandingController.show(fakeRequest)
+      val result = landingController.show(fakeRequest)
       contentAsString(result) should include("Continue")
     }
 
     "return IVLanding page" in {
-      val result = verifyLandingController.show(fakeRequest)
+      val result = landingController.show(fakeRequest)
       val doc    = Jsoup.parse(contentAsString(result))
       doc.getElementById("landing-signin-heading").text shouldBe messages("nisp.landing.signin.heading")
     }
@@ -98,7 +98,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
   "GET /not-authorised" must {
     "show not authorised page" when {
       "journey Id is None" in {
-        val result = verifyLandingController.showNotAuthorised(None)(fakeRequest)
+        val result = landingController.showNotAuthorised(None)(fakeRequest)
 
         status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
@@ -111,7 +111,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
           Future.successful(IdentityVerificationSuccessResponse("FailedMatching"))
         )
 
-        val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+        val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
         status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
@@ -123,7 +123,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
           Future.successful(IdentityVerificationSuccessResponse("InsufficientEvidence"))
         )
 
-        val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+        val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
         status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
@@ -135,7 +135,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
           Future.successful(IdentityVerificationSuccessResponse("Incomplete"))
         )
 
-        val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+        val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
         status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
@@ -147,7 +147,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
           Future.successful(IdentityVerificationSuccessResponse("PreconditionFailed"))
         )
 
-        val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+        val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
         status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
@@ -159,7 +159,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
           Future.successful(IdentityVerificationSuccessResponse("UserAborted"))
         )
 
-        val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+        val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
         status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
@@ -172,7 +172,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         Future.successful(IdentityVerificationSuccessResponse("TechnicalIssue"))
       )
 
-      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       status(result)        shouldBe INTERNAL_SERVER_ERROR
       contentAsString(result) should include("This online service is experiencing technical difficulties.")
     }
@@ -184,7 +184,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         Future.successful(IdentityVerificationSuccessResponse("LockedOut"))
       )
 
-      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       status(result)        shouldBe LOCKED
       contentAsString(result) should include(
         "You have reached the maximum number of attempts to confirm your identity."
@@ -198,7 +198,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         Future.successful(IdentityVerificationSuccessResponse("Timeout"))
       )
 
-      val result = verifyLandingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+      val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
       status(result)        shouldBe UNAUTHORIZED
       contentAsString(result) should include(
         "Your session has ended because you have not done anything for 15 minutes."
@@ -206,7 +206,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     }
 
     "show 2FA failure page when no journey ID specified" in {
-      val result = verifyLandingController.showNotAuthorised(None)(fakeRequest)
+      val result = landingController.showNotAuthorised(None)(fakeRequest)
       status(result)        shouldBe UNAUTHORIZED
       contentAsString(result) should include("We cannot confirm your identity")
       contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
@@ -215,19 +215,19 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
 
   "GET /cymraeg" must {
     "return 200" in {
-      val result = verifyLandingController.show(fakeRequestWelsh)
+      val result = landingController.show(fakeRequestWelsh)
       status(result) shouldBe OK
     }
 
     "return HTML" in {
-      val result = verifyLandingController.show(fakeRequestWelsh)
+      val result = landingController.show(fakeRequestWelsh)
       Helpers.contentType(result) shouldBe Some("text/html")
       charset(result)             shouldBe Some("utf-8")
     }
     "load the landing page in welsh" in {
       when(mockApplicationConfig.isWelshEnabled).thenReturn(true)
 
-      val result = verifyLandingController.show(fakeRequestWelsh)
+      val result = landingController.show(fakeRequestWelsh)
 
       contentAsString(result) should include("data-journey-click=\"link - click:lang-select:Cymraeg\"")
     }

@@ -137,7 +137,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
             None,
             isSa = false
           ),
-          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes)
+          AuthDetails(ConfidenceLevel.L200, fakeLoginTimes)
         )
         verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
       }
@@ -167,7 +167,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
             None,
             isSa = true
           ),
-          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes)
+          AuthDetails(ConfidenceLevel.L200, fakeLoginTimes)
         )
         verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
       }
@@ -197,7 +197,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
             Some(trustedHelper),
             isSa = false
           ),
-          AuthDetails(ConfidenceLevel.L200, Some("providerType"), fakeLoginTimes)
+          AuthDetails(ConfidenceLevel.L200, fakeLoginTimes)
         )
         verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
       }

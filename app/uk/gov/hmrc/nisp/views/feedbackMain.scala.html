@@ -190,8 +190,6 @@
         "assetsPath" -> config.assetsPrefix,
 
         "mainContentHeader" -> mainContentHeader,
-        "isGovernmentGateway" -> authDetails.fold(false)(ad => ad.isGG),
-        "isVerify" -> authDetails.fold(false)(ad => ad.isVerify),
         "isSa" -> false,
         "signOutUrl" -> Some(routes .StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
         "hideAccountMenu" -> mainTemplateParams.hideNavBar,

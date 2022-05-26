@@ -36,7 +36,7 @@ class FakeAuthActionWithNino @Inject() (
       AuthenticatedRequest(
         request,
         NispAuthedUserFixture.user(ninoContainer.nino),
-        AuthDetails(ConfidenceLevel.L200, Some("GGW"), LoginTimes(DateTime.now, None))
+        AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now, None))
       )
     )
 }

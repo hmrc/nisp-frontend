@@ -61,7 +61,7 @@ class AuthActionImpl @Inject() (
                 AuthenticatedRequest(
                   request,
                   NispAuthedUser(Nino(useNino), cdr.person.dateOfBirth, name, cdr.address, optTrustedHelper, hasSa),
-                  AuthDetails(confidenceLevel, credentials.map(_.providerType), loginTimes)
+                  AuthDetails(confidenceLevel, loginTimes)
                 )
               )
             case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
