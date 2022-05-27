@@ -83,8 +83,7 @@ class StatePensionController @Inject() (
         user.name.toString,
         statePension.contractedOut,
         statePension.forecastScenario,
-        statePension.amounts.cope.weeklyAmount,
-        authDetails.authProvider.getOrElse("N/A")
+        statePension.amounts.cope.weeklyAmount
       )
     )
 

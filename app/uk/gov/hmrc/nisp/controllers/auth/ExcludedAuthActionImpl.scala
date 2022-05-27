@@ -52,12 +52,12 @@ class ExcludedAuthActionImpl @Inject() (
             ExcludedAuthenticatedRequest(
               request,
               Nino(nino),
-              AuthDetails(confidenceLevel, credentials.map(creds => creds.providerType), loginTimes)
+              AuthDetails(confidenceLevel, loginTimes)
             )
           )
-        case _                                                       => throw new RuntimeException("Can't find credentials for user")
+        case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
-      case _: NoActiveSession             =>
+      case _: NoActiveSession =>
         Redirect(
           applicationConfig.ggSignInUrl,
           Map(

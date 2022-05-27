@@ -164,7 +164,6 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
                     request.nispAuthedUser.dateOfBirth,
                     niRecord.qualifyingYearsPriorTo1975
                   ),
-                  authenticationProvider = request.authDetails.authProvider.getOrElse("N/A"),
                   showFullNI = showFullNI,
                   currentDate = dateProvider.currentDate
                 )

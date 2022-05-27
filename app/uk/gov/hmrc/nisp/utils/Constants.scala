@@ -19,7 +19,6 @@ package uk.gov.hmrc.nisp.utils
 object Constants {
 
   val GovernmentGatewayId = "GovernmentGateway"
-  val VerifyProviderId    = "Verify"
 
   // scalastyle:off magic.number
   val baseUrl = "/check-your-state-pension"
@@ -45,7 +44,6 @@ object Constants {
 
   val shortYearStartCharacter = 2
   val shortYearEndCharacter   = 4
-  val verify                  = "verify"
   val iv                      = "iv"
   val chartWidthMinimum       = 31
   val deferralCutOffAge       = 53

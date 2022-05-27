@@ -33,7 +33,7 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with BeforeAndAfter with I
 
   implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
-  val authDetails = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
+  val authDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 

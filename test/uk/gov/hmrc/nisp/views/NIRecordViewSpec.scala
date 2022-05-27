@@ -52,7 +52,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer                = FakeTemplateRenderer
 
-  val authDetails                                   = AuthDetails(ConfidenceLevel.L200, None, LoginTimes(DateTime.now(), None))
+  val authDetails                                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
   implicit val user: NispAuthedUser                 = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
   implicit val abroadUser: NispAuthedUser           = NispAuthedUserFixture.user(TestAccountBuilder.abroadNino)
   implicit val fakeRequest: AuthenticatedRequest[_] = AuthenticatedRequest(FakeRequest(), user, authDetails)

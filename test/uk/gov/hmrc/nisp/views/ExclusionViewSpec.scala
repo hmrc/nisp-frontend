@@ -41,7 +41,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
   implicit val fakeRequest          = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
-    AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None))
+    AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
   )
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
   lazy val langUtils                = inject[LanguageUtils]
