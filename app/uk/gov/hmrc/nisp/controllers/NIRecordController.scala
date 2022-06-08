@@ -122,7 +122,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
         nationalInsuranceRecordResponse <- nationalInsuranceResponseF
         statePensionResponse <- statePensionResponseF
       } yield {
-        (nationalInsuranceRecordResponse: @unchecked) match {
+        nationalInsuranceRecordResponse match {
           case Right(Right(niRecord)) =>
             if (gapsOnlyView && niRecord.numberOfGaps < 1) {
               Redirect(routes.NIRecordController.showFull)
@@ -177,6 +177,9 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
               request.nispAuthedUser.name,
               exclusion.exclusion
             ))
+            Redirect(routes.ExclusionController.showNI)
+
+          case Left(_) =>
             Redirect(routes.ExclusionController.showNI)
         }
       }

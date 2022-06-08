@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.time.LocalDate
 import java.util.UUID
-
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -29,7 +28,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
@@ -367,6 +366,28 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
+
+    "Redirect to exclusion for an unexpected error" in {
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Left(UpstreamErrorResponse("Failed", 502)))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
+      )
+
+      val result = niRecordController
+        .showFull(
+          fakeRequest.withSession(
+            SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+            SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+          )
+        )
+
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
+    }
+
   }
 
   "GET /account/nirecord/gapsandhowtocheck" should {
