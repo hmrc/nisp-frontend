@@ -127,12 +127,13 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
             if (gapsOnlyView && niRecord.numberOfGaps < 1) {
               Redirect(routes.NIRecordController.showFull)
             } else {
-              val finalRelevantStartYear = (statePensionResponse: @unchecked) match {
+              val finalRelevantStartYear = statePensionResponse match {
                 case Right(Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _))) |
                      Right(Left(StatePensionExclusionFilteredWithCopeDate(_, _, _))) => None
                 case Right(Left(spExclusion: StatePensionExclusionFiltered)) => Some(spExclusion.finalRelevantStartYear
                   .getOrElse(throw new RuntimeException(s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion")))
                 case Right(Right(sp)) => Some(sp.finalRelevantStartYear)
+                case Left(_) => throw new RuntimeException("NIRecordController: an unexpected error has occurred")
               }
 
           finalRelevantStartYear
@@ -188,9 +189,11 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
   def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async {
     implicit request =>
       implicit val user: NispAuthedUser = request.nispAuthedUser
-      nationalInsuranceService.getSummary(user.nino) map { x => (x: @unchecked) match {
+      nationalInsuranceService.getSummary(user.nino) map { x => x match {
         case Right(Right(niRecord)) =>
           Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
+        case Right(Left(_)) =>
+          Redirect(routes.ExclusionController.showNI)
         case Left(_) =>
           Redirect(routes.ExclusionController.showNI)
       }

@@ -388,6 +388,61 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
 
+    "Redirect to exclusion for an unexpected error in successful response" in {
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
+      )
+
+      val result = niRecordController
+        .showFull(
+          fakeRequest.withSession(
+            SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+            SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+          )
+        )
+
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
+    }
+
+    "throw a runtime exception when receiving an unexpected error" in {
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -8,
+        0,
+        0,
+        Some(LocalDate.of(1975, 8, 1)),
+        false,
+        LocalDate.of(2016, 4, 5),
+        List(NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)),
+        false
+      )
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Left(UpstreamErrorResponse("failed", 500)))
+      )
+
+      val caught = intercept[RuntimeException] {
+        await(niRecordController
+          .showFull(
+            fakeRequest.withSession(
+              SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+              SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+            )
+          )
+        )
+      }
+
+      caught.getMessage shouldBe "NIRecordController: an unexpected error has occurred"
+    }
   }
 
   "GET /account/nirecord/gapsandhowtocheck" should {
@@ -502,6 +557,34 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       val result = niRecordController.showGapsAndHowToCheckThem(generateFakeRequest)
       contentAsString(result) should not include
         "Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010."
+    }
+
+    "redirect to exclusion page when there is an unexpected error" in {
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Left(UpstreamErrorResponse("test", 500)))
+      )
+
+      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+      when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+      when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+
+      val result = niRecordController.showGapsAndHowToCheckThem(generateFakeRequest)
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
+    }
+
+    "redirect to exclusion page when there is an unexpected error in successful response" in {
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
+      )
+
+      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+      when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+      when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+
+      val result = niRecordController.showGapsAndHowToCheckThem(generateFakeRequest)
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
   }
 
