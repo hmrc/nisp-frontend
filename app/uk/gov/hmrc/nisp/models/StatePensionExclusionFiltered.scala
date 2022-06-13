@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import uk.gov.hmrc.time.TaxYear
 
-trait StatePensionExclusionFilter {
+sealed trait StatePensionExclusionFilter {
   def exclusion: Exclusion
 }
 
