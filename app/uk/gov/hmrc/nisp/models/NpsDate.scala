@@ -16,39 +16,46 @@
 
 package uk.gov.hmrc.nisp.models
 
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import play.api.libs.json._
+import uk.gov.hmrc.nisp.models.NpsDate.{dateFormat, pattern}
 import uk.gov.hmrc.nisp.utils.Constants
 
 case class NpsDate(localDate: LocalDate) {
-  val toNpsString: String = NpsDate.dateFormat.print(localDate)
+  val toNpsString: String = NpsDate.dateFormat.writes(dateFormat(localDate)).toString
 
   val taxYear: Int = {
-    val year = localDate.year.get
-    if (localDate.isBefore(new LocalDate(year, Constants.taxYearsStartEndMonth, Constants.taxYearStartDay))) year - 1
+    val year = localDate.getYear
+    if (localDate.isBefore(LocalDate.of(year, Constants.taxYearsStartEndMonth, Constants.taxYearStartDay))) year - 1
     else year
   }
 }
 
 object NpsDate {
-  private val dateFormat   = DateTimeFormat.forPattern("dd/MM/yyyy")
+
+  private val pattern = "dd/MM/yyyy"
+  private def writes(pattern: String): Writes[LocalDate] = {
+    val datePattern = DateTimeFormatter.ofPattern(pattern)
+
+    Writes[LocalDate] { localDate => JsString(localDate.format(datePattern))}
+  }
+
+  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.localDateReads(pattern), writes(pattern))
   private val npsDateRegex = """^(\d\d)/(\d\d)/(\d\d\d\d)$""".r
 
   implicit val reads = new Reads[NpsDate] {
     override def reads(json: JsValue): JsResult[NpsDate] =
       json match {
-        case JsString(npsDateRegex(d, m, y)) => JsSuccess(NpsDate(new LocalDate(y.toInt, m.toInt, d.toInt)))
+        case JsString(npsDateRegex(d, m, y)) => JsSuccess(NpsDate(LocalDate.of(y.toInt, m.toInt, d.toInt)))
         case JsNull                          => JsError(JsonValidationError("Null date cannot convert to NpsDate"))
       }
   }
 
-  implicit val writes                                 = new Writes[NpsDate] {
-    override def writes(date: NpsDate): JsValue = JsString(date.toNpsString)
-  }
+  implicit val writes: Writes[NpsDate] = (date: NpsDate) => JsString(date.toNpsString)
   def taxYearEndDate(taxYear: Int): NpsDate           =
     NpsDate(taxYear + 1, Constants.taxYearsStartEndMonth, Constants.taxYearEndDay)
   def taxYearStartDate(taxYear: Int): NpsDate         =
     NpsDate(taxYear, Constants.taxYearsStartEndMonth, Constants.taxYearStartDay)
-  def apply(year: Int, month: Int, day: Int): NpsDate = NpsDate(new LocalDate(year, month, day))
+  def apply(year: Int, month: Int, day: Int): NpsDate = NpsDate(LocalDate.of(year, month, day))
 }
