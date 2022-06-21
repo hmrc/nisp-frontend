@@ -49,8 +49,6 @@ class TermsAndConditionsViewSpec extends HtmlSpec with Injecting {
 
     "assert correct heading level 2 on page" in {
       val title = source.getElementsByTag("h2").get(0).toString
-
-      println(s"\n\n\n\n\n\n\n\n\n\n TITLE TITLE $title TITLE TITLE \n\n\n\n\n\n\n\n")
       title should include(messages("nisp.tandcs.heading"))
     }
   }
