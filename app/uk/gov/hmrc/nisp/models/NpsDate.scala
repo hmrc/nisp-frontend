@@ -19,11 +19,10 @@ package uk.gov.hmrc.nisp.models
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import play.api.libs.json._
-import uk.gov.hmrc.nisp.models.NpsDate.{dateFormat, pattern}
 import uk.gov.hmrc.nisp.utils.Constants
 
 case class NpsDate(localDate: LocalDate) {
-  val toNpsString: String = NpsDate.dateFormat.writes(dateFormat(localDate)).toString
+  val toNpsString: String = NpsDate.dateFormat.format(localDate)
 
   val taxYear: Int = {
     val year = localDate.getYear
@@ -33,15 +32,8 @@ case class NpsDate(localDate: LocalDate) {
 }
 
 object NpsDate {
-
   private val pattern = "dd/MM/yyyy"
-  private def writes(pattern: String): Writes[LocalDate] = {
-    val datePattern = DateTimeFormatter.ofPattern(pattern)
-
-    Writes[LocalDate] { localDate => JsString(localDate.format(datePattern))}
-  }
-
-  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.localDateReads(pattern), writes(pattern))
+  private val dateFormat   = DateTimeFormatter.ofPattern(pattern)
   private val npsDateRegex = """^(\d\d)/(\d\d)/(\d\d\d\d)$""".r
 
   implicit val reads = new Reads[NpsDate] {
@@ -52,7 +44,9 @@ object NpsDate {
       }
   }
 
-  implicit val writes: Writes[NpsDate] = (date: NpsDate) => JsString(date.toNpsString)
+  implicit val writes                                 = new Writes[NpsDate] {
+    override def writes(date: NpsDate): JsValue = JsString(date.toNpsString)
+  }
   def taxYearEndDate(taxYear: Int): NpsDate           =
     NpsDate(taxYear + 1, Constants.taxYearsStartEndMonth, Constants.taxYearEndDay)
   def taxYearStartDate(taxYear: Int): NpsDate         =

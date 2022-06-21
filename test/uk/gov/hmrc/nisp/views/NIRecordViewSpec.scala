@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import play.api.Application
@@ -34,7 +33,7 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, Authenticated
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.{Exclusion, _}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
@@ -42,9 +41,9 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import java.time.LocalDate
-import java.util.UUID
 
+import java.time.{Instant, LocalDate}
+import java.util.UUID
 import scala.concurrent.Future
 
 class NIRecordViewSpec extends HtmlSpec with Injecting {
@@ -52,7 +51,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer                = FakeTemplateRenderer
 
-  val authDetails                                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
+  val authDetails                                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   implicit val user: NispAuthedUser                 = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
   implicit val abroadUser: NispAuthedUser           = NispAuthedUserFixture.user(TestAccountBuilder.abroadNino)
   implicit val fakeRequest: AuthenticatedRequest[_] = AuthenticatedRequest(FakeRequest(), user, authDetails)

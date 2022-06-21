@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.text.StringEscapeUtils
-import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
@@ -44,7 +43,7 @@ import uk.gov.hmrc.nisp.views.html.statepension_cope
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 import scala.concurrent.Future
 
 class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injecting {
@@ -55,7 +54,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
 
   implicit val user: NispAuthedUser =
     NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, None, false)
-  val authDetails                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
+  val authDetails                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 

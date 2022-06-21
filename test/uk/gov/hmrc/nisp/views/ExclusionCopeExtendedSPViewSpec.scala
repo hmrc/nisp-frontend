@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.DateTime
 import org.jsoup.nodes.Document
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
@@ -27,15 +26,15 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequ
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.views.html.excluded_cope_extended_sp
 
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.{Instant, LocalDate}
 
 class ExclusionCopeExtendedSPViewSpec extends HtmlSpec with Injecting {
 
   implicit val fakeRequest = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
-    AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
+    AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   )
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
