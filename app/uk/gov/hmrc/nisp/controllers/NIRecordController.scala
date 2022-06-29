@@ -181,7 +181,7 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
             Redirect(routes.ExclusionController.showNI)
 
           case Left(_) =>
-            Redirect(routes.ExclusionController.showNI)
+            throw new RuntimeException("NIRecordController: an unexpected error has occurred")
         }
       }
   }
