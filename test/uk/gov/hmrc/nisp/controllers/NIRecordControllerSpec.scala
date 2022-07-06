@@ -377,15 +377,18 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
-      val result = niRecordController
-        .showFull(
-          fakeRequest.withSession(
-            SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
-            SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+      val caught = intercept[RuntimeException] {
+        await(niRecordController
+          .showFull(
+            fakeRequest.withSession(
+              SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+              SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+            )
           )
         )
+      }
 
-      redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
+      caught.getMessage shouldBe "NIRecordController: an unexpected error has occurred"
     }
 
     "Redirect to exclusion for an unexpected error in successful response" in {
