@@ -58,36 +58,43 @@ class AuthActionImpl @Inject() (
           and Retrievals.allEnrolments
           and Retrievals.trustedHelper
       ) {
+
+        case _ ~ _ ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ _ ~ _ =>
+          upliftCredentialStrength
+
         case Some(nino)
           ~ confidenceLevel
           ~ credentialStrength
           ~ credentials
           ~ loginTimes
           ~ Enrolments(enrolments)
-          ~ optTrustedHelper =>
-          authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, optTrustedHelper)
+          ~ trustedHelper =>
+          authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, trustedHelper)
+
         case _ => throw new RuntimeException("Can't find credentials for user")
-      } recover {
-      case _: NoActiveSession             =>
-        Redirect(
-          applicationConfig.ggSignInUrl,
-          Map(
-            "continue"    -> Seq(applicationConfig.postSignInRedirectUrl),
-            "origin"      -> Seq("nisp-frontend"),
-            "accountType" -> Seq("individual")
+
+      }
+      .recover {
+        case _: NoActiveSession             =>
+          Redirect(
+            applicationConfig.ggSignInUrl,
+            Map(
+              "continue"    -> Seq(applicationConfig.postSignInRedirectUrl),
+              "origin"      -> Seq("nisp-frontend"),
+              "accountType" -> Seq("individual")
+            )
           )
-        )
-      case _: InsufficientConfidenceLevel =>
-        Redirect(
-          applicationConfig.ivUpliftUrl,
-          Map(
-            "origin"          -> Seq("NISP"),
-            "completionURL"   -> Seq(applicationConfig.postSignInRedirectUrl),
-            "failureURL"      -> Seq(applicationConfig.notAuthorisedRedirectUrl),
-            "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
+        case _: InsufficientConfidenceLevel =>
+          Redirect(
+            applicationConfig.ivUpliftUrl,
+            Map(
+              "origin"          -> Seq("NISP"),
+              "completionURL"   -> Seq(applicationConfig.postSignInRedirectUrl),
+              "failureURL"      -> Seq(applicationConfig.notAuthorisedRedirectUrl),
+              "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
+            )
           )
-        )
-    }
+      }
   }
 
   private def authenticate[A](
@@ -120,6 +127,22 @@ class AuthActionImpl @Inject() (
         }
     }
   }
+
+  private def upliftCredentialStrength: Future[Result] =
+    Future.successful(
+      Redirect(
+        // configDecorator.multiFactorAuthenticationUpliftUrl,
+        ???,
+        Map(
+          "origin"      -> Seq(
+            // configDecorator.origin
+          ),
+          "continueUrl" -> Seq(
+            // configDecorator.pertaxFrontendForAuthHost + configDecorator.personalAccount
+          )
+        )
+      )
+    )
 }
 
 trait AuthAction
