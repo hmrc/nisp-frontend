@@ -20,8 +20,9 @@ import com.google.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
-import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
+import uk.gov.hmrc.auth.core.retrieve.{Name, LoginTimes, ~}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -52,27 +53,7 @@ class AuthActionImpl @Inject() (
         nino and confidenceLevel and credentials and loginTimes and allEnrolments and trustedHelper
       ) {
         case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) ~ optTrustedHelper =>
-          val useNino = optTrustedHelper.fold(nino)(_.principalNino)
-          cds.retrievePerson(Nino(useNino)).flatMap {
-            case Right(cdr)                   =>
-              val hasSa: Boolean = optTrustedHelper.fold(enrolments.exists(_.key == "IR-SA"))(_ => false)
-              val name: UserName = UserName(Name(cdr.person.firstName, cdr.person.lastName))
-              block(
-                AuthenticatedRequest(
-                  request,
-                  NispAuthedUser(Nino(useNino), cdr.person.dateOfBirth, name, cdr.address, optTrustedHelper, hasSa),
-                  AuthDetails(confidenceLevel, loginTimes)
-                )
-              )
-            case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
-            case Left(NOT_FOUND)              => throw new InternalServerException("User not found")
-            case Left(MCI_EXCLUSION)          =>
-              if (request.path.contains("nirecord")) {
-                Future.successful(Redirect(routes.ExclusionController.showNI))
-              } else {
-                Future.successful(Redirect(routes.ExclusionController.showSP))
-              }
-          }
+          authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, optTrustedHelper)
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
       case _: NoActiveSession             =>
@@ -94,6 +75,37 @@ class AuthActionImpl @Inject() (
             "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
           )
         )
+    }
+  }
+
+  private def authenticate[A](
+    request: Request[A],
+    block: AuthenticatedRequest[A] => Future[Result],
+    nino: String,
+    confidenceLevel: ConfidenceLevel,
+    loginTimes: LoginTimes,
+    enrolments: Set[Enrolment],
+    trustedHelper: Option[TrustedHelper])(implicit hc: HeaderCarrier): Future[Result] = {
+    val useNino = trustedHelper.fold(nino)(_.principalNino)
+    cds.retrievePerson(Nino(useNino)).flatMap {
+      case Right(cdr)                   =>
+        val hasSa: Boolean = trustedHelper.fold(enrolments.exists(_.key == "IR-SA"))(_ => false)
+        val name: UserName = UserName(Name(cdr.person.firstName, cdr.person.lastName))
+        block(
+          AuthenticatedRequest(
+            request,
+            NispAuthedUser(Nino(useNino), cdr.person.dateOfBirth, name, cdr.address, trustedHelper, hasSa),
+            AuthDetails(confidenceLevel, loginTimes)
+          )
+        )
+      case Left(TECHNICAL_DIFFICULTIES) => throw new InternalServerException("Technical difficulties")
+      case Left(NOT_FOUND)              => throw new InternalServerException("User not found")
+      case Left(MCI_EXCLUSION)          =>
+        if (request.path.contains("nirecord")) {
+          Future.successful(Redirect(routes.ExclusionController.showNI))
+        } else {
+          Future.successful(Redirect(routes.ExclusionController.showSP))
+        }
     }
   }
 }
