@@ -21,7 +21,7 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Name, LoginTimes, ~}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
@@ -50,9 +50,21 @@ class AuthActionImpl @Inject() (
 
     authorised(ConfidenceLevel.L200)
       .retrieve(
-        nino and confidenceLevel and credentials and loginTimes and allEnrolments and trustedHelper
+        Retrievals.nino
+          and Retrievals.confidenceLevel
+          and Retrievals.credentialStrength
+          and Retrievals.credentials
+          and Retrievals.loginTimes
+          and Retrievals.allEnrolments
+          and Retrievals.trustedHelper
       ) {
-        case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes ~ Enrolments(enrolments) ~ optTrustedHelper =>
+        case Some(nino)
+          ~ confidenceLevel
+          ~ credentialStrength
+          ~ credentials
+          ~ loginTimes
+          ~ Enrolments(enrolments)
+          ~ optTrustedHelper =>
           authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, optTrustedHelper)
         case _ => throw new RuntimeException("Can't find credentials for user")
       } recover {
