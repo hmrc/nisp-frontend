@@ -60,7 +60,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
   }
 
   type AuthRetrievalType =
-    Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
+    Option[String] ~ ConfidenceLevel ~ Option[String] ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
 
   val mockAuthConnector         = mock[AuthConnector]
   val mockApplicationConfig     = mock[ApplicationConfig]
@@ -91,10 +91,11 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
   def makeRetrievalResults(
     ninoOption: Option[String] = Some(nino),
     enrolments: Enrolments = Enrolments(Set.empty),
+    credentialStrength: String = CredentialStrength.strong,
     trustedHelper: Option[TrustedHelper] = None
   ): Future[AuthRetrievalType] =
     Future.successful(
-      ninoOption ~ ConfidenceLevel.L200 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper
+      ninoOption ~ ConfidenceLevel.L200 ~ Some(credentialStrength) ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper
     )
 
   object Stubs {
