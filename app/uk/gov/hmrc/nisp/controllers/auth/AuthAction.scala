@@ -77,7 +77,6 @@ class AuthActionImpl @Inject() (
           authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, trustedHelper)
 
         case _ => throw new RuntimeException("Can't find credentials for user")
-
       }
       .recover {
         case _: NoActiveSession             =>
@@ -136,15 +135,11 @@ class AuthActionImpl @Inject() (
   private def upliftCredentialStrength: Future[Result] =
     Future.successful(
       Redirect(
-        // configDecorator.multiFactorAuthenticationUpliftUrl,
-        ???,
+        applicationConfig.mfaUpliftUrl,
         Map(
-          "origin"      -> Seq(
-            // configDecorator.origin
-          ),
-          "continueUrl" -> Seq(
-            // configDecorator.pertaxFrontendForAuthHost + configDecorator.personalAccount
-          )
+          "continue"    -> Seq(applicationConfig.postSignInRedirectUrl),
+          "origin"      -> Seq("nisp-frontend"),
+          "accountType" -> Seq("individual")
         )
       )
     )

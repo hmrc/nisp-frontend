@@ -49,6 +49,7 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val postSignInRedirectUrl         = configuration.getOptional[String]("login-callback.url").getOrElse("")
   val notAuthorisedRedirectUrl      = configuration.getOptional[String]("not-authorised-callback.url").getOrElse("")
   val ivUpliftUrl: String           = configuration.getOptional[String]("identity-verification-uplift.host").getOrElse("")
+  val mfaUpliftUrl: String          = configuration.getOptional[String]("mfa-uplift.host").getOrElse("")
   val ggSignInUrl: String           = configuration.getOptional[String]("government-gateway-sign-in.host").getOrElse("")
 
   val showUrBanner: Boolean              = configuration.getOptional[Boolean]("urBannerToggle").getOrElse(false)
