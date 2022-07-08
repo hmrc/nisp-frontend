@@ -58,11 +58,6 @@ class AuthActionImpl @Inject() (
           and Retrievals.allEnrolments
           and Retrievals.trustedHelper
       ) {
-        result =>
-          println(s"\n$result\n")
-          Future.successful(result)
-      }
-      .flatMap {
 
         case _ ~ _ ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ _ ~ _ =>
           upliftCredentialStrength
