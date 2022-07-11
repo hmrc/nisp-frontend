@@ -59,7 +59,7 @@ class AuthActionImpl @Inject() (
           and Retrievals.trustedHelper
       ) {
 
-        case _ ~ _ ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ _ ~ _ =>
+        case Some(nino) ~ _ ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ Enrolments(_) ~ _ =>
           upliftCredentialStrength
 
         case Some(nino)
