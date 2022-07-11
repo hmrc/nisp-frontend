@@ -132,9 +132,8 @@ class AuthActionImpl @Inject() (
       Redirect(
         applicationConfig.mfaUpliftUrl,
         Map(
-          "continue"    -> Seq(applicationConfig.postSignInRedirectUrl),
-          "origin"      -> Seq("nisp-frontend"),
-          "accountType" -> Seq("individual")
+          "continueUrl" -> Seq(applicationConfig.postSignInRedirectUrl),
+          "origin" -> Seq("nisp-frontend")
         )
       )
     )
