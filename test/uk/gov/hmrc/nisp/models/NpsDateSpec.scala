@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nisp.models
 
-import java.time.LocalDate
 import play.api.libs.json.{JsNull, JsString, Json}
-import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.nisp.utils.UnitSpec
+import uk.gov.hmrc.nisp.utils.{Constants, UnitSpec}
+
+import java.time.LocalDate
 
 class NpsDateSpec extends UnitSpec {
   "NpsDate" when {
