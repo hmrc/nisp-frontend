@@ -16,16 +16,23 @@
 
 package uk.gov.hmrc.nisp.models
 
-import play.api.libs.json.{JsNull, JsString, Json}
+import play.api.libs.json._
 import uk.gov.hmrc.nisp.utils.{Constants, UnitSpec}
 
 import java.time.LocalDate
 
 class NpsDateSpec extends UnitSpec {
+
+  val dateObject = Array(1, 1, 2015)
+
   "NpsDate" when {
     "JSON parsing" should {
       "return a JSError for null date" in {
         JsNull.validate[NpsDate].isError shouldBe true
+      }
+
+      "return a JsError for JsValue that isn't JsString" in {
+        Json.fromJson[NpsDate](JsBoolean(false)).isError shouldBe true
       }
     }
 
