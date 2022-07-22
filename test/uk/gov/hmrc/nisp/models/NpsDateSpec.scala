@@ -23,8 +23,6 @@ import java.time.LocalDate
 
 class NpsDateSpec extends UnitSpec {
 
-  val dateObject = Array(1, 1, 2015)
-
   "NpsDate" when {
     "JSON parsing" should {
       "return a JSError for null date" in {
