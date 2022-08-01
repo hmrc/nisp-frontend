@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.DateTime
 import org.scalatest._
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -29,11 +28,13 @@ import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.html.nirecordVoluntaryContributions
 
+import java.time.Instant
+
 class VoluntaryContributionsViewSpec extends HtmlSpec with BeforeAndAfter with Injecting {
 
   implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
-  val authDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
+  val authDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
