@@ -36,9 +36,9 @@ class StatePensionConnector @Inject()(val http: HttpClient,
 
   val serviceUrl: String = appConfig.statePensionServiceUrl
 
-  def getStatePension(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, StatePension]]] = {
+  def getStatePension(nino: Nino, delegationState: Boolean)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, StatePension]]] = {
     val urlToRead = s"$serviceUrl/ni/$nino"
     val header = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
-    retrieveFromCache[StatePension](APIType.StatePension, urlToRead, header)
+    retrieveFromCache[StatePension](APIType.StatePension, urlToRead, header, delegationState)
   }
 }
