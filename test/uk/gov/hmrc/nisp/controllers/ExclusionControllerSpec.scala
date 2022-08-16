@@ -158,7 +158,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
-      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedStatePensionResponse)))
       )
 
@@ -197,7 +197,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
           )
 
@@ -232,7 +232,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator))))
           )
 
@@ -267,7 +267,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.PostStatePensionAge, Some(65),
               Some(LocalDate.of(2017, 7, 18)), Some(false))))
           ))
@@ -308,7 +308,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.AmountDissonance, Some(65),
               Some(LocalDate.of(2017, 7, 18)), Some(true))))
           ))
@@ -344,7 +344,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan))))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.IsleOfMan, Some(65), Some(LocalDate.of(2017, 7, 18))
               , Some(true))))
           ))
@@ -399,7 +399,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Right(expectedStatePension)))
           )
 
@@ -454,7 +454,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             false
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Right(expectedStatePension)))
           )
 
@@ -515,7 +515,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             false
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(expectedStatePensionResponse)))
           )
 
@@ -547,7 +547,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             false
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(statePensionResponse)))
           )
 
@@ -583,7 +583,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             false
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(statePensionResponse)))
           )
 
@@ -619,7 +619,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             false
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(statePensionResponse)))
           )
 
@@ -654,7 +654,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             false
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(statePensionResponse)))
           )
 
@@ -685,7 +685,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             false
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(statePensionResponse)))
           )
 
@@ -720,7 +720,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             false
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Left(statePensionCopeProcessingResponse)))
           )
 
@@ -753,7 +753,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           false
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Left(statePensionCopeProcessingExtendedResponse)))
         )
 
@@ -786,7 +786,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           false
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Left(statePensionCopeFailedResponse)))
         )
 

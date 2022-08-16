@@ -27,12 +27,13 @@ import uk.gov.hmrc.nisp.services.MetricsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionConnector @Inject()(val http: HttpClient,
-                                      val sessionCache: SessionCache,
-                                      val metricsService: MetricsService,
-                                      val executionContext: ExecutionContext,
-                                      appConfig: ApplicationConfig
-                                     ) extends BackendConnector {
+class StatePensionConnector @Inject()(
+  val http: HttpClient,
+  val sessionCache: SessionCache,
+  val appConfig: ApplicationConfig,
+  val metricsService: MetricsService,
+  val executionContext: ExecutionContext
+) extends BackendConnector {
 
   val serviceUrl: String = appConfig.statePensionServiceUrl
 

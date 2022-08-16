@@ -82,7 +82,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(ok(Json.toJson(expectedStatePension).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino)) { statePension =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = false)) { statePension =>
         statePension shouldBe Right(Right(StatePension(
           LocalDate.of(2015, 4, 5),
           StatePensionAmounts(
@@ -117,7 +117,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           )
       )
 
-      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAll))
+      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAll, delegationState = false))
 
       result.map {
         spExclusion =>
@@ -135,7 +135,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(forbidden().withBody(json.toString()))
       )
 
-      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead))
+      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead, delegationState = false))
 
       result.map {
         spExclusion =>
@@ -154,7 +154,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDeadMCI)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDeadMCI, delegationState = false)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge,
@@ -179,7 +179,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino, delegationState = false)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.AmountDissonance
@@ -201,7 +201,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino, delegationState = false)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.IsleOfMan
@@ -222,7 +222,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino, delegationState = false)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.MarriedWomenReducedRateElection
@@ -243,7 +243,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino, delegationState = false)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge
@@ -264,7 +264,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino, delegationState = false)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge,
@@ -288,7 +288,7 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino, delegationState = false)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.IsleOfMan

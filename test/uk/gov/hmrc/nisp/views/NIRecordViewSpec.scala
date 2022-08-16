@@ -114,7 +114,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
     when(mockStatePensionService.yearsToContributeUntilPensionAge(mockEQ(LocalDate.of(2014, 4, 5)), mockEQ(2017)))
       .thenReturn(4)
 
-    when(mockStatePensionService.getSummary(mockAny())(mockAny()))
+    when(mockStatePensionService.getSummary(mockAny(), mockAny())(mockAny()))
       .thenReturn(Future.successful(Right(Right(StatePension(
         LocalDate.of(2015, 4, 5),
         amounts = StatePensionAmounts(
@@ -1089,7 +1089,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
         )
         ))))
 
-      when(mockStatePensionService.getSummary(mockAny())(mockAny()))
+      when(mockStatePensionService.getSummary(mockAny(), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
@@ -1214,7 +1214,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
         )
         ))))
 
-      when(mockStatePensionService.getSummary(mockAny())(mockAny()))
+      when(mockStatePensionService.getSummary(mockAny(), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
@@ -1360,7 +1360,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       when(mockStatePensionService.yearsToContributeUntilPensionAge(mockAny(), mockAny()))
         .thenReturn(1)
 
-      when(mockStatePensionService.getSummary(mockAny())(mockAny()))
+      when(mockStatePensionService.getSummary(mockAny(), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),
@@ -1571,7 +1571,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       when(mockStatePensionService.yearsToContributeUntilPensionAge(mockAny(), mockAny()))
         .thenReturn(1)
 
-      when(mockStatePensionService.getSummary(mockAny())(mockAny()))
+      when(mockStatePensionService.getSummary(mockAny(), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
           Exclusion.AmountDissonance,
           Some(66),

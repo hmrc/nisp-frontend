@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.text.StringEscapeUtils
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import play.api.i18n.Messages
 import play.api.inject.bind
@@ -83,7 +83,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
-    when(mockPertaxHelper.isFromPertax(ArgumentMatchers.any())).thenReturn(Future.successful(false))
+    when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
@@ -107,7 +107,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP :  Personal Max" should {
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -128,7 +128,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -512,7 +512,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : Personal Max: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -533,7 +533,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -640,7 +640,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : Full Rate current more than 155.65" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -661,7 +661,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1013,7 +1013,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : Full Rate current more than 155.65: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1034,7 +1034,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1143,7 +1143,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1164,7 +1164,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1482,7 +1482,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1503,7 +1503,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1615,7 +1615,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : No Gaps || Full Rate & Personal Max" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1636,7 +1636,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1919,7 +1919,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : No Gaps || Full Rate & Personal Max: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1940,7 +1940,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2049,7 +2049,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -2070,7 +2070,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2348,7 +2348,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -2369,7 +2369,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2480,7 +2480,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
       "State Pension view with NON-MQP : Reached || No Gaps || Full Rate and Personal Max" should {
 
         def mockSetup = {
-          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(any(), any())(any()))
             .thenReturn(Future.successful(Right(Right(StatePension(
               LocalDate.of(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -2501,7 +2501,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
             )
             ))))
 
-          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(any())(any()))
             .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -2739,7 +2739,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
       "State Pension view with NON-MQP : Reached || No Gaps || Full Rate and Personal Max: With State Pension age under consideration message" should {
 
         def mockSetup = {
-          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(any(), any())(any()))
             .thenReturn(Future.successful(Right(Right(StatePension(
               LocalDate.of(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -2760,7 +2760,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
             )
             ))))
 
-          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(any())(any()))
             .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
