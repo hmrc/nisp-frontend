@@ -91,8 +91,8 @@ class StatePensionConnectorSpec
 
       whenReady(
         statePensionConnector.getStatePension(nino, delegationState = false)
-      ) { statePension =>
-        statePension shouldBe statePension
+      ) { response =>
+        response shouldBe Right(Right(statePension))
       }
 
       server.verify(1, apiRequest)
@@ -103,8 +103,8 @@ class StatePensionConnectorSpec
 
       whenReady(
         statePensionConnector.getStatePension(nino, delegationState = false)
-      ) { statePension =>
-        statePension shouldBe statePension
+      ) { response =>
+        response shouldBe Right(Right(statePension))
       }
 
       server.verify(0, apiRequest)
@@ -113,10 +113,15 @@ class StatePensionConnectorSpec
     "return the correct response from api when user is delegated, and not use cache" in {
       sessionCache.cache(APIType.StatePension.toString, statePension).futureValue
 
+      server.stubFor(
+        get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(statePension).toString()))
+      )
+
       whenReady(
         statePensionConnector.getStatePension(nino, delegationState = true)
-      ) { statePension =>
-        statePension shouldBe statePension
+      ) { response =>
+        response shouldBe Right(Right(statePension))
       }
 
       server.verify(1, apiRequest)

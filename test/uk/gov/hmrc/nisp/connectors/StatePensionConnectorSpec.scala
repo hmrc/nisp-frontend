@@ -111,8 +111,10 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedStatePension).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = false)) { statePension =>
-        statePension shouldBe Right(Right(statePension))
+      whenReady(
+        statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = false)
+      ) { response =>
+        response shouldBe Right(Right(statePension))
       }
 
       server.verify(
@@ -128,8 +130,10 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedStatePension).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = true)) { statePension =>
-        statePension shouldBe Right(Right(statePension))
+      whenReady(
+        statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = true)
+      ) { response =>
+        response shouldBe Right(Right(statePension))
       }
 
       server.verify(
