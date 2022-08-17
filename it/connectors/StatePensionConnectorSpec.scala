@@ -20,6 +20,7 @@ import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.enums.APIType
 
 import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class StatePensionConnectorSpec
@@ -36,7 +37,7 @@ class StatePensionConnectorSpec
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   implicit val headerCarrier: HeaderCarrier =
-    HeaderCarrier(sessionId = Some(SessionId("session-sessionId")))
+    HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID()}")))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
