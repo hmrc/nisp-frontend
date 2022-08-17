@@ -26,30 +26,38 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.Injecting
-import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeSessionCache, TestAccountBuilder}
-import uk.gov.hmrc.nisp.models.{Exclusion, _}
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{ForbiddenStatePensionExclusion, OkStatePensionExclusion}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
 import java.time.LocalDate
 
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{ForbiddenStatePensionExclusion, OkStatePensionExclusion}
+class StatePensionConnectorSpec
+  extends UnitSpec
+    with ScalaFutures
+    with GuiceOneAppPerSuite
+    with Injecting
+    with BeforeAndAfterEach
+    with WireMockHelper {
 
-class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
-  Injecting with BeforeAndAfterEach with WireMockHelper {
+  implicit val headerCarrier: HeaderCarrier =
+    HeaderCarrier()
 
-  implicit val headerCarrier = HeaderCarrier()
-
-  implicit val defaultPatience =
+  implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
-  val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
-  val uuidRegex         = """[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"""
+  val mockMetricService: MetricsService =
+    mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
+  val uuidRegex =
+    """[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"""
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -68,34 +76,43 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
     reset(mockMetricService)
   }
 
-  val nino = TestAccountBuilder.regularNino
+  val nino: Nino =
+    TestAccountBuilder.regularNino
 
-  lazy val statePensionConnector = inject[StatePensionConnector]
+  lazy val statePensionConnector: StatePensionConnector =
+    inject[StatePensionConnector]
 
+  val expectedStatePension: JsValue =
+    TestAccountBuilder.getRawJson(nino, "state-pension")
+
+  val statePension: StatePension =
+    StatePension(
+      earningsIncludedUpTo = LocalDate.of(2015, 4, 5),
+      amounts = StatePensionAmounts(
+        protectedPayment = false,
+        current = StatePensionAmountRegular(133.41, 580.1, 6961.14),
+        forecast = StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+        maximum = StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+        cope = StatePensionAmountRegular(0, 0, 0)
+      ),
+      pensionAge = 64,
+      pensionDate = LocalDate.of(2018, 7, 6),
+      finalRelevantYear = "2017-18",
+      numberOfQualifyingYears = 30,
+      pensionSharingOrder = false,
+      currentFullWeeklyPensionAmount = 155.65,
+      reducedRateElection = false,
+      statePensionAgeUnderConsideration = false
+    )
   "getStatePension" should {
     "return the correct response for the regular test user" in {
-
-      val expectedStatePension = TestAccountBuilder.getRawJson(nino, "state-pension")
-
       server.stubFor(
         get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(expectedStatePension).toString()))
       )
 
       whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = false)) { statePension =>
-        statePension shouldBe Right(Right(StatePension(
-          LocalDate.of(2015, 4, 5),
-          StatePensionAmounts(
-            false,
-            StatePensionAmountRegular(133.41, 580.1, 6961.14),
-            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
-            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-            StatePensionAmountRegular(0, 0, 0)
-          ),
-          64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65,
-          false,
-          false
-        )))
+        statePension shouldBe Right(Right(statePension))
       }
 
       server.verify(
@@ -103,6 +120,22 @@ class StatePensionConnectorSpec extends UnitSpec with ScalaFutures with GuiceOne
           .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
       )
 
+    }
+
+    "return the correct response for the regular test user when delegationState is true" in {
+      server.stubFor(
+        get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(expectedStatePension).toString()))
+      )
+
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = true)) { statePension =>
+        statePension shouldBe Right(Right(statePension))
+      }
+
+      server.verify(
+        getRequestedFor(urlEqualTo(s"/ni/$nino"))
+          .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
+      )
     }
 
     "return a failed Future 403 with a Dead message for all exclusion" in {
