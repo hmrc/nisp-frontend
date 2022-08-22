@@ -92,21 +92,22 @@ trait BackendConnector {
       metricsService.keystoreMissCounter.inc()
       connectToMicroservice(url, api, headers)
     } else {
-      sessionCache.fetchAndGetEntry[A](api.toString).flatMap { keystoreResult =>
-        keystoreTimerContext.stop()
-        keystoreResult match {
-          case Some(data) =>
-            metricsService.keystoreHitCounter.inc()
-            Future.successful(Right(Right(data)))
-          case None =>
-            metricsService.keystoreMissCounter.inc()
-            connectToMicroservice(url, api, headers) map {
-              case Right(Right(right)) =>
-                Right(Right(cacheResult(right, api.toString)))
-              case errorResponse =>
-                errorResponse
-            }
-        }
+      sessionCache.fetchAndGetEntry[A](api.toString).flatMap {
+        keystoreResult =>
+          keystoreTimerContext.stop()
+          keystoreResult match {
+            case Some(data) =>
+              metricsService.keystoreHitCounter.inc()
+              Future.successful(Right(Right(data)))
+            case None =>
+              metricsService.keystoreMissCounter.inc()
+              connectToMicroservice(url, api, headers) map {
+                case Right(Right(right)) =>
+                  Right(Right(cacheResult(right, api.toString)))
+                case errorResponse =>
+                  errorResponse
+              }
+          }
       } recover {
         case e =>
           metricsService.keystoreReadFailed.inc()

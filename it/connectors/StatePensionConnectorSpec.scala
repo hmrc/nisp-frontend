@@ -13,15 +13,12 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.APIType
 
 import java.time.LocalDate
 import java.util.UUID
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class StatePensionConnectorSpec
   extends AnyWordSpec
@@ -36,27 +33,45 @@ class StatePensionConnectorSpec
   implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
+  private val uuid: UUID =
+    UUID.randomUUID()
+
   implicit val headerCarrier: HeaderCarrier =
-    HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID()}")))
+    HeaderCarrier(sessionId = Some(SessionId(s"session-$uuid")))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.state-pension.port" -> server.port()
+      "microservice.services.state-pension.port" -> server.port(),
+      "microservice.services.cachable.session-cache.port" -> server.port()
     )
     .build()
 
   private val nino: Nino =
     Nino("AB123456A")
 
+  private val apiUrl: String =
+    s"/ni/$nino"
+
+  private val cacheUrl: String =
+    s"/keystore/nisp-frontend/session-$uuid"
+
+  private val cachePutUrl: String =
+    s"$cacheUrl/data/StatePension"
+
+
+
   private val statePensionConnector: StatePensionConnector =
     inject[StatePensionConnector]
 
-  private val sessionCache: SessionCache =
-    inject[SessionCache]
-
-  private val apiRequest: RequestPatternBuilder =
-    getRequestedFor(urlEqualTo(s"/ni/$nino"))
+  private val apiGetRequest: RequestPatternBuilder =
+    getRequestedFor(urlEqualTo(apiUrl))
       .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
+
+  private val cacheGetRequest: RequestPatternBuilder =
+    getRequestedFor(urlEqualTo(cacheUrl))
+
+  private val cachePutRequest: RequestPatternBuilder =
+    putRequestedFor(urlEqualTo(cachePutUrl))
 
   private val statePension: StatePension =
     StatePension(
@@ -78,54 +93,85 @@ class StatePensionConnectorSpec
       statePensionAgeUnderConsideration = false
     )
 
-  override def beforeAll(): Unit = {
-    sessionCache.remove().futureValue
-    super.beforeEach()
-  }
-
   "getStatePension" should {
     "return the correct response from api" in {
       server.stubFor(
-        get(urlEqualTo(s"/ni/$nino"))
+        get(urlEqualTo(cacheUrl))
+          .willReturn(notFound())
+      )
+
+      server.stubFor(
+        get(urlEqualTo(apiUrl))
+          .willReturn(ok(Json.toJson(statePension).toString()))
+      )
+
+      server.stubFor(
+        put(urlEqualTo(cachePutUrl))
+          .withRequestBody(
+            equalToJson(
+              Json.toJson(Json.obj(
+                "name" -> "StatePension",
+                "result" -> Json.toJson(statePension)
+              )).toString() )
+          )
           .willReturn(ok(Json.toJson(statePension).toString()))
       )
 
       whenReady(
-        statePensionConnector.getStatePension(nino, delegationState = false)
+        statePensionConnector.getStatePension(
+          nino = nino,
+          delegationState = false
+        )
       ) { response =>
         response shouldBe Right(Right(statePension))
       }
 
-      server.verify(1, apiRequest)
+      server.verify(1, apiGetRequest)
+      server.verify(1, cacheGetRequest)
+      server.verify(1, cachePutRequest)
     }
 
     "return the correct response from cache, and not call api" in {
-      sessionCache.cache(APIType.StatePension.toString, statePension).futureValue
+      server.stubFor(
+        get(urlEqualTo(cacheUrl))
+          .willReturn(ok(Json.obj(
+            "id" -> uuid,
+            "data" -> Json.toJson(statePension)
+          ).toString()))
+      )
 
       whenReady(
-        statePensionConnector.getStatePension(nino, delegationState = false)
+        statePensionConnector.getStatePension(
+          nino = nino,
+          delegationState = false
+        )
       ) { response =>
         response shouldBe Right(Right(statePension))
       }
 
-      server.verify(0, apiRequest)
+      server.verify(0, apiGetRequest)
+      server.verify(1, cacheGetRequest)
+      server.verify(0, cachePutRequest)
     }
 
     "return the correct response from api when user is delegated, and not use cache" in {
-      sessionCache.cache(APIType.StatePension.toString, statePension).futureValue
-
       server.stubFor(
-        get(urlEqualTo(s"/ni/$nino"))
+        get(urlEqualTo(apiUrl))
           .willReturn(ok(Json.toJson(statePension).toString()))
       )
 
       whenReady(
-        statePensionConnector.getStatePension(nino, delegationState = true)
+        statePensionConnector.getStatePension(
+          nino = nino,
+          delegationState = true
+        )
       ) { response =>
         response shouldBe Right(Right(statePension))
       }
 
-      server.verify(1, apiRequest)
+      server.verify(1, apiGetRequest)
+      server.verify(0, cacheGetRequest)
+      server.verify(0, cachePutRequest)
     }
   }
 }
