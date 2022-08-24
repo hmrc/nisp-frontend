@@ -11,7 +11,7 @@ object AppDependencies {
 
   val compile = Seq(
     "uk.gov.hmrc"       %% "play-partials"                 % s"8.3.0-$playVersion",
-    "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % "5.24.0",
+    "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % "7.0.0",
     "uk.gov.hmrc"       %% "govuk-template"                % s"5.77.0-$playVersion",
     "uk.gov.hmrc"       %% "play-ui"                       % s"9.10.0-$playVersion",
     "uk.gov.hmrc"       %% "domain"                        % s"8.1.0-$playVersion",
@@ -23,7 +23,7 @@ object AppDependencies {
     "com.jsuereth"      %% "scala-arm"                     % "2.0",
     "uk.gov.hmrc"       %% "play-frontend-hmrc"            % s"1.27.0-$playVersion",
     "uk.gov.hmrc"       %% "govuk-template"                % s"5.77.0-$playVersion",
-    "uk.gov.hmrc"       %% "play-frontend-pta"             % "0.2.0"
+    "uk.gov.hmrc"       %% "play-frontend-pta"             % "0.3.0"
   )
 
   val test               = Seq(
