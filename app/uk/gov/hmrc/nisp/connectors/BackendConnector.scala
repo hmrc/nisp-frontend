@@ -127,8 +127,9 @@ trait BackendConnector {
     val timerContext = metricsService.startTimer(apiType)
 
     http.GET[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]](
-      urlToRead,
-      Seq(), headers
+      url = urlToRead,
+      queryParams = Seq(),
+      headers = headers
     ) map {
       response =>
         timerContext.stop()
@@ -148,9 +149,12 @@ trait BackendConnector {
     formats: Format[A]
   ): A = {
     val timerContext = metricsService.keystoreWriteTimer.time()
+
     sessionCache.cache[A](name, result).onComplete {
-      case Success(_) => timerContext.stop()
-      case Failure(_) => metricsService.keystoreWriteFailed.inc()
+      case Success(_) =>
+        timerContext.stop()
+      case Failure(_) =>
+        metricsService.keystoreWriteFailed.inc()
     }
     result
   }

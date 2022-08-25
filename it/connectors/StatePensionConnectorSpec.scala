@@ -58,7 +58,7 @@ class StatePensionConnectorSpec
 
   private val apiUrl: String =
     s"/ni/$nino"
-  
+
   private val apiGetRequest: RequestPatternBuilder =
     getRequestedFor(urlEqualTo(apiUrl))
       .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
