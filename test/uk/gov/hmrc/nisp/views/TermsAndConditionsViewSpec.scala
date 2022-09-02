@@ -16,29 +16,30 @@
 
 package uk.gov.hmrc.nisp.views
 
-import play.api.test.{FakeRequest, Injecting}
+import org.jsoup.nodes.Document
+import play.api.test.Injecting
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.views.html.termsAndConditions
 
 class TermsAndConditionsViewSpec extends HtmlSpec with Injecting {
-
-  val fakeRequest = FakeRequest("GET", "/")
 
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"
-  lazy val html                   = inject[uk.gov.hmrc.nisp.views.html.termsAndConditions]
-  lazy val source                 = asDocument(html(true).toString)
+  val html: termsAndConditions    = inject[uk.gov.hmrc.nisp.views.html.termsAndConditions]
+  val source: Document            = asDocument(html(showBackLink = true).toString)
 
   "TermsAndConditions" should {
 
     "assert correct page title" in {
       val title    = source.title()
-      val expected = messages("nisp.tandcs.title") + Constants.titleSplitter + messages(
-        "nisp.title.extension"
-      ) + Constants.titleSplitter + messages("nisp.gov-uk")
+      val expected =
+        messages("nisp.tandcs.title") + Constants.titleSplitter +
+        messages("nisp.title.extension") + Constants.titleSplitter +
+        messages("nisp.gov-uk")
       title should include(expected)
     }
 
@@ -48,7 +49,7 @@ class TermsAndConditionsViewSpec extends HtmlSpec with Injecting {
     }
 
     "assert correct heading level 2 on page" in {
-      val title = source.getElementsByTag("h2").get(0).toString
+      val title = source.getElementsByTag("h2").get(1).toString
       title should include(messages("nisp.tandcs.heading"))
     }
   }

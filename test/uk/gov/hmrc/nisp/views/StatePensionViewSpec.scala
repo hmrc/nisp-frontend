@@ -186,7 +186,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
             val urDismissedText = source.getElementsByClass("hmrc-user-research-banner__close")
             assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
             assert(urBannerHref.attr("href") == urResearchURL)
-            assert(urDismissedText.first.text() == Messages("nisp.home.banner.recruitment.reject"))
+            assert(urDismissedText.select("span").first.text() == messages("nisp.home.banner.recruitment.reject"))
             assert(source.getElementsByClass("hmrc-user-research-banner") != null)
           }
 
@@ -203,11 +203,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £148.71 a week, £590.10 a month, £7,081.15 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £148.71 " +
-                Messages("nisp.main.week") + ", £590.10 " +
-                Messages("nisp.main.month") + ", £7,081.15 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £148.71 " +
+                messages("nisp.main.week") + ", £590.10 " +
+                messages("nisp.main.month") + ", £7,081.15 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -263,7 +263,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£149.71 a week '" in {
             mockSetup
-            val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
@@ -283,7 +283,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£148.71 a week '" in {
             mockSetup
-            val sMessage = "£148.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£148.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart3'] [data-component='nisp_chart__inner_text']",
@@ -340,7 +340,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£149.71 a week'" in {
             mockSetup
-            val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
@@ -722,11 +722,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £168.08 a week, £590.10 a month, £7,081.15 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £168.08 " +
-                Messages("nisp.main.week") + ", £590.10 " +
-                Messages("nisp.main.month") + ", £7,081.15 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £168.08 " +
+                messages("nisp.main.week") + ", £590.10 " +
+                messages("nisp.main.month") + ", £7,081.15 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -782,7 +782,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£162.34 a week '" in {
             mockSetup
-            val sMessage = "£162.34 " + Messages("nisp.main.chart.week")
+            val sMessage = "£162.34 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
@@ -801,7 +801,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£168.08 a week '" in {
             mockSetup
-            val sMessage = "£168.08 " + Messages("nisp.main.chart.week")
+            val sMessage = "£168.08 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart2'] [data-component='nisp_chart__inner_text']",
@@ -858,7 +858,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£172.71 a week'" in {
             mockSetup
-            val sMessage = "£172.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£172.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
@@ -1224,11 +1224,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £148.71 a week, £590.10 a month, £7,081.15 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £148.71 " +
-                Messages("nisp.main.week") + ", £590.10 " +
-                Messages("nisp.main.month") + ", £7,081.15 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £148.71 " +
+                messages("nisp.main.week") + ", £590.10 " +
+                messages("nisp.main.month") + ", £7,081.15 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -1284,7 +1284,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£133.71 a week '" in {
             mockSetup
-            val sMessage = "£133.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£133.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
@@ -1304,7 +1304,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£148.71 a week '" in {
             mockSetup
-            val sMessage = "£148.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£148.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart3'] [data-component='nisp_chart__inner_text']",
@@ -1361,7 +1361,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£149.71 a week'" in {
             mockSetup
-            val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
@@ -1698,11 +1698,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £150.65  a week, £676.80 a month, £8,121.59 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £150.65 " +
-                Messages("nisp.main.week") + ", £676.80 " +
-                Messages("nisp.main.month") + ", £8,121.59 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £150.65 " +
+                messages("nisp.main.week") + ", £676.80 " +
+                messages("nisp.main.month") + ", £8,121.59 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -1758,7 +1758,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£118.65 a week '" in {
             mockSetup
-            val sMessage = "£118.65 " + Messages("nisp.main.chart.week")
+            val sMessage = "£118.65 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__chart1'] [data-component='nisp_chart__inner_text']",
@@ -1778,7 +1778,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£150.65 a week '" in {
             mockSetup
-            val sMessage = "£150.65 " + Messages("nisp.main.chart.week")
+            val sMessage = "£150.65 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__chart5'] [data-component='nisp_chart__inner_text']",
@@ -1788,7 +1788,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£150.65 is the most you can get'" in {
             mockSetup
-            val sMessage = "£150.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
+            val sMessage = "£150.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__h2_2']",
@@ -2130,11 +2130,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £155.65 a week, £676.80 a month, £8,121.59 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £155.65 " +
-                Messages("nisp.main.week") + ", £676.80 " +
-                Messages("nisp.main.month") + ", £8,121.59 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £155.65 " +
+                messages("nisp.main.week") + ", £676.80 " +
+                messages("nisp.main.month") + ", £8,121.59 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -2190,7 +2190,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£149.65 a week '" in {
             mockSetup
-            val sMessage = "£149.65 " + Messages("nisp.main.chart.week")
+            val sMessage = "£149.65 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__chart1'] [data-component='nisp_chart__inner_text']",
@@ -2211,7 +2211,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£155.65 a week '" in {
             mockSetup
-            val sMessage = "£155.65 " + Messages("nisp.main.chart.week")
+            val sMessage = "£155.65 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__chart4'] [data-component='nisp_chart__inner_text']",
@@ -2221,7 +2221,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£155.65 is the most you can get'" in {
             mockSetup
-            val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
+            val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__h2_2']",
@@ -2561,11 +2561,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "render page with text 'Your forecast is £155.65 a week, £676.80 a month, £8,121.59 a year ' " in {
           mockSetup
           val sMessage =
-            Messages("nisp.main.caveats") + " " +
-              Messages("nisp.is") + " £155.65 " +
-              Messages("nisp.main.week") + ", £676.80 " +
-              Messages("nisp.main.month") + ", £8,121.59 " +
-              Messages("nisp.main.year")
+            messages("nisp.main.caveats") + " " +
+              messages("nisp.is") + " £155.65 " +
+              messages("nisp.main.week") + ", £676.80 " +
+              messages("nisp.main.month") + ", £8,121.59 " +
+              messages("nisp.main.year")
           assertEqualsValue(
             doc,
             "[data-spec='state_pension__panel1__caveats']",
@@ -2612,7 +2612,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "render page with text '£155.65 is the most you can get'" in {
           mockSetup
-          val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
+          val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
           assertEqualsValue(
             doc,
             "[data-spec='reached_h2_1']",
