@@ -11,9 +11,9 @@ object AppDependencies {
 
   val compile = Seq(
     "uk.gov.hmrc"       %% "play-partials"                 % s"8.3.0-$playVersion",
-    "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % "7.0.0",
-    "uk.gov.hmrc"       %% "govuk-template"                % s"5.77.0-$playVersion",
-    "uk.gov.hmrc"       %% "play-ui"                       % s"9.10.0-$playVersion",
+    "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % "7.1.0",
+    "uk.gov.hmrc"       %% "govuk-template"                % s"5.78.0-$playVersion",
+    "uk.gov.hmrc"       %% "play-ui"                       % s"9.11.0-$playVersion",
     "uk.gov.hmrc"       %% "domain"                        % s"8.1.0-$playVersion",
     "uk.gov.hmrc"       %% "http-caching-client"           % s"9.6.0-$playVersion",
     "uk.gov.hmrc"       %% "play-language"                 % s"5.3.0-$playVersion",
@@ -21,7 +21,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-conditional-form-mapping" % s"1.11.0-$playVersion",
     "uk.gov.hmrc"       %% "local-template-renderer"       % s"2.17.0-$playVersion",
     "com.jsuereth"      %% "scala-arm"                     % "2.0",
-    "uk.gov.hmrc"       %% "play-frontend-hmrc"            % s"1.27.0-$playVersion",
+    "uk.gov.hmrc"       %% "play-frontend-hmrc"            % s"3.24.0-$playVersion",
     "uk.gov.hmrc"       %% "govuk-template"                % s"5.77.0-$playVersion",
     "uk.gov.hmrc"       %% "play-frontend-pta"             % "0.3.0"
   )
