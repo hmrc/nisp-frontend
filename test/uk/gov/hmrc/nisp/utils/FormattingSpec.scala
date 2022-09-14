@@ -19,24 +19,24 @@ package uk.gov.hmrc.nisp.utils
 class FormattingSpec extends UnitSpec {
   "startYearToTaxYear" when {
     "input is 1999" should {
-      "return 1999-00" in {
-        Formatting.startYearToTaxYear(1999) shouldBe "1999-00"
+      "return 1999 to 2000" in {
+        Formatting.startYearToTaxYear(1999) shouldBe "1999 to 2000"
       }
     }
     "input is 2015" should {
-      "return 2015-16" in {
-        Formatting.startYearToTaxYear(2015) shouldBe "2015-16"
+      "return 2015 to 2016" in {
+        Formatting.startYearToTaxYear(2015) shouldBe "2015 to 2016"
       }
     }
     "input is 2009" should {
-      "return 2009-10" in {
-        Formatting.startYearToTaxYear(2009) shouldBe "2009-10"
+      "return 2009 to 2010" in {
+        Formatting.startYearToTaxYear(2009) shouldBe "2009 to 2010"
 
       }
     }
     "input is 1985" should {
-      "return 1985-86" in {
-        Formatting.startYearToTaxYear(1985) shouldBe "1985-86"
+      "return 1985 to 1986" in {
+        Formatting.startYearToTaxYear(1985) shouldBe "1985 to 1986"
       }
     }
   }

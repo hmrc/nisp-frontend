@@ -22,7 +22,7 @@ object Formatting {
 
   def startYearToTaxYear(startYear: Int): String = {
     val endYear = TaxYear(startYear).finishYear
-    s"$startYear-${endYear.toString.substring(Constants.shortYearStartCharacter, Constants.shortYearEndCharacter)}"
+    s"$startYear to ${endYear.toString}"
   }
 
 }

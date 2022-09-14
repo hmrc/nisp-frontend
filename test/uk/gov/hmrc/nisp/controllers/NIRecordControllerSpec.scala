@@ -615,7 +615,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         false,
         LocalDate.of(2016, 4, 5),
         List(
-          NationalInsuranceTaxYear("2015-16", false, 2430.24, 0, 0, 52, 0, None, None, false, false)
+          NationalInsuranceTaxYear("2015 to 2016", false, 2430.24, 0, 0, 52, 0, None, None, false, false)
         ),
         false
       )
@@ -1051,17 +1051,17 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     "start and end are the same" should {
 
       "return a list with one string of that year" in {
-        val start = "2015-16"
-        val end   = "2015-16"
-        niRecordController.generateTableList(start, end) shouldBe List("2015-16")
+        val start = "2015 to 2016"
+        val end   = "2015 to 2016"
+        niRecordController.generateTableList(start, end) shouldBe List("2015 to 2016")
       }
     }
 
     "the start is less then the end" should {
 
       "throw an illegal argument exception" in {
-        val start  = "2014-15"
-        val end    = "2015-16"
+        val start  = "2014 to 2015"
+        val end    = "2015 to 2016"
         val caught = intercept[IllegalArgumentException] {
           niRecordController.generateTableList(start, end)
         }
@@ -1073,7 +1073,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       "throw exception for start" in {
         val start  = "hello"
-        val end    = "2014-15"
+        val end    = "2014 to 2015"
         val caught = intercept[IllegalArgumentException] {
           niRecordController.generateTableList(start, end)
         }
@@ -1094,63 +1094,63 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     "the end is greater than the start" should {
 
       "return a list of two adjacent dates" in {
-        val start = "2016-17"
-        val end   = "2015-16"
-        niRecordController.generateTableList(start, end) shouldBe Seq("2016-17", "2015-16")
+        val start = "2016 to 2017"
+        val end   = "2015 to 2016"
+        niRecordController.generateTableList(start, end) shouldBe Seq("2016 to 2017", "2015 to 2016")
       }
 
       "return a list of three dates" in {
         val start = "2016-17"
         val end   = "2014-15"
-        niRecordController.generateTableList(start, end) shouldBe Seq("2016-17", "2015-16", "2014-15")
+        niRecordController.generateTableList(start, end) shouldBe Seq("2016 to 2017", "2015 to 2016", "2014 to 2015")
       }
 
       "return a full NI Record" in {
-        val start = "2016-17"
-        val end   = "1975-76"
+        val start = "2016 to 2017"
+        val end   = "1975 to 1976"
         niRecordController.generateTableList(start, end) shouldBe Seq(
-          "2016-17",
-          "2015-16",
-          "2014-15",
-          "2013-14",
-          "2012-13",
-          "2011-12",
-          "2010-11",
-          "2009-10",
-          "2008-09",
-          "2007-08",
-          "2006-07",
-          "2005-06",
-          "2004-05",
-          "2003-04",
-          "2002-03",
-          "2001-02",
-          "2000-01",
-          "1999-00",
-          "1998-99",
-          "1997-98",
-          "1996-97",
-          "1995-96",
-          "1994-95",
-          "1993-94",
-          "1992-93",
-          "1991-92",
-          "1990-91",
-          "1989-90",
-          "1988-89",
-          "1987-88",
-          "1986-87",
-          "1985-86",
-          "1984-85",
-          "1983-84",
-          "1982-83",
-          "1981-82",
-          "1980-81",
-          "1979-80",
-          "1978-79",
-          "1977-78",
-          "1976-77",
-          "1975-76"
+          "2016 to 2017",
+          "2015 to 2016",
+          "2014 to 2015",
+          "2013 to 2014",
+          "2012 to 2013",
+          "2011 to 2012",
+          "2010 to 2011",
+          "2009 to 2010",
+          "2008 to 2009",
+          "2007 to 2008",
+          "2006 to 2007",
+          "2005 to 2006",
+          "2004 to 2005",
+          "2003 to 2004",
+          "2002 to 2003",
+          "2001 to 2002",
+          "2000 to 2001",
+          "1999 to 2000",
+          "1998 to 1999",
+          "1997 to 1998",
+          "1996 to 1997",
+          "1995 to 1996",
+          "1994 to 1995",
+          "1993 to 1994",
+          "1992 to 1993",
+          "1991 to 1992",
+          "1990 to 1991",
+          "1989 to 1990",
+          "1988 to 1989",
+          "1987 to 1988",
+          "1986 to 1987",
+          "1985 to 1986",
+          "1984 to 1985",
+          "1983 to 1984",
+          "1982 to 1983",
+          "1981 to 1982",
+          "1980 to 1981",
+          "1979 to 1980",
+          "1978 to 1979",
+          "1977 to 1978",
+          "1976 to 1977",
+          "1975 to 1976"
         )
       }
     }
