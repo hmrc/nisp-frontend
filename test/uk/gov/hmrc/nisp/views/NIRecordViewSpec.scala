@@ -126,7 +126,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
         ),
         pensionAge = 64,
         LocalDate.of(2018, 7, 6),
-        "2017-18",
+        "2017 to 2018",
         30,
         pensionSharingOrder = false,
         currentFullWeeklyPensionAmount = 155.65,
@@ -243,7 +243,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
         doc,
         ".govuk-grid-column-two-thirds>dl>dt:nth-child(2)>div>div.ni-action>a.view-details",
         "nisp.nirecord.gap.viewdetails",
-        "2013-14"
+        "2013 to 2014"
       )
     }
 
@@ -508,7 +508,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
         doc,
         ".govuk-grid-column-two-thirds>dl>dt:nth-child(2)>div>div.ni-action>a.view-details",
         "nisp.nirecord.gap.viewdetails",
-        "2013-14"
+        "2013 to 2014"
       )
     }
 
@@ -1081,9 +1081,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           false,
           LocalDate.of(2016, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-            NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-            NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true, underInvestigation = false)
+            NationalInsuranceTaxYearBuilder("2015 to 2016", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2014 to 2015", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013 to 2014", qualifying = false, payable = true, underInvestigation = false)
           ),
           reducedRateElection = false
         )
@@ -1206,9 +1206,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           false,
           LocalDate.of(2015, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
-            NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-            NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, payable = true, underInvestigation = false)
+            NationalInsuranceTaxYearBuilder("2015 to 2016", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2014 to 2015", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013 to 2014", qualifying = false, payable = true, underInvestigation = false)
           ),
           reducedRateElection = false
         )
@@ -1349,9 +1349,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           false,
           LocalDate.of(2017, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
-            NationalInsuranceTaxYearBuilder("2014-15", qualifying = true, underInvestigation = false),
-            NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+            NationalInsuranceTaxYearBuilder("2015 to 2016", qualifying = true, underInvestigation = true),
+            NationalInsuranceTaxYearBuilder("2014 to 2015", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013 to 2014", qualifying = true, underInvestigation = false) /*payable = true*/
           ),
           reducedRateElection = false
         )
@@ -1560,9 +1560,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           false,
           LocalDate.of(2017, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = true),
-            NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-            NationalInsuranceTaxYearBuilder("2013-14", qualifying = false, underInvestigation = false) /*payable = true*/
+            NationalInsuranceTaxYearBuilder("2015 to 2016", qualifying = true, underInvestigation = true),
+            NationalInsuranceTaxYearBuilder("2014 to 2015", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013 to 2014", qualifying = false, underInvestigation = false) /*payable = true*/
           ),
           reducedRateElection = false
         )
