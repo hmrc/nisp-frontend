@@ -116,7 +116,7 @@ class NIRecordController @Inject() (
 
   private def showNiRecordPage(gapsOnlyView: Boolean, yearsToContribute: Int, finalRelevantStartYear: Int, niRecord: NationalInsuranceRecord)
                               (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Result = {
-    val recordHasEnded = finalRelevantStartYear < 1
+    val recordHasEnded = yearsToContribute < 1
     val tableStart: String =
       if (recordHasEnded) Formatting.startYearToTaxYear(finalRelevantStartYear)
       else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
