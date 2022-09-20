@@ -233,7 +233,7 @@ nisp.excluded.cope.failed.britishSignLanguage.text = {0} ar gyfer y rhai sy’n 
 nisp.excluded.cope.failed.britishSignLanguage.linktext1 = gwiriwch eich bod yn gallu defnyddio’r gwasanaeth hwn
 
 nisp.excluded.cope.failed.openingTimes.h3 = Oriau agor
-nisp.excluded.cope.failed.openingTimes.line1 = 8:30am i 3:30pm, o ddydd Llun i ddydd Gwener.
+nisp.excluded.cope.failed.openingTimes.line1 = 8:00am i 6:00pm, o ddydd Llun i ddydd Gwener.
 nisp.excluded.cope.failed.openingTimes.linktext = Gwybodaeth am gostau galwadau
 
 
@@ -316,7 +316,7 @@ nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gen
 nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
 nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
-nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:30am i 3:30pm
+nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:00am i 6:00pm
 
 #****************************
 # Gaps in your record page
