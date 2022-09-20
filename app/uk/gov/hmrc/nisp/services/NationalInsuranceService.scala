@@ -57,8 +57,5 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
       }
   }
 
-  private def convertTaxYear(taxYear: String): String = {
-    val taxYearStart = taxYear.take(4).toInt
-    s"$taxYearStart to ${taxYearStart + 1}"
-  }
+  private def convertTaxYear(taxYear: String): String = taxYear.take(4)
 }

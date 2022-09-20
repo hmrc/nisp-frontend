@@ -266,6 +266,7 @@ nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.context =
 nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
+nisp.nirecord.seperator = i
 
 nisp.nirecord.showgaps = Bwrw golwg dros flynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
 nisp.nirecord.showfull = Gweld pob blwyddyn y gwnaed cyfraniadau ynddi

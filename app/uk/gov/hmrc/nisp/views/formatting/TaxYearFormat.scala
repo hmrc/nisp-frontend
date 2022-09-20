@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.utils
+package uk.gov.hmrc.nisp.views.formatting
 
-object Formatting {
+import uk.gov.hmrc.nisp.models.NationalInsuranceTaxYear
 
-  def startYearToTaxYear(startYear: Int): String = s"$startYear"
+object TaxYearFormat {
 
+  def convertTaxYear(niTaxYear : NationalInsuranceTaxYear, message: String): NationalInsuranceTaxYear = {
+    niTaxYear.copy(taxYear = s"${niTaxYear.taxYear} $message ${niTaxYear.taxYear.toInt + 1}")
+  }
+
+  def convertTaxYear(taxYear: String, message: String): String = s"$taxYear $message ${taxYear.toInt + 1}"
 }
