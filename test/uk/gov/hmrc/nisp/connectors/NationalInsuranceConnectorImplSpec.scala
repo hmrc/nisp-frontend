@@ -122,7 +122,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
         lazy val taxYear = nationalInsuranceRecord.map(_.map(_.taxYears.head))
         "be the 2013 to 2014 tax year" in {
-          taxYear.map(_.map(_.taxYear shouldBe "2013 to 2014"))
+          taxYear.map(_.map(_.taxYear shouldBe "2013"))
         }
 
         "be qualifying" in {
@@ -169,10 +169,10 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
       "a non qualifying year such as 2011 to 2012" should {
 
-        lazy val taxYear = nationalInsuranceRecord.map(_.map(_.taxYears.find(p => p.taxYear == "2011 to 2012").get))
+        lazy val taxYear = nationalInsuranceRecord.map(_.map(_.taxYears.find(p => p.taxYear == "2011").get))
 
         "be the 2011-12 tax year" in {
-          taxYear.map(_.map(_.taxYear shouldBe "2011 to 2012"))
+          taxYear.map(_.map(_.taxYear shouldBe "2011"))
         }
 
         "be non-qualifying" in {

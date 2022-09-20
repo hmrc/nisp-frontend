@@ -80,7 +80,7 @@ class NationalInsuranceServiceSpec
         earningsIncludedUpTo = LocalDate.of(2016, 4, 5),
         taxYears = List(
           NationalInsuranceTaxYear(
-            taxYear = "2015 to 2016",
+            taxYear = "2015",
             qualifying = true,
             classOneContributions = 12345.45,
             classTwoCredits = 0,
@@ -93,7 +93,7 @@ class NationalInsuranceServiceSpec
             underInvestigation = false
           ),
           NationalInsuranceTaxYear(
-            taxYear = "2014 to 2015",
+            taxYear = "2014",
             qualifying = false,
             classOneContributions = 123,
             classTwoCredits = 1,
@@ -106,7 +106,7 @@ class NationalInsuranceServiceSpec
             underInvestigation = false
           ),
           NationalInsuranceTaxYear(
-            taxYear = "1999 to 2000",
+            taxYear = "1999",
             qualifying = false,
             classOneContributions = 2,
             classTwoCredits = 5,
