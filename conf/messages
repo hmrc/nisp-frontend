@@ -233,7 +233,7 @@ nisp.excluded.cope.failed.britishSignLanguage.text = {0} for British Sign Langua
 nisp.excluded.cope.failed.britishSignLanguage.linktext1 = check you can use this service
 
 nisp.excluded.cope.failed.openingTimes.h3 = Opening Times
-nisp.excluded.cope.failed.openingTimes.line1 = Monday to Friday, 8:30am to 3:30pm.
+nisp.excluded.cope.failed.openingTimes.line1 = Monday to Friday, 8:00am to 6:00pm.
 nisp.excluded.cope.failed.openingTimes.linktext = Find out about the call charges
 
 #**********************
@@ -308,7 +308,7 @@ nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any fu
 nisp.nirecord.helpline.getHelp = Get help
 nisp.nirecord.helpline.number = Helpline 0800 731 0181
 nisp.nirecord.helpline.textNumber = Textphone 0800 731 0176
-nisp.nirecord.helpline.openTimes = Monday to Friday: 8:30am to 3:30pm
+nisp.nirecord.helpline.openTimes = Monday to Friday: 8:00am to 6:00pm
 
 #****************************
 # Gaps in your record page
