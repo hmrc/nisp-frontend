@@ -30,7 +30,7 @@ import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessingFailed
 import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, _}
 import uk.gov.hmrc.nisp.services._
-import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
+import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
@@ -111,15 +111,15 @@ class NIRecordController @Inject() (
     val start = tableStart.take(Constants.yearStringLength).toInt
     val end   = tableEnd.take(Constants.yearStringLength).toInt
 
-    (start to end by -1) map Formatting.startYearToTaxYear
+    (start to end by -1).map(_.toString)
   }
 
   private def showNiRecordPage(gapsOnlyView: Boolean, yearsToContribute: Int, finalRelevantStartYear: Int, niRecord: NationalInsuranceRecord)
                               (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Result = {
     val recordHasEnded = yearsToContribute < 1
     val tableStart: String =
-      if (recordHasEnded) Formatting.startYearToTaxYear(finalRelevantStartYear)
-      else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
+      if (recordHasEnded) finalRelevantStartYear.toString
+      else niRecord.earningsIncludedUpTo.getYear.toString
     val tableEnd: String = niRecord.taxYears match {
       case Nil => tableStart
       case _ => niRecord.taxYears.last.taxYear
