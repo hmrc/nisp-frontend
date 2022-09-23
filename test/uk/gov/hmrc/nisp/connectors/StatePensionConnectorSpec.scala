@@ -52,7 +52,7 @@ class StatePensionConnectorSpec
     HeaderCarrier()
 
   implicit val defaultPatience: PatienceConfig =
-    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+    PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
 
   val mockMetricService: MetricsService =
     mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
