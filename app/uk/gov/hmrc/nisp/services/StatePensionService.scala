@@ -42,19 +42,19 @@ class StatePensionService @Inject()(
     implicit hc: HeaderCarrier
   ): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]] =
     statePensionConnector.getStatePension(nino, delegationState).map {
-      response =>
-        (response: @unchecked) match {
-          case Right(Left(CopeStatePensionExclusion(exclusionReason, copeAvailableDate, previousAvailableDate))) =>
-            Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusionReason, copeAvailableDate, previousAvailableDate)))
-          case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
-            Right(Left(StatePensionExclusionFiltered(exclusion)))
-          case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
-            Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))
-          case Right(Right(statePension)) =>
-            Right(Right(statePension))
-          case Left(errorResponse) =>
-            Left(errorResponse)
-        }
+      case Right(Left(CopeStatePensionExclusion(exclusionReason, copeAvailableDate, previousAvailableDate))) =>
+        Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusionReason, copeAvailableDate, previousAvailableDate)))
+      case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
+        Right(Left(StatePensionExclusionFiltered(exclusion)))
+      case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
+        Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusionReasons),
+          pensionAge, pensionDate, statePensionAgeUnderConsideration)))
+      case Right(Left(x)) =>
+        throw new Exception(s"Unknown Exclusion: $x")
+      case Right(Right(statePension)) =>
+        Right(Right(statePension))
+      case Left(errorResponse) =>
+        Left(errorResponse)
     }
 
   def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int =

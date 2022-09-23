@@ -50,7 +50,7 @@ class AuthActionImpl @Inject() (
 
 
     authorised(
-      ConfidenceLevel.L200 and 
+      ConfidenceLevel.L200 and
         (CredentialStrength(CredentialStrength.weak) or CredentialStrength(CredentialStrength.strong))
     )
       .retrieve(

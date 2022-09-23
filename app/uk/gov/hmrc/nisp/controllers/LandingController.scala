@@ -23,7 +23,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
-import uk.gov.hmrc.nisp.views.html.{identity_verification_landing}
+import uk.gov.hmrc.nisp.views.html.identity_verification_landing
 import scala.concurrent.{ExecutionContext, Future}
 
 class LandingController @Inject() (
@@ -40,7 +40,7 @@ class LandingController @Inject() (
 ) extends NispFrontendController(mcc)
     with I18nSupport {
 
-  val logger = Logger(this.getClass)
+  val logger: Logger = Logger(this.getClass)
 
   def show: Action[AnyContent] = Action(implicit request =>
     Ok(identityVerificationLanding()).withNewSession
@@ -84,7 +84,7 @@ class LandingController @Inject() (
           logger.warn(s"identityVerificationConnector.identityVerificationResponse has returned, $FailedIV error")
           Unauthorized(notAuthorised())
         case response                                                                                    =>
-          logger.warn(s"Unhandled Response from Identity Verification: $response");
+          logger.warn(s"Unhandled Response from Identity Verification: $response")
           InternalServerError(technicalIssue())
       }
     } getOrElse Future.successful(Unauthorized(notAuthorised(showFirstParagraph = false)))
