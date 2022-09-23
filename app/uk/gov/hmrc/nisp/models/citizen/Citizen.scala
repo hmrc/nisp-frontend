@@ -34,5 +34,5 @@ case class Citizen(
 }
 
 object Citizen {
-  implicit val formats = Json.format[Citizen]
+  implicit val formats: OFormat[Citizen] = Json.format[Citizen]
 }

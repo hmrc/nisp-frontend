@@ -34,7 +34,7 @@ class StatePensionConnectorSpec
   server.start()
 
   implicit val defaultPatience: PatienceConfig =
-    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+    PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
 
   private val uuid: UUID = UUID.randomUUID()
 

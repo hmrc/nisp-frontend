@@ -29,10 +29,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
                                         (implicit executor: ExecutionContext) {
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] = {
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier):
+        Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] = {
     nationalInsuranceConnector.getNationalInsurance(nino)
       .map {
-        case Right(Right(ni)) => {
+        case Right(Right(ni)) =>
           if (ni.reducedRateElection) Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
           else Right(Right(
             ni.copy(
@@ -40,7 +41,6 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
               qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
             )
           ))
-        }
 
         case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
           Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusions))))
