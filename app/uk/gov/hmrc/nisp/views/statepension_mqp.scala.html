@@ -31,7 +31,9 @@
   h2: H2,
   details: details,
   link: Link,
-  insetText: insetText
+  insetText: insetText,
+  govukWarningText: GovukWarningText,
+  warningText: WarningText
 )
 
 @(
@@ -111,6 +113,10 @@
       content = HtmlContent(insetContent),
       specId = Some("state_pension__mqp__inset_text_1")
     )
+
+    @govukWarningText(WarningText(
+      content = Text(messages("nisp.landing.estimateprovided"))
+    ))
 
     <!-- WHAT YOU CAN DO NEXT -->
 
