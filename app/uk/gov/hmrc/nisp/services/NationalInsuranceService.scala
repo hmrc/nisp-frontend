@@ -37,7 +37,7 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
           if (ni.reducedRateElection) Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
           else Right(Right(
             ni.copy(
-              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
+              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse).map(t => t.copy(convertTaxYear(t.taxYear))),
               qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
             )
           ))
@@ -56,4 +56,6 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
         case value => throw new NotImplementedError(s"Match not implemented for: $value")
       }
   }
+
+  private def convertTaxYear(taxYear: String): String = taxYear.take(4)
 }

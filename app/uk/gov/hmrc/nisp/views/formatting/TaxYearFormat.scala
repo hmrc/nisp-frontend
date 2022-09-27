@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.utils
+package uk.gov.hmrc.nisp.views.formatting
 
-import uk.gov.hmrc.time.TaxYear
+import uk.gov.hmrc.nisp.models.NationalInsuranceTaxYear
 
-object Formatting {
+object TaxYearFormat {
 
-  def startYearToTaxYear(startYear: Int): String = {
-    val endYear = TaxYear(startYear).finishYear
-    s"$startYear-${endYear.toString.substring(Constants.shortYearStartCharacter, Constants.shortYearEndCharacter)}"
+  def convertTaxYear(niTaxYear : NationalInsuranceTaxYear, message: String): NationalInsuranceTaxYear = {
+    niTaxYear.copy(taxYear = s"${niTaxYear.taxYear} $message ${niTaxYear.taxYear.toInt + 1}")
   }
 
+  def convertTaxYear(taxYear: String, message: String): String = s"$taxYear $message ${taxYear.toInt + 1}"
 }

@@ -267,6 +267,7 @@ nisp.nirecord.youdonothaveanygaps = You do not have any gaps in your record.
 nisp.nirecord.showgaps = View years only showing gaps in your contributions
 nisp.nirecord.showfull = View all years of contributions
 nisp.nirecord.fullyear = Full year
+nisp.nirecord.seperator = to
 
 nisp.nirecord.gap = Year is not full
 nisp.nirecord.gap.paidemployment = Paid employment: <strong>{0}</strong>
