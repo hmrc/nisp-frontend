@@ -46,7 +46,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
   implicit val defaultPatience =
-    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+    PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
 
   val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
 

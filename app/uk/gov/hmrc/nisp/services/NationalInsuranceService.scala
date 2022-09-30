@@ -29,8 +29,10 @@ import scala.concurrent.{ExecutionContext, Future}
 class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
                                         (implicit executor: ExecutionContext) {
 
+  val serverInternalError = 500
+
   def getSummary(nino: Nino)(implicit hc: HeaderCarrier):
-        Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] = {
+      Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] = {
     nationalInsuranceConnector.getNationalInsurance(nino)
       .map {
         case Right(Right(ni)) =>
@@ -53,7 +55,7 @@ class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalIns
 
         case Left(errorResponse) => Left(errorResponse)
 
-        case value => throw new NotImplementedError(s"Match not implemented for: $value")
+        case value => Left(UpstreamErrorResponse(s"Match not implemented for: $value", serverInternalError))
       }
   }
 
