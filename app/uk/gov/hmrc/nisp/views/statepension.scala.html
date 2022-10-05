@@ -336,15 +336,6 @@
         langUtils.Dates.formatDate(statePension.pensionDate)
       )
     }
-old text
-    @if(isPertaxUrl) {
-      @insetText(
-        content = HtmlContent(messages(
-          "nisp.landing.estimateprovided"
-        )),
-        specId = Some("state_pension__inset_text_2")
-      )
-    }
 
     @link(
       attrs = Map("data-journey-click" -> "link - click:Your State Pension summary:Print your State Pension summary"),

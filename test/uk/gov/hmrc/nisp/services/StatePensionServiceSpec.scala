@@ -38,7 +38,7 @@ import scala.concurrent.Future
 class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndAfterEach with PrivateMethodTester {
 
   implicit val defaultPatience  =
-    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+    PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
   val mockStatePensionConnector = mock[StatePensionConnector]
 
   val statePensionService = new StatePensionService(mockStatePensionConnector)(global) {
