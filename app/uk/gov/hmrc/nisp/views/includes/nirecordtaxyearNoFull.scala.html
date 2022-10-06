@@ -31,7 +31,7 @@
   <dt>
   } else {
   <dt class="expandable" aria-expanded="false"
-    aria-controls="tax-year-@niTaxYear.taxYear">
+    aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
 }
     <div class="ni-wrapper">
       <div class="ni-years">
@@ -64,7 +64,7 @@
   </dt>
 
 @if(!niTaxYear.qualifying) {
-  <dd id="tax-year-@niTaxYear.taxYear">
+  <dd id="tax-year-@niTaxYear.taxYear.replace(" ", "")">
     @if(niTaxYear.underInvestigation) {
       <div class="contributions-wrapper">
         <p>@Html(messages("nisp.nirecord.gap.underInvestigation"))</p>
