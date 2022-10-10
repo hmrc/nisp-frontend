@@ -31,7 +31,8 @@
   h2: H2,
   details: details,
   link: Link,
-  insetText: insetText
+  insetText: insetText,
+  govukWarningText: GovukWarningText
 )
 
 @(
@@ -69,6 +70,14 @@
 }
 
 @insetContent = {
+  @if(isPertaxUrl) {
+    @govukWarningText(WarningText(
+      iconFallbackText = messages("global.important_legal_notice"),
+      attributes = Map("id" -> "state_pension__inset_text_2"),
+      content = Text(messages("nisp.landing.estimateprovided"))
+    ))
+  }
+
   @p(
     content = HtmlContent(s"""
       ${messages("nisp.main.description.mqp")}
@@ -323,15 +332,6 @@
           ))
         ),
         specId = Some("state_pension_mqp__money_advice__en_p1")
-      )
-    }
-
-    @if(isPertaxUrl) {
-      @insetText(
-        content = HtmlContent(
-          messages("nisp.landing.estimateprovided")
-        ),
-        specId = Some("state_pension__mqp__inset_text_2")
       )
     }
 
