@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.models
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, Reads}
+import play.api.libs.json.{JsPath, Json, OFormat, OWrites, Reads}
 import uk.gov.hmrc.nisp.models.enums.MQPScenario.MQPScenario
 import uk.gov.hmrc.nisp.models.enums.Scenario.Scenario
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
@@ -35,7 +35,7 @@ case class StatePensionAmountRegular(weeklyAmount: BigDecimal, monthlyAmount: Bi
     extends StatePensionAmount
 
 object StatePensionAmountRegular {
-  implicit val formats = Json.format[StatePensionAmountRegular]
+  implicit val formats: OFormat[StatePensionAmountRegular] = Json.format[StatePensionAmountRegular]
 }
 
 case class StatePensionAmountForecast(
@@ -46,7 +46,7 @@ case class StatePensionAmountForecast(
 ) extends StatePensionAmount {}
 
 object StatePensionAmountForecast {
-  implicit val formats = Json.format[StatePensionAmountForecast]
+  implicit val formats: OFormat[StatePensionAmountForecast] = Json.format[StatePensionAmountForecast]
 }
 
 case class StatePensionAmountMaximum(
@@ -58,7 +58,7 @@ case class StatePensionAmountMaximum(
 ) extends StatePensionAmount
 
 object StatePensionAmountMaximum {
-  implicit val formats = Json.format[StatePensionAmountMaximum]
+  implicit val formats: OFormat[StatePensionAmountMaximum] = Json.format[StatePensionAmountMaximum]
 }
 
 case class StatePensionAmounts(
@@ -70,7 +70,7 @@ case class StatePensionAmounts(
 )
 
 object StatePensionAmounts {
-  implicit val formats = Json.format[StatePensionAmounts]
+  implicit val formats: OFormat[StatePensionAmounts] = Json.format[StatePensionAmounts]
 }
 
 case class StatePension(
@@ -124,7 +124,7 @@ case class StatePension(
     }
   }
 
-  lazy val finalRelevantStartYear: Int = Integer.parseInt(finalRelevantYear.substring(0, 4))
+  lazy val finalRelevantStartYear: Int = Integer.parseInt(finalRelevantYear.take(4))
   lazy val finalRelevantEndYear: Int   = finalRelevantStartYear + 1
 }
 
@@ -145,5 +145,5 @@ object StatePension {
       readNullableBoolean(JsPath \ "statePensionAgeUnderConsideration")
   )(StatePension.apply _)
 
-  implicit val writes = Json.writes[StatePension]
+  implicit val writes: OWrites[StatePension] = Json.writes[StatePension]
 }

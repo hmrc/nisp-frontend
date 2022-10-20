@@ -230,7 +230,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(nationalInsuranceRecord)))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionResponse)))
         )
 
@@ -249,7 +249,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
         )
 
@@ -285,7 +285,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right((expectedNationalInsuranceRecord))))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionCopeResponse)))
         )
 
@@ -300,7 +300,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       "return COPE page for contracted out (B) user" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionCopeResponse)))
         )
 
@@ -319,7 +319,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(nationalInsuranceRecord)))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionResponse)))
         )
 
@@ -340,7 +340,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
         )
 
@@ -360,7 +360,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(nationalInsuranceRecord)))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionResponse)))
         )
 
@@ -382,7 +382,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(nationalInsuranceRecord)))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(foreignNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionResponse)))
         )
 
@@ -400,7 +400,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       "redirect to statepension page for non contracted out user" in {
         when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
 
-        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionVariation2)))
         )
 
@@ -427,7 +427,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(expectedNationalInsuranceRecord)))
         )
 
-        when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+        when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionVariation2)))
         )
 
@@ -451,7 +451,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
             Future.successful(Right(Right(nationalInsuranceRecordVariant2)))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 
@@ -513,7 +513,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
             Future.successful(Right(Right(expectedNationalInsuranceRecord)))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 
@@ -538,7 +538,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
             Future.successful(Right(Right(nationalInsuranceRecordVariant2)))
           )
 
-          when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
+          when(mockStatePensionService.getSummary(mockEQ(standardNino), mockAny())(mockAny())).thenReturn(
             Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 

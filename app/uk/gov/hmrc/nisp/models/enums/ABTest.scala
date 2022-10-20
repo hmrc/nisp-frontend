@@ -16,8 +16,10 @@
 
 package uk.gov.hmrc.nisp.models.enums
 
+import uk.gov.hmrc.nisp.models.enums
+
 object ABTest extends Enumeration {
   type ABTest = Value
-  val A = Value
-  val B = Value
+  val A: enums.ABTest.Value = Value
+  val B: enums.ABTest.Value = Value
 }

@@ -46,7 +46,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
   implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
   implicit val defaultPatience =
-    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+    PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
 
   val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
 
@@ -121,8 +121,8 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
       "the first tax year" should {
 
         lazy val taxYear = nationalInsuranceRecord.map(_.map(_.taxYears.head))
-        "be the 2013-14 tax year" in {
-          taxYear.map(_.map(_.taxYear shouldBe "2013-14"))
+        "be the 2013 to 2014 tax year" in {
+          taxYear.map(_.map(_.taxYear shouldBe "2013"))
         }
 
         "be qualifying" in {
@@ -167,12 +167,12 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
       }
 
-      "a non qualifying year such as 2011-12" should {
+      "a non qualifying year such as 2011 to 2012" should {
 
-        lazy val taxYear = nationalInsuranceRecord.map(_.map(_.taxYears.find(p => p.taxYear == "2011-12").get))
+        lazy val taxYear = nationalInsuranceRecord.map(_.map(_.taxYears.find(p => p.taxYear == "2011").get))
 
         "be the 2011-12 tax year" in {
-          taxYear.map(_.map(_.taxYear shouldBe "2011-12"))
+          taxYear.map(_.map(_.taxYear shouldBe "2011"))
         }
 
         "be non-qualifying" in {

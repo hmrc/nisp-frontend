@@ -44,6 +44,7 @@
   govukPanel: GovukPanel,
   panel: Panel,
   insetText: insetText,
+  govukWarningText: GovukWarningText,
   nispPageHeading: NispPageHeading
 )
 
@@ -117,6 +118,15 @@
       """),
       specId = Some("state_pension__panel1")
     )
+
+    @if(isPertaxUrl) {
+      @govukWarningText(WarningText(
+        iconFallbackText = messages("global.important_legal_notice"),
+        attributes = Map("id" -> "state_pension__inset_text_2"),
+        content = Text(messages("nisp.landing.estimateprovided"))
+      ))
+    }
+
 
     @if(statePension.mqpScenario.isDefined) {
 
@@ -324,15 +334,6 @@
     @if(customerAge > Constants.deferralCutOffAge) {
       @deferral(
         langUtils.Dates.formatDate(statePension.pensionDate)
-      )
-    }
-
-    @if(isPertaxUrl) {
-      @insetText(
-        content = HtmlContent(messages(
-          "nisp.landing.estimateprovided"
-        )),
-        specId = Some("state_pension__inset_text_2")
       )
     }
 

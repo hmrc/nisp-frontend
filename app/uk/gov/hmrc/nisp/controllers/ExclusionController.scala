@@ -84,7 +84,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
             } else {
               Ok(excludedCopeView(spExclusion.copeDataAvailableDate))
             }
-          case Left(error) => InternalServerError(errorHandler.internalServerErrorTemplate)
+          case Left(_) => InternalServerError(errorHandler.internalServerErrorTemplate)
           case _ =>
             logger.warn("User accessed/exclusion as non-excluded user")
             Redirect(routes.StatePensionController.show)
@@ -96,7 +96,7 @@ class ExclusionController @Inject()(statePensionService: StatePensionService,
     implicit request =>
       nationalInsuranceService.getSummary(request.nino).map {
         case Right(Left(StatePensionExclusionFilteredWithCopeDate(_, copeDataAvailableDate, previousAvailableDate)))
-          if (previousAvailableDate.isDefined) =>
+          if previousAvailableDate.isDefined =>
           Ok(excludedCopeExtendedNi(copeDataAvailableDate))
         case Right(Left(StatePensionExclusionFilteredWithCopeDate(_, copeDataAvailableDate, _))) =>
           Ok(excludedCopeNi(copeDataAvailableDate))
