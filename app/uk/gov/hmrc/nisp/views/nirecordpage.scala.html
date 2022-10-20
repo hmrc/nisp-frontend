@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.nisp.models.NationalInsuranceRecord
 @import java.time.LocalDate
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, details, insetText, NispPageHeading}
+@import uk.gov.hmrc.nisp.views.formatting.TaxYearFormat
 
 @this(
   newMain: main,
@@ -170,7 +171,7 @@
       <dt>
         <div class="ni-wrapper">
           <div class="ni-years">
-            @tableList.head
+            @(TaxYearFormat.convertTaxYear(tableList.head, messages("nisp.nirecord.seperator")))
           </div>
           <div class="inactive">
             @messages("nisp.nirecord.unavailableyear")
@@ -181,9 +182,9 @@
 
       @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying)) {
         @if(showFullNI) {
-          @nirecordtaxyear(niTaxYear, currentDate)
+          @nirecordtaxyear(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
         } else{
-          @nirecordtaxyearNoFull(niTaxYear, currentDate)
+          @nirecordtaxyearNoFull(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
         }
       }
 
@@ -194,7 +195,7 @@
         <dt>
           <div class="ni-wrapper">
             <div class="ni-years">
-              @tableList.head
+              @(TaxYearFormat.convertTaxYear(tableList.head, messages("nisp.nirecord.seperator")))
             </div>
             <div class="inactive">
               @messages("nisp.nirecord.unavailableyear")
@@ -209,9 +210,9 @@
           @niRecord.taxYears.find(p => p.taxYear == tableYear).map { taxYear =>
 
             @if(showFullNI) {
-              @nirecordtaxyear(taxYear, currentDate)
+              @nirecordtaxyear(TaxYearFormat.convertTaxYear(taxYear, messages("nisp.nirecord.seperator")), currentDate)
             } else {
-              @nirecordtaxyearNoFull(taxYear, currentDate)
+              @nirecordtaxyearNoFull(TaxYearFormat.convertTaxYear(taxYear, messages("nisp.nirecord.seperator")), currentDate)
             }
 
           }.getOrElse {
@@ -219,7 +220,7 @@
             <dt>
               <div class="ni-wrapper">
                 <div class="ni-years">
-                  @tableYear
+                  @(TaxYearFormat.convertTaxYear(tableYear, messages("nisp.nirecord.seperator")))
                 </div>
                 <div class="inactive">
                   @messages("nisp.nirecord.unavailableyear")

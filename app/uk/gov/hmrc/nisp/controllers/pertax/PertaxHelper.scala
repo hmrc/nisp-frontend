@@ -34,8 +34,8 @@ class PertaxHelper @Inject() (sessionCache: SessionCache, metricsService: Metric
     val timerContext = metricsService.keystoreWriteTimer.time()
     val cacheF       = sessionCache.cache(PERTAX, true)
     cacheF.onComplete {
-      case Success(value) => timerContext.stop()
-      case Failure(exception) => metricsService.keystoreWriteFailed.inc()
+      case Success(_) => timerContext.stop()
+      case Failure(_) => metricsService.keystoreWriteFailed.inc()
     }
   }
 

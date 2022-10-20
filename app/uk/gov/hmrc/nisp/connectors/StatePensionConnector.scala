@@ -27,18 +27,19 @@ import uk.gov.hmrc.nisp.services.MetricsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionConnector @Inject()(val http: HttpClient,
-                                      val sessionCache: SessionCache,
-                                      val metricsService: MetricsService,
-                                      val executionContext: ExecutionContext,
-                                      appConfig: ApplicationConfig
-                                     ) extends BackendConnector {
+class StatePensionConnector @Inject()(
+  val http: HttpClient,
+  val sessionCache: SessionCache,
+  val appConfig: ApplicationConfig,
+  val metricsService: MetricsService,
+  val executionContext: ExecutionContext
+) extends BackendConnector {
 
   val serviceUrl: String = appConfig.statePensionServiceUrl
 
-  def getStatePension(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, StatePension]]] = {
+  def getStatePension(nino: Nino, delegationState: Boolean)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, StatePension]]] = {
     val urlToRead = s"$serviceUrl/ni/$nino"
     val header = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
-    retrieveFromCache[StatePension](APIType.StatePension, urlToRead, header)
+    retrieveFromCache[StatePension](APIType.StatePension, urlToRead, header, delegationState)
   }
 }

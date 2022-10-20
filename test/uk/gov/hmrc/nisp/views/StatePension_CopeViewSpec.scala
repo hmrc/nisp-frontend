@@ -17,9 +17,7 @@
 package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.text.StringEscapeUtils
-import org.joda.time.DateTime
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.concurrent.ScalaFutures
 import play.api.Application
@@ -44,7 +42,7 @@ import uk.gov.hmrc.nisp.views.html.statepension_cope
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 import scala.concurrent.Future
 
 class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injecting {
@@ -55,7 +53,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
 
   implicit val user: NispAuthedUser =
     NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, None, false)
-  val authDetails                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(DateTime.now(), None))
+  val authDetails                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
@@ -75,7 +73,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
-    when(mockPertaxHelper.isFromPertax(ArgumentMatchers.any())).thenReturn(Future.successful(false))
+    when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
@@ -100,7 +98,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
 
     def mockSetup = {
 
-      when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      when(mockStatePensionService.getSummary(any(), any())(any()))
         .thenReturn(Future.successful(Right(Right(StatePension(
           LocalDate.of(2014, 4, 5),
           StatePensionAmounts(
@@ -112,7 +110,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
           ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
         ))))
 
-      when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      when(mockNationalInsuranceService.getSummary(any())(any()))
         .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 11,
           qualifyingYearsPriorTo1975 = 0,

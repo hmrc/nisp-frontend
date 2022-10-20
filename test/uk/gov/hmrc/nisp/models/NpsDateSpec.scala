@@ -16,25 +16,30 @@
 
 package uk.gov.hmrc.nisp.models
 
-import org.joda.time.LocalDate
-import play.api.libs.json.{JsNull, JsString, Json}
-import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.nisp.utils.UnitSpec
+import play.api.libs.json._
+import uk.gov.hmrc.nisp.utils.{Constants, UnitSpec}
+
+import java.time.LocalDate
 
 class NpsDateSpec extends UnitSpec {
+
   "NpsDate" when {
     "JSON parsing" should {
       "return a JSError for null date" in {
         JsNull.validate[NpsDate].isError shouldBe true
       }
+
+      "return a JsError for JsValue that isn't JsString" in {
+        Json.fromJson[NpsDate](JsBoolean(false)).isError shouldBe true
+      }
     }
 
     "JSON serialisation" should {
       "return JSString in correct format" in {
-        Json.toJson(NpsDate(new LocalDate(2015, 1, 1))) shouldBe JsString("01/01/2015")
+        Json.toJson(NpsDate(LocalDate.of(2015, 1, 1))) shouldBe JsString("01/01/2015")
       }
       "deserialise works" in {
-        Json.fromJson[NpsDate](JsString("01/01/2015")).get shouldBe NpsDate(new LocalDate(2015, 1, 1))
+        Json.fromJson[NpsDate](JsString("01/01/2015")).get shouldBe NpsDate(LocalDate.of(2015, 1, 1))
       }
     }
 
