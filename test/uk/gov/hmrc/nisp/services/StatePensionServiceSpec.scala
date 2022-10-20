@@ -23,7 +23,7 @@ import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfterEach, PrivateMethodTester}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder._
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
@@ -38,7 +38,7 @@ import scala.concurrent.Future
 class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndAfterEach with PrivateMethodTester {
 
   implicit val defaultPatience  =
-    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+    PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
   val mockStatePensionConnector = mock[StatePensionConnector]
 
   val statePensionService = new StatePensionService(mockStatePensionConnector)(global) {
@@ -89,7 +89,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
     "transform the Dead 403 into a Left(StatePensionExclusion(Dead))" in {
-      when(mockStatePensionConnector.getStatePension(mockEQ(excludedAll))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(excludedAll), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(ForbiddenStatePensionExclusion(Exclusion.Dead, Some("The customer needs to contact the National Insurance helpline")))))
       )
 
@@ -98,7 +98,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
 
     "transform the MCI 403 into a Left(StatePensionExclusion(MCI))" in {
 
-      when(mockStatePensionConnector.getStatePension(mockEQ(excludedAllButDead))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(excludedAllButDead), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(ForbiddenStatePensionExclusion(Exclusion.ManualCorrespondenceIndicator, Some("The customer cannot access the service, they should contact HMRC")))))
       )
 
@@ -106,10 +106,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "transform the COPE Failed 403 into a CopeProcessingFailed exclusion" in {
-      val copeResponseProcessingFailed: String =
-        "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_COPE_PROCESSING_FAILED\"}'"
-
-      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny()))
+      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino), mockAny())(mockAny()))
         .thenReturn(Future.successful(
           Right(Left(ForbiddenStatePensionExclusion(Exclusion.CopeProcessingFailed, None)))))
 
@@ -117,7 +114,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "transform the COPE Failed 403 into a CopeProcessing exclusion" in {
-      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny()))
+      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Left(CopeStatePensionExclusion(Exclusion.CopeProcessing, LocalDate.of(2021, 2, 17), None)))))
 
       statePensionService.getSummary(regularNino).futureValue shouldBe
@@ -125,7 +122,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "return the connector response for a regular user" in {
-      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(statePensionResponse[StatePension](regularNino))))
       )
 
@@ -143,7 +140,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "return the connector response for a RRE user" in {
-      when(mockStatePensionConnector.getStatePension(mockEQ(excludedMwrre))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(excludedMwrre), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(statePensionResponse[StatePension](excludedMwrre))))
       )
 
@@ -161,7 +158,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "return the connector response for a Abroad user" in {
-      when(mockStatePensionConnector.getStatePension(mockEQ(excludedAbroad))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(excludedAbroad), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(statePensionResponse[StatePension](excludedAbroad))))
       )
 
@@ -181,7 +178,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     "return the connector response with PostStatePensionAge exclusion for all the exclusions except MCI and Dead" in {
       val spResponse = statePensionResponse[OkStatePensionExclusion](excludedAllButDeadMCI)
 
-      when(mockStatePensionConnector.getStatePension(mockEQ(excludedAllButDeadMCI))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(excludedAllButDeadMCI), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(spResponse)))
       )
 
@@ -194,7 +191,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "return the connector response for a user with a true flag for State Pension Age Under Consideration" in {
-      when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationNino))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(statePensionResponse[StatePension](spaUnderConsiderationNino))))
       )
 
@@ -212,7 +209,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     }
 
     "return the connector response for a user with no flag for State Pension Age Under Consideration" in {
-      when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationNoFlagNino))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationNoFlagNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(statePensionResponse[StatePension](spaUnderConsiderationNoFlagNino))))
       )
 
@@ -232,7 +229,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     "return the connector response for a user with exclusion with a true flag for State Pension Age Under Consideration" in {
       val spResponse = statePensionResponse[OkStatePensionExclusion](spaUnderConsiderationExclusionIoMNino)
 
-      when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationExclusionIoMNino))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationExclusionIoMNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(spResponse)))
       )
 
@@ -247,7 +244,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
     "return the connector response for a user with exclusion with no flag for State Pension Age Under Consideration" in {
       val spResponse = statePensionResponse[StatePensionExclusion](spaUnderConsiderationExclusionNoFlagNino)
 
-      when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationExclusionNoFlagNino))(mockAny())).thenReturn(
+      when(mockStatePensionConnector.getStatePension(mockEQ(spaUnderConsiderationExclusionNoFlagNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(spResponse)))
       )
 
@@ -261,7 +258,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
 
     "return StatePensionExclusionWithCopeDate when CopeStatePensionExclusion is given" in {
       val date = LocalDate.now()
-      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny())).thenReturn(Future.successful(Right(Left(CopeStatePensionExclusion(Exclusion.CopeProcessing, date, None)))))
+      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino), mockAny())(mockAny())).thenReturn(Future.successful(Right(Left(CopeStatePensionExclusion(Exclusion.CopeProcessing, date, None)))))
 
       statePensionService.getSummary(regularNino).futureValue shouldBe Right(Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, date)))
     }

@@ -17,11 +17,12 @@
 package uk.gov.hmrc.nisp.helpers
 
 import com.google.inject.Inject
-import org.joda.time.DateTime
 import play.api.mvc.{BodyParsers, Request, Result}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthAction, ExcludedAuthenticatedRequest}
+
+import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeExcludedAuthAction @Inject() (val parser: BodyParsers.Default, val executionContext: ExecutionContext)
@@ -34,7 +35,7 @@ class FakeExcludedAuthAction @Inject() (val parser: BodyParsers.Default, val exe
       ExcludedAuthenticatedRequest(
         request,
         TestAccountBuilder.regularNino,
-        AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))
+        AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now, None))
       )
     )
 }

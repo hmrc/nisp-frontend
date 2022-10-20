@@ -17,20 +17,20 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import java.time.LocalDate
 
+import java.time.LocalDate
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthenticatedRequest, NispAuthedUser}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessingFailed
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, _}
 import uk.gov.hmrc.nisp.services._
-import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, Formatting}
+import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
@@ -39,25 +39,27 @@ import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.ExecutionContext
 
-class NIRecordController @Inject()(auditConnector: AuditConnector,
-                                   authenticate: AuthAction,
-                                   nationalInsuranceService: NationalInsuranceService,
-                                   statePensionService: StatePensionService,
-                                   appConfig: ApplicationConfig,
-                                   pertaxHelper: PertaxHelper,
-                                   mcc: MessagesControllerComponents,
-                                   dateProvider: DateProvider,
-                                   niRecordPage: nirecordpage,
-                                   niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
-                                   nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
-                                  )(implicit val formPartialRetriever: FormPartialRetriever,
-                                    val templateRenderer: TemplateRenderer,
-                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
-                                    ec: ExecutionContext)
-  extends NispFrontendController(mcc) with I18nSupport {
+class NIRecordController @Inject() (
+  auditConnector: AuditConnector,
+  authenticate: AuthAction,
+  nationalInsuranceService: NationalInsuranceService,
+  statePensionService: StatePensionService,
+  appConfig: ApplicationConfig,
+  pertaxHelper: PertaxHelper,
+  mcc: MessagesControllerComponents,
+  dateProvider: DateProvider,
+  niRecordPage: nirecordpage,
+  niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
+  nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
+)(implicit
+  val formPartialRetriever: FormPartialRetriever,
+  val templateRenderer: TemplateRenderer,
+  val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
+  ec: ExecutionContext
+) extends NispFrontendController(mcc)
+    with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI
-
 
   def showFull: Action[AnyContent] = show(gapsOnlyView = false)
 
@@ -109,89 +111,111 @@ class NIRecordController @Inject()(auditConnector: AuditConnector,
     val start = tableStart.take(Constants.yearStringLength).toInt
     val end   = tableEnd.take(Constants.yearStringLength).toInt
 
-    (start to end by -1) map Formatting.startYearToTaxYear
+    (start to end by -1).map(_.toString)
+  }
+
+  private def showNiRecordPage(gapsOnlyView: Boolean, yearsToContribute: Int, finalRelevantStartYear: Int, niRecord: NationalInsuranceRecord)
+                              (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Result = {
+    val recordHasEnded = yearsToContribute < 1
+    val tableStart: String =
+      if (recordHasEnded) finalRelevantStartYear.toString
+      else niRecord.earningsIncludedUpTo.getYear.toString
+    val tableEnd: String = niRecord.taxYears match {
+      case Nil => tableStart
+      case _ => niRecord.taxYears.last.taxYear
+    }
+    Ok(
+      niRecordPage(
+        tableList = generateTableList(tableStart, tableEnd),
+        niRecord = niRecord,
+        gapsOnlyView = gapsOnlyView,
+        recordHasEnded = recordHasEnded,
+        yearsToContribute = yearsToContribute,
+        finalRelevantEndYear = finalRelevantStartYear + 1,
+        showPre1975Years = showPre1975Years(
+          niRecord.dateOfEntry,
+          authRequest.nispAuthedUser.dateOfBirth,
+          niRecord.qualifyingYearsPriorTo1975
+        ),
+        showFullNI = showFullNI,
+        currentDate = dateProvider.currentDate
+      )
+    )
+  }
+
+  private def sendExclusion(exclusion: Exclusion)(implicit hc: HeaderCarrier, user: NispAuthedUser): Result = {
+    auditConnector.sendEvent(
+      AccountExclusionEvent(
+        user.nino.nino,
+        user.name,
+        exclusion
+      )
+    )
+    Redirect(routes.ExclusionController.showNI)
+  }
+
+  private def finalRelevantStartYear(statePensionResponse: Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]): Option[Int] = {
+
+    statePensionResponse match {
+      case Right(Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _))) |
+           Right(Left(StatePensionExclusionFilteredWithCopeDate(_, _, _))) =>
+        None
+      case Right(Left(spExclusion: StatePensionExclusionFiltered)) =>
+        Some(
+          spExclusion.finalRelevantStartYear
+            .getOrElse(
+              throw new RuntimeException(
+                s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion"
+              )
+            )
+        )
+      case Right(Right(sp)) => Some(sp.finalRelevantStartYear)
+      case Left(_) => throw new RuntimeException("NIRecordController: an unexpected error has occurred")
+    }
   }
 
   private def show(gapsOnlyView: Boolean): Action[AnyContent] = authenticate.async { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
     val nino                          = user.nino
 
-      val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
-      val statePensionResponseF = statePensionService.getSummary(nino)
-      for {
-        nationalInsuranceRecordResponse <- nationalInsuranceResponseF
-        statePensionResponse <- statePensionResponseF
-      } yield {
-        (nationalInsuranceRecordResponse: @unchecked) match {
-          case Right(Right(niRecord)) =>
-            if (gapsOnlyView && niRecord.numberOfGaps < 1) {
-              Redirect(routes.NIRecordController.showFull)
-            } else {
-              val finalRelevantStartYear = (statePensionResponse: @unchecked) match {
-                case Right(Left(StatePensionExclusionFiltered(CopeProcessingFailed, _, _, _))) |
-                     Right(Left(StatePensionExclusionFilteredWithCopeDate(_, _, _))) => None
-                case Right(Left(spExclusion: StatePensionExclusionFiltered)) => Some(spExclusion.finalRelevantStartYear
-                  .getOrElse(throw new RuntimeException(s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion")))
-                case Right(Right(sp)) => Some(sp.finalRelevantStartYear)
-              }
-
-          finalRelevantStartYear
+    val nationalInsuranceResponseF = nationalInsuranceService.getSummary(nino)
+    val statePensionResponseF      = statePensionService.getSummary(nino)
+    for {
+      nationalInsuranceRecordResponse <- nationalInsuranceResponseF
+      statePensionResponse            <- statePensionResponseF
+    } yield nationalInsuranceRecordResponse match {
+      case Right(Right(niRecord)) =>
+        if (gapsOnlyView && niRecord.numberOfGaps < 1) {
+          Redirect(routes.NIRecordController.showFull)
+        } else {
+          finalRelevantStartYear(statePensionResponse)
             .map { finalRelevantStartYear =>
               val yearsToContribute  = statePensionService.yearsToContributeUntilPensionAge(
                 niRecord.earningsIncludedUpTo,
                 finalRelevantStartYear
               )
-              val recordHasEnded     = yearsToContribute < 1
-              val tableStart: String =
-                if (recordHasEnded) Formatting.startYearToTaxYear(finalRelevantStartYear)
-                else Formatting.startYearToTaxYear(niRecord.earningsIncludedUpTo.getYear)
-              val tableEnd: String   = niRecord.taxYears match {
-                case Nil => tableStart
-                case _   => niRecord.taxYears.last.taxYear
-              }
               sendAuditEvent(nino, niRecord, yearsToContribute)
-
-              Ok(
-                niRecordPage(
-                  tableList = generateTableList(tableStart, tableEnd),
-                  niRecord = niRecord,
-                  gapsOnlyView = gapsOnlyView,
-                  recordHasEnded = recordHasEnded,
-                  yearsToContribute = yearsToContribute,
-                  finalRelevantEndYear = finalRelevantStartYear + 1,
-                  showPre1975Years = showPre1975Years(
-                    niRecord.dateOfEntry,
-                    request.nispAuthedUser.dateOfBirth,
-                    niRecord.qualifyingYearsPriorTo1975
-                  ),
-                  authenticationProvider = request.authDetails.authProvider.getOrElse("N/A"),
-                  showFullNI = showFullNI,
-                  currentDate = dateProvider.currentDate
-                )
-              )
-
-              }.getOrElse(Redirect(routes.ExclusionController.showSP))
+              showNiRecordPage(gapsOnlyView, yearsToContribute, finalRelevantStartYear, niRecord)
             }
-          case Right(Left(exclusion)) =>
-            auditConnector.sendEvent(AccountExclusionEvent(
-              nino.nino,
-              request.nispAuthedUser.name,
-              exclusion.exclusion
-            ))
-            Redirect(routes.ExclusionController.showNI)
+            .getOrElse(Redirect(routes.ExclusionController.showSP))
         }
-      }
+      case Right(Left(exclusion)) =>
+        sendExclusion(exclusion.exclusion)
+        Redirect(routes.ExclusionController.showNI)
+      case Left(_) =>
+        throw new RuntimeException("NIRecordController: an unexpected error has occurred")
+    }
   }
 
-  def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      implicit val user: NispAuthedUser = request.nispAuthedUser
-      nationalInsuranceService.getSummary(user.nino) map { x => (x: @unchecked) match {
-        case Right(Right(niRecord)) =>
-          Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
-        case Left(_) =>
-          Redirect(routes.ExclusionController.showNI)
-      }
+  def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async { implicit request =>
+    implicit val user: NispAuthedUser = request.nispAuthedUser
+    nationalInsuranceService.getSummary(user.nino) map {
+      case Right(Right(niRecord)) =>
+        Ok(niRecordGapsAndHowToCheckThemView(niRecord.homeResponsibilitiesProtection))
+      case Right(Left(_)) =>
+        Redirect(routes.ExclusionController.showNI)
+      case Left(_) =>
+        Redirect(routes.ExclusionController.showNI)
     }
   }
 

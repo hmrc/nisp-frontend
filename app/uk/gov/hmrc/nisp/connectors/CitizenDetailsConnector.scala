@@ -17,12 +17,16 @@
 package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{
+  HeaderCarrier, HttpResponse, UpstreamErrorResponse, HttpClient, HttpException
+}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReadsInstances.readEitherOf
+import play.api.http.Status.BAD_GATEWAY
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,19 +39,31 @@ class CitizenDetailsConnector @Inject() (
 
   val serviceUrl: String = appConfig.citizenDetailsServiceUrl
 
-  def connectToGetPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] = {
+  def connectToGetPersonDetails(nino: Nino)(
+    implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, CitizenDetailsResponse]] = {
 
     val context = metricsService.citizenDetailsTimer.time()
 
-    val result = http.GET[HttpResponse](s"$serviceUrl/citizen-details/$nino/designatory-details").map  {
+    http
+      .GET[Either[UpstreamErrorResponse, HttpResponse]](
+        s"$serviceUrl/citizen-details/$nino/designatory-details"
+      )
+      .transform { result =>
         context.stop()
-        _.json.as[CitizenDetailsResponse]
-    } recover {
-      case x =>
-        metricsService.citizenDetailsFailedCounter.inc()
-        throw x
-    }
-
-    result
+        result
+      }
+      .map {
+        case Right(response) => Right(response.json.as[CitizenDetailsResponse])
+        case Left(error) =>
+          metricsService.citizenDetailsFailedCounter.inc()
+          Left(error)
+      }
+      .recover {
+        case error: HttpException =>
+          Left(UpstreamErrorResponse(error.message, BAD_GATEWAY))
+        case error =>
+          metricsService.citizenDetailsFailedCounter.inc()
+          throw error
+      }
   }
 }

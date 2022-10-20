@@ -31,8 +31,7 @@ object AccountAccessEvent {
     name: String,
     contractedOutFlag: Boolean = false,
     forecastScenario: Scenario,
-    copeAmount: BigDecimal,
-    authenticationProvider: String
+    copeAmount: BigDecimal
   )(implicit hc: HeaderCarrier): AccountAccessEvent =
     new AccountAccessEvent(
       nino,
@@ -43,8 +42,7 @@ object AccountAccessEvent {
       name,
       contractedOutFlag,
       forecastScenario,
-      copeAmount,
-      authenticationProvider
+      copeAmount
     )
 }
 class AccountAccessEvent(
@@ -56,8 +54,7 @@ class AccountAccessEvent(
   name: String,
   contractedOutFlag: Boolean,
   forecastScenario: Scenario,
-  copeAmount: BigDecimal,
-  authenticationProvider: String
+  copeAmount: BigDecimal
 )(implicit hc: HeaderCarrier)
     extends NispBusinessEvent(
       "AccountPage",
@@ -70,7 +67,6 @@ class AccountAccessEvent(
         "Name"                   -> name,
         "ContractedOut"          -> contractedOutFlag.toString,
         "ForecastScenario"       -> forecastScenario.toString,
-        "COPEAmount"             -> copeAmount.toString(),
-        "AuthenticationProvider" -> authenticationProvider
+        "COPEAmount"             -> copeAmount.toString()
       )
     )

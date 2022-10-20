@@ -16,20 +16,21 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers.contentAsString
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
-import uk.gov.hmrc.nisp.views.html.{excluded_cope_failed_ni, excluded_cope_failed_sp}
+import uk.gov.hmrc.nisp.views.html.excluded_cope_failed_ni
+
+import java.time.{Instant, LocalDate}
 
 class ExclusionCopeFailedNIViewSpec extends HtmlSpec with Injecting {
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
@@ -39,7 +40,7 @@ class ExclusionCopeFailedNIViewSpec extends HtmlSpec with Injecting {
   implicit val fakeRequest = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
-    AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None))
+    AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   )
 
   override def beforeEach(): Unit = {

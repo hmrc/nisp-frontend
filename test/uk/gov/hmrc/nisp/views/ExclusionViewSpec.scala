@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.DateTime
 import org.mockito.Mockito.when
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -30,7 +29,7 @@ import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.html.{excluded_dead, excluded_mci, excluded_sp}
 import uk.gov.hmrc.play.language.LanguageUtils
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 
 class ExclusionViewSpec extends HtmlSpec with Injecting {
 
@@ -41,7 +40,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
   implicit val fakeRequest          = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
-    AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None))
+    AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   )
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
   lazy val langUtils                = inject[LanguageUtils]
@@ -457,10 +456,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
   }
 
   "Exclusion Manual Correspondence Indicator(MCI)" should {
-
-    implicit val authDetails =
-      AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now, None))
-
     lazy val sResult = inject[excluded_mci]
 
     lazy val htmlAccountDoc = asDocument(sResult(Exclusion.ManualCorrespondenceIndicator, Some(40)).toString)
@@ -1561,5 +1556,4 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
   }
-
 }

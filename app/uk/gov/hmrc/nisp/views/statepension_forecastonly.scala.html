@@ -36,7 +36,8 @@
   link: Link,
   govukPanel: GovukPanel,
   panel: Panel,
-  insetText: insetText
+  insetText: insetText,
+  govukWarningText: GovukWarningText
 )
 
 @(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
@@ -98,6 +99,15 @@ isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Au
       """),
       specId = Some("state_pension_forecast_only__panel1")
     )
+
+    @if(isPertaxUrl) {
+      @govukWarningText(WarningText(
+        iconFallbackText = messages("global.important_legal_notice"),
+        attributes = Map("id" -> "state_pension__inset_text_2"),
+        content = Text(messages("nisp.landing.estimateprovided"))
+      ))
+    }
+
 
     @p(
       content = Text(messages("nisp.main.caveats")),
@@ -163,14 +173,6 @@ isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Au
 
     @if(customerAge > Constants.deferralCutOffAge) {
       @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
-    }
-
-    @if(isPertaxUrl) {
-      @insetText(
-        content = HtmlContent(messages(
-          "nisp.landing.estimateprovided"
-        ))
-      )
     }
 
   }

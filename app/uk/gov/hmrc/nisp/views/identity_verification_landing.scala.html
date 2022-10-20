@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, fullWidth, insetText}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, fullWidth}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
@@ -24,11 +24,12 @@
   h1: H1,
   h2: H2,
   link: Link,
-  insetText: insetText,
   govukButton: GovukButton,
   govukInsetText: GovukInsetText,
+  govukWarningText: GovukWarningText,
   fullLayout: fullWidth
 )
+
 @()(implicit messages: Messages, request: Request[_])
 
 @main(
@@ -43,14 +44,16 @@
         msg = "nisp.landing.title",
         specId = Some("identity_verification_landing_h1")
       )
-      @insetText(
-        content = HtmlContent(messages("nisp.landing.estimateprovided"))
-      )
+      @govukWarningText(WarningText(
+        iconFallbackText = messages("global.important_legal_notice"),
+        attributes = Map("id" -> "state_pension__mqp__inset_text_3"),
+        content = Text(messages("nisp.landing.estimateprovided"))
+      ))
     </div>
   </div>
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
+    <div class="govuk-grid-column-two-thirds">
       @h2(
         elmId = Some("landing-signin-heading"),
         msg = "nisp.landing.signin.heading",
@@ -70,27 +73,6 @@
       </div>
     </div>
 
-    <div class="govuk-grid-column-one-half">
-      <div class="inner-block panel-indent">
-        @p(
-          content = HtmlContent(messages("nisp.landing.signin.verify",
-            link(
-              fullStop = true,
-              inParagraph = true,
-              link = routes.LandingController.verifySignIn.url,
-              messageKey = "nisp.landing.signin.verify.linktext",
-              specId = Some("identity_verification_landing_link")
-            ))
-          ),
-          specId = Some("identity_verification_landing_p2")
-        )
-        <div class="verify-block">
-          <img src='@controllers.routes.Assets.versioned("images/verify-logo-inline.png")' class="verify-logo" alt="" />
-          <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">@messages("nisp.gov-uk")</div>
-          <div class="govuk-body">@messages("nisp.verify")</div>
-        </div>
-      </div>
-    </div>
   </div>
 
 }

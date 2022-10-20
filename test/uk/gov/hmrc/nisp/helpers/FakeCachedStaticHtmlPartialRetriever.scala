@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 import uk.gov.hmrc.http.HttpGet
@@ -26,9 +25,7 @@ import scala.concurrent.duration.Duration
 object FakeCachedStaticHtmlPartialRetriever extends CachedStaticHtmlPartialRetriever {
   override def httpGet: HttpGet = ???
 
-  def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit
-    request: RequestHeader
-  ): Html =
+  def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html): Html =
     Html("")
 
   override def refreshAfter: Duration = ???

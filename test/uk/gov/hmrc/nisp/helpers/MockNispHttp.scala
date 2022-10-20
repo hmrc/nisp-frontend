@@ -19,7 +19,7 @@ package uk.gov.hmrc.nisp.helpers
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{BadRequestException, HttpClient, HttpResponse, Upstream4xxResponse}
+import uk.gov.hmrc.http.{BadRequestException, HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import scala.concurrent.Future
 
@@ -67,10 +67,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
-          upstreamResponseCode = 404,
+          statusCode = 404,
           reportAs = 500
         )
       )
@@ -119,10 +119,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -137,10 +137,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"TThe customer cannot access the service, they should contact HMRC\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -155,10 +155,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
-          upstreamResponseCode = 404,
+          statusCode = 404,
           reportAs = 500
         )
       )
@@ -199,10 +199,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -215,10 +215,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -233,10 +233,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -251,10 +251,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_DEAD\",\"message\":\"The customer needs to contact the National Insurance helpline\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -267,10 +267,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_MANUAL_CORRESPONDENCE\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -283,10 +283,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":\"EXCLUSION_ISLE_OF_MAN\",\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -299,10 +299,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             "GET of 'http://url' returned 403. Response body: '{\"code\":[\"EXCLUSION_MARRIED_WOMENS_REDUCED_RATE\",\"EXCLUSION_ISLE_OF_MAN\"],\"message\":\"The customer cannot access the service, they should contact HMRC\"}'",
-          upstreamResponseCode = 403,
+          statusCode = 403,
           reportAs = 500
         )
       )
@@ -315,10 +315,10 @@ object MockNispHttp {
   )
     .thenReturn(
       Future.failed(
-        new Upstream4xxResponse(
+        UpstreamErrorResponse(
           message =
             """GET of 'http://url' returned 404. Response body: '{"code":"NOT_FOUND","message":"Resource was not found"}'""",
-          upstreamResponseCode = 404,
+          statusCode = 404,
           reportAs = 500
         )
       )

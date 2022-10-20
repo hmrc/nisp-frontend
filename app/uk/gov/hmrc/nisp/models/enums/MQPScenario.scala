@@ -17,15 +17,16 @@
 package uk.gov.hmrc.nisp.models.enums
 
 import play.api.libs.json._
+import uk.gov.hmrc.nisp.models.enums
 
 object MQPScenario extends Enumeration {
   type MQPScenario = Value
 
-  val ContinueWorking = Value
-  val CantGet         = Value
-  val CanGetWithGaps  = Value
+  val ContinueWorking: enums.MQPScenario.Value = Value
+  val CantGet: enums.MQPScenario.Value = Value
+  val CanGetWithGaps: enums.MQPScenario.Value = Value
 
-  implicit val formats = new Format[MQPScenario] {
+  implicit val formats: Format[MQPScenario] = new Format[MQPScenario] {
     def reads(json: JsValue): JsResult[MQPScenario] = JsSuccess(MQPScenario.withName(json.as[String]))
     def writes(MQPScenario: MQPScenario): JsValue   = JsString(MQPScenario.toString)
   }

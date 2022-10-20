@@ -20,7 +20,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2013-14"
           }
         },
-        "taxYear": "2013-14",
+        "taxYear": "2013",
         "qualifying": false,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -38,7 +38,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2012-13"
           }
         },
-        "taxYear": "2012-13",
+        "taxYear": "2012",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -56,7 +56,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2011-12"
           }
         },
-        "taxYear": "2011-12",
+        "taxYear": "2011",
         "qualifying": false,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -74,7 +74,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2010-11"
           }
         },
-        "taxYear": "2010-11",
+        "taxYear": "2010",
         "qualifying": true,
         "classOneContributions": 1149.98,
         "classTwoCredits": 0,
@@ -92,7 +92,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2009-10"
           }
         },
-        "taxYear": "2009-10",
+        "taxYear": "2009",
         "qualifying": true,
         "classOneContributions": 4259.6,
         "classTwoCredits": 0,
@@ -110,7 +110,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2008-09"
           }
         },
-        "taxYear": "2008-09",
+        "taxYear": "2008",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -128,7 +128,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2007-08"
           }
         },
-        "taxYear": "2007-08",
+        "taxYear": "2007",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -146,7 +146,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2006-07"
           }
         },
-        "taxYear": "2006-07",
+        "taxYear": "2006",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -164,7 +164,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2005-06"
           }
         },
-        "taxYear": "2005-06",
+        "taxYear": "2005",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -182,7 +182,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2004-05"
           }
         },
-        "taxYear": "2004-05",
+        "taxYear": "2004",
         "qualifying": true,
         "classOneContributions": 2779.48,
         "classTwoCredits": 0,
@@ -200,7 +200,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2003-04"
           }
         },
-        "taxYear": "2003-04",
+        "taxYear": "2003",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -218,7 +218,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2002-03"
           }
         },
-        "taxYear": "2002-03",
+        "taxYear": "2002",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -236,7 +236,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2001-02"
           }
         },
-        "taxYear": "2001-02",
+        "taxYear": "2001",
         "qualifying": false,
         "classOneContributions": 14.3,
         "classTwoCredits": 0,
@@ -254,7 +254,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/2000-01"
           }
         },
-        "taxYear": "2000-01",
+        "taxYear": "2000",
         "qualifying": true,
         "classOneContributions": 1111.95,
         "classTwoCredits": 0,
@@ -272,7 +272,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1999-00"
           }
         },
-        "taxYear": "1999-00",
+        "taxYear": "1999",
         "qualifying": true,
         "classOneContributions": 860.99,
         "classTwoCredits": 0,
@@ -290,7 +290,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1998-99"
           }
         },
-        "taxYear": "1998-99",
+        "taxYear": "1998",
         "qualifying": true,
         "classOneContributions": 311.44,
         "classTwoCredits": 0,
@@ -308,7 +308,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1997-98"
           }
         },
-        "taxYear": "1997-98",
+        "taxYear": "1997",
         "qualifying": true,
         "classOneContributions": 2094.04,
         "classTwoCredits": 0,
@@ -326,7 +326,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1996-97"
           }
         },
-        "taxYear": "1996-97",
+        "taxYear": "1996",
         "qualifying": false,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -344,7 +344,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1995-96"
           }
         },
-        "taxYear": "1995-96",
+        "taxYear": "1995",
         "qualifying": false,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -362,7 +362,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1994-95"
           }
         },
-        "taxYear": "1994-95",
+        "taxYear": "1994",
         "qualifying": true,
         "classOneContributions": 2094.04,
         "classTwoCredits": 0,
@@ -380,7 +380,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1993-94"
           }
         },
-        "taxYear": "1993-94",
+        "taxYear": "1993",
         "qualifying": true,
         "classOneContributions": 996.32,
         "classTwoCredits": 0,
@@ -398,7 +398,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1992-93"
           }
         },
-        "taxYear": "1992-93",
+        "taxYear": "1992",
         "qualifying": true,
         "classOneContributions": 1555.84,
         "classTwoCredits": 0,
@@ -416,7 +416,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1991-92"
           }
         },
-        "taxYear": "1991-92",
+        "taxYear": "1991",
         "qualifying": true,
         "classOneContributions": 1085.76,
         "classTwoCredits": 0,
@@ -434,7 +434,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1990-91"
           }
         },
-        "taxYear": "1990-91",
+        "taxYear": "1990",
         "qualifying": true,
         "classOneContributions": 840.84,
         "classTwoCredits": 0,
@@ -452,7 +452,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1989-90"
           }
         },
-        "taxYear": "1989-90",
+        "taxYear": "1989",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -470,7 +470,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1988-89"
           }
         },
-        "taxYear": "1988-89",
+        "taxYear": "1988",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -488,7 +488,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1987-88"
           }
         },
-        "taxYear": "1987-88",
+        "taxYear": "1987",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -506,7 +506,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1986-87"
           }
         },
-        "taxYear": "1986-87",
+        "taxYear": "1986",
         "qualifying": false,
         "classOneContributions": 36.04,
         "classTwoCredits": 0,
@@ -524,7 +524,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1985-86"
           }
         },
-        "taxYear": "1985-86",
+        "taxYear": "1985",
         "qualifying": false,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -542,7 +542,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1984-85"
           }
         },
-        "taxYear": "1984-85",
+        "taxYear": "1984",
         "qualifying": true,
         "classOneContributions": 239.21,
         "classTwoCredits": 0,
@@ -560,7 +560,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1983-84"
           }
         },
-        "taxYear": "1983-84",
+        "taxYear": "1983",
         "qualifying": false,
         "classOneContributions": 17.76,
         "classTwoCredits": 0,
@@ -578,7 +578,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1982-83"
           }
         },
-        "taxYear": "1982-83",
+        "taxYear": "1982",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -596,7 +596,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1981-82"
           }
         },
-        "taxYear": "1981-82",
+        "taxYear": "1981",
         "qualifying": true,
         "classOneContributions": 0,
         "classTwoCredits": 0,
@@ -614,7 +614,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1980-81"
           }
         },
-        "taxYear": "1980-81",
+        "taxYear": "1980",
         "qualifying": true,
         "classOneContributions": 114.19,
         "classTwoCredits": 0,
@@ -632,7 +632,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1979-80"
           }
         },
-        "taxYear": "1979-80",
+        "taxYear": "1979",
         "qualifying": true,
         "classOneContributions": 24.9,
         "classTwoCredits": 0,
@@ -650,7 +650,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1978-79"
           }
         },
-        "taxYear": "1978-79",
+        "taxYear": "1978",
         "qualifying": true,
         "classOneContributions": 69.35,
         "classTwoCredits": 0,
@@ -668,7 +668,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1977-78"
           }
         },
-        "taxYear": "1977-78",
+        "taxYear": "1977",
         "qualifying": true,
         "classOneContributions": 82.13,
         "classTwoCredits": 0,
@@ -686,7 +686,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1976-77"
           }
         },
-        "taxYear": "1976-77",
+        "taxYear": "1976",
         "qualifying": true,
         "classOneContributions": 53.5,
         "classTwoCredits": 0,
@@ -704,7 +704,7 @@
             "href": "/national-insurance-record/ni/<NINO>/taxyear/1975-76"
           }
         },
-        "taxYear": "1975-76",
+        "taxYear": "1975",
         "qualifying": true,
         "classOneContributions": 70.67,
         "classTwoCredits": 0,
