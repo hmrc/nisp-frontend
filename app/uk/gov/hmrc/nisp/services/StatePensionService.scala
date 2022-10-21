@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.nisp.services
 
-import java.time.{LocalDate, ZoneId}
-
 import com.google.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
@@ -27,29 +25,40 @@ import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.utils.ExclusionHelper
 import uk.gov.hmrc.time.CurrentTaxYear
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionService @Inject() (statePensionConnector: StatePensionConnector)(implicit executor: ExecutionContext)
-    extends CurrentTaxYear {
+class StatePensionService @Inject()(
+  statePensionConnector: StatePensionConnector
+)(
+  implicit executor: ExecutionContext
+)
+  extends CurrentTaxYear {
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]] = {
-    statePensionConnector.getStatePension(nino)
-      .map { x => (x : @unchecked) match
-        {
-          case Right(Left(CopeStatePensionExclusion(exclusionReason, copeAvailableDate, previousAvailableDate))) =>
-            Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusionReason, copeAvailableDate, previousAvailableDate)))
-          case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
-            Right(Left(StatePensionExclusionFiltered(exclusion)))
-          case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
-            Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusionReasons), pensionAge, pensionDate, statePensionAgeUnderConsideration)))
-          case Right(Right(statePension)) => Right(Right(statePension))
-          case Left(errorResponse) => Left(errorResponse)
-        }
-      }
-  }
+  def getSummary(
+    nino: Nino,
+    delegationState: Boolean = false
+  )(
+    implicit hc: HeaderCarrier
+  ): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]] =
+    statePensionConnector.getStatePension(nino, delegationState).map {
+      case Right(Left(CopeStatePensionExclusion(exclusionReason, copeAvailableDate, previousAvailableDate))) =>
+        Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusionReason, copeAvailableDate, previousAvailableDate)))
+      case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
+        Right(Left(StatePensionExclusionFiltered(exclusion)))
+      case Right(Left(OkStatePensionExclusion(exclusionReasons, pensionAge, pensionDate, statePensionAgeUnderConsideration))) =>
+        Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusionReasons),
+          pensionAge, pensionDate, statePensionAgeUnderConsideration)))
+      case Right(Left(x)) =>
+        throw new Exception(s"Unknown Exclusion: $x")
+      case Right(Right(statePension)) =>
+        Right(Right(statePension))
+      case Left(errorResponse) =>
+        Left(errorResponse)
+    }
 
   def yearsToContributeUntilPensionAge(earningsIncludedUpTo: LocalDate, finalRelevantYearStart: Int): Int =
     finalRelevantYearStart - taxYearFor(earningsIncludedUpTo).startYear
 
-  override def now: () => LocalDate = () => LocalDate.now(ZoneId.of("Europe/London"))
+  override def now: () => LocalDate = () => LocalDate.now(ukTime)
 }

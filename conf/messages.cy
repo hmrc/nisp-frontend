@@ -13,9 +13,7 @@ nisp.textentry.charlimit =  Y terfyn yw 1,200 nod.
 nisp.useagain = I ddefnyddio’r gwasanaeth eto bydd angen i chi
 nisp.signin = fewngofnodi
 nisp.signOut = allgofnodi
-nisp.verify = Verify
 nisp.gov-uk = GOV.UK
-nisp.gov-uk-verify = GOV.UK Verify
 nisp.breadcrumb.account = Hafan y cyfrif
 nisp.breadcrumb.pension = Pensiwn y Wladwriaeth
 nisp.breadcrumb.nirecord = Cofnod YG
@@ -33,8 +31,6 @@ nisp.continue = Parhau
 nisp.landing.title = Gwirio eich Pensiwn y Wladwriaeth
 nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych chi
 nisp.landing.signin.gg = Gallwch fewngofnodi drwy ddefnyddio Porth y Llywodraeth. Efallai y bydd angen i chi ateb ychydig o gwestiynau – byddant yn seiliedig ar bethau mae CThEM eisoes yn ei wybod amdanoch. Yna gallwch gael mynediad i wasanaethau eraill CThEM yn ddiogel.
-nisp.landing.signin.verify = Gallwch hefyd {0} Os nad ydych wedi defnyddio GOV.UK Verify o’r blaen, bydd y broses yn cymryd tua 15 munud. Gallwch gael mynediad i wasanaethau eraill y llywodraeth yn ddiogel ble bynnag rydych yn gweld logo GOV.UK Verify.
-nisp.landing.signin.verify.linktext = fewngofnodi drwy ddefnyddio GOV.UK Verify
 nisp.landing.estimateprovided = Darperir eich rhagolwg Pensiwn y Wladwriaeth er gwybodaeth yn unig ac nid yw’r gwasanaeth yn cynnig cyngor ariannol. Pan yn cynllunio am eich ymddeoliad, dylech chwilio am gyngor proffesiynol.
 nisp.landing.eligibility.heading = Gallwch ddefnyddio’r gwasanaeth hwn os ydych yn
 nisp.landing.eligibility1 = dyn a aned ar ôl 5 Ebrill 1951
@@ -237,7 +233,7 @@ nisp.excluded.cope.failed.britishSignLanguage.text = {0} ar gyfer y rhai sy’n 
 nisp.excluded.cope.failed.britishSignLanguage.linktext1 = gwiriwch eich bod yn gallu defnyddio’r gwasanaeth hwn
 
 nisp.excluded.cope.failed.openingTimes.h3 = Oriau agor
-nisp.excluded.cope.failed.openingTimes.line1 = 8:30am i 3:30pm, o ddydd Llun i ddydd Gwener.
+nisp.excluded.cope.failed.openingTimes.line1 = 8:00am i 6:00pm, o ddydd Llun i ddydd Gwener.
 nisp.excluded.cope.failed.openingTimes.linktext = Gwybodaeth am gostau galwadau
 
 
@@ -270,6 +266,7 @@ nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.context =
 nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
+nisp.nirecord.seperator = i
 
 nisp.nirecord.showgaps = Bwrw golwg dros flynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
 nisp.nirecord.showfull = Gweld pob blwyddyn y gwnaed cyfraniadau ynddi
@@ -320,7 +317,7 @@ nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gen
 nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
 nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
-nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:30am i 3:30pm
+nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:00am i 6:00pm
 
 #****************************
 # Gaps in your record page

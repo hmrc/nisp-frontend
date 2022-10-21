@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.apache.commons.lang3.StringEscapeUtils
-import org.mockito.ArgumentMatchers
+import org.apache.commons.text.StringEscapeUtils
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import play.api.i18n.Messages
 import play.api.inject.bind
@@ -83,7 +83,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
-    when(mockPertaxHelper.isFromPertax(ArgumentMatchers.any())).thenReturn(Future.successful(false))
+    when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
@@ -107,7 +107,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP :  Personal Max" should {
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -128,7 +128,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -186,7 +186,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
             val urDismissedText = source.getElementsByClass("hmrc-user-research-banner__close")
             assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
             assert(urBannerHref.attr("href") == urResearchURL)
-            assert(urDismissedText.first.text() == Messages("nisp.home.banner.recruitment.reject"))
+            assert(urDismissedText.select("span").first.text() == messages("nisp.home.banner.recruitment.reject"))
             assert(source.getElementsByClass("hmrc-user-research-banner") != null)
           }
 
@@ -203,11 +203,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £148.71 a week, £590.10 a month, £7,081.15 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £148.71 " +
-                Messages("nisp.main.week") + ", £590.10 " +
-                Messages("nisp.main.month") + ", £7,081.15 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £148.71 " +
+                messages("nisp.main.week") + ", £590.10 " +
+                messages("nisp.main.month") + ", £7,081.15 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -263,7 +263,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£149.71 a week '" in {
             mockSetup
-            val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
@@ -283,7 +283,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£148.71 a week '" in {
             mockSetup
-            val sMessage = "£148.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£148.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart3'] [data-component='nisp_chart__inner_text']",
@@ -340,7 +340,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£149.71 a week'" in {
             mockSetup
-            val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
@@ -512,7 +512,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : Personal Max: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -533,7 +533,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -640,7 +640,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : Full Rate current more than 155.65" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -661,7 +661,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -722,11 +722,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £168.08 a week, £590.10 a month, £7,081.15 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £168.08 " +
-                Messages("nisp.main.week") + ", £590.10 " +
-                Messages("nisp.main.month") + ", £7,081.15 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £168.08 " +
+                messages("nisp.main.week") + ", £590.10 " +
+                messages("nisp.main.month") + ", £7,081.15 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -782,7 +782,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£162.34 a week '" in {
             mockSetup
-            val sMessage = "£162.34 " + Messages("nisp.main.chart.week")
+            val sMessage = "£162.34 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
@@ -801,7 +801,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£168.08 a week '" in {
             mockSetup
-            val sMessage = "£168.08 " + Messages("nisp.main.chart.week")
+            val sMessage = "£168.08 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart2'] [data-component='nisp_chart__inner_text']",
@@ -858,7 +858,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£172.71 a week'" in {
             mockSetup
-            val sMessage = "£172.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£172.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
@@ -886,7 +886,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
-            val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__legal__forecast_changes__p']",
@@ -1014,7 +1013,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : Full Rate current more than 155.65: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1035,7 +1034,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1144,7 +1143,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1165,7 +1164,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1225,11 +1224,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £148.71 a week, £590.10 a month, £7,081.15 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £148.71 " +
-                Messages("nisp.main.week") + ", £590.10 " +
-                Messages("nisp.main.month") + ", £7,081.15 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £148.71 " +
+                messages("nisp.main.week") + ", £590.10 " +
+                messages("nisp.main.month") + ", £7,081.15 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -1285,7 +1284,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£133.71 a week '" in {
             mockSetup
-            val sMessage = "£133.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£133.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
@@ -1305,7 +1304,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£148.71 a week '" in {
             mockSetup
-            val sMessage = "£148.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£148.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__chart3'] [data-component='nisp_chart__inner_text']",
@@ -1362,7 +1361,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£149.71 a week'" in {
             mockSetup
-            val sMessage = "£149.71 " + Messages("nisp.main.chart.week")
+            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
@@ -1483,7 +1482,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1504,7 +1503,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1616,7 +1615,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : No Gaps || Full Rate & Personal Max" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1637,7 +1636,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1699,11 +1698,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £150.65  a week, £676.80 a month, £8,121.59 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £150.65 " +
-                Messages("nisp.main.week") + ", £676.80 " +
-                Messages("nisp.main.month") + ", £8,121.59 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £150.65 " +
+                messages("nisp.main.week") + ", £676.80 " +
+                messages("nisp.main.month") + ", £8,121.59 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -1759,7 +1758,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£118.65 a week '" in {
             mockSetup
-            val sMessage = "£118.65 " + Messages("nisp.main.chart.week")
+            val sMessage = "£118.65 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__chart1'] [data-component='nisp_chart__inner_text']",
@@ -1779,7 +1778,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£150.65 a week '" in {
             mockSetup
-            val sMessage = "£150.65 " + Messages("nisp.main.chart.week")
+            val sMessage = "£150.65 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__chart5'] [data-component='nisp_chart__inner_text']",
@@ -1789,7 +1788,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£150.65 is the most you can get'" in {
             mockSetup
-            val sMessage = "£150.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
+            val sMessage = "£150.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__h2_2']",
@@ -1827,7 +1826,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
             mockSetup
-            val sMessage = StringEscapeUtils.unescapeHtml4(Messages("nisp.legal.forecastChanges")) + " ."
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__legal__forecast_changes__p']",
@@ -1921,7 +1919,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : No Gaps || Full Rate & Personal Max: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -1942,7 +1940,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2051,7 +2049,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -2072,7 +2070,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2132,11 +2130,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
           "render page with text 'Your forecast is £155.65 a week, £676.80 a month, £8,121.59 a year' " in {
             mockSetup
             val sMessage =
-              Messages("nisp.main.caveats") + " " +
-                Messages("nisp.is") + " £155.65 " +
-                Messages("nisp.main.week") + ", £676.80 " +
-                Messages("nisp.main.month") + ", £8,121.59 " +
-                Messages("nisp.main.year")
+              messages("nisp.main.caveats") + " " +
+                messages("nisp.is") + " £155.65 " +
+                messages("nisp.main.week") + ", £676.80 " +
+                messages("nisp.main.month") + ", £8,121.59 " +
+                messages("nisp.main.year")
             assertEqualsValue(
               doc,
               "[data-spec='state_pension__panel1__caveats']",
@@ -2192,7 +2190,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£149.65 a week '" in {
             mockSetup
-            val sMessage = "£149.65 " + Messages("nisp.main.chart.week")
+            val sMessage = "£149.65 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__chart1'] [data-component='nisp_chart__inner_text']",
@@ -2213,7 +2211,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£155.65 a week '" in {
             mockSetup
-            val sMessage = "£155.65 " + Messages("nisp.main.chart.week")
+            val sMessage = "£155.65 " + messages("nisp.main.chart.week")
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__chart4'] [data-component='nisp_chart__inner_text']",
@@ -2223,7 +2221,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
           "render page with text '£155.65 is the most you can get'" in {
             mockSetup
-            val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
+            val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
             assertEqualsValue(
               doc,
               "[data-spec='continue_working__h2_2']",
@@ -2350,7 +2348,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left: With State Pension age under consideration message" should {
 
           def mockSetup = {
-            when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
                 amounts = StatePensionAmounts(
@@ -2371,7 +2369,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+            when(mockNationalInsuranceService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2482,7 +2480,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
       "State Pension view with NON-MQP : Reached || No Gaps || Full Rate and Personal Max" should {
 
         def mockSetup = {
-          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(any(), any())(any()))
             .thenReturn(Future.successful(Right(Right(StatePension(
               LocalDate.of(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -2503,7 +2501,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
             )
             ))))
 
-          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(any())(any()))
             .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -2563,11 +2561,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
         "render page with text 'Your forecast is £155.65 a week, £676.80 a month, £8,121.59 a year ' " in {
           mockSetup
           val sMessage =
-            Messages("nisp.main.caveats") + " " +
-              Messages("nisp.is") + " £155.65 " +
-              Messages("nisp.main.week") + ", £676.80 " +
-              Messages("nisp.main.month") + ", £8,121.59 " +
-              Messages("nisp.main.year")
+            messages("nisp.main.caveats") + " " +
+              messages("nisp.is") + " £155.65 " +
+              messages("nisp.main.week") + ", £676.80 " +
+              messages("nisp.main.month") + ", £8,121.59 " +
+              messages("nisp.main.year")
           assertEqualsValue(
             doc,
             "[data-spec='state_pension__panel1__caveats']",
@@ -2614,7 +2612,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "render page with text '£155.65 is the most you can get'" in {
           mockSetup
-          val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
+          val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
           assertEqualsValue(
             doc,
             "[data-spec='reached_h2_1']",
@@ -2741,7 +2739,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
       "State Pension view with NON-MQP : Reached || No Gaps || Full Rate and Personal Max: With State Pension age under consideration message" should {
 
         def mockSetup = {
-          when(mockStatePensionService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockStatePensionService.getSummary(any(), any())(any()))
             .thenReturn(Future.successful(Right(Right(StatePension(
               LocalDate.of(2016, 4, 5),
               amounts = StatePensionAmounts(
@@ -2762,7 +2760,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
             )
             ))))
 
-          when(mockNationalInsuranceService.getSummary(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockNationalInsuranceService.getSummary(any())(any()))
             .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,

@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers
 
 import javax.inject.Inject
 import play.api.i18n.{Lang, MessagesApi}
-import play.api.mvc.ControllerComponents
+import play.api.mvc.{Call, ControllerComponents}
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 
 class CustomLanguageController @Inject() (implicit
@@ -36,7 +36,7 @@ class CustomLanguageController @Inject() (implicit
 }
 
 class LanguageService @Inject() () {
-  def routeToSwitchLanguage = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
+  def routeToSwitchLanguage: String => Call = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
 
   /** Returns a mapping between strings and the corresponding Lang object. * */
   def languageMap: Map[String, Lang] = Map(

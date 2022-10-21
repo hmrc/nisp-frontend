@@ -29,26 +29,35 @@ import scala.concurrent.{ExecutionContext, Future}
 class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
                                         (implicit executor: ExecutionContext) {
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] = {
+  val serverInternalError = 500
+
+  def getSummary(nino: Nino)(implicit hc: HeaderCarrier):
+      Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] = {
     nationalInsuranceConnector.getNationalInsurance(nino)
       .map {
-        case Right(Right(ni)) => {
+        case Right(Right(ni)) =>
           if (ni.reducedRateElection) Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
           else Right(Right(
             ni.copy(
-              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse),
+              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse).map(t => t.copy(convertTaxYear(t.taxYear))),
               qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
             )
           ))
-        }
+
         case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
           Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusions))))
+
         case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
           Right(Left(StatePensionExclusionFiltered(exclusion)))
+
         case Right(Left(CopeStatePensionExclusion(exclusion, copeAvailableDate, previousDate))) =>
           Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusion, copeAvailableDate, previousDate)))
+
         case Left(errorResponse) => Left(errorResponse)
 
+        case value => Left(UpstreamErrorResponse(s"Match not implemented for: $value", serverInternalError))
       }
   }
+
+  private def convertTaxYear(taxYear: String): String = taxYear.take(4)
 }

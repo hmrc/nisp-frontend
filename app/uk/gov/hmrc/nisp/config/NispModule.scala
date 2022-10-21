@@ -29,10 +29,6 @@ class NispModule extends Module {
       bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
       bind[SessionCache].to[NispSessionCache],
       bind[TemplateRenderer].to[LocalTemplateRenderer],
-      if (configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)) {
-        bind[AuthAction].to[AuthActionImpl]
-      } else {
-        bind[AuthAction].to[VerifyAuthActionImpl]
-      }
+      bind[AuthAction].to[AuthActionImpl]
     )
 }

@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.DateTime
-
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 import org.jsoup.nodes.Document
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
@@ -36,7 +34,7 @@ class ExclusionCopeExtendedNIViewSpec extends HtmlSpec with Injecting {
   implicit val fakeRequest = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
-    AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None))
+    AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   )
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
@@ -69,5 +67,4 @@ class ExclusionCopeExtendedNIViewSpec extends HtmlSpec with Injecting {
       today.format(DateTimeFormatter.ofPattern("d MMMM y")).replace(" ", "&nbsp;")
     )
   }
-
 }

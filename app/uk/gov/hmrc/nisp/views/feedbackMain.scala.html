@@ -21,11 +21,8 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.viewParams.MainTemplateParams
 @import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.html.layouts.{Article, Sidebar, TrackingConsentSnippet}
 @import uk.gov.hmrc.renderer.TemplateRenderer
-
-@import scala.concurrent.ExecutionContext
 
 @this(
     templateRenderer: TemplateRenderer,
@@ -35,9 +32,6 @@
     articleView: Article,
     sidebarView: Sidebar,
     langUtils: LanguageUtils
-)(
-    implicit ec: ExecutionContext,
-    formPartialRetriever: FormPartialRetriever
 )
 
 @(
@@ -105,10 +99,6 @@
 
 @checkForUrCookie = @{
     !request.cookies.exists(x => x.name == "cysp-nisp-urBannerHide")
-}
-
-@getHelpForm = {
-    @formPartialRetriever.getPartialContent(s"${config.contactFrontendPartialBaseUrl}/contact/problem_reports")
 }
 
 @sidebar = {
@@ -203,8 +193,6 @@
         "inlineScript" -> inlineScript,
         "assetsPath" -> config.assetsPrefix,
         "mainContentHeader" -> mainContentHeader,
-        "isGovernmentGateway" -> authDetails.fold(false)(ad => ad.isGG),
-        "isVerify" -> authDetails.fold(false)(ad => ad.isVerify),
         "isSa" -> false,
         "signOutUrl" -> Some(routes.StatePensionController.signOut).filter(_ => mainTemplateParams.articleEnabled && !mainTemplateParams.hideNavBar),
         "hideAccountMenu" -> mainTemplateParams.hideNavBar,
@@ -215,7 +203,7 @@
         "showLastLogInStatus" -> showLastLogInStatus,
         "userDisplayName" -> userDisplayName,
         "previouslyLoggedInAt" -> previouslyLoggedInAt,
-        "getHelpForm" -> getHelpForm,
+
         "actingAttorneyBanner" -> actingAttorneyBanner,
         "navTitle" -> navTitle,
         "navLinks" -> links,

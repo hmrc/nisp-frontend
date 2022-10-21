@@ -28,8 +28,8 @@ TwirlKeys.templateImports ++= Seq(
 lazy val scoverageSettings =
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-    ScoverageKeys.coverageMinimum := 88.23,
-    ScoverageKeys.coverageFailOnMinimum := false,
+    ScoverageKeys.coverageMinimumStmtTotal := 87.36,
+    ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
 
@@ -68,16 +68,20 @@ lazy val microservice = Project(appName, file("."))
     scalaVersion := "2.12.12",
     libraryDependencies ++= AppDependencies.all,
     retrieveManaged := true,
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
+    update / evictionWarningOptions  := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     majorVersion := 10,
-    scalacOptions ++= Seq("-P:silencer:pathFilters=routes"),
+    scalacOptions ++= Seq(
+      "-Xfatal-warnings",
+      "-P:silencer:pathFilters=routes",
+      "-feature"
+    ),
     scalacOptions ++= suppressedImports
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest)(base => Seq(base / "it")).value,
+    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory)(base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    parallelExecution in IntegrationTest := false,
+    IntegrationTest / parallelExecution := false,
     scalacOptions += "-Ypartial-unification"
   )

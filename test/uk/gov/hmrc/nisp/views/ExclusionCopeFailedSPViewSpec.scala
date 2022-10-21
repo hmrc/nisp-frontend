@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
 import play.api.Application
@@ -31,6 +30,8 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequ
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.views.html.excluded_cope_failed_sp
 
+import java.time.{Instant, LocalDate}
+
 class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
@@ -40,7 +41,7 @@ class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
   implicit val fakeRequest = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
-    AuthDetails(ConfidenceLevel.L200, Some("GovernmentGateway"), LoginTimes(DateTime.now(), None))
+    AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   )
 
   override def beforeEach(): Unit = {
@@ -118,5 +119,4 @@ class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
       "Opening Times"
     )
   }
-
 }

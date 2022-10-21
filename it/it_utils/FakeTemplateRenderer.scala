@@ -22,6 +22,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 object FakeTemplateRenderer extends TemplateRenderer {
 

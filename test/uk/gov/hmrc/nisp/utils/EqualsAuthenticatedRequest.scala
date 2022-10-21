@@ -20,6 +20,7 @@ import org.mockito.ArgumentMatcher
 import org.scalactic.{Prettifier, source}
 import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+import scala.language.implicitConversions
 
 case class EqualsAuthenticatedRequest(n: AuthenticatedRequest[_])
     extends ArgumentMatcher[AuthenticatedRequest[_]]

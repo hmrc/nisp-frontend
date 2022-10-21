@@ -30,7 +30,7 @@ import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakeParti
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.io.{BufferedSource, Source}
 
 class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
@@ -51,7 +51,7 @@ class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
       val properties                                       = new Properties()
       val managedResource: ManagedResource[BufferedSource] = managed(Source.fromURI(file.toURI))
       managedResource.acquireAndGet(bufferedSource => properties.load(bufferedSource.bufferedReader()))
-      properties.stringPropertyNames().toSet
+      properties.stringPropertyNames().asScala.toSet
     } else {
       throw new FileNotFoundException("Messages file cannot be loaded")
     }

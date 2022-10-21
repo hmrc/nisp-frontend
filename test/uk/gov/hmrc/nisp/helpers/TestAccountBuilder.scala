@@ -37,9 +37,6 @@ object TestAccountBuilder {
 
   def randomNino: Nino = Nino(new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA"))
 
-  val nispAuthedUser =
-    NispAuthedUser(regularNino, LocalDate.now, UserName(Name(Some("first"), Some("name"))), None, None, false)
-
   val nonExistentNino: Nino                             = randomNino
   val regularNino: Nino                                 = randomNino
   val mqpNino: Nino                                     = randomNino
@@ -84,6 +81,9 @@ object TestAccountBuilder {
   val excludedAbroad: Nino = randomNino
 
   val internalServerError: Nino = randomNino
+
+  val nispAuthedUser =
+    NispAuthedUser(regularNino, LocalDate.now, UserName(Name(Some("first"), Some("name"))), None, None, false)
 
   val mappedTestAccounts = Map(
     regularNino                                 -> "regular",
@@ -138,6 +138,10 @@ object TestAccountBuilder {
 
   def jsonResponse(nino: Nino, api: String): Future[HttpResponse] =
     fileContents(s"test/resources/${mappedTestAccounts(nino)}/$api.json").map { string: String =>
-      HttpResponse(Status.OK, Some(Json.parse(string.replace("<NINO>", nino.nino))))
+      HttpResponse(
+        status = Status.OK,
+        json = Json.parse(string.replace("<NINO>", nino.nino)),
+        headers = Map.empty
+      )
     }
 }

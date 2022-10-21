@@ -2,10 +2,12 @@ package controllers
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it_utils.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, WiremockHelper}
-import org.joda.time.DateTime
-import org.joda.time.DateTimeUtils.currentTimeMillis
+
+import java.lang.System.currentTimeMillis
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
@@ -20,10 +22,10 @@ import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 import java.util.UUID
 
-class LandingControllerISpec extends WordSpec
+class LandingControllerISpec extends AnyWordSpec
   with Matchers
   with GuiceOneAppPerSuite
   with WiremockHelper
@@ -74,8 +76,8 @@ class LandingControllerISpec extends WordSpec
          |"nino": "$nino",
          |"confidenceLevel": 200,
          |"loginTimes": {
-         |  "currentLogin": "${DateTime.now}",
-         |  "previousLogin": "${DateTime.now}"
+         |  "currentLogin": "${LocalDateTime.now}",
+         |  "previousLogin": "${LocalDateTime.now}"
          |  }
          |}
       """.stripMargin)))
