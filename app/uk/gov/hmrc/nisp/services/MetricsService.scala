@@ -16,15 +16,17 @@
 
 package uk.gov.hmrc.nisp.services
 
+import com.codahale.metrics.{Counter, Timer}
 import com.codahale.metrics.Timer.Context
 import com.google.inject.Inject
 import com.kenshoo.play.metrics.Metrics
+import uk.gov.hmrc.nisp.models.enums
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.enums.APIType.APIType
 
 class MetricsService @Inject() (metrics: Metrics) {
 
-  val timers = Map(
+  val timers: Map[enums.APIType.Value, Timer] = Map(
     APIType.SP                -> metrics.defaultRegistry.timer("sp-response-timer"),
     APIType.NI                -> metrics.defaultRegistry.timer("ni-response-timer"),
     APIType.SchemeMembership  -> metrics.defaultRegistry.timer("scheme-membership-response-timer"),
@@ -32,7 +34,7 @@ class MetricsService @Inject() (metrics: Metrics) {
     APIType.NationalInsurance -> metrics.defaultRegistry.timer("national-insurance-response-timer")
   )
 
-  val failedCounters = Map(
+  val failedCounters: Map[enums.APIType.Value, Counter] = Map(
     APIType.SP                -> metrics.defaultRegistry.counter("sp-failed-counter"),
     APIType.NI                -> metrics.defaultRegistry.counter("ni-failed-counter"),
     APIType.SchemeMembership  -> metrics.defaultRegistry.counter("scheme-membership-failed-counter"),
@@ -40,16 +42,16 @@ class MetricsService @Inject() (metrics: Metrics) {
     APIType.NationalInsurance -> metrics.defaultRegistry.counter("national-insurance-failed-counter")
   )
 
-  val keystoreReadTimer                 = metrics.defaultRegistry.timer("keystore-read-timer")
-  val keystoreWriteTimer                = metrics.defaultRegistry.timer("keystore-write-timer")
-  val keystoreReadFailed                = metrics.defaultRegistry.counter("keystore-read-failed-counter")
-  val keystoreWriteFailed               = metrics.defaultRegistry.counter("keystore-write-failed-counter")
-  val keystoreHitCounter                = metrics.defaultRegistry.counter("keystore-hit-counter")
-  val keystoreMissCounter               = metrics.defaultRegistry.counter("keystore-miss-counter")
-  val identityVerificationTimer         = metrics.defaultRegistry.timer("identity-verification-timer")
-  val identityVerificationFailedCounter = metrics.defaultRegistry.counter("identity-verification-failed-counter")
-  val citizenDetailsTimer               = metrics.defaultRegistry.timer("citizen-details-timer")
-  val citizenDetailsFailedCounter       = metrics.defaultRegistry.counter("citizen-details-failed-counter")
+  val keystoreReadTimer: Timer = metrics.defaultRegistry.timer("keystore-read-timer")
+  val keystoreWriteTimer: Timer = metrics.defaultRegistry.timer("keystore-write-timer")
+  val keystoreReadFailed: Counter = metrics.defaultRegistry.counter("keystore-read-failed-counter")
+  val keystoreWriteFailed: Counter = metrics.defaultRegistry.counter("keystore-write-failed-counter")
+  val keystoreHitCounter: Counter = metrics.defaultRegistry.counter("keystore-hit-counter")
+  val keystoreMissCounter: Counter = metrics.defaultRegistry.counter("keystore-miss-counter")
+  val identityVerificationTimer: Timer = metrics.defaultRegistry.timer("identity-verification-timer")
+  val identityVerificationFailedCounter: Counter = metrics.defaultRegistry.counter("identity-verification-failed-counter")
+  val citizenDetailsTimer: Timer = metrics.defaultRegistry.timer("citizen-details-timer")
+  val citizenDetailsFailedCounter: Counter = metrics.defaultRegistry.counter("citizen-details-failed-counter")
 
   def startTimer(api: APIType): Context = timers(api).time()
 

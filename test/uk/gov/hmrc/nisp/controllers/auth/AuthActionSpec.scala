@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import akka.util.Timeout
-import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, spy, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -45,7 +44,7 @@ import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.{EqualsAuthenticatedRequest, UnitSpec}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -61,14 +60,14 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
   }
 
   type AuthRetrievalType =
-    Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
+    Option[String] ~ ConfidenceLevel ~ Option[String] ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
 
   val mockAuthConnector         = mock[AuthConnector]
   val mockApplicationConfig     = mock[ApplicationConfig]
   val mockCitizenDetailsService = mock[CitizenDetailsService]
 
   val nino                   = new Generator().nextNino.nino
-  val fakeLoginTimes         = LoginTimes(DateTime.now(), None)
+  val fakeLoginTimes         = LoginTimes(Instant.now(), None)
   val credentials            = Credentials("providerId", "providerType")
   val citizen                = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
   val address                = Address(Some("Country"))
@@ -92,10 +91,11 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
   def makeRetrievalResults(
     ninoOption: Option[String] = Some(nino),
     enrolments: Enrolments = Enrolments(Set.empty),
+    credentialStrength: String = CredentialStrength.strong,
     trustedHelper: Option[TrustedHelper] = None
   ): Future[AuthRetrievalType] =
     Future.successful(
-      ninoOption ~ ConfidenceLevel.L200 ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper
+      ninoOption ~ ConfidenceLevel.L200 ~ Some(credentialStrength) ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper
     )
 
   object Stubs {
@@ -202,6 +202,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
         verify(stubs).successBlock(argThat(EqualsAuthenticatedRequest(expectedAuthenticatedRequest)))
       }
     }
+
     "redirect to sign in page when no session" in {
       val ggSigninUrl           = "ggSigninUrl"
       val postSignInRedirectUrl = "postSignInRedirectUrl"
@@ -300,6 +301,33 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
       val result = authAction.invokeBlock(FakeRequest("", "a-non-ni-record-uri"), Stubs.successBlock)
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
+    }
+  }
+
+  "A user with a weak credential strength" must {
+    "be redirected to the MFA uplift endpoint" in {
+
+      val mfaRedirectUrl = "mfaUpliftUrl?continueUrl=postSignInRedirectUrl&origin=nisp-frontend"
+
+      val postSignInRedirectUrl = "postSignInRedirectUrl"
+      val mfaUpliftUrl = "mfaUpliftUrl"
+
+      when(
+        mockAuthConnector.authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
+      )
+        .thenReturn(makeRetrievalResults(credentialStrength = CredentialStrength.weak))
+
+      when(mockApplicationConfig.mfaUpliftUrl).thenReturn(mfaUpliftUrl)
+      when(mockApplicationConfig.postSignInRedirectUrl).thenReturn(postSignInRedirectUrl)
+
+      when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+
+      val stubs   = spy(Stubs)
+      val request = FakeRequest("", "")
+      val result  = authAction.invokeBlock(request, stubs.successBlock)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).get shouldBe mfaRedirectUrl
     }
   }
 }
