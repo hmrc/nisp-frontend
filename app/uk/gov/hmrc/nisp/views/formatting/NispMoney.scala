@@ -44,5 +44,4 @@ object NispMoney {
 
     Html(s"$prefix&pound;$quantity")
   }
-  //  def pounds(value: BigDecimal): Html = Money.pounds(value, if (value.isValidInt) 0 else 2)
 }
