@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.time.LocalDate
-import java.util.UUID
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -34,13 +32,13 @@ import uk.gov.hmrc.nisp.controllers.auth.AuthAction
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessing
-import uk.gov.hmrc.nisp.models.{Exclusion, _}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.Future
 
 class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
@@ -50,9 +48,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockDateProvider: DateProvider                         = mock[DateProvider]
-
-  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer                = FakeTemplateRenderer
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -77,9 +72,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[TemplateRenderer].toInstance(templateRenderer),
       bind[DateProvider].toInstance(mockDateProvider)
     )
     .build()

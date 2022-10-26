@@ -21,14 +21,12 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.config.wiring.NispSessionCache
 import uk.gov.hmrc.nisp.controllers.auth._
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 class NispModule extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
     Seq(
       bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
       bind[SessionCache].to[NispSessionCache],
-      bind[TemplateRenderer].to[LocalTemplateRenderer],
       bind[AuthAction].to[AuthActionImpl]
     )
 }

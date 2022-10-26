@@ -37,12 +37,10 @@ import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.nisp.utils.{EqualsAuthenticatedRequest, UnitSpec}
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
 import java.time.{Instant, LocalDate}
 import scala.concurrent.duration._
@@ -77,9 +75,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
     .overrides(
       bind[AuthConnector].toInstance(mockAuthConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[CitizenDetailsService].toInstance(mockCitizenDetailsService),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[CitizenDetailsService].toInstance(mockCitizenDetailsService)
     )
     .build()
 

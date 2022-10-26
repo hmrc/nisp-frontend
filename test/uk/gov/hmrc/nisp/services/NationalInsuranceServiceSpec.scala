@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.nisp.services
 
-import java.time.LocalDate
-
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -30,11 +28,9 @@ import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion}
-import uk.gov.hmrc.nisp.models.{Exclusion, _}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.utils.UnitSpec
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -54,9 +50,7 @@ class NationalInsuranceServiceSpec
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[NationalInsuranceConnectorImpl].toInstance(mockNationalInsuranceConnector),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[NationalInsuranceConnectorImpl].toInstance(mockNationalInsuranceConnector)
     ).build()
 
   override def beforeEach(): Unit = {

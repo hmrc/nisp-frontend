@@ -29,10 +29,9 @@ import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.CitizenDetailsConnector
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, TestAccountBuilder}
+import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.models.citizen.{Address, Citizen, CitizenDetailsError, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.utils.UnitSpec
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -52,9 +51,7 @@ class CitizenDetailsServiceSpec
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[CitizenDetailsConnector].toInstance(mockCitizenDetailsConnector),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[CitizenDetailsConnector].toInstance(mockCitizenDetailsConnector)
     )
     .build()
 
