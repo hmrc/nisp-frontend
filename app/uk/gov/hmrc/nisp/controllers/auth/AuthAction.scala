@@ -35,19 +35,18 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionImpl @Inject() (
+class AuthActionImpl @Inject()(
   override val authConnector: AuthConnector,
   cds: CitizenDetailsService,
   val parser: BodyParsers.Default,
   val executionContext: ExecutionContext,
   applicationConfig: ApplicationConfig
 ) extends AuthAction
-    with AuthorisedFunctions {
+  with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
 
     authorised(
       ConfidenceLevel.L200 and
@@ -63,22 +62,21 @@ class AuthActionImpl @Inject() (
           and Retrievals.trustedHelper
       ) {
 
-        case Some(nino) ~ _ ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ Enrolments(_) ~ _ =>
+        case Some(_) ~ _ ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ Enrolments(_) ~ _ =>
           upliftCredentialStrength
 
         case Some(nino)
           ~ confidenceLevel
-          ~ credentialStrength
-          ~ credentials
+          ~ _
+          ~ _
           ~ loginTimes
           ~ Enrolments(enrolments)
           ~ trustedHelper =>
           authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, trustedHelper)
 
         case _ => throw new RuntimeException("Can't find credentials for user")
-      }
-      .recover {
-        case _: NoActiveSession             =>
+      } recover {
+        case _: NoActiveSession =>
           Redirect(
             applicationConfig.ggSignInUrl,
             Map(
@@ -107,7 +105,10 @@ class AuthActionImpl @Inject() (
     confidenceLevel: ConfidenceLevel,
     loginTimes: LoginTimes,
     enrolments: Set[Enrolment],
-    trustedHelper: Option[TrustedHelper])(implicit hc: HeaderCarrier): Future[Result] = {
+    trustedHelper: Option[TrustedHelper]
+  )(
+    implicit hc: HeaderCarrier
+  ): Future[Result] = {
     val useNino = trustedHelper.fold(nino)(_.principalNino)
     cds.retrievePerson(Nino(useNino)).flatMap {
       case Right(cdr)                   =>
@@ -144,5 +145,5 @@ class AuthActionImpl @Inject() (
 }
 
 trait AuthAction
-    extends ActionBuilder[AuthenticatedRequest, AnyContent]
-    with ActionFunction[Request, AuthenticatedRequest]
+  extends ActionBuilder[AuthenticatedRequest, AnyContent]
+  with ActionFunction[Request, AuthenticatedRequest]

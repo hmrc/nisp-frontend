@@ -17,9 +17,7 @@
 package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.{
-  HeaderCarrier, HttpResponse, UpstreamErrorResponse, HttpClient, HttpException
-}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse, HttpClient, HttpException}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -30,8 +28,7 @@ import play.api.http.Status.BAD_GATEWAY
 
 import scala.concurrent.{ExecutionContext, Future}
 
-//TODO[Testing] this class needs testing
-class CitizenDetailsConnector @Inject() (
+class CitizenDetailsConnector @Inject()(
   http: HttpClient,
   metricsService: MetricsService,
   appConfig: ApplicationConfig
@@ -39,31 +36,33 @@ class CitizenDetailsConnector @Inject() (
 
   val serviceUrl: String = appConfig.citizenDetailsServiceUrl
 
-  def connectToGetPersonDetails(nino: Nino)(
-    implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, CitizenDetailsResponse]] = {
+  def connectToGetPersonDetails(
+    nino: Nino
+  )(
+    implicit hc: HeaderCarrier
+  ): Future[Either[UpstreamErrorResponse, CitizenDetailsResponse]] = {
 
     val context = metricsService.citizenDetailsTimer.time()
 
     http
       .GET[Either[UpstreamErrorResponse, HttpResponse]](
         s"$serviceUrl/citizen-details/$nino/designatory-details"
-      )
-      .transform { result =>
+      ).transform {
+      result =>
         context.stop()
         result
-      }
-      .map {
-        case Right(response) => Right(response.json.as[CitizenDetailsResponse])
-        case Left(error) =>
-          metricsService.citizenDetailsFailedCounter.inc()
-          Left(error)
-      }
-      .recover {
-        case error: HttpException =>
-          Left(UpstreamErrorResponse(error.message, BAD_GATEWAY))
-        case error =>
-          metricsService.citizenDetailsFailedCounter.inc()
-          throw error
-      }
+    } map {
+      case Right(response) =>
+        Right(response.json.as[CitizenDetailsResponse])
+      case Left(error) =>
+        metricsService.citizenDetailsFailedCounter.inc()
+        Left(error)
+    } recover {
+      case error: HttpException =>
+        Left(UpstreamErrorResponse(error.message, BAD_GATEWAY))
+      case error =>
+        metricsService.citizenDetailsFailedCounter.inc()
+        throw error
+    }
   }
 }

@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers.pertax
 
+import com.codahale.metrics.Timer
 import com.google.inject.Inject
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -26,32 +27,46 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.util.{Failure, Success}
 
-class PertaxHelper @Inject() (sessionCache: SessionCache, metricsService: MetricsService)(implicit
-  ec: ExecutionContext
+class PertaxHelper @Inject()(
+  sessionCache: SessionCache,
+  metricsService: MetricsService
+)(
+  implicit ec: ExecutionContext
 ) {
 
   def setFromPertax(implicit hc: HeaderCarrier): Unit = {
-    val timerContext = metricsService.keystoreWriteTimer.time()
-    val cacheF       = sessionCache.cache(PERTAX, true)
+    val timerContext: Timer.Context =
+      metricsService.keystoreWriteTimer.time()
+    val cacheF =
+      sessionCache.cache(PERTAX, true)
+
     cacheF.onComplete {
-      case Success(_) => timerContext.stop()
-      case Failure(_) => metricsService.keystoreWriteFailed.inc()
+      case Success(_) =>
+        timerContext.stop()
+      case Failure(_) =>
+        metricsService.keystoreWriteFailed.inc()
     }
   }
 
   def isFromPertax(implicit hc: HeaderCarrier): Future[Boolean] = {
-    val keystoreTimerContext = metricsService.keystoreReadTimer.time()
-    sessionCache.fetchAndGetEntry[Boolean](PERTAX).map { keystoreResult =>
-      keystoreTimerContext.stop()
-      keystoreResult match {
-        case Some(isPertax) => metricsService.keystoreHitCounter.inc(); isPertax
-        case None           =>
-          metricsService.keystoreMissCounter.inc()
-          false
-      }
-    } recover { case _ =>
-      metricsService.keystoreReadFailed.inc()
-      false
+    val keystoreTimerContext =
+      metricsService.keystoreReadTimer.time()
+
+    sessionCache.fetchAndGetEntry[Boolean](PERTAX).map {
+      keystoreResult =>
+        keystoreTimerContext.stop()
+        keystoreResult match {
+          case Some(isPertax) =>
+            metricsService.keystoreHitCounter.inc()
+            isPertax
+          case None =>
+            metricsService.keystoreMissCounter.inc()
+            false
+        }
+    } recover {
+      case _ =>
+        metricsService.keystoreReadFailed.inc()
+        false
     }
   }
 }
