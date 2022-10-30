@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers.pertax
 
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{RETURNS_DEEP_STUBS, reset, when}
+import org.mockito.Mockito.{RETURNS_DEEP_STUBS, reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -46,7 +46,6 @@ class PertaxHelperSpec
     mock[SessionCache]
   val mockMetricService: MetricsService =
     mock[MetricsService](RETURNS_DEEP_STUBS)
-
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MetricsService].toInstance(mockMetricService),
@@ -56,21 +55,77 @@ class PertaxHelperSpec
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockMetricService)
+    reset(mockMetricService.keystoreReadTimer)
+    reset(mockMetricService.keystoreWriteTimer)
+    reset(mockMetricService.keystoreWriteFailed)
+    reset(mockMetricService.keystoreHitCounter)
+    reset(mockMetricService.keystoreMissCounter)
     reset(mockSessionCache)
   }
 
   lazy val pertaxHelper: PertaxHelper =
     inject[PertaxHelper]
 
-  "PertaxHelperSpec setFromPertax" should {
-    "set value in cache" in {
+  "PertaxHelperSpec.setFromPertax" should {
+    "call timerContext.stop() when set value in cache succeeds" in {
       when(mockSessionCache.cache(any(), any())(any(), any(), any()))
         .thenReturn(Future.successful(
           CacheMap("customerPERTAX", Map("customerPERTAX" -> JsBoolean(true)))
         ))
 
-      pertaxHelper.setFromPertax shouldBe((): Unit)
+      await(pertaxHelper.setFromPertax) shouldBe((): Unit)
+
+      verify(mockMetricService.keystoreWriteTimer.time()).stop()
+    }
+
+    "call keystoreWriteFailed.inc() when set value in cache fails" in {
+      when(mockSessionCache.cache(any(), any())(any(), any(), any()))
+        .thenReturn(Future.failed(new Exception("this is an error")))
+
+      await(pertaxHelper.setFromPertax) shouldBe((): Unit)
+
+      verify(mockMetricService.keystoreWriteFailed).inc()
+    }
+  }
+
+  "PertaxHelperSpec.isFromPertax" should {
+    "call timerContext.stop() and keystoreHitCounter.inc() when true returned from cache" in {
+      when(mockSessionCache.fetchAndGetEntry[Boolean](any())(any(), any(), any()))
+        .thenReturn(Future.successful(Some(true)))
+
+      await(pertaxHelper.isFromPertax) shouldBe true
+
+      verify(mockMetricService.keystoreReadTimer.time()).stop()
+      verify(mockMetricService.keystoreHitCounter).inc()
+    }
+
+    "call timerContext.stop() and keystoreHitCounter.inc() when false returned from cache" in {
+      when(mockSessionCache.fetchAndGetEntry[Boolean](any())(any(), any(), any()))
+        .thenReturn(Future.successful(Some(false)))
+
+      await(pertaxHelper.isFromPertax) shouldBe false
+
+      verify(mockMetricService.keystoreReadTimer.time()).stop()
+      verify(mockMetricService.keystoreHitCounter).inc()
+    }
+
+    "call timerContext.stop() and keystoreMissCounter.inc() when None returned from cache" in {
+      when(mockSessionCache.fetchAndGetEntry[Boolean](any())(any(), any(), any()))
+        .thenReturn(Future.successful(None))
+
+      await(pertaxHelper.isFromPertax) shouldBe false
+
+      verify(mockMetricService.keystoreReadTimer.time()).stop()
+      verify(mockMetricService.keystoreMissCounter).inc()
+    }
+
+    "call keystoreReadFailed.inc() when fetch fails" in {
+      when(mockSessionCache.fetchAndGetEntry[Boolean](any())(any(), any(), any()))
+        .thenReturn(Future.failed(new Exception("this is an error")))
+
+      await(pertaxHelper.isFromPertax) shouldBe false
+
+      verify(mockMetricService.keystoreReadFailed).inc()
     }
   }
 }

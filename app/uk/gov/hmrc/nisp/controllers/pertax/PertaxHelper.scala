@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.controllers.pertax
 
 import com.codahale.metrics.Timer
 import com.google.inject.Inject
-import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.Constants._
 
@@ -35,14 +35,14 @@ class PertaxHelper @Inject()(
 ) {
 
   def setFromPertax(implicit hc: HeaderCarrier): Unit = {
-    val timerContext: Timer.Context =
+    val keystoreTimerContext: Timer.Context =
       metricsService.keystoreWriteTimer.time()
-    val cacheF =
+    val cacheF: Future[CacheMap] =
       sessionCache.cache(PERTAX, true)
 
     cacheF.onComplete {
       case Success(_) =>
-        timerContext.stop()
+        keystoreTimerContext.stop()
       case Failure(_) =>
         metricsService.keystoreWriteFailed.inc()
     }
