@@ -32,8 +32,6 @@ import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import scala.concurrent.Future
 
-//import scala.concurrent.ExecutionContext.Implicits.global
-
 class PertaxHelperSpec
   extends UnitSpec
     with GuiceOneAppPerSuite
@@ -44,26 +42,26 @@ class PertaxHelperSpec
     HeaderCarrier()
   val mockSessionCache: SessionCache =
     mock[SessionCache]
-  val mockMetricService: MetricsService =
+  val mockMetricsService: MetricsService =
     mock[MetricsService](RETURNS_DEEP_STUBS)
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[MetricsService].toInstance(mockMetricService),
+      bind[MetricsService].toInstance(mockMetricsService),
       bind[SessionCache].toInstance(mockSessionCache)
     )
     .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockMetricService.keystoreReadTimer)
-    reset(mockMetricService.keystoreWriteTimer)
-    reset(mockMetricService.keystoreWriteFailed)
-    reset(mockMetricService.keystoreHitCounter)
-    reset(mockMetricService.keystoreMissCounter)
+    reset(mockMetricsService.keystoreWriteTimer)
+    reset(mockMetricsService.keystoreWriteFailed)
+    reset(mockMetricsService.keystoreReadTimer)
+    reset(mockMetricsService.keystoreHitCounter)
+    reset(mockMetricsService.keystoreMissCounter)
     reset(mockSessionCache)
   }
 
-  lazy val pertaxHelper: PertaxHelper =
+  val pertaxHelper: PertaxHelper =
     inject[PertaxHelper]
 
   "PertaxHelperSpec.setFromPertax" should {
@@ -73,18 +71,9 @@ class PertaxHelperSpec
           CacheMap("customerPERTAX", Map("customerPERTAX" -> JsBoolean(true)))
         ))
 
-      await(pertaxHelper.setFromPertax) shouldBe((): Unit)
+      await(pertaxHelper.setFromPertax) shouldBe ((): Unit)
 
-      verify(mockMetricService.keystoreWriteTimer.time()).stop()
-    }
-
-    "call keystoreWriteFailed.inc() when set value in cache fails" in {
-      when(mockSessionCache.cache(any(), any())(any(), any(), any()))
-        .thenReturn(Future.failed(new Exception("this is an error")))
-
-      await(pertaxHelper.setFromPertax) shouldBe((): Unit)
-
-      verify(mockMetricService.keystoreWriteFailed).inc()
+      verify(mockMetricsService.keystoreWriteTimer.time()).stop()
     }
   }
 
@@ -95,8 +84,8 @@ class PertaxHelperSpec
 
       await(pertaxHelper.isFromPertax) shouldBe true
 
-      verify(mockMetricService.keystoreReadTimer.time()).stop()
-      verify(mockMetricService.keystoreHitCounter).inc()
+      verify(mockMetricsService.keystoreReadTimer.time()).stop()
+      verify(mockMetricsService.keystoreHitCounter).inc()
     }
 
     "call timerContext.stop() and keystoreHitCounter.inc() when false returned from cache" in {
@@ -105,8 +94,8 @@ class PertaxHelperSpec
 
       await(pertaxHelper.isFromPertax) shouldBe false
 
-      verify(mockMetricService.keystoreReadTimer.time()).stop()
-      verify(mockMetricService.keystoreHitCounter).inc()
+      verify(mockMetricsService.keystoreReadTimer.time()).stop()
+      verify(mockMetricsService.keystoreHitCounter).inc()
     }
 
     "call timerContext.stop() and keystoreMissCounter.inc() when None returned from cache" in {
@@ -115,8 +104,8 @@ class PertaxHelperSpec
 
       await(pertaxHelper.isFromPertax) shouldBe false
 
-      verify(mockMetricService.keystoreReadTimer.time()).stop()
-      verify(mockMetricService.keystoreMissCounter).inc()
+      verify(mockMetricsService.keystoreReadTimer.time()).stop()
+      verify(mockMetricsService.keystoreMissCounter).inc()
     }
 
     "call keystoreReadFailed.inc() when fetch fails" in {
@@ -125,7 +114,7 @@ class PertaxHelperSpec
 
       await(pertaxHelper.isFromPertax) shouldBe false
 
-      verify(mockMetricService.keystoreReadFailed).inc()
+      verify(mockMetricsService.keystoreReadFailed).inc()
     }
   }
 }
