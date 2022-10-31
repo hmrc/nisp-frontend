@@ -32,15 +32,15 @@ import uk.gov.hmrc.nisp.models.citizen._
 import uk.gov.hmrc.nisp.services.CitizenDetailsService
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionImpl @Inject()(
   override val authConnector: AuthConnector,
   cds: CitizenDetailsService,
   val parser: BodyParsers.Default,
-  val executionContext: ExecutionContext,
   applicationConfig: ApplicationConfig
+)(
+  implicit val executionContext: ExecutionContext
 ) extends AuthAction
   with AuthorisedFunctions {
 
