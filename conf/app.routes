@@ -1,36 +1,30 @@
 # microservice specific routes
-->         /hmrc-frontend                          hmrcfrontend.Routes
-->          /pta-frontend                                ptafrontend.Routes
+->         /hmrc-frontend                             hmrcfrontend.Routes
+->         /pta-frontend                              ptafrontend.Routes
 
-GET         /assets/*file                          controllers.Assets.versioned(path="/public", file: Asset)
+GET        /assets/*file                              controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /                                      uk.gov.hmrc.nisp.controllers.LandingController.show
-GET         /not-authorised                        uk.gov.hmrc.nisp.controllers.LandingController.showNotAuthorised(journeyId: Option[String])
+GET        /                                          uk.gov.hmrc.nisp.controllers.LandingController.show
+GET        /not-authorised                            uk.gov.hmrc.nisp.controllers.LandingController.showNotAuthorised(journeyId: Option[String])
 
-GET         /account                               uk.gov.hmrc.nisp.controllers.StatePensionController.show
-GET         /account/pta                           uk.gov.hmrc.nisp.controllers.StatePensionController.pta
-GET         /account/cope                          uk.gov.hmrc.nisp.controllers.StatePensionController.showCope
-GET         /sign-out                              uk.gov.hmrc.nisp.controllers.StatePensionController.signOut
-GET         /timeout                               uk.gov.hmrc.nisp.controllers.StatePensionController.timeout
+GET        /account                                   uk.gov.hmrc.nisp.controllers.StatePensionController.show
+GET        /account/pta                               uk.gov.hmrc.nisp.controllers.StatePensionController.pta
+GET        /account/cope                              uk.gov.hmrc.nisp.controllers.StatePensionController.showCope
+GET        /sign-out                                  uk.gov.hmrc.nisp.controllers.StatePensionController.signOut
+GET        /timeout                                   uk.gov.hmrc.nisp.controllers.StatePensionController.timeout
 
-GET         /exclusion                             uk.gov.hmrc.nisp.controllers.ExclusionController.showSP
-GET         /exclusionni                           uk.gov.hmrc.nisp.controllers.ExclusionController.showNI
+GET        /exclusion                                 uk.gov.hmrc.nisp.controllers.ExclusionController.showSP
+GET        /exclusionni                               uk.gov.hmrc.nisp.controllers.ExclusionController.showNI
 
-GET         /account/nirecord                      uk.gov.hmrc.nisp.controllers.NIRecordController.showFull
-GET         /account/nirecord/pta                  uk.gov.hmrc.nisp.controllers.NIRecordController.pta
-GET         /account/nirecord/gaps                 uk.gov.hmrc.nisp.controllers.NIRecordController.showGaps
-GET         /account/nirecord/gapsandhowtocheck    uk.gov.hmrc.nisp.controllers.NIRecordController.showGapsAndHowToCheckThem
-GET         /account/nirecord/voluntarycontribs    uk.gov.hmrc.nisp.controllers.NIRecordController.showVoluntaryContributions
+GET        /account/nirecord                          uk.gov.hmrc.nisp.controllers.NIRecordController.showFull
+GET        /account/nirecord/pta                      uk.gov.hmrc.nisp.controllers.NIRecordController.pta
+GET        /account/nirecord/gaps                     uk.gov.hmrc.nisp.controllers.NIRecordController.showGaps
+GET        /account/nirecord/gapsandhowtocheck        uk.gov.hmrc.nisp.controllers.NIRecordController.showGapsAndHowToCheckThem
+GET        /account/nirecord/voluntarycontribs        uk.gov.hmrc.nisp.controllers.NIRecordController.showVoluntaryContributions
 
-GET         /feedback                              uk.gov.hmrc.nisp.controllers.FeedbackController.show
-POST        /feedback                              uk.gov.hmrc.nisp.controllers.FeedbackController.submit
-GET         /feedback/thankyou                     uk.gov.hmrc.nisp.controllers.FeedbackController.showThankYou
-
-GET         /terms-and-conditions                  uk.gov.hmrc.nisp.controllers.TermsConditionsController.show
+GET        /terms-and-conditions                      uk.gov.hmrc.nisp.controllers.TermsConditionsController.show
 
 #Welsh Translation
-GET         /language/:lang                        uk.gov.hmrc.nisp.controllers.CustomLanguageController.switchToLanguage(lang: String)
+GET        /language/:lang                            uk.gov.hmrc.nisp.controllers.CustomLanguageController.switchToLanguage(lang: String)
 
-# Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                          controllers.Assets.versioned(path="/public", file: Asset)
 

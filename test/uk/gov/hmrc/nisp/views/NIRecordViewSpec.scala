@@ -39,17 +39,12 @@ import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 import java.time.{Instant, LocalDate}
 import java.util.UUID
 import scala.concurrent.Future
 
 class NIRecordViewSpec extends HtmlSpec with Injecting {
-
-  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer                = FakeTemplateRenderer
 
   val authDetails                                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   implicit val user: NispAuthedUser                 = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
@@ -74,9 +69,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[TemplateRenderer].toInstance(templateRenderer),
       bind[DateProvider].toInstance(mockDateProvider)
     )
     .build()
@@ -94,7 +86,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       mockDateProvider
     )
     mockSetup
-    when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
   }

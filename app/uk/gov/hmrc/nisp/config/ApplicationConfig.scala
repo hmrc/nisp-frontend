@@ -36,9 +36,6 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
   val ssoUrl: Option[String]         = configuration.getOptional[String]("portal.ssoUrl")
 
-  val frontendTemplatePath: String    = getConfString("frontend-template-provider.path", "/template/mustache")
-  val frontEndTemplateProviderBaseUrl = baseUrl("frontend-template-provider")
-
   val contactFormServiceIdentifier  = "NISP"
   val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   val reportAProblemPartialUrl      = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
@@ -64,9 +61,6 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
   val urRecruitmentLinkURL: String       = configuration.get[String]("ur-research.url")
 
-  private val pertaxFrontendService: String = baseUrl("pertax-frontend")
-  val pertaxFrontendUrl: String             = configuration.getOptional[String]("breadcrumb-service.url").getOrElse("")
-  val breadcrumbPartialUrl: String          = s"$pertaxFrontendService/personal-account/integration/main-content-header"
   val showFullNI: Boolean                   = getConfBool("features.fullNIrecord", false)
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)
   val isWelshEnabled: Boolean               = getConfBool("features.welsh-translation", false)

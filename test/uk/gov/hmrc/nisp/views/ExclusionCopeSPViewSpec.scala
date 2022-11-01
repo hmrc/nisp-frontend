@@ -45,7 +45,6 @@ class ExclusionCopeSPViewSpec extends HtmlSpec with Injecting {
   override def beforeEach(): Unit = {
     super.beforeEach()
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
-    when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
   }

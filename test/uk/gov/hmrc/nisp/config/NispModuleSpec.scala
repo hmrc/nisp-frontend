@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.nisp.config
 
-import play.api.inject.{Injector, bind}
+import play.api.inject.Injector
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl}
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import uk.gov.hmrc.nisp.utils.UnitSpec
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
 class NispModuleSpec extends UnitSpec {
 
@@ -32,10 +30,6 @@ class NispModuleSpec extends UnitSpec {
       "the identity verification flag is set to true" in {
         val injector: Injector = GuiceApplicationBuilder()
           .configure(identityVerificationProp -> true)
-          .overrides(
-            bind[FormPartialRetriever].to[FakePartialRetriever],
-            bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
-          )
           .injector()
 
         injector.instanceOf[AuthAction] shouldBe an[AuthActionImpl]

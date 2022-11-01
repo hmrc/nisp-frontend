@@ -1,16 +1,13 @@
 package controllers
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import it_utils.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer, WiremockHelper}
-
-import java.lang.System.currentTimeMillis
-import org.scalatest.concurrent.ScalaFutures
+import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.test.FakeRequest
@@ -19,9 +16,8 @@ import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationSuccessResponse
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.lang.System.currentTimeMillis
 import java.time.{LocalDate, LocalDateTime}
 import java.util.UUID
 
@@ -35,11 +31,6 @@ class LandingControllerISpec extends AnyWordSpec
   implicit val formats: Format[IdentityVerificationSuccessResponse] = Json.format[IdentityVerificationSuccessResponse]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(
-      bind[TemplateRenderer].toInstance(FakeTemplateRenderer),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
-    )
     .configure(
       "microservice.services.auth.port" -> server.port(),
       "microservice.services.identity-verification.port" -> server.port()

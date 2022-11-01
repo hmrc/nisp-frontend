@@ -47,7 +47,6 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
   override def beforeEach(): Unit = {
     super.beforeEach()
     when(mockApplicationConfig.urBannerUrl).thenReturn("/urResearch")
-    when(mockApplicationConfig.pertaxFrontendUrl).thenReturn("/pert")
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
   }

@@ -24,14 +24,10 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
 import uk.gov.hmrc.nisp.utils.UnitSpec
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 import java.util.Locale
 import scala.concurrent.duration._
@@ -43,11 +39,6 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
   implicit lazy val messages: MessagesImpl  = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever),
-      bind[TemplateRenderer].to(FakeTemplateRenderer)
-    )
     .build()
 
   def asDocument(html: String): Document = Jsoup.parse(html)

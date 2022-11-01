@@ -33,8 +33,6 @@ import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.ExecutionContext
@@ -51,11 +49,8 @@ class NIRecordController @Inject() (
   niRecordPage: nirecordpage,
   niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
   nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
-)(implicit
-  val formPartialRetriever: FormPartialRetriever,
-  val templateRenderer: TemplateRenderer,
-  val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever,
-  ec: ExecutionContext
+)(
+  implicit ec: ExecutionContext
 ) extends NispFrontendController(mcc)
     with I18nSupport {
 

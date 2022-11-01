@@ -75,7 +75,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
     reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
-    when(mockAppConfig.pertaxFrontendUrl).thenReturn("/pert")
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")

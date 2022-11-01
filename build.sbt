@@ -33,7 +33,8 @@ lazy val scoverageSettings =
     ScoverageKeys.coverageHighlighting := true
   )
 
-val suppressedImports = Seq("-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlFeatureImports._",
+val suppressedImports = Seq(
+  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlFeatureImports._",
   "-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlHelperImports._",
   "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Html",
   "-P:silencer:lineContentFilters=import _root_.play.twirl.api.JavaScript",
@@ -48,7 +49,8 @@ val suppressedImports = Seq("-P:silencer:lineContentFilters=import _root_.play.t
   "-P:silencer:lineContentFilters=import play.api.data._",
   "-P:silencer:lineContentFilters=import uk.gov.hmrc.govukfrontend.views.html.components._",
   "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.components._",
-  "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.helpers._")
+  "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
+)
 
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.govukfrontend.views.html.components._",
@@ -58,7 +60,7 @@ TwirlKeys.templateImports ++= Seq(
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(
-    Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory, SbtWeb): _*
+    Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtWeb): _*
   )
   .settings(
     publishingSettings,

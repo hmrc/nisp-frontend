@@ -26,31 +26,30 @@ import uk.gov.hmrc.nisp.models.Exclusion._
 import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.ExecutionContext
 
-class ExclusionController @Inject()(statePensionService: StatePensionService,
-                                    nationalInsuranceService: NationalInsuranceService,
-                                    authenticate: ExcludedAuthAction,
-                                    mcc: MessagesControllerComponents,
-                                    excludedCopeView: excluded_cope_sp,
-                                    excludedCopeExtendedView: excluded_cope_extended_sp,
-                                    excludedCopeFailedView: excluded_cope_failed_sp,
-                                    excludedSp: excluded_sp,
-                                    excludedCopeNi: excluded_cope_ni,
-                                    excludedCopeFailedNi: excluded_cope_failed_ni,
-                                    excludedCopeExtendedNi: excluded_cope_extended_ni,
-                                    excludedDead: excluded_dead,
-                                    excludedMci: excluded_mci,
-                                    excludedNi: excluded_ni,
-                                    errorHandler: ErrorHandler)
-                                   (implicit val executor: ExecutionContext,
-                                    implicit val formPartialRetriever: FormPartialRetriever,
-                                    val templateRenderer: TemplateRenderer,
-                                    val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
-  extends NispFrontendController(mcc) with I18nSupport with Logging {
+class ExclusionController @Inject()(
+  statePensionService: StatePensionService,
+  nationalInsuranceService: NationalInsuranceService,
+  authenticate: ExcludedAuthAction,
+  mcc: MessagesControllerComponents,
+  excludedCopeView: excluded_cope_sp,
+  excludedCopeExtendedView: excluded_cope_extended_sp,
+  excludedCopeFailedView: excluded_cope_failed_sp,
+  excludedSp: excluded_sp,
+  excludedCopeNi: excluded_cope_ni,
+  excludedCopeFailedNi: excluded_cope_failed_ni,
+  excludedCopeExtendedNi: excluded_cope_extended_ni,
+  excludedDead: excluded_dead,
+  excludedMci: excluded_mci,
+  excludedNi: excluded_ni,
+  errorHandler: ErrorHandler
+)(
+  implicit val executor: ExecutionContext
+) extends NispFrontendController(mcc)
+  with I18nSupport
+  with Logging {
 
   def showSP: Action[AnyContent] = authenticate.async { implicit request =>
     val statePensionF      = statePensionService.getSummary(request.nino)

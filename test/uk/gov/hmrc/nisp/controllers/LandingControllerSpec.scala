@@ -54,7 +54,6 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     super.beforeEach()
     reset(mockApplicationConfig, mockIVConnector)
     when(mockApplicationConfig.urBannerUrl).thenReturn(urResearchURL)
-    when(mockApplicationConfig.pertaxFrontendUrl).thenReturn("/pert")
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
   }

@@ -28,17 +28,15 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeSessionCache, TestAccountBuilder}
-import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-
-import java.time.LocalDate
-
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.ForbiddenStatePensionExclusion
+import uk.gov.hmrc.nisp.services.MetricsService
+import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
+
+import java.time.LocalDate
 
 class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
   Injecting with BeforeAndAfterEach with WireMockHelper {
@@ -53,9 +51,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MetricsService].toInstance(mockMetricService),
-      bind[SessionCache].toInstance(FakeSessionCache),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[SessionCache].toInstance(FakeSessionCache)
     )
     .configure(
       "microservice.services.national-insurance.port" -> server.port()

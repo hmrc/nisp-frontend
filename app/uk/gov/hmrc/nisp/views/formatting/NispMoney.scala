@@ -17,8 +17,31 @@
 package uk.gov.hmrc.nisp.views.formatting
 
 import play.twirl.api.Html
-import uk.gov.hmrc.play.views.formatting.Money
+
+import scala.math.BigDecimal.RoundingMode._
 
 object NispMoney {
-  def pounds(value: BigDecimal): Html = Money.pounds(value, if (value.isValidInt) 0 else 2)
+  def pounds(
+    value: BigDecimal,
+    roundUp: Boolean = false
+  ): Html = {
+    val prefix: String =
+      if (value < 0) "&minus;" else ""
+
+    val decimalPlaces: Int =
+      if (value.isValidInt) 0 else 2
+
+    val rounding: Value =
+      if (roundUp) CEILING else FLOOR
+
+    def quantity: String =
+      s"%,.${decimalPlaces}f"
+        .format(
+          value
+            .setScale(decimalPlaces, rounding)
+            .abs
+        )
+
+    Html(s"$prefix&pound;$quantity")
+  }
 }

@@ -31,12 +31,11 @@ import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeSessionCache, TestAccountBuilder}
+import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
 
 import java.time.LocalDate
 
@@ -62,9 +61,7 @@ class StatePensionConnectorSpec
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MetricsService].toInstance(mockMetricService),
-      bind[SessionCache].toInstance(FakeSessionCache),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(FakeCachedStaticHtmlPartialRetriever)
+      bind[SessionCache].toInstance(FakeSessionCache)
     )
     .configure(
       "microservice.services.state-pension.port" -> server.port()
