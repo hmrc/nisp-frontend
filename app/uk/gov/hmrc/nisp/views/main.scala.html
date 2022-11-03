@@ -106,6 +106,7 @@
 @hmrcLayout(
   pageTitle = Some(if(extendedTitle){fullTitle}else{pageTitle}),
   serviceName = Some(messages("nisp.title")),
+  serviceUrl = Some(appConfig.serviceUrl),
   nonce = CSPNonce.get,
   isWelshTranslationAvailable = true,
   userResearchBannerUrl = if(showUrBanner)Some(appConfig.urBannerUrl) else None,
