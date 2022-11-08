@@ -168,7 +168,6 @@ class NIRecordController @Inject() (
     implicit val user: NispAuthedUser = request.nispAuthedUser
     val nino = user.nino
 
-
     statePensionService.getSummary(nino) flatMap {
       case Right(Left(copeExclusion: StatePensionExclusionFilteredWithCopeDate)) =>
         Future.successful(sendExclusion(copeExclusion.exclusion))
@@ -199,36 +198,6 @@ class NIRecordController @Inject() (
       case Left(_) =>
         throw new RuntimeException("NIRecordController: an unexpected error has occurred")
     }
-
-//    nationalInsuranceService.getSummary(nino) flatMap {
-//      case Right(Right(nationalInsuranceRecord)) =>
-//        statePensionService.getSummary(nino) flatMap {
-//          case Right(Left(copeExclusion: StatePensionExclusionFilteredWithCopeDate)) =>
-//            Future.successful(sendExclusion(copeExclusion.exclusion))
-//          case Right(statePensionResponse) =>
-//            if (gapsOnlyView && nationalInsuranceRecord.numberOfGaps < 1)
-//              Future.successful(Redirect(routes.NIRecordController.showFull))
-//            else {
-//              finalRelevantStartYear(statePensionResponse)
-//                .map { finalRelevantStartYear =>
-//                  val yearsToContribute  = statePensionService.yearsToContributeUntilPensionAge(
-//                    nationalInsuranceRecord.earningsIncludedUpTo,
-//                    finalRelevantStartYear
-//                  )
-//                  sendAuditEvent(nino, nationalInsuranceRecord, yearsToContribute)
-//                  Future.successful(
-//                    showNiRecordPage(gapsOnlyView, yearsToContribute, finalRelevantStartYear, nationalInsuranceRecord)
-//                  )
-//                }
-//                .getOrElse(Future.successful(Redirect(routes.ExclusionController.showSP)))
-//            }
-//          case Left(_) =>
-//            throw new RuntimeException("NIRecordController: an unexpected error has occurred")
-//        }
-//      case Right(Left(exclusion)) =>
-//        Future.successful(sendExclusion(exclusion.exclusion))
-//      case Left(_) =>
-//        throw new RuntimeException("NIRecordController: an unexpected error has occurred")
   }
 
   def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async { implicit request =>
