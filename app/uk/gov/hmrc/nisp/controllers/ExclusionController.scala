@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StateP
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.views.html._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class ExclusionController @Inject()(
   statePensionService: StatePensionService,
@@ -52,24 +52,24 @@ class ExclusionController @Inject()(
   with Logging {
 
   def showSP: Action[AnyContent] = authenticate.async { implicit request =>
-    val statePensionF      = statePensionService.getSummary(request.nino)
-    val nationalInsuranceF = nationalInsuranceService.getSummary(request.nino)
-
-      for (
-        statePension <- statePensionF;
-        nationalInsurance <- nationalInsuranceF
-      ) yield {
-        statePension match {
-          case Right(Right(sp)) if sp.reducedRateElection =>
-            Ok(excludedSp(MarriedWomenReducedRateElection, Some(sp.pensionAge), Some(sp.pensionDate), canSeeNIRecord = false, None))
-          case Right(Left(statePensionExclusionFiltered: StatePensionExclusionFiltered)) =>
-            if (statePensionExclusionFiltered.exclusion == Dead)
-              Ok(excludedDead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge))
-            else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
-              Ok(excludedMci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge))
-            else if (statePensionExclusionFiltered.exclusion == CopeProcessingFailed)
-              Ok(excludedCopeFailedView())
-            else
+    statePensionService.getSummary(request.nino) flatMap {
+      case Right(Right(statePension)) if statePension.reducedRateElection =>
+        Future.successful(Ok(excludedSp(
+          MarriedWomenReducedRateElection,
+          Some(statePension.pensionAge),
+          Some(statePension.pensionDate),
+          canSeeNIRecord = false,
+          None)))
+      case Right(Left(statePensionExclusionFiltered: StatePensionExclusionFiltered)) =>
+        if (statePensionExclusionFiltered.exclusion == Dead)
+          Future.successful(Ok(excludedDead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge)))
+        else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
+          Future.successful(Ok(excludedMci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge)))
+        else if (statePensionExclusionFiltered.exclusion == CopeProcessingFailed)
+          Future.successful(Ok(excludedCopeFailedView()))
+        else {
+          nationalInsuranceService.getSummary(request.nino) map {
+            nationalInsurance =>
               Ok(excludedSp(
                 statePensionExclusionFiltered.exclusion,
                 statePensionExclusionFiltered.pensionAge,
@@ -77,18 +77,19 @@ class ExclusionController @Inject()(
                 nationalInsurance.isRight,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
-          case Right(Left(spExclusion: StatePensionExclusionFilteredWithCopeDate)) =>
-            if(spExclusion.previousAvailableDate.exists(_.isBefore(spExclusion.copeDataAvailableDate))) {
-              Ok(excludedCopeExtendedView(spExclusion.copeDataAvailableDate))
-            } else {
-              Ok(excludedCopeView(spExclusion.copeDataAvailableDate))
-            }
-          case Left(_) => InternalServerError(errorHandler.internalServerErrorTemplate)
-          case _ =>
-            logger.warn("User accessed/exclusion as non-excluded user")
-            Redirect(routes.StatePensionController.show)
+          }
         }
-      }
+      case Right(Left(spExclusion: StatePensionExclusionFilteredWithCopeDate)) =>
+        if(spExclusion.previousAvailableDate.exists(_.isBefore(spExclusion.copeDataAvailableDate))) {
+          Future.successful(Ok(excludedCopeExtendedView(spExclusion.copeDataAvailableDate)))
+        } else {
+          Future.successful(Ok(excludedCopeView(spExclusion.copeDataAvailableDate)))
+        }
+      case Left(_) => Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+      case _ =>
+        logger.warn("User accessed/exclusion as non-excluded user")
+        Future.successful(Redirect(routes.StatePensionController.show))
+    }
   }
 
   def showNI: Action[AnyContent] = authenticate.async {

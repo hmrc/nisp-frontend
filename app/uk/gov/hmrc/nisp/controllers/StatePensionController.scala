@@ -34,7 +34,7 @@ import uk.gov.hmrc.nisp.views.html._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.time.LocalDate
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class StatePensionController @Inject() (
   authenticate: AuthAction,
@@ -200,31 +200,26 @@ class StatePensionController @Inject() (
         .get("delegationState")
         .fold(false)(_.equalsIgnoreCase("On"))
     pertaxHelper.isFromPertax.flatMap { isPertax =>
-      val statePensionResponseF      = statePensionService.getSummary(user.nino, delegationState)
-      val nationalInsuranceResponseF = nationalInsuranceService.getSummary(user.nino)
-      for {
-        statePensionResponse      <- statePensionResponseF
-        nationalInsuranceResponse <- nationalInsuranceResponseF
-      } yield (statePensionResponse, nationalInsuranceResponse) match {
-        case (Right(Right(statePension)), Right(Left(nationalInsuranceExclusion)))
-            if statePension.reducedRateElection =>
-          sendExclusion(nationalInsuranceExclusion.exclusion)
-        case (Right(Right(statePension)), Right(Right(nationalInsuranceRecord))) =>
-          sendAuditEvent(statePension, user)
-
-          if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
-            doShowStatePensionMQP(statePension, nationalInsuranceRecord, isPertax)
-          } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
-            doShowStatePensionForecast(statePension, nationalInsuranceRecord, isPertax)
-          } else {
-            doShowStatePension(statePension, nationalInsuranceRecord, isPertax)
-          }
-        case (Right(Left(statePensionExclusion)), _)                             =>
-          sendExclusion(statePensionExclusion.exclusion)
-        case _                                                                   =>
-          throw new RuntimeException(
-            "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
-          )
+      statePensionService.getSummary(user.nino, delegationState).flatMap {
+        case Right(Left(statePensionExclusion)) => Future.successful(sendExclusion(statePensionExclusion.exclusion))
+        case Right(Right(statePension)) => nationalInsuranceService.getSummary(user.nino) map {
+          case Right(Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+            sendExclusion(nationalInsuranceExclusion.exclusion)
+          case Right(Right(nationalInsuranceRecord)) =>
+            sendAuditEvent(statePension, user)
+            if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
+              doShowStatePensionMQP(statePension, nationalInsuranceRecord, isPertax)
+            }
+            else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
+              doShowStatePensionForecast(statePension, nationalInsuranceRecord, isPertax)
+            }
+            else {
+              doShowStatePension(statePension, nationalInsuranceRecord, isPertax)
+            }
+        }
+        case _ => throw new RuntimeException(
+                    "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
+                  )
       }
     }
   }
