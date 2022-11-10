@@ -36,6 +36,7 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
   val ssoUrl: Option[String]         = configuration.getOptional[String]("portal.ssoUrl")
 
+  val serviceUrl: String            = loadConfig("serviceUrl")
   val contactFormServiceIdentifier  = "NISP"
   val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   val reportAProblemPartialUrl      = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
