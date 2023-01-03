@@ -8,7 +8,7 @@ GET        /                                          uk.gov.hmrc.nisp.controlle
 GET        /not-authorised                            uk.gov.hmrc.nisp.controllers.LandingController.showNotAuthorised(journeyId: Option[String])
 
 GET        /account                                   uk.gov.hmrc.nisp.controllers.StatePensionController.show
-GET        /account/pta                               uk.gov.hmrc.nisp.controllers.StatePensionController.pta
+GET        /account/pta                               uk.gov.hmrc.nisp.controllers.StatePensionController.pta()
 GET        /account/cope                              uk.gov.hmrc.nisp.controllers.StatePensionController.showCope
 GET        /sign-out                                  uk.gov.hmrc.nisp.controllers.StatePensionController.signOut
 GET        /timeout                                   uk.gov.hmrc.nisp.controllers.StatePensionController.timeout

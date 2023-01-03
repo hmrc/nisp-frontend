@@ -37,7 +37,7 @@ object JsonDepersonaliser {
 
   def depersonaliseArray(array: JsArray): JsArray = {
 
-    val value: Seq[JsValue] = for {
+    val value: scala.collection.IndexedSeq[JsValue] = for {
       value <- array.value
     } yield depersonaliseValue(value)
 
