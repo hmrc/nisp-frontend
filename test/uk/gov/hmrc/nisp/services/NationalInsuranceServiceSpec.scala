@@ -45,8 +45,8 @@ class NationalInsuranceServiceSpec
 
   def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
 
-  implicit val headerCarrier         = HeaderCarrier()
-  val mockNationalInsuranceConnector = mock[NationalInsuranceConnectorImpl]
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
+  val mockNationalInsuranceConnector: NationalInsuranceConnectorImpl = mock[NationalInsuranceConnectorImpl]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -58,7 +58,7 @@ class NationalInsuranceServiceSpec
     reset(mockNationalInsuranceConnector)
   }
 
-  val nationalInsuranceService = inject[NationalInsuranceService]
+  val nationalInsuranceService: NationalInsuranceService = inject[NationalInsuranceService]
 
   "NationalInsuranceConnection" when {
 
@@ -121,7 +121,7 @@ class NationalInsuranceServiceSpec
           .thenReturn(Future.successful(Right(Right(mockNationalInsuranceRecord))))
 
         nationalInsuranceService.getSummary(generateNino).isRight shouldBe true
-        nationalInsuranceService.getSummary(generateNino).right.get.map {
+        nationalInsuranceService.getSummary(generateNino).toOption.get.map {
           nir =>
             nir shouldBe a[NationalInsuranceRecord]
         }
@@ -206,7 +206,7 @@ class NationalInsuranceServiceSpec
 
         result.map {
           excl =>
-            val exclusion = excl.left.get
+            val exclusion = excl.swap.getOrElse(StatePensionExclusionFiltered)
 
             exclusion shouldBe StatePensionExclusionFiltered(Exclusion.Dead)
         }
@@ -225,7 +225,7 @@ class NationalInsuranceServiceSpec
 
         result.map {
           excl =>
-            val exclusion = excl.left.get
+            val exclusion = excl.swap.getOrElse(StatePensionExclusionFiltered)
 
             exclusion shouldBe StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator)
         }
@@ -244,7 +244,7 @@ class NationalInsuranceServiceSpec
 
         result.map {
           excl =>
-            val exclusion = excl.left.get
+            val exclusion = excl.swap.getOrElse(StatePensionExclusionFiltered)
 
             exclusion shouldBe StatePensionExclusionFiltered(Exclusion.IsleOfMan)
         }
@@ -263,7 +263,7 @@ class NationalInsuranceServiceSpec
 
         result.map {
           excl =>
-            val exclusion = excl.left.get
+            val exclusion = excl.swap.getOrElse(StatePensionExclusionFiltered)
 
             exclusion shouldBe StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)
         }

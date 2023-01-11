@@ -21,23 +21,25 @@ import org.mockito.Mockito._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{BadRequestException, HttpClient, HttpResponse, UpstreamErrorResponse}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 object MockNispHttp {
   val mockHttp: HttpClient = mock(classOf[HttpClient])
 
-  val noDataNinos = List(
+  val noDataNinos: List[Nino] = List(
     TestAccountBuilder.backendNotFound
   )
 
-  def createMockedURL(urlEndsWith: String, response: Future[HttpResponse]): Unit =
+  def createMockedURL(urlEndsWith: String, response: HttpResponse): Unit = {
+    val desiredResponse: Future[HttpResponse] = Future[HttpResponse](response)(ExecutionContext.global)
     when(
       mockHttp.GET[HttpResponse](ArgumentMatchers.endsWith(urlEndsWith))(
         ArgumentMatchers.any(),
         ArgumentMatchers.any(),
         ArgumentMatchers.any()
       )
-    ).thenReturn(response)
+    ).thenReturn(desiredResponse)
+  }
 
   def createFailedMockedURL(urlEndsWith: String): Unit =
     when(
@@ -54,7 +56,7 @@ object MockNispHttp {
   def setupNationalInsuranceEndpoints(nino: Nino): Unit =
     createMockedURL(s"national-insurance/ni/$nino", TestAccountBuilder.jsonResponse(nino, "national-insurance-record"))
 
-  val badRequestNino = TestAccountBuilder.nonExistentNino
+  val badRequestNino: Nino = TestAccountBuilder.nonExistentNino
 
   createFailedMockedURL(s"ni/$badRequestNino")
 
@@ -76,7 +78,7 @@ object MockNispHttp {
       )
     )
 
-  val spNinos = List(
+  val spNinos: List[Nino] = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.urBannerNino,
     TestAccountBuilder.noUrBannerNino,
@@ -164,7 +166,7 @@ object MockNispHttp {
       )
     )
 
-  val niNinos = List(
+  val niNinos: List[Nino] = List(
     TestAccountBuilder.regularNino,
     TestAccountBuilder.fullUserNino,
     TestAccountBuilder.forecastOnlyNino,

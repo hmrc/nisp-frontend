@@ -41,12 +41,12 @@ import java.time.LocalDate
 class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
   Injecting with BeforeAndAfterEach with WireMockHelper {
 
-  implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
-  implicit val defaultPatience =
+  implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
 
-  val mockMetricService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
+  val mockMetricService: MetricsService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -62,7 +62,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
     reset(mockMetricService)
   }
 
-  lazy val nationalInsuranceConnector = inject[NationalInsuranceConnectorImpl]
+  lazy val nationalInsuranceConnector: NationalInsuranceConnectorImpl = inject[NationalInsuranceConnectorImpl]
 
   "getNationalInsuranceRecord" when {
 
@@ -227,7 +227,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
         result.map {
           spExclusion =>
-            val exclusion = spExclusion.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
 
             exclusion.code shouldBe Exclusion.Dead
         }
@@ -248,7 +248,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
         result.map {
           spExclusion =>
-            val exclusion = spExclusion.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
 
             exclusion.code shouldBe Exclusion.ManualCorrespondenceIndicator
         }
@@ -268,7 +268,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
         result.map {
           spExclusion =>
-            val exclusion = spExclusion.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
 
             exclusion.code shouldBe Exclusion.IsleOfMan
         }
@@ -288,7 +288,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
 
         result.map {
           spExclusion =>
-            val exclusion = spExclusion.left.get.asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
 
             exclusion.code shouldBe Exclusion.MarriedWomenReducedRateElection
         }

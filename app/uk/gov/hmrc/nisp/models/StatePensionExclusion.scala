@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.models
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
 import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue, Json, JsonValidationError, OFormat, Reads, Writes}
 import uk.gov.hmrc.time.TaxYear
 
@@ -72,10 +71,14 @@ object StatePensionExclusion {
 
     override def writes(spExclusion: StatePensionExclusion): JsValue = {
       spExclusion match {
-        case okStatePensionExclusion: OkStatePensionExclusion => OkStatePensionExclusion.formats.writes(okStatePensionExclusion)
-        case copeStatePensionExclusion: CopeStatePensionExclusion => CopeStatePensionExclusion.formats.writes(copeStatePensionExclusion)
+        case okStatePensionExclusion: OkStatePensionExclusion =>
+          OkStatePensionExclusion.formats.writes(okStatePensionExclusion)
+        case copeStatePensionExclusion: CopeStatePensionExclusion =>
+          CopeStatePensionExclusion.formats.writes(copeStatePensionExclusion)
         case forbiddenStatePensionExclusion: ForbiddenStatePensionExclusion =>
           ForbiddenStatePensionExclusion.formats.writes(forbiddenStatePensionExclusion)
+        case _ =>
+          throw new Exception("Unexpected State Pension Exclusion was received")
       }
     }
   }

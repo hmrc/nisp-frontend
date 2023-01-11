@@ -105,7 +105,7 @@ class CitizenDetailsConnectorSpec
 
       await(
         connector.connectToGetPersonDetails(nino)
-      ).left.get shouldBe a[UpstreamErrorResponse]
+      ).swap.getOrElse(UpstreamErrorResponse) shouldBe a[UpstreamErrorResponse]
     }
 
     "return Left(Throwable)" in {
@@ -114,7 +114,7 @@ class CitizenDetailsConnectorSpec
 
       await(
         connector.connectToGetPersonDetails(nino)
-      ).left.get shouldBe a[Throwable]
+      ).swap.getOrElse(UpstreamErrorResponse) shouldBe a[Throwable]
     }
 
     "return a Throwable for failed request" in {
@@ -131,7 +131,7 @@ class CitizenDetailsConnectorSpec
         .thenReturn(Future.failed(new HttpException("This is an error", 503)))
 
       recoverToSucceededIf[HttpException] {
-        connector.connectToGetPersonDetails(nino).left.get shouldBe a[UpstreamErrorResponse]
+        connector.connectToGetPersonDetails(nino).swap.getOrElse(UpstreamErrorResponse) shouldBe a[UpstreamErrorResponse]
       }
     }
   }

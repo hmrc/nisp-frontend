@@ -18,14 +18,16 @@ package uk.gov.hmrc.nisp.views
 
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
+import org.mockito.stubbing.OngoingStubbing
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.NIRecordController
@@ -46,7 +48,7 @@ import scala.concurrent.Future
 
 class NIRecordViewSpec extends HtmlSpec with Injecting {
 
-  val authDetails                                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
+  val authDetails: AuthDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   implicit val user: NispAuthedUser                 = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
   implicit val abroadUser: NispAuthedUser           = NispAuthedUserFixture.user(TestAccountBuilder.abroadNino)
   implicit val fakeRequest: AuthenticatedRequest[_] = AuthenticatedRequest(FakeRequest(), user, authDetails)
@@ -59,7 +61,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockDateProvider: DateProvider                         = mock[DateProvider]
 
-  lazy val langUtils = inject[LanguageUtils]
+  lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -73,32 +75,30 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
     )
     .build()
 
-  lazy val controller = inject[NIRecordController]
+  lazy val controller: NIRecordController = inject[NIRecordController]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(
-      mockNationalInsuranceService,
-      mockStatePensionService,
-      mockAppConfig,
-      mockPertaxHelper,
-      mockAuditConnector,
-      mockDateProvider
-    )
+    reset(mockNationalInsuranceService)
+    reset(mockStatePensionService)
+    reset(mockAppConfig)
+    reset(mockPertaxHelper)
+    reset(mockAuditConnector)
+    reset(mockDateProvider)
     mockSetup
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
 
-  def generateFakeRequest = FakeRequest().withSession(
+  def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
     SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
 
-  val nIRecordRegular = TestAccountBuilder
+  val nIRecordRegular: NationalInsuranceRecord = TestAccountBuilder
     .jsonResponseByType[NationalInsuranceRecord](TestAccountBuilder.regularNino, "national-insurance-record")
 
-  def mockSetup = {
+  def mockSetup: OngoingStubbing[String] = {
     when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
     when(mockAppConfig.showFullNI).thenReturn(true)
 
@@ -624,7 +624,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
 
   "Render Ni Record view With HRP Message" should {
     lazy val withHRPResult = inject[nirecordGapsAndHowToCheckThem]
-    lazy val withHRPDoc    = asDocument(withHRPResult(true)(request = fakeRequest, messages = messages, user = user).toString)
+    lazy val withHRPDoc    = asDocument(withHRPResult(homeResponsibilitiesProtection = true)(request = fakeRequest, messages = messages, user = user).toString)
 
     "render with correct page title" in {
       assertElementContainsText(
@@ -845,7 +845,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
 
   "Render Ni Record without HRP Message" should {
     lazy val withoutHRPresult = inject[nirecordGapsAndHowToCheckThem]
-    lazy val withoutHRPDoc    = asDocument(withoutHRPresult(false)(request = fakeRequest, messages = messages, user = user).toString)
+    lazy val withoutHRPDoc    = asDocument(withoutHRPresult(homeResponsibilitiesProtection = false)(request = fakeRequest, messages = messages, user = user).toString)
 
     "render with correct page title" in {
       assertElementContainsText(
@@ -1058,7 +1058,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
   "Render Ni Record without gap and has pre75years" should {
     lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
-    def mockSetup = {
+    def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]]] = {
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
@@ -1069,7 +1069,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           numberOfGaps = 0,
           numberOfGapsPayable = 0,
           Some(LocalDate.of(1954, 3, 6)),
-          false,
+          homeResponsibilitiesProtection = false,
           LocalDate.of(2016, 4, 5),
           List(
             NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = false),
@@ -1183,7 +1183,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
   "Render Ni Record without gap and has gaps pre75years" should {
     lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
-    def mockSetup = {
+    def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]]] = {
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
@@ -1194,7 +1194,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           numberOfGaps = 1,
           numberOfGapsPayable = 1,
           Some(LocalDate.of(1954, 3, 6)),
-          false,
+          homeResponsibilitiesProtection = false,
           LocalDate.of(2015, 4, 5),
           List(
             NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = false),
@@ -1326,7 +1326,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
   "Render Ni Record without gap and has gaps pre75years with Years to contribute " should {
     lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
 
-    def mockSetup = {
+    def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]]] = {
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
@@ -1337,7 +1337,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           numberOfGaps = 1,
           numberOfGapsPayable = 1,
           Some(LocalDate.of(1954, 3, 6)),
-          false,
+          homeResponsibilitiesProtection = false,
           LocalDate.of(2017, 4, 5),
           List(
             NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = true),
@@ -1540,7 +1540,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
     lazy val doc           = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
     lazy val abroadUserDoc = asDocument(contentAsString(abroadUserController.showFull(generateFakeRequest)))
 
-    def mockSetup = {
+    def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]]] = {
       when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 2,
@@ -1548,7 +1548,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
           numberOfGaps = 1,
           numberOfGapsPayable = 1,
           Some(LocalDate.of(1954, 3, 6)),
-          false,
+          homeResponsibilitiesProtection = false,
           LocalDate.of(2017, 4, 5),
           List(
             NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = true),

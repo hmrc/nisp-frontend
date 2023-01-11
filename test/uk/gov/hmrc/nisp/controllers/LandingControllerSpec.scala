@@ -25,6 +25,7 @@ import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -36,8 +37,8 @@ import scala.concurrent.Future
 
 class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
 
-  implicit val fakeRequest                           = FakeRequest("GET", "/")
-  val fakeRequestWelsh                               = FakeRequest("GET", "/cymraeg")
+  implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
+  val fakeRequestWelsh: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/cymraeg")
   val urResearchURL                                  =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
   val mockApplicationConfig: ApplicationConfig       = mock[ApplicationConfig]
@@ -52,13 +53,14 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockApplicationConfig, mockIVConnector)
+    reset(mockApplicationConfig)
+    reset(mockIVConnector)
     when(mockApplicationConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
 
-  val landingController = inject[LandingController]
+  val landingController: LandingController = inject[LandingController]
 
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 

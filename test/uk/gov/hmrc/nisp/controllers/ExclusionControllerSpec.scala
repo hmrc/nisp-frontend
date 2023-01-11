@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.controllers
 
 import java.time.LocalDate
 import java.util.UUID
-
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -26,7 +25,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.Result
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
@@ -40,9 +39,9 @@ import scala.concurrent.Future
 
 class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
-  val fakeRequest                  = FakeRequest()
-  val mockStatePensionService      = mock[StatePensionService]
-  val mockNationalInsuranceService = mock[NationalInsuranceService]
+  val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -54,12 +53,13 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockStatePensionService, mockNationalInsuranceService)
+    reset(mockStatePensionService)
+    reset(mockNationalInsuranceService)
   }
 
   def authId(username: String): String = s"/auth/oid/$username"
 
-  val testExclusionController = inject[ExclusionController]
+  val testExclusionController: ExclusionController = inject[ExclusionController]
 
   val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
   val mciMessaging  = "We need to talk to you about an MCI error before you sign in."
@@ -102,12 +102,12 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
         10,
         4,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
             "2013-14",
-            false,
+            qualifying = false,
             0,
             0,
             0,
@@ -115,12 +115,12 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             704.60,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           ),
           NationalInsuranceTaxYear(
             "2012-13",
-            true,
+            qualifying = true,
             0,
             0,
             0,
@@ -128,17 +128,17 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             689,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           )
         ),
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
@@ -148,10 +148,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
         LocalDate.of(2018, 7, 6),
         "2017-18",
         30,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -379,7 +379,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val expectedStatePension = StatePension(
             LocalDate.of(2014, 4, 5),
             StatePensionAmounts(
-              false,
+              protectedPayment = false,
               StatePensionAmountRegular(133.41, 580.1, 6961.14),
               StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
               StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
@@ -389,10 +389,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             LocalDate.of(2050, 7, 6),
             "2050-51",
             25,
-            false,
+            pensionSharingOrder = false,
             155.65,
-            true,
-            false
+            reducedRateElection = true,
+            statePensionAgeUnderConsideration = false
           )
 
           when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -438,7 +438,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val expectedStatePension = StatePension(
             LocalDate.of(2015, 4, 5),
             StatePensionAmounts(
-              false,
+              protectedPayment = false,
               StatePensionAmountRegular(133.41, 580.1, 6961.14),
               StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
               StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
@@ -448,10 +448,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             LocalDate.of(2018, 7, 6),
             "2017-18",
             30,
-            false,
+            pensionSharingOrder = false,
             155.65,
-            true,
-            false
+            reducedRateElection = true,
+            statePensionAgeUnderConsideration = false
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -509,10 +509,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             10,
             4,
             Some(LocalDate.of(1975, 8, 1)),
-            false,
+            homeResponsibilitiesProtection = false,
             LocalDate.of(2014, 4, 5),
             List.empty[NationalInsuranceTaxYear],
-            false
+            reducedRateElection = false
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -541,10 +541,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             10,
             4,
             Some(LocalDate.of(1975, 8, 1)),
-            false,
+            homeResponsibilitiesProtection = false,
             LocalDate.of(2014, 4, 5),
             List.empty[NationalInsuranceTaxYear],
-            false
+            reducedRateElection = false
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -577,10 +577,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             10,
             4,
             Some(LocalDate.of(1975, 8, 1)),
-            false,
+            homeResponsibilitiesProtection = false,
             LocalDate.of(2014, 4, 5),
             List.empty[NationalInsuranceTaxYear],
-            false
+            reducedRateElection = false
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -613,10 +613,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             10,
             4,
             Some(LocalDate.of(1975, 8, 1)),
-            false,
+            homeResponsibilitiesProtection = false,
             LocalDate.of(2014, 4, 5),
             List.empty[NationalInsuranceTaxYear],
-            false
+            reducedRateElection = false
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -648,10 +648,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             10,
             4,
             Some(LocalDate.of(1975, 8, 1)),
-            false,
+            homeResponsibilitiesProtection = false,
             LocalDate.of(2014, 4, 5),
             List.empty[NationalInsuranceTaxYear],
-            false
+            reducedRateElection = false
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -679,10 +679,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             10,
             4,
             Some(LocalDate.of(1975, 8, 1)),
-            false,
+            homeResponsibilitiesProtection = false,
             LocalDate.of(2014, 4, 5),
             List.empty[NationalInsuranceTaxYear],
-            false
+            reducedRateElection = false
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -714,10 +714,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
             10,
             4,
             Some(LocalDate.of(1975, 8, 1)),
-            false,
+            homeResponsibilitiesProtection = false,
             LocalDate.of(2014, 4, 5),
             List.empty[NationalInsuranceTaxYear],
-            false
+            reducedRateElection = false
           )
 
           when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -747,10 +747,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           10,
           4,
           Some(LocalDate.of(1975, 8, 1)),
-          false,
+          homeResponsibilitiesProtection = false,
           LocalDate.of(2014, 4, 5),
           List.empty[NationalInsuranceTaxYear],
-          false
+          reducedRateElection = false
         )
 
         when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
@@ -780,10 +780,10 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           10,
           4,
           Some(LocalDate.of(1975, 8, 1)),
-          false,
+          homeResponsibilitiesProtection = false,
           LocalDate.of(2014, 4, 5),
           List.empty[NationalInsuranceTaxYear],
-          false
+          reducedRateElection = false
         )
 
         when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
