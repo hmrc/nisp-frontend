@@ -125,6 +125,7 @@ trait BackendConnector {
     formats: Format[A]
   ): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] = {
     val timerContext = metricsService.startTimer(apiType)
+
     http.GET[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]](
       url = urlToRead,
       queryParams = Seq(),

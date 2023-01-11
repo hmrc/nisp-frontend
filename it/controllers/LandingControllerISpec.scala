@@ -72,7 +72,7 @@ class LandingControllerISpec extends AnyWordSpec
   ))
 
   val nationalInsuaranceTaxYear = NationalInsuranceTaxYear("2011-12", true, 0.0, 1, 1, 1, 0.0, None, None, true, false)
-  val nationalInsuranceRecord = NationalInsuranceRecord(2,2,0,0,None, false, LocalDate.now(), List(nationalInsuaranceTaxYear), false)
+  val nationalInsuranceRecord = NationalInsuranceRecord(2, 2, 0, 0, None, false, LocalDate.now(), List(nationalInsuaranceTaxYear), false)
   val nationalInsuranceJson: JsValue = Json.toJson(nationalInsuranceRecord)
 
   override def beforeEach(): Unit = {
