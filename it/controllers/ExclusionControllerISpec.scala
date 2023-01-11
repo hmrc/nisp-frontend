@@ -87,6 +87,27 @@ class ExclusionControllerISpec extends AnyWordSpec
       """.stripMargin)))
   }
 
+  trait Test {
+    val statePensionResponse = StatePension(
+      LocalDate.of(2015, 4, 5),
+      StatePensionAmounts(
+        false,
+        StatePensionAmountRegular(133.41, 580.1, 6961.14),
+        StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+        StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+        StatePensionAmountRegular(0, 0, 0)
+      ),
+      64,
+      LocalDate.of(2018, 7, 6),
+      "2017",
+      30,
+      false,
+      155.65,
+      true,
+      false
+    )
+  }
+
   "showSP" should {
     val request = FakeRequest("GET", s"/check-your-state-pension/exclusion")
       .withSession(
@@ -96,25 +117,7 @@ class ExclusionControllerISpec extends AnyWordSpec
       )
 
     "return a 200" when {
-      "there is a success and reducedRateElection is true" in {
-        val statePensionResponse = StatePension(
-          LocalDate.of(2015, 4, 5),
-          StatePensionAmounts(
-            false,
-            StatePensionAmountRegular(133.41, 580.1, 6961.14),
-            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
-            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-            StatePensionAmountRegular(0, 0, 0)
-          ),
-          64,
-          LocalDate.of(2018, 7, 6),
-          "2017",
-          30,
-          false,
-          155.65,
-          true,
-          false
-        )
+      "there is a success and reducedRateElection is true" in new Test {
 
         sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
 
@@ -195,6 +198,15 @@ class ExclusionControllerISpec extends AnyWordSpec
       val result = route(app, request)
 
       result map getStatus shouldBe Some(INTERNAL_SERVER_ERROR)
+    }
+
+    "redirect the user when they are a non-excluded user" in new Test {
+
+      sessionCache.cache(APIType.StatePension.toString, statePensionResponse.copy(reducedRateElection = false)).futureValue
+
+      val result = route(app, request)
+
+      result map getStatus shouldBe Some(SEE_OTHER)
     }
   }
 
