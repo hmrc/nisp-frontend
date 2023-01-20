@@ -33,25 +33,6 @@ lazy val scoverageSettings =
     ScoverageKeys.coverageHighlighting := true
   )
 
-//val suppressedImports = Seq(
-//  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlFeatureImports._",
-//  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlHelperImports._",
-//  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Html",
-//  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.JavaScript",
-//  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Txt",
-//  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Xml",
-//  "-P:silencer:lineContentFilters=import models._",
-//  "-P:silencer:lineContentFilters=import controllers._",
-//  "-P:silencer:lineContentFilters=import play.api.i18n._",
-//  "-P:silencer:lineContentFilters=import views.html._",
-//  "-P:silencer:lineContentFilters=import play.api.templates.PlayMagic._",
-//  "-P:silencer:lineContentFilters=import play.api.mvc._",
-//  "-P:silencer:lineContentFilters=import play.api.data._",
-//  "-P:silencer:lineContentFilters=import uk.gov.hmrc.govukfrontend.views.html.components._",
-//  "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.components._",
-//  "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
-//)
-
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.govukfrontend.views.html.components._",
   "uk.gov.hmrc.hmrcfrontend.views.html.components._",
@@ -74,7 +55,6 @@ lazy val microservice = Project(appName, file("."))
     majorVersion := 10,
     scalacOptions ++= Seq(
       "-Xfatal-warnings",
-      //"-P:silencer:pathFilters=routes",
       "-feature",
       "-Werror",
       "-Wconf:cat=unused-imports&site=.*views\\.html.*:s",
@@ -84,8 +64,6 @@ lazy val microservice = Project(appName, file("."))
       "-Wconf:cat=unused&src=.*ReverseRoutes\\.scala:s",
       "-Wconf:cat=unused&src=.*JavaScriptReverseRoutes\\.scala:s"
     )
-//    ,
-//    scalacOptions ++= suppressedImports
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
