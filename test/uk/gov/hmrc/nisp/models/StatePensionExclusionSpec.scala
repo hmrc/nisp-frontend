@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.nisp.models
 
-import java.time.LocalDate
-
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.OkStatePensionExclusion
+import play.api.libs.json.Json
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 import uk.gov.hmrc.nisp.utils.UnitSpec
+
+import java.time.LocalDate
 
 class StatePensionExclusionSpec extends UnitSpec {
 
@@ -65,5 +66,108 @@ class StatePensionExclusionSpec extends UnitSpec {
         OkStatePensionExclusion(List(Exclusion.AmountDissonance), Some(67), Some(LocalDate.of(2020, 4, 5)), Some(false)).finalRelevantStartYear shouldBe Some(2018)
       }
     }
+
+    "OkStatePensionExclusion" should {
+      "de-serialise correctly" in {
+        val okStatePensionExclusion = OkStatePensionExclusion(
+          exclusionReasons = List(Exclusion.ManualCorrespondenceIndicator),
+          pensionAge = Some(65),
+          pensionDate = Some(LocalDate.parse("2030-01-01")),
+          statePensionAgeUnderConsideration = Some(true)
+        )
+
+        val okStatePensionExclusionJson = Json.obj(
+          "exclusionReasons" -> Json.arr("EXCLUSION_MANUAL_CORRESPONDENCE"),
+          "pensionAge" -> 65,
+          "pensionDate" -> "2030-01-01",
+          "statePensionAgeUnderConsideration" -> true
+        )
+
+        okStatePensionExclusionJson.as[OkStatePensionExclusion] shouldBe okStatePensionExclusion
+      }
+
+      "serialise correctly" in {
+        val okStatePensionExclusion = OkStatePensionExclusion(
+          exclusionReasons = List(Exclusion.ManualCorrespondenceIndicator),
+          pensionAge = Some(65),
+          pensionDate = Some(LocalDate.parse("2030-01-01")),
+          statePensionAgeUnderConsideration = Some(true)
+        )
+
+        val okStatePensionExclusionJson = Json.obj(
+          "exclusionReasons" -> Json.arr("ManualCorrespondenceIndicator"),
+          "pensionAge" -> 65,
+          "pensionDate" -> "2030-01-01",
+          "statePensionAgeUnderConsideration" -> true
+        )
+
+        Json.toJson(okStatePensionExclusion) shouldBe okStatePensionExclusionJson
+      }
+    }
+
+    "CopeStatePensionExclusion" should {
+      "de-serialise correctly" in {
+        val copeStatePensionExclusion = CopeStatePensionExclusion(
+          code = Exclusion.CopeProcessing,
+          copeDataAvailableDate = LocalDate.parse("2030-01-01"),
+          previousAvailableDate = Some(LocalDate.parse("2035-05-11"))
+        )
+
+        val copeStatePensionExclusionJson = Json.obj(
+          "code" -> "EXCLUSION_COPE_PROCESSING",
+          "copeDataAvailableDate" -> "2030-01-01",
+          "previousAvailableDate" -> "2035-05-11"
+        )
+
+        copeStatePensionExclusionJson.as[CopeStatePensionExclusion] shouldBe copeStatePensionExclusion
+      }
+
+      "serialise correctly" in {
+        val copeStatePensionExclusion = CopeStatePensionExclusion(
+          code = Exclusion.CopeProcessing,
+          copeDataAvailableDate = LocalDate.parse("2030-01-01"),
+          previousAvailableDate = Some(LocalDate.parse("2035-05-11"))
+        )
+
+        val copeStatePensionExclusionJson = Json.obj(
+          "code" -> "CopeProcessing",
+          "copeDataAvailableDate" -> "2030-01-01",
+          "previousAvailableDate" -> "2035-05-11"
+        )
+
+        Json.toJson(copeStatePensionExclusion) shouldBe copeStatePensionExclusionJson
+      }
+    }
+
+    "ForbiddenStatePensionExclusion" should {
+      "de-serialise correctly" in {
+        val forbiddenStatePensionExclusion = ForbiddenStatePensionExclusion(
+          code = Exclusion.Dead,
+          message = Some("To be or not to be ? That is the question !!")
+        )
+
+        val forbiddenStatePensionExclusionJson = Json.obj(
+          "code" -> "EXCLUSION_DEAD",
+          "message" -> "To be or not to be ? That is the question !!"
+        )
+
+        forbiddenStatePensionExclusionJson.as[ForbiddenStatePensionExclusion] shouldBe forbiddenStatePensionExclusion
+      }
+
+      "serialise correctly" in {
+        val forbiddenStatePensionExclusion = ForbiddenStatePensionExclusion(
+          code = Exclusion.Dead,
+          message = Some("To be or not to be ? That is the question !!")
+        )
+
+        val forbiddenStatePensionExclusionJson = Json.obj(
+          "code" -> "Dead",
+          "message" -> "To be or not to be ? That is the question !!"
+        )
+
+        Json.toJson(forbiddenStatePensionExclusion) shouldBe forbiddenStatePensionExclusionJson
+      }
+    }
+
   }
 }

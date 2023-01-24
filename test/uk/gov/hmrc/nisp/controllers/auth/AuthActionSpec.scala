@@ -60,16 +60,16 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
   type AuthRetrievalType =
     Option[String] ~ ConfidenceLevel ~ Option[String] ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
 
-  val mockAuthConnector         = mock[AuthConnector]
-  val mockApplicationConfig     = mock[ApplicationConfig]
-  val mockCitizenDetailsService = mock[CitizenDetailsService]
+  val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockCitizenDetailsService: CitizenDetailsService = mock[CitizenDetailsService]
 
-  val nino                   = new Generator().nextNino.nino
-  val fakeLoginTimes         = LoginTimes(Instant.now(), None)
-  val credentials            = Credentials("providerId", "providerType")
-  val citizen                = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
-  val address                = Address(Some("Country"))
-  val citizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
+  val nino: String = new Generator().nextNino.nino
+  val fakeLoginTimes: LoginTimes = LoginTimes(Instant.now(), None)
+  val credentials: Credentials = Credentials("providerId", "providerType")
+  val citizen: Citizen = Citizen(Nino(nino), Some("John"), Some("Smith"), LocalDate.of(1983, 1, 2))
+  val address: Address = Address(Some("Country"))
+  val citizenDetailsResponse: CitizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -81,7 +81,9 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockAuthConnector, mockApplicationConfig, mockCitizenDetailsService)
+    reset(mockAuthConnector)
+    reset(mockApplicationConfig)
+    reset(mockCitizenDetailsService)
   }
 
   def makeRetrievalResults(
@@ -104,7 +106,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
     "/mdtp/uplift?origin=NISP&completionURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failureURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised&confidenceLevel=200"
   implicit val timeout: Timeout = 5 seconds
 
-  val authAction = inject[AuthActionImpl]
+  val authAction: AuthActionImpl = inject[AuthActionImpl]
 
   "GET /statepension" should {
     "invoke the block" when {

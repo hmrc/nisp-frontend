@@ -47,7 +47,7 @@ class CitizenDetailsServiceSpec
   val noNameNino: Nino            = TestAccountBuilder.noNameNino
   val nonExistentNino: Nino       = TestAccountBuilder.nonExistentNino
   val badRequestNino: Nino        = TestAccountBuilder.blankNino
-  val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
+  val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -63,7 +63,7 @@ class CitizenDetailsServiceSpec
   def citizenDetailsResponseForNino(nino: Nino): CitizenDetailsResponse =
     TestAccountBuilder.directJsonResponse(nino, "citizen-details")
 
-  val citizenDetailsService = inject[CitizenDetailsService]
+  val citizenDetailsService: CitizenDetailsService = inject[CitizenDetailsService]
 
   "CitizenDetailsService" should {
     "return something for valid NINO" in {
@@ -128,10 +128,10 @@ class CitizenDetailsServiceSpec
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
         citizenDetailsService.retrievePerson(nino)(new HeaderCarrier())
       whenReady(person) { p =>
-        p.right.map(_.person.copy(nino = nino)) shouldBe Right(
+        p.map(_.person.copy(nino = nino)) shouldBe Right(
           Citizen(nino, Some("AHMED"), Some("BRENNAN"), LocalDate.of(1954, 3, 9))
         )
-        p.right.get.person.getNameFormatted     shouldBe Some("AHMED BRENNAN")
+        p.toOption.get.person.getNameFormatted     shouldBe Some("AHMED BRENNAN")
       }
     }
 
@@ -151,7 +151,7 @@ class CitizenDetailsServiceSpec
             Some(Address(Some("GREAT BRITAIN")))
           )
         )
-        p.right.get.person.getNameFormatted shouldBe None
+        p.toOption.get.person.getNameFormatted shouldBe None
       }
     }
   }

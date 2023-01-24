@@ -33,6 +33,7 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 
 import scala.io.Source
+import scala.util.Using
 
 class IdentityVerificationConnectorSpec
     extends UnitSpec
@@ -45,12 +46,13 @@ class IdentityVerificationConnectorSpec
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   import IdentityVerificationSuccessResponse._
 
-  val mockMetricService     = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
-  val mockApplicationConfig = mock[ApplicationConfig]
+  val mockMetricService: MetricsService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
+  val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockMetricService, mockApplicationConfig)
+    reset(mockMetricService)
+    reset(mockApplicationConfig)
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -62,9 +64,9 @@ class IdentityVerificationConnectorSpec
     )
     .build()
 
-  lazy val identityVerificationConnector = inject[IdentityVerificationConnector]
+  lazy val identityVerificationConnector: IdentityVerificationConnector = inject[IdentityVerificationConnector]
 
-  val possibleJournies = Map(
+  val possibleJournies: Map[String, String] = Map(
     "success-journey-id"               -> "test/resources/identity-verification/success.json",
     "incomplete-journey-id"            -> "test/resources/identity-verification/incomplete.json",
     "failed-matching-journey-id"       -> "test/resources/identity-verification/failed-matching.json",
@@ -80,7 +82,10 @@ class IdentityVerificationConnectorSpec
   )
 
   def mockJourneyId(journeyId: String): Unit = {
-    val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
+    val fileContents = Using(Source.fromFile(possibleJournies(journeyId))) {
+      resource => resource.mkString
+    }.get
+
     server.stubFor(
       get(urlEqualTo(s"/mdtp/journey/journeyId/$journeyId"))
         .willReturn(ok(Json.parse(fileContents).toString()))

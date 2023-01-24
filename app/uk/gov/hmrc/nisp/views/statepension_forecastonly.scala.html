@@ -95,7 +95,7 @@ isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Au
       headingLevel = 2,
       title = Text(messages("nisp.main.basedOn") + " " + langUtils.Dates.formatDate(statePension.pensionDate)),
       content = HtmlContent(s"""
-        <p role="text" data-spec="state_pension__panel1__forecast__caveats">${messages("nisp.main.caveats") + " " + messages("nisp.is") + " " + NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) + " " + messages("nisp.main.week")},<br/>${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) + " " + messages("nisp.main.month")}, ${NispMoney.pounds(statePension.amounts.forecast.annualAmount) + " " + messages("nisp.main.year")}</p>
+        <p role="text" data-spec="state_pension__panel1__forecast__caveats">${messages("nisp.main.caveats")} ${messages("nisp.is")} ${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.week")},<br/>${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount)} ${messages("nisp.main.month")}, ${NispMoney.pounds(statePension.amounts.forecast.annualAmount)} ${messages("nisp.main.year")}</p>
       """),
       specId = Some("state_pension_forecast_only__panel1")
     )
@@ -136,7 +136,7 @@ isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Au
 
     @h2(
       elmId = Some("mostYouCanGetForecast"),
-      msg = NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) + " " + messages("nisp.main.mostYouCanGet"),
+      msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
       specId = Some("state_pension_forecast_only__h2_1")
     )
 

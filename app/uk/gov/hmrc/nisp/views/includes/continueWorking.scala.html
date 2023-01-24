@@ -40,7 +40,7 @@
 
   @h2(
     elmId = Some("mostYouCanGetMQP"),
-    msg = NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) + " " + messages("nisp.main.mostYouCanGet"),
+    msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
     specId = Some("continue_working__mqp_scenario_h2_1")
   )
 
@@ -150,11 +150,13 @@
         specId = Some("continue_working__chart5")
       )
     }
+
+    case _ => {}
   }
 
   @h2(
     elmId = Some("mostYouCanGet"),
-    msg = NispMoney.pounds(forecastChart.amountModel.weeklyAmount) + " " + messages("nisp.main.mostYouCanGet"),
+    msg = s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
     specId = Some("continue_working__h2_2")
   )
 

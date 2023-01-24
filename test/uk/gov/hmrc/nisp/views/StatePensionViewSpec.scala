@@ -19,12 +19,14 @@ package uk.gov.hmrc.nisp.views
 import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
+import org.mockito.stubbing.OngoingStubbing
 import play.api.i18n.Messages
-import play.api.inject.bind
+import play.api.inject.{Injector, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
@@ -46,7 +48,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
   val urResearchURL =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
 
-  val fakeRequest = FakeRequest()
+  val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -54,9 +56,9 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
 
-  lazy val langUtils = inject[LanguageUtils]
+  lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
-  val standardInjector = GuiceApplicationBuilder()
+  val standardInjector: Injector = GuiceApplicationBuilder()
     .overrides(
       bind[AuthAction].to[FakeAuthAction],
       bind[StatePensionService].toInstance(mockStatePensionService),
@@ -67,7 +69,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
     .build()
     .injector
 
-  val abroadUserInjector = GuiceApplicationBuilder()
+  val abroadUserInjector: Injector = GuiceApplicationBuilder()
     .overrides(
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
@@ -82,7 +84,11 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
+    reset(mockStatePensionService)
+    reset(mockNationalInsuranceService)
+    reset(mockAuditConnector)
+    reset(mockAppConfig)
+    reset(mockPertaxHelper)
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
@@ -90,10 +96,10 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
   }
 
-  lazy val statePensionController = standardInjector.instanceOf[StatePensionController]
-  lazy val abroadUserController   = abroadUserInjector.instanceOf[StatePensionController]
+  lazy val statePensionController: StatePensionController = standardInjector.instanceOf[StatePensionController]
+  lazy val abroadUserController: StatePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
-  def generateFakeRequest = fakeRequest.withSession(
+  def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withSession(
     SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
@@ -105,7 +111,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
       "The scenario is continue working  || Fill Gaps" when {
 
         "State Pension view with NON-MQP :  Personal Max" should {
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[String] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -134,7 +140,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
                 Some(LocalDate.of(1954, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -510,7 +516,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP : Personal Max: With State Pension age under consideration message" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -539,7 +545,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
                 Some(LocalDate.of(1954, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -638,7 +644,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -655,8 +661,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 11,
                 pensionSharingOrder = false,
                 currentFullWeeklyPensionAmount = 149.65,
-                false,
-                false
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = false
               )
               ))))
 
@@ -667,7 +673,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
                 Some(LocalDate.of(1954, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -1011,7 +1017,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65: With State Pension age under consideration message" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -1040,7 +1046,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
                 Some(LocalDate.of(1954, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -1141,7 +1147,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -1158,8 +1164,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 11,
                 pensionSharingOrder = false,
                 currentFullWeeklyPensionAmount = 149.65,
-                false,
-                false
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = false
               )
               ))))
 
@@ -1170,7 +1176,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
                 Some(LocalDate.of(1989, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -1480,7 +1486,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps: With State Pension age under consideration message" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -1509,7 +1515,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
                 Some(LocalDate.of(1989, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -1613,7 +1619,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP : No Gaps || Full Rate & Personal Max" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -1630,8 +1636,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 11,
                 pensionSharingOrder = false,
                 currentFullWeeklyPensionAmount = 151.65,
-                false,
-                false
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = false
               )
               ))))
 
@@ -1642,7 +1648,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 0,
                 numberOfGapsPayable = 0,
                 Some(LocalDate.of(1989, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -1917,7 +1923,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP : No Gaps || Full Rate & Personal Max: With State Pension age under consideration message" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -1946,7 +1952,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 0,
                 numberOfGapsPayable = 0,
                 Some(LocalDate.of(1989, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -2047,7 +2053,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -2064,8 +2070,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 11,
                 pensionSharingOrder = false,
                 currentFullWeeklyPensionAmount = 149.65,
-                false,
-                false
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = false
               )
               ))))
 
@@ -2076,7 +2082,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
                 Some(LocalDate.of(1989, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -2346,7 +2352,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left: With State Pension age under consideration message" should {
 
-          def mockSetup = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -2375,7 +2381,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
                 numberOfGaps = 2,
                 numberOfGapsPayable = 2,
                 Some(LocalDate.of(1989, 3, 6)),
-                false,
+                homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
 
@@ -2478,7 +2484,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
       "State Pension view with NON-MQP : Reached || No Gaps || Full Rate and Personal Max" should {
 
-        def mockSetup = {
+        def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
           when(mockStatePensionService.getSummary(any(), any())(any()))
             .thenReturn(Future.successful(Right(Right(StatePension(
               LocalDate.of(2016, 4, 5),
@@ -2495,8 +2501,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               11,
               pensionSharingOrder = false,
               currentFullWeeklyPensionAmount = 149.65,
-              false,
-              false
+              reducedRateElection = false,
+              statePensionAgeUnderConsideration = false
             )
             ))))
 
@@ -2507,7 +2513,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               numberOfGaps = 0,
               numberOfGapsPayable = 0,
               Some(LocalDate.of(1989, 3, 6)),
-              false,
+              homeResponsibilitiesProtection = false,
               LocalDate.of(2017, 4, 5),
               List(
 
@@ -2737,7 +2743,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
 
       "State Pension view with NON-MQP : Reached || No Gaps || Full Rate and Personal Max: With State Pension age under consideration message" should {
 
-        def mockSetup = {
+        def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
           when(mockStatePensionService.getSummary(any(), any())(any()))
             .thenReturn(Future.successful(Right(Right(StatePension(
               LocalDate.of(2016, 4, 5),
@@ -2766,7 +2772,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
               numberOfGaps = 0,
               numberOfGapsPayable = 0,
               Some(LocalDate.of(1989, 3, 6)),
-              false,
+              homeResponsibilitiesProtection = false,
               LocalDate.of(2017, 4, 5),
               List(
 

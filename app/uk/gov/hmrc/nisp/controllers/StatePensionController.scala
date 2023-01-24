@@ -201,25 +201,30 @@ class StatePensionController @Inject() (
         .fold(false)(_.equalsIgnoreCase("On"))
     pertaxHelper.isFromPertax.flatMap { isPertax =>
       statePensionService.getSummary(user.nino, delegationState).flatMap {
-        case Right(Left(statePensionExclusion)) => Future.successful(sendExclusion(statePensionExclusion.exclusion))
-        case Right(Right(statePension)) => nationalInsuranceService.getSummary(user.nino) map {
-          case Right(Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
-            sendExclusion(nationalInsuranceExclusion.exclusion)
-          case Right(Right(nationalInsuranceRecord)) =>
-            sendAuditEvent(statePension, user)
-            if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
-              doShowStatePensionMQP(statePension, nationalInsuranceRecord, isPertax)
-            }
-            else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
-              doShowStatePensionForecast(statePension, nationalInsuranceRecord, isPertax)
-            }
-            else {
-              doShowStatePension(statePension, nationalInsuranceRecord, isPertax)
-            }
-        }
+        case Right(Left(statePensionExclusion)) =>
+          Future.successful(sendExclusion(statePensionExclusion.exclusion))
+        case Right(Right(statePension)) =>
+          nationalInsuranceService.getSummary(user.nino) map {
+            case Right(Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+              sendExclusion(nationalInsuranceExclusion.exclusion)
+            case Right(Right(nationalInsuranceRecord)) =>
+              sendAuditEvent(statePension, user)
+              if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
+                doShowStatePensionMQP(statePension, nationalInsuranceRecord, isPertax)
+              }
+              else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
+                doShowStatePensionForecast(statePension, nationalInsuranceRecord, isPertax)
+              }
+              else {
+                doShowStatePension(statePension, nationalInsuranceRecord, isPertax)
+              }
+            case _ => throw new RuntimeException(
+              "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
+            )
+          }
         case _ => throw new RuntimeException(
-                    "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
-                  )
+          "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
+        )
       }
     }
   }

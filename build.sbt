@@ -33,25 +33,6 @@ lazy val scoverageSettings =
     ScoverageKeys.coverageHighlighting := true
   )
 
-val suppressedImports = Seq(
-  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlFeatureImports._",
-  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlHelperImports._",
-  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Html",
-  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.JavaScript",
-  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Txt",
-  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Xml",
-  "-P:silencer:lineContentFilters=import models._",
-  "-P:silencer:lineContentFilters=import controllers._",
-  "-P:silencer:lineContentFilters=import play.api.i18n._",
-  "-P:silencer:lineContentFilters=import views.html._",
-  "-P:silencer:lineContentFilters=import play.api.templates.PlayMagic._",
-  "-P:silencer:lineContentFilters=import play.api.mvc._",
-  "-P:silencer:lineContentFilters=import play.api.data._",
-  "-P:silencer:lineContentFilters=import uk.gov.hmrc.govukfrontend.views.html.components._",
-  "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.components._",
-  "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
-)
-
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.govukfrontend.views.html.components._",
   "uk.gov.hmrc.hmrcfrontend.views.html.components._",
@@ -67,23 +48,27 @@ lazy val microservice = Project(appName, file("."))
     playSettings,
     scoverageSettings,
     PlayKeys.playDefaultPort := 9234,
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.13.8",
     libraryDependencies ++= AppDependencies.all,
     retrieveManaged := true,
     update / evictionWarningOptions  := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     majorVersion := 10,
     scalacOptions ++= Seq(
       "-Xfatal-warnings",
-      "-P:silencer:pathFilters=routes",
-      "-feature"
-    ),
-    scalacOptions ++= suppressedImports
+      "-feature",
+      "-Werror",
+      "-Wconf:cat=unused-imports&site=.*views\\.html.*:s",
+      "-Wconf:cat=unused-imports&site=<empty>:s",
+      "-Wconf:cat=unused&src=.*RoutesPrefix\\.scala:s",
+      "-Wconf:cat=unused&src=.*Routes\\.scala:s",
+      "-Wconf:cat=unused&src=.*ReverseRoutes\\.scala:s",
+      "-Wconf:cat=unused&src=.*JavaScriptReverseRoutes\\.scala:s"
+    )
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
     IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory)(base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    IntegrationTest / parallelExecution := false,
-    scalacOptions += "-Ypartial-unification"
+    IntegrationTest / parallelExecution := false
   )

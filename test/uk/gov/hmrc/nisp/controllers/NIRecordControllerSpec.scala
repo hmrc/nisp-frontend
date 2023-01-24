@@ -23,7 +23,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.Result
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
@@ -51,14 +51,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(
-      mockNationalInsuranceService,
-      mockStatePensionService,
-      mockAppConfig,
-      mockPertaxHelper,
-      mockAuditConnector,
-      mockDateProvider
-    )
+    reset(mockNationalInsuranceService)
+    reset(mockStatePensionService)
+    reset(mockAppConfig)
+    reset(mockPertaxHelper)
+    reset(mockAuditConnector)
+    reset(mockDateProvider)
     when(mockAppConfig.urBannerUrl).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
@@ -76,10 +74,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     )
     .build()
 
-  val fakeRequest        = FakeRequest()
-  val niRecordController = inject[NIRecordController]
+  val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  val niRecordController: NIRecordController = inject[NIRecordController]
 
-  def generateFakeRequest = FakeRequest().withSession(
+  def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
     SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
@@ -91,7 +89,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       val statePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
@@ -101,10 +99,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2018, 7, 6),
         "2017",
         30,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       val expectedNationalInsuranceRecord = NationalInsuranceRecord(
@@ -113,13 +111,13 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         2,
         1,
         Some(LocalDate.of(1973, 7, 7)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
         List(
-          NationalInsuranceTaxYear("2015", true, 12345.45, 0, 0, 0, 0, None, None, false, false),
+          NationalInsuranceTaxYear("2015", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
           NationalInsuranceTaxYear(
             "2014",
-            false,
+            qualifying = false,
             123,
             1,
             1,
@@ -127,12 +125,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             456.58,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            false,
-            false
+            payable = false,
+            underInvestigation = false
           ),
           NationalInsuranceTaxYear(
             "1999",
-            false,
+            qualifying = false,
             2,
             5,
             0,
@@ -140,11 +138,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             111.11,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            false,
-            false
+            payable = false,
+            underInvestigation = false
           )
         ),
-        false
+        reducedRateElection = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -168,19 +166,19 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         0,
         0,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
         List(
-          NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false),
-          NationalInsuranceTaxYear("2014-15", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
+          NationalInsuranceTaxYear("2015-16", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
+          NationalInsuranceTaxYear("2014-15", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)
         ),
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePensionResponse = StatePension(
         LocalDate.of(2016, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
@@ -190,10 +188,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2018, 7, 6),
         "2017-18",
         30,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -240,12 +238,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         10,
         4,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
             "2013-14",
-            false,
+            qualifying = false,
             0,
             0,
             0,
@@ -253,17 +251,17 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             704.60,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           )
         ),
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
@@ -273,10 +271,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2018, 7, 6),
         "2017-18",
         30,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -301,16 +299,16 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         0,
         0,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
-        List(NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)),
-        false
+        List(NationalInsuranceTaxYear("2015-16", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)),
+        reducedRateElection = false
       )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2016, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
@@ -320,10 +318,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2018, 7, 6),
         "2017-18",
         30,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -411,10 +409,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         0,
         0,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
-        List(NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)),
-        false
+        List(NationalInsuranceTaxYear("2015-16", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)),
+        reducedRateElection = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -450,12 +448,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         10,
         4,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
             "2013-14",
-            false,
+            qualifying = false,
             0,
             0,
             0,
@@ -463,11 +461,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             704.60,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           )
         ),
-        false
+        reducedRateElection = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -491,12 +489,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         6,
         4,
         Some(LocalDate.of(1975, 8, 1)),
-        true,
+        homeResponsibilitiesProtection = true,
         LocalDate.of(2016, 4, 5),
         List(
-          NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
+          NationalInsuranceTaxYear("2015-16", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)
         ),
-        false
+        reducedRateElection = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -521,12 +519,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         10,
         4,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
             "2013-14",
-            false,
+            qualifying = false,
             0,
             0,
             0,
@@ -534,11 +532,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             704.60,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           )
         ),
-        false
+        reducedRateElection = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -604,18 +602,18 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         0,
         0,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
         List(
-          NationalInsuranceTaxYear("2015", false, 2430.24, 0, 0, 52, 0, None, None, false, false)
+          NationalInsuranceTaxYear("2015", qualifying = false, 2430.24, 0, 0, 52, 0, None, None, payable = false, underInvestigation = false)
         ),
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2016, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
@@ -625,10 +623,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2018, 7, 6),
         "2017",
         30,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -654,18 +652,18 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         0,
         0,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
         List(
-          NationalInsuranceTaxYear("2015-16", true, 2430.24, 0, 0, 0, 0, None, None, false, false)
+          NationalInsuranceTaxYear("2015-16", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)
         ),
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2016, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
@@ -675,10 +673,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2018, 7, 6),
         "2017-18",
         30,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -704,16 +702,16 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         0,
         0,
         Some(LocalDate.of(1975, 8, 1)),
-        false,
+        homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
         List.empty[NationalInsuranceTaxYear],
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2016, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(3, 0, 155.65, 676.8, 8121.59),
@@ -723,10 +721,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2018, 7, 6),
         "2017-18",
         30,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -755,12 +753,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         6,
         4,
         Some(LocalDate.of(1975, 8, 1)),
-        true,
+        homeResponsibilitiesProtection = true,
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
             "2013",
-            false,
+            qualifying = false,
             2430.24,
             0,
             0,
@@ -768,12 +766,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             0,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2024, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           ),
           NationalInsuranceTaxYear(
             "2012",
-            false,
+            qualifying = false,
             2430.24,
             0,
             0,
@@ -781,17 +779,17 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             722.8,
             Some(LocalDate.of(2018, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           )
         ),
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2014, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
@@ -801,10 +799,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2050, 7, 6),
         "2050",
         25,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -830,12 +828,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         6,
         4,
         Some(LocalDate.of(1975, 8, 1)),
-        true,
+        homeResponsibilitiesProtection = true,
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
             "2013",
-            false,
+            qualifying = false,
             2430.24,
             0,
             0,
@@ -843,12 +841,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             722.8,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2024, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           ),
           NationalInsuranceTaxYear(
             "2012",
-            false,
+            qualifying = false,
             2430.24,
             0,
             0,
@@ -856,17 +854,17 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             722.8,
             Some(LocalDate.of(2018, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           )
         ),
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2014, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
@@ -876,10 +874,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2050, 7, 6),
         "2050",
         25,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -906,12 +904,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         6,
         4,
         Some(LocalDate.of(1975, 8, 1)),
-        true,
+        homeResponsibilitiesProtection = true,
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
             "2013",
-            false,
+            qualifying = false,
             2430.24,
             0,
             0,
@@ -919,12 +917,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             722.8,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2024, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           ),
           NationalInsuranceTaxYear(
             "2012",
-            false,
+            qualifying = false,
             2430.24,
             0,
             0,
@@ -932,17 +930,17 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             722.8,
             Some(LocalDate.of(2018, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            true,
-            false
+            payable = true,
+            underInvestigation = false
           )
         ),
-        false
+        reducedRateElection = false
       )
 
       val expectedStatePension = StatePension(
         LocalDate.of(2014, 4, 5),
         StatePensionAmounts(
-          false,
+          protectedPayment = false,
           StatePensionAmountRegular(133.41, 580.1, 6961.14),
           StatePensionAmountForecast(0, 146.76, 638.14, 7657.73),
           StatePensionAmountMaximum(50, 7, 155.65, 676.8, 8121.59),
@@ -952,10 +950,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2050, 7, 6),
         "2050",
         25,
-        false,
+        pensionSharingOrder = false,
         155.65,
-        false,
-        false
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
       )
 
       when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
@@ -1156,13 +1154,13 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       2,
       1,
       Some(LocalDate.of(1973, 7, 7)),
-      false,
+      homeResponsibilitiesProtection = false,
       LocalDate.of(2016, 4, 5),
       List(
-        NationalInsuranceTaxYear("2015-16", true, 12345.45, 0, 0, 0, 0, None, None, false, false),
+        NationalInsuranceTaxYear("2015-16", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
         NationalInsuranceTaxYear(
           "2014-15",
-          false,
+          qualifying = false,
           123,
           1,
           1,
@@ -1170,12 +1168,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
           456.58,
           Some(LocalDate.of(2019, 4, 5)),
           Some(LocalDate.of(2023, 4, 5)),
-          false,
-          false
+          payable = false,
+          underInvestigation = false
         ),
         NationalInsuranceTaxYear(
           "1999-00",
-          false,
+          qualifying = false,
           2,
           5,
           0,
@@ -1183,11 +1181,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
           111.11,
           Some(LocalDate.of(2019, 4, 5)),
           Some(LocalDate.of(2023, 4, 5)),
-          false,
-          false
+          payable = false,
+          underInvestigation = false
         )
       ),
-      false
+      reducedRateElection = false
     )
 
     val copeExclusionResponse =
@@ -1214,13 +1212,13 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       2,
       1,
       Some(LocalDate.of(1973, 7, 7)),
-      false,
+      homeResponsibilitiesProtection = false,
       LocalDate.of(2016, 4, 5),
       List(
-        NationalInsuranceTaxYear("2015-16", true, 12345.45, 0, 0, 0, 0, None, None, false, false),
+        NationalInsuranceTaxYear("2015-16", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
         NationalInsuranceTaxYear(
           "2014-15",
-          false,
+          qualifying = false,
           123,
           1,
           1,
@@ -1228,12 +1226,12 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
           456.58,
           Some(LocalDate.of(2019, 4, 5)),
           Some(LocalDate.of(2023, 4, 5)),
-          false,
-          false
+          payable = false,
+          underInvestigation = false
         ),
         NationalInsuranceTaxYear(
           "1999-00",
-          false,
+          qualifying = false,
           2,
           5,
           0,
@@ -1241,11 +1239,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
           111.11,
           Some(LocalDate.of(2019, 4, 5)),
           Some(LocalDate.of(2023, 4, 5)),
-          false,
-          false
+          payable = false,
+          underInvestigation = false
         )
       ),
-      false
+      reducedRateElection = false
     )
 
     when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(

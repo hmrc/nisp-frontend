@@ -26,7 +26,7 @@
   headingLevel: Int = 1,
   specId: Option[String] = None,
   title: Content,
-)()
+)
 
 <div @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-panel govuk-panel--confirmation")" data-component="nisp_panel"@if(specId){ data-spec="@specId"}>
   <h@{headingLevel} class="govuk-panel__title" data-component="nisp_panel__title">

@@ -17,18 +17,14 @@
 package uk.gov.hmrc.nisp.helpers
 
 import java.time.LocalDate
-
 import play.api.http.Status
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.{JsValue, Json, Reads}
 import uk.gov.hmrc.domain.{Generator, Nino}
 
-import scala.concurrent.Future
 import scala.io.Source
-import scala.util.Random
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Random, Using}
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
-import resource._
 import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
 import uk.gov.hmrc.nisp.models.UserName
@@ -82,10 +78,10 @@ object TestAccountBuilder {
 
   val internalServerError: Nino = randomNino
 
-  val nispAuthedUser =
-    NispAuthedUser(regularNino, LocalDate.now, UserName(Name(Some("first"), Some("name"))), None, None, false)
+  val nispAuthedUser: NispAuthedUser =
+    NispAuthedUser(regularNino, LocalDate.now, UserName(Name(Some("first"), Some("name"))), None, None, isSa = false)
 
-  val mappedTestAccounts = Map(
+  val mappedTestAccounts: Map[Nino, String] = Map(
     regularNino                                 -> "regular",
     mqpNino                                     -> "mqp",
     forecastOnlyNino                            -> "forecastonly",
@@ -124,24 +120,31 @@ object TestAccountBuilder {
   def directJsonResponse(nino: Nino, api: String): CitizenDetailsResponse =
     jsonResponseByType[CitizenDetailsResponse](nino, api)
 
-  def jsonResponseByType[A](nino: Nino, api: String)(implicit fjs: Reads[A]): A =
-    managed(Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json"))
-      .acquireAndGet(resource => Json.parse(resource.mkString.replace("<NINO>", nino.nino)).as[A])
+  def jsonResponseByType[A](nino: Nino, api: String)(implicit fjs: Reads[A]): A = {
+    Using(Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json")) {
+      resource => Json.parse(resource.mkString.replace("<NINO>", nino.nino)).as[A]
+    }.get
 
-  def getRawJson(nino: Nino, api: String) =
-    managed(Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json"))
-      .acquireAndGet(resource => Json.parse(resource.mkString.replace("<NINO>", nino.nino)))
-
-  private def fileContents(filename: String): Future[String] = Future {
-    managed(Source.fromFile(filename)).acquireAndGet(_.mkString)
   }
 
-  def jsonResponse(nino: Nino, api: String): Future[HttpResponse] =
-    fileContents(s"test/resources/${mappedTestAccounts(nino)}/$api.json").map { string: String =>
+  def getRawJson(nino: Nino, api: String): JsValue = {
+    Using(Source.fromFile(s"test/resources/${mappedTestAccounts(nino)}/$api.json")) {
+      resource => Json.parse(resource.mkString.replace("<NINO>", nino.nino))
+    }.get
+  }
+
+  private def fileContents(filename: String): String = {
+    Using(Source.fromFile(filename)) {
+      resource => resource.mkString
+    }.get
+  }
+
+  def jsonResponse(nino: Nino, api: String): HttpResponse = {
+    val resource = fileContents(s"test/resources/${mappedTestAccounts(nino)}/$api.json")
       HttpResponse(
         status = Status.OK,
-        json = Json.parse(string.replace("<NINO>", nino.nino)),
+        json = Json.parse(resource.replace("<NINO>", nino.nino)),
         headers = Map.empty
       )
-    }
+  }
 }

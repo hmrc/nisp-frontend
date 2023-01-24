@@ -21,13 +21,13 @@ import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
-import resource._
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.io.{File, FileNotFoundException}
 import java.util.Properties
-import scala.collection.JavaConverters._
-import scala.io.{BufferedSource, Source}
+import scala.jdk.CollectionConverters._
+import scala.io.Source
+import scala.util.Using
 
 class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
 
@@ -41,14 +41,15 @@ class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting {
   def createMessageSet(file: File): Set[String] =
     if (file.exists()) {
       val properties                                       = new Properties()
-      val managedResource: ManagedResource[BufferedSource] = managed(Source.fromURI(file.toURI))
-      managedResource.acquireAndGet(bufferedSource => properties.load(bufferedSource.bufferedReader()))
-      properties.stringPropertyNames().asScala.toSet
+      Using(Source.fromURI(file.toURI)) {
+        bufferedSource => properties.load(bufferedSource.bufferedReader())
+      }.get
+        properties.stringPropertyNames().asScala.toSet
     } else {
       throw new FileNotFoundException("Messages file cannot be loaded")
     }
 
-  def listMissingMessageKeys(header: String, missingKeys: Set[String]) =
+  def listMissingMessageKeys(header: String, missingKeys: Set[String]): String =
     missingKeys.toList.sorted.mkString(s"$header\n", "\n", "\n" * 2)
 
   "Application" should {

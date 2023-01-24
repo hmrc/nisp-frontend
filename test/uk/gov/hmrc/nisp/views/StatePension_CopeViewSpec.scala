@@ -24,10 +24,12 @@ import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -47,15 +49,15 @@ import scala.concurrent.Future
 
 class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injecting {
 
-  val mockUserNino         = TestAccountBuilder.regularNino
-  val mockUserNinoExcluded = TestAccountBuilder.excludedAll
-  val mockUserNinoNotFound = TestAccountBuilder.blankNino
+  val mockUserNino: Nino = TestAccountBuilder.regularNino
+  val mockUserNinoExcluded: Nino = TestAccountBuilder.excludedAll
+  val mockUserNinoNotFound: Nino = TestAccountBuilder.blankNino
 
   implicit val user: NispAuthedUser =
-    NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, None, false)
-  val authDetails                   = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
+    NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, None, isSa = false)
+  val authDetails: AuthDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
 
-  implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
+  implicit val fakeRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
   val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -68,11 +70,15 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
   val urResearchURL =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
 
-  lazy val langUtils = inject[LanguageUtils]
+  lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockStatePensionService, mockNationalInsuranceService, mockAuditConnector, mockAppConfig, mockPertaxHelper)
+    reset(mockStatePensionService)
+    reset(mockNationalInsuranceService)
+    reset(mockAuditConnector)
+    reset(mockAppConfig)
+    reset(mockPertaxHelper)
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
@@ -91,7 +97,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
     )
     .build()
 
-  val statePensionController = inject[StatePensionController]
+  val statePensionController: StatePensionController = inject[StatePensionController]
 
   "Render State Pension view with Contracted out User" should {
 
@@ -101,12 +107,12 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
         .thenReturn(Future.successful(Right(Right(StatePension(
           LocalDate.of(2014, 4, 5),
           StatePensionAmounts(
-            false,
+            protectedPayment = false,
             StatePensionAmountRegular(46.38, 201.67, 2420.04),
             StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
             StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
             StatePensionAmountRegular(50, 217.41, 2608.93))
-          ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, false, 155.65, false, false)
+          ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, pensionSharingOrder = false, 155.65, reducedRateElection = false, statePensionAgeUnderConsideration = false)
         ))))
 
       when(mockNationalInsuranceService.getSummary(any())(any()))
@@ -116,7 +122,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
           numberOfGaps = 2,
           numberOfGapsPayable = 2,
           Some(LocalDate.of(1954, 3, 6)),
-          false,
+          homeResponsibilitiesProtection = false,
           LocalDate.of(2017, 4, 5),
           List(
 
@@ -356,7 +362,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
 
   "Render Contracted Out View" should {
     lazy val sResult        = inject[statepension_cope]
-    lazy val htmlAccountDoc = asDocument(sResult(99.54, true).toString)
+    lazy val htmlAccountDoc = asDocument(sResult(99.54, isPertaxUrl = true).toString)
 
     "render with correct page title" in {
       assertElementContainsText(

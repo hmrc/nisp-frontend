@@ -112,7 +112,7 @@
       headingLevel = 2,
       title = Text(messages("nisp.main.basedOn") + " " + langUtils.Dates.formatDate(statePension.pensionDate)),
       content = HtmlContent(s"""
-        <p data-spec="state_pension__panel1__caveats">${messages("nisp.main.caveats") + " " + messages("nisp.is") + " " + NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) + " " + messages("nisp.main.week")}, ${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount) + " " + messages("nisp.main.month")}, ${NispMoney.pounds(statePension.amounts.forecast.annualAmount) + " " + messages("nisp.main.year")}</p>
+        <p data-spec="state_pension__panel1__caveats">${messages("nisp.main.caveats")} ${messages("nisp.is")} ${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.week")}, ${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount)} ${messages("nisp.main.month")}, ${NispMoney.pounds(statePension.amounts.forecast.annualAmount)} ${messages("nisp.main.year")}</p>
       """),
       specId = Some("state_pension__panel1")
     )
@@ -181,7 +181,7 @@
       @if(!isAbroad) {
         @insetText(
           content = HtmlContent(
-            link(
+            s"""${link(
               link = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
               messageKey = "nisp.mqp.overseas.linktext",
               attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
@@ -189,7 +189,7 @@
               comma = true,
               inParagraph = true,
               specId = Some("state_pension__link1")
-            ) + messages("nisp.mqp.overseas")
+            )}${messages("nisp.mqp.overseas")}"""
           ),
           specId = Some("state_pension__inset_text_1")
         )
@@ -209,6 +209,8 @@
         case Scenario.FillGaps => {
           @fillGapsMQP()
         }
+
+        case _ => {}
       }
 
     } else {

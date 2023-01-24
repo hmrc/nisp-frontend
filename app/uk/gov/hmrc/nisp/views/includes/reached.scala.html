@@ -56,7 +56,7 @@
 
 @h2(
   elmId = Some("mostYouCanGetReached"),
-  msg = NispMoney.pounds(statePension.amounts.forecast.weeklyAmount) + " " + messages("nisp.main.mostYouCanGet"),
+  msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
   specId = Some("reached_h2_1")
 )
 
