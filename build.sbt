@@ -1,7 +1,6 @@
 import play.sbt.PlayImport.PlayKeys
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings.addTestReportOption
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "nisp-frontend"
 
@@ -41,10 +40,9 @@ TwirlKeys.templateImports ++= Seq(
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(
-    Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtWeb): _*
+    Seq(play.sbt.PlayScala, SbtDistributablesPlugin, SbtWeb): _*
   )
   .settings(
-    publishingSettings,
     playSettings,
     scoverageSettings,
     PlayKeys.playDefaultPort := 9234,
