@@ -15,11 +15,13 @@
  *@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
   main: main,
   p: P,
-  h1: H1
+  h1: H1,
+  applicationConfig: ApplicationConfig
 )
 
 @(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_])
@@ -34,10 +36,21 @@
     specId = Some("service_error_500_h1")
   )
 
-  @p(
-    content = Text(messages(
+  @if(applicationConfig.showExcessiveTrafficMessage == true) {
+    @p(
+      elmId = Some("excessiveTraffic"),
+      content = Text(messages(
+        "global.error.InternalServerError500.excessiveTraffic.message"
+      )),
+      specId = Some("service_error_500_p1")
+    )
+  } else {
+      @p(
+      elmId = Some("tryAgainLater"),
+      content = Text(messages(
       "global.error.InternalServerError500.message"
-    )),
-    specId = Some("service_error_500_p1")
-  )
+      )),
+      specId = Some("service_error_500_p1")
+      )
+  }
 }
