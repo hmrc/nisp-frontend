@@ -50,17 +50,18 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val mfaUpliftUrl: String          = configuration.getOptional[String]("mfa-uplift.url").getOrElse("")
   val ggSignInUrl: String           = configuration.getOptional[String]("government-gateway-sign-in.host").getOrElse("")
 
-  val showUrBanner: Boolean              = configuration.getOptional[Boolean]("urBannerToggle").getOrElse(false)
-  val GaEventAction: String              = "home page UR"
-  val isleManLink                        = configuration.get[String]("isle-man-link.url")
-  val citizenAdviceLinkEn                = configuration.get[String]("citizens-advice-link-en.url")
-  val citizenAdviceLinkCy                = configuration.get[String]("citizens-advice-link-cy.url")
-  val moneyAdviceLinkEn                  = configuration.get[String]("money-advice-link-en.url")
-  val moneyAdviceLinkCy                  = configuration.get[String]("money-advice-link-cy.url")
-  val pensionWiseLink                    = configuration.get[String]("pension-wise-link.url")
-  val frontendHost                       = loadConfig("nisp-frontend.host")
-  val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
-  val urRecruitmentLinkURL: String       = configuration.get[String]("ur-research.url")
+  val showUrBanner: Boolean                = configuration.getOptional[Boolean]("urBannerToggle").getOrElse(false)
+  val showExcessiveTrafficMessage: Boolean = configuration.getOptional[Boolean]("excessiveTrafficToggle").getOrElse(false)
+  val GaEventAction: String                = "home page UR"
+  val isleManLink                          = configuration.get[String]("isle-man-link.url")
+  val citizenAdviceLinkEn                  = configuration.get[String]("citizens-advice-link-en.url")
+  val citizenAdviceLinkCy                  = configuration.get[String]("citizens-advice-link-cy.url")
+  val moneyAdviceLinkEn                    = configuration.get[String]("money-advice-link-en.url")
+  val moneyAdviceLinkCy                    = configuration.get[String]("money-advice-link-cy.url")
+  val pensionWiseLink                      = configuration.get[String]("pension-wise-link.url")
+  val frontendHost                         = loadConfig("nisp-frontend.host")
+  val accessibilityStatementHost: String   = loadConfig("accessibility-statement.url") + "/accessibility-statement"
+  val urRecruitmentLinkURL: String         = configuration.get[String]("ur-research.url")
 
   val showFullNI: Boolean                   = getConfBool("features.fullNIrecord", false)
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)

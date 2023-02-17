@@ -49,6 +49,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
     when(mockApplicationConfig.urBannerUrl).thenReturn("/urResearch")
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
+    when(mockApplicationConfig.showExcessiveTrafficMessage).thenReturn(false)
   }
 
   val errorHandler                    = inject[ErrorHandler]
@@ -80,6 +81,23 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
 
       val docTitle = doc.select("title").text()
       docTitle should include(messages("global.error.InternalServerError500.title"))
+    }
+
+    "return excessiveTrafficMessage when showExcessiveTrafficMessage is true" in {
+      when(mockApplicationConfig.showExcessiveTrafficMessage).thenReturn(true)
+      val serverErrorTemplate: Html = errorHandler.internalServerErrorTemplate
+      val doc: Document = Jsoup.parse(serverErrorTemplate.toString())
+
+      val docMessage = doc.getElementById("excessiveTraffic").text
+      docMessage shouldBe messages("global.error.InternalServerError500.excessiveTraffic.message")
+    }
+
+    "return 'try again later' when showExcessiveTrafficMessage is false" in {
+      val serverErrorTemplate: Html = errorHandler.internalServerErrorTemplate
+      val doc: Document = Jsoup.parse(serverErrorTemplate.toString())
+
+      val docMessage = doc.getElementById("tryAgainLater").text
+      docMessage shouldBe messages("global.error.InternalServerError500.message")
     }
   }
 

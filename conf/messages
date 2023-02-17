@@ -504,6 +504,8 @@ global.error.InternalServerError500.title = Sorry, there is a problem with the s
 global.error.InternalServerError500.heading = Sorry, there is a problem with the service
 global.error.InternalServerError500.message = Try again later.
 
+global.error.InternalServerError500.excessiveTraffic.message = This might be caused by a high number of people trying to use this service at the moment. Try again later.
+
 global.page.not.found.error.title=Page not found
 global.page.not.found.error.check.web.address.correct=If you typed the web address, check it is correct.
 global.page.not.found.error.check.web.address.full=If you pasted the web address, check you copied the entire address.
