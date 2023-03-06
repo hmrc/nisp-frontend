@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import java.net.{URI, URLEncoder}
-import com.google.inject.Inject
+import com.google.inject.{ImplementedBy, Inject}
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
@@ -27,6 +27,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class ExcludedAuthActionImpl @Inject() (
@@ -79,6 +80,7 @@ class ExcludedAuthActionImpl @Inject() (
 
 }
 
+@ImplementedBy(classOf[ExcludedAuthActionImpl])
 trait ExcludedAuthAction
     extends ActionBuilder[ExcludedAuthenticatedRequest, AnyContent]
     with ActionFunction[Request, ExcludedAuthenticatedRequest]

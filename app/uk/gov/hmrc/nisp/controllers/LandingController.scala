@@ -20,7 +20,6 @@ import com.google.inject.Inject
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.{locked_out, not_authorised, technical_issue, timeout}
 import uk.gov.hmrc.nisp.views.html.identity_verification_landing
@@ -28,7 +27,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class LandingController @Inject() (
   identityVerificationConnector: IdentityVerificationConnector,
-  applicationConfig: ApplicationConfig,
   mcc: MessagesControllerComponents,
   identityVerificationLanding: identity_verification_landing,
   notAuthorised: not_authorised,
@@ -46,6 +44,7 @@ class LandingController @Inject() (
     Ok(identityVerificationLanding()).withNewSession
   )
 
+  //noinspection ScalaStyle
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     val result = journeyId map { id =>
       import IdentityVerificationSuccessResponse._

@@ -21,8 +21,8 @@ import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import play.api.i18n.Messages
-import play.api.inject.{Injector, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
@@ -30,12 +30,12 @@ import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.utils.{Constants, WireMockHelper}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 
@@ -43,7 +43,7 @@ import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.Future
 
-class StatePensionViewSpec extends HtmlSpec with Injecting {
+class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
 
   val urResearchURL =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
@@ -64,7 +64,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
-      bind[ApplicationConfig].toInstance(mockAppConfig)
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -77,7 +78,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthActionWithNino],
-      bind[NinoContainer].toInstance(AbroadNinoContainer)
+      bind[NinoContainer].toInstance(AbroadNinoContainer),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -89,11 +91,12 @@ class StatePensionViewSpec extends HtmlSpec with Injecting {
     reset(mockAuditConnector)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
+    server.resetAll()
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
   }
 
   lazy val statePensionController: StatePensionController = standardInjector.instanceOf[StatePensionController]

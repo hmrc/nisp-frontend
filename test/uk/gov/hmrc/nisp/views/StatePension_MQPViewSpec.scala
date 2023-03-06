@@ -21,8 +21,8 @@ import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import play.api.i18n.Messages
-import play.api.inject.{Injector, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
@@ -30,12 +30,13 @@ import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.utils.{Constants, WireMockHelper}
 import uk.gov.hmrc.nisp.views.formatting.Time
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -44,7 +45,7 @@ import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.Future
 
-class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
+class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelper {
 
   val expectedMoneyServiceLink          = "https://www.moneyadviceservice.org.uk/en"
   val expectedPensionCreditOverviewLink = "https://www.gov.uk/pension-credit/overview"
@@ -61,6 +62,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
+  val mockFeatureFlagService: FeatureFlagService             = mock[FeatureFlagService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -71,7 +73,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
-      bind[PertaxHelper].toInstance(mockPertaxHelper)
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -84,7 +87,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthActionWithNino],
-      bind[NinoContainer].toInstance(AbroadNinoContainer)
+      bind[NinoContainer].toInstance(AbroadNinoContainer),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -101,7 +105,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting {
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-
+    server.resetAll()
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
   }
 
   lazy val controller: StatePensionController = standardInjector.instanceOf[StatePensionController]

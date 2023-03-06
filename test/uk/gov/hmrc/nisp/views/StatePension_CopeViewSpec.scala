@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.views
 import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.concurrent.ScalaFutures
 import play.api.Application
 import play.api.i18n.Messages
@@ -30,16 +31,19 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
+import uk.gov.hmrc.nisp.utils.{Constants, PertaxAuthMockingHelper, WireMockHelper}
 import uk.gov.hmrc.nisp.views.html.statepension_cope
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -47,7 +51,7 @@ import uk.gov.hmrc.play.language.LanguageUtils
 import java.time.{Instant, LocalDate}
 import scala.concurrent.Future
 
-class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injecting {
+class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injecting with WireMockHelper with PertaxAuthMockingHelper {
 
   val mockUserNino: Nino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded: Nino = TestAccountBuilder.excludedAll
@@ -79,11 +83,16 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
     reset(mockAuditConnector)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
+    server.resetAll()
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    mockPertaxAuth(PertaxAuthResponseModel(
+      ACCESS_GRANTED, "", None, None
+    ), mockUserNino.nino)
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -93,7 +102,8 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
-      bind[PertaxHelper].toInstance(mockPertaxHelper)
+      bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 
@@ -101,7 +111,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
 
   "Render State Pension view with Contracted out User" should {
 
-    def mockSetup = {
+    def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
 
       when(mockStatePensionService.getSummary(any(), any())(any()))
         .thenReturn(Future.successful(Right(Right(StatePension(

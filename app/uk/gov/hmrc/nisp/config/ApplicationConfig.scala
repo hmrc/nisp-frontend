@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nisp.config
 import com.google.inject.Inject
 import play.api.Configuration
-import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -27,22 +26,13 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   private def loadConfig(key: String) =
     configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost            = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
 
   val appName: String                = getString("appName")
-  val assetsPrefix: String           = loadConfig("assets.url") + loadConfig("assets.version") + "/"
-  val betaFeedbackUrl                = s"${Constants.baseUrl}/feedback"
-  val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
-  val ssoUrl: Option[String]         = configuration.getOptional[String]("portal.ssoUrl")
 
   val serviceUrl: String            = loadConfig("serviceUrl")
   val contactFormServiceIdentifier  = "NISP"
-  val contactFrontendPartialBaseUrl = s"$contactFrontendService"
-  val reportAProblemPartialUrl      = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   val reportAProblemNonJSUrl        = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-  val showGovUkDonePage: Boolean    = configuration.getOptional[Boolean]("govuk-done-page.enabled").getOrElse(true)
-  val govUkFinishedPageUrl: String  = loadConfig("govuk-done-page.url")
 
   val postSignInRedirectUrl         = configuration.getOptional[String]("login-callback.url").getOrElse("")
   val notAuthorisedRedirectUrl      = configuration.getOptional[String]("not-authorised-callback.url").getOrElse("")
@@ -52,7 +42,6 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val showUrBanner: Boolean                = configuration.getOptional[Boolean]("urBannerToggle").getOrElse(false)
   val showExcessiveTrafficMessage: Boolean = configuration.getOptional[Boolean]("excessiveTrafficToggle").getOrElse(false)
-  val GaEventAction: String                = "home page UR"
   val isleManLink                          = configuration.get[String]("isle-man-link.url")
   val citizenAdviceLinkEn                  = configuration.get[String]("citizens-advice-link-en.url")
   val citizenAdviceLinkCy                  = configuration.get[String]("citizens-advice-link-cy.url")
@@ -67,14 +56,12 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)
   val isWelshEnabled: Boolean               = getConfBool("features.welsh-translation", false)
   val feedbackFrontendUrl: String           = loadConfig("feedback-frontend.url")
-  val futurePensionUrl: String              = configuration.getOptional[String]("future-pension-link.url").getOrElse("")
   val urBannerUrl: String                   = configuration.getOptional[String]("urBanner.link").getOrElse("")
 
   val citizenDetailsServiceUrl: String       = baseUrl("citizen-details")
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")
   val nationalInsuranceServiceUrl: String    = baseUrl("national-insurance")
   val statePensionServiceUrl: String         = baseUrl("state-pension")
-  val authServiceUrl                         = baseUrl("auth")
 
   val sessionCacheURL: String    = baseUrl("cachable.session-cache")
   val sessionCacheDomain: String = getConfString(
@@ -82,9 +69,15 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
     throw new Exception("Could not find config 'cachable.session-cache.domain'")
   )
 
+  val pertaxAuthBaseUrl = baseUrl("pertax-auth")
+
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + SafeRedirectUrl(
       frontendHost + relativeReferrerPath
     ).encodedUrl
 
+  lazy val internalAuthResourceType: String =
+    servicesConfig.getConfString("internal-auth.resource-type", "ddcn-live-admin-frontend")
+
+  val ehCacheTtlInSeconds: Int = configuration.get[Int]("ehCache.ttlInSeconds")
 }
