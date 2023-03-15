@@ -120,6 +120,18 @@ class FeatureFlagRepositorySpec extends UnitSpec with Injecting with GuiceOneApp
     }
   }
 
+  "deleteFeatureFlag" must {
+    "delete a mongo record" in {
+      val allFlags: Boolean = (for {
+        _ <- insert(FeatureFlag(PertaxBackendToggle, true, PertaxBackendToggle.description))
+        result <- repository.deleteFeatureFlag(PertaxBackendToggle)
+      } yield result).futureValue
+
+      allFlags shouldBe true
+      findAll().futureValue.length shouldBe 0
+    }
+  }
+
   "Collection" must {
     "not allow duplicates" in {
 

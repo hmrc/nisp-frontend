@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.nisp.services.admin
 
+import play.api.Logging
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.models.admin.{FeatureFlag, FeatureFlagName}
+import uk.gov.hmrc.nisp.models.admin.{DeletedToggle, FeatureFlag, FeatureFlagName}
 import play.api.cache.AsyncCacheApi
 import uk.gov.hmrc.nisp.repositories.admin.FeatureFlagRepository
 
@@ -32,7 +33,7 @@ class FeatureFlagService @Inject()(
                                     cache: AsyncCacheApi
                                   )(implicit
                                     ec: ExecutionContext
-                                  ) {
+                                  ) extends Logging {
   val cacheValidFor: FiniteDuration =
     Duration(appConfig.ehCacheTtlInSeconds, Seconds)
   private val allFeatureFlagsCacheKey = "*$*$allFeatureFlags*$*$"
@@ -56,12 +57,22 @@ class FeatureFlagService @Inject()(
   def getAll: Future[List[FeatureFlag]] =
     cache.getOrElseUpdate(allFeatureFlagsCacheKey, cacheValidFor) {
       featureFlagRepository.getAllFeatureFlags.map { mongoFlags =>
+        val (deletedFlags, validMongoFlags) = mongoFlags.partition(_.name.isInstanceOf[DeletedToggle])
+
+        Future(deletedFlags.foreach { flag =>
+          featureFlagRepository.deleteFeatureFlag(flag.name).map {
+            case true => logger.warn(s"Flag `${flag.name}` has been deleted from Mongo")
+            case false => logger.error(s"Flag `${flag.name}` could not be deleted from Mongo")
+          }
+        })
+
         FeatureFlagName.allFeatureFlags
-          .foldLeft(mongoFlags) { (featureFlags, missingFlag) =>
-            if (featureFlags.map(_.name).contains(missingFlag))
+          .foldLeft(validMongoFlags.reverse) { (featureFlags, missingFlag) =>
+            if (featureFlags.map(_.name).contains(missingFlag)) {
               featureFlags
-            else
+            } else {
               FeatureFlag(missingFlag, false) :: featureFlags
+            }
           }
           .reverse
       }

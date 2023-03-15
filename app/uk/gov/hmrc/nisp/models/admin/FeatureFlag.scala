@@ -64,6 +64,10 @@ case object PertaxBackendToggle extends FeatureFlagName {
   )
 }
 
+case class DeletedToggle(name: String) extends FeatureFlagName {
+  override def toString: String = name
+}
+
 object FeatureFlagMongoFormats {
   implicit val formats: Format[FeatureFlag] =
     Json.format[FeatureFlag]
