@@ -310,6 +310,8 @@ nisp.nirecord.summary.gaps.single = {0} blwyddyn pan na wnaethoch gyfrannu digon
 nisp.nirecord.summary.yearsRemaining = {0} o flynyddoedd i’w cyfrannu cyn 5 Ebrill {1}
 nisp.nirecord.summary.yearsRemaining.single = {0} blwyddyn i gyfrannu cyn 5 Ebrill {1}
 
+nisp.nirecord.deadline = Mae rhagor o amser nawr ar gael i drethdalwyr cymwys lenwi blychau yn eu cofnod Yswiriant Gwladol. Mae’r dyddiad cau ar gyfer gwneud taliadau Yswiriant Gwladol gwirfoddol wedi symud i 31 Gorffennaf 2023.
+
 nisp.nirecord.pre75Years = Hyd at 1975
 nisp.nirecord.pre75QualifyingYears = Mae ein cofnodion yn dangos bod gennych {0} o flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
 nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gennych unrhyw flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>

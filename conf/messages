@@ -302,6 +302,8 @@ nisp.nirecord.summary.gaps.single = {0} year when you did not contribute enough
 nisp.nirecord.summary.yearsRemaining = {0} years to contribute before 5 April {1}
 nisp.nirecord.summary.yearsRemaining.single = {0} year to contribute before 5 April {1}
 
+nisp.nirecord.deadline = Eligible taxpayers now have more time to fill gaps in their National Insurance record. The deadline for making voluntary National Insurance payments has moved to 31 July 2023.
+
 nisp.nirecord.pre75Years = Up to 1975
 nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up to <span class="nowrap">5 April 1975</span>
 nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
