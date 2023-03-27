@@ -31,13 +31,13 @@ import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.NIRecordController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth._
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
+import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, WireMockHelper}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -46,7 +46,7 @@ import java.time.{Instant, LocalDate}
 import java.util.UUID
 import scala.concurrent.Future
 
-class NIRecordViewSpec extends HtmlSpec with Injecting {
+class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
 
   val authDetails: AuthDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   implicit val user: NispAuthedUser                 = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
@@ -71,7 +71,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[DateProvider].toInstance(mockDateProvider)
+      bind[DateProvider].toInstance(mockDateProvider),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 
@@ -88,6 +89,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
     mockSetup
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+    server.resetAll()
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -1530,7 +1533,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting {
         bind[PertaxHelper].toInstance(mockPertaxHelper),
         bind[AuthAction].to[FakeAuthActionWithNino],
         bind[NinoContainer].toInstance(AbroadNinoContainer),
-        bind[DateProvider].toInstance(mockDateProvider)
+        bind[DateProvider].toInstance(mockDateProvider),
+        bind[PertaxAuthAction].to[FakePertaxAuthAction]
       )
       .build()
       .injector

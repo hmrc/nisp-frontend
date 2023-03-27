@@ -29,7 +29,7 @@ import play.api.mvc.Result
 import java.nio.charset.Charset
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.reflect.ClassTag
-import scala.language.{postfixOps, implicitConversions}
+import scala.language.{implicitConversions, postfixOps}
 
 trait UnitSpec extends AnyWordSpec with Matchers with OptionValues {
 

@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser, StandardAuthJourney}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
@@ -35,22 +35,21 @@ import uk.gov.hmrc.time.TaxYear
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class NIRecordController @Inject() (
-  auditConnector: AuditConnector,
-  authenticate: AuthAction,
-  nationalInsuranceService: NationalInsuranceService,
-  statePensionService: StatePensionService,
-  appConfig: ApplicationConfig,
-  pertaxHelper: PertaxHelper,
-  mcc: MessagesControllerComponents,
-  dateProvider: DateProvider,
-  niRecordPage: nirecordpage,
-  niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
-  nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
-)(
-  implicit ec: ExecutionContext
-) extends NispFrontendController(mcc)
-    with I18nSupport {
+class NIRecordController @Inject()(
+                                    auditConnector: AuditConnector,
+                                    authenticate: StandardAuthJourney,
+                                    nationalInsuranceService: NationalInsuranceService,
+                                    statePensionService: StatePensionService,
+                                    appConfig: ApplicationConfig,
+                                    pertaxHelper: PertaxHelper,
+                                    mcc: MessagesControllerComponents,
+                                    dateProvider: DateProvider,
+                                    niRecordPage: nirecordpage,
+                                    niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
+                                    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
+                                  )(
+                                    implicit ec: ExecutionContext
+                                  ) extends NispFrontendController(mcc) with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI
 
@@ -58,13 +57,13 @@ class NIRecordController @Inject() (
 
   def showGaps: Action[AnyContent] = show(gapsOnlyView = true)
 
-  def pta: Action[AnyContent] = authenticate { implicit request =>
+  def pta: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     pertaxHelper.setFromPertax
     Redirect(routes.NIRecordController.showFull)
   }
 
   private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit
-    hc: HeaderCarrier
+                                                                                                    hc: HeaderCarrier
   ): Unit =
     auditConnector.sendEvent(
       NIRecordEvent(
@@ -79,20 +78,20 @@ class NIRecordController @Inject() (
     )
 
   private[controllers] def showPre1975Years(
-    dateOfEntry: Option[LocalDate],
-    dateOfBirth: LocalDate,
-    pre1975Years: Int
-  ): Boolean = {
+                                             dateOfEntry: Option[LocalDate],
+                                             dateOfBirth: LocalDate,
+                                             pre1975Years: Int
+                                           ): Boolean = {
 
     val dateOfEntryDiff = dateOfEntry.map(Constants.niRecordStartYear - TaxYear.taxYearFor(_).startYear)
 
     val sixteenthBirthdayTaxYear = TaxYear.taxYearFor(dateOfBirth.plusYears(Constants.niRecordMinAge))
-    val sixteenthBirthdayDiff    = Constants.niRecordStartYear - sixteenthBirthdayTaxYear.startYear
+    val sixteenthBirthdayDiff = Constants.niRecordStartYear - sixteenthBirthdayTaxYear.startYear
 
     (sixteenthBirthdayDiff, dateOfEntryDiff) match {
       case (sb, Some(doe)) => sb.min(doe) > 0
-      case (sb, _)         => sb > 0
-      case _               => pre1975Years > 0
+      case (sb, _) => sb > 0
+      case _ => pre1975Years > 0
     }
   }
 
@@ -102,7 +101,7 @@ class NIRecordController @Inject() (
     require(tableEnd.take(Constants.yearStringLength).forall(_.isDigit))
 
     val start = tableStart.take(Constants.yearStringLength).toInt
-    val end   = tableEnd.take(Constants.yearStringLength).toInt
+    val end = tableEnd.take(Constants.yearStringLength).toInt
 
     (start to end by -1).map(_.toString)
   }
@@ -164,7 +163,7 @@ class NIRecordController @Inject() (
     }
   }
 
-  private def show(gapsOnlyView: Boolean): Action[AnyContent] = authenticate.async { implicit request =>
+  private def show(gapsOnlyView: Boolean): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
     val nino = user.nino
 
@@ -179,7 +178,7 @@ class NIRecordController @Inject() (
             else {
               finalRelevantStartYear(statePensionResponse)
                 .map { finalRelevantStartYear =>
-                  val yearsToContribute  = statePensionService.yearsToContributeUntilPensionAge(
+                  val yearsToContribute = statePensionService.yearsToContributeUntilPensionAge(
                     nationalInsuranceRecord.earningsIncludedUpTo,
                     finalRelevantStartYear
                   )
@@ -200,7 +199,7 @@ class NIRecordController @Inject() (
     }
   }
 
-  def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.async { implicit request =>
+  def showGapsAndHowToCheckThem: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
     nationalInsuranceService.getSummary(user.nino) map {
       case Right(Right(niRecord)) =>
@@ -212,7 +211,7 @@ class NIRecordController @Inject() (
     }
   }
 
-  def showVoluntaryContributions: Action[AnyContent] = authenticate { implicit request =>
+  def showVoluntaryContributions: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
     Ok(nirecordVoluntaryContributionsView())
   }

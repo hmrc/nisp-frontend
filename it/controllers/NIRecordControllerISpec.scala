@@ -16,10 +16,7 @@
 
 package controllers
 
-import java.lang.System.currentTimeMillis
-import java.time.LocalDate
-import java.util.UUID
-import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, post, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock._
 import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -27,17 +24,23 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import uk.gov.hmrc.domain.{Generator, Nino}
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
 import play.api.test.Helpers.{OK, route, status => getStatus, _}
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.models.enums.APIType
+import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
+import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
+
+import java.lang.System.currentTimeMillis
+import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class NIRecordControllerISpec extends AnyWordSpec
@@ -55,7 +58,8 @@ class NIRecordControllerISpec extends AnyWordSpec
       "microservice.services.auth.port" -> server.port(),
       "microservice.services.citizen-details.port" -> server.port(),
       "microservice.services.national-insurance.port" -> server.port(),
-      "microservice.services.state-pension.port" -> server.port()
+      "microservice.services.state-pension.port" -> server.port(),
+      "microservice.services.pertax-auth.port" -> server.port()
     )
     .build()
 
@@ -97,6 +101,17 @@ class NIRecordControllerISpec extends AnyWordSpec
          |  }
          |}
       """.stripMargin)))
+
+    server.stubFor(
+      get(urlMatching(s"/pertax/$nino/authorise"))
+        .willReturn(
+          aResponse()
+            .withStatus(OK)
+            .withBody(Json.stringify(Json.toJson(PertaxAuthResponseModel(
+              ACCESS_GRANTED, "", None, None
+            ))))
+        )
+    )
 
     server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
       .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))

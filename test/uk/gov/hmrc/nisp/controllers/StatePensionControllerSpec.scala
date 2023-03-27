@@ -16,32 +16,33 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import java.time.LocalDate
-import java.util.UUID
 import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.inject.{Injector, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.AuthAction
+import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models.{Exclusion, _}
+import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.UnitSpec
+import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
+import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.Future
 
-class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
+class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting
+  with WireMockHelper {
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -58,6 +59,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
     reset(mockStatePensionService)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
+    server.resetAll()
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -73,7 +76,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthActionWithNino],
-      bind[NinoContainer].toInstance(AbroadNinoContainer)
+      bind[NinoContainer].toInstance(AbroadNinoContainer),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -85,7 +89,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[AuthAction].to[FakeAuthAction]
+      bind[AuthAction].to[FakeAuthAction],
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 

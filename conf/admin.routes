@@ -1,0 +1,6 @@
+GET        /metrics                         com.kenshoo.play.metrics.MetricsController.metrics
++nocsrf
+PUT        /featureFlags/:flagName          uk.gov.hmrc.nisp.controllers.admin.FeatureFlagsAdminController.put(flagName: uk.gov.hmrc.nisp.models.admin.FeatureFlagName)
++nocsrf
+PUT        /featureFlags                    uk.gov.hmrc.nisp.controllers.admin.FeatureFlagsAdminController.putAll
+GET        /featureFlags                    uk.gov.hmrc.nisp.controllers.admin.FeatureFlagsAdminController.get

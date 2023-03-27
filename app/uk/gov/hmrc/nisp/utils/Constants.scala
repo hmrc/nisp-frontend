@@ -54,4 +54,7 @@ object Constants {
   var yearStringLength = 4
 
   val titleSplitter = " - "
+
+  val ACCESS_GRANTED = "ACCESS_GRANTED"
+  val NO_HMRC_PT_ENROLMENT = "NO_HMRC_PT_ENROLMENT"
 }

@@ -21,7 +21,7 @@ import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser, StandardAuthJourney}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
@@ -36,25 +36,24 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionController @Inject() (
-  authenticate: AuthAction,
-  statePensionService: StatePensionService,
-  nationalInsuranceService: NationalInsuranceService,
-  auditConnector: AuditConnector,
-  applicationConfig: ApplicationConfig,
-  pertaxHelper: PertaxHelper,
-  mcc: MessagesControllerComponents,
-  sessionTimeout: sessionTimeout,
-  statePensionMQP: statepension_mqp,
-  statePensionCope: statepension_cope,
-  statePensionForecastOnly: statepension_forecastonly,
-  statePensionView: statepension
-)(implicit
-  ec: ExecutionContext
-) extends NispFrontendController(mcc)
-    with I18nSupport {
+class StatePensionController @Inject()(
+                                        authenticate: StandardAuthJourney,
+                                        statePensionService: StatePensionService,
+                                        nationalInsuranceService: NationalInsuranceService,
+                                        auditConnector: AuditConnector,
+                                        applicationConfig: ApplicationConfig,
+                                        pertaxHelper: PertaxHelper,
+                                        mcc: MessagesControllerComponents,
+                                        sessionTimeout: sessionTimeout,
+                                        statePensionMQP: statepension_mqp,
+                                        statePensionCope: statepension_cope,
+                                        statePensionForecastOnly: statepension_forecastonly,
+                                        statePensionView: statepension
+                                      )(implicit
+                                        ec: ExecutionContext
+                                      ) extends NispFrontendController(mcc) with I18nSupport {
 
-  def showCope: Action[AnyContent] = authenticate.async { implicit request =>
+  def showCope: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
     pertaxHelper.isFromPertax.flatMap { isPertax =>
       statePensionService.getSummary(user.nino) map {
@@ -65,14 +64,14 @@ class StatePensionController @Inject() (
               isPertax
             )
           )
-        case _                                                        =>
+        case _ =>
           Redirect(routes.StatePensionController.show)
       }
     }
   }
 
   private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser)(implicit
-    hc: HeaderCarrier
+                                                                               hc: HeaderCarrier
   ): Unit =
     auditConnector.sendEvent(
       AccountAccessEvent(
@@ -89,20 +88,20 @@ class StatePensionController @Inject() (
     )
 
   private def doShowStatePensionMQP(
-    statePension: StatePension,
-    nationalInsuranceRecord: NationalInsuranceRecord,
-    isPertax: Boolean
-  )(implicit
-    user: NispAuthedUser,
-    messages: Messages,
-    authRequest: AuthenticatedRequest[_],
-    request: Request[AnyContent]
-  ): Result = {
+                                     statePension: StatePension,
+                                     nationalInsuranceRecord: NationalInsuranceRecord,
+                                     isPertax: Boolean
+                                   )(implicit
+                                     user: NispAuthedUser,
+                                     messages: Messages,
+                                     authRequest: AuthenticatedRequest[_],
+                                     request: Request[AnyContent]
+                                   ): Result = {
     val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
       statePension.earningsIncludedUpTo,
       statePension.finalRelevantStartYear
     )
-    val yearsMissing                     = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
+    val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
     Ok(
       statePensionMQP(
         statePension,
@@ -118,15 +117,15 @@ class StatePensionController @Inject() (
   }
 
   private def doShowStatePensionForecast(
-    statePension: StatePension,
-    nationalInsuranceRecord: NationalInsuranceRecord,
-    isPertax: Boolean
-  )(implicit
-    user: NispAuthedUser,
-    messages: Messages,
-    authRequest: AuthenticatedRequest[_],
-    request: Request[AnyContent]
-  ): Result = {
+                                          statePension: StatePension,
+                                          nationalInsuranceRecord: NationalInsuranceRecord,
+                                          isPertax: Boolean
+                                        )(implicit
+                                          user: NispAuthedUser,
+                                          messages: Messages,
+                                          authRequest: AuthenticatedRequest[_],
+                                          request: Request[AnyContent]
+                                        ): Result = {
     val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
       statePension.earningsIncludedUpTo,
       statePension.finalRelevantStartYear
@@ -145,16 +144,16 @@ class StatePensionController @Inject() (
   }
 
   private def doShowStatePension(
-    statePension: StatePension,
-    nationalInsuranceRecord: NationalInsuranceRecord,
-    isPertax: Boolean
-  )(implicit
-    user: NispAuthedUser,
-    messages: Messages,
-    authRequest: AuthenticatedRequest[_],
-    request: Request[AnyContent]
-  ): Result = {
-    val yearsToContributeUntilPensionAge                    = statePensionService.yearsToContributeUntilPensionAge(
+                                  statePension: StatePension,
+                                  nationalInsuranceRecord: NationalInsuranceRecord,
+                                  isPertax: Boolean
+                                )(implicit
+                                  user: NispAuthedUser,
+                                  messages: Messages,
+                                  authRequest: AuthenticatedRequest[_],
+                                  request: Request[AnyContent]
+                                ): Result = {
+    val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
       statePension.earningsIncludedUpTo,
       statePension.finalRelevantStartYear
     )
@@ -181,7 +180,7 @@ class StatePensionController @Inject() (
     ).withSession(storeUserInfoInSession(user, statePension.contractedOut))
   }
 
-  private def sendExclusion(exclusion: Exclusion)(implicit hc:HeaderCarrier, user: NispAuthedUser, request: Request[AnyContent]): Result = {
+  private def sendExclusion(exclusion: Exclusion)(implicit hc: HeaderCarrier, user: NispAuthedUser, request: Request[AnyContent]): Result = {
     auditConnector.sendEvent(
       AccountExclusionEvent(
         user.nino.nino,
@@ -192,7 +191,7 @@ class StatePensionController @Inject() (
     Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
   }
 
-  def show: Action[AnyContent] = authenticate.async { implicit request =>
+  def show: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
 
     val delegationState: Boolean =
@@ -229,17 +228,17 @@ class StatePensionController @Inject() (
     }
   }
 
-  def pta(): Action[AnyContent] = authenticate { implicit request =>
+  def pta(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     pertaxHelper.setFromPertax
     Redirect(routes.StatePensionController.show)
   }
 
   private def storeUserInfoInSession(user: NispAuthedUser, contractedOut: Boolean)(implicit
-    request: Request[AnyContent]
+                                                                                   request: Request[AnyContent]
   ): Session =
     request.session +
-      (NAME          -> user.name.toString()) +
-      (NINO          -> user.nino.nino) +
+      (NAME -> user.name.toString()) +
+      (NINO -> user.nino.nino) +
       (CONTRACTEDOUT -> contractedOut.toString)
 
   def signOut: Action[AnyContent] = Action { _ =>
