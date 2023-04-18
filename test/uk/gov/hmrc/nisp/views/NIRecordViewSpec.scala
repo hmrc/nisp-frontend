@@ -176,6 +176,26 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       )
     }
 
+    "render with deadline banner" in {
+      assertEqualsMessage(
+        doc,
+        ".govuk-notification-banner__title",
+        "nisp.nirecord.banner.title"
+      )
+
+      assertEqualsMessage(
+        doc,
+        ".govuk-notification-banner__heading",
+        "nisp.nirecord.banner.heading"
+      )
+
+      assertEqualsMessage(
+        doc,
+        ".govuk-notification-banner__content .govuk-body",
+        "nisp.nirecord.banner.body"
+      )
+    }
+
     "render page with Gaps  heading  Your National Insurance record " in {
       assertEqualsMessage(
         doc,
