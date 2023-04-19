@@ -269,6 +269,10 @@ nisp.nirecord.showfull = View all years of contributions
 nisp.nirecord.fullyear = Full year
 nisp.nirecord.seperator = to
 
+nisp.nirecord.banner.title = Important
+nisp.nirecord.banner.heading = The deadline for making voluntary National Insurance contributions for eligible taxpayers with National Insurance gaps between April 2006 to April 2017 has been extended to 31 July 2023.
+nisp.nirecord.banner.body = Because of the demand on the service, payments may take more than the expected 8 weeks to show on your records.
+
 nisp.nirecord.gap = Year is not full
 nisp.nirecord.gap.paidemployment = Paid employment: <strong>{0}</strong>
 nisp.nirecord.gap.selfemployed.singular = Self-employment: <strong>1 week</strong>
