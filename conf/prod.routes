@@ -4,3 +4,4 @@ GET        /checkmystatepension         uk.gov.hmrc.nisp.controllers.redirect.Re
 GET        /checkmystatepension/*path   uk.gov.hmrc.nisp.controllers.redirect.RedirectController.redirectToHome(path)
 ->         /                            health.Routes
 GET        /admin/metrics               @com.kenshoo.play.metrics.MetricsController.metrics
+->         /admin                       admin.Routes

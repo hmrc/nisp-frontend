@@ -32,9 +32,12 @@ sealed trait FeatureFlagName {
 object FeatureFlagName {
   implicit val writes: Writes[FeatureFlagName] = (o: FeatureFlagName) => JsString(o.toString)
 
-  implicit val reads: Reads[FeatureFlagName] = {
-    case name if name == JsString(PertaxBackendToggle.toString) => JsSuccess(PertaxBackendToggle)
-    case _ => JsError("Unknown FeatureFlagName")
+  implicit val reads: Reads[FeatureFlagName] = new Reads[FeatureFlagName] {
+    override def reads(json: JsValue): JsResult[FeatureFlagName] =
+      allFeatureFlags
+        .find(flag => JsString(flag.toString) == json)
+        .map(JsSuccess(_))
+        .getOrElse(JsError(s"Unknown FeatureFlagName `${json.toString}`"))
   }
 
   implicit val formats: Format[FeatureFlagName] =
@@ -54,13 +57,20 @@ object FeatureFlagName {
       value.toString
   }
 
-  val allFeatureFlags: Seq[PertaxBackendToggle.type] = List(PertaxBackendToggle)
+  val allFeatureFlags: List[FeatureFlagName] = List(PertaxBackendToggle, ExcessiveTrafficToggle)
 }
 
 case object PertaxBackendToggle extends FeatureFlagName {
   override def toString: String            = "pertax-backend-toggle"
   override val description: Option[String] = Some(
     "Enable/disable pertax backend during auth"
+  )
+}
+
+case object ExcessiveTrafficToggle extends FeatureFlagName {
+  override def toString: String = "excessive-traffic-toggle"
+  override val description: Option[String] = Some(
+    "Enable/disable excessive traffic message displayed"
   )
 }
 
