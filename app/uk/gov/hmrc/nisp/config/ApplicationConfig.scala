@@ -41,7 +41,7 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val ggSignInUrl: String           = configuration.getOptional[String]("government-gateway-sign-in.host").getOrElse("")
 
   val showUrBanner: Boolean                = configuration.getOptional[Boolean]("urBannerToggle").getOrElse(false)
-  val showExcessiveTrafficMessage: Boolean = configuration.getOptional[Boolean]("excessiveTrafficToggle").getOrElse(true)
+  val showExcessiveTrafficMessage: Boolean = configuration.getOptional[Boolean]("excessiveTrafficToggle").getOrElse(false)
   val isleManLink                          = configuration.get[String]("isle-man-link.url")
   val citizenAdviceLinkEn                  = configuration.get[String]("citizens-advice-link-en.url")
   val citizenAdviceLinkCy                  = configuration.get[String]("citizens-advice-link-cy.url")
