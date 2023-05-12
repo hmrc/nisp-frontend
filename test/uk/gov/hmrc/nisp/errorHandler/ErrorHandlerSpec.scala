@@ -28,19 +28,27 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
+import sun.text.resources.ext.FormatData_en_AU
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.models.admin.{ExcessiveTrafficToggle, FeatureFlag}
+import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
 import uk.gov.hmrc.nisp.utils.UnitSpec
+
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.Locale
+import scala.concurrent.Future
 
 class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   implicit val request: Request[_] = FakeRequest()
 
-  val mockApplicationConfig = mock[ApplicationConfig]
+  lazy val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
+  lazy val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[ApplicationConfig].toInstance(mockApplicationConfig)
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[FeatureFlagService].toInstance(mockFeatureFlagService)
     )
     .build()
 
@@ -52,7 +60,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
     when(mockApplicationConfig.showExcessiveTrafficMessage).thenReturn(false)
   }
 
-  val errorHandler                    = inject[ErrorHandler]
+  lazy val errorHandler: ErrorHandler = inject[ErrorHandler]
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   "standardErrorTemplate" must {
@@ -75,26 +83,27 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
   }
 
   "internalServerErrorTemplate" must {
-    "return the service error 500 view" in {
-      val serverErrorTemplate: Html = errorHandler.internalServerErrorTemplate
-      val doc: Document             = Jsoup.parse(serverErrorTemplate.toString())
+    "return excessiveTrafficMessage when showExcessiveTrafficMessage is true" in {
+      val returnedFeatureFlag = FeatureFlag(ExcessiveTrafficToggle, isEnabled = true)
+      when(mockFeatureFlagService.get(ExcessiveTrafficToggle)).thenReturn(Future.successful(returnedFeatureFlag))
+      val serverErrorTemplate: Future[String] = errorHandler.internalServerErrorTemplate.map(_.toString)
+      val doc: Document = await(serverErrorTemplate.map(Jsoup.parse))
 
       val docTitle = doc.select("title").text()
       docTitle should include(messages("global.error.InternalServerError500.title"))
-    }
-
-    "return excessiveTrafficMessage when showExcessiveTrafficMessage is true" in {
-      when(mockApplicationConfig.showExcessiveTrafficMessage).thenReturn(true)
-      val serverErrorTemplate: Html = errorHandler.internalServerErrorTemplate
-      val doc: Document = Jsoup.parse(serverErrorTemplate.toString())
 
       val docMessage = doc.getElementById("excessiveTraffic").text
       docMessage shouldBe messages("global.error.InternalServerError500.excessiveTraffic.message")
     }
 
     "return 'try again later' when showExcessiveTrafficMessage is false" in {
-      val serverErrorTemplate: Html = errorHandler.internalServerErrorTemplate
-      val doc: Document = Jsoup.parse(serverErrorTemplate.toString())
+      val returnedFeatureFlag = FeatureFlag(ExcessiveTrafficToggle, isEnabled = false)
+      when(mockFeatureFlagService.get(ExcessiveTrafficToggle)).thenReturn(Future.successful(returnedFeatureFlag))
+      val serverErrorTemplate: Future[String] = errorHandler.internalServerErrorTemplate.map(_.toString)
+      val doc: Document = await(serverErrorTemplate.map(Jsoup.parse))
+
+      val docTitle = doc.select("title").text()
+      docTitle should include(messages("global.error.InternalServerError500.title"))
 
       val docMessage = doc.getElementById("tryAgainLater").text
       docMessage shouldBe messages("global.error.InternalServerError500.message")
