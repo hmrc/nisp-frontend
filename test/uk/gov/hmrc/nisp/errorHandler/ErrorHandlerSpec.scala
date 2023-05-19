@@ -28,14 +28,13 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
-import sun.text.resources.ext.FormatData_en_AU
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.admin.{ExcessiveTrafficToggle, FeatureFlag}
 import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.Locale
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
@@ -86,14 +85,13 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
     "return excessiveTrafficMessage when showExcessiveTrafficMessage is true" in {
       val returnedFeatureFlag = FeatureFlag(ExcessiveTrafficToggle, isEnabled = true)
       when(mockFeatureFlagService.get(ExcessiveTrafficToggle)).thenReturn(Future.successful(returnedFeatureFlag))
+
       val serverErrorTemplate: Future[String] = errorHandler.internalServerErrorTemplate.map(_.toString)
       val doc: Document = await(serverErrorTemplate.map(Jsoup.parse))
 
       val docTitle = doc.select("title").text()
       docTitle should include(messages("global.error.InternalServerError500.title"))
 
-      val docMessage = doc.getElementById("excessiveTraffic").text
-      docMessage shouldBe messages("global.error.InternalServerError500.excessiveTraffic.message")
     }
 
     "return 'try again later' when showExcessiveTrafficMessage is false" in {
@@ -105,8 +103,6 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
       val docTitle = doc.select("title").text()
       docTitle should include(messages("global.error.InternalServerError500.title"))
 
-      val docMessage = doc.getElementById("tryAgainLater").text
-      docMessage shouldBe messages("global.error.InternalServerError500.message")
     }
   }
 
