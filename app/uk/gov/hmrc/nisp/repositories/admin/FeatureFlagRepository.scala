@@ -47,8 +47,6 @@ class FeatureFlagRepository @Inject()(
     )
     with Transactions {
 
-//  private implicit val tc: TransactionConfiguration = TransactionConfiguration.strict
-
   def deleteFeatureFlag(name: FeatureFlagName): Future[Boolean] =
     collection
       .deleteOne(Filters.equal("name", name.toString))
@@ -86,7 +84,7 @@ class FeatureFlagRepository @Inject()(
     val bulkWrites: Seq[ReplaceOneModel[FeatureFlag]] = featureFlags.map { flag =>
       ReplaceOneModel[FeatureFlag](equal("name", flag.name), flag, ReplaceOptions().upsert(true))
     }
-    
+
     collection.bulkWrite(bulkWrites).toFuture().map(_ => ())
   }
 }
