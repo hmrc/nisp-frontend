@@ -33,7 +33,7 @@ class FeatureFlagSpec extends UnitSpec {
       val result = intercept[JsResultException] {
         JsString("invalid").as[FeatureFlagName]
       }
-      result.errors.toString() shouldBe "List((,List(JsonValidationError(List(Unknown FeatureFlagName),ArraySeq()))))"
+      result.getMessage should include("""Unknown FeatureFlagName `"invalid"`""")
     }
   }
 }

@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.nisp.repositories.admin
 
-import org.mongodb.scala.model.Filters.{equal, in}
-import org.mongodb.scala.model.{Filters, IndexModel, IndexOptions, Indexes, ReplaceOptions}
+import org.mongodb.scala.model.Filters.equal
+import org.mongodb.scala.model._
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
-import uk.gov.hmrc.mongo.transaction.{TransactionConfiguration, Transactions}
+import uk.gov.hmrc.mongo.transaction.Transactions
 import uk.gov.hmrc.nisp.models.admin.{FeatureFlag, FeatureFlagName}
 
 import javax.inject.{Inject, Singleton}
@@ -46,8 +46,6 @@ class FeatureFlagRepository @Inject()(
       extraCodecs = Codecs.playFormatSumCodecs(FeatureFlagName.formats)
     )
     with Transactions {
-
-  private implicit val tc: TransactionConfiguration = TransactionConfiguration.strict
 
   def deleteFeatureFlag(name: FeatureFlagName): Future[Boolean] =
     collection
@@ -79,14 +77,14 @@ class FeatureFlagRepository @Inject()(
       .toFuture()
 
   def setFeatureFlags(flags: Map[FeatureFlagName, Boolean]): Future[Unit] = {
-    val featureFlags = flags.map { case (flag, status) =>
+    val featureFlags: Seq[FeatureFlag] = flags.map { case (flag, status) =>
       FeatureFlag(flag, status, flag.description)
     }.toList
-    withSessionAndTransaction(session =>
-      for {
-        _ <- collection.deleteMany(session, filter = in("name", flags.keys.toSeq: _*)).toFuture()
-        _ <- collection.insertMany(session, featureFlags).toFuture()
-      } yield ()
-    )
+
+    val bulkWrites: Seq[ReplaceOneModel[FeatureFlag]] = featureFlags.map { flag =>
+      ReplaceOneModel[FeatureFlag](equal("name", flag.name), flag, ReplaceOptions().upsert(true))
+    }
+
+    collection.bulkWrite(bulkWrites).toFuture().map(_ => ())
   }
 }
