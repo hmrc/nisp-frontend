@@ -269,7 +269,7 @@ nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofno
 nisp.nirecord.seperator = i
 
 nisp.nirecord.banner.title = Pwysig
-nisp.nirecord.banner.heading = Mae’r dyddiad cau ar gyfer talu cyfraniadau Yswiriant Gwladol gwirfoddol wedi’i ymestyn i 31 Gorffennaf 2023 ar gyfer trethdalwyr cymwys sydd â bylchau Yswiriant Gwladol rhwng mis Ebrill 2006 a mis Ebrill 2017.
+nisp.nirecord.banner.heading = Mae’r dyddiad cau ar gyfer talu cyfraniadau Yswiriant Gwladol gwirfoddol wedi’i ymestyn i 5 Ebrill 2025 ar gyfer trethdalwyr cymwys sydd â bylchau Yswiriant Gwladol rhwng mis Ebrill 2006 a mis Ebrill 2018.
 nisp.nirecord.banner.body = Oherwydd y galw am y gwasanaeth, gall taliadau gymryd mwy na’r 8 wythnos disgwyliedig i ymddangos ar eich cofnodion.
 
 nisp.nirecord.showgaps = Bwrw golwg dros flynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
