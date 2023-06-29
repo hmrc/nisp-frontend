@@ -207,7 +207,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with name " in {
       assertEqualsValue(
         doc,
-        "[data-spec='nirecordpage__pageheading'] [data-aria-hidden]",
+        "[data-spec='nirecordpage__pageheading'] .govuk-caption-l",
         "AHMED BRENNAN"
       )
     }
@@ -472,7 +472,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with name " in {
       assertEqualsValue(
         doc,
-        "[data-spec='nirecordpage__pageheading'] [data-aria-hidden]",
+        "[data-spec='nirecordpage__pageheading'] .govuk-caption-l",
         "AHMED BRENNAN"
       )
     }
