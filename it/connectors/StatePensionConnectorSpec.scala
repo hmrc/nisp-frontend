@@ -1,5 +1,6 @@
 package connectors
 
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
 import it_utils.WiremockHelper
@@ -43,7 +44,9 @@ class StatePensionConnectorSpec
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.state-pension.port" -> server.port()
+      "microservice.services.state-pension.port" -> server.port(),
+      "microservice.services.cachable.session-cache.port" -> server.port(),
+      "microservice.services.cachable.session-cache.host" -> "localhost"
     )
     .build()
 
@@ -83,7 +86,15 @@ class StatePensionConnectorSpec
       statePensionAgeUnderConsideration = false
     )
 
+
   override def beforeAll(): Unit = {
+    super.beforeAll()
+    server.stubFor(delete(urlPathMatching("/keystore/nisp-frontend/*"))
+      .willReturn(ResponseDefinitionBuilder.responseDefinition().withStatusMessage("Hello"))) //. HttpResponse.apply(200, "")))
+    server.start()
+  }
+
+  override def beforeEach(): Unit = {
     sessionCache.remove().futureValue
     super.beforeEach()
   }

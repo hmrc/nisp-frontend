@@ -16,6 +16,7 @@
 
 package controllers
 
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
@@ -59,7 +60,8 @@ class StatePensionControllerISpec extends AnyWordSpec
       "microservice.services.citizen-details.port" -> server.port(),
       "microservice.services.state-pension.port" -> server.port(),
       "microservice.services.national-insurance.port" -> server.port(),
-      "microservice.services.pertax-auth.port" -> server.port()
+      "microservice.services.pertax-auth.port" -> server.port(),
+      "microservice.services.cachable.session-cache" -> server.port()
     )
     .build()
 
@@ -74,7 +76,10 @@ class StatePensionControllerISpec extends AnyWordSpec
   override def beforeEach(): Unit = {
     sessionCache.remove().futureValue
     super.beforeEach()
+  }
 
+  override def beforeAll(): Unit = {
+    super.beforeAll()
     server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
       s"""{
          |"nino": "$nino",
@@ -114,6 +119,9 @@ class StatePensionControllerISpec extends AnyWordSpec
 
     server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
       .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
+
+    server.stubFor(delete(urlPathMatching(s"/keystore/nisp-frontend/*"))
+      .willReturn(ResponseDefinitionBuilder.responseDefinition().withStatus(200)))
   }
 
   trait Test {
