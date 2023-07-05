@@ -12,13 +12,11 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
-import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models._
-
 import java.time.LocalDate
-import java.util.UUID
+
 
 class StatePensionConnectorSpec
   extends AnyWordSpec
@@ -33,10 +31,6 @@ class StatePensionConnectorSpec
   implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
 
-  private val uuid: UUID = UUID.randomUUID()
-
-  private val sessionId: String = s"session-$uuid"
-
   implicit val headerCarrier: HeaderCarrier =
     HeaderCarrier(sessionId = Some(SessionId(sessionId)))
 
@@ -48,17 +42,11 @@ class StatePensionConnectorSpec
     )
     .build()
 
-  private val nino: Nino =
-    new Generator().nextNino
-
   private val statePensionConnector: StatePensionConnector =
     inject[StatePensionConnector]
 
   private val apiUrl: String =
     s"/ni/$nino"
-
-  private val keystoreUrl: String =
-    s"/keystore/nisp-frontend/$sessionId"
 
   private val apiGetRequest: RequestPatternBuilder =
     getRequestedFor(urlEqualTo(apiUrl))

@@ -34,7 +34,6 @@ import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.time.LocalDate
 import scala.concurrent.Future
-import scala.util.Random
 
 class NationalInsuranceServiceSpec
     extends UnitSpec
@@ -42,8 +41,6 @@ class NationalInsuranceServiceSpec
     with GuiceOneAppPerSuite
     with BeforeAndAfterEach
     with Injecting {
-
-  def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   val mockNationalInsuranceConnector: NationalInsuranceConnectorImpl = mock[NationalInsuranceConnectorImpl]

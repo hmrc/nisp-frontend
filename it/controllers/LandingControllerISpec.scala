@@ -28,14 +28,11 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{route, status => getStatus, _}
-import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationSuccessResponse
 import uk.gov.hmrc.nisp.models._
-
 import java.lang.System.currentTimeMillis
 import java.time.{LocalDate, LocalDateTime}
-import java.util.UUID
 
 class LandingControllerISpec extends AnyWordSpec
   with Matchers
@@ -52,10 +49,6 @@ class LandingControllerISpec extends AnyWordSpec
       "microservice.services.identity-verification.port" -> server.port()
     )
     .build()
-
-
-  val nino = new Generator().nextNino.nino
-  val uuid = UUID.randomUUID()
 
   val returnJson = Json.toJson(StatePension(
     LocalDate.of(2015, 4, 5),

@@ -18,8 +18,6 @@ package controllers
 
 import java.lang.System.currentTimeMillis
 import java.time.LocalDate
-import java.util.UUID
-
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
@@ -34,7 +32,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers.{route, status => getStatus, _}
-import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.models.enums.APIType
@@ -63,9 +60,6 @@ class ExclusionControllerISpec extends AnyWordSpec
       "microservice.services.national-insurance.port" -> server.port()
     )
     .build()
-
-  val nino = new Generator().nextNino.nino
-  val uuid = UUID.randomUUID()
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(s"session-$uuid")))
   private val sessionCache: SessionCache = inject[SessionCache]

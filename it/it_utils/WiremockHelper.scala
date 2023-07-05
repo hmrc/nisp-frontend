@@ -19,11 +19,24 @@ package it_utils
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
+import uk.gov.hmrc.domain.Generator
+
+import java.util.UUID
 
 trait WiremockHelper extends BeforeAndAfterAll with BeforeAndAfterEach {
   this: Suite =>
 
   protected val server: WireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
+
+  protected val uuid: UUID = UUID.randomUUID()
+
+  protected val sessionId: String = s"session-$uuid"
+
+  protected val nino = new Generator().nextNino
+
+  protected val keystoreUrl: String =
+    s"/keystore/nisp-frontend/$sessionId"
+
 
   override def beforeAll(): Unit = {
     server.start()

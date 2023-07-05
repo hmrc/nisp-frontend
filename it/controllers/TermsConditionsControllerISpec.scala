@@ -16,10 +16,6 @@
 
 package controllers
 
-import java.lang.System.currentTimeMillis
-import java.time.LocalDateTime
-import java.util.UUID
-
 import com.github.tomakehurst.wiremock.client.WireMock.{ok, post, urlEqualTo}
 import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
@@ -31,8 +27,10 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{OK, route, status => getStatus, _}
-import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.SessionKeys
+
+import java.lang.System.currentTimeMillis
+import java.time.LocalDateTime
 
 class TermsConditionsControllerISpec extends AnyWordSpec
   with Matchers
@@ -47,9 +45,6 @@ class TermsConditionsControllerISpec extends AnyWordSpec
       "microservice.services.identity-verification.port" -> server.port()
     )
     .build()
-
-  val nino = new Generator().nextNino.nino
-  val uuid = UUID.randomUUID()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
