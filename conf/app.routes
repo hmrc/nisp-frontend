@@ -7,6 +7,8 @@ GET        /assets/*file                              controllers.Assets.version
 GET        /                                          uk.gov.hmrc.nisp.controllers.LandingController.show
 GET        /not-authorised                            uk.gov.hmrc.nisp.controllers.LandingController.showNotAuthorised(journeyId: Option[String])
 
+GET        /keep-alive                               uk.gov.hmrc.nisp.controllers.TimeoutController.keep_alive
+
 GET        /account                                   uk.gov.hmrc.nisp.controllers.StatePensionController.show
 GET        /account/pta                               uk.gov.hmrc.nisp.controllers.StatePensionController.pta()
 GET        /account/cope                              uk.gov.hmrc.nisp.controllers.StatePensionController.showCope
@@ -26,5 +28,3 @@ GET        /terms-and-conditions                      uk.gov.hmrc.nisp.controlle
 
 #Welsh Translation
 GET        /language/:lang                            uk.gov.hmrc.nisp.controllers.CustomLanguageController.switchToLanguage(lang: String)
-
-
