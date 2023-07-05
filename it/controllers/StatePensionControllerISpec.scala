@@ -70,10 +70,7 @@ class StatePensionControllerISpec extends AnyWordSpec
   override def beforeEach(): Unit = {
     sessionCache.remove().futureValue
     super.beforeEach()
-  }
 
-  override def beforeAll(): Unit = {
-    super.beforeAll()
     server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
       s"""{
          |"nino": "$nino",

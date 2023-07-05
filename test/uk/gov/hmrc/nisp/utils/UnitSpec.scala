@@ -75,4 +75,7 @@ trait UnitSpec extends AnyWordSpec with Matchers with OptionValues {
 
   def mock[T](answer: Answer[Object])(implicit ev: ClassTag[T]): T =
     Mockito.mock(ev.runtimeClass.asInstanceOf[Class[T]], answer)
+
+  def generateNino: Nino = new uk.gov.hmrc.domain.Generator(new Random()).nextNino
+
 }
