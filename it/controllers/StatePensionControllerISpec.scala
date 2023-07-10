@@ -64,7 +64,7 @@ class StatePensionControllerISpec extends AnyWordSpec
   val citizen = Citizen(nino, dateOfBirth = LocalDate.now())
   val citizenDetailsResponse = CitizenDetailsResponse(citizen, None)
 
-  implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(s"session-$uuid")))
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId)))
   private val sessionCache: SessionCache = inject[SessionCache]
 
   override def beforeEach(): Unit = {

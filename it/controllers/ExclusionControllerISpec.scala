@@ -61,7 +61,7 @@ class ExclusionControllerISpec extends AnyWordSpec
     )
     .build()
 
-  implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(s"session-$uuid")))
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId)))
   private val sessionCache: SessionCache = inject[SessionCache]
 
   override def beforeEach(): Unit = {
