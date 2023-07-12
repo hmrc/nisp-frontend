@@ -12,16 +12,11 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.enums.APIType
-
 import java.time.LocalDate
-import java.util.UUID
-import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class StatePensionConnectorSpec
   extends AnyWordSpec
@@ -36,25 +31,19 @@ class StatePensionConnectorSpec
   implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
 
-  private val uuid: UUID = UUID.randomUUID()
-
   implicit val headerCarrier: HeaderCarrier =
-    HeaderCarrier(sessionId = Some(SessionId(s"session-$uuid")))
+    HeaderCarrier(sessionId = Some(SessionId(sessionId)))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.state-pension.port" -> server.port()
+      "microservice.services.state-pension.port" -> server.port(),
+      "microservice.services.cachable.session-cache.port" -> server.port(),
+      "microservice.services.cachable.session-cache.host" -> "localhost"
     )
     .build()
 
-  private val nino: Nino =
-    Nino("AB123456A")
-
   private val statePensionConnector: StatePensionConnector =
     inject[StatePensionConnector]
-
-  private val sessionCache: SessionCache =
-    inject[SessionCache]
 
   private val apiUrl: String =
     s"/ni/$nino"
@@ -83,16 +72,24 @@ class StatePensionConnectorSpec
       statePensionAgeUnderConsideration = false
     )
 
-  override def beforeAll(): Unit = {
-    sessionCache.remove().futureValue
-    super.beforeEach()
-  }
-
   "getStatePension" should {
     "return the correct response from api" in {
       server.stubFor(
+        get(urlEqualTo(keystoreUrl))
+          .willReturn(notFound())
+      )
+
+      server.stubFor(
         get(urlEqualTo(apiUrl))
           .willReturn(ok(Json.toJson(statePension).toString()))
+      )
+
+      server.stubFor(
+        put(urlEqualTo(s"$keystoreUrl/data/StatePension"))
+          .willReturn(ok(Json.obj(
+            "id" -> sessionId,
+            "data" -> Json.toJson(statePension)
+          ).toString()))
       )
 
       whenReady(
@@ -105,7 +102,15 @@ class StatePensionConnectorSpec
     }
 
     "return the correct response from cache" in {
-      sessionCache.cache(APIType.StatePension.toString, statePension).futureValue
+      server.stubFor(
+        get(urlEqualTo(keystoreUrl))
+          .willReturn(ok(Json.obj(
+            "id" -> sessionId,
+            "data" -> Json.obj(
+              "StatePension" -> Json.toJson(statePension)
+            )
+          ).toString()))
+      )
 
       whenReady(
         statePensionConnector.getStatePension(nino, delegationState = false)
@@ -117,8 +122,6 @@ class StatePensionConnectorSpec
     }
 
     "return the correct response from api when user is delegated" in {
-      sessionCache.cache(APIType.StatePension.toString, statePension).futureValue
-
       server.stubFor(
         get(urlEqualTo(apiUrl))
           .willReturn(ok(Json.toJson(statePension).toString()))

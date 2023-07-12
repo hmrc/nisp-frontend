@@ -16,9 +16,6 @@
 
 package controllers
 
-import java.lang.System.currentTimeMillis
-import java.util.UUID
-
 import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -30,8 +27,9 @@ import play.api.http.Status.MOVED_PERMANENTLY
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers.{defaultAwaitTimeout, route, writeableOf_AnyContentAsEmpty, status => getStatus}
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.SessionKeys
+
+import java.lang.System.currentTimeMillis
 
 class RedirectControllerISpec extends AnyWordSpec
   with Matchers
@@ -42,9 +40,6 @@ class RedirectControllerISpec extends AnyWordSpec
   with Injecting {
 
   server.start()
-
-  val nino = new Generator().nextNino.nino
-  val uuid = UUID.randomUUID()
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(

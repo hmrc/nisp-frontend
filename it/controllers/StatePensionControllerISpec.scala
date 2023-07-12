@@ -29,7 +29,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Helpers.{defaultAwaitTimeout, redirectLocation, route, writeableOf_AnyContentAsEmpty, status => getStatus}
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
 import uk.gov.hmrc.nisp.models._
@@ -40,7 +39,6 @@ import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
 
 import java.lang.System.currentTimeMillis
 import java.time.LocalDate
-import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class StatePensionControllerISpec extends AnyWordSpec
@@ -63,12 +61,10 @@ class StatePensionControllerISpec extends AnyWordSpec
     )
     .build()
 
-  val nino = new Generator().nextNino.nino
-  val uuid = UUID.randomUUID()
-  val citizen = Citizen(Nino(nino), dateOfBirth = LocalDate.now())
+  val citizen = Citizen(nino, dateOfBirth = LocalDate.now())
   val citizenDetailsResponse = CitizenDetailsResponse(citizen, None)
 
-  implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(s"session-$uuid")))
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId)))
   private val sessionCache: SessionCache = inject[SessionCache]
 
   override def beforeEach(): Unit = {
@@ -114,6 +110,12 @@ class StatePensionControllerISpec extends AnyWordSpec
 
     server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
       .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
+
+    server.stubFor(
+      get(urlEqualTo(keystoreUrl))
+        .willReturn(badRequest())
+    )
+
   }
 
   trait Test {

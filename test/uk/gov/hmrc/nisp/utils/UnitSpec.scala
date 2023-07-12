@@ -25,6 +25,7 @@ import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
+import uk.gov.hmrc.domain.Nino
 
 import java.nio.charset.Charset
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -73,4 +74,7 @@ trait UnitSpec extends AnyWordSpec with Matchers with OptionValues {
 
   def mock[T](answer: Answer[Object])(implicit ev: ClassTag[T]): T =
     Mockito.mock(ev.runtimeClass.asInstanceOf[Class[T]], answer)
+
+  def generateNino: Nino = new uk.gov.hmrc.domain.Generator().nextNino
+
 }
