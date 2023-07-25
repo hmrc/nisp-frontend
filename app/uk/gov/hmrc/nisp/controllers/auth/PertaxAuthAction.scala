@@ -22,10 +22,10 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.{InternalServerError, Redirect, Status}
 import play.api.mvc.{ActionRefiner, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
 import uk.gov.hmrc.nisp.models.admin.PertaxBackendToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
-import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
 import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl

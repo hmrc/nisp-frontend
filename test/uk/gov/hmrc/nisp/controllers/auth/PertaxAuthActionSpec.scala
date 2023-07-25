@@ -22,22 +22,24 @@ import org.mockito.Mockito.when
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.Play.materializer
 import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER}
 import play.api.mvc.Results.Ok
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.Helpers.LOCATION
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.{FakeRequest, Helpers, Injecting}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.twirl.api.Html
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
 import uk.gov.hmrc.nisp.models.UserName
-import uk.gov.hmrc.nisp.models.admin.{FeatureFlag, PertaxBackendToggle}
+import uk.gov.hmrc.nisp.models.admin.PertaxBackendToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
-import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
 import uk.gov.hmrc.nisp.utils.{Constants, UnitSpec}
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
 import uk.gov.hmrc.play.partials.HtmlPartial
@@ -45,16 +47,24 @@ import uk.gov.hmrc.play.partials.HtmlPartial
 import java.time.{Instant, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
 
-class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with BeforeAndAfterEach {
+class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .bindings(
+      featureFlagServiceBinding
+    ).build()
+
+  override def afterEach(): Unit = {
+    Mockito.mockingDetails(mockFeatureFlagService).printInvocations()
+    super.afterEach()
+  }
 
   lazy val connector: PertaxAuthConnector = mock[PertaxAuthConnector]
 
-  lazy val featureFlagService = mock[FeatureFlagService]
-
   lazy val authAction = new PertaxAuthActionImpl(
     connector,
-    app.injector.instanceOf[technical_issue],
-    featureFlagService
+    inject[technical_issue],
+    mockFeatureFlagService
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
   lazy val date = LocalDate.now()
@@ -63,6 +73,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
   override def beforeEach(): Unit = {
     super.beforeEach()
     Mockito.reset()
+    featureFlagSCAWrapperMock()
   }
 
   def authenticatedRequest(requestMethod: String = "GET", requestUrl: String = "/"): AuthenticatedRequest[AnyContent] = new AuthenticatedRequest[AnyContent](
@@ -102,7 +113,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               None, None
             ))
 
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
 
             authAction.invokeBlock(authenticatedRequest(), block)
           }
@@ -122,7 +133,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               None
             ))
 
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
 
             authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
           }
@@ -156,7 +167,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               HtmlPartial.Success(Some("Test Title"), Html("Hello"))
             ))
 
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
 
             authAction.invokeBlock(authenticatedRequest(), block)
           })
@@ -185,7 +196,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
                 Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
               ))
 
-              when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+              when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
 
               when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
                 HtmlPartial.Failure(None, "ERROR")
@@ -206,7 +217,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               authAction.invokeBlock(authenticatedRequest(), block)
             })
 
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
 
             result.header.status shouldBe INTERNAL_SERVER_ERROR
           }
@@ -218,7 +229,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
 
       "return Successful in the request body" in {
         lazy val result = await {
-          when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = false)))
+          when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = false)))
           authAction.invokeBlock(authenticatedRequest(), block)
         }
 

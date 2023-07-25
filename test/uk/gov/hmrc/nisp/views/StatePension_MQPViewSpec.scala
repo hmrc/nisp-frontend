@@ -34,7 +34,6 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, WireMockHelper}
 import uk.gov.hmrc.nisp.views.formatting.Time
@@ -62,7 +61,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
-  val mockFeatureFlagService: FeatureFlagService             = mock[FeatureFlagService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -74,7 +72,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
     .injector
@@ -88,7 +87,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
     .injector

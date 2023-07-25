@@ -18,12 +18,13 @@
 @import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
 @import java.time.format.DateTimeFormatter
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, insetText}
+@import uk.gov.hmrc.nisp.views.Main
 
 @this(
-    main: main,
-    p: P,
-    h1: H1,
-    insetText: insetText
+  main: Main,
+  p: P,
+  h1: H1,
+  insetText: insetText
 )
 
 @(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])

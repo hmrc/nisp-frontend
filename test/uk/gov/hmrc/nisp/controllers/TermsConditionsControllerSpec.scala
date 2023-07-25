@@ -23,19 +23,21 @@ import play.api.Application
 import play.api.http._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.{FakeRequest, Injecting}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
-  val fakeRequest           = FakeRequest("GET", "/")
-  val mockApplicationConfig = mock[ApplicationConfig]
+  val fakeRequest: FakeRequest[AnyContentAsEmpty.type]  = FakeRequest("GET", "/")
+  val mockApplicationConfig: ApplicationConfig          = mock[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[ApplicationConfig].toInstance(mockApplicationConfig)
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      featureFlagServiceBinding
     )
     .build()
 
@@ -44,6 +46,7 @@ class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
     when(mockApplicationConfig.urBannerUrl).thenReturn("/urResearch")
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
+    featureFlagSCAWrapperMock()
   }
 
   val termsConditionController = inject[TermsConditionsController]

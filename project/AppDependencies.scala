@@ -29,11 +29,12 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "http-caching-client"                % s"10.0.0-$playVersion",
     "uk.gov.hmrc"       %% "tax-year"                           % "3.0.0",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping"      % s"1.12.0-$playVersion",
-    "uk.gov.hmrc"       %% "play-frontend-hmrc"                 % s"6.7.0-$playVersion",
     "uk.gov.hmrc"       %% "play-partials"                      % s"8.3.0-$playVersion",
     "uk.gov.hmrc"       %% "play-frontend-pta"                  % "0.4.0",
     "uk.gov.hmrc"       %% s"internal-auth-client-$playVersion" % "1.2.0",
     "uk.gov.hmrc.mongo" %% s"hmrc-mongo-$playVersion"           % hmrcMongoVersion,
+    "uk.gov.hmrc"       %% "mongo-feature-toggles-client"       % "0.2.0",
+    "uk.gov.hmrc"       %% "sca-wrapper"                        % "1.0.40",
     ehcache
   )
 

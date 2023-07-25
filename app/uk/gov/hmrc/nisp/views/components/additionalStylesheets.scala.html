@@ -14,31 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.models.Exclusion
-@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.H1
-@import uk.gov.hmrc.nisp.views.Main
+@this()
+@()
 
-@this(
-  main: Main,
-  dead: exclusions.dead,
-  h1: H1
-)
-
-@(exclusion: Exclusion, statePensionAge: Option[Int])(
-  implicit messages: Messages,
-  request: ExcludedAuthenticatedRequest[_]
-)
-
-@main(
-  pageTitle = messages("nisp.excluded.title")
-) {
-
-  @h1(
-    elmId = Some("mainTitle"),
-    msg = "nisp.excluded.title",
-    specId = Some("excluded_dead__h1")
-  )
-
-  @dead()
-}
+<link rel="stylesheet" href='@controllers.routes.Assets.versioned("stylesheets/nisp.css")'/>

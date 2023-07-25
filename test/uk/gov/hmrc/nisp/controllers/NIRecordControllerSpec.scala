@@ -59,11 +59,13 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     reset(mockPertaxHelper)
     reset(mockAuditConnector)
     reset(mockDateProvider)
+    reset(mockFeatureFlagService)
     when(mockAppConfig.urBannerUrl).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    featureFlagSCAWrapperMock()
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -75,7 +77,8 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[DateProvider].toInstance(mockDateProvider),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
 

@@ -20,6 +20,7 @@ import akka.util.Timeout
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.mockito.Mockito
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -38,8 +39,17 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
   implicit val defaultAwaitTimeout: Timeout = 5.seconds
   implicit lazy val messages: MessagesImpl  = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
+  val forceScaMock: Boolean = true
+
   override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(featureFlagServiceBinding)
     .build()
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    Mockito.reset()
+    featureFlagSCAWrapperMock()
+  }
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 

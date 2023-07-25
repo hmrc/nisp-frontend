@@ -1,0 +1,4 @@
+# Add all the application routes to the prod.routes file
+->         /                                prod.Routes
+
+->         /check-your-state-pension        mongoFeatureTogglesTestOnly.Routes
