@@ -280,11 +280,10 @@ div.panel-indent {
   div {
     background: $light-bg-chart-bar;
     display: block;
-    height: 37px;
+    height: 2em;
     position: relative;
 
     @media only screen and (max-width: 640px) {
-      height: 27px;
       margin-left: 0;
     }
 
@@ -296,7 +295,7 @@ div.panel-indent {
       font-size: 1.3em;
       height: 100%;
       line-height: 1.75;
-      text-align: right;
+      text-align: left;
 
       @media only screen and (max-width: 972px) {
         min-width: 46%;
@@ -336,7 +335,7 @@ div.panel-indent {
       }
 
       > * {
-        padding-right: 10px;
+        padding-left: 10px;
       }
     }
   }
