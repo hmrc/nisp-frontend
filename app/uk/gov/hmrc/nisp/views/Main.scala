@@ -92,8 +92,8 @@ class MainImpl @Inject() (
       wrapperService.layout(
         content = contentBlock,
         pageTitle = Some(fullPageTitle),
-        //serviceNameKey = appConfig.serviceNameKey,
-        //serviceNameUrl = None,
+        serviceNameKey = Some("nisp.title"),
+        serviceNameUrl = Some("/check-your-state-pension/account"),
         sidebarContent = sidebar,
         signoutUrl = routes.StatePensionController.signOut.url,
         //timeOutUrl = appConfig.timeOutUrl,

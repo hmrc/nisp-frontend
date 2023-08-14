@@ -98,6 +98,19 @@ class MainViewSpec extends HtmlSpec {
 
     s"when using the ${testObject.uniqueValues.testName} for the main" which {
 
+      "the page header should" should {
+
+        lazy val pageHeader = doc.select(".hmrc-header__service-name")
+
+        "contain the text 'Check your State Pension forecast'" in {
+          pageHeader.text() shouldBe "Check your State Pension forecast"
+        }
+
+        "link to the account page when clicked" in {
+          pageHeader.attr("href") shouldBe "/check-your-state-pension/account"
+        }
+      }
+
       "the page title" should {
 
         s"equal ${CommonValues.pageTitle}" in {
