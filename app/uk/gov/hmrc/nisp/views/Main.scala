@@ -55,15 +55,15 @@ trait Main {
            ): HtmlFormat.Appendable
 }
 
-class MainImpl @Inject() (
-                           appConfig: ApplicationConfig,
-                           featureFlagService: FeatureFlagService,
-                           wrapperService: WrapperService,
-                           oldMain: oldMain,
-                           additionalStyles: additionalStylesheets,
-                           additionalScripts: additionalScripts,
-                           ptaHead: PtaHead
-                         ) extends Main with Logging {
+class MainImpl @Inject()(
+                          appConfig: ApplicationConfig,
+                          featureFlagService: FeatureFlagService,
+                          wrapperService: WrapperService,
+                          oldMain: oldMain,
+                          additionalStyles: additionalStylesheets,
+                          additionalScripts: additionalScripts,
+                          ptaHead: PtaHead
+                        ) extends Main with Logging {
 
   //noinspection ScalaStyle
   override def apply(
@@ -77,13 +77,13 @@ class MainImpl @Inject() (
                       contentBlock: Html
                     )(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
     val scaWrapperToggle = Await.result(featureFlagService.get(SCAWrapperToggle), Duration(appConfig.scaWrapperFutureTimeout, SECONDS))
-    val fullPageTitle    = if(extendedTitle) {
+    val fullPageTitle = if (extendedTitle) {
       s"$pageTitle - ${Messages("nisp.title.extension")} - GOV.UK"
     } else pageTitle
-    val trustedHelper    = Try(request.asInstanceOf[AuthenticatedRequest[_]]) match {
+    val trustedHelper = Try(request.asInstanceOf[AuthenticatedRequest[_]]) match {
       case Failure(_: java.lang.ClassCastException) => None
-      case Success(value)                           => value.nispAuthedUser.trustedHelper
-      case Failure(exception)                       => throw exception
+      case Success(value) => value.nispAuthedUser.trustedHelper
+      case Failure(exception) => throw exception
     }
 
     if (scaWrapperToggle.isEnabled) {
@@ -96,10 +96,8 @@ class MainImpl @Inject() (
         serviceNameUrl = Some("/check-your-state-pension/account"),
         sidebarContent = sidebar,
         signoutUrl = routes.StatePensionController.signOut.url,
-        //timeOutUrl = appConfig.timeOutUrl,
         keepAliveUrl = routes.TimeoutController.keep_alive.url,
         showBackLinkJS = true,
-        //backLinkUrl: Option[String] = None,
         showSignOutInHeader = true,
         scripts = Seq(additionalScripts()),
         styleSheets = Seq(
@@ -115,7 +113,6 @@ class MainImpl @Inject() (
         optTrustedHelper = trustedHelper,
         fullWidth = false,
         hideMenuBar = hideNavBar,
-        //disableSessionExpired = disableSessionExpired
       )(messages, HeaderCarrierConverter.fromRequest(request), request)
 
     } else {

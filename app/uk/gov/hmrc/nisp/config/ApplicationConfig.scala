@@ -80,5 +80,5 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   val ehCacheTtlInSeconds: Int = configuration.get[Int]("ehCache.ttlInSeconds")
 
-  val scaWrapperFutureTimeout: Int = getConfInt("sca-wrapper.future-timeout", 5)
+  val scaWrapperFutureTimeout: Int = configuration.get[Int]("sca-wrapper.future-timeout")
 }
