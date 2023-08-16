@@ -29,8 +29,8 @@ class TermsAndConditionsViewSpec extends HtmlSpec with Injecting {
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
   val feedbackFrontendUrl: String = "/foo"
-  val html: termsAndConditions    = inject[uk.gov.hmrc.nisp.views.html.termsAndConditions]
-  val source: Document            = asDocument(html(showBackLink = true).toString)
+  lazy val html: termsAndConditions    = inject[uk.gov.hmrc.nisp.views.html.termsAndConditions]
+  lazy val source: Document            = asDocument(html(showBackLink = true).toString)
 
   "TermsAndConditions" should {
 

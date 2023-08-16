@@ -20,9 +20,10 @@
 @import java.time.LocalDate
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, details, insetText, NispPageHeading}
 @import uk.gov.hmrc.nisp.views.formatting.TaxYearFormat
+@import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  newMain: main,
+  main: Main,
   nirecordtaxyear: includes.nirecordtaxyear,
   nirecordtaxyearNoFull: includes.nirecordtaxyearNoFull,
   p: P,
@@ -46,7 +47,7 @@
   currentDate: LocalDate
 )(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
-@newMain(
+@main(
   pageTitle = if(user.livesAbroad) messages("nisp.nirecord.heading.uk") else messages("nisp.nirecord.heading")
 ) {
     <div class="govuk-notification-banner" role="region"

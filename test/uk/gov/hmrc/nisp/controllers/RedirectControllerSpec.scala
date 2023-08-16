@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -23,9 +24,17 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
-class RedirectControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
+class RedirectControllerSpec extends UnitSpec with GuiceOneAppPerSuite with BeforeAndAfterEach {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    featureFlagSCAWrapperMock()
+  }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .bindings(
+      featureFlagServiceBinding
+    )
     .build()
 
   "GET /checkmystatepension" should {

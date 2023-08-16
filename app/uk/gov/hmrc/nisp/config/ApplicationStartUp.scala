@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,33 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nisp.models.Exclusion
-@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.H1
-@import uk.gov.hmrc.nisp.views.Main
+package uk.gov.hmrc.nisp.config
 
-@this(
-  main: Main,
-  dead: exclusions.dead,
-  h1: H1
-)
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagNamesLibrary
+import uk.gov.hmrc.nisp.models.admin._
 
-@(exclusion: Exclusion, statePensionAge: Option[Int])(
-  implicit messages: Messages,
-  request: ExcludedAuthenticatedRequest[_]
-)
-
-@main(
-  pageTitle = messages("nisp.excluded.title")
-) {
-
-  @h1(
-    elmId = Some("mainTitle"),
-    msg = "nisp.excluded.title",
-    specId = Some("excluded_dead__h1")
-  )
-
-  @dead()
+class ApplicationStartUp {
+  FeatureFlagNamesLibrary.addFlags(List(
+    SCAWrapperToggle,
+    PertaxBackendToggle,
+    ExcessiveTrafficToggle
+  ))
 }

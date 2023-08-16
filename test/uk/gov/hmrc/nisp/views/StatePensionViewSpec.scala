@@ -20,7 +20,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
-import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsEmpty
@@ -65,7 +64,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
     .injector
@@ -79,7 +79,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
     .injector
@@ -97,6 +98,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    featureFlagSCAWrapperMock()
   }
 
   lazy val statePensionController: StatePensionController = standardInjector.instanceOf[StatePensionController]
@@ -183,19 +185,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               "[data-component='nisp_page_heading__h1']",
               "nisp.main.h1.title"
             )
-          }
-
-          "render page with UR banner" in {
-            mockSetup
-            val request         = statePensionController.show()(generateFakeRequest)
-            val source          = asDocument(contentAsString(request))
-            val urBanner        = source.getElementsByClass("hmrc-user-research-banner__title")
-            val urBannerHref    = source.getElementsByClass("hmrc-user-research-banner__link")
-            val urDismissedText = source.getElementsByClass("hmrc-user-research-banner__close")
-            assert(urBanner.text() == Messages("nisp.home.banner.recruitment.title"))
-            assert(urBannerHref.attr("href") == urResearchURL)
-            assert(urDismissedText.select("span").first.text() == messages("nisp.home.banner.recruitment.reject"))
-            assert(source.getElementsByClass("hmrc-user-research-banner") != null)
           }
 
           "render page with text 'You can get your State Pension on 7 june 2020' " in {

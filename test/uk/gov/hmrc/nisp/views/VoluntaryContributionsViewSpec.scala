@@ -17,8 +17,6 @@
 package uk.gov.hmrc.nisp.views
 
 import org.scalatest._
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
@@ -37,9 +35,6 @@ class VoluntaryContributionsViewSpec extends HtmlSpec with BeforeAndAfter with I
   val authDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
 
   implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
-
-  override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .build()
 
   val expectedMoneyServiceLink   = "https://www.moneyadviceservice.org.uk/en"
   val expectedCitizensAdviceLink = "https://www.citizensadvice.org.uk/"

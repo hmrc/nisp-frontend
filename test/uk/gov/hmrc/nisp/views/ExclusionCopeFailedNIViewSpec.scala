@@ -48,12 +48,14 @@ class ExclusionCopeFailedNIViewSpec extends HtmlSpec with Injecting {
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+    featureFlagSCAWrapperMock()
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure("future-pension-link.url" -> "pensionUrl")
     .overrides(
-      bind[ApplicationConfig].toInstance(mockAppConfig)
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      featureFlagServiceBinding
     )
     .build()
 

@@ -16,47 +16,43 @@
 
 package uk.gov.hmrc.nisp.config
 import com.google.inject.Inject
-import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
+class ApplicationConfig @Inject()(servicesConfig: ServicesConfig) {
   import servicesConfig._
 
-  private def loadConfig(key: String) =
-    configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
-
-  private val contactHost            = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
+  private val contactHost            = servicesConfig.getString("contact-frontend.host")
 
   val appName: String                = getString("appName")
 
-  val serviceUrl: String            = loadConfig("serviceUrl")
+  val serviceUrl: String            = servicesConfig.getString("serviceUrl")
   val contactFormServiceIdentifier  = "NISP"
   val reportAProblemNonJSUrl        = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  val postSignInRedirectUrl         = configuration.getOptional[String]("login-callback.url").getOrElse("")
-  val notAuthorisedRedirectUrl      = configuration.getOptional[String]("not-authorised-callback.url").getOrElse("")
-  val ivUpliftUrl: String           = configuration.getOptional[String]("identity-verification-uplift.host").getOrElse("")
-  val mfaUpliftUrl: String          = configuration.getOptional[String]("mfa-uplift.url").getOrElse("")
-  val ggSignInUrl: String           = configuration.getOptional[String]("government-gateway-sign-in.host").getOrElse("")
+  val postSignInRedirectUrl: String     = getString("login-callback.url")
+  val notAuthorisedRedirectUrl: String  = getString("not-authorised-callback.url")
+  val ivUpliftUrl: String               = getString("identity-verification-uplift.host")
+  val mfaUpliftUrl: String              = getString("mfa-uplift.url")
+  val ggSignInUrl: String               = getString("government-gateway-sign-in.host")
 
-  val showUrBanner: Boolean                = configuration.getOptional[Boolean]("urBannerToggle").getOrElse(false)
-  val showExcessiveTrafficMessage: Boolean = configuration.getOptional[Boolean]("excessiveTrafficToggle").getOrElse(false)
-  val isleManLink                          = configuration.get[String]("isle-man-link.url")
-  val citizenAdviceLinkEn                  = configuration.get[String]("citizens-advice-link-en.url")
-  val citizenAdviceLinkCy                  = configuration.get[String]("citizens-advice-link-cy.url")
-  val moneyAdviceLinkEn                    = configuration.get[String]("money-advice-link-en.url")
-  val moneyAdviceLinkCy                    = configuration.get[String]("money-advice-link-cy.url")
-  val pensionWiseLink                      = configuration.get[String]("pension-wise-link.url")
-  val frontendHost                         = loadConfig("nisp-frontend.host")
-  val accessibilityStatementHost: String   = loadConfig("accessibility-statement.url") + "/accessibility-statement"
-  val urRecruitmentLinkURL: String         = configuration.get[String]("ur-research.url")
+  val showUrBanner: Boolean                 = getBoolean("urBannerToggle")
+  val showExcessiveTrafficMessage: Boolean  = getBoolean("excessiveTrafficToggle")
+  val isleManLink: String                   = getString("isle-man-link.url")
+  val citizenAdviceLinkEn: String           = getString("citizens-advice-link-en.url")
+  val citizenAdviceLinkCy: String           = getString("citizens-advice-link-cy.url")
+  val moneyAdviceLinkEn: String             = getString("money-advice-link-en.url")
+  val moneyAdviceLinkCy: String             = getString("money-advice-link-cy.url")
+  val pensionWiseLink: String               = getString("pension-wise-link.url")
+  private val frontendHost                  = getString("nisp-frontend.host")
+  val accessibilityStatementHost: String    = getString("accessibility-statement.url") + "/accessibility-statement"
+  val urRecruitmentLinkURL: String          = getString("ur-research.url")
 
   val showFullNI: Boolean                   = getConfBool("features.fullNIrecord", false)
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)
   val isWelshEnabled: Boolean               = getConfBool("features.welsh-translation", false)
-  val feedbackFrontendUrl: String           = loadConfig("feedback-frontend.url")
-  val urBannerUrl: String                   = configuration.getOptional[String]("urBanner.link").getOrElse("")
+  val feedbackFrontendUrl: String           = getString("feedback-frontend.url")
+  val urBannerUrl: String                   = getString("urBanner.link")
 
   val citizenDetailsServiceUrl: String       = baseUrl("citizen-details")
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")
@@ -69,15 +65,16 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
     throw new Exception("Could not find config 'cachable.session-cache.domain'")
   )
 
-  val pertaxAuthBaseUrl = baseUrl("pertax-auth")
+  val pertaxAuthBaseUrl: String = baseUrl("pertax-auth")
 
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + SafeRedirectUrl(
       frontendHost + relativeReferrerPath
     ).encodedUrl
 
-  lazy val internalAuthResourceType: String =
-    servicesConfig.getConfString("internal-auth.resource-type", "ddcn-live-admin-frontend")
+  lazy val internalAuthResourceType: String = getConfString("internal-auth.resource-type", "ddcn-live-admin-frontend")
 
-  val ehCacheTtlInSeconds: Int = configuration.get[Int]("ehCache.ttlInSeconds")
+  val ehCacheTtlInSeconds: Int = getInt("ehCache.ttlInSeconds")
+
+  val scaWrapperFutureTimeout: Int = getInt("sca-wrapper.future-timeout")
 }

@@ -32,7 +32,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.reflect.ClassTag
 import scala.language.{implicitConversions, postfixOps}
 
-trait UnitSpec extends AnyWordSpec with Matchers with OptionValues {
+trait UnitSpec extends AnyWordSpec with Matchers with OptionValues with SCAWrapperMockHelper {
 
   import scala.concurrent.duration._
   import scala.concurrent.{Await, Future}

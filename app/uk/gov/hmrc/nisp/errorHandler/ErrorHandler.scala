@@ -23,8 +23,8 @@ import play.api.mvc.Results.InternalServerError
 import play.api.mvc.{Request, RequestHeader, Result}
 import play.api.{Logger, PlayException}
 import play.twirl.api.Html
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.nisp.models.admin.ExcessiveTrafficToggle
-import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
 import uk.gov.hmrc.nisp.views.html.{global_error, page_not_found_template, service_error_500}
 import uk.gov.hmrc.play.bootstrap.frontend.http.{ApplicationException, FrontendErrorHandler}
 

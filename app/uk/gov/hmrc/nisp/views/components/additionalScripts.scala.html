@@ -14,31 +14,14 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.models.Exclusion
-@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.H1
-@import uk.gov.hmrc.nisp.views.Main
+@import uk.gov.hmrc.ptafrontend.views.html.PtaScripts
 
 @this(
-  main: Main,
-  dead: exclusions.dead,
-  h1: H1
+  ptaScripts: PtaScripts
 )
+@()(implicit requestHeader: RequestHeader)
 
-@(exclusion: Exclusion, statePensionAge: Option[Int])(
-  implicit messages: Messages,
-  request: ExcludedAuthenticatedRequest[_]
-)
-
-@main(
-  pageTitle = messages("nisp.excluded.title")
-) {
-
-  @h1(
-    elmId = Some("mainTitle"),
-    msg = "nisp.excluded.title",
-    specId = Some("excluded_dead__h1")
-  )
-
-  @dead()
-}
+<script src='@controllers.routes.Assets.versioned("javascript/jquery.js")'></script>
+<script src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
+<script src='@controllers.routes.Assets.versioned("javascript/nirecord.js")'></script>
+@ptaScripts()

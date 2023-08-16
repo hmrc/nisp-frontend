@@ -28,9 +28,9 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.models.admin.{ExcessiveTrafficToggle, FeatureFlag}
-import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
+import uk.gov.hmrc.nisp.models.admin.ExcessiveTrafficToggle
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.util.Locale
@@ -42,12 +42,11 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
   implicit val request: Request[_] = FakeRequest()
 
   lazy val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
-  lazy val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+      featureFlagServiceBinding
     )
     .build()
 
@@ -57,6 +56,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
     when(mockApplicationConfig.showExcessiveTrafficMessage).thenReturn(false)
+    featureFlagSCAWrapperMock()
   }
 
   lazy val errorHandler: ErrorHandler = inject[ErrorHandler]
@@ -65,6 +65,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
   "standardErrorTemplate" must {
     "return the global error view" in {
       val title   = "testTitle"
+      val expectedTitle = "testTitle - Check your State Pension - GOV.UK"
       val heading = "testHeading"
       val message = "testMessage"
 
@@ -75,7 +76,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
       val docHeading = doc.select("h1").text()
       val docMessage = doc.select("p").text()
 
-      docTitle   shouldBe title
+      docTitle   shouldBe expectedTitle
       docHeading shouldBe heading
       docMessage shouldBe message
     }

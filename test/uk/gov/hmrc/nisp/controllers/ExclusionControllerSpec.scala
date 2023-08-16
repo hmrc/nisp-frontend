@@ -47,7 +47,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
     .overrides(
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-      bind[ExcludedAuthAction].to[FakeExcludedAuthAction]
+      bind[ExcludedAuthAction].to[FakeExcludedAuthAction],
+      featureFlagServiceBinding
     )
     .build()
 
@@ -55,6 +56,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
     super.beforeEach()
     reset(mockStatePensionService)
     reset(mockNationalInsuranceService)
+    reset(mockFeatureFlagService)
+    featureFlagSCAWrapperMock()
   }
 
   def authId(username: String): String = s"/auth/oid/$username"
