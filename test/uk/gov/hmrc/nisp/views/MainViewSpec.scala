@@ -36,6 +36,8 @@ class MainViewSpec extends HtmlSpec {
     val researchBannerLinkSelector: String
 
     val accessibilityReferrerUrl: String
+
+    val reportTechnicalProblemUrl: String
   }
 
   object OldMainUnique extends UniqueValues {
@@ -48,6 +50,9 @@ class MainViewSpec extends HtmlSpec {
     override val researchBannerLinkSelector: String = "a"
 
     override val accessibilityReferrerUrl: String = "9234%2Fsome-url"
+
+    override val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/problem_reports_nonjs?service=NISP/" +
+      "contact/report-technical-problem?newTab=true&service=NISP&referrerUrl=%2Fsome-url"
   }
 
   object NewMainUnique extends UniqueValues {
@@ -60,6 +65,8 @@ class MainViewSpec extends HtmlSpec {
     override val researchBannerLinkSelector: String = ".hmrc-user-research-banner__link"
 
     override val accessibilityReferrerUrl: String = "12346%2Fcheck-your-state-pension"
+
+    override val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?newTab=true&service=NISP&referrerUrl=%2Fsome-url"
   }
 
   object CommonValues {
@@ -269,6 +276,20 @@ class MainViewSpec extends HtmlSpec {
 
         "have the correct sign out url" in {
           timeoutDialogueData.attr("data-sign-out-url") shouldBe "/check-your-state-pension/sign-out"
+        }
+
+      }
+
+      "the link to report a problem" should {
+
+        lazy val isThePageNotWorkingCorrectly = doc.select(".hmrc-report-technical-issue")
+
+        "contain the correct text" in {
+          isThePageNotWorkingCorrectly.text() shouldBe "Is this page not working properly? (opens in new tab)"
+        }
+
+        "contains the correct link" in {
+          isThePageNotWorkingCorrectly.attr("href") shouldBe testObject.uniqueValues.reportTechnicalProblemUrl
         }
 
       }
