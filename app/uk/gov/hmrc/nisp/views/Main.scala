@@ -123,9 +123,7 @@ class MainImpl @Inject()(
         sidebar = sidebar,
         optCustomLayout = optCustomLayout,
         hideNavBar = hideNavBar
-      )(
-        contentBlock
-      )
+      )(contentBlock)
     }
   }
 }

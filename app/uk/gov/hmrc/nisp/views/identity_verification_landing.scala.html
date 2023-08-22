@@ -34,46 +34,35 @@
 @()(implicit messages: Messages, request: Request[_])
 
 @main(
-  pageTitle = messages("nisp.landing.title"),
-  optCustomLayout = Some(fullLayout(_))
+  pageTitle = messages("nisp.landing.title")
 ) {
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      @h1(
-        classes = Some("govuk-heading-xl"),
-        msg = "nisp.landing.title",
-        specId = Some("identity_verification_landing_h1")
-      )
-      @govukWarningText(WarningText(
-        iconFallbackText = Some(messages("global.important_legal_notice")),
-        attributes = Map("id" -> "state_pension__mqp__inset_text_3"),
-        content = Text(messages("nisp.landing.estimateprovided"))
-      ))
-    </div>
-  </div>
+  @h1(
+    classes = Some("govuk-heading-xl"),
+    msg = "nisp.landing.title",
+    specId = Some("identity_verification_landing_h1")
+  )
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      @h2(
-        elmId = Some("landing-signin-heading"),
-        msg = "nisp.landing.signin.heading",
-        specId = Some("identity_verification_landing_h2_1")
-      )
-      <div class="inner-block">
-        @p(
-          content = Text(messages("nisp.landing.signin.gg")),
-          specId = Some("identity_verification_landing_p1")
-        )
+  @govukWarningText(WarningText(
+    iconFallbackText = Some(messages("global.important_legal_notice")),
+    attributes = Map("id" -> "state_pension__mqp__inset_text_3"),
+    content = Text(messages("nisp.landing.estimateprovided"))
+  ))
 
-        @govukButton(Button(
-          attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue"),
-          content = Text(messages("nisp.continue")),
-          href = Some(routes.StatePensionController.show.url)
-        ))
-      </div>
-    </div>
+  @h2(
+    elmId = Some("landing-signin-heading"),
+    msg = "nisp.landing.signin.heading",
+    specId = Some("identity_verification_landing_h2_1")
+  )
 
-  </div>
+  @p(
+    content = Text(messages("nisp.landing.signin.gg")),
+    specId = Some("identity_verification_landing_p1")
+  )
 
+  @govukButton(Button(
+    attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue"),
+    content = Text(messages("nisp.continue")),
+    href = Some(routes.StatePensionController.show.url)
+  ))
 }
