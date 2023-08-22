@@ -103,7 +103,7 @@ isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: Au
 
     @if(isPertaxUrl) {
       @govukWarningText(WarningText(
-        iconFallbackText = messages("global.important_legal_notice"),
+        iconFallbackText = Some(messages("global.important_legal_notice")),
         attributes = Map("id" -> "state_pension__inset_text_2"),
         content = Text(messages("nisp.landing.estimateprovided"))
       ))
