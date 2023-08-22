@@ -30,8 +30,6 @@ class MainViewSpec extends HtmlSpec {
     val testName: String
     val profileAndSettingsLink: String
 
-    val researchBannerHeaderText: String
-    val researchBannerLinkText: String
     val researchBannerHeaderSelector: String
     val researchBannerLinkSelector: String
 
@@ -44,8 +42,6 @@ class MainViewSpec extends HtmlSpec {
     override val testName: String = "old style"
     override val profileAndSettingsLink: String = "http://localhost:9232/personal-account/your-profile"
 
-    override val researchBannerHeaderText: String = "Help make GOV.UK better"
-    override val researchBannerLinkText: String = "Sign up to take part in research (opens in new tab)"
     override val researchBannerHeaderSelector: String = "h2"
     override val researchBannerLinkSelector: String = "a"
 
@@ -59,8 +55,6 @@ class MainViewSpec extends HtmlSpec {
     override val testName: String = "new style"
     override val profileAndSettingsLink: String = "http://localhost:9232/personal-account/profile-and-settings"
 
-    override val researchBannerHeaderText: String = "Help improve GOV.UK"
-    override val researchBannerLinkText: String = "Help improve digital services by joining the HMRC user panel (opens in new window)"
     override val researchBannerHeaderSelector: String = ".hmrc-user-research-banner__title"
     override val researchBannerLinkSelector: String = ".hmrc-user-research-banner__link"
 
@@ -72,12 +66,33 @@ class MainViewSpec extends HtmlSpec {
   object CommonValues {
 
     val pageTitle = "Fake Page Title - Check your State Pension - GOV.UK"
+    val pageHeader = "Check your State Pension forecast"
     val accountHome = "Account home"
     val messages = "Messages"
     val checkProgress = "Check progress"
     val profileAndSettings = "Profile and settings"
     val signOut = "Sign out"
 
+    val accountLink = "/check-your-state-pension/account"
+    val localPersonalAccountLink = "http://localhost:9232/personal-account"
+    val localMessagesLink = "http://localhost:9232/personal-account/messages"
+    val localTrackProgressLink = "http://localhost:9100/track"
+    val signOutUrl = "/check-your-state-pension/sign-out"
+    val keepAliveUrl = "/check-your-state-pension/keep-alive"
+
+    val urBannerHeader = "Help make GOV.UK better"
+    val urBannerLinkText = "Sign up to take part in research (opens in new tab)"
+    val urBannerLink =
+      "https://signup.take-part-in-research.service.gov.uk/home?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
+
+    val accessibilityStatementText = "Accessibility statement"
+    val accessibilityStatementBaseUrl =
+      "http://localhost:12346/accessibility-statement/check-your-state-pension?referrerUrl=http%3A%2F%2Flocalhost%3A"
+
+    val reportATechnicalIssueText = "Is this page not working properly? (opens in new tab)"
+
+    val scriptUrl = "http://localhost:9234/check-your-state-pension/assets/javascript/nirecord.js"
+    val ptaScriptUrl = "http://localhost:9234/check-your-state-pension/pta-frontend/assets/pta.js"
   }
 
   case class TestObject(uniqueValues: UniqueValues, scaWrapper: Boolean)
@@ -110,11 +125,11 @@ class MainViewSpec extends HtmlSpec {
         lazy val pageHeader = doc.select(".hmrc-header__service-name")
 
         "contain the text 'Check your State Pension forecast'" in {
-          pageHeader.text() shouldBe "Check your State Pension forecast"
+          pageHeader.text() shouldBe CommonValues.pageHeader
         }
 
         "link to the account page when clicked" in {
-          pageHeader.attr("href") shouldBe "/check-your-state-pension/account"
+          pageHeader.attr("href") shouldBe CommonValues.accountLink
         }
       }
 
@@ -140,7 +155,7 @@ class MainViewSpec extends HtmlSpec {
         }
 
         "have the link to the users personal account" in {
-          accountHome.attr("href") shouldBe "http://localhost:9232/personal-account"
+          accountHome.attr("href") shouldBe CommonValues.localPersonalAccountLink
         }
 
       }
@@ -152,7 +167,7 @@ class MainViewSpec extends HtmlSpec {
         }
 
         "have the link to the users personal account" in {
-          messagesLink.attr("href") shouldBe "http://localhost:9232/personal-account/messages"
+          messagesLink.attr("href") shouldBe CommonValues.localMessagesLink
         }
 
       }
@@ -164,7 +179,7 @@ class MainViewSpec extends HtmlSpec {
         }
 
         "have the link to the users personal account" in {
-          checkProgressLink.attr("href") shouldBe "http://localhost:9100/track"
+          checkProgressLink.attr("href") shouldBe CommonValues.localTrackProgressLink
         }
 
       }
@@ -188,7 +203,7 @@ class MainViewSpec extends HtmlSpec {
         }
 
         "have the link to the sign out controller" in {
-          signOutLink.attr("href") shouldBe "/check-your-state-pension/sign-out"
+          signOutLink.attr("href") shouldBe CommonValues.signOutUrl
         }
 
       }
@@ -200,7 +215,7 @@ class MainViewSpec extends HtmlSpec {
         "have the text 'Help make GOV.UK better'" in {
           val text = researchBanner.select(testObject.uniqueValues.researchBannerHeaderSelector).text()
 
-          text shouldBe testObject.uniqueValues.researchBannerHeaderText
+          text shouldBe CommonValues.urBannerHeader
         }
 
         "have the link 'Sign up to take part in research (opens in new tab)'" which {
@@ -208,12 +223,11 @@ class MainViewSpec extends HtmlSpec {
           lazy val link = researchBanner.select(testObject.uniqueValues.researchBannerLinkSelector)
 
           "has the correct text" in {
-            link.text() shouldBe testObject.uniqueValues.researchBannerLinkText
+            link.text() shouldBe CommonValues.urBannerLinkText
           }
 
           "links to the correct URL" in {
-            link.attr("href") shouldBe
-              "https://signup.take-part-in-research.service.gov.uk/home?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
+            link.attr("href") shouldBe CommonValues.urBannerLink
           }
 
         }
@@ -225,15 +239,11 @@ class MainViewSpec extends HtmlSpec {
         lazy val scripts = doc.select("script").text()
 
         "still contain the nirecord js script" in {
-          val expectedScriptUrl = "http://localhost:9234/check-your-state-pension/assets/javascript/nirecord.js"
-
-          scripts.contains(expectedScriptUrl)
+          scripts.contains(CommonValues.scriptUrl)
         }
 
         "still contains the pta scripts" in {
-          val expectedPtaScript = "http://localhost:9234/check-your-state-pension/pta-frontend/assets/pta.js"
-
-          scripts.contains(expectedPtaScript)
+          scripts.contains(CommonValues.ptaScriptUrl)
         }
 
       }
@@ -244,14 +254,11 @@ class MainViewSpec extends HtmlSpec {
           .select("body > footer > div > div > div.govuk-footer__meta-item.govuk-footer__meta-item--grow > ul > li:nth-child(2) > a")
 
         "contain the text 'Accessibility statement'" in {
-          val expectedText = "Accessibility statement"
-
-          accessibilityLink.text() shouldBe expectedText
+          accessibilityLink.text() shouldBe CommonValues.accessibilityStatementText
         }
 
         "contains the correct URL" in {
-          val expectedUrl = "http://localhost:12346/accessibility-statement/check-your-state-pension?" +
-            "referrerUrl=http%3A%2F%2Flocalhost%3A" + testObject.uniqueValues.accessibilityReferrerUrl
+          val expectedUrl = CommonValues.accessibilityStatementBaseUrl + testObject.uniqueValues.accessibilityReferrerUrl
 
           accessibilityLink.attr("href") shouldBe expectedUrl
         }
@@ -271,11 +278,11 @@ class MainViewSpec extends HtmlSpec {
         }
 
         "have the correct keep alive url" in {
-          timeoutDialogueData.attr("data-keep-alive-url") shouldBe "/check-your-state-pension/keep-alive"
+          timeoutDialogueData.attr("data-keep-alive-url") shouldBe CommonValues.keepAliveUrl
         }
 
         "have the correct sign out url" in {
-          timeoutDialogueData.attr("data-sign-out-url") shouldBe "/check-your-state-pension/sign-out"
+          timeoutDialogueData.attr("data-sign-out-url") shouldBe CommonValues.signOutUrl
         }
 
       }
@@ -285,7 +292,7 @@ class MainViewSpec extends HtmlSpec {
         lazy val isThePageNotWorkingCorrectly = doc.select(".hmrc-report-technical-issue")
 
         "contain the correct text" in {
-          isThePageNotWorkingCorrectly.text() shouldBe "Is this page not working properly? (opens in new tab)"
+          isThePageNotWorkingCorrectly.text() shouldBe CommonValues.reportATechnicalIssueText
         }
 
         "contains the correct link" in {

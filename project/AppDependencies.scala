@@ -34,7 +34,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% s"internal-auth-client-$playVersion" % "1.2.0",
     "uk.gov.hmrc.mongo" %% s"hmrc-mongo-$playVersion"           % hmrcMongoVersion,
     "uk.gov.hmrc"       %% "mongo-feature-toggles-client"       % "0.2.0",
-    "uk.gov.hmrc"       %% "sca-wrapper"                        % "1.0.41",
+    "uk.gov.hmrc"       %% "sca-wrapper"                        % "1.0.43",
     ehcache
   )
 

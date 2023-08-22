@@ -105,7 +105,6 @@ class MainImpl @Inject()(
           ptaHead()
         ),
         bannerConfig = BannerConfig(
-          showChildBenefitBanner = false,
           showAlphaBanner = false,
           showBetaBanner = false,
           showHelpImproveBanner = showUrBanner
