@@ -48,7 +48,8 @@
 )(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
 @main(
-  pageTitle = if(user.livesAbroad) messages("nisp.nirecord.heading.uk") else messages("nisp.nirecord.heading")
+  pageTitle = if(user.livesAbroad) { messages("nisp.nirecord.heading.uk") } else if (niRecord.numberOfGaps > 0) {
+    messages("nisp.nirecord.gaps.heading") } else messages("nisp.nirecord.heading")
 ) {
     <div class="govuk-notification-banner" role="region"
          aria-labelledby="govuk-notification-banner-title"
@@ -65,7 +66,11 @@
     </div>
 
     @nispPageHeading(
-      text = if(user.livesAbroad) messages("nisp.nirecord.heading.uk") else messages("nisp.nirecord.heading"),
+      text = if(user.livesAbroad) {
+                messages("nisp.nirecord.heading.uk") }
+             else if (niRecord.numberOfGaps > 0) {
+                messages("nisp.nirecord.gaps.heading") }
+             else messages("nisp.nirecord.heading"),
       section = messages(user.name.getOrElse("")),
       context = messages(user.name.getOrElse("")),
       specId = Some("nirecordpage__pageheading")
