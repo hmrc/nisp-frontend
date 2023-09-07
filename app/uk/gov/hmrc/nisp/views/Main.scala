@@ -96,6 +96,7 @@ class MainImpl @Inject()(
         serviceNameUrl = Some("/check-your-state-pension/account"),
         sidebarContent = sidebar,
         signoutUrl = routes.StatePensionController.signOut.url,
+        timeOutUrl = None,
         keepAliveUrl = routes.TimeoutController.keep_alive.url,
         showBackLinkJS = true,
         showSignOutInHeader = true,
