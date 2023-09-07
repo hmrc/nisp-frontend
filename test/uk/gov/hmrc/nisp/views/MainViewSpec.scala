@@ -285,6 +285,10 @@ class MainViewSpec extends HtmlSpec {
           timeoutDialogueData.attr("data-sign-out-url") shouldBe CommonValues.signOutUrl
         }
 
+        "have an empty time out url" in {
+          timeoutDialogueData.attr("data-timeout-url") shouldBe ""
+        }
+
       }
 
       "the link to report a problem" should {
