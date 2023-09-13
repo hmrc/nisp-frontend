@@ -170,7 +170,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.heading")
+        messages("nisp.nirecord.gaps.heading")
           + Constants.titleSplitter
           + messages("nisp.title.extension")
           + Constants.titleSplitter
@@ -202,7 +202,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertEqualsMessage(
         doc,
         "[data-spec='nirecordpage__pageheading'] [data-component='nisp_page_heading__h1']",
-        "nisp.nirecord.heading"
+        "nisp.nirecord.gaps.heading"
       )
     }
 
@@ -455,7 +455,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.heading")
+        messages("nisp.nirecord.gaps.heading")
           + Constants.titleSplitter
           + messages("nisp.title.extension")
           + Constants.titleSplitter
@@ -467,7 +467,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertEqualsMessage(
         doc,
         "[data-spec='nirecordpage__pageheading'] [data-component='nisp_page_heading__h1']",
-        "nisp.nirecord.heading"
+        "nisp.nirecord.gaps.heading"
       )
     }
 
@@ -1274,7 +1274,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.title")
+        messages("nisp.nirecord.gaps.title")
         + Constants.titleSplitter
         + messages("nisp.title.extension")
         + Constants.titleSplitter

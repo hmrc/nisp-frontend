@@ -264,6 +264,7 @@ nisp.nirecord.title = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading = Eich cofnod Yswiriant Gwladol
 nisp.nirecord.heading.uk = Eich cofnod Yswiriant Gwladol y DU
 nisp.nirecord.gaps.heading = Bylchau yn eich cofnod Yswiriant Gwladol
+nisp.nirecord.gaps.title = Bylchau yn eich cofnod Yswiriant Gwladol
 nisp.nirecord.context =
 nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
