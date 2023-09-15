@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.HttpErrorFunctions.{is4xx, is5xx}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.models.StatePensionExclusion
-import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.enums.APIType._
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.EitherReads.eitherReads
@@ -88,7 +87,7 @@ trait BackendConnector {
     val keystoreTimerContext =
       metricsService.keystoreReadTimer.time()
 
-    if (api == APIType.StatePension && delegationState) {
+    if (delegationState) {
       metricsService.keystoreMissCounter.inc()
       connectToMicroservice(url, api, headers)
     } else {

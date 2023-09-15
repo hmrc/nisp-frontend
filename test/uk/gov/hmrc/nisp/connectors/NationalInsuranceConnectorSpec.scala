@@ -38,7 +38,7 @@ import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
 
 import java.time.LocalDate
 
-class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
+class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
   Injecting with BeforeAndAfterEach with WireMockHelper {
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
@@ -62,13 +62,13 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
     reset(mockMetricService)
   }
 
-  lazy val nationalInsuranceConnector: NationalInsuranceConnectorImpl = inject[NationalInsuranceConnectorImpl]
+  lazy val nationalInsuranceConnector: NationalInsuranceConnector = inject[NationalInsuranceConnector]
 
   "getNationalInsuranceRecord" when {
 
     "there is a regular user" should {
       lazy val nationalInsuranceRecord =
-        await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
+        await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino, delegationState = false)(headerCarrier))
 
       val jsonPayload = TestAccountBuilder.getRawJson(
         TestAccountBuilder.regularNino,
@@ -223,7 +223,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll))
+        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll, delegationState = false))
 
         result.map {
           spExclusion =>
@@ -244,7 +244,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead))
+        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead, delegationState = false))
 
         result.map {
           spExclusion =>
@@ -264,7 +264,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI))
+        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI, delegationState = false))
 
         result.map {
           spExclusion =>
@@ -284,7 +284,7 @@ class NationalInsuranceConnectorImplSpec extends UnitSpec with ScalaFutures with
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedMwrre))
+        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedMwrre, delegationState = false))
 
         result.map {
           spExclusion =>

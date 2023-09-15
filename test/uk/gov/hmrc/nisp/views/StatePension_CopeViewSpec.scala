@@ -127,7 +127,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
           ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, pensionSharingOrder = false, 155.65, reducedRateElection = false, statePensionAgeUnderConsideration = false)
         ))))
 
-      when(mockNationalInsuranceService.getSummary(any())(any()))
+      when(mockNationalInsuranceService.getSummary(any(), any())(any()))
         .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 11,
           qualifyingYearsPriorTo1975 = 0,

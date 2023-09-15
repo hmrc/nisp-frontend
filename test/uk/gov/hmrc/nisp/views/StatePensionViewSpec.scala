@@ -138,7 +138,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -530,7 +530,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -658,7 +658,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1031,7 +1031,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1161,7 +1161,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1500,7 +1500,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1633,7 +1633,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -1937,7 +1937,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2067,7 +2067,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2366,7 +2366,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockNationalInsuranceService.getSummary(any())(any()))
+            when(mockNationalInsuranceService.getSummary(any(), any())(any()))
               .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
                 qualifyingYears = 11,
                 qualifyingYearsPriorTo1975 = 0,
@@ -2498,7 +2498,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
             )
             ))))
 
-          when(mockNationalInsuranceService.getSummary(any())(any()))
+          when(mockNationalInsuranceService.getSummary(any(), any())(any()))
             .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,
@@ -2757,7 +2757,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
             )
             ))))
 
-          when(mockNationalInsuranceService.getSummary(any())(any()))
+          when(mockNationalInsuranceService.getSummary(any(), any())(any()))
             .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
               qualifyingYears = 11,
               qualifyingYearsPriorTo1975 = 0,

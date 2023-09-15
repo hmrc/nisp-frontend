@@ -17,47 +17,52 @@
 package uk.gov.hmrc.nisp.services
 
 import com.google.inject.Inject
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
+import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
 import uk.gov.hmrc.nisp.models.StatePensionExclusion._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.utils.ExclusionHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NationalInsuranceService @Inject()(nationalInsuranceConnector: NationalInsuranceConnectorImpl)
-                                        (implicit executor: ExecutionContext) {
+class NationalInsuranceService @Inject()(
+  nationalInsuranceConnector: NationalInsuranceConnector
+)(
+  implicit executor: ExecutionContext
+) {
 
-  val serverInternalError = 500
+  def getSummary(
+    nino: Nino,
+    delegationState: Boolean = false
+  )(
+    implicit hc: HeaderCarrier
+  ): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] =
+    nationalInsuranceConnector.getNationalInsurance(nino, delegationState).map {
+      case Right(Right(ni)) if ni.reducedRateElection =>
+        Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
+      case Right(Right(ni)) =>
+          Right(Right(wrangleNiRecord(ni)))
+      case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
+        Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusions))))
+      case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
+        Right(Left(StatePensionExclusionFiltered(exclusion)))
+      case Right(Left(CopeStatePensionExclusion(exclusion, copeAvailableDate, previousDate))) =>
+        Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusion, copeAvailableDate, previousDate)))
+      case Left(errorResponse) =>
+        Left(errorResponse)
+      case value =>
+        Left(UpstreamErrorResponse(s"Match not implemented for: $value", INTERNAL_SERVER_ERROR))
+    }
 
-  def getSummary(nino: Nino)(implicit hc: HeaderCarrier):
-      Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] = {
-    nationalInsuranceConnector.getNationalInsurance(nino)
-      .map {
-        case Right(Right(ni)) =>
-          if (ni.reducedRateElection) Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
-          else Right(Right(
-            ni.copy(
-              taxYears = ni.taxYears.sortBy(_.taxYear)(Ordering[String].reverse).map(t => t.copy(convertTaxYear(t.taxYear))),
-              qualifyingYearsPriorTo1975 = ni.qualifyingYears - ni.taxYears.count(_.qualifying)
-            )
-          ))
-
-        case Right(Left(OkStatePensionExclusion(exclusions, _, _, _))) =>
-          Right(Left(StatePensionExclusionFiltered(ExclusionHelper.filterExclusions(exclusions))))
-
-        case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
-          Right(Left(StatePensionExclusionFiltered(exclusion)))
-
-        case Right(Left(CopeStatePensionExclusion(exclusion, copeAvailableDate, previousDate))) =>
-          Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusion, copeAvailableDate, previousDate)))
-
-        case Left(errorResponse) => Left(errorResponse)
-
-        case value => Left(UpstreamErrorResponse(s"Match not implemented for: $value", serverInternalError))
-      }
-  }
-
-  private def convertTaxYear(taxYear: String): String = taxYear.take(4)
+  private def wrangleNiRecord(ni: NationalInsuranceRecord): NationalInsuranceRecord =
+    ni.copy(
+      qualifyingYearsPriorTo1975 =
+        ni.qualifyingYears - ni.taxYears.count(_.qualifying),
+      taxYears                   =
+        ni.taxYears
+          .sortBy(_.taxYear)(Ordering[String].reverse)
+          .map(niTaxYear => niTaxYear.copy(niTaxYear.taxYear.take(4)))
+    )
 }
