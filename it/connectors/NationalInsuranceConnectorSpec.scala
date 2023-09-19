@@ -79,7 +79,7 @@ class NationalInsuranceConnectorSpec
       )
 
       server.stubFor(
-        put(urlEqualTo(s"$keystoreUrl/data/StatePension"))
+        put(urlEqualTo(s"$keystoreUrl/data/NationalInsurance"))
           .willReturn(ok(Json.obj(
             "id" -> sessionId,
             "data" -> Json.toJson(nationalInsuranceRecord)
