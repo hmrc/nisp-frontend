@@ -24,15 +24,9 @@ object AppDependencies {
   private val hmrcMongoVersion = "0.74.0"
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"       %% s"bootstrap-frontend-$playVersion"   % bootstrapVersion,
-    "uk.gov.hmrc"       %% "domain"                             % s"8.1.0-$playVersion",
     "uk.gov.hmrc"       %% "http-caching-client"                % s"10.0.0-$playVersion",
     "uk.gov.hmrc"       %% "tax-year"                           % "3.0.0",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping"      % s"1.12.0-$playVersion",
-    "uk.gov.hmrc"       %% "play-partials"                      % s"8.3.0-$playVersion",
-    "uk.gov.hmrc"       %% "play-frontend-pta"                  % "0.4.0",
-    "uk.gov.hmrc"       %% s"internal-auth-client-$playVersion" % "1.2.0",
-    "uk.gov.hmrc.mongo" %% s"hmrc-mongo-$playVersion"           % hmrcMongoVersion,
     "uk.gov.hmrc"       %% "mongo-feature-toggles-client"       % "0.2.0",
     "uk.gov.hmrc"       %% "sca-wrapper"                        % "1.0.44",
     ehcache
