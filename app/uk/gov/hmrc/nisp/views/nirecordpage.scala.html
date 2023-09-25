@@ -47,15 +47,15 @@
   currentDate: LocalDate
 )(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
-@defining(
+@headingOrTitle = @{
 if (user.livesAbroad) {
-  messages("nisp.nirecord.heading.uk")
-} else if (niRecord.numberOfGaps > 0) {
-  messages("nisp.nirecord.gaps.heading")
-} else {
-  messages("nisp.nirecord.heading")
+    messages("nisp.nirecord.heading.uk")
+  } else if (niRecord.numberOfGaps > 0) {
+    messages("nisp.nirecord.gaps.heading")
+  } else {
+    messages("nisp.nirecord.heading")
+  }
 }
-) { headingOrTitle =>
 
 @main(
   pageTitle = headingOrTitle
@@ -309,5 +309,5 @@ if (user.livesAbroad) {
   <span id="current-language" class="govuk-visually-hidden" aria-hidden="true">
     @{messages.lang.code}
   </span>
-}
+
 }
