@@ -70,3 +70,18 @@ lazy val microservice = Project(appName, file("."))
     addTestReportOption(IntegrationTest, "int-test-reports"),
     IntegrationTest / parallelExecution := false
   )
+  lazy val testSettings: Seq[Def.Setting[_]] = Seq(
+    fork := true,
+    unmanagedSourceDirectories += baseDirectory.value / "test-utils" / "src",
+    Test / javaOptions += "-Dconfig.file=conf/test.application.conf"
+  )
+
+  lazy val itSettings = Defaults.itSettings ++ Seq(
+    fork := true,
+    parallelExecution := false,
+    unmanagedSourceDirectories := Seq(
+      baseDirectory.value / "it",
+      baseDirectory.value / "test-utils" / "src"
+    ),
+    javaOptions += "-Dconfig.file=conf/test.application.conf"
+  )
