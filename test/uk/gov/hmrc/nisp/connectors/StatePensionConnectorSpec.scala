@@ -109,7 +109,7 @@ class StatePensionConnectorSpec
       )
 
       whenReady(
-        statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = false)
+        statePensionConnector.getStatePension(TestAccountBuilder.regularNino)
       ) { response =>
         response shouldBe Right(Right(statePension))
       }
@@ -119,24 +119,6 @@ class StatePensionConnectorSpec
           .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
       )
 
-    }
-
-    "return the correct response for the regular test user when delegationState is true" in {
-      server.stubFor(
-        get(urlEqualTo(s"/ni/$nino"))
-          .willReturn(ok(Json.toJson(expectedStatePension).toString()))
-      )
-
-      whenReady(
-        statePensionConnector.getStatePension(TestAccountBuilder.regularNino, delegationState = true)
-      ) { response =>
-        response shouldBe Right(Right(statePension))
-      }
-
-      server.verify(
-        getRequestedFor(urlEqualTo(s"/ni/$nino"))
-          .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
-      )
     }
 
     "return a failed Future 403 with a Dead message for all exclusion" in {
@@ -151,7 +133,7 @@ class StatePensionConnectorSpec
           )
       )
 
-      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAll, delegationState = false))
+      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAll))
 
       result.map {
         spExclusion =>
@@ -169,7 +151,7 @@ class StatePensionConnectorSpec
           .willReturn(forbidden().withBody(json.toString()))
       )
 
-      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead, delegationState = false))
+      val result = await(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDead))
 
       result.map {
         spExclusion =>
@@ -188,7 +170,7 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDeadMCI, delegationState = false)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.excludedAllButDeadMCI)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge,
@@ -213,7 +195,7 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino, delegationState = false)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.AmountDissonance
@@ -235,7 +217,7 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino, delegationState = false)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.IsleOfMan
@@ -256,7 +238,7 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino, delegationState = false)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.MarriedWomenReducedRateElection
@@ -277,7 +259,7 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino, delegationState = false)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge
@@ -298,7 +280,7 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino, delegationState = false)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.PostStatePensionAge,
@@ -322,7 +304,7 @@ class StatePensionConnectorSpec
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
-      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino, delegationState = false)) { result =>
+      whenReady(statePensionConnector.getStatePension(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino)) { result =>
         result shouldBe Right(Left(OkStatePensionExclusion(
           List(
             Exclusion.IsleOfMan

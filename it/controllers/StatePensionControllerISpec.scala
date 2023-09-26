@@ -29,17 +29,14 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Helpers.{defaultAwaitTimeout, redirectLocation, route, writeableOf_AnyContentAsEmpty, status => getStatus}
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
-import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
 
 import java.lang.System.currentTimeMillis
 import java.time.LocalDate
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class StatePensionControllerISpec extends AnyWordSpec
   with Matchers
@@ -65,10 +62,8 @@ class StatePensionControllerISpec extends AnyWordSpec
   val citizenDetailsResponse = CitizenDetailsResponse(citizen, None)
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId)))
-  private val sessionCache: SessionCache = inject[SessionCache]
 
   override def beforeEach(): Unit = {
-    sessionCache.remove().futureValue
     super.beforeEach()
 
     server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
@@ -110,12 +105,6 @@ class StatePensionControllerISpec extends AnyWordSpec
 
     server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
       .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
-
-    server.stubFor(
-      get(urlEqualTo(keystoreUrl))
-        .willReturn(badRequest())
-    )
-
   }
 
   trait Test {
@@ -149,23 +138,21 @@ class StatePensionControllerISpec extends AnyWordSpec
 
     "return a 200 when a successful request is sent" in new Test {
 
-      sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
 
       val result = route(app, request)
       result map getStatus shouldBe Some(OK)
     }
 
     "redirect to the show state pension page when the state pension returned isn't contracted out" in new Test {
-      val contractedOutResponse = statePensionResponse.copy(
-        amounts = StatePensionAmounts(
-          false,
-          StatePensionAmountRegular(0, 580.1, 6961.14),
-          StatePensionAmountForecast(3, 0, 690.14, 7657.73),
-          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0, 0, 0)
-        ))
+//      val contractedOutResponse = statePensionResponse.copy(
+//        amounts = StatePensionAmounts(
+//          false,
+//          StatePensionAmountRegular(0, 580.1, 6961.14),
+//          StatePensionAmountForecast(3, 0, 690.14, 7657.73),
+//          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+//          StatePensionAmountRegular(0, 0, 0)
+//        ))
 
-      sessionCache.cache(APIType.StatePension.toString, contractedOutResponse).futureValue
 
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)
@@ -181,17 +168,17 @@ class StatePensionControllerISpec extends AnyWordSpec
         SessionKeys.authToken -> "Bearer 123"
       )
 
-    val nationalInsuranceRecord = NationalInsuranceRecord(
-      2018,
-      1974,
-      1,
-      1,
-      None,
-      true,
-      LocalDate.now(),
-      List(),
-      false
-    )
+//    val nationalInsuranceRecord = NationalInsuranceRecord(
+//      2018,
+//      1974,
+//      1,
+//      1,
+//      None,
+//      true,
+//      LocalDate.now(),
+//      List(),
+//      false
+//    )
 
     "send an exclusion" when {
       "a state pension exclusion is returned" in new Test {
@@ -208,7 +195,6 @@ class StatePensionControllerISpec extends AnyWordSpec
 
       "a national insurance exclusion is returned" in new Test {
 
-        sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
 
         val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
@@ -223,44 +209,38 @@ class StatePensionControllerISpec extends AnyWordSpec
 
     "return a 200" when {
       "the state pension returned has a mqpscenario that isn't continueWorking" in new Test {
-        val mqpResponse = statePensionResponse.copy(
-          amounts = StatePensionAmounts(
-            false,
-            StatePensionAmountRegular(0, 580.1, 6961.14),
-            StatePensionAmountForecast(3, 0, 690.14, 7657.73),
-            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-            StatePensionAmountRegular(0, 0, 0)
-          ))
+//        val mqpResponse = statePensionResponse.copy(
+//          amounts = StatePensionAmounts(
+//            false,
+//            StatePensionAmountRegular(0, 580.1, 6961.14),
+//            StatePensionAmountForecast(3, 0, 690.14, 7657.73),
+//            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+//            StatePensionAmountRegular(0, 0, 0)
+//          ))
 
         server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
           .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
 
-        sessionCache.cache(APIType.StatePension.toString, mqpResponse).futureValue
-        sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord).futureValue
 
         val result = route(app, request)
         result map getStatus shouldBe Some(OK)
       }
 
       "a forecast only state pension is returned" in new Test {
-        val forecastOnlyResponse = statePensionResponse.copy(amounts = StatePensionAmounts(
-          false,
-          StatePensionAmountRegular(183.41, 580.1, 6961.14),
-          StatePensionAmountForecast(3, 176.76, 690.14, 7657.73),
-          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-          StatePensionAmountRegular(0, 0, 0)
-        ))
+//        val forecastOnlyResponse = statePensionResponse.copy(amounts = StatePensionAmounts(
+//          false,
+//          StatePensionAmountRegular(183.41, 580.1, 6961.14),
+//          StatePensionAmountForecast(3, 176.76, 690.14, 7657.73),
+//          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+//          StatePensionAmountRegular(0, 0, 0)
+//        ))
 
-        sessionCache.cache(APIType.StatePension.toString, forecastOnlyResponse).futureValue
-        sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord).futureValue
 
         val result = route(app, request)
         result map getStatus shouldBe Some(OK)
       }
       "a successful standard request is supplied" in new Test {
 
-        sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
-        sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord).futureValue
 
         val result = route(app, request)
         result map getStatus shouldBe Some(OK)

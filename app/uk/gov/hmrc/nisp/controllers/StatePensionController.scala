@@ -194,12 +194,8 @@ class StatePensionController @Inject()(
   def show: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
 
-    val delegationState: Boolean =
-      request.request.session
-        .get("delegationState")
-        .fold(false)(_.equalsIgnoreCase("On"))
     pertaxHelper.isFromPertax.flatMap { isPertax =>
-      statePensionService.getSummary(user.nino, delegationState).flatMap {
+      statePensionService.getSummary(user.nino).flatMap {
         case Right(Left(statePensionExclusion)) =>
           Future.successful(sendExclusion(statePensionExclusion.exclusion))
         case Right(Right(statePension)) =>

@@ -29,17 +29,14 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Helpers.{OK, route, status => getStatus, _}
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
-import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
 
 import java.lang.System.currentTimeMillis
 import java.time.LocalDate
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class NIRecordControllerISpec extends AnyWordSpec
   with Matchers
@@ -50,13 +47,14 @@ class NIRecordControllerISpec extends AnyWordSpec
   with Injecting {
 
   server.start()
+  server2.start()
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
       "microservice.services.auth.port" -> server.port(),
       "microservice.services.citizen-details.port" -> server.port(),
       "microservice.services.national-insurance.port" -> server.port(),
-      "microservice.services.state-pension.port" -> server.port(),
+      "microservice.services.state-pension.port" -> server2.port(),
       "microservice.services.pertax-auth.port" -> server.port()
     )
     .build()
@@ -66,10 +64,8 @@ class NIRecordControllerISpec extends AnyWordSpec
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(s"session-$uuid")))
   implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
-  private val sessionCache: SessionCache = inject[SessionCache]
 
   override def beforeEach(): Unit = {
-    sessionCache.remove().futureValue
     super.beforeEach()
 
     server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
@@ -114,25 +110,35 @@ class NIRecordControllerISpec extends AnyWordSpec
   }
 
   trait Test {
-    val nationalInsuranceRecord = NationalInsuranceRecord(2018, 1974, 1, 1, None, true, LocalDate.now(), List(), true)
+    val nationalInsuranceRecord = NationalInsuranceRecord(
+      qualifyingYears = 2018,
+      qualifyingYearsPriorTo1975 = 1974,
+      numberOfGaps = 1,
+      numberOfGapsPayable = 1,
+      dateOfEntry = None,
+      homeResponsibilitiesProtection = true,
+      earningsIncludedUpTo = LocalDate.now(),
+      taxYears = List(),
+      reducedRateElection = true
+    )
 
     val statePensionResponse = StatePension(
-      LocalDate.of(2015, 4, 5),
-      StatePensionAmounts(
+      earningsIncludedUpTo = LocalDate.of(2015, 4, 5),
+      amounts = StatePensionAmounts(
         false,
         StatePensionAmountRegular(133.41, 580.1, 6961.14),
         StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
         StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
         StatePensionAmountRegular(0, 0, 0)
       ),
-      64,
-      LocalDate.of(2018, 7, 6),
-      "2017",
-      30,
-      false,
-      155.65,
-      true,
-      false
+      pensionAge = 64,
+      pensionDate = LocalDate.of(2018, 7, 6),
+      finalRelevantYear = "2017",
+      numberOfQualifyingYears = 30,
+      pensionSharingOrder = false,
+      currentFullWeeklyPensionAmount = 155.65,
+      reducedRateElection = true,
+      statePensionAgeUnderConsideration = false
     )
   }
 
@@ -145,11 +151,11 @@ class NIRecordControllerISpec extends AnyWordSpec
       )
 
     "redirect with a full niRecord" in new Test {
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
-      sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
-      sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord).futureValue
+      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
 
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)
@@ -181,10 +187,9 @@ class NIRecordControllerISpec extends AnyWordSpec
     "redirect with gaps in the national insurance record" in new Test {
 
       server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
+      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
-
-      sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
-      sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord).futureValue
 
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)
@@ -192,12 +197,10 @@ class NIRecordControllerISpec extends AnyWordSpec
     }
 
     "redirect to showFull when the number of gaps in the national insurance response is less than 1" in new Test {
-
       server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(nationalInsuranceRecord.copy(numberOfGaps = 0, reducedRateElection = false)).toString)))
+      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
-
-      sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
-      sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord.copy(numberOfGaps = 0, reducedRateElection = false)).futureValue
 
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)
@@ -205,12 +208,10 @@ class NIRecordControllerISpec extends AnyWordSpec
     }
 
     "redirect to showFull when the number of gaps in the national insurance response is more than 1" in new Test {
-
       server.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
-
-      sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
-      sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord.copy(numberOfGaps = 2, reducedRateElection = false)).futureValue
+      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(nationalInsuranceRecord.copy(numberOfGaps = 2, reducedRateElection = false)).toString)))
 
       val result = route(app, request)
       result map getStatus shouldBe Some(OK)
@@ -225,8 +226,6 @@ class NIRecordControllerISpec extends AnyWordSpec
           SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString,
           SessionKeys.authToken -> "Bearer 123"
         )
-
-      sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord).futureValue
 
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)
@@ -244,8 +243,8 @@ class NIRecordControllerISpec extends AnyWordSpec
       )
 
     "return a 200" in new Test {
-
-      sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord.copy(reducedRateElection = false)).futureValue
+      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(nationalInsuranceRecord.copy(reducedRateElection = false)).toString)))
 
       val result = route(app, request)
 
@@ -254,8 +253,8 @@ class NIRecordControllerISpec extends AnyWordSpec
     }
 
     "redirect to the exclusion controller when a successful error passed" in new Test {
-
-      sessionCache.cache(APIType.NationalInsurance.toString, nationalInsuranceRecord).futureValue
+      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
 
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)

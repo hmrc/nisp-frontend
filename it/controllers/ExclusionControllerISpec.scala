@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.lang.System.currentTimeMillis
-import java.time.LocalDate
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
@@ -30,14 +28,13 @@ import play.api.Application
 import play.api.http.Status.OK
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers.{route, status => getStatus, _}
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.models.enums.APIType
-import uk.gov.hmrc.nisp.models.{StatePension, StatePensionAmountForecast, StatePensionAmountMaximum, StatePensionAmountRegular, StatePensionAmounts}
+import uk.gov.hmrc.nisp.models._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.lang.System.currentTimeMillis
+import java.time.LocalDate
 
 class ExclusionControllerISpec extends AnyWordSpec
   with Matchers
@@ -62,10 +59,8 @@ class ExclusionControllerISpec extends AnyWordSpec
     .build()
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId)))
-  private val sessionCache: SessionCache = inject[SessionCache]
 
   override def beforeEach(): Unit = {
-    sessionCache.remove().futureValue
     super.beforeEach()
 
     server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
@@ -83,22 +78,22 @@ class ExclusionControllerISpec extends AnyWordSpec
 
   trait Test {
     val statePensionResponse = StatePension(
-      LocalDate.of(2015, 4, 5),
-      StatePensionAmounts(
+      earningsIncludedUpTo = LocalDate.of(2015, 4, 5),
+      amounts = StatePensionAmounts(
         false,
         StatePensionAmountRegular(133.41, 580.1, 6961.14),
         StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
         StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
         StatePensionAmountRegular(0, 0, 0)
       ),
-      64,
-      LocalDate.of(2018, 7, 6),
-      "2017",
-      30,
-      false,
-      155.65,
-      true,
-      false
+      pensionAge = 64,
+      pensionDate = LocalDate.of(2018, 7, 6),
+      finalRelevantYear = "2017",
+      numberOfQualifyingYears = 30,
+      pensionSharingOrder = false,
+      currentFullWeeklyPensionAmount = 155.65,
+      reducedRateElection = true,
+      statePensionAgeUnderConsideration = false
     )
   }
 
@@ -112,8 +107,8 @@ class ExclusionControllerISpec extends AnyWordSpec
 
     "return a 200" when {
       "there is a success and reducedRateElection is true" in new Test {
-
-        sessionCache.cache(APIType.StatePension.toString, statePensionResponse).futureValue
+        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
         val result = route(app, request)
 
@@ -196,7 +191,8 @@ class ExclusionControllerISpec extends AnyWordSpec
 
     "redirect the user when they are a non-excluded user" in new Test {
 
-      sessionCache.cache(APIType.StatePension.toString, statePensionResponse.copy(reducedRateElection = false)).futureValue
+      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(statePensionResponse.copy(reducedRateElection = false)).toString)))
 
       val result = route(app, request)
 

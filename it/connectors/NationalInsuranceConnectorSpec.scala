@@ -69,60 +69,12 @@ class NationalInsuranceConnectorSpec
   "getNationalInsurance" should {
     "return the correct response from api" in {
       server.stubFor(
-        get(urlEqualTo(keystoreUrl))
-          .willReturn(notFound())
-      )
-
-      server.stubFor(
-        get(urlEqualTo(apiUrl))
-          .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString()))
-      )
-
-      server.stubFor(
-        put(urlEqualTo(s"$keystoreUrl/data/NationalInsurance"))
-          .willReturn(ok(Json.obj(
-            "id" -> sessionId,
-            "data" -> Json.toJson(nationalInsuranceRecord)
-          ).toString()))
-      )
-
-      whenReady(
-        nationalInsuranceConnector.getNationalInsurance(nino, delegationState = false)
-      ) { response =>
-        response shouldBe Right(Right(nationalInsuranceRecord))
-      }
-
-      server.verify(1, apiGetRequest)
-    }
-
-    "return the correct response from cache" in {
-      server.stubFor(
-        get(urlEqualTo(keystoreUrl))
-          .willReturn(ok(Json.obj(
-            "id"   -> sessionId,
-            "data" -> Json.obj(
-              "NationalInsurance" -> Json.toJson(nationalInsuranceRecord)
-            )
-          ).toString()))
-      )
-
-      whenReady(
-        nationalInsuranceConnector.getNationalInsurance(nino, delegationState = false)
-      ) { response =>
-        response shouldBe Right(Right(nationalInsuranceRecord))
-      }
-
-      server.verify(0, apiGetRequest)
-    }
-
-    "return the correct response from api when user is delegated" in {
-      server.stubFor(
         get(urlEqualTo(apiUrl))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString()))
       )
 
       whenReady(
-        nationalInsuranceConnector.getNationalInsurance(nino, delegationState = true)
+        nationalInsuranceConnector.getNationalInsurance(nino)
       ) { response =>
         response shouldBe Right(Right(nationalInsuranceRecord))
       }

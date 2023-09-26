@@ -18,7 +18,6 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.enums.APIType
@@ -29,7 +28,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class StatePensionConnector @Inject()(
   val http: HttpClient,
-  val sessionCache: SessionCache,
   val appConfig: ApplicationConfig,
   val metricsService: MetricsService,
   val executionContext: ExecutionContext
@@ -37,9 +35,9 @@ class StatePensionConnector @Inject()(
 
   val serviceUrl: String = appConfig.statePensionServiceUrl
 
-  def getStatePension(nino: Nino, delegationState: Boolean)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, StatePension]]] = {
+  def getStatePension(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, StatePension]]] = {
     val urlToRead = s"$serviceUrl/ni/$nino"
     val header = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
-    retrieveFromCache[StatePension](APIType.StatePension, urlToRead, header, delegationState)
+    connectToMicroservice[StatePension](APIType.StatePension, urlToRead, header)
   }
 }

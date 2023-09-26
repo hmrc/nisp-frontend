@@ -36,12 +36,11 @@ class StatePensionService @Inject()(
   extends CurrentTaxYear {
 
   def getSummary(
-    nino: Nino,
-    delegationState: Boolean = false
+    nino: Nino
   )(
     implicit hc: HeaderCarrier
   ): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]] =
-    statePensionConnector.getStatePension(nino, delegationState).map {
+    statePensionConnector.getStatePension(nino).map {
       case Right(Left(CopeStatePensionExclusion(exclusionReason, copeAvailableDate, previousAvailableDate))) =>
         Right(Left(StatePensionExclusionFilteredWithCopeDate(exclusionReason, copeAvailableDate, previousAvailableDate)))
       case Right(Left(ForbiddenStatePensionExclusion(exclusion, _))) =>
