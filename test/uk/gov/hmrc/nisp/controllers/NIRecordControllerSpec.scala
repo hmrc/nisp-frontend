@@ -153,7 +153,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         reducedRateElection = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
@@ -202,7 +202,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
@@ -216,7 +216,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
     "redirect to exclusion for excluded user" in {
       // FIXME: add COPE
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
@@ -285,7 +285,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
@@ -332,7 +332,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
@@ -346,7 +346,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
     "redirect to exclusion for excluded user" in {
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
@@ -367,7 +367,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
     "Redirect to exclusion for an unexpected error" in {
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Left(UpstreamErrorResponse("Failed", 502)))
       )
 
@@ -391,7 +391,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
     "Redirect to exclusion for an unexpected error in successful response" in {
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
@@ -423,7 +423,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         reducedRateElection = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
@@ -476,7 +476,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         reducedRateElection = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
@@ -505,7 +505,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         reducedRateElection = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
@@ -547,7 +547,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         reducedRateElection = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
@@ -562,7 +562,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
     "redirect to exclusion page when there is an unexpected error" in {
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Left(UpstreamErrorResponse("test", 500)))
       )
 
@@ -576,7 +576,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
     "redirect to exclusion page when there is an unexpected error in successful response" in {
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
@@ -637,7 +637,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
@@ -687,7 +687,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
@@ -735,7 +735,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
@@ -813,7 +813,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
@@ -888,7 +888,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
@@ -964,7 +964,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         statePensionAgeUnderConsideration = false
       )
 
-      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
         Future.successful(Right(Right(expectedNationalInsuranceResponse)))
       )
 
@@ -1199,7 +1199,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     val copeExclusionResponse =
       StatePensionExclusionFilteredWithCopeDate(CopeProcessing, LocalDate.of(2023, 4, 5), None)
 
-    when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+    when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
       Future.successful(Right(Right(expectedNationalInsuranceRecord)))
     )
 
@@ -1254,7 +1254,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       reducedRateElection = false
     )
 
-    when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+    when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino), mockAny())(mockAny())).thenReturn(
       Future.successful(Right(Right(expectedNationalInsuranceRecord)))
     )
 

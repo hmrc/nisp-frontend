@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.services
 
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -26,7 +26,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnectorImpl
+import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.utils.UnitSpec
@@ -35,18 +35,18 @@ import java.time.LocalDate
 import scala.concurrent.Future
 
 class NationalInsuranceServiceSpec
-    extends UnitSpec
+  extends UnitSpec
     with ScalaFutures
     with GuiceOneAppPerSuite
     with BeforeAndAfterEach
     with Injecting {
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
-  val mockNationalInsuranceConnector: NationalInsuranceConnectorImpl = mock[NationalInsuranceConnectorImpl]
+  val mockNationalInsuranceConnector: NationalInsuranceConnector = mock[NationalInsuranceConnector]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[NationalInsuranceConnectorImpl].toInstance(mockNationalInsuranceConnector)
+      bind[NationalInsuranceConnector].toInstance(mockNationalInsuranceConnector)
     ).build()
 
   override def beforeEach(): Unit = {
@@ -113,7 +113,7 @@ class NationalInsuranceServiceSpec
       )
 
       "return a Right(NationalInsuranceRecord)" in {
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(Right(Right(mockNationalInsuranceRecord))))
 
         nationalInsuranceService.getSummary(generateNino).isRight shouldBe true
@@ -125,7 +125,7 @@ class NationalInsuranceServiceSpec
 
       "return unmodified data" in {
 
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(Right(Right(mockNationalInsuranceRecord))))
 
         whenReady(nationalInsuranceService.getSummary(generateNino)) { record =>
@@ -179,11 +179,12 @@ class NationalInsuranceServiceSpec
           )
         )
 
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(Right(Right(jumbledRecord))))
 
-        whenReady(nationalInsuranceService.getSummary(generateNino)) { result: Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]] =>
-          result.map(_.map(_.taxYears shouldBe mockNationalInsuranceRecord.taxYears))
+        whenReady(nationalInsuranceService.getSummary(generateNino)) {
+          result: Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]] =>
+            result.map(_.map(_.taxYears shouldBe mockNationalInsuranceRecord.taxYears))
         }
 
       }
@@ -193,7 +194,7 @@ class NationalInsuranceServiceSpec
     "There is failed future from a Dead exclusion" should {
       "return a Dead Exclusion" in {
 
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(
             Right(Left(ForbiddenStatePensionExclusion(Exclusion.Dead, Some("The customer needs to contact the National Insurance helpline")))))
           )
@@ -212,7 +213,7 @@ class NationalInsuranceServiceSpec
     "There is failed future from a MCI exclusion" should {
       "return a Left MCI Exclusion" in {
 
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(
             Right(Left(ForbiddenStatePensionExclusion(Exclusion.ManualCorrespondenceIndicator, Some("The customer cannot access the service, they should contact HMRC")))))
           )
@@ -231,7 +232,7 @@ class NationalInsuranceServiceSpec
     "There is failed future from a Isle of Man exclusion" should {
       "return a Left Isle of Man Exclusion" in {
 
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(
             Right(Left(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, Some("The customer cannot access the service, they should contact HMRC")))))
           )
@@ -250,7 +251,7 @@ class NationalInsuranceServiceSpec
     "There is failed future from a MWRRE exclusion" should {
       "return a Left MWRRE Exclusion" in {
 
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(
             Right(Left(ForbiddenStatePensionExclusion(Exclusion.MarriedWomenReducedRateElection, Some("The customer cannot access the service, they should contact HMRC")))))
           )
@@ -295,7 +296,7 @@ class NationalInsuranceServiceSpec
       )
 
       "return a Left(Exclusion)" in {
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(Right(Right(mockNationalInsuranceRecord))))
 
         val niSummary = nationalInsuranceService.getSummary(generateNino)
@@ -311,7 +312,7 @@ class NationalInsuranceServiceSpec
       "return Left(CopeProcessing)" in {
         val localDate = LocalDate.now()
 
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(
             Right(Left(CopeStatePensionExclusion(Exclusion.CopeProcessing, localDate, None))))
           )
@@ -322,7 +323,7 @@ class NationalInsuranceServiceSpec
       }
 
       "return Left(CopeProcessingFailed)" in {
-        when(mockNationalInsuranceConnector.getNationalInsurance(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockNationalInsuranceConnector.getNationalInsurance(any(), any())(any()))
           .thenReturn(Future.successful(
             Right(Left(ForbiddenStatePensionExclusion(Exclusion.CopeProcessingFailed, None))))
           )

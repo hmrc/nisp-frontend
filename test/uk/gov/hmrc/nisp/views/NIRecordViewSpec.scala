@@ -132,7 +132,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       ))))
 
     val niRecord = nIRecordRegular.copy(qualifyingYearsPriorTo1975 = -3)
-    when(mockNationalInsuranceService.getSummary(mockAny())(mockAny())).
+    when(mockNationalInsuranceService.getSummary(mockAny(), mockAny())(mockAny())).
       thenReturn(Future.successful(Right(Right(niRecord))))
 
     when(mockAppConfig.showUrBanner).thenReturn(true)
@@ -1087,7 +1087,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
-      when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
+      when(mockNationalInsuranceService.getSummary(mockAny(), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 1,
           qualifyingYearsPriorTo1975 = 5,
@@ -1212,7 +1212,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
-      when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
+      when(mockNationalInsuranceService.getSummary(mockAny(), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 2,
           qualifyingYearsPriorTo1975 = 0,
@@ -1355,7 +1355,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
       when(mockAppConfig.showFullNI).thenReturn(true)
 
-      when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
+      when(mockNationalInsuranceService.getSummary(mockAny(), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 2,
           qualifyingYearsPriorTo1975 = 0,
@@ -1568,7 +1568,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     lazy val abroadUserDoc = asDocument(contentAsString(abroadUserController.showFull(generateFakeRequest)))
 
     def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]]] = {
-      when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
+      when(mockNationalInsuranceService.getSummary(mockAny(), mockAny())(mockAny()))
         .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 2,
           qualifyingYearsPriorTo1975 = 0,
