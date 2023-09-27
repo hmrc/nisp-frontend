@@ -68,7 +68,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
 
     "there is a regular user" should {
       lazy val nationalInsuranceRecord =
-        await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino, delegationState = false)(headerCarrier))
+        await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
 
       val jsonPayload = TestAccountBuilder.getRawJson(
         TestAccountBuilder.regularNino,
@@ -223,7 +223,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll, delegationState = false))
+        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll))
 
         result.map {
           spExclusion =>
@@ -244,7 +244,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead, delegationState = false))
+        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead))
 
         result.map {
           spExclusion =>
@@ -264,7 +264,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI, delegationState = false))
+        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI))
 
         result.map {
           spExclusion =>
@@ -284,7 +284,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
             .willReturn(forbidden.withBody(json.toString()))
         )
 
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedMwrre, delegationState = false))
+        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedMwrre))
 
         result.map {
           spExclusion =>

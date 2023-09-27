@@ -115,7 +115,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
 
     def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
 
-      when(mockStatePensionService.getSummary(any(), any())(any()))
+      when(mockStatePensionService.getSummary(any())(any()))
         .thenReturn(Future.successful(Right(Right(StatePension(
           LocalDate.of(2014, 4, 5),
           StatePensionAmounts(
@@ -127,7 +127,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
           ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, pensionSharingOrder = false, 155.65, reducedRateElection = false, statePensionAgeUnderConsideration = false)
         ))))
 
-      when(mockNationalInsuranceService.getSummary(any(), any())(any()))
+      when(mockNationalInsuranceService.getSummary(any())(any()))
         .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
           qualifyingYears = 11,
           qualifyingYearsPriorTo1975 = 0,

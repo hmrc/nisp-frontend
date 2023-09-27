@@ -16,20 +16,18 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusion}
 import uk.gov.hmrc.nisp.models.enums.APIType
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusion}
 import uk.gov.hmrc.nisp.services.MetricsService
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class NationalInsuranceConnector @Inject()(
   val http: HttpClient,
-  val sessionCache: SessionCache,
   val appConfig: ApplicationConfig,
   val metricsService: MetricsService,
   val executionContext: ExecutionContext
@@ -37,9 +35,9 @@ class NationalInsuranceConnector @Inject()(
 
   val serviceUrl: String = appConfig.nationalInsuranceServiceUrl
 
-  def getNationalInsurance(nino: Nino, delegationState: Boolean)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]] = {
+  def getNationalInsurance(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]] = {
     val urlToRead = s"$serviceUrl/ni/$nino"
     val header    = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
-    retrieveFromCache[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead, header, delegationState)
+    connectToMicroservice[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead, header)
   }
 }

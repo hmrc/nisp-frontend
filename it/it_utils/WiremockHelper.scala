@@ -27,16 +27,13 @@ trait WiremockHelper extends BeforeAndAfterAll with BeforeAndAfterEach {
   this: Suite =>
 
   protected val server: WireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
+  protected val server2: WireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
 
   protected val uuid: UUID = UUID.randomUUID()
 
   protected val sessionId: String = s"session-$uuid"
 
   protected val nino = new Generator().nextNino
-
-  protected val keystoreUrl: String =
-    s"/keystore/nisp-frontend/$sessionId"
-
 
   override def beforeAll(): Unit = {
     server.start()
@@ -51,5 +48,6 @@ trait WiremockHelper extends BeforeAndAfterAll with BeforeAndAfterEach {
   override def afterAll(): Unit = {
     super.afterAll()
     server.stop()
+    server2.stop()
   }
 }

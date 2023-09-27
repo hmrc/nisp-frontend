@@ -15,6 +15,7 @@ import play.api.test.Injecting
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.models._
+
 import java.time.LocalDate
 
 
@@ -75,60 +76,12 @@ class StatePensionConnectorSpec
   "getStatePension" should {
     "return the correct response from api" in {
       server.stubFor(
-        get(urlEqualTo(keystoreUrl))
-          .willReturn(notFound())
-      )
-
-      server.stubFor(
-        get(urlEqualTo(apiUrl))
-          .willReturn(ok(Json.toJson(statePension).toString()))
-      )
-
-      server.stubFor(
-        put(urlEqualTo(s"$keystoreUrl/data/StatePension"))
-          .willReturn(ok(Json.obj(
-            "id" -> sessionId,
-            "data" -> Json.toJson(statePension)
-          ).toString()))
-      )
-
-      whenReady(
-        statePensionConnector.getStatePension(nino, delegationState = false)
-      ) { response =>
-        response shouldBe Right(Right(statePension))
-      }
-
-      server.verify(1, apiGetRequest)
-    }
-
-    "return the correct response from cache" in {
-      server.stubFor(
-        get(urlEqualTo(keystoreUrl))
-          .willReturn(ok(Json.obj(
-            "id" -> sessionId,
-            "data" -> Json.obj(
-              "StatePension" -> Json.toJson(statePension)
-            )
-          ).toString()))
-      )
-
-      whenReady(
-        statePensionConnector.getStatePension(nino, delegationState = false)
-      ) { response =>
-        response shouldBe Right(Right(statePension))
-      }
-
-      server.verify(0, apiGetRequest)
-    }
-
-    "return the correct response from api when user is delegated" in {
-      server.stubFor(
         get(urlEqualTo(apiUrl))
           .willReturn(ok(Json.toJson(statePension).toString()))
       )
 
       whenReady(
-        statePensionConnector.getStatePension(nino, delegationState = true)
+        statePensionConnector.getStatePension(nino)
       ) { response =>
         response shouldBe Right(Right(statePension))
       }

@@ -34,12 +34,11 @@ class NationalInsuranceService @Inject()(
 ) {
 
   def getSummary(
-    nino: Nino,
-    delegationState: Boolean = false
+    nino: Nino
   )(
     implicit hc: HeaderCarrier
   ): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]] =
-    nationalInsuranceConnector.getNationalInsurance(nino, delegationState).map {
+    nationalInsuranceConnector.getNationalInsurance(nino).map {
       case Right(Right(ni)) if ni.reducedRateElection =>
         Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)))
       case Right(Right(ni)) =>

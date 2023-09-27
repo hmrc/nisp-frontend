@@ -21,9 +21,7 @@ import org.mockito.Mockito.{RETURNS_DEEP_STUBS, when}
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.OK
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
-import uk.gov.hmrc.nisp.helpers.FakeSessionCache
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusion}
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -39,7 +37,6 @@ class BackendConnectorSpec extends UnitSpec with ScalaFutures {
 
   object BackendConnectorImpl extends BackendConnector {
     override def http: HttpClient                            = mockHttp
-    override def sessionCache: SessionCache                  = FakeSessionCache
     override def serviceUrl: String                          = "national-insurance"
     override val metricsService: MetricsService              = mockMetricsService
     override implicit val executionContext: ExecutionContext = global
@@ -47,7 +44,7 @@ class BackendConnectorSpec extends UnitSpec with ScalaFutures {
 
     def getNationalInsurance()(implicit headerCarrier: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]] = {
       val urlToRead = s"$serviceUrl/ni"
-      retrieveFromCache(APIType.NationalInsurance, urlToRead)(headerCarrier, NationalInsuranceRecord.formats)
+      connectToMicroservice(APIType.NationalInsurance, urlToRead, Seq.empty)(headerCarrier, NationalInsuranceRecord.formats)
     }
   }
 
