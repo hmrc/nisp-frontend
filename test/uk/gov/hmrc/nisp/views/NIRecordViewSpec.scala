@@ -121,9 +121,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
           StatePensionAmountRegular(0, 0, 0)
         ),
         pensionAge = 64,
-        LocalDate.of(2018, 7, 6),
-        "2017",
-        30,
+        pensionDate = LocalDate.of(2018, 7, 6),
+        finalRelevantYear = "2017",
+        numberOfQualifyingYears = 30,
         pensionSharingOrder = false,
         currentFullWeeklyPensionAmount = 155.65,
         reducedRateElection = false,
@@ -170,14 +170,13 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.heading")
+        messages("nisp.nirecord.gaps.heading")
           + Constants.titleSplitter
           + messages("nisp.title.extension")
           + Constants.titleSplitter
           + messages("nisp.gov-uk")
       )
     }
-
     "render with deadline banner" in {
       assertEqualsMessage(
         doc,
@@ -202,7 +201,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertEqualsMessage(
         doc,
         "[data-spec='nirecordpage__pageheading'] [data-component='nisp_page_heading__h1']",
-        "nisp.nirecord.heading"
+        "nisp.nirecord.gaps.heading"
       )
     }
 
@@ -455,7 +454,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.heading")
+        messages("nisp.nirecord.gaps.heading")
           + Constants.titleSplitter
           + messages("nisp.title.extension")
           + Constants.titleSplitter
@@ -467,7 +466,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertEqualsMessage(
         doc,
         "[data-spec='nirecordpage__pageheading'] [data-component='nisp_page_heading__h1']",
-        "nisp.nirecord.heading"
+        "nisp.nirecord.gaps.heading"
       )
     }
 
@@ -1274,7 +1273,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.title")
+        messages("nisp.nirecord.gaps.title")
         + Constants.titleSplitter
         + messages("nisp.title.extension")
         + Constants.titleSplitter
@@ -1540,6 +1539,54 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
         doc,
         "[data-spec='nirecordpage__printlink_l']",
         "nisp.print.this.ni.record"
+      )
+    }
+  }
+
+  "Render Ni Record with no gaps, UK user" should {
+    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+
+    def mockSetupNoGaps: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, StatePension]]]] = {
+      when(mockNationalInsuranceService.getSummary(mockAny())(mockAny()))
+        .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+          qualifyingYears = 2,
+          qualifyingYearsPriorTo1975 = 0,
+          numberOfGaps = 0,
+          numberOfGapsPayable = 0,
+          Some(LocalDate.of(1954, 3, 6)),
+          homeResponsibilitiesProtection = false,
+          LocalDate.of(2017, 4, 5),
+          List(
+            NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = true),
+            NationalInsuranceTaxYearBuilder("2014", qualifying = false, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013", qualifying = false, underInvestigation = false) /*payable = true*/
+          ),
+          reducedRateElection = false
+        )
+        ))))
+
+      when(mockStatePensionService.yearsToContributeUntilPensionAge(mockAny(), mockAny()))
+        .thenReturn(1)
+
+      when(mockStatePensionService.getSummary(mockAny(), mockAny())(mockAny()))
+        .thenReturn(Future.successful(Right(Left(StatePensionExclusionFiltered(
+          Exclusion.AmountDissonance,
+          Some(66),
+          Some(LocalDate.of(2018, 3, 6))
+        )
+        ))))
+    }
+
+    "render with correct page title" in {
+      mockSetupNoGaps
+      assertElementContainsText(
+        doc,
+        "head > title",
+        messages("nisp.nirecord.heading")
+          + Constants.titleSplitter
+          + messages("nisp.title.extension")
+          + Constants.titleSplitter
+          + messages("nisp.gov-uk")
       )
     }
   }

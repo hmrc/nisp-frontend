@@ -47,8 +47,18 @@
   currentDate: LocalDate
 )(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
+@headingOrTitle = @{
+if (user.livesAbroad) {
+    messages("nisp.nirecord.heading.uk")
+  } else if (niRecord.numberOfGaps > 0) {
+    messages("nisp.nirecord.gaps.heading")
+  } else {
+    messages("nisp.nirecord.heading")
+  }
+}
+
 @main(
-  pageTitle = if(user.livesAbroad) messages("nisp.nirecord.heading.uk") else messages("nisp.nirecord.heading")
+  pageTitle = headingOrTitle
 ) {
     <div class="govuk-notification-banner" role="region"
          aria-labelledby="govuk-notification-banner-title"
@@ -65,7 +75,7 @@
     </div>
 
     @nispPageHeading(
-      text = if(user.livesAbroad) messages("nisp.nirecord.heading.uk") else messages("nisp.nirecord.heading"),
+      text = headingOrTitle,
       section = messages(user.name.getOrElse("")),
       context = messages(user.name.getOrElse("")),
       specId = Some("nirecordpage__pageheading")
