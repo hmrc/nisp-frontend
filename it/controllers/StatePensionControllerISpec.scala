@@ -47,12 +47,13 @@ class StatePensionControllerISpec extends AnyWordSpec
   with Injecting {
 
   server.start()
+  server2.start()
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
       "microservice.services.auth.port" -> server.port(),
       "microservice.services.citizen-details.port" -> server.port(),
-      "microservice.services.state-pension.port" -> server.port(),
+      "microservice.services.state-pension.port" -> server2.port(),
       "microservice.services.national-insurance.port" -> server.port(),
       "microservice.services.pertax-auth.port" -> server.port()
     )
@@ -109,22 +110,34 @@ class StatePensionControllerISpec extends AnyWordSpec
 
   trait Test {
     val statePensionResponse = StatePension(
-      LocalDate.of(2015, 4, 5),
-      StatePensionAmounts(
+      earningsIncludedUpTo = LocalDate.of(2015, 4, 5),
+      amounts = StatePensionAmounts(
         false,
         StatePensionAmountRegular(133.41, 580.1, 6961.14),
         StatePensionAmountForecast(3, 176.76, 690.14, 7657.73),
         StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
         StatePensionAmountRegular(1, 0, 0)
       ),
-      64,
-      LocalDate.of(2018, 7, 6),
-      "2017",
-      30,
-      false,
-      155.65,
-      true,
-      false
+      pensionAge = 64,
+      pensionDate = LocalDate.of(2018, 7, 6),
+      finalRelevantYear = "2017",
+      numberOfQualifyingYears = 30,
+      pensionSharingOrder = false,
+      currentFullWeeklyPensionAmount = 155.65,
+      reducedRateElection = true,
+      statePensionAgeUnderConsideration = false
+    )
+
+    val nationalInsuranceRecord = NationalInsuranceRecord(
+      qualifyingYears = 2018,
+      qualifyingYearsPriorTo1975 = 1974,
+      numberOfGaps = 1,
+      numberOfGapsPayable = 1,
+      dateOfEntry = None,
+      homeResponsibilitiesProtection = true,
+      earningsIncludedUpTo = LocalDate.now(),
+      taxYears = List(),
+      reducedRateElection = false
     )
   }
 
@@ -137,22 +150,25 @@ class StatePensionControllerISpec extends AnyWordSpec
       )
 
     "return a 200 when a successful request is sent" in new Test {
-
+      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
       val result = route(app, request)
       result map getStatus shouldBe Some(OK)
     }
 
     "redirect to the show state pension page when the state pension returned isn't contracted out" in new Test {
-//      val contractedOutResponse = statePensionResponse.copy(
-//        amounts = StatePensionAmounts(
-//          false,
-//          StatePensionAmountRegular(0, 580.1, 6961.14),
-//          StatePensionAmountForecast(3, 0, 690.14, 7657.73),
-//          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-//          StatePensionAmountRegular(0, 0, 0)
-//        ))
+      val contractedOutResponse = statePensionResponse.copy(
+        amounts = StatePensionAmounts(
+          false,
+          StatePensionAmountRegular(0, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 0, 690.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ))
 
+      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        .willReturn(ok(Json.toJson(contractedOutResponse).toString)))
 
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)
@@ -167,18 +183,6 @@ class StatePensionControllerISpec extends AnyWordSpec
         SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString,
         SessionKeys.authToken -> "Bearer 123"
       )
-
-//    val nationalInsuranceRecord = NationalInsuranceRecord(
-//      2018,
-//      1974,
-//      1,
-//      1,
-//      None,
-//      true,
-//      LocalDate.now(),
-//      List(),
-//      false
-//    )
 
     "send an exclusion" when {
       "a state pension exclusion is returned" in new Test {
@@ -195,6 +199,8 @@ class StatePensionControllerISpec extends AnyWordSpec
 
       "a national insurance exclusion is returned" in new Test {
 
+        server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
         val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
@@ -209,38 +215,47 @@ class StatePensionControllerISpec extends AnyWordSpec
 
     "return a 200" when {
       "the state pension returned has a mqpscenario that isn't continueWorking" in new Test {
-//        val mqpResponse = statePensionResponse.copy(
-//          amounts = StatePensionAmounts(
-//            false,
-//            StatePensionAmountRegular(0, 580.1, 6961.14),
-//            StatePensionAmountForecast(3, 0, 690.14, 7657.73),
-//            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-//            StatePensionAmountRegular(0, 0, 0)
-//          ))
+        val mqpResponse = statePensionResponse.copy(
+          amounts = StatePensionAmounts(
+            false,
+            StatePensionAmountRegular(0, 580.1, 6961.14),
+            StatePensionAmountForecast(3, 0, 690.14, 7657.73),
+            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+            StatePensionAmountRegular(0, 0, 0)
+          ))
 
-        server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
-          .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
-
+        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
+        server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(mqpResponse).toString)))
 
         val result = route(app, request)
         result map getStatus shouldBe Some(OK)
       }
 
       "a forecast only state pension is returned" in new Test {
-//        val forecastOnlyResponse = statePensionResponse.copy(amounts = StatePensionAmounts(
-//          false,
-//          StatePensionAmountRegular(183.41, 580.1, 6961.14),
-//          StatePensionAmountForecast(3, 176.76, 690.14, 7657.73),
-//          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-//          StatePensionAmountRegular(0, 0, 0)
-//        ))
+        val forecastOnlyResponse = statePensionResponse.copy(amounts = StatePensionAmounts(
+          false,
+          StatePensionAmountRegular(183.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 176.76, 690.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ))
 
+        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
+        server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(forecastOnlyResponse).toString)))
 
         val result = route(app, request)
         result map getStatus shouldBe Some(OK)
       }
-      "a successful standard request is supplied" in new Test {
 
+      "a successful standard request is supplied" in new Test {
+        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
+        server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+          .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
         val result = route(app, request)
         result map getStatus shouldBe Some(OK)
