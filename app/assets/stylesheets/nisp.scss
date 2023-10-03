@@ -390,19 +390,6 @@ input[name="email"] {
   text-align: right;
 }
 
-.summary-list-item {
-  display: list-item;
-}
-
-.summary-list-item:focus {
-  background-color: #fd0;
-  -webkit-box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
-  box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
-  color: #0b0c0c;
-  outline: 3px solid transparent;
-  text-decoration: none;
-}
-
 .lang-select {
   border-bottom: 0px;
   float: right;

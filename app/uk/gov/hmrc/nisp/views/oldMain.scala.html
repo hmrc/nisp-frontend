@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 @import uk.gov.hmrc.ptafrontend.views.html._
+@import uk.gov.hmrc.nisp.views.html.components.additionalScripts
 @import uk.gov.hmrc.nisp.views.html.includes.attorneyBanner
 
 @this(
@@ -36,7 +37,7 @@
   hmrcAccountMenu: HmrcAccountMenu,
   banner: attorneyBanner,
   ptaHead: PtaHead,
-  ptaScripts: PtaScripts
+  additionalScripts: additionalScripts
 )(implicit accountMenuConfig: AccountMenuConfig)
 
 @(
@@ -94,13 +95,6 @@
   ))
 }
 
-@scripts = {
-  <script src='@controllers.routes.Assets.versioned("javascript/jquery.js")'></script>
-  <script src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
-  <script src='@controllers.routes.Assets.versioned("javascript/nirecord.js")'></script>
-  @ptaScripts()
-}
-
 @fullTitle = @{
   pageTitle + " - " + messages("nisp.title.extension") + " - " + messages("nisp.gov-uk")
 }
@@ -116,7 +110,7 @@
   displayHmrcBanner = false,
   additionalHeadBlock = Some(headBlock),
   beforeContentBlock = Some(beforeContent),
-  additionalScriptsBlock  = Some(scripts),
+  additionalScriptsBlock  = Some(additionalScripts()),
   mainContentLayout = Some(sidebar match {
     case Some(sidebarHtml) => twoThirdsOneThirdMainContent(sidebarHtml)
     case None => optCustomLayout.getOrElse(twoThirdsMainContent(_))
