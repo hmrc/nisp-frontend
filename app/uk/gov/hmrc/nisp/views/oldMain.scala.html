@@ -37,6 +37,7 @@
   hmrcAccountMenu: HmrcAccountMenu,
   banner: attorneyBanner,
   ptaHead: PtaHead,
+  ptaScripts: PtaScripts,
   additionalScripts: additionalScripts
 )(implicit accountMenuConfig: AccountMenuConfig)
 
@@ -101,7 +102,7 @@
 
 
 @hmrcLayout(
-  pageTitle = Some(if(extendedTitle) {fullTitle} else {pageTitle}),
+  pageTitle = Some(if(extendedTitle) {fullTitle} else pageTitle),
   serviceName = Some(messages("nisp.title")),
   serviceUrl = Some(appConfig.serviceUrl),
   isWelshTranslationAvailable = true,
@@ -110,7 +111,7 @@
   displayHmrcBanner = false,
   additionalHeadBlock = Some(headBlock),
   beforeContentBlock = Some(beforeContent),
-  additionalScriptsBlock  = Some(additionalScripts()),
+  additionalScriptsBlock  = Some(additionalScripts(Some(ptaScripts))),
   mainContentLayout = Some(sidebar match {
     case Some(sidebarHtml) => twoThirdsOneThirdMainContent(sidebarHtml)
     case None => optCustomLayout.getOrElse(twoThirdsMainContent(_))

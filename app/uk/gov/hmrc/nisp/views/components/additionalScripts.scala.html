@@ -19,7 +19,8 @@
 @this(
   ptaScripts: PtaScripts
 )
-@()(implicit requestHeader: RequestHeader)
+
+@(ptaScripts: Option[PtaScripts] = None)(implicit requestHeader: RequestHeader)
 
 <script src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
-@ptaScripts()
+@ptaScripts.map(_.apply())
