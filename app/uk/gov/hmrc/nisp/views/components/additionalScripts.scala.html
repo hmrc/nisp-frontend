@@ -15,12 +15,14 @@
  *@
 
 @import uk.gov.hmrc.ptafrontend.views.html.PtaScripts
+@import views.html.helper.CSPNonce
 
 @this(
   ptaScripts: PtaScripts
 )
 
+
 @(ptaScripts: Option[PtaScripts] = None)(implicit requestHeader: RequestHeader)
 
-<script src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
+<script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascript/app.js")'></script>
 @ptaScripts.map(_.apply())
