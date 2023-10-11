@@ -40,9 +40,9 @@ class LandingController @Inject() (
 
   val logger: Logger = Logger(this.getClass)
 
-  def show: Action[AnyContent] = Action { implicit request =>
-    Ok(identityVerificationLanding())
-  }
+  def show: Action[AnyContent] = Action(implicit request =>
+    Ok(identityVerificationLanding()).withNewSession
+  )
 
   //noinspection ScalaStyle
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
