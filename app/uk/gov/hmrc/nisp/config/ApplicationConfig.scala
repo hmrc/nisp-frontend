@@ -74,7 +74,5 @@ class ApplicationConfig @Inject()(servicesConfig: ServicesConfig) {
 
   lazy val internalAuthResourceType: String = getConfString("internal-auth.resource-type", "ddcn-live-admin-frontend")
 
-  val ehCacheTtlInSeconds: Int = getInt("ehCache.ttlInSeconds")
-
   val scaWrapperFutureTimeout: Int = getInt("sca-wrapper.future-timeout")
 }

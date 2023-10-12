@@ -17,9 +17,12 @@
 package uk.gov.hmrc.nisp.views
 
 import org.jsoup.Jsoup
+import org.jsoup.select.Elements
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+
+import scala.collection.mutable.ArrayBuffer
 
 //scalastyle:off magic.number
 class MainViewSpec extends HtmlSpec {
@@ -91,8 +94,8 @@ class MainViewSpec extends HtmlSpec {
 
     val reportATechnicalIssueText = "Is this page not working properly? (opens in new tab)"
 
-    val scriptUrl = "http://localhost:9234/check-your-state-pension/assets/javascript/nirecord.js"
-    val ptaScriptUrl = "http://localhost:9234/check-your-state-pension/pta-frontend/assets/pta.js"
+    val scriptUrl = "/check-your-state-pension/assets/javascript/app.js"
+    val ptaScriptUrl = "/check-your-state-pension/pta-frontend/assets/pta.js"
   }
 
   case class TestObject(uniqueValues: UniqueValues, scaWrapper: Boolean)
@@ -236,14 +239,21 @@ class MainViewSpec extends HtmlSpec {
 
       "js scripts" should {
 
-        lazy val scripts = doc.select("script").text()
+        def scripts: Elements = doc.getElementsByTag("script")
 
-        "still contain the nirecord js script" in {
-          scripts.contains(CommonValues.scriptUrl)
+        val srcAttributes = new ArrayBuffer[String]()
+
+        scripts.forEach(
+          script =>
+            srcAttributes.append(script.attr("src"))
+        )
+
+        "still contain the app.js script" in {
+          srcAttributes.count(_ == CommonValues.scriptUrl) shouldBe 1
         }
 
         "still contains the pta scripts" in {
-          scripts.contains(CommonValues.ptaScriptUrl)
+          srcAttributes.count(_ == CommonValues.ptaScriptUrl) shouldBe 1
         }
 
       }

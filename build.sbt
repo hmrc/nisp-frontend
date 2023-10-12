@@ -15,7 +15,9 @@ val excludedPackages = Seq[String](
   "uk.gov.hmrc.nisp.auth.*",
   "uk.gov.hmrc.nisp.views.*",
   "uk.gov.hmrc.nisp.config.*",
-  "uk.gov.hmrc.BuildInfo"
+  "uk.gov.hmrc.BuildInfo",
+  "testOnlyDoNotUseInAppConf.*",
+  "admin.*",
 )
 
 TwirlKeys.templateImports ++= Seq(
@@ -27,16 +29,10 @@ TwirlKeys.templateImports ++= Seq(
 lazy val scoverageSettings =
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-    ScoverageKeys.coverageMinimumStmtTotal := 87.36,
+    ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
-
-TwirlKeys.templateImports ++= Seq(
-  "uk.gov.hmrc.govukfrontend.views.html.components._",
-  "uk.gov.hmrc.hmrcfrontend.views.html.components._",
-  "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
-)
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(
