@@ -170,11 +170,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.gaps.heading")
+        "Your National Insurance record"
           + Constants.titleSplitter
-          + messages("nisp.title.extension")
+          + "Check your State Pension"
           + Constants.titleSplitter
-          + messages("nisp.gov-uk")
+          + "GOV.UK"
       )
     }
     "render with deadline banner" in {
@@ -201,7 +201,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertEqualsMessage(
         doc,
         "[data-spec='nirecordpage__pageheading'] [data-component='nisp_page_heading__h1']",
-        "nisp.nirecord.gaps.heading"
+        "nisp.nirecord.heading"
       )
     }
 
@@ -454,11 +454,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.gaps.heading")
+        "Gaps in your National Insurance record"
           + Constants.titleSplitter
-          + messages("nisp.title.extension")
+          + "Check your State Pension"
           + Constants.titleSplitter
-          + messages("nisp.gov-uk")
+          + "GOV.UK"
       )
     }
 
@@ -654,11 +654,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         withHRPDoc,
         "head > title",
-        messages("nisp.nirecord.gapsinyourrecord.heading")
+        "Gaps in your record and how to check them"
           + Constants.titleSplitter
-          + messages("nisp.title.extension")
+          + "Check your State Pension"
           + Constants.titleSplitter
-          + messages("nisp.gov-uk")
+          + "GOV.UK"
       )
     }
 
@@ -875,11 +875,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         withoutHRPDoc,
         "head > title",
-        messages("nisp.nirecord.gapsinyourrecord.heading")
+        "Gaps in your record and how to check them"
           + Constants.titleSplitter
-          + messages("nisp.title.extension")
+          + "Check your State Pension"
           + Constants.titleSplitter
-          + messages("nisp.gov-uk")
+          + "GOV.UK"
       )
     }
 
@@ -1130,11 +1130,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.title")
+        "Your National Insurance record"
           + Constants.titleSplitter
-          + messages("nisp.title.extension")
+          + "Check your State Pension"
           + Constants.titleSplitter
-          + messages("nisp.gov-uk")
+          + "GOV.UK"
       )
     }
 
@@ -1273,11 +1273,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.gaps.title")
+        "Your National Insurance record"
         + Constants.titleSplitter
-        + messages("nisp.title.extension")
+        + "Check your State Pension"
         + Constants.titleSplitter
-        + messages("nisp.gov-uk")
+        + "GOV.UK"
       )
     }
 
@@ -1582,11 +1582,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         doc,
         "head > title",
-        messages("nisp.nirecord.heading")
+        "Your National Insurance record"
           + Constants.titleSplitter
-          + messages("nisp.title.extension")
+          + "Check your State Pension"
           + Constants.titleSplitter
-          + messages("nisp.gov-uk")
+          + "GOV.UK"
       )
     }
   }
@@ -1650,11 +1650,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       assertElementContainsText(
         abroadUserDoc,
         "head > title",
-        messages("nisp.nirecord.heading.uk")
+        "Your UK National Insurance record"
           + Constants.titleSplitter
-          + messages("nisp.title.extension")
+          + "Check your State Pension"
           + Constants.titleSplitter
-          + messages("nisp.gov-uk")
+          + "GOV.UK"
       )
     }
 
