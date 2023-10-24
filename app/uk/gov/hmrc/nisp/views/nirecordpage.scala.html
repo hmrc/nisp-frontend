@@ -50,7 +50,7 @@
 @headingOrTitle = @{
 if (user.livesAbroad) {
     messages("nisp.nirecord.heading.uk")
-  } else if (niRecord.numberOfGaps > 0) {
+  } else if (niRecord.numberOfGaps > 0 && gapsOnlyView == true) {
     messages("nisp.nirecord.gaps.heading")
   } else {
     messages("nisp.nirecord.heading")
