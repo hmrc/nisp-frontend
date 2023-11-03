@@ -27,7 +27,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "http-caching-client"                % s"10.0.0-$playVersion",
     "uk.gov.hmrc"       %% "tax-year"                           % "3.3.0",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping"      % s"1.13.0-$playVersion",
-    "uk.gov.hmrc"       %% "mongo-feature-toggles-client"       % "0.3.0",
+    "uk.gov.hmrc"       %% "mongo-feature-toggles-client"       % "0.4.0",
     "uk.gov.hmrc"       %% "sca-wrapper"                        % "1.0.45",
     ehcache
   )
