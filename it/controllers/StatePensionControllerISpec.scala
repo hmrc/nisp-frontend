@@ -19,8 +19,10 @@ package controllers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.concurrent.PatienceConfiguration.Timeout
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.time.{Milliseconds, Span}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -112,11 +114,11 @@ class StatePensionControllerISpec extends AnyWordSpec
     val statePensionResponse = StatePension(
       earningsIncludedUpTo = LocalDate.of(2015, 4, 5),
       amounts = StatePensionAmounts(
-        false,
-        StatePensionAmountRegular(133.41, 580.1, 6961.14),
-        StatePensionAmountForecast(3, 176.76, 690.14, 7657.73),
-        StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-        StatePensionAmountRegular(1, 0, 0)
+        protectedPayment = false,
+        current = StatePensionAmountRegular(133.41, 580.1, 6961.14),
+        forecast = StatePensionAmountForecast(3, 176.76, 690.14, 7657.73),
+        maximum = StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+        cope = StatePensionAmountRegular(1, 0, 0)
       ),
       pensionAge = 64,
       pensionDate = LocalDate.of(2018, 7, 6),

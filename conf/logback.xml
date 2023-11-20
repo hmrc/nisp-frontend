@@ -53,6 +53,9 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
+<!-- Uncomment to not have logs bombarded when local testing -->
+<!--    <logger name="uk.gov.hmrc.audit.handler.DatastreamHandler" level="OFF"/>-->
+
     <root level="INFO">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
