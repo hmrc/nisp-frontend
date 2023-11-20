@@ -47,7 +47,7 @@ class PertaxAuthActionImpl @Inject()(
   override def messagesApi: MessagesApi = controllerComponents.messagesApi
 
   override protected def refine[A](request: AuthenticatedRequest[A]): Future[Either[Result, AuthenticatedRequest[A]]] = {
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     implicit val implicitRequest: AuthenticatedRequest[A] = request
 
     featureFlagService.get(PertaxBackendToggle).flatMap { flag =>
