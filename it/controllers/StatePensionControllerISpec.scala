@@ -19,10 +19,8 @@ package controllers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.concurrent.PatienceConfiguration.Timeout
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.time.{Milliseconds, Span}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
