@@ -15,7 +15,7 @@
  */
 
 import play.sbt.PlayImport.ehcache
-import sbt._
+import sbt.*
 
 object AppDependencies {
 
@@ -36,10 +36,9 @@ object AppDependencies {
     "org.pegdown"             %   "pegdown"                 % "1.6.0",
     "org.jsoup"               %   "jsoup"                   % "1.15.4",
     "uk.gov.hmrc"             %%  "bootstrap-test-play-28"  % bootstrapVersion,
-    "org.mockito"             %   "mockito-core"            % "4.6.1",
+    "org.mockito"             %   "mockito-core"            % "5.8.0",
     "com.github.tomakehurst"  %   "wiremock-jre8"           % "2.27.2",
-    "com.vladsch.flexmark"    %   "flexmark-all"            % "0.35.10",
-    "uk.gov.hmrc.mongo" %% s"hmrc-mongo-test-$playVersion" % hmrcMongoVersion
+    "uk.gov.hmrc.mongo" %% s"hmrc-mongo-test-$playVersion"  % hmrcMongoVersion
   ).map(_ % "test,it")
 
   val all: Seq[ModuleID] = compile ++ test

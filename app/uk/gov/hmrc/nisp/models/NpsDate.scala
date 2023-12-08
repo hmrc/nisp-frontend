@@ -22,7 +22,7 @@ import play.api.libs.json._
 import uk.gov.hmrc.nisp.utils.Constants
 
 case class NpsDate(localDate: LocalDate) {
-  val toNpsString: String = NpsDate.dateFormat.format(localDate)
+  private val toNpsString: String = NpsDate.dateFormat.format(localDate)
 
   val taxYear: Int = {
     val year = localDate.getYear
@@ -35,18 +35,13 @@ object NpsDate {
   private val pattern = "dd/MM/yyyy"
   private val dateFormat   = DateTimeFormatter.ofPattern(pattern)
 
-  implicit val reads = new Reads[NpsDate] {
-    override def reads(json: JsValue): JsResult[NpsDate] =
-      json match {
-        case JsString(date)                  => JsSuccess(NpsDate(LocalDate.parse(date, dateFormat)))
-        case JsNull                          => JsError(JsonValidationError("Null date cannot convert to NpsDate"))
-        case _                               => JsError("Unable to parse JsValue")
-      }
+  implicit val reads: Reads[NpsDate] = (json: JsValue) => json match {
+    case JsString(date) => JsSuccess(NpsDate(LocalDate.parse(date, dateFormat)))
+    case JsNull => JsError(JsonValidationError("Null date cannot convert to NpsDate"))
+    case _ => JsError("Unable to parse JsValue")
   }
 
-  implicit val writes                                 = new Writes[NpsDate] {
-    override def writes(date: NpsDate): JsValue = JsString(date.toNpsString)
-  }
+  implicit val writes: Writes[NpsDate] = (date: NpsDate) => JsString(date.toNpsString)
   def taxYearEndDate(taxYear: Int): NpsDate           =
     NpsDate(taxYear + 1, Constants.taxYearsStartEndMonth, Constants.taxYearEndDay)
   def taxYearStartDate(taxYear: Int): NpsDate         =

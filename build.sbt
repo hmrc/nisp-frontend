@@ -4,7 +4,7 @@ import uk.gov.hmrc.DefaultBuildSettings.addTestReportOption
 
 val appName = "nisp-frontend"
 
-lazy val playSettings: Seq[Setting[_]] = Seq(
+lazy val playSettings: Seq[Setting[?]] = Seq(
   pipelineStages := Seq(digest)
 )
 
@@ -36,7 +36,7 @@ lazy val scoverageSettings =
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(
-    Seq(play.sbt.PlayScala, SbtDistributablesPlugin, SbtWeb): _*
+    Seq(play.sbt.PlayScala, SbtDistributablesPlugin, SbtWeb) *
   )
   .settings(
     playSettings,
@@ -60,7 +60,7 @@ lazy val microservice = Project(appName, file("."))
     )
   )
   .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(inConfig(IntegrationTest)(Defaults.itSettings) *)
   .settings(
     IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory)(base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
