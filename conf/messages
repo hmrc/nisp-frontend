@@ -272,8 +272,7 @@ nisp.nirecord.fullyear = Full year
 nisp.nirecord.seperator = to
 
 nisp.nirecord.banner.title = Important
-nisp.nirecord.banner.heading = The deadline for making voluntary National Insurance contributions for eligible taxpayers with National Insurance gaps between April 2006 to April 2018 has been extended to 5 April 2025.
-nisp.nirecord.banner.body = Because of the demand on the service, payments may take more than the expected 8 weeks to show on your records.
+nisp.nirecord.banner.heading = You can soon use your Personal Tax Account to check if you can make voluntary National Insurance contributions, and pay using the online service.
 
 nisp.nirecord.gap = Year is not full
 nisp.nirecord.gap.paidemployment = Paid employment: <strong>{0}</strong>
