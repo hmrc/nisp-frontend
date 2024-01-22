@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+  <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
+
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/nisp-frontend.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -11,6 +13,8 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%date{ISO8601} level=[%level] logger=[%logger] thread=[%thread] rid=[%X{X-Request-ID}] user=[%X{Authorization}] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
+          <pattern>%green(%date{ISO8601}) %coloredLevel %white(message=[%yellow(%message)]) %white(logger=[%yellow(%logger)] thread=[%yellow(%thread)] rid=[%X{X-Request-ID}] user=[%X{Authorization}]) %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
+
         </encoder>
     </appender>
 
