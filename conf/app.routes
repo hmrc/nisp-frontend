@@ -1,6 +1,6 @@
 # microservice specific routes
 ->         /hmrc-frontend                             hmrcfrontend.Routes
-->         /pta-frontend                              ptafrontend.Routes
+->         /sca-wrapper                               sca.Routes
 
 GET        /assets/*file                              controllers.Assets.versioned(path="/public", file: Asset)
 

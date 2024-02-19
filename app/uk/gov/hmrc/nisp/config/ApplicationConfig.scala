@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.nisp.config
 import com.google.inject.Inject
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
+import uk.gov.hmrc.play.bootstrap.binders.{RedirectUrl, UnsafePermitAll}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class ApplicationConfig @Inject()(servicesConfig: ServicesConfig) {
@@ -68,11 +69,8 @@ class ApplicationConfig @Inject()(servicesConfig: ServicesConfig) {
   val pertaxAuthBaseUrl: String = baseUrl("pertax-auth")
 
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
-    accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + SafeRedirectUrl(
-      frontendHost + relativeReferrerPath
-    ).encodedUrl
+    accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + RedirectUrl(frontendHost + relativeReferrerPath).get(UnsafePermitAll).encodedUrl
+
 
   lazy val internalAuthResourceType: String = getConfString("internal-auth.resource-type", "ddcn-live-admin-frontend")
-
-  val scaWrapperFutureTimeout: Int = getInt("sca-wrapper.future-timeout")
 }

@@ -48,7 +48,7 @@ class BackendConnectorSpec extends UnitSpec with ScalaFutures {
     }
   }
 
-  implicit val headerCarrier = HeaderCarrier()
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   "connectToMicroservice" should {
     "should return UpstreamErrorResponse and failed future" in {

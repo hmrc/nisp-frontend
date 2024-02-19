@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import java.time.{Instant, LocalDate}
 import org.jsoup.nodes.Document
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -31,7 +32,7 @@ import java.time.format.DateTimeFormatter
 
 class ExclusionCopeExtendedNIViewSpec extends HtmlSpec with Injecting {
 
-  implicit val fakeRequest = ExcludedAuthenticatedRequest(
+  implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
@@ -40,7 +41,7 @@ class ExclusionCopeExtendedNIViewSpec extends HtmlSpec with Injecting {
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
   val today = LocalDate.now()
 
-  val excludedCopeExtendedNIView = inject[excluded_cope_extended_ni]
+  val excludedCopeExtendedNIView: excluded_cope_extended_ni = inject[excluded_cope_extended_ni]
   lazy val view: Document = asDocument(contentAsString(excludedCopeExtendedNIView(today)))
 
   "render correct h1" in {

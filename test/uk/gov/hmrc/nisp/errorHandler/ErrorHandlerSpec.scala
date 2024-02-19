@@ -56,7 +56,6 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
     when(mockApplicationConfig.showExcessiveTrafficMessage).thenReturn(false)
-    featureFlagSCAWrapperMock()
   }
 
   lazy val errorHandler: ErrorHandler = inject[ErrorHandler]

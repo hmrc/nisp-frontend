@@ -23,13 +23,12 @@ import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.Play.materializer
 import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results.Ok
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.Helpers.LOCATION
 import play.api.test.{FakeRequest, Helpers, Injecting}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.twirl.api.Html
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
@@ -67,13 +66,12 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
     mockFeatureFlagService
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
-  lazy val date = LocalDate.now()
-  lazy val instant = Instant.now()
+  lazy val date: LocalDate = LocalDate.now()
+  lazy val instant: Instant = Instant.now()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     Mockito.reset()
-    featureFlagSCAWrapperMock()
   }
 
   def authenticatedRequest(requestMethod: String = "GET", requestUrl: String = "/"): AuthenticatedRequest[AnyContent] = new AuthenticatedRequest[AnyContent](
@@ -118,7 +116,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
             authAction.invokeBlock(authenticatedRequest(), block)
           }
 
-          await(bodyOf(result)) shouldBe "Successful"
+          result.body shouldBe "Successful"
         }
       }
 
@@ -177,7 +175,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           }
 
           "has a body of 'Hello'" in {
-            bodyOf(result) shouldBe "Hello"
+            result.body shouldBe "Hello"
           }
         }
 
@@ -233,7 +231,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           authAction.invokeBlock(authenticatedRequest(), block)
         }
 
-        bodyOf(result) shouldBe "Successful"
+        result.body shouldBe "Successful"
       }
 
     }

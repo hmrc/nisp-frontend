@@ -21,21 +21,17 @@ import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.Request
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
-import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
 import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 import uk.gov.hmrc.nisp.controllers.routes
-import uk.gov.hmrc.nisp.models.admin.SCAWrapperToggle
-import uk.gov.hmrc.nisp.views.html.oldMain
 import uk.gov.hmrc.nisp.views.html.components.{additionalScripts, additionalStylesheets}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import uk.gov.hmrc.ptafrontend.views.html.PtaHead
+import uk.gov.hmrc.sca.views.html.PtaHead
 import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 
 import javax.inject.Inject
-import scala.concurrent.Await
-import scala.concurrent.duration.{Duration, SECONDS}
+
 import scala.util.{Failure, Success, Try}
 
 @ImplementedBy(classOf[MainImpl])
@@ -56,10 +52,7 @@ trait Main {
 }
 
 class MainImpl @Inject()(
-                          appConfig: ApplicationConfig,
-                          featureFlagService: FeatureFlagService,
                           wrapperService: WrapperService,
-                          oldMain: oldMain,
                           additionalStyles: additionalStylesheets,
                           additionalScripts: additionalScripts,
                           ptaHead: PtaHead
@@ -76,7 +69,6 @@ class MainImpl @Inject()(
                     )(
                       contentBlock: Html
                     )(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
-    val scaWrapperToggle = Await.result(featureFlagService.get(SCAWrapperToggle), Duration(appConfig.scaWrapperFutureTimeout, SECONDS))
     val fullPageTitle = if (extendedTitle) {
       s"$pageTitle - ${Messages("nisp.title.extension")} - GOV.UK"
     } else pageTitle
@@ -86,45 +78,32 @@ class MainImpl @Inject()(
       case Failure(exception) => throw exception
     }
 
-    if (scaWrapperToggle.isEnabled) {
-      logger.debug(s"SCA Wrapper layout used for request `${request.uri}``")
-
-      wrapperService.layout(
-        content = contentBlock,
-        pageTitle = Some(fullPageTitle),
-        serviceNameKey = Some("nisp.title"),
-        serviceNameUrl = Some("/check-your-state-pension/account"),
-        sidebarContent = sidebar,
-        signoutUrl = routes.StatePensionController.signOut.url,
-        timeOutUrl = None,
-        keepAliveUrl = routes.TimeoutController.keep_alive.url,
-        showBackLinkJS = true,
-        showSignOutInHeader = true,
-        scripts = Seq(additionalScripts()),
-        styleSheets = Seq(
-          additionalStyles(),
-          ptaHead()
-        ),
-        bannerConfig = BannerConfig(
-          showAlphaBanner = false,
-          showBetaBanner = false,
-          showHelpImproveBanner = showUrBanner
-        ),
-        optTrustedHelper = trustedHelper,
-        fullWidth = false,
-        hideMenuBar = hideNavBar,
-      )(messages, HeaderCarrierConverter.fromRequest(request), request)
-
-    } else {
-      logger.debug(s"Old layout used for request `${request.uri}``")
-
-      oldMain(
-        pageTitle,
-        showUrBanner = showUrBanner,
-        sidebar = sidebar,
-        optCustomLayout = optCustomLayout,
-        hideNavBar = hideNavBar
-      )(contentBlock)
-    }
+    wrapperService.standardScaLayout(
+      content = contentBlock,
+      pageTitle = Some(fullPageTitle),
+      serviceNameKey = Some("nisp.title"),
+      serviceURLs = ServiceURLs(
+        signOutUrl = Some(routes.StatePensionController.signOut.url),
+        accessibilityStatementUrl = wrapperService.defaultserviceURLs.accessibilityStatementUrl
+      ),
+      sidebarContent = sidebar,
+      timeOutUrl = None,
+      keepAliveUrl = routes.TimeoutController.keep_alive.url,
+      showBackLinkJS = true,
+      showSignOutInHeader = true,
+      scripts = Seq(additionalScripts()),
+      styleSheets = Seq(
+        additionalStyles(),
+        ptaHead()
+      ),
+      bannerConfig = BannerConfig(
+        showAlphaBanner = false,
+        showBetaBanner = false,
+        showHelpImproveBanner = showUrBanner
+      ),
+      optTrustedHelper = trustedHelper,
+      fullWidth = false,
+      hideMenuBar = hideNavBar,
+    )(messages, HeaderCarrierConverter.fromRequest(request), request)
   }
 }

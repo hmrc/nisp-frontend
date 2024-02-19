@@ -61,7 +61,6 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
     reset(mockPertaxHelper)
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
-    featureFlagSCAWrapperMock()
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -78,8 +77,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -92,8 +90,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthAction],
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 

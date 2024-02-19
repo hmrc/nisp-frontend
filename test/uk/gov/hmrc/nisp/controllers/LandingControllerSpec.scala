@@ -47,8 +47,7 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
-      bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      featureFlagServiceBinding
+      bind[ApplicationConfig].toInstance(mockApplicationConfig)
     )
     .build()
 
@@ -59,7 +58,6 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     when(mockApplicationConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
-    featureFlagSCAWrapperMock()
   }
 
   val landingController: LandingController = inject[LandingController]

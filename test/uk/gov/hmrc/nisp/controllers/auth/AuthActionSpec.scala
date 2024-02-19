@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers.auth
 
-import akka.util.Timeout
+import org.apache.pekko.util.Timeout
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, spy, verify, when}
 import org.scalatest.BeforeAndAfterEach

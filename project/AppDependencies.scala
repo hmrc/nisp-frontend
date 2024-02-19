@@ -19,26 +19,26 @@ import sbt.*
 
 object AppDependencies {
 
-  val bootstrapVersion = "7.22.0"
-  private val playVersion = "play-28"
-  private val hmrcMongoVersion = "1.3.0"
+  val bootstrapVersion = "8.2.0"
+  private val playVersion = "play-30"
+  private val hmrcMongoVersion = "1.6.0"
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"       %% "http-caching-client"                % s"10.0.0-$playVersion",
-    "uk.gov.hmrc"       %% "tax-year"                           % "3.3.0",
-    "uk.gov.hmrc"       %% "play-conditional-form-mapping"      % s"1.13.0-$playVersion",
-    "uk.gov.hmrc"       %% "mongo-feature-toggles-client"       % "0.4.0",
-    "uk.gov.hmrc"       %% "sca-wrapper"                        % "1.0.45",
+    "uk.gov.hmrc"       %% s"http-caching-client-$playVersion"           % "11.1.0",
+    "uk.gov.hmrc"       %% "tax-year"                                    % "3.3.0",
+    "uk.gov.hmrc"       %% s"play-conditional-form-mapping-$playVersion" % "2.0.0",
+    "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion"  % "1.1.0",
+    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                   % "1.2.0",
     ehcache
   )
 
   val test: Seq[ModuleID] = Seq(
-    "org.pegdown"             %   "pegdown"                 % "1.6.0",
-    "org.jsoup"               %   "jsoup"                   % "1.15.4",
-    "uk.gov.hmrc"             %%  "bootstrap-test-play-28"  % bootstrapVersion,
-    "org.mockito"             %   "mockito-core"            % "5.8.0",
-    "com.github.tomakehurst"  %   "wiremock-jre8"           % "2.27.2",
-    "uk.gov.hmrc.mongo" %% s"hmrc-mongo-test-$playVersion"  % hmrcMongoVersion
+    "org.pegdown"             %   "pegdown"                       % "1.6.0",
+    "org.jsoup"               %   "jsoup"                         % "1.15.4",
+    "uk.gov.hmrc"             %%  "bootstrap-test-play-28"        % bootstrapVersion,
+    "org.mockito"             %   "mockito-core"                  % "5.8.0",
+    "com.github.tomakehurst"  %   "wiremock-jre8"                 % "2.27.2",
+    "uk.gov.hmrc.mongo"       %% s"hmrc-mongo-test-$playVersion"  % hmrcMongoVersion
   ).map(_ % "test,it")
 
   val all: Seq[ModuleID] = compile ++ test

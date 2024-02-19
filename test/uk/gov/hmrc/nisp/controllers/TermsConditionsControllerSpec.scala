@@ -36,8 +36,7 @@ class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      featureFlagServiceBinding
+      bind[ApplicationConfig].toInstance(mockApplicationConfig)
     )
     .build()
 
@@ -46,7 +45,6 @@ class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
     when(mockApplicationConfig.urBannerUrl).thenReturn("/urResearch")
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
-    featureFlagSCAWrapperMock()
   }
 
   val termsConditionController = inject[TermsConditionsController]

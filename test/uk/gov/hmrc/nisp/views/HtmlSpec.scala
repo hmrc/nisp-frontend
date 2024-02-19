@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.views
 
-import akka.util.Timeout
+import org.apache.pekko.util.Timeout
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -26,6 +26,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
 import uk.gov.hmrc.nisp.utils.UnitSpec
@@ -35,20 +36,18 @@ import scala.concurrent.duration._
 
 trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
-  implicit val request                      = FakeRequest()
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   implicit val defaultAwaitTimeout: Timeout = 5.seconds
   implicit lazy val messages: MessagesImpl  = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
   val forceScaMock: Boolean = true
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(featureFlagServiceBinding)
     .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     Mockito.reset()
-    featureFlagSCAWrapperMock()
   }
 
   def asDocument(html: String): Document = Jsoup.parse(html)

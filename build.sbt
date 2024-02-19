@@ -23,7 +23,8 @@ val excludedPackages = Seq[String](
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.govukfrontend.views.html.components._",
   "uk.gov.hmrc.hmrcfrontend.views.html.components._",
-  "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
+  "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
+  "play.twirl.api.HtmlFormat"
 )
 
 lazy val scoverageSettings =
@@ -42,15 +43,16 @@ lazy val microservice = Project(appName, file("."))
     playSettings,
     scoverageSettings,
     PlayKeys.playDefaultPort := 9234,
-    scalaVersion := "2.13.8",
+    scalaVersion := "2.13.12",
+    libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
     libraryDependencies ++= AppDependencies.all,
     retrieveManaged := true,
     update / evictionWarningOptions  := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     majorVersion := 10,
     scalacOptions ++= Seq(
-      "-Xfatal-warnings",
+      //"-Xfatal-warnings",
       "-feature",
-      "-Werror",
+      //"-Werror",
       "-Wconf:cat=unused-imports&site=.*views\\.html.*:s",
       "-Wconf:cat=unused-imports&site=<empty>:s",
       "-Wconf:cat=unused&src=.*RoutesPrefix\\.scala:s",

@@ -72,8 +72,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[DateProvider].toInstance(mockDateProvider),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 
@@ -92,7 +91,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
-    featureFlagSCAWrapperMock()
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -1597,8 +1595,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
         bind[AuthAction].to[FakeAuthActionWithNino],
         bind[NinoContainer].toInstance(AbroadNinoContainer),
         bind[DateProvider].toInstance(mockDateProvider),
-        bind[PertaxAuthAction].to[FakePertaxAuthAction],
-        featureFlagServiceBinding
+        bind[PertaxAuthAction].to[FakePertaxAuthAction]
       )
       .build()
       .injector

@@ -93,7 +93,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
     mockPertaxAuth(PertaxAuthResponseModel(
       ACCESS_GRANTED, "", None, None
     ), mockUserNino.nino)
-    featureFlagSCAWrapperMock()
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -104,8 +103,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 

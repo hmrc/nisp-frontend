@@ -16,31 +16,22 @@
 
 package uk.gov.hmrc.nisp.config
 
-import akka.stream.Materializer
+import com.google.inject.{Inject, Singleton}
+import org.apache.pekko.stream.Materializer
 import play.api.http.{EnabledFilters, HttpFilters}
 import play.api.mvc.{EssentialFilter, RequestHeader, Result}
-import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
-import uk.gov.hmrc.nisp.models.admin.SCAWrapperToggle
 import uk.gov.hmrc.sca.connectors.ScaWrapperDataConnector
 import uk.gov.hmrc.sca.filters.WrapperDataFilter
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 class SCAWrapperDataFilter @Inject() (
                                        scaWrapperDataConnector: ScaWrapperDataConnector,
-                                       featureFlagService: FeatureFlagService
                                      )(implicit val ec: ExecutionContext, override val mat: Materializer)
   extends WrapperDataFilter(scaWrapperDataConnector)(ec, mat) {
 
   override def apply(blockFunction: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] =
-    featureFlagService.get(SCAWrapperToggle).flatMap { toggle =>
-      if (toggle.isEnabled) {
-        super.apply(blockFunction)(rh)
-      } else {
-        blockFunction(rh)
-      }
-    }
+    super.apply(blockFunction)(rh)
 }
 
 @Singleton

@@ -17,10 +17,11 @@
 package uk.gov.hmrc.nisp.views
 
 import org.scalatest._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthenticatedRequest, NispAuthedUser}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.utils.Constants
@@ -30,11 +31,11 @@ import java.time.Instant
 
 class VoluntaryContributionsViewSpec extends HtmlSpec with BeforeAndAfter with Injecting {
 
-  implicit val user = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
+  implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
 
-  val authDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
+  val authDetails: AuthDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
 
-  implicit val fakeRequest = AuthenticatedRequest(FakeRequest(), user, authDetails)
+  implicit val fakeRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(FakeRequest(), user, authDetails)
 
   val expectedMoneyServiceLink   = "https://www.moneyadviceservice.org.uk/en"
   val expectedCitizensAdviceLink = "https://www.citizensadvice.org.uk/"

@@ -28,12 +28,10 @@ class RedirectControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Befo
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    featureFlagSCAWrapperMock()
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .bindings(
-      featureFlagServiceBinding
     )
     .build()
 

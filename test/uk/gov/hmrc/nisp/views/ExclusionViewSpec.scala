@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.views
 
 import org.mockito.Mockito.when
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
@@ -37,13 +38,13 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
   val urResearchURL                    =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
 
-  implicit val fakeRequest          = ExcludedAuthenticatedRequest(
+  implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   )
   implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
-  lazy val langUtils                = inject[LanguageUtils]
+  lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
   override def beforeEach(): Unit = {
     super.beforeEach()

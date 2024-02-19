@@ -111,15 +111,8 @@ class MainViewSpec extends HtmlSpec {
 
     lazy val pageRender = main.apply("Fake Page Title")(Html("<p>Fake body</p>"))
 
-    lazy val doc = {
-      if (testObject.scaWrapper) {
-        featureFlagSCAWrapperMock(true)
-      } else {
-        featureFlagSCAWrapperMock()
-      }
+    lazy val doc = Jsoup.parse(pageRender.toString())
 
-      Jsoup.parse(pageRender.toString())
-    }
 
     s"when using the ${testObject.uniqueValues.testName} for the main" which {
 
