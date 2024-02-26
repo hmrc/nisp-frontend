@@ -21,15 +21,14 @@ object AppDependencies {
 
   val bootstrapVersion = "8.2.0"
   private val playVersion = "play-30"
-  private val hmrcMongoVersion = "1.6.0"
+  private val hmrcMongoVersion = "1.7.0"
 
   val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% s"http-caching-client-$playVersion"           % "11.1.0",
     "uk.gov.hmrc"       %% "tax-year"                                    % "3.3.0",
     "uk.gov.hmrc"       %% s"play-conditional-form-mapping-$playVersion" % "2.0.0",
     "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion"  % "1.1.0",
-    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                   % "1.2.0",
-    ehcache
+    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                   % "1.3.0"
   )
 
   val test: Seq[ModuleID] = Seq(
@@ -37,7 +36,7 @@ object AppDependencies {
     "org.jsoup"               %   "jsoup"                         % "1.15.4",
     "uk.gov.hmrc"             %%  "bootstrap-test-play-28"        % bootstrapVersion,
     "org.mockito"             %   "mockito-core"                  % "5.8.0",
-    "com.github.tomakehurst"  %   "wiremock-jre8"                 % "2.27.2",
+    "com.github.tomakehurst"  %   "wiremock"                      % "2.27.2",
     "uk.gov.hmrc.mongo"       %% s"hmrc-mongo-test-$playVersion"  % hmrcMongoVersion
   ).map(_ % "test,it")
 

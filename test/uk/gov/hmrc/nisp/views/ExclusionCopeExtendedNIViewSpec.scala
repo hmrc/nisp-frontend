@@ -39,7 +39,7 @@ class ExclusionCopeExtendedNIViewSpec extends HtmlSpec with Injecting {
   )
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
-  val today = LocalDate.now()
+  val today: LocalDate = LocalDate.now()
 
   val excludedCopeExtendedNIView: excluded_cope_extended_ni = inject[excluded_cope_extended_ni]
   lazy val view: Document = asDocument(contentAsString(excludedCopeExtendedNIView(today)))
