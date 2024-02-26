@@ -14,64 +14,76 @@
  * limitations under the License.
  */
 
-package controllers
+package uk.gov.hmrc.nisp.controllers
 
-import it_utils.WiremockHelper
+import com.github.tomakehurst.wiremock.client.WireMock.{ok, post, urlEqualTo}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.http.Status.MOVED_PERMANENTLY
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers.{defaultAwaitTimeout, route, writeableOf_AnyContentAsEmpty, status => getStatus}
-import play.api.test.{FakeRequest, Injecting}
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{status => getStatus, _}
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.nisp.it_utils.WiremockHelper
 
 import java.lang.System.currentTimeMillis
+import java.time.LocalDateTime
 
-class RedirectControllerISpec extends AnyWordSpec
+class TermsConditionsControllerISpec extends AnyWordSpec
   with Matchers
   with GuiceOneAppPerSuite
   with WiremockHelper
   with ScalaFutures
-  with BeforeAndAfterEach
-  with Injecting {
-
-  server.start()
+  with BeforeAndAfterEach {
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
       "microservice.services.auth.port" -> server.port(),
-      "microservice.services.citizen-details.port" -> server.port()
+      "microservice.services.identity-verification.port" -> server.port()
     )
     .build()
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
 
-  "redirectToHome" should {
-    "return a 301 and use the a blank path when a blank path is supplied" in {
-      val request = FakeRequest("GET", s"/checkmystatepension")
+    server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
+      s"""{
+         |"nino": "$nino",
+         |"confidenceLevel": 200,
+         |"loginTimes": {
+         |  "currentLogin": "${LocalDateTime.now}",
+         |  "previousLogin": "${LocalDateTime.now}"
+         |  }
+         |}
+      """.stripMargin)))
+  }
+
+  "show" should {
+    "return a 200 with the terms and conditions page when showBackLink isn't included" in {
+      val request = FakeRequest("GET", s"/check-your-state-pension/terms-and-conditions")
         .withSession(
           SessionKeys.sessionId -> s"session-$uuid",
-          SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString,
-          SessionKeys.authToken -> "Bearer 123"
+          SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString
         )
 
       val result = route(app, request)
-      result map getStatus shouldBe Some(MOVED_PERMANENTLY)
+
+      result map getStatus shouldBe Some(OK)
     }
 
-    "return a 301 when a path is provided" in {
-      val request = FakeRequest("GET", s"/checkmystatepension/newpath")
+    "return a 200 with the terms and conditions page when showBackLink is true" in {
+      val request = FakeRequest("GET", s"/check-your-state-pension/terms-and-conditions?showBackLink=true")
         .withSession(
           SessionKeys.sessionId -> s"session-$uuid",
-          SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString,
-          SessionKeys.authToken -> "Bearer 123"
+          SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString
         )
 
       val result = route(app, request)
-      result map getStatus shouldBe Some(MOVED_PERMANENTLY)
+
+      result map getStatus shouldBe Some(OK)
     }
   }
 }
