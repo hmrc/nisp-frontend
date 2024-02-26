@@ -38,7 +38,7 @@ object AppDependencies {
     "org.mockito"             %   "mockito-core"                  % "5.8.0",
     "com.github.tomakehurst"  %   "wiremock"                      % "2.27.2",
     "uk.gov.hmrc.mongo"       %% s"hmrc-mongo-test-$playVersion"  % hmrcMongoVersion
-  ).map(_ % "test,it")
+  ).map(_ % Test)
 
   val all: Seq[ModuleID] = compile ++ test
 }
