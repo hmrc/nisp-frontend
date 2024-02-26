@@ -176,7 +176,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           }
 
           "has a body of 'Hello'" in {
-            await(bodyOf(result)) shouldBe "Hello"
+            bodyOf(result) shouldBe "Hello"
           }
         }
 
@@ -232,7 +232,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           authAction.invokeBlock(authenticatedRequest(), block)
         }
 
-        await(bodyOf(result)) shouldBe "Successful"
+        bodyOf(result) shouldBe "Successful"
       }
 
     }
