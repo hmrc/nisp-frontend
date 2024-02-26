@@ -23,6 +23,7 @@ import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.Play.materializer
 import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results.Ok
@@ -116,7 +117,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
             authAction.invokeBlock(authenticatedRequest(), block)
           }
 
-          result.body shouldBe "Successful"
+          await(bodyOf(result)) shouldBe "Successful"
         }
       }
 
@@ -175,7 +176,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           }
 
           "has a body of 'Hello'" in {
-            result.body shouldBe "Hello"
+            await(bodyOf(result)) shouldBe "Hello"
           }
         }
 
@@ -231,7 +232,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
           authAction.invokeBlock(authenticatedRequest(), block)
         }
 
-        result.body shouldBe "Successful"
+        await(bodyOf(result)) shouldBe "Successful"
       }
 
     }

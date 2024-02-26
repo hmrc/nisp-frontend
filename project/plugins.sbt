@@ -14,5 +14,3 @@ addSbtPlugin("org.scalastyle"      %% "scalastyle-sbt-plugin" % "1.0.0" exclude(
 addSbtPlugin("io.github.irundaia"  % "sbt-sassify"            % "1.5.2")
 addSbtPlugin("com.typesafe.sbt"    % "sbt-digest"             % "1.1.4")
 addSbtPlugin("org.scalameta"       % "sbt-scalafmt"           % "2.5.2")
-
-addDependencyTreePlugin

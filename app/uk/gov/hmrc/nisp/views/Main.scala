@@ -26,12 +26,11 @@ import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.views.html.components.{additionalScripts, additionalStylesheets}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import uk.gov.hmrc.sca.views.html.PtaHead
 import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
+import uk.gov.hmrc.sca.views.html.PtaHead
 
 import javax.inject.Inject
-
 import scala.util.{Failure, Success, Try}
 
 @ImplementedBy(classOf[MainImpl])
@@ -83,6 +82,7 @@ class MainImpl @Inject()(
       pageTitle = Some(fullPageTitle),
       serviceNameKey = Some("nisp.title"),
       serviceURLs = ServiceURLs(
+        serviceUrl = Some("/check-your-state-pension/account"),
         signOutUrl = Some(routes.StatePensionController.signOut.url),
         accessibilityStatementUrl = wrapperService.defaultserviceURLs.accessibilityStatementUrl
       ),
