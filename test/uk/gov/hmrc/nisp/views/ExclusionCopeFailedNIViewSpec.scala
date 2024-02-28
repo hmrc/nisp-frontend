@@ -21,6 +21,7 @@ import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -37,7 +38,7 @@ class ExclusionCopeFailedNIViewSpec extends HtmlSpec with Injecting {
   val urResearchURL                    =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
 
-  implicit val fakeRequest = ExcludedAuthenticatedRequest(
+  implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
@@ -48,18 +49,16 @@ class ExclusionCopeFailedNIViewSpec extends HtmlSpec with Injecting {
     when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-    featureFlagSCAWrapperMock()
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure("future-pension-link.url" -> "pensionUrl")
     .overrides(
-      bind[ApplicationConfig].toInstance(mockAppConfig),
-      featureFlagServiceBinding
+      bind[ApplicationConfig].toInstance(mockAppConfig)
     )
     .build()
 
-  val excludedCopeFailedNIView = inject[excluded_cope_failed_ni]
+  val excludedCopeFailedNIView: excluded_cope_failed_ni = inject[excluded_cope_failed_ni]
   val today: LocalDate       = LocalDate.now()
 
   lazy val view: Document = asDocument(contentAsString(excludedCopeFailedNIView()))

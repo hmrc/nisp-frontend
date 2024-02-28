@@ -21,7 +21,6 @@ import uk.gov.hmrc.nisp.models.admin._
 
 class ApplicationStartUp {
   FeatureFlagNamesLibrary.addFlags(List(
-    SCAWrapperToggle,
     PertaxBackendToggle,
     ExcessiveTrafficToggle
   ))

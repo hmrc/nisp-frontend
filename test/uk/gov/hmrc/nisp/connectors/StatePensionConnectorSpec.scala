@@ -137,7 +137,7 @@ class StatePensionConnectorSpec
 
       result.map {
         spExclusion =>
-          val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
+          val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, None)).asInstanceOf[ForbiddenStatePensionExclusion]
 
           exclusion.code shouldBe Exclusion.Dead
       }
@@ -155,7 +155,7 @@ class StatePensionConnectorSpec
 
       result.map {
         spExclusion =>
-          val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
+          val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, None)).asInstanceOf[ForbiddenStatePensionExclusion]
 
           exclusion.code shouldBe Exclusion.ManualCorrespondenceIndicator
       }

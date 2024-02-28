@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.utils
 
 import uk.gov.hmrc.nisp.models.Exclusion
 
-class ExclusionHelperSpec extends UnitSpec {
+class ExclusionFeatureFlagServiceHelperSpec extends UnitSpec {
 
   "filterExclusions" should {
     "return Dead" when {

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package controllers
+package uk.gov.hmrc.nisp.controllers
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import it_utils.WiremockHelper
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
@@ -30,6 +29,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.{route, status => getStatus, _}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationSuccessResponse
+import uk.gov.hmrc.nisp.it_utils.WiremockHelper
 import uk.gov.hmrc.nisp.models._
 import java.lang.System.currentTimeMillis
 import java.time.{LocalDate, LocalDateTime}

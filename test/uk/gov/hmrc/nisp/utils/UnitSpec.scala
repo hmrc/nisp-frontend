@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import akka.stream.Materializer
-import akka.util.ByteString
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.util.ByteString
 import org.mockito.Mockito
 import org.mockito.stubbing.Answer
 import org.scalatest.wordspec.AnyWordSpec
@@ -32,7 +32,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.reflect.ClassTag
 import scala.language.{implicitConversions, postfixOps}
 
-trait UnitSpec extends AnyWordSpec with Matchers with OptionValues with SCAWrapperMockHelper {
+trait UnitSpec extends AnyWordSpec with Matchers with OptionValues with MockFeatureFlagServiceHelper {
 
   import scala.concurrent.duration._
   import scala.concurrent.{Await, Future}

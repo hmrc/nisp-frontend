@@ -203,7 +203,7 @@ class NationalInsuranceServiceSpec
 
         result.map {
           excl =>
-            val exclusion = excl.swap.getOrElse(StatePensionExclusionFiltered)
+            val exclusion: Object = excl.swap.getOrElse(StatePensionExclusionFiltered)
 
             exclusion shouldBe StatePensionExclusionFiltered(Exclusion.Dead)
         }
@@ -222,7 +222,7 @@ class NationalInsuranceServiceSpec
 
         result.map {
           excl =>
-            val exclusion = excl.swap.getOrElse(StatePensionExclusionFiltered)
+            val exclusion: Object = excl.swap.getOrElse(StatePensionExclusionFiltered)
 
             exclusion shouldBe StatePensionExclusionFiltered(Exclusion.ManualCorrespondenceIndicator)
         }
@@ -241,7 +241,7 @@ class NationalInsuranceServiceSpec
 
         result.map {
           excl =>
-            val exclusion = excl.swap.getOrElse(StatePensionExclusionFiltered)
+            val exclusion: Object = excl.swap.getOrElse(StatePensionExclusionFiltered)
 
             exclusion shouldBe StatePensionExclusionFiltered(Exclusion.IsleOfMan)
         }
@@ -260,7 +260,7 @@ class NationalInsuranceServiceSpec
 
         result.map {
           excl =>
-            val exclusion = excl.swap.getOrElse(StatePensionExclusionFiltered)
+            val exclusion: Object = excl.swap.getOrElse(StatePensionExclusionFiltered)
 
             exclusion shouldBe StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection)
         }

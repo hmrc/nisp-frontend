@@ -18,13 +18,6 @@ package uk.gov.hmrc.nisp.models.admin
 
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagName
 
-case object SCAWrapperToggle extends FeatureFlagName {
-  override val name: String = "SCAWrapperToggle"
-  override val description: Option[String] = Some(
-    "Enable/Disable the sca page wrapper"
-  )
-}
-
 case object PertaxBackendToggle extends FeatureFlagName {
   override val name: String            = "pertax-backend-toggle"
   override val description: Option[String] = Some(

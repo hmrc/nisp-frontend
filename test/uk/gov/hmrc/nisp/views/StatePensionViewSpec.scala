@@ -64,8 +64,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -79,8 +78,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -98,7 +96,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
-    featureFlagSCAWrapperMock()
   }
 
   lazy val statePensionController: StatePensionController = standardInjector.instanceOf[StatePensionController]

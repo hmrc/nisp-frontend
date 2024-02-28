@@ -18,6 +18,7 @@ package uk.gov.hmrc.nisp.views
 
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -36,7 +37,7 @@ class ExclusionCopeNIViewSpec extends HtmlSpec with Injecting {
   val urResearchURL                    =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
 
-  implicit val fakeRequest = ExcludedAuthenticatedRequest(
+  implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
@@ -49,7 +50,7 @@ class ExclusionCopeNIViewSpec extends HtmlSpec with Injecting {
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
 
-  val excludedCopeNIView = inject[excluded_cope_ni]
+  val excludedCopeNIView: excluded_cope_ni = inject[excluded_cope_ni]
   val today: LocalDate = LocalDate.now()
 
   lazy val view: Document = asDocument(contentAsString(excludedCopeNIView(today)))

@@ -41,19 +41,6 @@ class MainViewSpec extends HtmlSpec {
     val reportTechnicalProblemUrl: String
   }
 
-  object OldMainUnique extends UniqueValues {
-    override val testName: String = "old style"
-    override val profileAndSettingsLink: String = "http://localhost:9232/personal-account/your-profile"
-
-    override val researchBannerHeaderSelector: String = "h2"
-    override val researchBannerLinkSelector: String = "a"
-
-    override val accessibilityReferrerUrl: String = "9234%2Fsome-url"
-
-    override val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/problem_reports_nonjs?service=NISP/" +
-      "contact/report-technical-problem?newTab=true&service=NISP&referrerUrl=%2Fsome-url"
-  }
-
   object NewMainUnique extends UniqueValues {
     override val testName: String = "new style"
     override val profileAndSettingsLink: String = "http://localhost:9232/personal-account/profile-and-settings"
@@ -95,15 +82,12 @@ class MainViewSpec extends HtmlSpec {
     val reportATechnicalIssueText = "Is this page not working properly? (opens in new tab)"
 
     val scriptUrl = "/check-your-state-pension/assets/javascript/app.js"
-    val ptaScriptUrl = "/check-your-state-pension/pta-frontend/assets/pta.js"
+    val ptaScriptUrl = "/check-your-state-pension/sca-wrapper/assets/pta.js"
   }
 
-  case class TestObject(uniqueValues: UniqueValues, scaWrapper: Boolean)
+  case class TestObject(uniqueValues: UniqueValues)
 
-  Seq(
-    TestObject(OldMainUnique, scaWrapper = false),
-    TestObject(NewMainUnique, scaWrapper = true)
-  ).foreach { testObject =>
+  Seq(TestObject(NewMainUnique)).foreach { testObject =>
 
     lazy val main = inject[Main]
 
@@ -111,15 +95,8 @@ class MainViewSpec extends HtmlSpec {
 
     lazy val pageRender = main.apply("Fake Page Title")(Html("<p>Fake body</p>"))
 
-    lazy val doc = {
-      if (testObject.scaWrapper) {
-        featureFlagSCAWrapperMock(true)
-      } else {
-        featureFlagSCAWrapperMock()
-      }
+    lazy val doc = Jsoup.parse(pageRender.toString())
 
-      Jsoup.parse(pageRender.toString())
-    }
 
     s"when using the ${testObject.uniqueValues.testName} for the main" which {
 

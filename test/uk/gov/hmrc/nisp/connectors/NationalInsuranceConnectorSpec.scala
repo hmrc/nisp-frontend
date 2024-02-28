@@ -227,7 +227,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
 
         result.map {
           spExclusion =>
-            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, None)).asInstanceOf[ForbiddenStatePensionExclusion]
 
             exclusion.code shouldBe Exclusion.Dead
         }
@@ -248,7 +248,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
 
         result.map {
           spExclusion =>
-            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, None)).asInstanceOf[ForbiddenStatePensionExclusion]
 
             exclusion.code shouldBe Exclusion.ManualCorrespondenceIndicator
         }
@@ -268,7 +268,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
 
         result.map {
           spExclusion =>
-            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.Dead, None)).asInstanceOf[ForbiddenStatePensionExclusion]
 
             exclusion.code shouldBe Exclusion.IsleOfMan
         }
@@ -288,7 +288,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
 
         result.map {
           spExclusion =>
-            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion).asInstanceOf[ForbiddenStatePensionExclusion]
+            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, None)).asInstanceOf[ForbiddenStatePensionExclusion]
 
             exclusion.code shouldBe Exclusion.MarriedWomenReducedRateElection
         }

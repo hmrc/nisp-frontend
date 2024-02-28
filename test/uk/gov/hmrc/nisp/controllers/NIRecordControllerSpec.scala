@@ -65,7 +65,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
-    featureFlagSCAWrapperMock()
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()

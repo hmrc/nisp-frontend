@@ -72,8 +72,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -87,8 +86,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthAction].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector

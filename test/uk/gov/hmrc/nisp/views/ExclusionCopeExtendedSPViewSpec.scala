@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.views
 
 import org.jsoup.nodes.Document
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -31,7 +32,7 @@ import java.time.{Instant, LocalDate}
 
 class ExclusionCopeExtendedSPViewSpec extends HtmlSpec with Injecting {
 
-  implicit val fakeRequest = ExcludedAuthenticatedRequest(
+  implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
     FakeRequest(),
     TestAccountBuilder.regularNino,
     AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))

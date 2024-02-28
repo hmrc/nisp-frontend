@@ -16,25 +16,16 @@
 
 package uk.gov.hmrc.nisp.utils
 
-import org.mockito.ArgumentMatchers.{eq => mockEq}
-import org.mockito.Mockito.{mock, when}
-import org.mockito.stubbing.OngoingStubbing
+import org.mockito.Mockito.mock
 import play.api.inject.{Binding, bind}
-import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
-import uk.gov.hmrc.nisp.models.admin.SCAWrapperToggle
 
-import scala.concurrent.Future
-
-trait SCAWrapperMockHelper {
+trait MockFeatureFlagServiceHelper {
 
   lazy val mockFeatureFlagService: FeatureFlagService = mock(classOf[FeatureFlagService])
 
   lazy val featureFlagServiceBinding: Binding[FeatureFlagService] = bind[FeatureFlagService].toInstance(mockFeatureFlagService)
 
-  def featureFlagSCAWrapperMock(isEnabled: Boolean = false): OngoingStubbing[Future[FeatureFlag]] = {
-    when(mockFeatureFlagService.get(mockEq(SCAWrapperToggle)))
-      .thenReturn(Future.successful(FeatureFlag(SCAWrapperToggle, isEnabled = isEnabled)))
-  }
+
 
 }
