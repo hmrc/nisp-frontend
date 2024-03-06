@@ -407,6 +407,7 @@ nisp.mqp.years.dontCount.plural = Hefyd mae gennych {0} ar eich cofnod sydd ddim
 nisp.mqp.years.dontCount.zero = Nid oes gennych unrhyw flynyddoedd ar eich cofnod sydd ddim yn cyfri tuag at eich pensiwn.
 
 nisp.mqp.filling.never.single = Ni fydd llenwi hwn yn ddigon i gael unrhyw Bensiwn y Wladwriaeth.
+nisp.mqp.filling.never.plural = Nid yw llenwi’r rhain yn ddigon i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.filling.may.single = Efallai bydd llenwi un flwyddyn yn rhoi ychydig o Bensiwn y Wladwriaeth i chi.
 nisp.mqp.filling.may.plural = Efallai bydd llenwi rhai o’r blynyddoedd hyn yn rhoi ychydig o Bensiwn y Wladwriaeth i chi.
 nisp.mqp.afterSpa = Ar ôl oedran Pensiwn y Wladwriaeth, {0} ni fyddwch bellach yn talu cyfraniadau Yswiriant Gwladol.

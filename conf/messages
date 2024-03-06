@@ -396,6 +396,7 @@ nisp.mqp.years.dontCount.plural = You also have {0} on your record which do not 
 nisp.mqp.years.dontCount.zero = You do not have any years on your record that do not count towards your pension.
 
 nisp.mqp.filling.never.single = Filling this is not enough to get any State Pension.
+nisp.mqp.filling.never.plural = Filling these are not enough to get any State Pension.
 nisp.mqp.filling.may.single = Filling one year may get you some State Pension.
 nisp.mqp.filling.may.plural = Filling some of these years may get you some State Pension.
 
