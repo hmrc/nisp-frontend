@@ -19,7 +19,7 @@ import sbt.*
 
 object AppDependencies {
 
-  val bootstrapVersion = "8.2.0"
+  val bootstrapVersion = "8.5.0"
   private val playVersion = "play-30"
   private val hmrcMongoVersion = "1.7.0"
 
@@ -27,8 +27,8 @@ object AppDependencies {
     "uk.gov.hmrc"       %% s"http-caching-client-$playVersion"           % "11.1.0",
     "uk.gov.hmrc"       %% "tax-year"                                    % "3.3.0",
     "uk.gov.hmrc"       %% s"play-conditional-form-mapping-$playVersion" % "2.0.0",
-    "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion"  % "1.1.0",
-    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                   % "1.3.0"
+    "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion"  % "1.3.0",
+    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                   % "1.5.0"
   )
 
   val test: Seq[ModuleID] = Seq(
