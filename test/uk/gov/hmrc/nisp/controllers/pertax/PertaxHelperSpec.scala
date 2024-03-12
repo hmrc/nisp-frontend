@@ -32,7 +32,7 @@ import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class PertaxFeatureFlagServiceHelperSpec
+class PertaxHelperSpec
   extends UnitSpec
     with GuiceOneAppPerSuite
     with Injecting
