@@ -26,6 +26,4 @@ trait MockFeatureFlagServiceHelper {
 
   lazy val featureFlagServiceBinding: Binding[FeatureFlagService] = bind[FeatureFlagService].toInstance(mockFeatureFlagService)
 
-
-
 }
