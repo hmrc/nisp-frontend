@@ -21,11 +21,13 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser, StandardAuthJourney}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.admin.ViewPayableGapsToggle
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
@@ -48,7 +50,8 @@ class NIRecordController @Inject()(
                                     niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
                                     nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
                                   )(
-                                    implicit ec: ExecutionContext
+                                    implicit ec: ExecutionContext,
+                                    val featureFlagService: FeatureFlagService,
                                   ) extends NispFrontendController(mcc) with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI
@@ -107,7 +110,7 @@ class NIRecordController @Inject()(
   }
 
   private def showNiRecordPage(gapsOnlyView: Boolean, yearsToContribute: Int, finalRelevantStartYear: Int, niRecord: NationalInsuranceRecord)
-                              (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Result = {
+                              (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Future[Result] = {
     val recordHasEnded = yearsToContribute < 1
     val tableStart: String =
       if (recordHasEnded) finalRelevantStartYear.toString
@@ -116,24 +119,32 @@ class NIRecordController @Inject()(
       case Nil => tableStart
       case _ => niRecord.taxYears.last.taxYear
     }
-    Ok(
-      niRecordPage(
-        tableList = generateTableList(tableStart, tableEnd),
-        niRecord = niRecord,
-        gapsOnlyView = gapsOnlyView,
-        recordHasEnded = recordHasEnded,
-        yearsToContribute = yearsToContribute,
-        finalRelevantEndYear = finalRelevantStartYear + 1,
-        showPre1975Years = showPre1975Years(
-          niRecord.dateOfEntry,
-          authRequest.nispAuthedUser.dateOfBirth,
-          niRecord.qualifyingYearsPriorTo1975
-        ),
-        showFullNI = showFullNI,
-        currentDate = dateProvider.currentDate
+
+    featureFlagService.get(ViewPayableGapsToggle).flatMap { flag =>
+      Future.successful(
+        Ok(
+          niRecordPage(
+            tableList = generateTableList(tableStart, tableEnd),
+            niRecord = niRecord,
+            gapsOnlyView = gapsOnlyView,
+            recordHasEnded = recordHasEnded,
+            yearsToContribute = yearsToContribute,
+            finalRelevantEndYear = finalRelevantStartYear + 1,
+            showPre1975Years = showPre1975Years(
+              niRecord.dateOfEntry,
+              authRequest.nispAuthedUser.dateOfBirth,
+              niRecord.qualifyingYearsPriorTo1975
+            ),
+            showFullNI = showFullNI,
+            currentDate = dateProvider.currentDate,
+            appConfig.niRecordPayableGapDeadline,
+            flag.isEnabled,
+            appConfig.nispModellingFrontendUrl
+          )
+        )
       )
-    )
-  }
+    }
+ }
 
   private def sendExclusion(exclusion: Exclusion)(implicit hc: HeaderCarrier, user: NispAuthedUser): Result = {
     auditConnector.sendEvent(
@@ -183,9 +194,7 @@ class NIRecordController @Inject()(
                     finalRelevantStartYear
                   )
                   sendAuditEvent(nino, nationalInsuranceRecord, yearsToContribute)
-                  Future.successful(
-                    showNiRecordPage(gapsOnlyView, yearsToContribute, finalRelevantStartYear, nationalInsuranceRecord)
-                  )
+                  showNiRecordPage(gapsOnlyView, yearsToContribute, finalRelevantStartYear, nationalInsuranceRecord)
                 }
                 .getOrElse(Future.successful(Redirect(routes.ExclusionController.showSP)))
             }

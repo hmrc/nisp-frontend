@@ -44,7 +44,10 @@
   finalRelevantEndYear: Int,
   showPre1975Years: Boolean,
   showFullNI: Boolean,
-  currentDate: LocalDate
+  currentDate: LocalDate,
+  niRecordCutoffYear: Int,
+  viewPayableGapsToggle: Boolean,
+  nispModellingPayableGapsURL: String
 )(implicit messages: Messages, request: AuthenticatedRequest[_], user: NispAuthedUser)
 
 @headingOrTitle = @{
@@ -203,15 +206,39 @@ if (user.livesAbroad) {
       </dt>
       }
 
-      @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying)) {
+      @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt > niRecordCutoffYear - 1)) {
         @if(showFullNI) {
           @nirecordtaxyear(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
-        } else{
+        } else {
           @nirecordtaxyearNoFull(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
         }
       }
 
-    } else {
+      @if(niRecord.numberOfGaps > 0) {
+
+        @if(viewPayableGapsToggle) {
+          <a href="@nispModellingPayableGapsURL" role="button" draggable="false" class="govuk-button govuk-!-margin-top-5" data-module="govuk-button">
+          @messages("nisp.main.context.fillGaps.viewPayableGaps")
+          </a>
+        }
+
+        @if(!niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt <= niRecordCutoffYear - 1).isEmpty) {
+
+          <h2 class="govuk-heading-m @if(!viewPayableGapsToggle) {govuk-!-margin-top-5}">@messages("nisp.main.context.fillGaps.niRecordCutOff", niRecordCutoffYear.toString)</h2>
+
+          <p class="govuk-body govuk-!-margin-bottom-5">@Messages("nisp.main.context.fillGaps.tooLate", niRecordCutoffYear.toString)</p>
+        }
+      }
+
+      @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt <= niRecordCutoffYear - 1)) {
+        @if(showFullNI) {
+          @nirecordtaxyear(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
+        } else {
+          @nirecordtaxyearNoFull(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
+        }
+      }
+
+  } else {
 
       @if(niRecord.taxYears.isEmpty) {
 
