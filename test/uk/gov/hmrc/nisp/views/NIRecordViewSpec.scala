@@ -505,7 +505,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'year is not full'" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dt:nth-child(2)>div>div.ni-notfull",
+        ".govuk-grid-column-two-thirds>dl>dt:nth-child(4)>div>div.ni-notfull",
         "nisp.nirecord.gap"
       )
     }
@@ -513,7 +513,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with link 'View details'" in {
       assertContainsExpectedValue(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dt:nth-child(2)>div>div.ni-action>a.view-details",
+        ".govuk-grid-column-two-thirds>dl>dt:nth-child(4)>div>div.ni-action>a.view-details",
         "nisp.nirecord.gap.viewdetails",
         "2013 to 2014"
       )
@@ -522,7 +522,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'You did not make any contributions this year '" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header",
+        ".govuk-grid-column-two-thirds>dl>dd:nth-child(5)>div.contributions-wrapper>p.contributions-header",
         "nisp.nirecord.youdidnotmakeanycontrib"
       )
     }
@@ -530,7 +530,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'Find out more about gaps in your account'" in {
       assertContainsExpectedValue(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)",
+        ".govuk-grid-column-two-thirds>dl>dd:nth-child(5)>div.contributions-wrapper>p:nth-child(2)",
         "nisp.nirecord.gap.findoutmoreabout",
         "/check-your-state-pension/account/nirecord/gapsandhowtocheck"
       )
@@ -539,7 +539,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'You can make up the shortfall'" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)",
+        ".govuk-grid-column-two-thirds>dl>dd:nth-child(5)>div.contributions-wrapper>p.contributions-header:nth-child(3)",
         "nisp.nirecord.gap.youcanmakeupshortfall"
       )
     }
@@ -547,7 +547,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'Pay a voluntary contribution of figure out how to do it...'" in {
       assertContainsDynamicMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)",
+        ".govuk-grid-column-two-thirds>dl>dd:nth-child(5)>div.contributions-wrapper>p:nth-child(4)",
         "nisp.nirecord.gap.payvoluntarycontrib",
         "&pound;704.60",
         langUtils.Dates.formatDate(LocalDate.of(2023, 4, 5)),
@@ -558,7 +558,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'Find out more about...'" in {
       assertContainsDynamicMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)",
+        ".govuk-grid-column-two-thirds>dl>dd:nth-child(5)>div.contributions-wrapper>p:nth-child(5)",
         "nisp.nirecord.gap.findoutmore",
         "/check-your-state-pension/account/nirecord/voluntarycontribs"
       )

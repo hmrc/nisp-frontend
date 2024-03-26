@@ -38,6 +38,7 @@ import uk.gov.hmrc.nisp.models.admin.ViewPayableGapsToggle
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.time.TaxYear
 
 import java.time.LocalDate
 import java.util.UUID
@@ -67,7 +68,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
-    when(mockAppConfig.niRecordPayableGapDeadline).thenReturn(2006)
+    when(mockAppConfig.niRecordPayableYears).thenReturn(17)
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -329,7 +330,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showGaps(generateFakeRequest)
 
-      contentAsString(result) should include("It’s too late to pay for gaps in your National Insurance record before April 2006")
+      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
 
     "Not show it's too late to pay text when user has gaps before cutoff point " in {
@@ -394,7 +395,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showGaps(generateFakeRequest)
 
-      contentAsString(result) should not include("It’s too late to pay for gaps in your National Insurance record before April 2006")
+      contentAsString(result) should not include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
 
     "return full page for user without gaps" in {

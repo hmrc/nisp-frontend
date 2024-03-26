@@ -54,7 +54,7 @@ class ApplicationConfig @Inject()(servicesConfig: ServicesConfig) {
   val isWelshEnabled: Boolean               = getConfBool("features.welsh-translation", false)
   val feedbackFrontendUrl: String           = getString("feedback-frontend.url")
   val urBannerUrl: String                   = getString("urBanner.link")
-  val niRecordPayableGapDeadline: Int       = getInt("niRecordTaxYearCutOff.year")
+  val niRecordPayableYears: Int             = getInt("numberOfPayableTaxYears")
 
   val citizenDetailsServiceUrl: String       = baseUrl("citizen-details")
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")
