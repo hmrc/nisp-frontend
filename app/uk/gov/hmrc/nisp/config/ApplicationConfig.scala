@@ -60,7 +60,7 @@ class ApplicationConfig @Inject()(servicesConfig: ServicesConfig) {
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")
   val nationalInsuranceServiceUrl: String    = baseUrl("national-insurance")
   val statePensionServiceUrl: String         = baseUrl("state-pension")
-  val nispModellingFrontendUrl: String       = s"${baseUrl("nisp-modelling-frontend")}/check-your-state-pension/modelling/your-payable-gaps"
+  val nispModellingFrontendUrl: String       = baseUrl("nisp-modelling-frontend")
 
   val sessionCacheURL: String    = baseUrl("cachable.session-cache")
   val sessionCacheDomain: String = getConfString(
