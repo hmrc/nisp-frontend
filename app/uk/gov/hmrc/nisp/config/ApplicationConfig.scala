@@ -54,11 +54,13 @@ class ApplicationConfig @Inject()(servicesConfig: ServicesConfig) {
   val isWelshEnabled: Boolean               = getConfBool("features.welsh-translation", false)
   val feedbackFrontendUrl: String           = getString("feedback-frontend.url")
   val urBannerUrl: String                   = getString("urBanner.link")
+  val niRecordPayableYears: Int             = getInt("numberOfPayableTaxYears")
 
   val citizenDetailsServiceUrl: String       = baseUrl("citizen-details")
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")
   val nationalInsuranceServiceUrl: String    = baseUrl("national-insurance")
   val statePensionServiceUrl: String         = baseUrl("state-pension")
+  val nispModellingFrontendUrl: String       = baseUrl("nisp-modelling-frontend")
 
   val sessionCacheURL: String    = baseUrl("cachable.session-cache")
   val sessionCacheDomain: String = getConfString(

@@ -31,3 +31,10 @@ case object ExcessiveTrafficToggle extends FeatureFlagName {
     "Enable/disable excessive traffic message displayed"
   )
 }
+
+case object ViewPayableGapsToggle extends FeatureFlagName {
+  override val name: String = "view-payable-gaps-toggle"
+  override val description: Option[String] = Some(
+    "Enable/disable the View payable gaps button on NI record"
+  )
+}

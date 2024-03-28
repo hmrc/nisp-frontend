@@ -22,6 +22,7 @@ import uk.gov.hmrc.nisp.models.admin._
 class ApplicationStartUp {
   FeatureFlagNamesLibrary.addFlags(List(
     PertaxBackendToggle,
-    ExcessiveTrafficToggle
+    ExcessiveTrafficToggle,
+    ViewPayableGapsToggle
   ))
 }

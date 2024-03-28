@@ -100,6 +100,9 @@ nisp.main.context.continueWorkingMax.stillNeedToPay = When you reach {0}, you st
 nisp.main.context.fillGaps.improve.title = You can improve your forecast
 nisp.main.context.fillGaps.viewGaps = View gaps in your record
 nisp.main.context.fillGaps.viewGapsAndCost = View gaps in your record and the costs of filling them
+nisp.main.context.fillGaps.viewPayableGaps = View payable gaps
+nisp.main.context.fillGaps.niRecordCutOff = Your National Insurance record before April {0}
+nisp.main.context.fillGaps.tooLate = It’s too late to pay for gaps in your National Insurance record before April {0}.
 
 nisp.main.context.fillgaps.para1.plural = You have years on your National Insurance record where you did not contribute enough.
 nisp.main.context.fillgaps.para1.singular = You have a year on your National Insurance record where you did not contribute enough. You only need to fill this year to get the most you can.
