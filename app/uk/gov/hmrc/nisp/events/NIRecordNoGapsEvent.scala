@@ -23,6 +23,6 @@ object NIRecordNoGapsEvent {
 }
 
 class NIRecordNoGapsEvent (nino: String)(implicit hc: HeaderCarrier)
-  extends NispBusinessEvent("NIRecordNoGaps",Map("nino" -> nino))
+  extends NispBusinessEvent("NIRecordNoGaps", Map("nino" -> nino))
 
 
