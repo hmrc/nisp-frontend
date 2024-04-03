@@ -21,11 +21,13 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser, StandardAuthJourney}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent, NIRecordNoGapsEvent}
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
@@ -48,7 +50,8 @@ class NIRecordController @Inject()(
                                     niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
                                     nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
                                   )(
-                                    implicit ec: ExecutionContext
+                                    implicit ec: ExecutionContext,
+                                    val featureFlagService: FeatureFlagService,
                                   ) extends NispFrontendController(mcc) with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI
@@ -62,6 +65,13 @@ class NIRecordController @Inject()(
     Redirect(routes.NIRecordController.showFull)
   }
 
+  private def isFriendlyUser(nino: String): Boolean =
+    appConfig.friendlyUsers.contains(nino.filterNot(_.isWhitespace).toUpperCase)
+
+  private def ninoContainsNumberAtEnd(nino: String): Boolean = {
+    val lastDigit: String = nino.filter(_.isDigit).last.toString
+    appConfig.allowedUsersEndOfNino.contains(lastDigit)
+  }
   private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit
                                                                                                     hc: HeaderCarrier
   ): Unit =
@@ -112,8 +122,10 @@ class NIRecordController @Inject()(
   }
 
   private def showNiRecordPage(gapsOnlyView: Boolean, yearsToContribute: Int, finalRelevantStartYear: Int, niRecord: NationalInsuranceRecord)
-                              (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Result = {
+                              (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Future[Result] = {
     val recordHasEnded = yearsToContribute < 1
+    val yearsPayable = TaxYear.current.startYear - appConfig.niRecordPayableYears
+    val nispModellingPayableGapsUrl = s"${appConfig.nispModellingFrontendUrl}/check-your-state-pension/modelling/your-payable-gaps"
     val tableStart: String =
       if (recordHasEnded) finalRelevantStartYear.toString
       else niRecord.earningsIncludedUpTo.getYear.toString
@@ -121,24 +133,42 @@ class NIRecordController @Inject()(
       case Nil => tableStart
       case _ => niRecord.taxYears.last.taxYear
     }
-    Ok(
-      niRecordPage(
-        tableList = generateTableList(tableStart, tableEnd),
-        niRecord = niRecord,
-        gapsOnlyView = gapsOnlyView,
-        recordHasEnded = recordHasEnded,
-        yearsToContribute = yearsToContribute,
-        finalRelevantEndYear = finalRelevantStartYear + 1,
-        showPre1975Years = showPre1975Years(
-          niRecord.dateOfEntry,
-          authRequest.nispAuthedUser.dateOfBirth,
-          niRecord.qualifyingYearsPriorTo1975
-        ),
-        showFullNI = showFullNI,
-        currentDate = dateProvider.currentDate
+
+    for {
+      payableGapsToggle <- featureFlagService.get(ViewPayableGapsToggle)
+      friendlyUserToggle <- featureFlagService.get(FriendlyUserFilterToggle)
+    } yield {
+      val showViewPayableGapsButton: Boolean = (payableGapsToggle.isEnabled,
+        friendlyUserToggle.isEnabled,
+        isFriendlyUser(user.nino.nino),
+        ninoContainsNumberAtEnd(user.nino.nino)) match {
+        case(true, false, _, _) => true
+        case(true, true, _, _) => ninoContainsNumberAtEnd(user.nino.nino) || isFriendlyUser(user.nino.nino)
+        case _ => false
+      }
+
+      Ok(
+        niRecordPage(
+          tableList = generateTableList(tableStart, tableEnd),
+          niRecord = niRecord,
+          gapsOnlyView = gapsOnlyView,
+          recordHasEnded = recordHasEnded,
+          yearsToContribute = yearsToContribute,
+          finalRelevantEndYear = finalRelevantStartYear + 1,
+          showPre1975Years = showPre1975Years(
+            niRecord.dateOfEntry,
+            authRequest.nispAuthedUser.dateOfBirth,
+            niRecord.qualifyingYearsPriorTo1975
+          ),
+          showFullNI = showFullNI,
+          currentDate = dateProvider.currentDate,
+          yearsPayable,
+          showViewPayableGapsButton,
+          nispModellingPayableGapsUrl
+        )
       )
-    )
-  }
+    }
+ }
 
   private def sendExclusion(exclusion: Exclusion)(implicit hc: HeaderCarrier, user: NispAuthedUser): Result = {
     auditConnector.sendEvent(
@@ -189,9 +219,7 @@ class NIRecordController @Inject()(
                     finalRelevantStartYear
                   )
                   sendAuditEvent(nino, nationalInsuranceRecord, yearsToContribute)
-                  Future.successful(
-                    showNiRecordPage(gapsOnlyView, yearsToContribute, finalRelevantStartYear, nationalInsuranceRecord)
-                  )
+                  showNiRecordPage(gapsOnlyView, yearsToContribute, finalRelevantStartYear, nationalInsuranceRecord)
                 }
                 .getOrElse(Future.successful(Redirect(routes.ExclusionController.showSP)))
             }

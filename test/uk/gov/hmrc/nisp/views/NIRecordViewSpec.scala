@@ -28,6 +28,7 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.NIRecordController
@@ -36,6 +37,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.admin.FriendlyUserFilterToggle
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, WireMockHelper}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
@@ -91,6 +93,10 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
+      .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = true)))
+    when(mockAppConfig.friendlyUsers).thenReturn(Seq())
+    when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -505,7 +511,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'year is not full'" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dt:nth-child(2)>div>div.ni-notfull",
+        ".ni-notfull",
         "nisp.nirecord.gap"
       )
     }
@@ -513,7 +519,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with link 'View details'" in {
       assertContainsExpectedValue(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dt:nth-child(2)>div>div.ni-action>a.view-details",
+        ".view-details",
         "nisp.nirecord.gap.viewdetails",
         "2013 to 2014"
       )
@@ -522,7 +528,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'You did not make any contributions this year '" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header",
+        ".contributions-header",
         "nisp.nirecord.youdidnotmakeanycontrib"
       )
     }
@@ -530,7 +536,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'Find out more about gaps in your account'" in {
       assertContainsExpectedValue(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(2)",
+        ".contributions-wrapper>p:nth-child(2)",
         "nisp.nirecord.gap.findoutmoreabout",
         "/check-your-state-pension/account/nirecord/gapsandhowtocheck"
       )
@@ -539,7 +545,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'You can make up the shortfall'" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header:nth-child(3)",
+        ".contributions-header:nth-child(3)",
         "nisp.nirecord.gap.youcanmakeupshortfall"
       )
     }
@@ -547,7 +553,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'Pay a voluntary contribution of figure out how to do it...'" in {
       assertContainsDynamicMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(4)",
+        ".contributions-wrapper>p:nth-child(4)",
         "nisp.nirecord.gap.payvoluntarycontrib",
         "&pound;704.60",
         langUtils.Dates.formatDate(LocalDate.of(2023, 4, 5)),
@@ -558,7 +564,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'Find out more about...'" in {
       assertContainsDynamicMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p:nth-child(5)",
+        ".contributions-wrapper>p:nth-child(5)",
         "nisp.nirecord.gap.findoutmore",
         "/check-your-state-pension/account/nirecord/voluntarycontribs"
       )
@@ -567,7 +573,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text ' year is not full'" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dt:nth-child(10)>div>div.ni-notfull",
+        ".ni-notfull",
         "nisp.nirecord.gap"
       )
     }
@@ -575,7 +581,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'You did not make any contributions this year for too late to pay '" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(11)>div.contributions-wrapper>p.contributions-header",
+        ".contributions-header",
         "nisp.nirecord.youdidnotmakeanycontrib"
       )
     }
@@ -583,7 +589,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'Find out more about for too late to pay'" in {
       assertContainsExpectedValue(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(11)>div.contributions-wrapper>p:nth-child(2)",
+        ".contributions-wrapper>p:nth-child(2)",
         "nisp.nirecord.gap.findoutmoreabout",
         "/check-your-state-pension/account/nirecord/gapsandhowtocheck"
       )
@@ -592,7 +598,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'It’s too late to pay for this year. You can usually only pay for the last 6 years.'" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(11)>div.contributions-wrapper>p.panel-indent:nth-child(3)",
+        ".panel-indent:nth-child(3)",
         "nisp.nirecord.gap.latePaymentMessage"
       )
     }

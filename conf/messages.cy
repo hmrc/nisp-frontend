@@ -99,6 +99,9 @@ nisp.main.context.continueWorkingMax.stillNeedToPay = Pan fyddwch yn cyrraedd {0
 nisp.main.context.fillGaps.improve.title = Gallwch wella eich rhagolwg
 nisp.main.context.fillGaps.viewGaps = Edrych ar fylchau yn eich cofnod
 nisp.main.context.fillGaps.viewGapsAndCost = Bwrw golwg ar fylchau yn eich cofnod a’r gost o’u llenwi
+nisp.main.context.fillGaps.viewPayableGaps = Bwrw golwg dros fylchau taladwy
+nisp.main.context.fillGaps.niRecordCutOff = Eich cofnod Yswiriant Gwladol cyn mis Ebrill {0}
+nisp.main.context.fillGaps.tooLate = Mae’n rhy hwyr i dalu am fylchau yn ein cofnod Yswiriant Gwladol cyn mis Ebrill {0}.
 
 nisp.main.context.fillgaps.para1.plural = Mae gennych flynyddoedd ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon.
 nisp.main.context.fillgaps.para1.singular = Mae gennych flwyddyn ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon. Dim ond y flwyddyn hon sydd angen i chi ei llenwi i gael y mwyaf y gallwch ei gael.
