@@ -27,7 +27,7 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser, 
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.admin.ViewPayableGapsToggle
+import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
@@ -65,6 +65,13 @@ class NIRecordController @Inject()(
     Redirect(routes.NIRecordController.showFull)
   }
 
+  private def isFriendlyUser(nino: String): Boolean =
+    appConfig.friendlyUsers.contains(nino.filterNot(_.isWhitespace).toUpperCase)
+
+  private def ninoContainsNumberAtEnd(nino: String): Boolean = {
+    val lastDigit: String = nino.filter(_.isDigit).last.toString
+    appConfig.allowedUsersEndOfNino.contains(lastDigit)
+  }
   private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit
                                                                                                     hc: HeaderCarrier
   ): Unit =
@@ -122,27 +129,37 @@ class NIRecordController @Inject()(
       case _ => niRecord.taxYears.last.taxYear
     }
 
-    featureFlagService.get(ViewPayableGapsToggle).flatMap { flag =>
-      Future.successful(
-        Ok(
-          niRecordPage(
-            tableList = generateTableList(tableStart, tableEnd),
-            niRecord = niRecord,
-            gapsOnlyView = gapsOnlyView,
-            recordHasEnded = recordHasEnded,
-            yearsToContribute = yearsToContribute,
-            finalRelevantEndYear = finalRelevantStartYear + 1,
-            showPre1975Years = showPre1975Years(
-              niRecord.dateOfEntry,
-              authRequest.nispAuthedUser.dateOfBirth,
-              niRecord.qualifyingYearsPriorTo1975
-            ),
-            showFullNI = showFullNI,
-            currentDate = dateProvider.currentDate,
-            yearsPayable,
-            flag.isEnabled,
-            nispModellingPayableGapsUrl
-          )
+    for {
+      payableGapsToggle <- featureFlagService.get(ViewPayableGapsToggle)
+      friendlyUserToggle <- featureFlagService.get(FriendlyUserFilterToggle)
+    } yield {
+      val showViewPayableGapsButton: Boolean = (payableGapsToggle.isEnabled,
+        friendlyUserToggle.isEnabled,
+        isFriendlyUser(user.nino.nino),
+        ninoContainsNumberAtEnd(user.nino.nino)) match {
+        case(true, false, _, _) => true
+        case(true, true, _, _) => ninoContainsNumberAtEnd(user.nino.nino) || isFriendlyUser(user.nino.nino)
+        case _ => false
+      }
+
+      Ok(
+        niRecordPage(
+          tableList = generateTableList(tableStart, tableEnd),
+          niRecord = niRecord,
+          gapsOnlyView = gapsOnlyView,
+          recordHasEnded = recordHasEnded,
+          yearsToContribute = yearsToContribute,
+          finalRelevantEndYear = finalRelevantStartYear + 1,
+          showPre1975Years = showPre1975Years(
+            niRecord.dateOfEntry,
+            authRequest.nispAuthedUser.dateOfBirth,
+            niRecord.qualifyingYearsPriorTo1975
+          ),
+          showFullNI = showFullNI,
+          currentDate = dateProvider.currentDate,
+          yearsPayable,
+          showViewPayableGapsButton,
+          nispModellingPayableGapsUrl
         )
       )
     }

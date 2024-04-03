@@ -38,3 +38,10 @@ case object ViewPayableGapsToggle extends FeatureFlagName {
     "Enable/disable the View payable gaps button on NI record"
   )
 }
+
+case object FriendlyUserFilterToggle extends FeatureFlagName {
+  override val name: String = "friendly-user-filter-toggle"
+  override val description: Option[String] = Some(
+    "Enable/disable allowing specific users through instead of everybody."
+  )
+}

@@ -34,7 +34,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessing
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.admin.ViewPayableGapsToggle
+import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -69,6 +69,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
     when(mockAppConfig.niRecordPayableYears).thenReturn(17)
+    when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
+      .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = true)))
+    when(mockAppConfig.friendlyUsers).thenReturn(Seq())
+    when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -96,6 +100,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   def mockViewPayableGapsFeatureFlag(enabled: Boolean) = {
     when(mockFeatureFlagService.get(ViewPayableGapsToggle))
       .thenReturn(Future.successful(FeatureFlag(ViewPayableGapsToggle, isEnabled = enabled)))
+  }
+
+  def mockFriendlyUserFilterToggle(enabled: Boolean) = {
+    when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
+      .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = enabled)))
   }
 
   "GET /account/nirecord/gaps (gaps)" should {
@@ -177,7 +186,247 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       contentAsString(result) should include("View all years of contributions")
     }
 
-    "return gaps page for user with gaps and display View Payable Gaps button when ViewPayableGapsFeatureFlag is true" in {
+    "return gaps page and display View Payable Gaps button when ViewPayableGapsFeatureFlag is true and FriendlyUserFilterToggle is false" in {
+
+      mockFriendlyUserFilterToggle(false)
+
+      val statePensionResponse = StatePension(
+        LocalDate.of(2015, 4, 5),
+        StatePensionAmounts(
+          protectedPayment = false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017",
+        30,
+        pensionSharingOrder = false,
+        155.65,
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
+      )
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        40,
+        39,
+        2,
+        1,
+        Some(LocalDate.of(1973, 7, 7)),
+        homeResponsibilitiesProtection = false,
+        LocalDate.of(2016, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2015", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
+          NationalInsuranceTaxYear(
+            "2014",
+            qualifying = false,
+            123,
+            1,
+            1,
+            1,
+            456.58,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            "1999",
+            qualifying = false,
+            2,
+            5,
+            0,
+            1,
+            111.11,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          )
+        ),
+        reducedRateElection = false
+      )
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(statePensionResponse)))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
+
+      mockViewPayableGapsFeatureFlag(true)
+
+      val result = niRecordController.showGaps(generateFakeRequest)
+      contentAsString(result) should include("View all years of contributions")
+      contentAsString(result) should include("View payable gaps")
+    }
+
+    "return gaps page and not display View Payable Gaps button when FriendlyUserFilterToggle is true but users nino does not end in digit present in allowed list and user is not friendly user" in {
+
+      val statePensionResponse = StatePension(
+        LocalDate.of(2015, 4, 5),
+        StatePensionAmounts(
+          protectedPayment = false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017",
+        30,
+        pensionSharingOrder = false,
+        155.65,
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
+      )
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        40,
+        39,
+        2,
+        1,
+        Some(LocalDate.of(1973, 7, 7)),
+        homeResponsibilitiesProtection = false,
+        LocalDate.of(2016, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2015", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
+          NationalInsuranceTaxYear(
+            "2014",
+            qualifying = false,
+            123,
+            1,
+            1,
+            1,
+            456.58,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            "1999",
+            qualifying = false,
+            2,
+            5,
+            0,
+            1,
+            111.11,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          )
+        ),
+        reducedRateElection = false
+      )
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(statePensionResponse)))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
+
+      mockViewPayableGapsFeatureFlag(true)
+
+      val result = niRecordController.showGaps(generateFakeRequest)
+      contentAsString(result) should include("View all years of contributions")
+      contentAsString(result) should not include("View payable gaps")
+    }
+
+    "return gaps page and display View Payable Gaps button when FriendlyUserFilterToggle is true and users is friendlyUser" in {
+
+      when(mockAppConfig.friendlyUsers).thenReturn(Seq(TestAccountBuilder.regularNino.nino))
+
+      val statePensionResponse = StatePension(
+        LocalDate.of(2015, 4, 5),
+        StatePensionAmounts(
+          protectedPayment = false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017",
+        30,
+        pensionSharingOrder = false,
+        155.65,
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
+      )
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        40,
+        39,
+        2,
+        1,
+        Some(LocalDate.of(1973, 7, 7)),
+        homeResponsibilitiesProtection = false,
+        LocalDate.of(2016, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2015", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
+          NationalInsuranceTaxYear(
+            "2014",
+            qualifying = false,
+            123,
+            1,
+            1,
+            1,
+            456.58,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            "1999",
+            qualifying = false,
+            2,
+            5,
+            0,
+            1,
+            111.11,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          )
+        ),
+        reducedRateElection = false
+      )
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(statePensionResponse)))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
+
+      mockViewPayableGapsFeatureFlag(true)
+
+      val result = niRecordController.showGaps(generateFakeRequest)
+      contentAsString(result) should include("View all years of contributions")
+      contentAsString(result) should include("View payable gaps")
+    }
+
+    "return gaps page and display View Payable Gaps button when FriendlyUserFilterToggle and users nino ends in allowed digit" in {
+      val nino = TestAccountBuilder.regularNino.nino
+      when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq(nino.charAt(nino.length - 2).toString))
 
       val statePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),

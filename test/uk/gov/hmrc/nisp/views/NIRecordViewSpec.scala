@@ -28,6 +28,7 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.NIRecordController
@@ -36,6 +37,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.admin.FriendlyUserFilterToggle
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, WireMockHelper}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
@@ -91,6 +93,10 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
+      .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = true)))
+    when(mockAppConfig.friendlyUsers).thenReturn(Seq())
+    when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
