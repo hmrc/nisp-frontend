@@ -509,8 +509,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     }
 
     "render page with text 'year is not full'" in {
-
-      println(doc)
       assertEqualsMessage(
         doc,
         ".ni-notfull",
