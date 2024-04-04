@@ -125,7 +125,6 @@ class NIRecordController @Inject()(
                               (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Future[Result] = {
     val recordHasEnded = yearsToContribute < 1
     val yearsPayable = TaxYear.current.startYear - appConfig.niRecordPayableYears
-    val nispModellingPayableGapsUrl = s"${appConfig.nispModellingFrontendUrl}/check-your-state-pension/modelling/your-payable-gaps"
     val tableStart: String =
       if (recordHasEnded) finalRelevantStartYear.toString
       else niRecord.earningsIncludedUpTo.getYear.toString
@@ -164,7 +163,7 @@ class NIRecordController @Inject()(
           currentDate = dateProvider.currentDate,
           yearsPayable,
           showViewPayableGapsButton,
-          nispModellingPayableGapsUrl
+          appConfig.nispModellingFrontendUrl
         )
       )
     }

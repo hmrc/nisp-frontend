@@ -58,12 +58,13 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val niRecordPayableYears: Int             = getInt("numberOfPayableTaxYears")
   val friendlyUsers: Seq[String]            = config.get[Seq[String]]("allowedUsers.friendly")
   val allowedUsersEndOfNino: Seq[String]    = config.get[Seq[String]]("allowedUsers.endOfNino")
+  val nispModellingFrontendUrl: String      = getString("nisp-modelling.url")
+
 
   val citizenDetailsServiceUrl: String       = baseUrl("citizen-details")
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")
   val nationalInsuranceServiceUrl: String    = baseUrl("national-insurance")
   val statePensionServiceUrl: String         = baseUrl("state-pension")
-  val nispModellingFrontendUrl: String       = baseUrl("nisp-modelling-frontend")
 
   val sessionCacheURL: String    = baseUrl("cachable.session-cache")
   val sessionCacheDomain: String = getConfString(
