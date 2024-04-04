@@ -787,7 +787,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       contentAsString(result) should include("View years only showing gaps in your contributions")
     }
 
-    "return gaps page for user with gaps and not show button if no gaps after cutoff year" in {
+    "return gaps page for user with gaps and not show View payable gaps button if user has payable gaps but toggle is false" in {
 
       val expectedNationalInsuranceRecord = NationalInsuranceRecord(
         28,
@@ -799,7 +799,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
-            "2013",
+            "2005",
             qualifying = false,
             0,
             0,
@@ -808,11 +808,11 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
             704.60,
             Some(LocalDate.of(2019, 4, 5)),
             Some(LocalDate.of(2023, 4, 5)),
-            payable = true,
+            payable = false,
             underInvestigation = false
           ),
           NationalInsuranceTaxYear(
-            "2009",
+            "2001",
             qualifying = false,
             0,
             0,
@@ -857,15 +857,16 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
 
-      mockViewPayableGapsFeatureFlag(true)
+      mockViewPayableGapsFeatureFlag(false)
       mockFriendlyUserFilterToggle(false)
 
       val result = niRecordController.showFull(generateFakeRequest)
       contentAsString(result) should include("View years only showing gaps in your contributions")
       contentAsString(result) should not include("View payable gaps")
+      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
 
-    "return gaps page for user with gaps and show button if user has gaps before cutoff year" in {
+    "return gaps page for user with gaps and show button if user has payable gaps" in {
 
       val statePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),
@@ -955,9 +956,10 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       val result = niRecordController.showFull(generateFakeRequest)
       contentAsString(result) should include("View years only showing gaps in your contributions")
       contentAsString(result) should include("View payable gaps")
+      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
 
-    "return gaps page for user with gaps but not show button if user has no gaps before cutoff year" in {
+    "return gaps page for user with gaps but not show button if user has no gaps before or including cutoff year" in {
 
       val statePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),
