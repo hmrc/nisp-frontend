@@ -25,7 +25,7 @@ import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser, StandardAuthJourney}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent}
+import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent, NIRecordNoGapsEvent}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services._
@@ -85,6 +85,11 @@ class NIRecordController @Inject()(
         niRecord.numberOfGaps - niRecord.numberOfGapsPayable,
         niRecord.qualifyingYearsPriorTo1975
       )
+    )
+
+  private def sendNoGapsAuditEvent(nino: Nino)(implicit headerCarrier: HeaderCarrier): Unit =
+    auditConnector.sendEvent(
+      NIRecordNoGapsEvent(nino.nino)
     )
 
   private[controllers] def showPre1975Years(
@@ -203,6 +208,7 @@ class NIRecordController @Inject()(
       case Right(statePensionResponse) =>
         nationalInsuranceService.getSummary(nino) flatMap {
           case Right(Right(nationalInsuranceRecord)) =>
+            if (nationalInsuranceRecord.numberOfGaps == 0) sendNoGapsAuditEvent(nino)
             if (gapsOnlyView && nationalInsuranceRecord.numberOfGaps < 1)
               Future.successful(Redirect(routes.NIRecordController.showFull))
             else {
