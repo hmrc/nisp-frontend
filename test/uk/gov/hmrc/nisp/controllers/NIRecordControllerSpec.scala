@@ -866,7 +866,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
 
-    "return gaps page for user with gaps and show button if user has payable gaps" in {
+    "return gaps page for user with gaps and show button and text if user has payable gaps" in {
 
       val statePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),
@@ -959,7 +959,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
 
-    "return gaps page for user with gaps but not show button if user has no gaps before or including cutoff year" in {
+    "return gaps page for user with gaps and show button even if user has no gaps before or including cutoff year" in {
 
       val statePensionResponse = StatePension(
         LocalDate.of(2015, 4, 5),
@@ -1022,7 +1022,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showFull(generateFakeRequest)
       contentAsString(result) should include("View years only showing gaps in your contributions")
-      contentAsString(result) should not include("View payable gaps")
+      contentAsString(result) should include("View payable gaps")
     }
 
     "return full page for user without gaps" in {
