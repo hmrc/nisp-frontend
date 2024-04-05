@@ -736,7 +736,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         LocalDate.of(2014, 4, 5),
         List(
           NationalInsuranceTaxYear(
-            "2013-14",
+            "2013",
             qualifying = false,
             0,
             0,
@@ -785,6 +785,244 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showFull(generateFakeRequest)
       contentAsString(result) should include("View years only showing gaps in your contributions")
+    }
+
+    "return gaps page for user with gaps and not show View payable gaps button if user has payable gaps but toggle is false" in {
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -3,
+        10,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        homeResponsibilitiesProtection = false,
+        LocalDate.of(2014, 4, 5),
+        List(
+          NationalInsuranceTaxYear(
+            "2005",
+            qualifying = false,
+            0,
+            0,
+            0,
+            0,
+            704.60,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            "2001",
+            qualifying = false,
+            0,
+            0,
+            0,
+            0,
+            704.60,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = false,
+            underInvestigation = false
+          )
+        ),
+        reducedRateElection = false
+      )
+
+      val expectedStatePensionResponse = StatePension(
+        LocalDate.of(2015, 4, 5),
+        StatePensionAmounts(
+          protectedPayment = false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017-18",
+        30,
+        pensionSharingOrder = false,
+        155.65,
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
+      )
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedStatePensionResponse)))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
+
+      mockViewPayableGapsFeatureFlag(false)
+      mockFriendlyUserFilterToggle(false)
+
+      val result = niRecordController.showFull(generateFakeRequest)
+      contentAsString(result) should include("View years only showing gaps in your contributions")
+      contentAsString(result) should not include("View payable gaps")
+      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
+    }
+
+    "return gaps page for user with gaps and show button if user has payable gaps" in {
+
+      val statePensionResponse = StatePension(
+        LocalDate.of(2015, 4, 5),
+        StatePensionAmounts(
+          protectedPayment = false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017",
+        30,
+        pensionSharingOrder = false,
+        155.65,
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
+      )
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        40,
+        39,
+        2,
+        1,
+        Some(LocalDate.of(1973, 7, 7)),
+        homeResponsibilitiesProtection = false,
+        LocalDate.of(2016, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2015", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
+          NationalInsuranceTaxYear(
+            "2014",
+            qualifying = false,
+            123,
+            1,
+            1,
+            1,
+            456.58,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = true,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            "2008",
+            qualifying = false,
+            2,
+            5,
+            0,
+            1,
+            111.11,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = true,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            "1999",
+            qualifying = false,
+            2,
+            5,
+            0,
+            1,
+            111.11,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = true,
+            underInvestigation = false
+          )
+        ),
+        reducedRateElection = false
+      )
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(statePensionResponse)))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
+
+      mockViewPayableGapsFeatureFlag(true)
+      mockFriendlyUserFilterToggle(false)
+
+      val result = niRecordController.showFull(generateFakeRequest)
+      contentAsString(result) should include("View years only showing gaps in your contributions")
+      contentAsString(result) should include("View payable gaps")
+      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
+    }
+
+    "return gaps page for user with gaps but not show button if user has no gaps before or including cutoff year" in {
+
+      val statePensionResponse = StatePension(
+        LocalDate.of(2015, 4, 5),
+        StatePensionAmounts(
+          protectedPayment = false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64,
+        LocalDate.of(2018, 7, 6),
+        "2017",
+        30,
+        pensionSharingOrder = false,
+        155.65,
+        reducedRateElection = false,
+        statePensionAgeUnderConsideration = false
+      )
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        40,
+        39,
+        2,
+        1,
+        Some(LocalDate.of(1973, 7, 7)),
+        homeResponsibilitiesProtection = false,
+        LocalDate.of(2016, 4, 5),
+        List(
+          NationalInsuranceTaxYear("2015", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
+          NationalInsuranceTaxYear(
+            "2014",
+            qualifying = false,
+            123,
+            1,
+            1,
+            1,
+            456.58,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = true,
+            underInvestigation = false
+          )
+        ),
+        reducedRateElection = false
+      )
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+      )
+
+      when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(statePensionResponse)))
+      )
+
+      when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
+
+      mockViewPayableGapsFeatureFlag(true)
+      mockFriendlyUserFilterToggle(false)
+
+      val result = niRecordController.showFull(generateFakeRequest)
+      contentAsString(result) should include("View years only showing gaps in your contributions")
+      contentAsString(result) should not include("View payable gaps")
     }
 
     "return full page for user without gaps" in {
