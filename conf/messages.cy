@@ -292,7 +292,7 @@ nisp.nirecord.gap.voluntary.plural = Gwirfoddol: <strong>{0} o wythnosau</strong
 nisp.nirecord.gap.whenyouareclaiming.singular = Credydau Yswiriant Gwladol: <strong>1 wythnos</strong>
 nisp.nirecord.gap.whenyouareclaiming.plural= Credydau Yswiriant Gwladol: <strong>{0} o wythnosau</strong>
 nisp.nirecord.gap.whenyouareclaiming.info.singular = Efallai bod yr wythnos hon wedi cael ei ychwanegu i’ch cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun yn llawn amser neu ar wasanaeth rheithgor.
-nisp.nirecord.gap.whenyouareclaiming.info.plural = Gallai’r rhain fod wedi cael eu hychwanegu i’ch cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun yn llawn amser neu ar wasanaeth rheithgor.
+nisp.nirecord.gap.whenyouareclaiming.info.plural = Mae’n bosibl bod y rhain wedi cael eu hychwanegu at eich cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun ar sail amser llawn neu ar wasanaeth rheithgor.
 
 nisp.nirecord.unavailableyear = Nid yw eich cofnod ar gyfer y flwyddyn hon ar gael eto
 nisp.nirecord.yourcontributionfrom = Mae gennych gyfraniadau o
@@ -301,6 +301,7 @@ nisp.nirecord.gap.findoutmoreabout = Darganfyddwch fwy am <a href="{0}">fylchau 
 nisp.nirecord.gap.youcanmakeupshortfall = Gallwch wneud i fyny’r diffyg
 nisp.nirecord.gap.payvoluntarycontrib = Talu cyfraniad gwirfoddol o <strong>{0}</strong> erbyn <strong>{1}</strong>. Efallai bydd y diffyg hwn yn cynyddu ar ôl <strong>{2}</strong>.
 nisp.nirecord.gap.payvoluntarycontribaftercutoff = Talu cyfraniad gwirfoddol o <strong>{0}</strong> erbyn <strong>{1}</strong>.
+nisp.nirecord.gap.youCanPayvoluntarycontribaftercutoff = Gallwch dalu cyfraniad gwirfoddol o <strong>{0}</strong> erbyn <strong>{1}</strong>.
 
 nisp.nirecord.gap.findoutmore = Darganfyddwch fwy am <a href="{0}">gyfraniadau gwirfoddol</a>.
 nisp.nirecord.gap.latePaymentMessage = Mae’n rhy hwyr i dalu am y flwyddyn hon. Fel arfer gallwch ond talu am y 6 mlynedd diwethaf.

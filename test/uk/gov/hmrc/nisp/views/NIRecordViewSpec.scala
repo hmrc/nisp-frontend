@@ -37,7 +37,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.admin.FriendlyUserFilterToggle
+import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, WireMockHelper}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
@@ -94,7 +94,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
     when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
-      .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = true)))
+      .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = false)))
+    when(mockFeatureFlagService.get(ViewPayableGapsToggle))
+      .thenReturn(Future.successful(FeatureFlag(ViewPayableGapsToggle, isEnabled = false)))
     when(mockAppConfig.friendlyUsers).thenReturn(Seq())
     when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
   }
@@ -263,7 +265,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'You did not make any contributions this year '" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header",
+        "div.contributions-wrapper>p.contributions-header",
         "nisp.nirecord.youdidnotmakeanycontrib"
       )
     }
