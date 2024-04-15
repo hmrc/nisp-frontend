@@ -24,7 +24,8 @@
 
 @(
   niTaxYear: NationalInsuranceTaxYear,
-  currentDate: LocalDate
+  currentDate: LocalDate,
+  newContentWithButtonToggle: Boolean
 )(implicit messages: Messages)
 
 <dt class="expandable" aria-expanded="false"
@@ -169,14 +170,14 @@
   @if(niTaxYear.classOneContributions <= 0
     && niTaxYear.otherCredits <= 0
     && niTaxYear.classThreeCredits <= 0
-    && niTaxYear.classTwoCredits <= 0) {
+    && niTaxYear.classTwoCredits <= 0 && !newContentWithButtonToggle) {
 
       <p class="contributions-header">
         @messages("nisp.nirecord.youdidnotmakeanycontrib")
       </p>
     }
 
-  @if(!niTaxYear.qualifying) {
+  @if(!niTaxYear.qualifying && !newContentWithButtonToggle) {
     <p>
       @Html(messages(
         "nisp.nirecord.gap.findoutmoreabout",
@@ -193,18 +194,31 @@
       classThreePayableByDate <- niTaxYear.classThreePayableBy;
       classThreePayableWithPenalty <- niTaxYear.classThreePayableByPenalty
     ) {
-      <p class="contributions-header">
+      @if(!newContentWithButtonToggle) {
+        <p class="contributions-header">
         @Html(messages("nisp.nirecord.gap.youcanmakeupshortfall"))
-      </p>
+        </p>
+      }
 
       @if(niTaxYear.currentDateAfterCutOff(currentDate)) {
-        <p class="voluntary-contribution">
-          @Html(messages(
-            "nisp.nirecord.gap.payvoluntarycontribaftercutoff",
-            NispMoney.pounds(niTaxYear.classThreePayable),
-            langUtils.Dates.formatDate(classThreePayableWithPenalty)
-          ))
-        </p>
+          @if(newContentWithButtonToggle) {
+            <p class="voluntary-contribution govuk-!-margin-top-4">
+
+            @Html(messages(
+              "nisp.nirecord.gap.youCanPayvoluntarycontribaftercutoff",
+              NispMoney.pounds(niTaxYear.classThreePayable),
+              langUtils.Dates.formatDate(classThreePayableWithPenalty)
+            ))
+            </p>
+          } else {
+            <p class="voluntary-contribution">
+            @Html(messages(
+              "nisp.nirecord.gap.payvoluntarycontribaftercutoff",
+              NispMoney.pounds(niTaxYear.classThreePayable),
+              langUtils.Dates.formatDate(classThreePayableWithPenalty)
+            ))
+            </p>
+          }
       } else {
         <p class="voluntary-contribution">
           @Html(messages(
@@ -216,16 +230,18 @@
         </p>
       }
 
-      <p>
+      @if(!newContentWithButtonToggle) {
+        <p>
         @Html(messages(
           "nisp.nirecord.gap.findoutmore",
           routes.NIRecordController.showVoluntaryContributions.url
         ))
-      </p>
+        </p>
+      }
     }
   } else {
     @if(!niTaxYear.qualifying) {
-      <p class="panel-indent">
+      <p class="panel-indent @if(newContentWithButtonToggle) {govuk-!-margin-top-3}">
         @Html(messages("nisp.nirecord.gap.latePaymentMessage"))
       </p>
     }

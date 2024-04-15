@@ -295,6 +295,7 @@ nisp.nirecord.gap.findoutmoreabout = Find out more about <a href="{0}">gaps in y
 nisp.nirecord.gap.youcanmakeupshortfall = You can make up the shortfall
 nisp.nirecord.gap.payvoluntarycontrib = Pay a voluntary contribution of <strong>{0}</strong> by <strong>{1}</strong>. This shortfall may increase after <strong>{2}</strong>.
 nisp.nirecord.gap.payvoluntarycontribaftercutoff = Pay a voluntary contribution of <strong>{0}</strong> by <strong>{1}</strong>.
+nisp.nirecord.gap.youCanPayvoluntarycontribaftercutoff = You can pay a voluntary contribution of <strong>{0}</strong> by <strong>{1}</strong>.
 nisp.nirecord.gap.findoutmore = Find out more about <a href="{0}">voluntary contributions</a>.
 nisp.nirecord.gap.latePaymentMessage = It’s too late to pay for this year. You can usually only pay for the last 6 years.
 nisp.nirecord.gap.underInvestigation = We are checking this year to see if it counts towards your pension. We’ll update your record when this is finished, you do not need to do anything.

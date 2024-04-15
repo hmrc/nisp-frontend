@@ -270,7 +270,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'You did not make any contributions this year '" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header",
+        "div.contributions-wrapper>p.contributions-header",
         "nisp.nirecord.youdidnotmakeanycontrib"
       )
     }
