@@ -359,6 +359,10 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title = Credydau Yswiria
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc = Os oeddech yn hawlio budd-daliadau oherwydd eich bod yn methu gweithio, yn ddi-waith neu’n gofalu am rywun yn llawn amser, dylai’r rhain fod wedi cael eu credydu’n awtomatig. Os ydych yn credu bod gennych hawl i gredydau sydd ddim ar eich cofnod, gwiriwch os ydych yn gymwys a darganfod sut i’w cael.
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp = Mae Diogelwch Cyfrifoldebau Cartref (HRP) ond ar gael ar gyfer blynyddoedd treth <strong>llawn</strong>, o’r 6 Ebrill i 5 Ebrill, rhwng 1978 a 2010.
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = Mwy am gredydau Yswiriant Gwladol (agor mewn tab newydd)
+nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay = Fel arfer, gallwch ond dalu am fylchau yn eich cofnod Yswiriant Gwladol o’r 6 blwyddyn ddiwethaf.
+nisp.nirecord.gapsinyourrecord.thedeadlineforpaying = Mae’r dyddiad cau ar gyfer talu am fylchau rhwng mis Ebrill 2006 a mis Ebrill 2016 wedi’i ymestyn i 5 Ebrill 2025.
+nisp.nirecord.gapsinyourrecord.findoutmore = Dysgwch ragor am fylchau yn eich cofnod a sut i’w gwirio
+
 
 #********************************
 # Voluntary contributions page

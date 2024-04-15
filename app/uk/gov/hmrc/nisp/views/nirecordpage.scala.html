@@ -91,6 +91,25 @@ if (user.livesAbroad) {
       summary = messages("nisp.show.nino")
     )
 
+  @if(viewPayableGapsToggle) {
+    @p(
+      content = Text(messages("nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay")),
+      specId = Some("nirecordpage__p1")
+    )
+
+    @p(
+      content = Text(messages("nisp.nirecord.gapsinyourrecord.thedeadlineforpaying")),
+      specId = Some("nirecordpage__p2")
+    )
+
+    @link(
+      fullStop = false,
+      link = routes.NIRecordController.showGapsAndHowToCheckThem.url,
+      messageKey = "nisp.nirecord.gapsinyourrecord.findoutmore",
+      specId = Some("nirecordpage_text3__link")
+    )
+
+  } else {
     @p(
       content = Text(messages("nisp.nirecord.summary.youhave")),
       specId = Some("nirecordpage__p1")
@@ -113,37 +132,37 @@ if (user.livesAbroad) {
       </li>
 
       @if(!recordHasEnded) {
-      <li data-spec="nirecordpage__ul__qualifying_years__li2">
-      @if(yearsToContribute != 1) {
-        @messages(
-          "nisp.nirecord.summary.yearsRemaining",
-          yearsToContribute,
-          finalRelevantEndYear.toString
-        )
-      } else {
-        @messages(
-          "nisp.nirecord.summary.yearsRemaining.single",
-          yearsToContribute,
-          finalRelevantEndYear.toString
-        )
-      }
-      </li>
+        <li data-spec="nirecordpage__ul__qualifying_years__li2">
+        @if(yearsToContribute != 1) {
+          @messages(
+            "nisp.nirecord.summary.yearsRemaining",
+            yearsToContribute,
+            finalRelevantEndYear.toString
+          )
+        } else {
+          @messages(
+            "nisp.nirecord.summary.yearsRemaining.single",
+            yearsToContribute,
+            finalRelevantEndYear.toString
+          )
+        }
+        </li>
       }
 
       @if(niRecord.numberOfGaps > 0) {
-      <li data-spec="nirecordpage__ul__qualifying_years__li3">
-      @if(niRecord.numberOfGaps != 1) {
-        @messages(
-          "nisp.nirecord.summary.gaps",
-          niRecord.numberOfGaps
-        )
-      } else {
-        @messages(
-          "nisp.nirecord.summary.gaps.single",
-          niRecord.numberOfGaps
-        )
-      }
-      </li>
+        <li data-spec="nirecordpage__ul__qualifying_years__li3">
+        @if(niRecord.numberOfGaps != 1) {
+          @messages(
+            "nisp.nirecord.summary.gaps",
+            niRecord.numberOfGaps
+          )
+        } else {
+          @messages(
+            "nisp.nirecord.summary.gaps.single",
+            niRecord.numberOfGaps
+          )
+        }
+        </li>
       }
     </ul>
 
