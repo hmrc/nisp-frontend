@@ -292,7 +292,7 @@ nisp.nirecord.gap.voluntary.plural = Gwirfoddol: <strong>{0} o wythnosau</strong
 nisp.nirecord.gap.whenyouareclaiming.singular = Credydau Yswiriant Gwladol: <strong>1 wythnos</strong>
 nisp.nirecord.gap.whenyouareclaiming.plural= Credydau Yswiriant Gwladol: <strong>{0} o wythnosau</strong>
 nisp.nirecord.gap.whenyouareclaiming.info.singular = Efallai bod yr wythnos hon wedi cael ei ychwanegu i’ch cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun yn llawn amser neu ar wasanaeth rheithgor.
-nisp.nirecord.gap.whenyouareclaiming.info.plural = Gallai’r rhain fod wedi cael eu hychwanegu i’ch cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun yn llawn amser neu ar wasanaeth rheithgor.
+nisp.nirecord.gap.whenyouareclaiming.info.plural = Mae’n bosibl bod y rhain wedi cael eu hychwanegu at eich cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun ar sail amser llawn neu ar wasanaeth rheithgor.
 
 nisp.nirecord.unavailableyear = Nid yw eich cofnod ar gyfer y flwyddyn hon ar gael eto
 nisp.nirecord.yourcontributionfrom = Mae gennych gyfraniadau o
@@ -301,6 +301,7 @@ nisp.nirecord.gap.findoutmoreabout = Darganfyddwch fwy am <a href="{0}">fylchau 
 nisp.nirecord.gap.youcanmakeupshortfall = Gallwch wneud i fyny’r diffyg
 nisp.nirecord.gap.payvoluntarycontrib = Talu cyfraniad gwirfoddol o <strong>{0}</strong> erbyn <strong>{1}</strong>. Efallai bydd y diffyg hwn yn cynyddu ar ôl <strong>{2}</strong>.
 nisp.nirecord.gap.payvoluntarycontribaftercutoff = Talu cyfraniad gwirfoddol o <strong>{0}</strong> erbyn <strong>{1}</strong>.
+nisp.nirecord.gap.youCanPayvoluntarycontribaftercutoff = Gallwch dalu cyfraniad gwirfoddol o <strong>{0}</strong> erbyn <strong>{1}</strong>.
 
 nisp.nirecord.gap.findoutmore = Darganfyddwch fwy am <a href="{0}">gyfraniadau gwirfoddol</a>.
 nisp.nirecord.gap.latePaymentMessage = Mae’n rhy hwyr i dalu am y flwyddyn hon. Fel arfer gallwch ond talu am y 6 mlynedd diwethaf.
@@ -359,6 +360,10 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title = Credydau Yswiria
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc = Os oeddech yn hawlio budd-daliadau oherwydd eich bod yn methu gweithio, yn ddi-waith neu’n gofalu am rywun yn llawn amser, dylai’r rhain fod wedi cael eu credydu’n awtomatig. Os ydych yn credu bod gennych hawl i gredydau sydd ddim ar eich cofnod, gwiriwch os ydych yn gymwys a darganfod sut i’w cael.
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp = Mae Diogelwch Cyfrifoldebau Cartref (HRP) ond ar gael ar gyfer blynyddoedd treth <strong>llawn</strong>, o’r 6 Ebrill i 5 Ebrill, rhwng 1978 a 2010.
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = Mwy am gredydau Yswiriant Gwladol (agor mewn tab newydd)
+nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay = Fel arfer, gallwch ond dalu am fylchau yn eich cofnod Yswiriant Gwladol o’r 6 blwyddyn ddiwethaf.
+nisp.nirecord.gapsinyourrecord.thedeadlineforpaying = Mae’r dyddiad cau ar gyfer talu am fylchau rhwng mis Ebrill 2006 a mis Ebrill 2016 wedi’i ymestyn i 5 Ebrill 2025.
+nisp.nirecord.gapsinyourrecord.findoutmore = Dysgwch ragor am fylchau yn eich cofnod a sut i’w gwirio
+
 
 #********************************
 # Voluntary contributions page

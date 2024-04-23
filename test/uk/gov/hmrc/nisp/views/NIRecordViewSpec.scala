@@ -37,7 +37,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.admin.FriendlyUserFilterToggle
+import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, WireMockHelper}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
@@ -74,7 +74,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[DateProvider].toInstance(mockDateProvider),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
 
@@ -94,7 +95,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     server.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
     when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
-      .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = true)))
+      .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = false)))
+    when(mockFeatureFlagService.get(ViewPayableGapsToggle))
+      .thenReturn(Future.successful(FeatureFlag(ViewPayableGapsToggle, isEnabled = false)))
     when(mockAppConfig.friendlyUsers).thenReturn(Seq())
     when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
   }
@@ -143,6 +146,10 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     when(mockAppConfig.urBannerUrl).thenReturn(
       "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
     )
+  }
+  def mockViewPayableGapsFeatureFlag(enabled: Boolean) = {
+    when(mockFeatureFlagService.get(ViewPayableGapsToggle))
+      .thenReturn(Future.successful(FeatureFlag(ViewPayableGapsToggle, isEnabled = enabled)))
   }
 
   "Render Ni Record to view all the years" should {
@@ -263,7 +270,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     "render page with text 'You did not make any contributions this year '" in {
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>dd:nth-child(3)>div.contributions-wrapper>p.contributions-header",
+        "div.contributions-wrapper>p.contributions-header",
         "nisp.nirecord.youdidnotmakeanycontrib"
       )
     }
@@ -1769,6 +1776,42 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
         doc,
         "[data-spec='nirecordpage__printlink_l']",
         "nisp.print.this.ni.record"
+      )
+    }
+  }
+
+  "Render Ni Record view with ViewPayableGapsToggle set to true" should {
+
+
+    lazy val doc = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
+
+    "return correct content in first paragraph" in {
+      mockViewPayableGapsFeatureFlag(true)
+      mockSetup
+      assertEqualsMessage(
+        doc,
+        "[data-spec='nirecordpage__p1']",
+        "nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay"
+      )
+    }
+
+    "return correct content in second paragraph" in {
+      mockViewPayableGapsFeatureFlag(true)
+      mockSetup
+      assertEqualsMessage(
+        doc,
+        "[data-spec='nirecordpage__p2']",
+        "nisp.nirecord.gapsinyourrecord.thedeadlineforpaying"
+      )
+    }
+
+    "return correct content for find out more link" in {
+      mockViewPayableGapsFeatureFlag(true)
+      mockSetup
+      assertEqualsMessage(
+        doc,
+        "[data-spec='nirecordpage_text3__link']",
+        "nisp.nirecord.gapsinyourrecord.findoutmore"
       )
     }
   }

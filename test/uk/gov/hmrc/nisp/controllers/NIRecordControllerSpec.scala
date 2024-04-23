@@ -265,7 +265,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       mockViewPayableGapsFeatureFlag(true)
 
       val result = niRecordController.showGaps(generateFakeRequest)
-      contentAsString(result) should include("View all years of contributions")
+      contentAsString(result) should include("Find out more about gaps in your record and how to check them")
       contentAsString(result) should include("View payable gaps")
     }
 
@@ -423,7 +423,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       mockViewPayableGapsFeatureFlag(true)
 
       val result = niRecordController.showGaps(generateFakeRequest)
-      contentAsString(result) should include("View all years of contributions")
+      contentAsString(result) should include("Find out more about gaps in your record and how to check them")
       contentAsString(result) should include("View payable gaps")
     }
 
@@ -503,7 +503,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       mockViewPayableGapsFeatureFlag(true)
 
       val result = niRecordController.showGaps(generateFakeRequest)
-      contentAsString(result) should include("View all years of contributions")
+      contentAsString(result) should include("Find out more about gaps in your record and how to check them")
       contentAsString(result) should include("View payable gaps")
     }
 
@@ -954,7 +954,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       mockFriendlyUserFilterToggle(false)
 
       val result = niRecordController.showFull(generateFakeRequest)
-      contentAsString(result) should include("View years only showing gaps in your contributions")
+      contentAsString(result) should include("Find out more about gaps in your record and how to check them")
       contentAsString(result) should include("View payable gaps")
       contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
@@ -1021,7 +1021,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       mockFriendlyUserFilterToggle(false)
 
       val result = niRecordController.showFull(generateFakeRequest)
-      contentAsString(result) should include("View years only showing gaps in your contributions")
+      contentAsString(result) should include("Find out more about gaps in your record and how to check them")
       contentAsString(result) should include("View payable gaps")
     }
 
