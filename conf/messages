@@ -274,9 +274,6 @@ nisp.nirecord.showfull = View all years of contributions
 nisp.nirecord.fullyear = Full year
 nisp.nirecord.seperator = to
 
-nisp.nirecord.banner.title = Important
-nisp.nirecord.banner.heading = You can soon use your Personal Tax Account to check if you can make voluntary National Insurance contributions, and pay using the online service.
-
 nisp.nirecord.gap = Year is not full
 nisp.nirecord.gap.paidemployment = Paid employment: <strong>{0}</strong>
 nisp.nirecord.gap.selfemployed.singular = Self-employment: <strong>1 week</strong>

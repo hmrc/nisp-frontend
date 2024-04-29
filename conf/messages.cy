@@ -273,8 +273,6 @@ nisp.nirecord.yournirecordallyears = Pob blwyddyn.
 nisp.nirecord.youdonothaveanygaps = Nid oes gennych unrhyw fylchau yn eich cofnod.
 nisp.nirecord.seperator = i
 
-nisp.nirecord.banner.title = Pwysig
-nisp.nirecord.banner.heading = Cyn bo hir, gallwch ddefnyddio’ch Cyfrif Treth Personol i wirio a allwch wneud cyfraniadau Yswiriant Gwladol gwirfoddol a thalu gan ddefnyddio’r gwasanaeth ar-lein.
 
 nisp.nirecord.showgaps = Bwrw golwg dros flynyddoedd sy’n dangos bylchau yn eich cyfraniadau yn unig
 nisp.nirecord.showfull = Gweld pob blwyddyn y gwnaed cyfraniadau ynddi
