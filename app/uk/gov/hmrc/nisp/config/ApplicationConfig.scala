@@ -52,7 +52,6 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)
   val isWelshEnabled: Boolean               = getConfBool("features.welsh-translation", false)
   val feedbackFrontendUrl: String           = getString("feedback-frontend.url")
-  val urBannerUrl: String                   = getString("urBanner.link")
   val niRecordPayableYears: Int             = getInt("numberOfPayableTaxYears")
   val friendlyUsers: Seq[String]            = config.get[Seq[String]]("allowedUsers.friendly")
   val allowedUsersEndOfNino: Seq[String]    = config.get[Seq[String]]("allowedUsers.endOfNino")
