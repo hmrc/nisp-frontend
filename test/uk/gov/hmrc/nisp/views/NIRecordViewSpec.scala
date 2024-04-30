@@ -110,7 +110,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
   val nIRecordRegular: NationalInsuranceRecord = TestAccountBuilder
     .jsonResponseByType[NationalInsuranceRecord](TestAccountBuilder.regularNino, "national-insurance-record")
 
-  def mockSetup: OngoingStubbing[String] = {
+  def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
     when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
     when(mockAppConfig.showFullNI).thenReturn(true)
 
@@ -141,11 +141,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     val niRecord = nIRecordRegular.copy(qualifyingYearsPriorTo1975 = -3)
     when(mockNationalInsuranceService.getSummary(mockAny())(mockAny())).
       thenReturn(Future.successful(Right(Right(niRecord))))
-
-    when(mockAppConfig.showUrBanner).thenReturn(true)
-    when(mockAppConfig.urBannerUrl).thenReturn(
-      "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
-    )
   }
   def mockViewPayableGapsFeatureFlag(enabled: Boolean) = {
     when(mockFeatureFlagService.get(ViewPayableGapsToggle))

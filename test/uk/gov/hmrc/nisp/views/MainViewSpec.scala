@@ -33,9 +33,6 @@ class MainViewSpec extends HtmlSpec {
     val testName: String
     val profileAndSettingsLink: String
 
-    val researchBannerHeaderSelector: String
-    val researchBannerLinkSelector: String
-
     val accessibilityReferrerUrl: String
 
     val reportTechnicalProblemUrl: String
@@ -44,9 +41,6 @@ class MainViewSpec extends HtmlSpec {
   object NewMainUnique extends UniqueValues {
     override val testName: String = "new style"
     override val profileAndSettingsLink: String = "http://localhost:9232/personal-account/profile-and-settings"
-
-    override val researchBannerHeaderSelector: String = ".hmrc-user-research-banner__title"
-    override val researchBannerLinkSelector: String = ".hmrc-user-research-banner__link"
 
     override val accessibilityReferrerUrl: String = "12346%2Fcheck-your-state-pension"
 
@@ -184,32 +178,6 @@ class MainViewSpec extends HtmlSpec {
 
         "have the link to the sign out controller" in {
           signOutLink.attr("href") shouldBe CommonValues.signOutUrl
-        }
-
-      }
-
-      "the research banner" should {
-
-        lazy val researchBanner = doc.select(".hmrc-user-research-banner").first()
-
-        "have the text 'Help make GOV.UK better'" in {
-          val text = researchBanner.select(testObject.uniqueValues.researchBannerHeaderSelector).text()
-
-          text shouldBe CommonValues.urBannerHeader
-        }
-
-        "have the link 'Sign up to take part in research (opens in new tab)'" which {
-
-          lazy val link = researchBanner.select(testObject.uniqueValues.researchBannerLinkSelector)
-
-          "has the correct text" in {
-            link.text() shouldBe CommonValues.urBannerLinkText
-          }
-
-          "links to the correct URL" in {
-            link.attr("href") shouldBe CommonValues.urBannerLink
-          }
-
         }
 
       }

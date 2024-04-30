@@ -38,7 +38,6 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val mfaUpliftUrl: String              = getString("mfa-uplift.url")
   val ggSignInUrl: String               = getString("government-gateway-sign-in.host")
 
-  val showUrBanner: Boolean                 = getBoolean("urBannerToggle")
   val showExcessiveTrafficMessage: Boolean  = getBoolean("excessiveTrafficToggle")
   val isleManLink: String                   = getString("isle-man-link.url")
   val citizenAdviceLinkEn: String           = getString("citizens-advice-link-en.url")
@@ -48,7 +47,6 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val pensionWiseLink: String               = getString("pension-wise-link.url")
   private val frontendHost                  = getString("nisp-frontend.host")
   val accessibilityStatementHost: String    = getString("accessibility-statement.url") + "/accessibility-statement"
-  val urRecruitmentLinkURL: String          = getString("ur-research.url")
 
   val showFullNI: Boolean                   = getConfBool("features.fullNIrecord", false)
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)

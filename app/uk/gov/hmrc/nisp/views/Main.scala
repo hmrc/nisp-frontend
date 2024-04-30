@@ -37,7 +37,7 @@ import scala.util.{Failure, Success, Try}
 trait Main {
   def apply(
              pageTitle: String,
-             showUrBanner: Boolean = true,
+             showUrBanner: Boolean = false,
              extendedTitle: Boolean = true,
              optCustomLayout: Option[Html => Html] = None,
              sidebar: Option[Html] = None,
