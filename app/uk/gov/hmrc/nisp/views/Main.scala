@@ -90,6 +90,7 @@ class MainImpl @Inject()(
       timeOutUrl = None,
       keepAliveUrl = routes.TimeoutController.keep_alive.url,
       showBackLinkJS = true,
+      showSignOutInHeader = true,
       scripts = Seq(additionalScripts()),
       styleSheets = Seq(
         additionalStyles(),
