@@ -21,14 +21,14 @@ object AppDependencies {
 
   val bootstrapVersion = "8.5.0"
   private val playVersion = "play-30"
-  private val hmrcMongoVersion = "1.7.0"
+  private val hmrcMongoVersion = "1.9.0"
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"       %% s"http-caching-client-$playVersion"           % "11.1.0",
-    "uk.gov.hmrc"       %% "tax-year"                                    % "3.3.0",
+    "uk.gov.hmrc"       %% s"http-caching-client-$playVersion"           % "11.2.0",
+    "uk.gov.hmrc"       %% "tax-year"                                    % "4.0.0",
     "uk.gov.hmrc"       %% s"play-conditional-form-mapping-$playVersion" % "2.0.0",
     "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion"  % "1.3.0",
-    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                   % "1.5.0"
+    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                   % "1.6.0"
   )
 
   val test: Seq[ModuleID] = Seq(
