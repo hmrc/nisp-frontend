@@ -71,9 +71,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
   val mockMetricsService: MetricsService                     = mock[MetricsService]
   val mockSessionCache: SessionCache                         = mock[SessionCache]
 
-  val urResearchURL =
-    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
-
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
   override def beforeEach(): Unit = {
@@ -85,7 +82,6 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
     reset(mockPertaxHelper)
     server.resetAll()
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
-    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
