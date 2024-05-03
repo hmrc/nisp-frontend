@@ -44,9 +44,6 @@ import scala.concurrent.Future
 
 class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
 
-  val urResearchURL =
-    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
-
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
@@ -92,7 +89,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     reset(mockPertaxHelper)
     server.resetAll()
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
-    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
@@ -113,7 +109,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       "The scenario is continue working  || Fill Gaps" when {
 
         "State Pension view with NON-MQP :  Personal Max" should {
-          def mockSetup: OngoingStubbing[String] = {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(StatePension(
                 LocalDate.of(2016, 4, 5),
@@ -154,8 +150,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockHelper {
               )
               ))))
 
-            when(mockAppConfig.showUrBanner).thenReturn(true)
-            when(mockAppConfig.urRecruitmentLinkURL).thenReturn(urResearchURL)
           }
 
           lazy val doc =

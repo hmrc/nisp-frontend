@@ -48,8 +48,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
 
   val expectedMoneyServiceLink          = "https://www.moneyadviceservice.org.uk/en"
   val expectedPensionCreditOverviewLink = "https://www.gov.uk/pension-credit/overview"
-  val urResearchURL                     =
-    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
     SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
@@ -99,7 +97,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
     reset(mockAppConfig)
     reset(mockPertaxHelper)
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
-    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")

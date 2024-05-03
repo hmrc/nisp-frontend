@@ -46,10 +46,6 @@
   statePensionAgeUnderConsideration: Option[Boolean]
 )(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
 
-@excludeUrPanel(showUrBannerOn: Exclusion) = @{
-  showUrBannerOn == PostStatePensionAge | showUrBannerOn == IsleOfMan
-}
-
 @insetContent = {
   @if(exclusion.equals(PostStatePensionAge)) {
     @postStatePensionAge()
@@ -84,8 +80,7 @@
 }
 
 @main(
-  pageTitle = messages("nisp.main.title"),
-  showUrBanner = excludeUrPanel(exclusion)
+  pageTitle = messages("nisp.main.title")
 ) {
 
   @h1(

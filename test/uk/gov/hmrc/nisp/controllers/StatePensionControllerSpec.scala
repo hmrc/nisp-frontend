@@ -244,7 +244,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(statePensionResponse)))
         )
 
-        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
         when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -299,7 +299,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(statePensionCopeResponse)))
         )
 
-        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
         when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -314,7 +314,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(statePensionCopeResponse)))
         )
 
-        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
         when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -333,7 +333,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(statePensionResponse)))
         )
 
-        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
         when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -354,7 +354,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
         )
 
-        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
         when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -374,7 +374,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(statePensionResponse)))
         )
 
-        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
         when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -396,7 +396,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(statePensionResponse)))
         )
 
-        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
         when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -441,7 +441,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           Future.successful(Right(Right(statePensionVariation2)))
         )
 
-        when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
         when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -465,7 +465,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
             Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 
-          when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
           when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
           when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -527,7 +527,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
             Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 
-          when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
           when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
           when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -552,7 +552,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
             Future.successful(Right(Right(statePensionResponseVariation3)))
           )
 
-          when(mockAppConfig.urBannerUrl).thenReturn("/foo")
+
           when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
           when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 

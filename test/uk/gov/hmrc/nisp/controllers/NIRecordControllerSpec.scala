@@ -66,7 +66,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     reset(mockAuditConnector)
     reset(mockDateProvider)
     reset(mockFeatureFlagService)
-    when(mockAppConfig.urBannerUrl).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     server.resetAll()
@@ -1208,7 +1207,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
-      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
       when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
       when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -1237,7 +1235,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
-      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
       when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
       when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -1279,7 +1276,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         Future.successful(Right(Right(expectedNationalInsuranceRecord)))
       )
 
-      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
       when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
       when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -1294,7 +1290,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         Future.successful(Left(UpstreamErrorResponse("test", 500)))
       )
 
-      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
       when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
       when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -1308,7 +1303,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
       )
 
-      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
       when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
       when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 
@@ -1320,7 +1314,6 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   "GET /account/nirecord/voluntarycontribs" should {
 
     "return how to check page for authenticated user" in {
-      when(mockAppConfig.urBannerUrl).thenReturn("/foo")
       when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
       when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
 

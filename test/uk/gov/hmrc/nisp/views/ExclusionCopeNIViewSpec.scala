@@ -34,8 +34,6 @@ import java.time.{Instant, LocalDate}
 class ExclusionCopeNIViewSpec extends HtmlSpec with Injecting {
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
-  val urResearchURL                    =
-    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
 
   implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
     FakeRequest(),
@@ -45,7 +43,6 @@ class ExclusionCopeNIViewSpec extends HtmlSpec with Injecting {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    when(mockAppConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
   }

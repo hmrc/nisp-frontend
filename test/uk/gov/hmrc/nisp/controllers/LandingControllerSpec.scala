@@ -39,8 +39,6 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
 
   implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
   val fakeRequestWelsh: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/cymraeg")
-  val urResearchURL                                  =
-    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
   val mockApplicationConfig: ApplicationConfig       = mock[ApplicationConfig]
   val mockIVConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
 
@@ -55,7 +53,6 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
     super.beforeEach()
     reset(mockApplicationConfig)
     reset(mockIVConnector)
-    when(mockApplicationConfig.urBannerUrl).thenReturn(urResearchURL)
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
   }

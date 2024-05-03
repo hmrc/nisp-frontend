@@ -42,7 +42,6 @@ class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    when(mockApplicationConfig.urBannerUrl).thenReturn("/urResearch")
     when(mockApplicationConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockApplicationConfig.contactFormServiceIdentifier).thenReturn("/id")
   }
