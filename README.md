@@ -6,6 +6,11 @@ Other components:
 - [State Pension Backend](https://github.com/hmrc/state-pension)
 - [National Insurance Backend](https://github.com/hmrc/national-insurance-record)
 
+Service Manager profile
+```shell
+sm2 --start NISP_ALL --clean --workers 5
+```
+
 ## Summary
 
 This service provides the following useful information to the customer:

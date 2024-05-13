@@ -43,12 +43,6 @@
     specId = Some("identity_verification_landing_h1")
   )
 
-  @govukWarningText(WarningText(
-    iconFallbackText = Some(messages("global.important_legal_notice")),
-    attributes = Map("id" -> "state_pension__mqp__inset_text_3"),
-    content = Text(messages("nisp.landing.estimateprovided"))
-  ))
-
   @h2(
     elmId = Some("landing-signin-heading"),
     msg = "nisp.landing.signin.heading",
@@ -56,8 +50,13 @@
   )
 
   @p(
-    content = Text(messages("nisp.landing.signin.gg")),
-    specId = Some("identity_verification_landing_p1")
+    content = Text(messages("nisp.landing.signin.line1")),
+    specId = Some("identity_verification_landing_line1")
+  )
+
+  @p(
+    content = Text(messages("nisp.landing.signin.line2")),
+    specId = Some("identity_verification_landing_line2")
   )
 
   @govukButton(Button(

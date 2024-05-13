@@ -27,10 +27,11 @@ nisp.title.extension = Gwirio eich Pensiwn y Wladwriaeth
 #*************************
 
 nisp.title = Gwirio rhagolwg o’ch Pensiwn y Wladwriaeth
-nisp.continue = Parhau
-nisp.landing.title = Gwirio eich Pensiwn y Wladwriaeth
-nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych chi
-nisp.landing.signin.gg = Gallwch fewngofnodi drwy ddefnyddio Porth y Llywodraeth. Efallai y bydd angen i chi ateb ychydig o gwestiynau – byddant yn seiliedig ar bethau mae CThEM eisoes yn ei wybod amdanoch. Yna gallwch gael mynediad i wasanaethau eraill CThEM yn ddiogel.
+nisp.continue = Yn eich blaen
+nisp.landing.title = Gwirioʼch Pensiwn y Wladwriaeth
+nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych
+nisp.landing.signin.line1 = Gallwch fewngofnodi gyda’r Dynodydd Defnyddiwr (ID) a’r cyfrinair a ddefnyddiwch i fewngofnodi i wasanaethau ar-lein CThEF.
+nisp.landing.signin.line2 = Mae’n bosibl y bydd angen i chi ateb ychydig o gwestiynau - byddant yn seiliedig ar bethau y mae CThEF eisoes yn gwybod amdanoch chi. Yna, gallwch gael mynediad at wasanaethau eraill CThEF yn ddiogel.
 nisp.landing.estimateprovided = Darperir eich rhagolwg Pensiwn y Wladwriaeth er gwybodaeth yn unig ac nid yw’r gwasanaeth yn cynnig cyngor ariannol. Pan yn cynllunio am eich ymddeoliad, dylech chwilio am gyngor proffesiynol.
 nisp.landing.eligibility.heading = Gallwch ddefnyddio’r gwasanaeth hwn os ydych yn
 nisp.landing.eligibility1 = dyn a aned ar ôl 5 Ebrill 1951

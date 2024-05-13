@@ -33,6 +33,10 @@ ThisBuild / scalacOptions ++= Seq(
   "-Wconf:cat=unused&src=.*JavaScriptReverseRoutes\\.scala:s"
 )
 
+addCommandAlias("runLocal", "run -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes")
+addCommandAlias("runAllTests", ";test;it/test;")
+addCommandAlias("runAllChecks", ";clean;scalastyle;coverageOn;runAllTests;coverageReport;coverageOff;")
+
 lazy val playSettings: Seq[Setting[?]] = Seq(
   pipelineStages := Seq(digest)
 )
