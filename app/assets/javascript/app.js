@@ -55,11 +55,23 @@ function printLink() {
   }
 }
 
+function goBack() {
+  const backLink = document.getElementById('nispBackLink');
+
+  if (backLink != null && backLink != 'undefined') {
+    backLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.history.back();
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function (){
   hideDetails();
   hideAccordion();
   accordionToggleShowHide();
   printLink();
+  goBack();
 }, false);
 
 

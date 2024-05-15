@@ -372,7 +372,8 @@ if (user.livesAbroad) {
     content = HtmlContent(
       link(
         inParagraph = true,
-        link = "javascript:window.history.back();",
+        link = "#",
+        id = Some("nispBackLink"),
         messageKey = "nisp.back",
         specId = Some("nirecordpage__backlink_l")
     )),
