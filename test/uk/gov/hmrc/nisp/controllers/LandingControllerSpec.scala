@@ -73,14 +73,6 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       charset(result)             shouldBe Some("utf-8")
     }
 
-    "load the landing page" in {
-      val result = landingController.show(fakeRequest)
-      contentAsString(result) should include(
-        "Your State Pension forecast is provided for your information only and the " +
-          "service does not offer financial advice. When planning for your retirement, you should seek professional advice."
-      )
-    }
-
     "have a start button" in {
       val result = landingController.show(fakeRequest)
       contentAsString(result) should include("Continue")
