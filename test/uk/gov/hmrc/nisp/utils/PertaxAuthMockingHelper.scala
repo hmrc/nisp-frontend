@@ -68,7 +68,7 @@ trait PertaxAuthMockingHelper {
       .withBody(body)
 
     server.stubFor(
-      get(urlMatching(s"/pertax/partials/$partialUrl"))
+      get(urlMatching(s"/$partialUrl"))
         .willReturn(
           title.fold(response) { unwrappedTitle =>
             response.withHeader("X-Title", UriEncoding.encodePathSegment(unwrappedTitle, "UTF-8"))

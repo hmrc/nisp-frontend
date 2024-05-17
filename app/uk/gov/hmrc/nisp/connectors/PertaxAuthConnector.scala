@@ -42,7 +42,7 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: Application
   }
 
   override def loadPartial(partialContextUrl: String)(implicit hc: HeaderCarrier): Future[HtmlPartial] = {
-    val partialUrl = appConfig.pertaxAuthBaseUrl + s"/pertax/partials/$partialContextUrl"
+    val partialUrl = appConfig.pertaxAuthBaseUrl + s"/$partialContextUrl"
 
     http.GET[HtmlPartial](partialUrl).map {
       case partialSuccess: HtmlPartial.Success => partialSuccess
