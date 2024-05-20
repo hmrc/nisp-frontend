@@ -216,27 +216,6 @@
       }
     }
 
-    <p class="govuk-body">
-      @statePension.mqpScenario.map { mqp =>
-        @if(mqp == CanGetWithGaps) {
-          @link(
-            fullStop = true,
-            link = routes.NIRecordController.showGaps.url,
-            messageKey = "nisp.main.context.fillGaps.viewGapsAndCost",
-            specId = Some("state_pension__mqp__cant_get_with_gaps")
-          )
-        }
-        @if(mqp == CantGet) {
-          @link(
-            fullStop = true,
-            link = routes.NIRecordController.showFull.url,
-            messageKey = "nisp.main.showyourrecord",
-            specId = Some("state_pension__mqp__cant_get")
-          )
-        }
-      }
-    </p>
-
     @p(
       content = HtmlContent(
       messages(

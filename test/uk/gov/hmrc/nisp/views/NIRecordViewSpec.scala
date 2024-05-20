@@ -384,14 +384,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       )
     }
 
-    "render page with href link 'back'" in {
-      assertLinkHasValue(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "javascript:window.history.back();"
-      )
-    }
-
     "render page with print link" in {
       assertEqualsMessage(
         doc,
@@ -613,14 +605,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
         doc,
         "[data-spec='nirecordpage__backlink_l']",
         "nisp.back"
-      )
-    }
-
-    "render page with href link 'back'" in {
-      assertLinkHasValue(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "javascript:window.history.back();"
       )
     }
 
@@ -1172,15 +1156,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       )
     }
 
-    "render page with href link 'back'" in {
-      mockSetup
-      assertLinkHasValue(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "javascript:window.history.back();"
-      )
-    }
-
     "render page with print link" in {
       mockSetup
       assertEqualsMessage(
@@ -1312,15 +1287,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
         doc,
         "[data-spec='nirecordpage__backlink_l']",
         "nisp.back"
-      )
-    }
-
-    "render page with href link 'back'" in {
-      mockSetup
-      assertLinkHasValue(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "javascript:window.history.back();"
       )
     }
 
@@ -1508,15 +1474,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
         doc,
         "[data-spec='nirecordpage__backlink_l']",
         "nisp.back"
-      )
-    }
-
-    "render page with href link 'back'" in {
-      mockSetup
-      assertLinkHasValue(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "javascript:window.history.back();"
       )
     }
 
