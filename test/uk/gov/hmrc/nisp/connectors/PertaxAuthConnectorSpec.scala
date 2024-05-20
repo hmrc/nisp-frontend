@@ -84,7 +84,7 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
 
           val result = {
             mockPertaxPartial("""<html></html>""", Some("Test Page"))
-            connector.loadPartial("partial")
+            connector.loadPartial("/partial")
           }
 
           await(result) shouldBe expectedPartial
@@ -98,7 +98,7 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
 
           val result = {
             mockPertaxPartial("<html>Failure Page</html>", None, BAD_REQUEST)
-            connector.loadPartial("partial")
+            connector.loadPartial("/partial")
           }
 
           await(result) shouldBe expectedPartial
