@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import cats.data.EitherT
+import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.when
@@ -247,7 +248,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
                   )))))
 
             when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
-              HtmlPartial.Success(Some("Test Title"), Html("Hello"))
+              HtmlPartial.Success(Some("Test Title"), Html("<div id=\"partial\">Hello</div>"))
             ))
 
             authAction.invokeBlock(authenticatedRequest(), block)
@@ -257,8 +258,10 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
             result.header.status shouldBe IM_A_TEAPOT
           }
 
-          "has a body of 'Hello'" in {
-            bodyOf(result) shouldBe "Hello"
+          "has a title of 'Test Title' and partial of 'Hello'" in {
+            lazy val doc = Jsoup.parse(bodyOf(result))
+            doc.getElementsByTag("title").text() shouldBe "Test Title - nisp.title.extension - GOV.UK"
+            doc.getElementById("partial").text() shouldBe "Hello"
           }
         }
       }

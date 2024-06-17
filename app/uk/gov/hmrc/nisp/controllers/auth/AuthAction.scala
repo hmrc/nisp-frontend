@@ -48,10 +48,7 @@ class AuthActionImpl @Inject()(
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised(
-      ConfidenceLevel.L200 and
-        (CredentialStrength(CredentialStrength.weak) or CredentialStrength(CredentialStrength.strong))
-    )
+    authorised()
       .retrieve(
         Retrievals.nino
           and Retrievals.confidenceLevel
@@ -61,9 +58,6 @@ class AuthActionImpl @Inject()(
           and Retrievals.allEnrolments
           and Retrievals.trustedHelper
       ) {
-
-        case Some(_) ~ _ ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ Enrolments(_) ~ _ =>
-          upliftCredentialStrength
 
         case Some(nino)
           ~ confidenceLevel
@@ -75,26 +69,6 @@ class AuthActionImpl @Inject()(
           authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, trustedHelper)
 
         case _ => throw new RuntimeException("Can't find credentials for user")
-      } recover {
-        case _: NoActiveSession =>
-          Redirect(
-            applicationConfig.ggSignInUrl,
-            Map(
-              "continue"    -> Seq(applicationConfig.postSignInRedirectUrl),
-              "origin"      -> Seq("nisp-frontend"),
-              "accountType" -> Seq("individual")
-            )
-          )
-        case _: InsufficientConfidenceLevel =>
-          Redirect(
-            applicationConfig.ivUpliftUrl,
-            Map(
-              "origin"          -> Seq("NISP"),
-              "completionURL"   -> Seq(applicationConfig.postSignInRedirectUrl),
-              "failureURL"      -> Seq(applicationConfig.notAuthorisedRedirectUrl),
-              "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
-            )
-          )
       }
   }
 
@@ -131,17 +105,6 @@ class AuthActionImpl @Inject()(
         }
     }
   }
-
-  private def upliftCredentialStrength: Future[Result] =
-    Future.successful(
-      Redirect(
-        applicationConfig.mfaUpliftUrl,
-        Map(
-          "continueUrl" -> Seq(applicationConfig.postSignInRedirectUrl),
-          "origin" -> Seq("nisp-frontend")
-        )
-      )
-    )
 }
 
 trait AuthAction

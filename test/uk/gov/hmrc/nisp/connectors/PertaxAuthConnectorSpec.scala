@@ -40,11 +40,8 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
   val nino = "AA000000A"
 
   "PertaxAuthConnector" when {
-
     "calling .authorise" when {
-
       "pertax auth returns a successful response" should {
-
         s"return a PertaxAuthResponseModel containing the data returned by pertax" in {
           val expectedReturnModel = PertaxAuthResponseModel(ACCESS_GRANTED, "A field", None, None)
 
@@ -59,7 +56,7 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
 
       "pertax returns Json that cannot be parsed" should {
 
-        "return an UpstreamErrorRespobnse" in {
+        "return an UpstreamErrorResponse" in {
           val expectedReturnModel = UpstreamErrorResponse(
             "[PertaxAuthenticationHttpParser][read] There was an issue parsing the response from Pertax Auth.",
             INTERNAL_SERVER_ERROR

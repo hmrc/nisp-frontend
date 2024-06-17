@@ -57,15 +57,16 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient,
     httpClientResponse
       .read(
         http.POSTEmpty[Either[UpstreamErrorResponse, HttpResponse]](
-            s"/$pertaxUrl/$nino/authorise",
-            Seq((HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json"))
+            s"$pertaxUrl/$nino/authorise",
+            Seq(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
           )
       )
       .map(_.json.as[PertaxAuthResponseModel])
   }
 
   override def loadPartial(partialContextUrl: String)(implicit hc: HeaderCarrier): Future[HtmlPartial] = {
-    val partialUrl = appConfig.pertaxAuthBaseUrl + s"$partialContextUrl"
+    val partialUrl =
+      appConfig.pertaxAuthBaseUrl + s"${if (partialContextUrl.charAt(0).toString == "/") partialContextUrl else s"/$partialContextUrl"}"
 
     http.GET[HtmlPartial](partialUrl).map {
       case partialSuccess: HtmlPartial.Success => partialSuccess

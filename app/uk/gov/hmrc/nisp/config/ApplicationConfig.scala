@@ -56,7 +56,6 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val friendlyUsers: Seq[String]            = config.get[Seq[String]]("allowedUsers.friendly")
   val allowedUsersEndOfNino: Seq[String]    = config.get[Seq[String]]("allowedUsers.endOfNino")
   val nispModellingFrontendUrl: String      = getString("nisp-modelling.url")
-  lazy val pertaxFrontendUrl: String        = servicesConfig.getString("external-urls.pertax-frontend.host")
 
 
   val citizenDetailsServiceUrl: String       = baseUrl("citizen-details")
