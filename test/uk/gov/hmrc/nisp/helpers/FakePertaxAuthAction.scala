@@ -16,15 +16,15 @@
 
 package uk.gov.hmrc.nisp.helpers
 
-import play.api.mvc.Result
-import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, PertaxAuthAction}
+import play.api.mvc.{Request, Result}
+import uk.gov.hmrc.nisp.controllers.auth.PertaxAuthAction
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakePertaxAuthAction @Inject()(implicit val executionContext: ExecutionContext) extends PertaxAuthAction {
-  override protected def refine[A](request: AuthenticatedRequest[A]): Future[Either[Result, AuthenticatedRequest[A]]] = {
-    Future.successful(Right(request))
+  override protected def filter[A](request: Request[A]): Future[Option[Result]] = {
+    Future.successful(None)
   }
 
 }

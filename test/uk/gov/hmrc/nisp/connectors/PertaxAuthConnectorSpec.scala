@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import cats.implicits.catsStdInstancesForFuture
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Json
@@ -27,10 +28,13 @@ import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
 import uk.gov.hmrc.nisp.utils.{PertaxAuthMockingHelper, UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.partials.HtmlPartial
 
+import scala.concurrent.ExecutionContext
+
 class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockHelper with PertaxAuthMockingHelper with Injecting {
 
   lazy val connector: PertaxAuthConnector = inject[PertaxAuthConnector]
 
+  implicit val ec: ExecutionContext = ExecutionContext.global
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   val nino = "AA000000A"
@@ -71,6 +75,23 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
           }
 
           await(result) shouldBe Left(expectedReturnModel)
+        }
+      }
+    }
+
+    "calling .pertaxPostAuthorise" when {
+      "pertax returns a successful response" should {
+        "return the expected return model" in {
+          val expectedReturnModel = PertaxAuthResponseModel(ACCESS_GRANTED, "A field", None, None)
+
+          val result = {
+            mockPostPertaxAuth(expectedReturnModel)
+            connector.pertaxPostAuthorise
+          }
+
+          await(result).map { res =>
+            res shouldBe expectedReturnModel
+          }
         }
       }
     }

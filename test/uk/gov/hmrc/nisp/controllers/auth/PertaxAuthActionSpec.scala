@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers.auth
 
+import cats.data.EitherT
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.when
@@ -24,10 +25,10 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.Play.materializer
-import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER}
+import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER, UNAUTHORIZED}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results.Ok
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.Helpers.LOCATION
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import play.twirl.api.Html
@@ -35,12 +36,13 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
 import uk.gov.hmrc.nisp.models.UserName
-import uk.gov.hmrc.nisp.models.admin.PertaxBackendToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
+import uk.gov.hmrc.nisp.utils.Constants.{CONFIDENCE_LEVEL_UPLIFT_REQUIRED, CREDENTIAL_STRENGTH_UPLIFT_REQUIRED}
 import uk.gov.hmrc.nisp.utils.{Constants, UnitSpec}
+import uk.gov.hmrc.nisp.views.Main
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
 import uk.gov.hmrc.play.partials.HtmlPartial
 
@@ -64,7 +66,8 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
   lazy val authAction = new PertaxAuthActionImpl(
     connector,
     inject[technical_issue],
-    mockFeatureFlagService
+    main                = app.injector.instanceOf[Main],
+    appConfig           = app.injector.instanceOf[ApplicationConfig]
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
   lazy val date: LocalDate = LocalDate.now()
@@ -96,9 +99,9 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
     when(connector.authorise(any())(any())).thenReturn(Future.successful(Left(error)))
   }
 
-  def block: AuthenticatedRequest[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
+  def block: Request[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
 
-  "PertaxAuthAction.refine" when {
+  "PertaxAuthAction.filter" when {
 
     "the pertax auth feature switch is on" should {
 
@@ -112,7 +115,11 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
               None, None
             ))
 
-            when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                  Future.successful(Right(PertaxAuthResponseModel("ACCESS_GRANTED", "", None, None)))
+                ))
 
             authAction.invokeBlock(authenticatedRequest(), block)
           }
@@ -123,6 +130,21 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
 
       "redirect the user" when {
 
+        "the response from pertax auth connector has an UNAUTHORIZED status" in {
+          lazy val result = await({
+            mockFailedAuth(UpstreamErrorResponse("Error", UNAUTHORIZED))
+            authAction.invokeBlock(authenticatedRequest(), block)
+          })
+
+          when(connector.pertaxPostAuthorise(any(), any()))
+            .thenReturn(
+              EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                Future.successful(Left(UpstreamErrorResponse("Error", UNAUTHORIZED))
+                )))
+
+          result.header.status shouldBe SEE_OTHER
+        }
+
         "the response from pertax auth connector indicates NO_HMRC_PT_ENROLMENT and has a redirect URL" which {
           lazy val request = {
             mockAuth(PertaxAuthResponseModel(
@@ -132,7 +154,11 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
               None
             ))
 
-            when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                  Future.successful(Right(PertaxAuthResponseModel("NO_HMRC_PT_ENROLMENT", "", Some("/some-redirect/"), None)
+                  ))))
 
             authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
           }
@@ -146,6 +172,54 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
             val expectedRedirectUrl = "/some-redirect/?redirectUrl=%2Fsome-base-url"
 
             result.header.headers(LOCATION) shouldBe expectedRedirectUrl
+          }
+
+          "the response from pertax auth connector indicates CREDENTIAL_STRENGTH_UPLIFT_REQUIRED" which {
+            lazy val request = {
+              mockAuth(PertaxAuthResponseModel(
+                CREDENTIAL_STRENGTH_UPLIFT_REQUIRED,
+                "Still doesn't matter.",
+                Some("/some-redirect"),
+                None
+              ))
+
+              when(connector.pertaxPostAuthorise(any(), any()))
+                .thenReturn(
+                  EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                    Future.successful(Right(PertaxAuthResponseModel("CREDENTIAL_STRENGTH_UPLIFT_REQUIRED", "", Some("/some-redirect/"), None)
+                    ))))
+
+              authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
+            }
+            lazy val result = await(request)
+
+            "has a status of INTERNAL_SERVER_ERROR(500)" in {
+              status(result) shouldBe INTERNAL_SERVER_ERROR
+            }
+          }
+
+          "the response from pertax auth connector indicates CONFIDENCE_LEVEL_UPLIFT_REQUIRED and has a redirect URL" which {
+            lazy val request = {
+              mockAuth(PertaxAuthResponseModel(
+                CONFIDENCE_LEVEL_UPLIFT_REQUIRED,
+                "Still doesn't matter.",
+                Some("/some-redirect"),
+                None
+              ))
+
+              when(connector.pertaxPostAuthorise(any(), any()))
+                .thenReturn(
+                  EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                    Future.successful(Right(PertaxAuthResponseModel("CONFIDENCE_LEVEL_UPLIFT_REQUIRED", "", Some("/some-redirect/"), None)
+                    ))))
+
+              authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
+            }
+            lazy val result = await(request)
+
+            "has a status of SEE_OTHER(303)" in {
+              status(result) shouldBe SEE_OTHER
+            }
           }
         }
       }
@@ -162,11 +236,19 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
               Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
             ))
 
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                  Future.successful(Right(PertaxAuthResponseModel(
+                    "NOT_A_VALID_CODE",
+                    "Doesn't matter, even now.",
+                    None,
+                    Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
+                  )))))
+
             when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
               HtmlPartial.Success(Some("Test Title"), Html("Hello"))
             ))
-
-            when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
 
             authAction.invokeBlock(authenticatedRequest(), block)
           })
@@ -179,10 +261,24 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
             bodyOf(result) shouldBe "Hello"
           }
         }
-
       }
 
       "return an internal server error" when {
+
+        "pertax auth connector returns a left that isn't unauthorised" in {
+          lazy val result = await({
+            mockFailedAuth(UpstreamErrorResponse("Error", INTERNAL_SERVER_ERROR))
+            authAction.invokeBlock(authenticatedRequest(), block)
+          })
+
+          when(connector.pertaxPostAuthorise(any(), any()))
+            .thenReturn(
+              EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                Future.successful(Left(UpstreamErrorResponse("Error", INTERNAL_SERVER_ERROR))
+                )))
+
+          result.header.status shouldBe INTERNAL_SERVER_ERROR
+        }
 
         "the pertax auth service fails to return a partial" which {
 
@@ -195,7 +291,15 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
                 Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
               ))
 
-              when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+              when(connector.pertaxPostAuthorise(any(), any()))
+                .thenReturn(
+                  EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                    Future.successful(Right(PertaxAuthResponseModel(
+                      "NOT_A_VALID_CODE",
+                      "Doesn't matter, even now.",
+                      None,
+                      Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
+                    )))))
 
               when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
                 HtmlPartial.Failure(None, "ERROR")
@@ -203,6 +307,16 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
 
               authAction.invokeBlock(authenticatedRequest(), block)
             })
+
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                  Future.successful(Right(PertaxAuthResponseModel(
+                    "NOT_A_VALID_CODE",
+                    "Doesn't matter, even now.",
+                    None,
+                    None
+                  )))))
 
             result.header.status shouldBe INTERNAL_SERVER_ERROR
           }
@@ -216,25 +330,20 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
               authAction.invokeBlock(authenticatedRequest(), block)
             })
 
-            when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                  Future.successful(Right(PertaxAuthResponseModel(
+                    "NOT_A_VALID_CODE",
+                    "Doesn't matter, even now.",
+                    None,
+                    None
+                  )))))
 
             result.header.status shouldBe INTERNAL_SERVER_ERROR
           }
         }
       }
-    }
-
-    "the pertax feature switch is off" should {
-
-      "return Successful in the request body" in {
-        lazy val result = await {
-          when(mockFeatureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = false)))
-          authAction.invokeBlock(authenticatedRequest(), block)
-        }
-
-        bodyOf(result) shouldBe "Successful"
-      }
-
     }
   }
 
