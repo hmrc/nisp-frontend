@@ -21,7 +21,7 @@ import cats.implicits.catsStdInstancesForFuture
 import com.google.inject.ImplementedBy
 import play.api.Logging
 import play.api.http.HeaderNames
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.nino
+//import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.nino
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -57,7 +57,7 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient,
     httpClientResponse
       .read(
         http.POSTEmpty[Either[UpstreamErrorResponse, HttpResponse]](
-            s"$pertaxUrl/$nino/authorise",
+            s"$pertaxUrl/pertax/authorise",
             Seq(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
           )
       )

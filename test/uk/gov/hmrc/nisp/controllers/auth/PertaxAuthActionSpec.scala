@@ -50,7 +50,7 @@ import uk.gov.hmrc.play.partials.HtmlPartial
 import java.time.{Instant, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
 
-class PertaxAuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
+class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .bindings(
@@ -194,8 +194,8 @@ class PertaxAuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with In
             }
             lazy val result = await(request)
 
-            "has a status of INTERNAL_SERVER_ERROR(500)" in {
-              status(result) shouldBe INTERNAL_SERVER_ERROR
+            "has a status of SEE_OTHER(303)" in {
+              result.header.status shouldBe SEE_OTHER
             }
           }
 

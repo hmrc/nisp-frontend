@@ -21,6 +21,7 @@ import play.api.Logging
 import play.api.http.Status.UNAUTHORIZED
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{ActionFilter, ControllerComponents, Request, Result, Results}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
@@ -36,14 +37,14 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthActionImpl @Inject()(
-  pertaxAuthConnector: PertaxAuthConnector,
-  technicalIssue: technical_issue,
-  main: Main,
-  appConfig: ApplicationConfig
-)(
-  implicit val executionContext: ExecutionContext,
-  controllerComponents: ControllerComponents
-) extends ActionFilter[Request]
+                                      pertaxAuthConnector: PertaxAuthConnector,
+                                      technicalIssue: technical_issue,
+                                      main: Main,
+                                      appConfig: ApplicationConfig
+                                    )(
+                                      implicit val executionContext: ExecutionContext,
+                                      controllerComponents: ControllerComponents
+                                    ) extends ActionFilter[Request]
   with Results
   with PertaxAuthAction
   with I18nSupport
@@ -64,33 +65,44 @@ class PertaxAuthActionImpl @Inject()(
         Future.successful(None)
       case Right(PertaxAuthResponseModel(NO_HMRC_PT_ENROLMENT, _, Some(redirect), _))           =>
         Future.successful(Some(Redirect(s"$redirect?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}")))
-      case Right(PertaxAuthResponseModel("CONFIDENCE_LEVEL_UPLIFT_REQUIRED", _, _, _))          =>
-        Future.successful(Some(Redirect(appConfig.ivUpliftUrl)))
-      case Right(PertaxAuthResponseModel("CREDENTIAL_STRENGTH_UPLIFT_REQUIRED", _, Some(_), _)) =>
-        val ex =
-          new RuntimeException(
-            s"Weak credentials should be dealt before the service"
+      case Right(PertaxAuthResponseModel("CONFIDENCE_LEVEL_UPLIFT_REQUIRED", _, Some(redirect), _)) =>
+        Future.successful(Some(Redirect(
+          redirect,
+          Map(
+            "origin" -> Seq("NISP"),
+            "completionURL" -> Seq(appConfig.postSignInRedirectUrl),
+            "failureURL" -> Seq(appConfig.notAuthorisedRedirectUrl),
+            "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
           )
-        logger.error(ex.getMessage, ex)
-        Future.successful(Some(InternalServerError(technicalIssue())))
+        )))
+      case Right(PertaxAuthResponseModel("CREDENTIAL_STRENGTH_UPLIFT_REQUIRED", _, Some(_), _)) => upliftCredentialStrength
 
-      case Right(PertaxAuthResponseModel(_, _, _, Some(errorView)))                             =>
-        pertaxAuthConnector.loadPartial(errorView.url).map {
+      case Right(PertaxAuthResponseModel(_, _, _, Some(errorPartial)))                             =>
+        pertaxAuthConnector.loadPartial(errorPartial.url).map {
           case partial: HtmlPartial.Success =>
-            Some(Status(errorView.statusCode)(main(partial.title.getOrElse(""))(partial.content)))
+            Some(Status(errorPartial.statusCode)(main(partial.title.getOrElse(""))(partial.content)))
           case _: HtmlPartial.Failure       =>
-            logger.error(s"The partial ${errorView.url} failed to be retrieved")
+            logger.error(s"The partial ${errorPartial.url} failed to be retrieved")
             Some(InternalServerError(technicalIssue()))
         }
-      case Right(response)                                                                      =>
-        val ex =
-          new RuntimeException(
-            s"Pertax response `${response.code}` with message ${response.message} is not handled"
-          )
-        logger.error(ex.getMessage, ex)
+      case _@error =>
+        logger.error(s"[PertaxAuthAction][refine] Error thrown during authentication.")
+        error.left.foreach(error => logger.error("[PertaxAuthAction][refine] Error details:" +
+          s"\nStatus: ${error.statusCode}\nMessages: ${error.message}"))
         Future.successful(Some(InternalServerError(technicalIssue())))
     }
   }
+  private def upliftCredentialStrength: Future[Option[Result]] =
+    Future.successful(Some(
+      Redirect(
+        appConfig.mfaUpliftUrl,
+        Map(
+          "continueUrl" -> Seq(appConfig.postSignInRedirectUrl),
+          "origin" -> Seq("nisp-frontend")
+        )
+      )
+    )
+    )
 }
 
 @ImplementedBy(classOf[PertaxAuthActionImpl])
