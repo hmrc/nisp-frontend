@@ -57,8 +57,15 @@ class PertaxAuthActionImpl @Inject()(
     implicit val implicitRequest: Request[A] = request
 
     pertaxAuthConnector.pertaxPostAuthorise.value.flatMap {
-      case Left(UpstreamErrorResponse(_, status, _, _)) if status == UNAUTHORIZED               =>
-        Future.successful(Some(Redirect(appConfig.ggSignInUrl)))
+      case Left(UpstreamErrorResponse(_, status, _, _)) if status == UNAUTHORIZED =>
+        Future.successful(Some(Redirect(
+          appConfig.ggSignInUrl,
+          Map(
+            "continue" -> Seq(appConfig.postSignInRedirectUrl),
+            "origin" -> Seq("nisp-frontend"),
+            "accountType" -> Seq("individual")
+          )
+        )))
       case Left(_)                                                                              =>
         Future.successful(Some(InternalServerError(technicalIssue())))
       case Right(PertaxAuthResponseModel(ACCESS_GRANTED, _, _, _))                              =>
