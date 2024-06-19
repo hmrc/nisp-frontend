@@ -34,14 +34,14 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionImpl @Inject()(
+class AuthRetrievalsImpl @Inject()(
   override val authConnector: AuthConnector,
   cds: CitizenDetailsService,
   val parser: BodyParsers.Default,
   applicationConfig: ApplicationConfig
 )(
   implicit val executionContext: ExecutionContext
-) extends AuthAction
+) extends AuthRetrievals
   with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
@@ -107,6 +107,6 @@ class AuthActionImpl @Inject()(
   }
 }
 
-trait AuthAction
+trait AuthRetrievals
   extends ActionBuilder[AuthenticatedRequest, AnyContent]
   with ActionFunction[Request, AuthenticatedRequest]

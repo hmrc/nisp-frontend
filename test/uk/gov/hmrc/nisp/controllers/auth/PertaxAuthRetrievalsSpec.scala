@@ -50,7 +50,7 @@ import uk.gov.hmrc.play.partials.HtmlPartial
 import java.time.{Instant, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
 
-class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
+class PertaxAuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .bindings(

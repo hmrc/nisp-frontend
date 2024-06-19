@@ -68,7 +68,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[AuditConnector].toInstance(mockAuditConnector),
-      bind[AuthAction].to[FakeAuthAction],
+      bind[AuthRetrievals].to[FakeAuthAction],
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[ApplicationConfig].toInstance(mockAppConfig),
@@ -1544,7 +1544,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
         bind[AuditConnector].toInstance(mockAuditConnector),
         bind[ApplicationConfig].toInstance(mockAppConfig),
         bind[PertaxHelper].toInstance(mockPertaxHelper),
-        bind[AuthAction].to[FakeAuthActionWithNino],
+        bind[AuthRetrievals].to[FakeAuthActionWithNino],
         bind[NinoContainer].toInstance(AbroadNinoContainer),
         bind[DateProvider].toInstance(mockDateProvider),
         bind[PertaxAuthAction].to[FakePertaxAuthAction]
