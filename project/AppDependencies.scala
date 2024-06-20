@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import play.sbt.PlayImport.ehcache
 import sbt.*
 
 object AppDependencies {
