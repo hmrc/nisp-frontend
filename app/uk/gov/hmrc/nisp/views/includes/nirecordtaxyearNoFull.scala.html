@@ -27,8 +27,7 @@
   currentDate: LocalDate
 )(implicit messages: Messages)
 
-  <div class="govuk-summary-list__row expandable" aria-expanded="false"
-    aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
+  <div class="govuk-summary-list__row expandable">
 
 
     <dt class="govuk-summary-list__key">
@@ -38,20 +37,15 @@
       <dd class="govuk-summary-list__value inactive">
         @messages("nisp.nirecord.fullyear")
       </dd>
+      <dd class="govuk-summary-list__value"></dd>
     } else {
       <dd class="govuk-summary-list__value">
         @messages("nisp.nirecord.gap")
       </dd>
       <dd class="govuk-summary-list__actions">
-        <a href="#">
+        <a href="#" class="govuk-link view-details" aria-expanded="false" aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
           @Html(messages(
             "nisp.nirecord.gap.viewdetails",
-            niTaxYear.taxYear
-          ))
-        </a>
-        <a href="#" class="hide-details">
-          @Html(messages(
-            "nisp.nirecord.gap.hidedetails",
             niTaxYear.taxYear
           ))
         </a>
@@ -67,6 +61,7 @@
           <dd class="govuk-summary-list__value">
             @Html(messages("nisp.nirecord.gap.underInvestigation"))
           </dd>
+          <dd class="govuk-summary-list__actions"></dd>
         } else {
 
           <dt class="govuk-summary-list__key"></dt>
@@ -178,6 +173,7 @@
               </div>
             }
           </dd>
+          <dd class="govuk-summary-list__actions"></dd>
       }
   </div>
 }

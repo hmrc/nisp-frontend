@@ -34,12 +34,10 @@ function accordionToggleShowHide() {
           this.setAttribute('class', 'govuk-summary-list__row active')
           this.nextElementSibling.style.display = 'table-row'
           this.querySelector('.view-details').setAttribute('aria-expanded', 'true')
-          this.setAttribute('aria-expanded', 'true')
         } else {
           this.setAttribute('class', 'govuk-summary-list__row expandable')
           this.nextElementSibling.style.display = 'none'
           this.querySelector('.view-details').setAttribute('aria-expanded', 'false')
-          this.setAttribute('aria-expanded', 'false')
         }
       });
     }
