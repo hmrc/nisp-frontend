@@ -52,7 +52,7 @@ class PertaxAuthActionImpl @Inject()(
 
   override def messagesApi: MessagesApi = controllerComponents.messagesApi
 
-  override protected def filter[A](request: Request[A]): Future[Option[Result]] = {
+  override def filter[A](request: Request[A]): Future[Option[Result]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     implicit val implicitRequest: Request[A] = request
 
