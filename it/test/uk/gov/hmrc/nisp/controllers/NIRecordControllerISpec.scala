@@ -109,17 +109,6 @@ class NIRecordControllerISpec extends AnyWordSpec
         )
     )
 
-    server.stubFor(
-      get(urlMatching(s"/pertax/$nino/authorise"))
-        .willReturn(
-          aResponse()
-            .withStatus(OK)
-            .withBody(Json.stringify(Json.toJson(PertaxAuthResponseModel(
-              ACCESS_GRANTED, "", None, None
-            ))))
-        )
-    )
-
     server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
       .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
   }

@@ -46,7 +46,7 @@ class ExcludedAuthActionImpl @Inject() (
     implicit val hc: HeaderCarrier    = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     implicit val ec: ExecutionContext = executionContext
 
-    authorised()
+    authorised(ConfidenceLevel.L200)
       .retrieve(Retrievals.nino and Retrievals.confidenceLevel and Retrievals.credentials and Retrievals.loginTimes) {
         case Some(nino) ~ confidenceLevel ~ credentials ~ loginTimes =>
           block(
