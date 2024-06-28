@@ -33,7 +33,8 @@
   details: details,
   insetText: insetText,
   govukPanel: GovukPanel,
-  nispPageHeading: NispPageHeading
+  nispPageHeading: NispPageHeading,
+  notifPanel: GovukNotificationBanner
 )
 @(
   tableList: Seq[String],
@@ -63,6 +64,11 @@ if (user.livesAbroad) {
 @main(
   pageTitle = headingOrTitle
 ) {
+
+    @notifPanel(NotificationBanner(
+      content = Text(messages("nisp.nirecord.banner")),
+
+    ))
 
     @nispPageHeading(
       text = headingOrTitle,
