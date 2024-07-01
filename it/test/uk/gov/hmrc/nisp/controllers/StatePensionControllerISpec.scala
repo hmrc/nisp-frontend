@@ -17,28 +17,43 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.github.tomakehurst.wiremock.client.WireMock._
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import play.api.mvc.Results.Ok
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.Helpers.{defaultAwaitTimeout, redirectLocation, route, writeableOf_AnyContentAsEmpty, status => getStatus}
-import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
+import play.api.test.{FakeRequest, Helpers, Injecting}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys, UpstreamErrorResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
+import uk.gov.hmrc.nisp.controllers.auth._
 import uk.gov.hmrc.nisp.it_utils.WiremockHelper
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
+import uk.gov.hmrc.nisp.utils.UnitSpec
+import uk.gov.hmrc.nisp.views.Main
+import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
 
 import java.lang.System.currentTimeMillis
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
+import scala.concurrent.{ExecutionContext, Future}
 
-class StatePensionControllerISpec extends AnyWordSpec
+
+class StatePensionControllerISpec extends UnitSpec
   with Matchers
   with GuiceOneAppPerSuite
   with WiremockHelper
@@ -48,6 +63,35 @@ class StatePensionControllerISpec extends AnyWordSpec
 
   server.start()
   server2.start()
+
+  lazy val date: LocalDate = LocalDate.now()
+  lazy val instant: Instant = Instant.now()
+  lazy val mockPertaxAuthConnector: PertaxAuthConnector = mock[PertaxAuthConnector]
+  lazy val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+
+  def mockAuth(pertaxAuthResponseModel: PertaxAuthResponseModel): OngoingStubbing[Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]] = {
+    when(mockPertaxAuthConnector.authorise(any())(any())).thenReturn(Future.successful(Right(pertaxAuthResponseModel)))
+  }
+
+  lazy val authAction = new PertaxAuthActionImpl(
+    mockPertaxAuthConnector,
+    inject[technical_issue],
+    main                = app.injector.instanceOf[Main],
+    appConfig           = app.injector.instanceOf[ApplicationConfig]
+  )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
+
+  def authenticatedRequest(requestMethod: String = "GET", requestUrl: String = "/"): AuthenticatedRequest[AnyContent] = new AuthenticatedRequest[AnyContent](
+    FakeRequest(requestMethod, requestUrl),
+    NispAuthedUser(
+      Nino("AA000000A"),
+      date,
+      UserName(Name(Some("John"), Some("Doe"))),
+      None, None, isSa = true
+    ),
+    AuthDetails(ConfidenceLevel.L200, LoginTimes(
+      instant, None
+    ))
+  )
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
@@ -59,8 +103,8 @@ class StatePensionControllerISpec extends AnyWordSpec
     )
     .build()
 
-  val citizen = Citizen(nino, dateOfBirth = LocalDate.now())
-  val citizenDetailsResponse = CitizenDetailsResponse(citizen, None)
+  val citizen: Citizen = Citizen(nino, dateOfBirth = LocalDate.now())
+  val citizenDetailsResponse: CitizenDetailsResponse = CitizenDetailsResponse(citizen, None)
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId)))
 
@@ -94,7 +138,7 @@ class StatePensionControllerISpec extends AnyWordSpec
       """.stripMargin)))
 
     server.stubFor(
-      get(urlMatching(s"/pertax/$nino/authorise"))
+      post(urlMatching("/pertax/authorise"))
         .willReturn(
           aResponse()
             .withStatus(OK)
@@ -140,6 +184,8 @@ class StatePensionControllerISpec extends AnyWordSpec
       reducedRateElection = false
     )
   }
+
+  def block: Request[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
 
   "showCope" should {
     val request = FakeRequest("GET", s"/check-your-state-pension/account/cope")

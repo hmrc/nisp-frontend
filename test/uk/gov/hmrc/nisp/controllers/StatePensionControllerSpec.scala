@@ -29,7 +29,7 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, PertaxAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
@@ -75,7 +75,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[AuthAction].to[FakeAuthActionWithNino],
+      bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
       bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
@@ -89,7 +89,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[AuthAction].to[FakeAuthAction],
+      bind[AuthRetrievals].to[FakeAuthAction],
       bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()

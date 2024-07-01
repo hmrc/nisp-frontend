@@ -30,7 +30,7 @@ import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, PertaxAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
@@ -64,7 +64,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
 
   val standardInjector: Injector = GuiceApplicationBuilder()
     .overrides(
-      bind[AuthAction].to[FakeAuthAction],
+      bind[AuthRetrievals].to[FakeAuthAction],
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
@@ -82,7 +82,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[AuthAction].to[FakeAuthActionWithNino],
+      bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
       bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )

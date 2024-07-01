@@ -47,7 +47,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
-class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
+class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   class BrokenAuthConnector(exception: Throwable) extends AuthConnector {
     override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
@@ -106,7 +106,7 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
     "/mdtp/uplift?origin=NISP&completionURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Faccount&failureURL=http%3A%2F%2Flocalhost%3A9234%2Fcheck-your-state-pension%2Fnot-authorised&confidenceLevel=200"
   implicit val timeout: Timeout = 5 seconds
 
-  val authAction: AuthActionImpl = inject[AuthActionImpl]
+  val authAction: AuthRetrievalsImpl = inject[AuthRetrievalsImpl]
 
   "GET /statepension" should {
     "invoke the block" when {
@@ -201,42 +201,6 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
       }
     }
 
-    "redirect to sign in page when no session" in {
-      val ggSigninUrl           = "ggSigninUrl"
-      val postSignInRedirectUrl = "postSignInRedirectUrl"
-      val expectedUrl           = s"$ggSigninUrl?continue=$postSignInRedirectUrl&origin=nisp-frontend&accountType=individual"
-
-      when(mockAuthConnector.authorise(any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(Future.failed(new SessionRecordNotFound))
-
-      when(mockApplicationConfig.ggSignInUrl).thenReturn(ggSigninUrl)
-      when(mockApplicationConfig.postSignInRedirectUrl).thenReturn(postSignInRedirectUrl)
-
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      status(result)               shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe expectedUrl
-    }
-
-    "redirect to uplift when insufficient confidence level" in {
-      when(mockAuthConnector.authorise(any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(Future.failed(new InsufficientConfidenceLevel))
-
-      val ivUpliftUrl              = "ivUpliftUrl"
-      val postSignInRedirectUrl    = "postSignInRedirectUrl"
-      val notAuthorisedRedirectUrl = "notAuthorisedRedirectUrl"
-
-      val expectedUrl =
-        s"$ivUpliftUrl?origin=NISP&completionURL=$postSignInRedirectUrl&failureURL=$notAuthorisedRedirectUrl&confidenceLevel=200"
-
-      when(mockApplicationConfig.notAuthorisedRedirectUrl).thenReturn(notAuthorisedRedirectUrl)
-      when(mockApplicationConfig.postSignInRedirectUrl).thenReturn(postSignInRedirectUrl)
-      when(mockApplicationConfig.ivUpliftUrl).thenReturn(ivUpliftUrl)
-
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
-      status(result)               shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe expectedUrl
-    }
-
     "return error for not found user" in {
       when(
         mockAuthConnector.authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
@@ -299,33 +263,6 @@ class AuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting wi
       val result = authAction.invokeBlock(FakeRequest("", "a-non-ni-record-uri"), Stubs.successBlock)
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
-    }
-  }
-
-  "A user with a weak credential strength" must {
-    "be redirected to the MFA uplift endpoint" in {
-
-      val mfaRedirectUrl = "mfaUpliftUrl?continueUrl=postSignInRedirectUrl&origin=nisp-frontend"
-
-      val postSignInRedirectUrl = "postSignInRedirectUrl"
-      val mfaUpliftUrl = "mfaUpliftUrl"
-
-      when(
-        mockAuthConnector.authorise[AuthRetrievalType](any[Predicate], any())(any[HeaderCarrier], any[ExecutionContext])
-      )
-        .thenReturn(makeRetrievalResults(credentialStrength = CredentialStrength.weak))
-
-      when(mockApplicationConfig.mfaUpliftUrl).thenReturn(mfaUpliftUrl)
-      when(mockApplicationConfig.postSignInRedirectUrl).thenReturn(postSignInRedirectUrl)
-
-      when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Right(citizenDetailsResponse)))
-
-      val stubs   = spy(Stubs)
-      val request = FakeRequest("", "")
-      val result  = authAction.invokeBlock(request, stubs.successBlock)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe mfaRedirectUrl
     }
   }
 }

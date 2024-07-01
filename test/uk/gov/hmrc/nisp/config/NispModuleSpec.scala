@@ -18,7 +18,7 @@ package uk.gov.hmrc.nisp.config
 
 import play.api.inject.Injector
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthActionImpl}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, AuthRetrievalsImpl}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class NispModuleSpec extends UnitSpec {
@@ -32,7 +32,7 @@ class NispModuleSpec extends UnitSpec {
           .configure(identityVerificationProp -> true)
           .injector()
 
-        injector.instanceOf[AuthAction] shouldBe an[AuthActionImpl]
+        injector.instanceOf[AuthRetrievals] shouldBe an[AuthRetrievalsImpl]
       }
     }
   }

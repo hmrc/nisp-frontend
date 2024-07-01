@@ -18,15 +18,16 @@ package uk.gov.hmrc.nisp.controllers.auth
 
 import com.google.inject.ImplementedBy
 import play.api.Logging
+import play.api.http.Status.UNAUTHORIZED
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Results.{InternalServerError, Redirect, Status}
-import play.api.mvc.{ActionRefiner, ControllerComponents, Result}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
+import play.api.mvc.{ActionFilter, ControllerComponents, Request, Result, Results}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
-import uk.gov.hmrc.nisp.models.admin.PertaxBackendToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.utils.Constants._
+import uk.gov.hmrc.nisp.views.Main
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -36,47 +37,80 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthActionImpl @Inject()(
-                                  pertaxAuthConnector: PertaxAuthConnector,
-                                  technicalIssue: technical_issue,
-                                  featureFlagService: FeatureFlagService
-                                )(
-                                  implicit val executionContext: ExecutionContext,
-                                  controllerComponents: ControllerComponents
-                                ) extends PertaxAuthAction with I18nSupport with Logging {
+                                      pertaxAuthConnector: PertaxAuthConnector,
+                                      technicalIssue: technical_issue,
+                                      main: Main,
+                                      appConfig: ApplicationConfig
+                                    )(
+                                      implicit val executionContext: ExecutionContext,
+                                      controllerComponents: ControllerComponents
+                                    ) extends ActionFilter[Request]
+  with Results
+  with PertaxAuthAction
+  with I18nSupport
+  with Logging {
 
   override def messagesApi: MessagesApi = controllerComponents.messagesApi
 
-  override protected def refine[A](request: AuthenticatedRequest[A]): Future[Either[Result, AuthenticatedRequest[A]]] = {
+  override def filter[A](request: Request[A]): Future[Option[Result]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-    implicit val implicitRequest: AuthenticatedRequest[A] = request
+    implicit val implicitRequest: Request[A] = request
 
-    featureFlagService.get(PertaxBackendToggle).flatMap { flag =>
-      if (flag.isEnabled) {
-        pertaxAuthConnector.authorise(request.nispAuthedUser.nino.nino).flatMap {
-          case Right(PertaxAuthResponseModel(ACCESS_GRANTED, _, _, _)) =>
-            Future.successful(Right(request))
-          case Right(PertaxAuthResponseModel(NO_HMRC_PT_ENROLMENT, _, Some(redirect), _)) =>
-            Future.successful(Left(Redirect(s"$redirect/?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}")))
-          case Right(PertaxAuthResponseModel(_, _, _, Some(errorPartial))) =>
-            pertaxAuthConnector.loadPartial(errorPartial.url).map {
-              case partial: HtmlPartial.Success =>
-                Left(Status(errorPartial.statusCode)(partial.content))
-              case _: HtmlPartial.Failure =>
-                logger.error("[PertaxAuthAction][refine] Failed to retrieve a partial from pertax auth service.")
-                Left(InternalServerError(technicalIssue()))
-            }
-          case _@error =>
-            logger.error(s"[PertaxAuthAction][refine] Error thrown during authentication.")
-            error.left.foreach(error => logger.error("[PertaxAuthAction][refine] Error details:" +
-              s"\nStatus: ${error.statusCode}\nMessages: ${error.message}"))
-            Future.successful(Left(InternalServerError(technicalIssue())))
+    pertaxAuthConnector.pertaxPostAuthorise.value.flatMap {
+      case Left(UpstreamErrorResponse(_, status, _, _)) if status == UNAUTHORIZED =>
+        Future.successful(Some(Redirect(
+          appConfig.ggSignInUrl,
+          Map(
+            "continue" -> Seq(appConfig.postSignInRedirectUrl),
+            "origin" -> Seq("nisp-frontend"),
+            "accountType" -> Seq("individual")
+          )
+        )))
+      case Left(_)                                                                              =>
+        Future.successful(Some(InternalServerError(technicalIssue())))
+      case Right(PertaxAuthResponseModel(ACCESS_GRANTED, _, _, _))                              =>
+        Future.successful(None)
+      case Right(PertaxAuthResponseModel(NO_HMRC_PT_ENROLMENT, _, Some(redirect), _))           =>
+        Future.successful(Some(Redirect(s"$redirect?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}")))
+      case Right(PertaxAuthResponseModel("CONFIDENCE_LEVEL_UPLIFT_REQUIRED", _, Some(redirect), _)) =>
+        Future.successful(Some(Redirect(
+          redirect,
+          Map(
+            "origin" -> Seq("NISP"),
+            "completionURL" -> Seq(appConfig.postSignInRedirectUrl),
+            "failureURL" -> Seq(appConfig.notAuthorisedRedirectUrl),
+            "confidenceLevel" -> Seq(ConfidenceLevel.L200.toString)
+          )
+        )))
+      case Right(PertaxAuthResponseModel("CREDENTIAL_STRENGTH_UPLIFT_REQUIRED", _, Some(_), _)) => upliftCredentialStrength
+
+      case Right(PertaxAuthResponseModel(_, _, _, Some(errorPartial)))                             =>
+        pertaxAuthConnector.loadPartial(errorPartial.url).map {
+          case partial: HtmlPartial.Success =>
+            Some(Status(errorPartial.statusCode)(main(partial.title.getOrElse(""))(partial.content)))
+          case _: HtmlPartial.Failure       =>
+            logger.error(s"The partial ${errorPartial.url} failed to be retrieved")
+            Some(InternalServerError(technicalIssue()))
         }
-      } else {
-        Future.successful(Right(request))
-      }
+      case _@error =>
+        logger.error(s"[PertaxAuthAction][refine] Error thrown during authentication.")
+        error.left.foreach(error => logger.error("[PertaxAuthAction][refine] Error details:" +
+          s"\nStatus: ${error.statusCode}\nMessages: ${error.message}"))
+        Future.successful(Some(InternalServerError(technicalIssue())))
     }
   }
+  private def upliftCredentialStrength: Future[Option[Result]] =
+    Future.successful(Some(
+      Redirect(
+        appConfig.mfaUpliftUrl,
+        Map(
+          "continueUrl" -> Seq(appConfig.postSignInRedirectUrl),
+          "origin" -> Seq("nisp-frontend")
+        )
+      )
+    )
+    )
 }
 
 @ImplementedBy(classOf[PertaxAuthActionImpl])
-trait PertaxAuthAction extends ActionRefiner[AuthenticatedRequest, AuthenticatedRequest]
+trait PertaxAuthAction extends ActionFilter[Request]

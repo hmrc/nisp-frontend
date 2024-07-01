@@ -22,13 +22,16 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.mockito.MockitoSugar.mock
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.http.Status.OK
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.test.Helpers.{OK, route, status => getStatus, _}
+import play.api.test.Helpers.{route, status => getStatus, _}
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.it_utils.WiremockHelper
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
@@ -61,6 +64,7 @@ class NIRecordControllerISpec extends AnyWordSpec
 
   val citizen = Citizen(nino, dateOfBirth = LocalDate.now())
   val citizenDetailsResponse = CitizenDetailsResponse(citizen, None)
+  lazy val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(s"session-$uuid")))
   implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
@@ -95,7 +99,7 @@ class NIRecordControllerISpec extends AnyWordSpec
       """.stripMargin)))
 
     server.stubFor(
-      get(urlMatching(s"/pertax/$nino/authorise"))
+      post(urlMatching("/pertax/authorise"))
         .willReturn(
           aResponse()
             .withStatus(OK)

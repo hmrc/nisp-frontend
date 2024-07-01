@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import play.api.mvc.{BodyParsers, Request, Result}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
-import uk.gov.hmrc.nisp.controllers.auth.{AuthAction, AuthDetails, AuthenticatedRequest}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, AuthDetails, AuthenticatedRequest}
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 
 import java.time.Instant
@@ -30,7 +30,7 @@ class FakeAuthActionWithNino @Inject() (
   val parser: BodyParsers.Default,
   val executionContext: ExecutionContext,
   ninoContainer: NinoContainer
-) extends AuthAction {
+) extends AuthRetrievals {
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] =
     block(
       AuthenticatedRequest(

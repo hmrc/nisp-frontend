@@ -18,13 +18,6 @@ package uk.gov.hmrc.nisp.models.admin
 
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagName
 
-case object PertaxBackendToggle extends FeatureFlagName {
-  override val name: String            = "pertax-backend-toggle"
-  override val description: Option[String] = Some(
-    "Enable/disable pertax backend during auth"
-  )
-}
-
 case object ExcessiveTrafficToggle extends FeatureFlagName {
   override val name: String = "excessive-traffic-toggle"
   override val description: Option[String] = Some(

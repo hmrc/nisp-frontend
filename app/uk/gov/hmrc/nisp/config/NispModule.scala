@@ -27,7 +27,7 @@ class NispModule extends Module {
     Seq(
       bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
       bind[SessionCache].to[NispSessionCache],
-      bind[AuthAction].to[AuthActionImpl],
+      bind[AuthRetrievals].to[AuthRetrievalsImpl],
       bind[ApplicationStartUp].toSelf.eagerly()
     )
 }

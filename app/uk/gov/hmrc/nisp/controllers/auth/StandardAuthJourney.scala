@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.nisp.controllers.auth
 
-import play.api.mvc.{ActionBuilder, AnyContent}
+import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
 
 import javax.inject.Inject
 
-class StandardAuthJourney @Inject()(auth: AuthAction, pertaxAuth: PertaxAuthAction) {
-  val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedRequest, AnyContent] = auth andThen pertaxAuth
+class StandardAuthJourney @Inject()(auth: AuthRetrievals, pertaxAuth: PertaxAuthAction, defaultActionBuilder: DefaultActionBuilder) {
+  val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedRequest, AnyContent] = defaultActionBuilder andThen pertaxAuth andThen auth
 }
