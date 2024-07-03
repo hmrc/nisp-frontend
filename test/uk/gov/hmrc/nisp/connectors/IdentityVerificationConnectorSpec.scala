@@ -19,6 +19,7 @@ package uk.gov.hmrc.nisp.connectors
 import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, urlEqualTo}
 import org.mockito.Mockito
 import org.mockito.Mockito.reset
+import org.scalatest.concurrent.Eventually.eventually
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -144,11 +145,12 @@ class IdentityVerificationConnectorSpec
   }
 
   "return failed future for invalid json fields" in {
+
     val journeyId = "invalid-fields-journey-id"
     mockJourneyId(journeyId)
-    val result    = identityVerificationConnector.identityVerificationResponse(journeyId)
-    ScalaFutures.whenReady(result) { e =>
-      e shouldBe a[IdentityVerificationErrorResponse]
+
+    eventually {
+      await(identityVerificationConnector.identityVerificationResponse(journeyId)) shouldBe a[IdentityVerificationErrorResponse]
     }
   }
 }
