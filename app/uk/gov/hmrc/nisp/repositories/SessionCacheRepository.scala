@@ -23,22 +23,22 @@ import play.api.mvc.Request
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.{DataKey, SessionCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
-import uk.gov.hmrc.nisp.repositories.SessionCacheNew.CacheKey
+import uk.gov.hmrc.nisp.repositories.SessionCache.CacheKey
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[NispSessionCacheRepository])
-trait SessionCacheNew {
+trait SessionCache {
   def get[T](key: CacheKey[T])(implicit format: Format[T], request: Request[_]): Future[Option[T]]
   def put[T](key: CacheKey[T], value: T)(implicit format: Format[T], request: Request[_]): Future[Unit]
 }
 
-object SessionCacheNew {
+object SessionCache {
   sealed abstract class CacheKey[T]{val dataKey: DataKey[T]}
   object CacheKey {
-    val PERTAX:CacheKey[Boolean]= new CacheKey[Boolean](){override val dataKey: DataKey[Boolean] = DataKey[Boolean](uk.gov.hmrc.nisp.utils.Constants.PERTAX)}
+    val PERTAX:CacheKey[Boolean]= new CacheKey[Boolean](){override val dataKey: DataKey[Boolean] = DataKey[Boolean]("customerPERTAX")}
   }
 }
 
@@ -53,7 +53,7 @@ class NispSessionCacheRepository @Inject() (
       ttl = Duration(config.get[Int]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS),
       timestampSupport = timestampSupport,
       sessionIdKey = SessionKeys.sessionId
-    ) with SessionCacheNew {
+    ) with SessionCache {
 
   override def get[T](key: CacheKey[T])(implicit format: Format[T], request: Request[_]): Future[Option[T]] =
     getFromSession(key.dataKey)

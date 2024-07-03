@@ -26,7 +26,7 @@ import uk.gov.hmrc.sca.filters.WrapperDataFilter
 import scala.concurrent.{ExecutionContext, Future}
 
 class SCAWrapperDataFilter @Inject() (
-                                       scaWrapperDataConnector: ScaWrapperDataConnector,
+                                       scaWrapperDataConnector: ScaWrapperDataConnector
                                      )(implicit val ec: ExecutionContext, override val mat: Materializer)
   extends WrapperDataFilter(scaWrapperDataConnector)(ec, mat) {
 

@@ -32,15 +32,15 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, AuthDetails, AuthenticatedRequest, NispAuthedUser, PertaxAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthRetrievals, AuthenticatedRequest, NispAuthedUser, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
+import uk.gov.hmrc.nisp.repositories.SessionCache
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
 import uk.gov.hmrc.nisp.utils.{Constants, PertaxAuthMockingHelper, WireMockHelper}

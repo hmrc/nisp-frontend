@@ -38,12 +38,7 @@ object Constants {
   val NAME          = "customerName"
   val NINO          = "customerNino"
   val CONTRACTEDOUT = "contractedOutFlag"
-  val PERTAX        = "customerPERTAX"
 
-  val ninoWithoutSuffixLength: Int = 8
-
-  val shortYearStartCharacter = 2
-  val shortYearEndCharacter   = 4
   val iv                      = "iv"
   val chartWidthMinimum       = 31
   val deferralCutOffAge       = 53

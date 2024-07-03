@@ -51,7 +51,7 @@ class NIRecordController @Inject()(
                                     nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
                                   )(
                                     implicit ec: ExecutionContext,
-                                    val featureFlagService: FeatureFlagService,
+                                    val featureFlagService: FeatureFlagService
                                   ) extends NispFrontendController(mcc) with I18nSupport {
 
   val showFullNI: Boolean = appConfig.showFullNI

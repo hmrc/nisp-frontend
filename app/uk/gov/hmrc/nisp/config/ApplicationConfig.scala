@@ -63,12 +63,6 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val nationalInsuranceServiceUrl: String    = baseUrl("national-insurance")
   val statePensionServiceUrl: String         = baseUrl("state-pension")
 
-  val sessionCacheURL: String    = baseUrl("cachable.session-cache")
-  val sessionCacheDomain: String = getConfString(
-    "cachable.session-cache.domain",
-    throw new Exception("Could not find config 'cachable.session-cache.domain'")
-  )
-
   val pertaxAuthBaseUrl: String = baseUrl("pertax-auth")
 
   def accessibilityStatementUrl(relativeReferrerPath: String): String =

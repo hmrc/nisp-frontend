@@ -23,7 +23,6 @@ object AppDependencies {
   private val hmrcMongoVersion = "1.9.0"
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"       %% s"http-caching-client-$playVersion"           % "11.2.0",
     "uk.gov.hmrc"       %% "tax-year"                                    % "4.0.0",
     "uk.gov.hmrc"       %% s"play-conditional-form-mapping-$playVersion" % "2.0.0",
     "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion"  % "1.3.0",

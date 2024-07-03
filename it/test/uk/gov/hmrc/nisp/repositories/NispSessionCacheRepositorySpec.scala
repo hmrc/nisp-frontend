@@ -29,7 +29,7 @@ import uk.gov.hmrc.nisp.utils.UnitSpec
 import java.util.UUID
 import scala.concurrent.ExecutionContext
 
-class SessionCacheNewSpec extends UnitSpec with MongoSupport {
+class NispSessionCacheRepositorySpec extends UnitSpec with MongoSupport {
 
   private val configuration = Configuration(
     "mongodb.timeToLiveInSeconds" -> "60",
