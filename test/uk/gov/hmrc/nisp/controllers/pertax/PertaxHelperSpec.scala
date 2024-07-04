@@ -16,17 +16,21 @@
 
 package uk.gov.hmrc.nisp.controllers.pertax
 
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{RETURNS_DEEP_STUBS, reset, verify, when}
+import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.concurrent.Eventually.eventually
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.JsBoolean
-import play.api.test.Injecting
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
+import uk.gov.hmrc.nisp.repositories.SessionCacheNew
+import uk.gov.hmrc.nisp.repositories.SessionCacheNew.CacheKey.PERTAX
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
@@ -44,10 +48,13 @@ class PertaxHelperSpec
     mock[SessionCache]
   val mockMetricsService: MetricsService =
     mock[MetricsService](RETURNS_DEEP_STUBS)
+  val mockSessionCacheNew: SessionCacheNew =
+    mock[SessionCacheNew]
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MetricsService].toInstance(mockMetricsService),
-      bind[SessionCache].toInstance(mockSessionCache)
+      bind[SessionCache].toInstance(mockSessionCache),
+      bind[SessionCacheNew].toInstance(mockSessionCacheNew)
     )
     .build()
 
@@ -58,6 +65,7 @@ class PertaxHelperSpec
     reset(mockMetricsService.keystoreReadTimer)
     reset(mockMetricsService.keystoreHitCounter)
     reset(mockMetricsService.keystoreMissCounter)
+    reset(mockSessionCacheNew)
     reset(mockSessionCache)
   }
 
@@ -66,14 +74,23 @@ class PertaxHelperSpec
 
   "PertaxHelperSpec.setFromPertax" should {
     "call timerContext.stop() when set value in cache succeeds" in {
+
       when(mockSessionCache.cache(any(), any())(any(), any(), any()))
         .thenReturn(Future.successful(
           CacheMap("customerPERTAX", Map("customerPERTAX" -> JsBoolean(true)))
         ))
 
-      await(pertaxHelper.setFromPertax) shouldBe ((): Unit)
+      when(mockSessionCacheNew.put(any(), any())(any(), any()))
+        .thenReturn(Future.successful(()))
 
-      verify(mockMetricsService.keystoreWriteTimer.time()).stop()
+      implicit val request: FakeRequest[_] = FakeRequest()
+
+      await(pertaxHelper.setFromPertax) shouldBe ((): Unit)
+      eventually{
+        verify(mockSessionCacheNew, times(1)).put(ArgumentMatchers.eq(PERTAX),any())(any(),any())
+        verify(mockSessionCache, times(1)).cache(ArgumentMatchers.eq("customerPERTAX"),any())(any(),any(),any())
+        verify(mockMetricsService.keystoreWriteTimer.time()).stop()
+      }
     }
   }
 
@@ -84,8 +101,10 @@ class PertaxHelperSpec
 
       await(pertaxHelper.isFromPertax) shouldBe true
 
-      verify(mockMetricsService.keystoreReadTimer.time()).stop()
-      verify(mockMetricsService.keystoreHitCounter).inc()
+      eventually {
+        verify(mockMetricsService.keystoreReadTimer.time()).stop()
+        verify(mockMetricsService.keystoreHitCounter).inc()
+      }
     }
 
     "call timerContext.stop() and keystoreHitCounter.inc() when false returned from cache" in {
@@ -94,8 +113,10 @@ class PertaxHelperSpec
 
       await(pertaxHelper.isFromPertax) shouldBe false
 
-      verify(mockMetricsService.keystoreReadTimer.time()).stop()
-      verify(mockMetricsService.keystoreHitCounter).inc()
+      eventually {
+        verify(mockMetricsService.keystoreReadTimer.time()).stop()
+        verify(mockMetricsService.keystoreHitCounter).inc()
+      }
     }
 
     "call timerContext.stop() and keystoreMissCounter.inc() when None returned from cache" in {
@@ -104,8 +125,10 @@ class PertaxHelperSpec
 
       await(pertaxHelper.isFromPertax) shouldBe false
 
-      verify(mockMetricsService.keystoreReadTimer.time()).stop()
-      verify(mockMetricsService.keystoreMissCounter).inc()
+      eventually {
+        verify(mockMetricsService.keystoreReadTimer.time()).stop()
+        verify(mockMetricsService.keystoreMissCounter).inc()
+      }
     }
 
     "call keystoreReadFailed.inc() when fetch fails" in {
@@ -114,7 +137,9 @@ class PertaxHelperSpec
 
       await(pertaxHelper.isFromPertax) shouldBe false
 
-      verify(mockMetricsService.keystoreReadFailed).inc()
+      eventually {
+        verify(mockMetricsService.keystoreReadFailed).inc()
+      }
     }
   }
 }

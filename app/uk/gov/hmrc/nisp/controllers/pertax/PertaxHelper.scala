@@ -18,27 +18,33 @@ package uk.gov.hmrc.nisp.controllers.pertax
 
 import com.codahale.metrics.Timer
 import com.google.inject.Inject
+import play.api.mvc.Request
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.nisp.services.MetricsService
 import uk.gov.hmrc.nisp.utils.Constants._
 
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.nisp.repositories.SessionCacheNew
+import uk.gov.hmrc.nisp.repositories.SessionCacheNew.CacheKey
 
 import scala.util.{Failure, Success}
 
 class PertaxHelper @Inject()(
   sessionCache: SessionCache,
+  sessionCacheNew: SessionCacheNew,
   metricsService: MetricsService
 )(
   implicit ec: ExecutionContext
 ) {
 
-  def setFromPertax(implicit hc: HeaderCarrier): Unit = {
+  def setFromPertax(implicit hc: HeaderCarrier, request: Request[_]): Unit = {
     val keystoreTimerContext: Timer.Context =
       metricsService.keystoreWriteTimer.time()
-    val cacheF: Future[CacheMap] =
-      sessionCache.cache(PERTAX, true)
+    val cacheF: Future[CacheMap] = for {
+      cacheMap <- sessionCache.cache(PERTAX, true)
+      _        <- sessionCacheNew.put(CacheKey.PERTAX,true)
+    } yield (cacheMap)
 
     cacheF.onComplete {
       case Success(_) =>
