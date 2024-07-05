@@ -54,8 +54,6 @@ class NationalInsuranceConnectorSpec
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
       "microservice.services.national-insurance.port" -> server.port(),
-      "microservice.services.cachable.session-cache.port" -> server.port(),
-      "microservice.services.cachable.session-cache.host" -> "localhost"
     )
     .build()
 

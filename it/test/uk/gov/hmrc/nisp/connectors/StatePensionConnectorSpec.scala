@@ -54,8 +54,6 @@ class StatePensionConnectorSpec
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
       "microservice.services.state-pension.port" -> server.port(),
-      "microservice.services.cachable.session-cache.port" -> server.port(),
-      "microservice.services.cachable.session-cache.host" -> "localhost"
     )
     .build()
 

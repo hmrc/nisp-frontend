@@ -103,7 +103,7 @@ class MainImpl @Inject()(
       ),
       optTrustedHelper = trustedHelper,
       fullWidth = false,
-      hideMenuBar = hideNavBar,
+      hideMenuBar = hideNavBar
     )(messages, HeaderCarrierConverter.fromRequest(request), request)
   }
 }

@@ -29,8 +29,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.nisp.helpers.{FakeSessionCache, TestAccountBuilder}
+import uk.gov.hmrc.nisp.helpers.{TestAccountBuilder}
 import uk.gov.hmrc.nisp.models.Exclusion
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.ForbiddenStatePensionExclusion
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -51,7 +50,6 @@ class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with Gui
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MetricsService].toInstance(mockMetricService),
-      bind[SessionCache].toInstance(FakeSessionCache)
     )
     .configure(
       "microservice.services.national-insurance.port" -> server.port()
