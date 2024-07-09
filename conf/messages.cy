@@ -327,7 +327,8 @@ nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
 nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:00am i 6:00pm
 
-nisp.nirecord.banner = There is a short delay in processing some payments. Your forecast will be updated as soon as possible.
+nisp.nirecord.banner = Mae yna oedi byr wrth brosesu rhai taliadau.  Bydd eich rhagolwg yn cael ei ddiweddaru cyn gynted â phosibl.
+
 #****************************
 # Gaps in your record page
 #****************************
