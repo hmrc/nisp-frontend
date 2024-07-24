@@ -8,14 +8,16 @@ function hideDetails() {
 }
 
 function hideAccordion() {
-  const accordion = document.querySelector('.accordion')
+  const summaryList = document.getElementsByClassName('govuk-summary-list')
 
-  if (accordion != null && accordion != 'undefined') {
-    const dd = accordion.getElementsByTagName('dd')
+  if (summaryList != null && summaryList.length > 0) {
+    for (let i = 0; i < summaryList.length; i++) {
+      const nirecord = summaryList[i].getElementsByClassName('contributions-details')
 
-    if (dd != null && dd.length > 0) {
-      for (let i = 0; i < dd.length; i++) {
-        dd[i].style.display = 'none'
+      if (nirecord != null && nirecord.length > 0) {
+        for (let i = 0; i < nirecord.length; i++) {
+          nirecord[i].style.display = 'none'
+        }
       }
     }
   }
@@ -28,16 +30,14 @@ function accordionToggleShowHide() {
     for (let i = 0; i < expandables.length; i++) {
       expandables[i].addEventListener('click', function (e) {
         e.preventDefault();
-        if (this.getAttribute('class') !== 'active') {
-          this.setAttribute('class', 'active')
-          this.nextElementSibling.style.display = 'block'
+        if (this.getAttribute('class') !== 'govuk-summary-list__row active') {
+          this.setAttribute('class', 'govuk-summary-list__row active')
+          this.nextElementSibling.style.display = 'table-row'
           this.querySelector('.view-details').setAttribute('aria-expanded', 'true')
-          this.setAttribute('aria-expanded', 'true')
         } else {
-          this.removeAttribute('class')
+          this.setAttribute('class', 'govuk-summary-list__row expandable')
           this.nextElementSibling.style.display = 'none'
           this.querySelector('.view-details').setAttribute('aria-expanded', 'false')
-          this.setAttribute('aria-expanded', 'false')
         }
       });
     }
