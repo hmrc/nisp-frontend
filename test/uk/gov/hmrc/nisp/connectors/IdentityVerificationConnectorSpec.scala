@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, ok, urlEqualTo}
 import org.mockito.Mockito
 import org.mockito.Mockito.reset
 import org.scalatest.concurrent.Eventually.eventually
@@ -24,6 +24,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.http.Status.{FORBIDDEN, IM_A_TEAPOT, NOT_FOUND}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -142,6 +143,30 @@ class IdentityVerificationConnectorSpec
 
   "return no failure when identityVerification returns non-existant result type" in {
     behave like identityVerificationResponse("invalid-journey-id", "ABCDEFG")
+  }
+
+  "return an error when a status of NOT_FOUND is returned from downstream" in {
+    server.stubFor(
+      get(urlEqualTo(s"/mdtp/journey/journeyId/notFound"))
+        .willReturn(aResponse().withStatus(NOT_FOUND)))
+
+    await(identityVerificationConnector.identityVerificationResponse("notFound")) shouldBe IdentityVerificationNotFoundResponse
+  }
+
+  "return an error when a status of FORBIDDEN is returned from downstream" in {
+    server.stubFor(
+      get(urlEqualTo(s"/mdtp/journey/journeyId/forbidden"))
+        .willReturn(aResponse().withStatus(FORBIDDEN)))
+
+    await(identityVerificationConnector.identityVerificationResponse("forbidden")) shouldBe IdentityVerificationForbiddenResponse
+  }
+
+  "return an error when a status of anything else is returned from downstream" in {
+    server.stubFor(
+      get(urlEqualTo(s"/mdtp/journey/journeyId/teapot"))
+        .willReturn(aResponse().withStatus(IM_A_TEAPOT)))
+
+    await(identityVerificationConnector.identityVerificationResponse("teapot")) shouldBe a[IdentityVerificationErrorResponse]
   }
 
   "return failed future for invalid json fields" in {

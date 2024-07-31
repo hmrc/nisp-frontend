@@ -1173,6 +1173,14 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     }
   }
 
+  "GET /account/nirecord/pta" should {
+    "set keystore from pta and redirect the user" in {
+      val result = niRecordController.pta(generateFakeRequest)
+
+      status(result) shouldBe SEE_OTHER
+    }
+  }
+
   "GET /account/nirecord/gapsandhowtocheck" should {
 
     "return how to check page for authenticated user" in {
