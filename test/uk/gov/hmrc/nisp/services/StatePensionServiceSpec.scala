@@ -21,15 +21,16 @@ import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfterEach, PrivateMethodTester}
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.Reads
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder._
 import uk.gov.hmrc.nisp.models.{Exclusion, _}
 import uk.gov.hmrc.nisp.utils.UnitSpec
-import java.time.LocalDate
 
+import java.time.LocalDate
 import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -261,6 +262,12 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
       when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny())).thenReturn(Future.successful(Right(Left(CopeStatePensionExclusion(Exclusion.CopeProcessing, date, None)))))
 
       statePensionService.getSummary(regularNino).futureValue shouldBe Right(Left(StatePensionExclusionFilteredWithCopeDate(Exclusion.CopeProcessing, date)))
+    }
+
+    "return an error when an upstreamErrorResponse occurs" in {
+      when(mockStatePensionConnector.getStatePension(mockEQ(regularNino))(mockAny())).thenReturn(Future.successful(Left(UpstreamErrorResponse("Error", INTERNAL_SERVER_ERROR))))
+
+      statePensionService.getSummary(regularNino).futureValue shouldBe Left(UpstreamErrorResponse("Error", INTERNAL_SERVER_ERROR))
     }
 
   }

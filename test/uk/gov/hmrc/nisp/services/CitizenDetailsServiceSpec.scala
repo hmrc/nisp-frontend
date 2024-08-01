@@ -80,6 +80,18 @@ class CitizenDetailsServiceSpec
       }
     }
 
+    "return None for LOCKED" in {
+      when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(nonExistentNino))(mockAny())).thenReturn(
+        Future.successful(Left(UpstreamErrorResponse("LOCKED", LOCKED)))
+      )
+
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
+        citizenDetailsService.retrievePerson(nonExistentNino)(new HeaderCarrier())
+      whenReady(person) { p =>
+        p.isLeft shouldBe true
+      }
+    }
+
     "return None for bad NINO" in {
       when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(nonExistentNino))(mockAny())).thenReturn(
         Future.successful(Left(UpstreamErrorResponse("NOT_FOUND", NOT_FOUND)))
@@ -99,6 +111,18 @@ class CitizenDetailsServiceSpec
 
       val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
         citizenDetailsService.retrievePerson(badRequestNino)(new HeaderCarrier())
+      whenReady(person) { p =>
+        p.isLeft shouldBe true
+      }
+    }
+
+    "return None for any other status" in {
+      when(mockCitizenDetailsConnector.connectToGetPersonDetails(mockEQ(nonExistentNino))(mockAny())).thenReturn(
+        Future.successful(Left(UpstreamErrorResponse("IM_A_TEAPOT", IM_A_TEAPOT)))
+      )
+
+      val person: Future[Either[CitizenDetailsError, CitizenDetailsResponse]] =
+        citizenDetailsService.retrievePerson(nonExistentNino)(new HeaderCarrier())
       whenReady(person) { p =>
         p.isLeft shouldBe true
       }

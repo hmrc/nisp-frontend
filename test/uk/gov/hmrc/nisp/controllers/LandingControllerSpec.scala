@@ -153,6 +153,18 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
         status(result)        shouldBe UNAUTHORIZED
         contentAsString(result) should include("We cannot confirm your identity")
       }
+
+      "show generic not_authorised template for FailedIV journey" in {
+        val journeyId = "user-aborted-journey-id"
+
+        when(mockIVConnector.identityVerificationResponse(mockEQ(journeyId))(mockAny())).thenReturn(
+          Future.successful(IdentityVerificationSuccessResponse("FailedIV"))
+        )
+
+        val result = landingController.showNotAuthorised(Some(journeyId))(fakeRequest)
+        status(result)        shouldBe UNAUTHORIZED
+        contentAsString(result) should include("We cannot confirm your identity")
+      }
     }
 
     "show technical_issue template for TechnicalIssue journey" in {

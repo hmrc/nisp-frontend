@@ -22,12 +22,13 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Injecting
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.NationalInsuranceConnector
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion}
+import uk.gov.hmrc.nisp.models.StatePensionExclusion.{CopeStatePensionExclusion, ForbiddenStatePensionExclusion, OkStatePensionExclusion}
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
@@ -191,6 +192,24 @@ class NationalInsuranceServiceSpec
 
     }
 
+    "A list of exclusions are returned" should {
+      "return a filtered exclusion" in {
+        when(mockNationalInsuranceConnector.getNationalInsurance(any())(any()))
+          .thenReturn(Future.successful(
+            Right(Left(OkStatePensionExclusion(List(Exclusion.IsleOfMan)))))
+          )
+
+        val result = await(nationalInsuranceService.getSummary(generateNino))
+
+        result.map {
+          excl =>
+            val exclusion: Object = excl.swap.getOrElse(StatePensionExclusionFiltered)
+
+            exclusion shouldBe StatePensionExclusionFiltered(Exclusion.IsleOfMan)
+        }
+      }
+    }
+
     "There is failed future from a Dead exclusion" should {
       "return a Dead Exclusion" in {
 
@@ -331,6 +350,18 @@ class NationalInsuranceServiceSpec
         val result = nationalInsuranceService.getSummary(generateNino)
 
         result.futureValue shouldBe Right(Left(StatePensionExclusionFiltered(Exclusion.CopeProcessingFailed)))
+      }
+    }
+
+    "There is any other error as a Left" should {
+      "return an error as a Left" in {
+        when(mockNationalInsuranceConnector.getNationalInsurance(any())(any()))
+          .thenReturn(Future.successful(Left(UpstreamErrorResponse("error", INTERNAL_SERVER_ERROR))))
+
+
+        val result = await(nationalInsuranceService.getSummary(generateNino))
+
+        result shouldBe Left(UpstreamErrorResponse("error", INTERNAL_SERVER_ERROR))
       }
     }
   }

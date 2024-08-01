@@ -172,6 +172,61 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
       redirectLocation(result) shouldBe Some("/check-your-state-pension/account")
     }
 
+    "return redirect to account page for non-excluded user in NI" in {
+
+      val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+        28,
+        -3,
+        10,
+        4,
+        Some(LocalDate.of(1975, 8, 1)),
+        homeResponsibilitiesProtection = false,
+        LocalDate.of(2014, 4, 5),
+        List(
+          NationalInsuranceTaxYear(
+            "2013-14",
+            qualifying = false,
+            0,
+            0,
+            0,
+            0,
+            704.60,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = true,
+            underInvestigation = false
+          ),
+          NationalInsuranceTaxYear(
+            "2012-13",
+            qualifying = true,
+            0,
+            0,
+            0,
+            52,
+            689,
+            Some(LocalDate.of(2019, 4, 5)),
+            Some(LocalDate.of(2023, 4, 5)),
+            payable = true,
+            underInvestigation = false
+          )
+        ),
+        reducedRateElection = false
+      )
+
+      when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+        Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+      )
+
+      val result = testExclusionController.showNI()(
+        fakeRequest.withSession(
+          SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+          SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
+        )
+      )
+
+      redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
+    }
+
     "Exclusion Controller" when {
 
       def generateSPRequest: Future[Result] =
@@ -765,6 +820,38 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
         status(result)        shouldBe OK
         contentAsString(result) should include(copeProcessingExtendedHeader)
       }
+
+      "return the COPE Processing Extended Exclusion on /exclusion in NI with previousAvailableDate defined" in {
+        val statePensionCopeProcessingExtendedResponse = StatePensionExclusionFilteredWithCopeDate(
+          exclusion = Exclusion.CopeProcessing,
+          copeDataAvailableDate = LocalDate.of(2017, 7, 28),
+          previousAvailableDate = Some(LocalDate.of(2017, 7, 18))
+        )
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          Future.successful(Right(Left(statePensionCopeProcessingExtendedResponse))))
+
+        val result = testExclusionController.showNI()(FakeRequest())
+
+        status(result)        shouldBe OK
+        contentAsString(result) should include("Sorry, we are still working on your National Insurance record")
+      }
+
+      "return the COPE Processing Extended Exclusion on /exclusion in NI" in {
+        val statePensionCopeProcessingExtendedResponse = StatePensionExclusionFilteredWithCopeDate(
+          exclusion = Exclusion.CopeProcessing,
+          copeDataAvailableDate = LocalDate.of(2017, 7, 28),
+          previousAvailableDate = None
+        )
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          Future.successful(Right(Left(statePensionCopeProcessingExtendedResponse))))
+
+        val result = testExclusionController.showNI()(FakeRequest())
+
+        status(result)        shouldBe OK
+        contentAsString(result) should include("Sorry, we are currently working on your National Insurance record")
+      }
     }
 
     "The user has COPE Failed exclusion" should {
@@ -798,6 +885,24 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
         status(result)        shouldBe OK
         contentAsString(result) should include(copeFailedHeader)
       }
+
+      "return the COPE Failed Exclusion on /exclusion in NI" in {
+        val nationalInsuranceCopeFailedResponse = StatePensionExclusionFiltered(
+          exclusion = Exclusion.CopeProcessingFailed
+        )
+
+        when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+          Future.successful(Right(Left(nationalInsuranceCopeFailedResponse))))
+
+        val result = testExclusionController.showNI()(FakeRequest())
+
+        status(result)        shouldBe OK
+        contentAsString(result) should include("Sorry, we cannot show your National Insurance record online")
+      }
+
+    }
+
+    "Return an internal server error when any other error occurs from state pension" in {
 
     }
   }
