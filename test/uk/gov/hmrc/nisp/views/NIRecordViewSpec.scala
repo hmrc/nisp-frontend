@@ -1268,7 +1268,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       mockSetup
       assertEqualsMessage(
         doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(10)>dt",
+        "govuk-summary-list__row",
         "nisp.nirecord.pre75Years"
       )
     }
