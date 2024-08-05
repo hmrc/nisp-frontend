@@ -290,7 +290,7 @@ if (user.livesAbroad) {
             </div>
           }
 
-          @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt > niRecordCutoffYear - 1)) {
+          @for(niTaxYear <- niRecord.taxYears.filter(_.taxYear.toInt > niRecordCutoffYear - 1)) {
             @if(showFullNI) {
               @nirecordtaxyear(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate, viewPayableGapsToggle)
             } else {
@@ -300,7 +300,7 @@ if (user.livesAbroad) {
           </dl>
 
           @if(niRecord.numberOfGapsPayable > 0) {
-            @if(!niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt <= niRecordCutoffYear - 1).isEmpty) {
+            @if(!niRecord.taxYears.filter(_.taxYear.toInt <= niRecordCutoffYear - 1).isEmpty) {
               @if(viewPayableGapsToggle) {
               <a href="@nispModellingPayableGapsURL" role="button" draggable="false" class="govuk-button govuk-!-margin-top-5" data-module="govuk-button">
                 @messages("nisp.main.context.fillGaps.viewPayableGaps")
