@@ -34,16 +34,16 @@
         @niTaxYear.taxYear
       </dt>
     @if(niTaxYear.qualifying) {
-      <dd class="govuk-summary-list__value inactive">
+      <dd id="full-year" class="govuk-summary-list__value inactive">
         @messages("nisp.nirecord.fullyear")
       </dd>
       <dd class="govuk-summary-list__value"></dd>
     } else {
-      <dd class="govuk-summary-list__value">
+      <dd id="year-is-not-full" class="govuk-summary-list__value">
         @messages("nisp.nirecord.gap")
       </dd>
       <dd class="govuk-summary-list__actions">
-        <a href="#" class="govuk-link view-details" aria-expanded="false" aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
+        <a id="view-year-link" href="#" class="govuk-link view-details" aria-expanded="false" aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
           @Html(messages(
             "nisp.nirecord.gap.viewdetails",
             niTaxYear.taxYear
@@ -71,7 +71,7 @@
               || niTaxYear.classThreeCredits > 0
               || niTaxYear.classTwoCredits > 0) {
 
-              <p class="govuk-body contributions-header">
+              <p id="you-have-contribution-from" class="govuk-body contributions-header">
                 @messages("nisp.nirecord.yourcontributionfrom")
               </p>
             }
@@ -111,8 +111,8 @@
                 <p class="govuk-body">@Html(messages("nisp.nirecord.gap.whenyouareclaiming.singular",niTaxYear.otherCredits))</p>
                 <p class="govuk-body">@Html(messages("nisp.nirecord.gap.whenyouareclaiming.info.singular"))</p>
               } else {
-                <p class="govuk-body">@Html(messages("nisp.nirecord.gap.whenyouareclaiming.plural",niTaxYear.otherCredits))</p>
-                <p class="govuk-body">@Html(messages("nisp.nirecord.gap.whenyouareclaiming.info.plural"))</p>
+                <p id="national-insurance-credits" class="govuk-body">@Html(messages("nisp.nirecord.gap.whenyouareclaiming.plural",niTaxYear.otherCredits))</p>
+                <p id="added-disabled-ill-unemployed-caring" class="govuk-body">@Html(messages("nisp.nirecord.gap.whenyouareclaiming.info.plural"))</p>
               }
             }
 

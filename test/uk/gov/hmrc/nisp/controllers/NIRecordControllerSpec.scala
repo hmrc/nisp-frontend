@@ -1034,7 +1034,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         Some(LocalDate.of(1975, 8, 1)),
         homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
-        List(NationalInsuranceTaxYear("2015-16", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)),
+        List(NationalInsuranceTaxYear("2015", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)),
         reducedRateElection = false
       )
 
@@ -1394,7 +1394,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         homeResponsibilitiesProtection = false,
         LocalDate.of(2016, 4, 5),
         List(
-          NationalInsuranceTaxYear("2015-16", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)
+          NationalInsuranceTaxYear("2015", qualifying = true, 2430.24, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false)
         ),
         reducedRateElection = false
       )

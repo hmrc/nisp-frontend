@@ -233,21 +233,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     }
 
     "render page with text 'year is not full'" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(2)>dd.ni-notfull",
-        "nisp.nirecord.gap"
-      )
+      doc.getElementById("year-is-not-full").text() shouldBe "Year is not full"
     }
 
     "render page with link 'View details'" in {
-      assertContainsExpectedValue(
-        doc,
-//        ".govuk-grid-column-two-thirds>dl>dt:nth-child(2)>div>div.ni-action>a.view-details",
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(2)>dd.ni-action>a.view-details",
-        "nisp.nirecord.gap.viewdetails",
-        "2013 to 2014"
-      )
+      doc.getElementById("view-year-link").text() shouldBe "View 2013 to 2014 details"
     }
 
     "render page with text 'You did not make any contributions this year '" in {
@@ -303,20 +293,12 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
       )
     }
 
-    "render page with text ' FUll years'" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(10)>dd",
-        "nisp.nirecord.fullyear"
-      )
+    "render page with text 'Full years'" in {
+      doc.getElementById("full-year").text() shouldBe "Full year"
     }
 
     "render page with text 'You have contributions from '" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(11)>dd>p.contributions-header",
-        "nisp.nirecord.yourcontributionfrom"
-      )
+      doc.getElementById("you-have-contribution-from").text() shouldBe "You have contributions from"
     }
 
     "render page with text 'Paid employment £ 1,149.98'" in {
@@ -329,36 +311,20 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     }
 
     "render page with text 'full year'" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(4)>dd",
-        "nisp.nirecord.fullyear"
-      )
+      doc.getElementById("full-year").text() shouldBe "Full year"
     }
 
     "render page with text 'you have contributions from '" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(5)>dd>.contributions-header",
-        "nisp.nirecord.yourcontributionfrom"
-      )
+      doc.getElementById("you-have-contribution-from").text() shouldBe "You have contributions from"
     }
 
     "render page with text 'National Insurance credits 52 weeks'" in {
-      assertContainsDynamicMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(5)>dd>.other-credits",
-        "nisp.nirecord.gap.whenyouareclaiming.plural",
-        "52"
-      )
+      doc.getElementById("national-insurance-credits").text() shouldBe "National Insurance credits: 52 weeks"
+
     }
 
     "render page with text 'These may have been added to your record if you were ill/disabled...'" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(5)>dd>p:nth-child(3)",
-        "nisp.nirecord.gap.whenyouareclaiming.info.plural"
-      )
+      doc.getElementById("added-disabled-ill-unemployed-caring").text() shouldBe "These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service."
     }
 
     "render page with link 'view gaps only'" in {
@@ -491,20 +457,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     }
 
     "render page with text 'year is not full'" in {
-      assertEqualsMessage(
-        doc,
-        ".ni-notfull",
-        "nisp.nirecord.gap"
-      )
+      doc.getElementById("year-is-not-full").text() shouldBe "Year is not full"
     }
 
     "render page with link 'View details'" in {
-      assertContainsExpectedValue(
-        doc,
-        ".view-details",
-        "nisp.nirecord.gap.viewdetails",
-        "2013 to 2014"
-      )
+      doc.getElementById("view-year-link").text() shouldBe "View 2013 to 2014 details"
     }
 
     "render page with text 'You did not make any contributions this year '" in {
@@ -1131,21 +1088,12 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
 
     "render page with text 'pre75 years'" in {
       mockSetup
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(10)>dt",
-        "nisp.nirecord.pre75Years"
-      )
+      doc.getElementById("up-to-1975").text() shouldBe "Up to 1975"
     }
 
     "render page with text 'you have 5  qualifying years pre 1975'" in {
       mockSetup
-      assertContainsDynamicMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(10)>dd",
-        "nisp.nirecord.pre75QualifyingYears",
-        "5"
-      )
+      doc.getElementById("record-show-qualifying-years").text() shouldBe "Our records show you have 5 full years up to 5 April 1975"
     }
 
     "render page with link 'back'" in {
@@ -1266,20 +1214,13 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
 
     "render page with text 'pre75 years'" in {
       mockSetup
-      assertEqualsMessage(
-        doc,
-        "govuk-summary-list__row",
-        "nisp.nirecord.pre75Years"
-      )
+      doc.getElementById("up-to-1975").text() shouldBe "Up to 1975"
+
     }
 
     "render page with text 'Our records show you do not have any full years up to 5 April 1975'" in {
       mockSetup
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(10)>dd",
-        "nisp.nirecord.pre75QualifyingYearsZero"
-      )
+      doc.getElementById("no-full-years-upto-1975").text() shouldBe "Our records show you do not have any full years up to 5 April 1975"
     }
 
     "render page with link 'back'" in {
@@ -1413,11 +1354,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
 
     "render page with text 'you have contributions from '" in {
       mockSetup
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(6)>dd>.contributions-header",
-        "nisp.nirecord.yourcontributionfrom"
-      )
+      doc.getElementById("you-have-contribution-from").text() shouldBe "You have contributions from"
     }
 
     "render page with text 'paid employment : £12,345.67'" in {

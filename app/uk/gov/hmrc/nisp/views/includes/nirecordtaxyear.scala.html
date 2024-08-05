@@ -34,16 +34,16 @@
       @niTaxYear.taxYear
     </dt>
     @if(niTaxYear.qualifying) {
-      <dd class="govuk-summary-list__value ni-notfull full-inactive">
+      <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive">
         @messages("nisp.nirecord.fullyear")
       </dd>
     } else {
-      <dd class="govuk-summary-list__value ni-notfull">
+      <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull">
         @Html(messages("nisp.nirecord.gap"))
       </dd>
     }
     <dd class="govuk-summary-list__actions ni-action">
-      <a href="#" class="govuk-link view-details" aria-expanded="false" aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
+      <a id="view-year-link" href="#" class="govuk-link view-details" aria-expanded="false" aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
         @Html(messages("nisp.nirecord.gap.viewdetails", niTaxYear.taxYear))
       </a>
     </dd>
@@ -67,7 +67,7 @@
         || niTaxYear.classThreeCredits > 0
         || niTaxYear.classTwoCredits > 0) {
 
-        <p class="govuk-body contributions-header">
+        <p id="you-have-contribution-from" class="govuk-body contributions-header">
           @messages("nisp.nirecord.yourcontributionfrom")
         </p>
       }
@@ -152,13 +152,13 @@
 
         } else {
 
-          <p class="govuk-body other-credits">
+          <p id="national-insurance-credits" class="govuk-body other-credits">
             @Html(messages(
               "nisp.nirecord.gap.whenyouareclaiming.plural",
               niTaxYear.otherCredits
             ))
           </p>
-          <p class="govuk-body other-credits-reason">
+          <p id="added-disabled-ill-unemployed-caring" class="govuk-body other-credits-reason">
             @Html(messages(
               "nisp.nirecord.gap.whenyouareclaiming.info.plural"
             ))
