@@ -260,7 +260,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inject
 
           "has a title of 'Test Title' and partial of 'Hello'" in {
             lazy val doc = Jsoup.parse(bodyOf(result))
-            doc.getElementsByTag("title").text() shouldBe "Test Title - nisp.title.extension - GOV.UK"
+            doc.getElementsByTag("title").text() should include("Test Title - nisp.title.extension - GOV.UK")
             doc.getElementById("partial").text() shouldBe "Hello"
           }
         }

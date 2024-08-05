@@ -172,7 +172,7 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
 
       "the user details is a trusted helper" in {
         val trustedHelperNino = new Generator().nextNino.nino
-        val trustedHelper     = TrustedHelper("pName", "aName", "link", trustedHelperNino)
+        val trustedHelper     = TrustedHelper("pName", "aName", "link", Some(trustedHelperNino))
 
         when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
           .thenReturn(makeRetrievalResults(trustedHelper = Some(trustedHelper)))

@@ -24,13 +24,13 @@
 )
 
 @(
-  pageTitle: String,
+  title: String,
   heading: String,
   message: String
 )(implicit request: Request[_], messages: Messages)
 
 @main(
-  pageTitle = pageTitle,
+  pageTitle = title,
 ) {
 
   @h1(

@@ -85,7 +85,8 @@ class ExclusionController @Inject()(
         } else {
           Future.successful(Ok(excludedCopeView(spExclusion.copeDataAvailableDate)))
         }
-      case Left(_) => Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+      case Left(_) =>
+        errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
       case _ =>
         logger.warn("User accessed/exclusion as non-excluded user")
         Future.successful(Redirect(routes.StatePensionController.show))

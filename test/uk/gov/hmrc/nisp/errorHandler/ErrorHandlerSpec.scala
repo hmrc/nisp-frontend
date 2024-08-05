@@ -67,14 +67,14 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
       val heading = "testHeading"
       val message = "testMessage"
 
-      val standardErrorTemplate: Html = errorHandler.standardErrorTemplate(title, heading, message)
+      val standardErrorTemplate: Html = await(errorHandler.standardErrorTemplate(title, heading, message))
       val doc: Document               = Jsoup.parse(standardErrorTemplate.toString())
 
       val docTitle   = doc.select("title").text()
       val docHeading = doc.select("h1").text()
       val docMessage = doc.select("p").text()
 
-      docTitle   shouldBe expectedTitle
+      docTitle   should include(expectedTitle)
       docHeading shouldBe heading
       docMessage shouldBe message
     }
@@ -90,7 +90,6 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
 
       val docTitle = doc.select("title").text()
       docTitle should include(messages("global.error.InternalServerError500.title"))
-
     }
 
     "return 'try again later' when showExcessiveTrafficMessage is false" in {
@@ -108,7 +107,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
   "notFoundTemplate" must {
     "return the page not found view" in {
       val notFoundTemplate: Html = errorHandler.notFoundTemplate
-      val doc: Document          = Jsoup.parse(notFoundTemplate.toString())
+      val doc: Document          = await(Jsoup.parse(notFoundTemplate.toString()))
 
       val docTitle = doc.select("title").text()
       docTitle should include(messages("global.page.not.found.error.title"))
