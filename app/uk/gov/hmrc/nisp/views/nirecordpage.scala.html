@@ -299,13 +299,13 @@ if (user.livesAbroad) {
           }
           </dl>
 
-          @if(niRecord.numberOfGapsPayable > 0) {
-            @if(!niRecord.taxYears.filter(_.taxYear.toInt <= niRecordCutoffYear - 1).isEmpty) {
-              @if(viewPayableGapsToggle) {
+          @if(niRecord.numberOfGaps > 0) {
+            @if(viewPayableGapsToggle) {
               <a href="@nispModellingPayableGapsURL" role="button" draggable="false" class="govuk-button govuk-!-margin-top-5" data-module="govuk-button">
                 @messages("nisp.main.context.fillGaps.viewPayableGaps")
               </a>
-              }
+            }
+            @if(!niRecord.taxYears.filter(_.taxYear.toInt <= niRecordCutoffYear - 1).isEmpty) {
 
               <h2 class="govuk-heading-m govuk-!-margin-top-5">@messages("nisp.main.context.fillGaps.niRecordCutOff", niRecordCutoffYear.toString)</h2>
               <p class="govuk-body govuk-!-margin-bottom-5">@Messages("nisp.main.context.fillGaps.tooLate", niRecordCutoffYear.toString)</p>
