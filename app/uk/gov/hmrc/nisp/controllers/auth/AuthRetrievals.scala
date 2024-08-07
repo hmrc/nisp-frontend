@@ -83,7 +83,7 @@ class AuthRetrievalsImpl @Inject()(
   )(
     implicit hc: HeaderCarrier
   ): Future[Result] = {
-    val useNino = trustedHelper.fold(nino)(_.principalNino)
+    val useNino: String = trustedHelper.flatMap(_.principalNino).getOrElse(nino)
     cds.retrievePerson(Nino(useNino)).flatMap {
       case Right(cdr)                   =>
         val hasSa: Boolean = trustedHelper.fold(enrolments.exists(_.key == "IR-SA"))(_ => false)

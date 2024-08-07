@@ -22,10 +22,10 @@ import play.api.i18n.Messages
 import play.api.mvc.Request
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.views.html.components.{additionalScripts, additionalStylesheets}
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 import uk.gov.hmrc.sca.views.html.PtaHead
@@ -54,7 +54,8 @@ class MainImpl @Inject()(
                           wrapperService: WrapperService,
                           additionalStyles: additionalStylesheets,
                           additionalScripts: additionalScripts,
-                          ptaHead: PtaHead
+                          ptaHead: PtaHead,
+                          appConfig: ApplicationConfig
                         ) extends Main with Logging {
 
   //noinspection ScalaStyle
@@ -84,13 +85,12 @@ class MainImpl @Inject()(
       serviceURLs = ServiceURLs(
         serviceUrl = Some("/check-your-state-pension/account"),
         signOutUrl = Some(routes.StatePensionController.signOut.url),
-        accessibilityStatementUrl = wrapperService.defaultserviceURLs.accessibilityStatementUrl
+        accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri))
       ),
       sidebarContent = sidebar,
       timeOutUrl = None,
       keepAliveUrl = routes.TimeoutController.keep_alive.url,
       showBackLinkJS = true,
-      showSignOutInHeader = true,
       scripts = Seq(additionalScripts()),
       styleSheets = Seq(
         additionalStyles(),
@@ -104,6 +104,6 @@ class MainImpl @Inject()(
       optTrustedHelper = trustedHelper,
       fullWidth = false,
       hideMenuBar = hideNavBar
-    )(messages, HeaderCarrierConverter.fromRequest(request), request)
+    )(messages, request)
   }
 }

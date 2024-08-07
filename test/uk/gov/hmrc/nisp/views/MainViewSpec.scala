@@ -42,7 +42,7 @@ class MainViewSpec extends HtmlSpec {
     override val testName: String = "new style"
     override val profileAndSettingsLink: String = "http://localhost:9232/personal-account/profile-and-settings"
 
-    override val accessibilityReferrerUrl: String = "12346%2Fcheck-your-state-pension"
+    override val accessibilityReferrerUrl: String = "9234%2Fsome-url"
 
     override val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?newTab=true&service=NISP&referrerUrl=%2Fsome-url"
   }
@@ -96,7 +96,7 @@ class MainViewSpec extends HtmlSpec {
 
       "the page header should" should {
 
-        lazy val pageHeader = doc.select(".hmrc-header__service-name")
+        lazy val pageHeader = doc.select(".govuk-header__service-name")
 
         "contain the text 'Check your State Pension forecast'" in {
           pageHeader.text() shouldBe CommonValues.pageHeader

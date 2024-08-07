@@ -19,12 +19,11 @@ import uk.gov.hmrc.DefaultBuildSettings.*
 
 val appName = "nisp-frontend"
 
-ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / scalaVersion := "2.13.14"
 ThisBuild / majorVersion := 10
 ThisBuild / scalacOptions ++= Seq(
-  "-Xfatal-warnings",
   "-feature",
-  "-Werror",
+  //"-Werror", //FIXME uncomment after a full migration from V1 HttpClientModule to HttpClientV2Module
   "-Wconf:cat=unused-imports&site=.*views\\.html.*:s",
   "-Wconf:cat=unused-imports&site=<empty>:s",
   "-Wconf:cat=unused&src=.*RoutesPrefix\\.scala:s",
@@ -32,10 +31,11 @@ ThisBuild / scalacOptions ++= Seq(
   "-Wconf:cat=unused&src=.*ReverseRoutes\\.scala:s",
   "-Wconf:cat=unused&src=.*JavaScriptReverseRoutes\\.scala:s"
 )
+ThisBuild / dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.14.3" //FIXME try removing this override after a library update
 
 addCommandAlias("runLocal", "run -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes")
 addCommandAlias("runAllTests", ";test;it/test;")
-addCommandAlias("runAllChecks", ";clean;scalastyle;coverageOn;runAllTests;coverageReport;coverageOff;")
+addCommandAlias("runAllChecks", ";clean;scalastyle;coverageOn;runAllTests;coverageOff;coverageAggregate;")
 
 lazy val playSettings: Seq[Setting[?]] = Seq(
   pipelineStages := Seq(digest)

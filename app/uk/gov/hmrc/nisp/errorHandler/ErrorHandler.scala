@@ -37,17 +37,13 @@ class ErrorHandler @Inject() (
   featureFlagService: FeatureFlagService
 )(implicit
   val messagesApi: MessagesApi,
-  ec: ExecutionContext
+  val ec: ExecutionContext
 ) extends FrontendErrorHandler {
 
   private val logger = Logger(getClass)
 
+  //FIXME sca-wrapper > 9.0.0 will have some breaking changes, views will be based on RequestHeader instead of Request[_]
   private def rhToRequest(rh: RequestHeader): Request[_] = Request(rh, "")
-
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
-    request: Request[_]
-  ): Html =
-    globalError(pageTitle, heading, message)
 
   def internalServerErrorTemplateFuture(implicit request: Request[_]): Future[Html] = {
     featureFlagService.get(ExcessiveTrafficToggle).map{featureFlag =>
@@ -78,6 +74,13 @@ class ErrorHandler @Inject() (
       internalServerErrorTemplateFuture(rhToRequest(rh)).map(page => InternalServerError(page).withHeaders(CACHE_CONTROL -> "no-cache"))
   }
 
-  override def notFoundTemplate(implicit request: Request[_]): Html = pageNotFound()
+  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] = {
+    implicit val req: Request[_] =  rhToRequest(request)
+    Future.successful(pageNotFound())
+  }
 
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader): Future[Html] = {
+    implicit val req: Request[_] =  rhToRequest(request)
+    Future.successful(globalError(pageTitle, heading, message))
+  }
 }
