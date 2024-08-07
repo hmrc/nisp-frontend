@@ -29,7 +29,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -53,8 +54,8 @@ class CitizenDetailsConnectorSpec
     mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
   val mockApplicationConfig: ApplicationConfig =
     mock[ApplicationConfig]
-  val mockHttp: HttpClient =
-    mock[HttpClient]
+  val mockHttp: HttpClientV2 =
+    mock[HttpClientV2](Mockito.RETURNS_DEEP_STUBS)
   val nino: Nino =
     Nino("AB123456C")
   val url: String =
@@ -81,7 +82,7 @@ class CitizenDetailsConnectorSpec
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[HttpClient].toInstance(mockHttp),
+      bind[HttpClientV2].toInstance(mockHttp),
       bind[MetricsService].toInstance(mockMetricService)
     )
     .build()
@@ -91,7 +92,7 @@ class CitizenDetailsConnectorSpec
 
   "CitizenDetailsConnector connectToGetPersonDetails" should {
     "return Right(CitizenDetailsResponse)" in {
-      when(mockHttp.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Right(HttpResponse(Status.OK, Json.toJson(response), Map("" -> Seq(""))))))
 
       await(
@@ -100,7 +101,7 @@ class CitizenDetailsConnectorSpec
     }
 
     "return Left(UpstreamErrorResponse)" in {
-      when(mockHttp.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Left(UpstreamErrorResponse("This is the error", 502, 502))))
 
       await(
@@ -109,7 +110,7 @@ class CitizenDetailsConnectorSpec
     }
 
     "return Left(Throwable)" in {
-      when(mockHttp.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.successful(Left(UpstreamErrorResponse("This is the error", 500, 500))))
 
       await(
@@ -118,7 +119,7 @@ class CitizenDetailsConnectorSpec
     }
 
     "return a Throwable for failed request" in {
-      when(mockHttp.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.failed(new Throwable("This is a Throwable")))
 
       await(
@@ -127,7 +128,7 @@ class CitizenDetailsConnectorSpec
     }
 
     "return a Left(UpstreamErrorResponse) for failed request HttpException" in {
-      when(mockHttp.GET[Either[UpstreamErrorResponse, HttpResponse]](any(), any(), any())(any(), any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
         .thenReturn(Future.failed(new HttpException("This is an error", 503)))
 
       recoverToSucceededIf[HttpException] {
