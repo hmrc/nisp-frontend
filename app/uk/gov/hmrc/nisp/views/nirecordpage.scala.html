@@ -207,29 +207,27 @@ if (user.livesAbroad) {
     @if(gapsOnlyView) {
       <dl class="govuk-summary-list">
 
-      @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
+        @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
 
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            @(TaxYearFormat.convertTaxYear(tableList.head, messages("nisp.nirecord.seperator")))
-          </dt>
-          <dd class="govuk-summary-list__value">
-            @messages("nisp.nirecord.unavailableyear")
-          </dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              @(TaxYearFormat.convertTaxYear(tableList.head, messages("nisp.nirecord.seperator")))
+            </dt>
+            <dd class="govuk-summary-list__value">
+              @messages("nisp.nirecord.unavailableyear")
+            </dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
 
-      }
-
-      @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt > niRecordCutoffYear - 1)) {
-        @niTaxYear
-        @if(showFullNI) {
-          @nirecordtaxyear(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate, viewPayableGapsToggle)
-        } else {
-          @nirecordtaxyearNoFull(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
         }
-      }
 
+        @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt > niRecordCutoffYear - 1)) {
+          @if(showFullNI) {
+            @nirecordtaxyear(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate, viewPayableGapsToggle)
+          } else {
+            @nirecordtaxyearNoFull(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
+          }
+        }
      </dl>
 
       @if(niRecord.numberOfGapsPayable > 0) {
@@ -297,7 +295,7 @@ if (user.livesAbroad) {
               @nirecordtaxyearNoFull(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")), currentDate)
             }
           }
-          </dl>
+        </dl>
 
           @if(niRecord.numberOfGaps > 0) {
             @if(viewPayableGapsToggle) {
@@ -337,8 +335,8 @@ if (user.livesAbroad) {
                   }
                 <dd class="govuk-summary-list__actions"></dd>
               </div>
+            }
           </dl>
-        }
       }
     }
 
