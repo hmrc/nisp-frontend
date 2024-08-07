@@ -19,7 +19,8 @@ package uk.gov.hmrc.nisp.connectors
 import play.api.http.Status
 import play.api.libs.json._
 import uk.gov.hmrc.http.HttpErrorFunctions.{is4xx, is5xx}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.models.StatePensionExclusion
 import uk.gov.hmrc.nisp.models.enums.APIType._
 import uk.gov.hmrc.nisp.services.MetricsService
@@ -29,13 +30,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait BackendConnector {
 
-  def http: HttpClient
+  def http: HttpClientV2
 
   def serviceUrl: String
 
   val metricsService: MetricsService
-
-  implicit val executionContext: ExecutionContext
 
   implicit def reads[A: Reads]: Reads[Either[StatePensionExclusion, A]] =
     eitherReads[StatePensionExclusion, A]
@@ -76,23 +75,22 @@ trait BackendConnector {
     urlToRead: String,
     headers: Seq[(String, String)]
   )(
-    implicit hc: HeaderCarrier,
-    formats: Format[A]
+    implicit
+    formats: Format[A],
+    hc: HeaderCarrier,
+    ec: ExecutionContext
   ): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]] = {
     val timerContext = metricsService.startTimer(apiType)
 
-    http.GET[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]](
-      url = urlToRead,
-      queryParams = Seq(),
-      headers = headers
-    ) map {
-      response =>
-        timerContext.stop()
-        response
-    } recover {
-      case e =>
-        metricsService.incrementFailedCounter(apiType)
-        throw e
-    }
+    http
+      .get(url"$urlToRead")
+      .setHeader(headers:_*)
+      .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]]
+      .andThen(_ => timerContext.stop())
+      .recover {
+        case e =>
+          metricsService.incrementFailedCounter(apiType)
+          throw e
+      }
   }
 }
