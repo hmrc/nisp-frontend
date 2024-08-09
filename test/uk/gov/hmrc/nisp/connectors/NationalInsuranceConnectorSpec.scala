@@ -16,280 +16,100 @@
 
 package uk.gov.hmrc.nisp.connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock._
-import org.mockito.Mockito
-import org.mockito.Mockito.reset
-import org.scalatest.BeforeAndAfterEach
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, times, verify, when}
+import org.mockito.{ArgumentCaptor, ArgumentMatchers, Mockito}
+import org.scalatest.concurrent.Eventually.eventually
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatest.{BeforeAndAfterEach, RecoverMethods}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
 import play.api.test.Injecting
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.nisp.helpers.{TestAccountBuilder}
-import uk.gov.hmrc.nisp.models.Exclusion
-import uk.gov.hmrc.nisp.models.StatePensionExclusion.ForbiddenStatePensionExclusion
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps, UpstreamErrorResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.models.enums.APIType
+import uk.gov.hmrc.nisp.models.{NationalInsuranceRecord, StatePensionExclusion}
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
-class NationalInsuranceConnectorSpec extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite with
-  Injecting with BeforeAndAfterEach with WireMockHelper {
+class NationalInsuranceConnectorSpec extends UnitSpec
+  with GuiceOneAppPerSuite
+  with ScalaFutures
+  with Injecting
+  with BeforeAndAfterEach
+  with RecoverMethods {
 
-  implicit val headerCarrier: HeaderCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
-
-  implicit val defaultPatience: PatienceConfig =
-    PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
-
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   val mockMetricService: MetricsService = mock[MetricsService](Mockito.RETURNS_DEEP_STUBS)
-
-  override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(
-      bind[MetricsService].toInstance(mockMetricService),
-    )
-    .configure(
-      "microservice.services.national-insurance.port" -> server.port()
-    ).build()
+  val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockHttp: HttpClientV2 = mock[HttpClientV2](Mockito.RETURNS_DEEP_STUBS)
+  val nino: Nino = Nino("AB123456C")
 
   override def beforeEach(): Unit = {
     super.beforeEach()
+    reset(mockApplicationConfig)
     reset(mockMetricService)
+    reset(mockHttp)
   }
 
-  lazy val nationalInsuranceConnector: NationalInsuranceConnector = inject[NationalInsuranceConnector]
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[HttpClientV2].toInstance(mockHttp),
+      bind[MetricsService].toInstance(mockMetricService)
+    )
+    .build()
 
-  "getNationalInsuranceRecord" when {
+  lazy val connector: NationalInsuranceConnector =
+    inject[NationalInsuranceConnector]
 
-    "there is a regular user" should {
-      lazy val nationalInsuranceRecord =
-        await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.regularNino)(headerCarrier))
+  "NationalInsuranceConnector getNationalInsurance" should {
 
-      val jsonPayload = TestAccountBuilder.getRawJson(
-        TestAccountBuilder.regularNino,
-        "national-insurance-record"
-      )
+    "return NationalInsuranceRecord" in {
 
-      "return a National Insurance Record with 28 qualifying years" in {
-        server.stubFor(
-          get(urlEqualTo(s"/ni/${TestAccountBuilder.regularNino}"))
-            .willReturn(ok(jsonPayload.toString()))
-        )
+      val nir = NationalInsuranceRecord(
+        qualifyingYears = 1,
+        qualifyingYearsPriorTo1975 = 2,
+        numberOfGaps = 3,
+        numberOfGapsPayable = 4,
+        Some(LocalDate.of(1,2,3)),
+        homeResponsibilitiesProtection = true,
+        LocalDate.of(1,2,3),
+        List.empty,
+        reducedRateElection = false)
 
-        nationalInsuranceRecord.map(_.map(_.qualifyingYears shouldBe 28))
+      val headerCaptor: ArgumentCaptor[(String,String)] = ArgumentCaptor.forClass(classOf[(String,String)])
 
-        server.verify(
-          getRequestedFor(urlEqualTo(s"/ni/${TestAccountBuilder.regularNino}"))
-            .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
-        )
+      when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/AB123456C"))(any())
+        .setHeader(headerCaptor.capture())
+        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](any(), any()))
+        .thenReturn(Future.successful(Right(Right(nir))))
 
-      }
+      await(
+        connector.getNationalInsurance(nino)
+      ) shouldBe Right(Right(nir))
 
-      "return a National Insurance Record with 0 qualifyingYearsPriorTo1975" in {
-        nationalInsuranceRecord.map(_.map(_.qualifyingYearsPriorTo1975 shouldBe 0))
-      }
-
-      "return a National Insurance Record with 10 numberOfGaps" in {
-        nationalInsuranceRecord.map(_.map(_.numberOfGaps shouldBe 10))
-      }
-
-      "return a National Insurance Record with 4 numberOfGapsPayable" in {
-        nationalInsuranceRecord.map(_.map(_.numberOfGapsPayable shouldBe 4))
-      }
-
-      "return a National Insurance Record with false homeResponsibilitiesProtection" in {
-        nationalInsuranceRecord.map(_.map(_.homeResponsibilitiesProtection shouldBe false))
-      }
-
-      "return a National Insurance Record with earningsIncludedUpTo of 2014-04-05" in {
-        nationalInsuranceRecord.map(_.map(_.earningsIncludedUpTo shouldBe LocalDate.of(2014, 4, 5)))
-      }
-
-      "return a National Insurance Record with 39 tax years" in {
-        nationalInsuranceRecord.map(_.map(_.taxYears.length shouldBe 39))
-      }
-
-      "the first tax year" should {
-
-        lazy val taxYear = nationalInsuranceRecord.map(_.map(_.taxYears.head))
-        "be the 2013 to 2014 tax year" in {
-          taxYear.map(_.map(_.taxYear shouldBe "2013"))
-        }
-
-        "be qualifying" in {
-          taxYear.map(_.map(_.qualifying shouldBe false))
-        }
-
-        "have classOneContributions of 0" in {
-          taxYear.map(_.map(_.classOneContributions shouldBe 0))
-        }
-
-        "have classTwoCredits of 0" in {
-          taxYear.map(_.map(_.classTwoCredits shouldBe 0))
-        }
-
-        "have classThreeCredits of 0" in {
-          taxYear.map(_.map(_.classThreeCredits shouldBe 0))
-        }
-
-        "have otherCredits of 0" in {
-          taxYear.map(_.map(_.otherCredits shouldBe 0))
-        }
-
-        "have classThreePayable of 704.60" in {
-          taxYear.map(_.map(_.classThreePayable shouldBe 704.60))
-        }
-
-        "have no classThreePayableBy date" in {
-          taxYear.map(_.map(_.classThreePayableBy shouldBe Some(LocalDate.of(2019, 4, 5))))
-        }
-
-        "have no classThreePayableByPenalty date" in {
-          taxYear.map(_.map(_.classThreePayableByPenalty shouldBe Some(LocalDate.of(2023, 4, 5))))
-        }
-
-        "be not payable" in {
-          taxYear.map(_.map(_.payable shouldBe true))
-        }
-
-        "be not underInvestigation " in {
-          taxYear.map(_.map(_.underInvestigation shouldBe false))
-        }
-
-      }
-
-      "a non qualifying year such as 2011 to 2012" should {
-
-        lazy val taxYear = nationalInsuranceRecord.map(_.map(_.taxYears.find(p => p.taxYear == "2011").get))
-
-        "be the 2011-12 tax year" in {
-          taxYear.map(_.map(_.taxYear shouldBe "2011"))
-        }
-
-        "be non-qualifying" in {
-          taxYear.map(_.map(_.qualifying shouldBe false))
-        }
-
-        "have classOneContributions of 0" in {
-          taxYear.map(_.map(_.classOneContributions shouldBe 0))
-        }
-
-        "have classTwoCredits of 0" in {
-          taxYear.map(_.map(_.classTwoCredits shouldBe 0))
-        }
-
-        "have classThreeCredits of 0" in {
-          taxYear.map(_.map(_.classThreeCredits shouldBe 0))
-        }
-
-        "have otherCredits of 0" in {
-          taxYear.map(_.map(_.otherCredits shouldBe 0))
-        }
-
-        "have classThreePayable of 655.20" in {
-          taxYear.map(_.map(_.classThreePayable shouldBe 655.20))
-        }
-
-        "have classThreePayableBy date of 5th April 2019" in {
-          taxYear.map(_.map(_.classThreePayableBy shouldBe Some(LocalDate.of(2019, 4, 5))))
-        }
-
-        "have classThreePayableByPenalty date of 5th April 2023" in {
-          taxYear.map(_.map(_.classThreePayableByPenalty shouldBe Some(LocalDate.of(2023, 4, 5))))
-        }
-
-        "be payable" in {
-          taxYear.map(_.map(_.payable shouldBe true))
-        }
-
-        "be not underInvestigation " in {
-          taxYear.map(_.map(_.underInvestigation shouldBe false))
-        }
-
+      eventually {
+        headerCaptor.getValue shouldBe List("Accept" -> "application/vnd.hmrc.1.0+json")
+        verify(mockMetricService.startTimer(ArgumentMatchers.eq(APIType.NationalInsurance)), times(1)).stop()
       }
     }
 
-    "there is a Dead Exclusion" should {
-      "return a failed future with a 403 response code with a relevant message" in {
-        val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
+    "return an error" in {
+      val errorResponse = new IllegalArgumentException("test")
+      when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/AB123456C"))(any())
+        .setHeader(any())
+        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](any(), any()))
+        .thenReturn(Future.failed(errorResponse))
 
-        server.stubFor(
-          get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAll}"))
-            .willReturn(forbidden.withBody(json.toString()))
-        )
-
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAll))
-
-        result.map {
-          spExclusion =>
-            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, None)).asInstanceOf[ForbiddenStatePensionExclusion]
-
-            exclusion.code shouldBe Exclusion.Dead
-        }
-      }
-    }
-
-    "there is a MCI Exclusion" should {
-      "return a failed future with a 403 response code with a relevant message" in {
-
-        val json = Json.parse("""{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline"}""")
-
-        server.stubFor(
-          get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAllButDead}"))
-            .willReturn(forbidden.withBody(json.toString()))
-        )
-
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDead))
-
-        result.map {
-          spExclusion =>
-            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, None)).asInstanceOf[ForbiddenStatePensionExclusion]
-
-            exclusion.code shouldBe Exclusion.ManualCorrespondenceIndicator
-        }
-      }
-    }
-
-    "there is a IOM Exclusion" should {
-      "return a failed future with a 403 response code with a relevant message" in {
-        val json = Json.parse("""{"code":"EXCLUSION_ISLE_OF_MAN","message":"The customer needs to contact the National Insurance helpline"}""")
-
-        server.stubFor(
-          get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAllButDeadMCI}"))
-            .willReturn(forbidden.withBody(json.toString()))
-        )
-
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedAllButDeadMCI))
-
-        result.map {
-          spExclusion =>
-            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.Dead, None)).asInstanceOf[ForbiddenStatePensionExclusion]
-
-            exclusion.code shouldBe Exclusion.IsleOfMan
-        }
-      }
-    }
-
-    "there is a MWRRE Exclusion" should {
-      "return a 403 response code with a relevant message" in {
-        val json = Json.parse("""{"code":"EXCLUSION_MARRIED_WOMEN_REDUCED_RATE_ELECTION","message":"The customer needs to contact the National Insurance helpline"}""")
-
-        server.stubFor(
-          get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedMwrre}"))
-            .willReturn(forbidden.withBody(json.toString()))
-        )
-
-        val result = await(nationalInsuranceConnector.getNationalInsurance(TestAccountBuilder.excludedMwrre))
-
-        result.map {
-          spExclusion =>
-            val exclusion = spExclusion.swap.getOrElse(ForbiddenStatePensionExclusion(Exclusion.IsleOfMan, None)).asInstanceOf[ForbiddenStatePensionExclusion]
-
-            exclusion.code shouldBe Exclusion.MarriedWomenReducedRateElection
-        }
+      whenReady(connector.getNationalInsurance(nino).failed) { e =>
+        e shouldBe errorResponse
       }
     }
   }
