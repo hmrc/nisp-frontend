@@ -18,7 +18,8 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.enums.APIType
 import uk.gov.hmrc.nisp.models.{StatePension, StatePensionExclusion}
@@ -27,10 +28,10 @@ import uk.gov.hmrc.nisp.services.MetricsService
 import scala.concurrent.{ExecutionContext, Future}
 
 class StatePensionConnector @Inject()(
-  val http: HttpClient,
+  val http: HttpClientV2,
   val appConfig: ApplicationConfig,
   val metricsService: MetricsService,
-  val executionContext: ExecutionContext
+  implicit val ec: ExecutionContext
 ) extends BackendConnector {
 
   val serviceUrl: String = appConfig.statePensionServiceUrl

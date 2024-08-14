@@ -16,51 +16,52 @@
 
 package uk.gov.hmrc.nisp.connectors
 
+import com.codahale.metrics.Timer
 import com.google.inject.Inject
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse, HttpClient, HttpException}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
-import uk.gov.hmrc.nisp.services.MetricsService
+import play.api.http.Status.BAD_GATEWAY
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.HttpReadsInstances.readEitherOf
-import play.api.http.Status.BAD_GATEWAY
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, HttpResponse, StringContextOps, UpstreamErrorResponse}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.models.citizen.CitizenDetailsResponse
+import uk.gov.hmrc.nisp.services.MetricsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CitizenDetailsConnector @Inject()(
-  http: HttpClient,
+class CitizenDetailsConnector @Inject() (
+  http: HttpClientV2,
   metricsService: MetricsService,
   appConfig: ApplicationConfig
-)(implicit executionContext: ExecutionContext) {
+)(implicit
+  executionContext: ExecutionContext
+) {
 
   val serviceUrl: String = appConfig.citizenDetailsServiceUrl
 
   def connectToGetPersonDetails(
     nino: Nino
-  )(
-    implicit hc: HeaderCarrier
+  )(implicit
+    hc: HeaderCarrier
   ): Future[Either[UpstreamErrorResponse, CitizenDetailsResponse]] = {
 
-    val context = metricsService.citizenDetailsTimer.time()
+    val context: Timer.Context = metricsService.citizenDetailsTimer.time()
 
     http
-      .GET[Either[UpstreamErrorResponse, HttpResponse]](
-        s"$serviceUrl/citizen-details/$nino/designatory-details"
-      ).transform {
-      result =>
-        context.stop()
-        result
-    } map {
-      case Right(response) =>
-        Right(response.json.as[CitizenDetailsResponse])
-      case Left(error) =>
-        metricsService.citizenDetailsFailedCounter.inc()
-        Left(error)
-    } recover {
+      .get(url"$serviceUrl/citizen-details/$nino/designatory-details")
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
+      .andThen(_ => context.stop())
+      .map {
+        case Right(response) =>
+          Right(response.json.as[CitizenDetailsResponse])
+        case Left(error)     =>
+          metricsService.citizenDetailsFailedCounter.inc()
+          Left(error)
+      } recover {
       case error: HttpException =>
         Left(UpstreamErrorResponse(error.message, BAD_GATEWAY))
-      case error =>
+      case error                =>
         metricsService.citizenDetailsFailedCounter.inc()
         throw error
     }

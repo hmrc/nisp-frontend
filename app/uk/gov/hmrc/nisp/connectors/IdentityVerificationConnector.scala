@@ -18,11 +18,13 @@ package uk.gov.hmrc.nisp.connectors
 
 import com.google.inject.Inject
 import play.api.http.Status._
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.HttpReadsInstances.readEitherOf
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.services.MetricsService
+
 import scala.concurrent.{ExecutionContext, Future}
 
 sealed trait IdentityVerificationResponse
@@ -45,28 +47,26 @@ object IdentityVerificationSuccessResponse {
 }
 
 class IdentityVerificationConnector @Inject() (
-  http: HttpClient,
+  http: HttpClientV2,
   metricsService: MetricsService,
   appConfig: ApplicationConfig
 )(implicit ec: ExecutionContext) {
 
   val serviceUrl: String = appConfig.identityVerificationServiceUrl
 
-  private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
+  private def url(journeyId: String) = url"$serviceUrl/mdtp/journey/journeyId/$journeyId"
 
   def identityVerificationResponse(
     journeyId: String
   )(implicit hc: HeaderCarrier): Future[IdentityVerificationResponse] = {
     val context  = metricsService.identityVerificationTimer.time()
     http
-      .GET[Either[UpstreamErrorResponse, HttpResponse]](url(journeyId))
-      .transform { result =>
-        context.stop()
-        result
-      }
+      .get(url(journeyId))
+      .execute[Either[UpstreamErrorResponse, HttpResponse]]
+      .andThen{_ => context.stop()}
       .map {
         case Right(response) =>
-          val result = (response.json \ "result").as[String]
+          val result: String = (response.json \ "result").as[String]
           IdentityVerificationSuccessResponse(result)
         case Left(error) =>
           metricsService.identityVerificationFailedCounter.inc()
@@ -75,7 +75,7 @@ class IdentityVerificationConnector @Inject() (
               IdentityVerificationNotFoundResponse
             case FORBIDDEN =>
               IdentityVerificationForbiddenResponse
-            case status =>
+            case _ =>
               IdentityVerificationErrorResponse(error)
           }
       }

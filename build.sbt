@@ -14,75 +14,39 @@
  * limitations under the License.
  */
 
-import scoverage.ScoverageKeys
-import uk.gov.hmrc.DefaultBuildSettings.*
-
 val appName = "nisp-frontend"
 
 ThisBuild / scalaVersion := "2.13.14"
 ThisBuild / majorVersion := 10
 ThisBuild / scalacOptions ++= Seq(
   "-feature",
-  //"-Werror", //FIXME uncomment after a full migration from V1 HttpClientModule to HttpClientV2Module
-  "-Wconf:cat=unused-imports&site=.*views\\.html.*:s",
-  "-Wconf:cat=unused-imports&site=<empty>:s",
-  "-Wconf:cat=unused&src=.*RoutesPrefix\\.scala:s",
-  "-Wconf:cat=unused&src=.*Routes\\.scala:s",
-  "-Wconf:cat=unused&src=.*ReverseRoutes\\.scala:s",
-  "-Wconf:cat=unused&src=.*JavaScriptReverseRoutes\\.scala:s"
+  "-Werror",
+  "-Xlint:-missing-interpolator,_",
+  "-Wconf:src=routes/.*:is,src=twirl/.*:is"
 )
-ThisBuild / dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.14.3" //FIXME try removing this override after a library update
+
+val microservice = Project(appName, file("."))
+  .enablePlugins(PlayScala, SbtDistributablesPlugin, SbtWeb)
+  .settings(
+    PlayKeys.playDefaultPort := 9234,
+    CodeCoverageSettings(),
+    pipelineStages := Seq(digest),
+    libraryDependencies ++= LibraryDependencies(),
+    TwirlKeys.templateImports ++= Seq(
+      "uk.gov.hmrc.govukfrontend.views.html.components._",
+      "uk.gov.hmrc.hmrcfrontend.views.html.components._",
+      "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
+      "play.twirl.api.HtmlFormat"
+    )
+  )
+
+val it: Project =
+  project.in(file("it"))
+    .enablePlugins(PlayScala)
+    .dependsOn(microservice % "test->test")
 
 addCommandAlias("runLocal", "run -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes")
+addCommandAlias("runLocalWithColours", "run -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes -Dlogger.resource=logback-colours.xml")
 addCommandAlias("runAllTests", ";test;it/test;")
-addCommandAlias("runAllChecks", ";clean;scalastyle;coverageOn;runAllTests;coverageOff;coverageAggregate;")
-
-lazy val playSettings: Seq[Setting[?]] = Seq(
-  pipelineStages := Seq(digest)
-)
-
-TwirlKeys.templateImports ++= Seq(
-  "uk.gov.hmrc.govukfrontend.views.html.components._",
-  "uk.gov.hmrc.hmrcfrontend.views.html.components._",
-  "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
-  "play.twirl.api.HtmlFormat"
-)
-
-lazy val scoverageSettings: Seq[Def.Setting[?]] = {
-  val excludedPackages = Seq[String](
-    "<empty>;Reverse.*",
-    "app.*",
-    "prod.*",
-    "uk.gov.hmrc.nisp.auth.*",
-    "uk.gov.hmrc.nisp.views.*",
-    "uk.gov.hmrc.nisp.config.*",
-    "uk.gov.hmrc.BuildInfo",
-    "testOnlyDoNotUseInAppConf.*",
-    "admin.*",
-  )
-  Seq(
-    ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-    ScoverageKeys.coverageMinimumStmtTotal := 90,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true
-  )
-}
-
-lazy val microservice = Project(appName, file("."))
-  .enablePlugins(
-    Seq(PlayScala, SbtDistributablesPlugin, SbtWeb) *
-  )
-  .settings(
-    playSettings,
-    scoverageSettings,
-    PlayKeys.playDefaultPort := 9234,
-    libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
-    libraryDependencies ++= AppDependencies.all,
-    retrieveManaged := true,
-    update / evictionWarningOptions  := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
-  )
-
-val it: Project = project.in(file("it"))
-  .enablePlugins(PlayScala)
-  .dependsOn(microservice % "test->test")
-  .settings(itSettings())
+addCommandAlias("runAllTestsWithColours", ";set Test/javaOptions += \"-Dlogger.resource=logback-colours.xml\";runAllTests;")
+addCommandAlias("runAllChecks", ";clean;coverageOn;runAllTests;coverageOff;coverageAggregate;")

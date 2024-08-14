@@ -22,7 +22,8 @@ import com.google.inject.ImplementedBy
 import play.api.Logging
 import play.api.http.HeaderNames
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, HttpResponse, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.httpParsers.PertaxAuthenticationHttpParser._
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
@@ -31,34 +32,33 @@ import uk.gov.hmrc.play.partials.HtmlPartial
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PertaxAuthConnectorImpl @Inject()(http: HttpClient,
-                                        appConfig: ApplicationConfig,
-                                        httpClientResponse: HttpClientResponse
-                                       )(
-                                   implicit ec: ExecutionContext
+class PertaxAuthConnectorImpl @Inject()(
+  http: HttpClientV2,
+  appConfig: ApplicationConfig,
+  httpClientResponse: HttpClientResponse
+)(
+  implicit
+  ec: ExecutionContext
 ) extends PertaxAuthConnector with Logging {
 
   override def authorise(nino: String)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]] = {
-    val authUrl = appConfig.pertaxAuthBaseUrl + s"/pertax/$nino/authorise"
-
-    http.GET[Either[UpstreamErrorResponse, PertaxAuthResponseModel]](
-      url = authUrl,
-      headers = Seq(HeaderNames.ACCEPT -> "application/vnd.hmrc.1.0+json")
-    )
+    val authUrl = url"${appConfig.pertaxAuthBaseUrl}/pertax/$nino/authorise"
+    http
+      .get(authUrl)
+      .setHeader(HeaderNames.ACCEPT -> "application/vnd.hmrc.1.0+json")
+      .execute[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]
   }
 
   def pertaxPostAuthorise(implicit
                           hc: HeaderCarrier,
                           ec: ExecutionContext
                          ): EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel] = {
-    val pertaxUrl = appConfig.pertaxAuthBaseUrl
-
     httpClientResponse
       .read(
-        http.POSTEmpty[Either[UpstreamErrorResponse, HttpResponse]](
-            s"$pertaxUrl/pertax/authorise",
-            Seq(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
-          )
+        http
+          .post(url"${appConfig.pertaxAuthBaseUrl}/pertax/authorise")
+          .setHeader(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
+          .execute[Either[UpstreamErrorResponse, HttpResponse]]
       )
       .map(_.json.as[PertaxAuthResponseModel])
   }
@@ -67,16 +67,19 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient,
     val partialUrl =
       appConfig.pertaxAuthBaseUrl + s"${if (partialContextUrl.charAt(0).toString == "/") partialContextUrl else s"/$partialContextUrl"}"
 
-    http.GET[HtmlPartial](partialUrl).map {
-      case partialSuccess: HtmlPartial.Success => partialSuccess
-      case partialFailure: HtmlPartial.Failure =>
-        logger.error(s"[PertaxAuthConnector][loadPartial] Failed to load Partial from partial url '$partialUrl'. " +
-          s"Partial info: $partialFailure, body: ${partialFailure.body}")
-        partialFailure
-    }.recover {
-      case exception: HttpException => HtmlPartial.Failure(Some(exception.responseCode))
-      case _ => HtmlPartial.Failure(None)
-    }
+    http
+      .get(url"${partialUrl}")
+      .execute[HtmlPartial]
+      .map {
+        case partialSuccess: HtmlPartial.Success => partialSuccess
+        case partialFailure: HtmlPartial.Failure =>
+          logger.error(s"[PertaxAuthConnector][loadPartial] Failed to load Partial from partial url '$partialUrl'. " +
+            s"Partial info: $partialFailure, body: ${partialFailure.body}")
+          partialFailure
+      }.recover {
+        case exception: HttpException => HtmlPartial.Failure(Some(exception.responseCode))
+        case _ => HtmlPartial.Failure(None)
+      }
   }
 
 }
