@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 
 object PertaxAuthenticationHttpParser extends Logging {
-  type PertaxAuthenticationResponse = Either[UpstreamErrorResponse, PertaxAuthResponseModel]
+  private type PertaxAuthenticationResponse = Either[UpstreamErrorResponse, PertaxAuthResponseModel]
 
   implicit object PertaxAuthenticationHttpReads extends HttpReads[PertaxAuthenticationResponse] {
     override def read(method: String, url: String, response: HttpResponse): PertaxAuthenticationResponse = {

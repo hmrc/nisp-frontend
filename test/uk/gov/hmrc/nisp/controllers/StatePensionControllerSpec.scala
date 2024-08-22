@@ -28,13 +28,14 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.time.LocalDate
@@ -42,7 +43,7 @@ import java.util.UUID
 import scala.concurrent.Future
 
 class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting
-  with WireMockHelper {
+  with WireMockSupport {
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -59,8 +60,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
     reset(mockStatePensionService)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
-    server.resetAll()
-    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    wireMockServer.resetAll()
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(

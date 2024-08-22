@@ -27,24 +27,27 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers.{defaultAwaitTimeout, route, writeableOf_AnyContentAsEmpty, status => getStatus}
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.nisp.it_utils.WiremockHelper
+import uk.gov.hmrc.http.test.WireMockSupport
 
 import java.lang.System.currentTimeMillis
+import java.util.UUID
 
 class RedirectControllerISpec extends AnyWordSpec
   with Matchers
   with GuiceOneAppPerSuite
-  with WiremockHelper
+  with WireMockSupport
   with ScalaFutures
   with BeforeAndAfterEach
   with Injecting {
 
-  server.start()
+  val uuid: UUID = UUID.randomUUID()
+
+  wireMockServer.start()
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.auth.port" -> server.port(),
-      "microservice.services.citizen-details.port" -> server.port()
+      "microservice.services.auth.port" -> wireMockServer.port(),
+      "microservice.services.citizen-details.port" -> wireMockServer.port()
     )
     .build()
 

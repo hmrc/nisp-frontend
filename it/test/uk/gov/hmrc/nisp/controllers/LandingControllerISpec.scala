@@ -28,25 +28,32 @@ import play.api.libs.json.{Format, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{route, status => getStatus, _}
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.nisp.connectors.IdentityVerificationSuccessResponse
-import uk.gov.hmrc.nisp.it_utils.WiremockHelper
 import uk.gov.hmrc.nisp.models._
+
 import java.lang.System.currentTimeMillis
 import java.time.{LocalDate, LocalDateTime}
+import java.util.UUID
 
 class LandingControllerISpec extends AnyWordSpec
   with Matchers
   with GuiceOneAppPerSuite
-  with WiremockHelper
+  with WireMockSupport
   with ScalaFutures
   with BeforeAndAfterEach {
 
   implicit val formats: Format[IdentityVerificationSuccessResponse] = Json.format[IdentityVerificationSuccessResponse]
 
+
+  val uuid: UUID = UUID.randomUUID()
+  val sessionId: String = s"session-$uuid"
+  val nino = "AA123456A"
+
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.auth.port" -> server.port(),
-      "microservice.services.identity-verification.port" -> server.port()
+      "microservice.services.auth.port" -> wireMockServer.port(),
+      "microservice.services.identity-verification.port" -> wireMockServer.port()
     )
     .build()
 
@@ -71,7 +78,7 @@ class LandingControllerISpec extends AnyWordSpec
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
+    wireMockServer.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
       s"""{
          |"nino": "$nino",
          |"confidenceLevel": 200,
@@ -109,7 +116,7 @@ class LandingControllerISpec extends AnyWordSpec
     ) foreach { journeyId =>
       s"return 401 with $journeyId as journeyId" in {
 
-        server.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/$journeyId"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/$journeyId"))
           .willReturn(ok(Json.toJson(IdentityVerificationSuccessResponse(journeyId)).toString())))
 
         val request = FakeRequest("GET", s"/check-your-state-pension/not-authorised?journeyId=$journeyId")
@@ -120,12 +127,12 @@ class LandingControllerISpec extends AnyWordSpec
 
         val result = route(app, request)
 
-        result map (getStatus) shouldBe Some(UNAUTHORIZED)
+        result map getStatus shouldBe Some(UNAUTHORIZED)
       }
     }
 
     "return 423 when LockedOut is returned from IV" in {
-      server.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/LockedOut"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/LockedOut"))
         .willReturn(ok(Json.toJson(IdentityVerificationSuccessResponse("LockedOut")).toString())))
 
       val request = FakeRequest("GET", s"/check-your-state-pension/not-authorised?journeyId=LockedOut")
@@ -136,11 +143,11 @@ class LandingControllerISpec extends AnyWordSpec
 
       val result = route(app, request)
 
-      result map (getStatus) shouldBe Some(LOCKED)
+      result map getStatus shouldBe Some(LOCKED)
     }
 
     "return 500 when TechnicalIssue is returned from IV" in {
-      server.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/TechnicalIssue"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/TechnicalIssue"))
         .willReturn(ok(Json.toJson(IdentityVerificationSuccessResponse("TechnicalIssue")).toString())))
 
       val request = FakeRequest("GET", s"/check-your-state-pension/not-authorised?journeyId=TechnicalIssue")
@@ -151,11 +158,11 @@ class LandingControllerISpec extends AnyWordSpec
 
       val result = route(app, request)
 
-      result map (getStatus) shouldBe Some(INTERNAL_SERVER_ERROR)
+      result map getStatus shouldBe Some(INTERNAL_SERVER_ERROR)
     }
 
     "return 500 when 404 is returned from IV" in {
-      server.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/journeyId"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/journeyId"))
         .willReturn(notFound()))
 
       val request = FakeRequest("GET", "/check-your-state-pension/not-authorised?journeyId=journeyId")
@@ -166,11 +173,11 @@ class LandingControllerISpec extends AnyWordSpec
 
       val result = route(app, request)
 
-      result map (getStatus) shouldBe Some(INTERNAL_SERVER_ERROR)
+      result map getStatus shouldBe Some(INTERNAL_SERVER_ERROR)
     }
 
     "return 500 when 403 is returned from IV" in {
-      server.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/journeyId"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/journeyId"))
         .willReturn(forbidden()))
 
       val request = FakeRequest("GET", "/check-your-state-pension/not-authorised?journeyId=journeyId")
@@ -181,11 +188,11 @@ class LandingControllerISpec extends AnyWordSpec
 
       val result = route(app, request)
 
-      result map (getStatus) shouldBe Some(INTERNAL_SERVER_ERROR)
+      result map getStatus shouldBe Some(INTERNAL_SERVER_ERROR)
     }
 
     "return 500 when 503 is returned from IV" in {
-      server.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/journeyId"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/mdtp/journey/journeyId/journeyId"))
         .willReturn(serviceUnavailable()))
 
       val request = FakeRequest("GET", "/check-your-state-pension/not-authorised?journeyId=journeyId")
@@ -196,7 +203,7 @@ class LandingControllerISpec extends AnyWordSpec
 
       val result = route(app, request)
 
-      result map (getStatus) shouldBe Some(INTERNAL_SERVER_ERROR)
+      result map getStatus shouldBe Some(INTERNAL_SERVER_ERROR)
     }
     "return 401 when no journeyId is supplied" in {
       val request = FakeRequest("GET", "/check-your-state-pension/not-authorised")

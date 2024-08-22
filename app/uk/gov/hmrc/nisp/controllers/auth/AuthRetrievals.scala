@@ -20,12 +20,10 @@ import com.google.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.auth.core.retrieve.{Name, LoginTimes, ~}
+import uk.gov.hmrc.auth.core.retrieve.v2.{Retrievals, TrustedHelper}
+import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name, ~}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
@@ -37,9 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthRetrievalsImpl @Inject()(
   override val authConnector: AuthConnector,
   cds: CitizenDetailsService,
-  val parser: BodyParsers.Default,
-  applicationConfig: ApplicationConfig
-)(
+  val parser: BodyParsers.Default)(
   implicit val executionContext: ExecutionContext
 ) extends AuthRetrievals
   with AuthorisedFunctions {

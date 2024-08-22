@@ -32,6 +32,7 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
@@ -43,7 +44,7 @@ import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.repositories.SessionCache
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
-import uk.gov.hmrc.nisp.utils.{Constants, PertaxAuthMockingHelper, WireMockHelper}
+import uk.gov.hmrc.nisp.utils.{Constants, PertaxAuthMockingHelper}
 import uk.gov.hmrc.nisp.views.html.statepension_cope
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -51,7 +52,7 @@ import uk.gov.hmrc.play.language.LanguageUtils
 import java.time.{Instant, LocalDate}
 import scala.concurrent.Future
 
-class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injecting with WireMockHelper with PertaxAuthMockingHelper {
+class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injecting with WireMockSupport with PertaxAuthMockingHelper {
 
   val mockUserNino: Nino = TestAccountBuilder.regularNino
   val mockUserNinoExcluded: Nino = TestAccountBuilder.excludedAll
@@ -80,12 +81,12 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
     reset(mockAuditConnector)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
-    server.resetAll()
+    wireMockServer.resetAll()
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
     mockPertaxAuth(PertaxAuthResponseModel(
       ACCESS_GRANTED, "", None, None
     ), mockUserNino.nino)
@@ -132,9 +133,9 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
           LocalDate.of(2017, 4, 5),
           List(
 
-            NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-            NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false)
+            NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
           ),
           reducedRateElection = false
         )

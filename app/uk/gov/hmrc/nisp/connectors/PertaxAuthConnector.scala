@@ -68,7 +68,7 @@ class PertaxAuthConnectorImpl @Inject()(
       appConfig.pertaxAuthBaseUrl + s"${if (partialContextUrl.charAt(0).toString == "/") partialContextUrl else s"/$partialContextUrl"}"
 
     http
-      .get(url"${partialUrl}")
+      .get(url"$partialUrl")
       .execute[HtmlPartial]
       .map {
         case partialSuccess: HtmlPartial.Success => partialSuccess

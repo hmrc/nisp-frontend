@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.stubbing.OngoingStubbing
@@ -35,11 +37,11 @@ import play.api.test.{FakeRequest, Helpers, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
 import uk.gov.hmrc.nisp.controllers.auth._
-import uk.gov.hmrc.nisp.it_utils.WiremockHelper
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
@@ -50,18 +52,24 @@ import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
 
 import java.lang.System.currentTimeMillis
 import java.time.{Instant, LocalDate}
+import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 
 class StatePensionControllerISpec extends UnitSpec
   with Matchers
   with GuiceOneAppPerSuite
-  with WiremockHelper
+  with WireMockSupport
   with ScalaFutures
   with BeforeAndAfterEach
   with Injecting {
 
-  server.start()
+  val uuid: UUID = UUID.randomUUID()
+  val sessionId: String = s"session-$uuid"
+  val nino = Nino("AA123456A")
+  val server2: WireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
+
+  wireMockServer.start()
   server2.start()
 
   lazy val date: LocalDate = LocalDate.now()
@@ -95,11 +103,11 @@ class StatePensionControllerISpec extends UnitSpec
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.auth.port" -> server.port(),
-      "microservice.services.citizen-details.port" -> server.port(),
+      "microservice.services.auth.port" -> wireMockServer.port(),
+      "microservice.services.citizen-details.port" -> wireMockServer.port(),
       "microservice.services.state-pension.port" -> server2.port(),
-      "microservice.services.national-insurance.port" -> server.port(),
-      "microservice.services.pertax-auth.port" -> server.port()
+      "microservice.services.national-insurance.port" -> wireMockServer.port(),
+      "microservice.services.pertax-auth.port" -> wireMockServer.port()
     )
     .build()
 
@@ -111,7 +119,7 @@ class StatePensionControllerISpec extends UnitSpec
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
+    wireMockServer.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
       s"""{
          |"nino": "$nino",
          |"confidenceLevel": 200,
@@ -137,7 +145,7 @@ class StatePensionControllerISpec extends UnitSpec
          |}
       """.stripMargin)))
 
-    server.stubFor(
+    wireMockServer.stubFor(
       post(urlMatching("/pertax/authorise"))
         .willReturn(
           aResponse()
@@ -148,7 +156,7 @@ class StatePensionControllerISpec extends UnitSpec
         )
     )
 
-    server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
+    wireMockServer.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
       .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
   }
 
@@ -235,7 +243,7 @@ class StatePensionControllerISpec extends UnitSpec
 
         val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
-        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(forbidden.withBody(json.toString)))
 
         val result = route(app, request)
@@ -250,7 +258,7 @@ class StatePensionControllerISpec extends UnitSpec
 
         val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
-        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(forbidden.withBody(json.toString)))
 
         val result = route(app, request)
@@ -270,7 +278,7 @@ class StatePensionControllerISpec extends UnitSpec
             StatePensionAmountRegular(0, 0, 0)
           ))
 
-        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
         server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(mqpResponse).toString)))
@@ -288,7 +296,7 @@ class StatePensionControllerISpec extends UnitSpec
           StatePensionAmountRegular(0, 0, 0)
         ))
 
-        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
         server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(forecastOnlyResponse).toString)))
@@ -298,7 +306,7 @@ class StatePensionControllerISpec extends UnitSpec
       }
 
       "a successful standard request is supplied" in new Test {
-        server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
         server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(statePensionResponse).toString)))

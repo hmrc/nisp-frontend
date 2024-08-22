@@ -30,9 +30,10 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.services.MetricsService
-import uk.gov.hmrc.nisp.utils.{UnitSpec, WireMockHelper}
+import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import scala.io.Source
 import scala.util.Using
@@ -43,7 +44,7 @@ class IdentityVerificationConnectorSpec
     with ScalaFutures
     with Injecting
     with BeforeAndAfterEach
-    with WireMockHelper {
+    with WireMockSupport {
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   import IdentityVerificationSuccessResponse._
@@ -62,7 +63,7 @@ class IdentityVerificationConnectorSpec
       bind[MetricsService].toInstance(mockMetricService)
     )
     .configure(
-      "microservice.services.identity-verification.port" -> server.port()
+      "microservice.services.identity-verification.port" -> wireMockServer.port()
     )
     .build()
 
@@ -88,7 +89,7 @@ class IdentityVerificationConnectorSpec
       resource => resource.mkString
     }.get
 
-    server.stubFor(
+    wireMockServer.stubFor(
       get(urlEqualTo(s"/mdtp/journey/journeyId/$journeyId"))
         .willReturn(ok(Json.parse(fileContents).toString()))
     )
@@ -146,7 +147,7 @@ class IdentityVerificationConnectorSpec
   }
 
   "return an error when a status of NOT_FOUND is returned from downstream" in {
-    server.stubFor(
+    wireMockServer.stubFor(
       get(urlEqualTo(s"/mdtp/journey/journeyId/notFound"))
         .willReturn(aResponse().withStatus(NOT_FOUND)))
 
@@ -154,7 +155,7 @@ class IdentityVerificationConnectorSpec
   }
 
   "return an error when a status of FORBIDDEN is returned from downstream" in {
-    server.stubFor(
+    wireMockServer.stubFor(
       get(urlEqualTo(s"/mdtp/journey/journeyId/forbidden"))
         .willReturn(aResponse().withStatus(FORBIDDEN)))
 
@@ -162,7 +163,7 @@ class IdentityVerificationConnectorSpec
   }
 
   "return an error when a status of anything else is returned from downstream" in {
-    server.stubFor(
+    wireMockServer.stubFor(
       get(urlEqualTo(s"/mdtp/journey/journeyId/teapot"))
         .willReturn(aResponse().withStatus(IM_A_TEAPOT)))
 

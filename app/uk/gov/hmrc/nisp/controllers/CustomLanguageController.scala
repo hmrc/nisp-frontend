@@ -35,7 +35,7 @@ class CustomLanguageController @Inject() (implicit
   override def languageMap: Map[String, Lang] = languageService.languageMap
 }
 
-class LanguageService @Inject() () {
+class LanguageService @Inject() {
   def routeToSwitchLanguage: String => Call = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
 
   /** Returns a mapping between strings and the corresponding Lang object. * */

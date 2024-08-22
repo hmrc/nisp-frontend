@@ -33,7 +33,7 @@ object StatePensionExclusion {
   }
 
   object OkStatePensionExclusion {
-    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
+    private val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
       date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
     }
 
@@ -51,7 +51,7 @@ object StatePensionExclusion {
     extends StatePensionExclusion
 
   object CopeStatePensionExclusion {
-    val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
+    private val dateWrites: Writes[LocalDate] = Writes[LocalDate] {
       date => JsString(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
     }
 

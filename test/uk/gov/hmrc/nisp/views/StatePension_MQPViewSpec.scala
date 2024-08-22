@@ -26,6 +26,7 @@ import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -35,7 +36,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.{Constants, WireMockHelper}
+import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.formatting.Time
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -44,7 +45,7 @@ import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.Future
 
-class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelper {
+class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupport {
 
   val expectedMoneyServiceLink          = "https://www.moneyadviceservice.org.uk/en"
   val expectedPensionCreditOverviewLink = "https://www.gov.uk/pension-credit/overview"
@@ -100,8 +101,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-    server.resetAll()
-    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    wireMockServer.resetAll()
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
   }
 
   lazy val controller: StatePensionController = standardInjector.instanceOf[StatePensionController]
@@ -152,9 +153,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
               LocalDate.of(2017, 4, 5),
               List(
 
-                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
               ),
               reducedRateElection = false
             )
@@ -433,9 +434,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
               LocalDate.of(2017, 4, 5),
               List(
 
-                NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
               ),
               reducedRateElection = false
             )
@@ -550,9 +551,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -862,9 +863,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -982,9 +983,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -1265,9 +1266,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -1383,9 +1384,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -1666,9 +1667,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -1784,9 +1785,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -2060,9 +2061,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 homeResponsibilitiesProtection = false,
                 LocalDate.of(2017, 4, 5),
                 List(
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -2181,9 +2182,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -2446,9 +2447,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -2538,9 +2539,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )
@@ -2797,9 +2798,9 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockHelp
                 LocalDate.of(2017, 4, 5),
                 List(
 
-                  NationalInsuranceTaxYearBuilder("2015-16", qualifying = true, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", qualifying = true, underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
                 ),
                 reducedRateElection = false
               )

@@ -30,12 +30,12 @@ object Country {
       case _                => true
     }
 
-  final val GREAT_BRITAIN    = "GREAT BRITAIN"
-  final val ISLE_OF_MAN      = "ISLE OF MAN"
-  final val ENGLAND          = "ENGLAND"
-  final val SCOTLAND         = "SCOTLAND"
-  final val WALES            = "WALES"
-  final val NORTHERN_IRELAND = "NORTHERN IRELAND"
-  final val NOT_SPECIFIED    = "NOT SPECIFIED OR NOT USED"
+  private final val GREAT_BRITAIN    = "GREAT BRITAIN"
+  private final val ISLE_OF_MAN      = "ISLE OF MAN"
+  private final val ENGLAND          = "ENGLAND"
+  private final val SCOTLAND         = "SCOTLAND"
+  private final val WALES            = "WALES"
+  private final val NORTHERN_IRELAND = "NORTHERN IRELAND"
+  private final val NOT_SPECIFIED    = "NOT SPECIFIED OR NOT USED"
 
 }

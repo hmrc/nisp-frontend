@@ -46,7 +46,7 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val moneyAdviceLinkCy: String             = getString("money-advice-link-cy.url")
   val pensionWiseLink: String               = getString("pension-wise-link.url")
   private val frontendHost                  = getString("nisp-frontend.host")
-  val accessibilityStatementHost: String    = getString("accessibility-statement.url") + "/accessibility-statement"
+  private val accessibilityStatementHost: String    = getString("accessibility-statement.url") + "/accessibility-statement"
 
   val showFullNI: Boolean                   = getConfBool("features.fullNIrecord", false)
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)

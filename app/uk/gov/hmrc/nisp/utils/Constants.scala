@@ -18,16 +18,8 @@ package uk.gov.hmrc.nisp.utils
 
 object Constants {
 
-  val GovernmentGatewayId = "GovernmentGateway"
-
   // scalastyle:off magic.number
   val baseUrl = "/check-your-state-pension"
-
-  val loginUrl = s"$baseUrl/account"
-
-  val logoutUrl = s"$baseUrl/signout"
-
-  val finishedPageUrl = s"$baseUrl/finished"
 
   val taxYearStartDay       = 6
   val taxYearEndDay         = 5
