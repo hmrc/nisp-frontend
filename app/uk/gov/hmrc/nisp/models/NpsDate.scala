@@ -35,7 +35,7 @@ object NpsDate {
   private val pattern = "dd/MM/yyyy"
   private val dateFormat   = DateTimeFormatter.ofPattern(pattern)
 
-  implicit val reads: Reads[NpsDate] = (json: JsValue) => json match {
+  implicit val reads: Reads[NpsDate] = {
     case JsString(date) => JsSuccess(NpsDate(LocalDate.parse(date, dateFormat)))
     case JsNull => JsError(JsonValidationError("Null date cannot convert to NpsDate"))
     case _ => JsError("Unable to parse JsValue")

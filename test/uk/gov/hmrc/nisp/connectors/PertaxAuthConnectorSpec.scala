@@ -22,15 +22,16 @@ import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import play.twirl.api.Html
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
-import uk.gov.hmrc.nisp.utils.{PertaxAuthMockingHelper, UnitSpec, WireMockHelper}
+import uk.gov.hmrc.nisp.utils.{PertaxAuthMockingHelper, UnitSpec}
 import uk.gov.hmrc.play.partials.HtmlPartial
 
 import scala.concurrent.ExecutionContext
 
-class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockHelper with PertaxAuthMockingHelper with Injecting {
+class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockSupport with PertaxAuthMockingHelper with Injecting {
 
   lazy val connector: PertaxAuthConnector = inject[PertaxAuthConnector]
 

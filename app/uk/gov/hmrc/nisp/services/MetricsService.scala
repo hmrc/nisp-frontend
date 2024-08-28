@@ -25,7 +25,7 @@ import uk.gov.hmrc.nisp.models.enums.APIType.APIType
 
 class MetricsService @Inject() (metrics: com.codahale.metrics.MetricRegistry) {
 
-  val timers: Map[enums.APIType.Value, Timer] = Map(
+  private val timers: Map[enums.APIType.Value, Timer] = Map(
     APIType.SP                -> metrics.timer("sp-response-timer"),
     APIType.NI                -> metrics.timer("ni-response-timer"),
     APIType.SchemeMembership  -> metrics.timer("scheme-membership-response-timer"),
@@ -33,7 +33,7 @@ class MetricsService @Inject() (metrics: com.codahale.metrics.MetricRegistry) {
     APIType.NationalInsurance -> metrics.timer("national-insurance-response-timer")
   )
 
-  val failedCounters: Map[enums.APIType.Value, Counter] = Map(
+  private val failedCounters: Map[enums.APIType.Value, Counter] = Map(
     APIType.SP                -> metrics.counter("sp-failed-counter"),
     APIType.NI                -> metrics.counter("ni-failed-counter"),
     APIType.SchemeMembership  -> metrics.counter("scheme-membership-failed-counter"),

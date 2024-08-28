@@ -27,23 +27,30 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.nisp.connectors.StatePensionConnector
-import uk.gov.hmrc.nisp.it_utils.WiremockHelper
 import uk.gov.hmrc.nisp.models._
 
 import java.time.LocalDate
+import java.util.UUID
 
 
 class StatePensionConnectorSpec
   extends AnyWordSpec
-    with WiremockHelper
+    with WireMockSupport
     with Matchers
     with ScalaFutures
     with GuiceOneAppPerSuite
     with Injecting {
 
-  server.start()
+
+  val uuid: UUID = UUID.randomUUID()
+  val sessionId: String = s"session-$uuid"
+  val nino = Nino("AA123456A")
+
+  wireMockServer.start()
 
   implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
@@ -53,7 +60,7 @@ class StatePensionConnectorSpec
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.state-pension.port" -> server.port(),
+      "microservice.services.state-pension.port" -> wireMockServer.port(),
     )
     .build()
 
@@ -89,7 +96,7 @@ class StatePensionConnectorSpec
 
   "getStatePension" should {
     "return the correct response from api" in {
-      server.stubFor(
+      wireMockServer.stubFor(
         get(urlEqualTo(apiUrl))
           .willReturn(ok(Json.toJson(statePension).toString()))
       )
@@ -100,7 +107,7 @@ class StatePensionConnectorSpec
         response shouldBe Right(Right(statePension))
       }
 
-      server.verify(1, apiGetRequest)
+      wireMockServer.verify(1, apiGetRequest)
     }
   }
 }

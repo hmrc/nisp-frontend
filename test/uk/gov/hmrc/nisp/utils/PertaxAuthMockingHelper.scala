@@ -24,13 +24,14 @@ import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import play.utils.UriEncoding
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 
 trait PertaxAuthMockingHelper {
-  this: WireMockHelper with GuiceOneAppPerSuite =>
+  this: WireMockSupport with GuiceOneAppPerSuite =>
 
   lazy val config: Map[String, Any] = Map[String, Any](
-    "microservice.services.pertax-auth.port" -> server.port()
+    "microservice.services.pertax-auth.port" -> wireMockServer.port()
   )
 
   override def fakeApplication(): Application = {
@@ -41,7 +42,7 @@ trait PertaxAuthMockingHelper {
   }
 
   def mockPertaxAuth(returnedValue: PertaxAuthResponseModel, nino: String = "AA000000A"): StubMapping = {
-    server.stubFor(
+    wireMockServer.stubFor(
       get(urlMatching(s"/pertax/$nino/authorise"))
         .willReturn(
           aResponse()
@@ -52,7 +53,7 @@ trait PertaxAuthMockingHelper {
   }
 
   def mockPostPertaxAuth(returnedValue: PertaxAuthResponseModel): StubMapping = {
-    server.stubFor(
+    wireMockServer.stubFor(
       post(urlMatching("/pertax/authorise"))
         .willReturn(aResponse().withStatus(OK)
           .withBody(Json.stringify(Json.toJson(returnedValue))))
@@ -60,7 +61,7 @@ trait PertaxAuthMockingHelper {
   }
 
   def mockPertaxAuthFailure(returnedValue: JsValue, nino: String = "AA000000A"): StubMapping = {
-    server.stubFor(
+    wireMockServer.stubFor(
       get(urlMatching(s"/pertax/$nino/authorise"))
         .willReturn(
           aResponse()
@@ -75,7 +76,7 @@ trait PertaxAuthMockingHelper {
       .withStatus(status)
       .withBody(body)
 
-    server.stubFor(
+    wireMockServer.stubFor(
       get(urlMatching(s"/$partialUrl"))
         .willReturn(
           title.fold(response) { unwrappedTitle =>

@@ -27,6 +27,7 @@ import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
@@ -39,7 +40,7 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.{Constants, DateProvider, WireMockHelper}
+import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -48,7 +49,7 @@ import java.time.{Instant, LocalDate}
 import java.util.UUID
 import scala.concurrent.Future
 
-class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
+class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
 
   val authDetails: AuthDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   implicit val user: NispAuthedUser                 = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
@@ -92,8 +93,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
     mockSetup
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-    server.resetAll()
-    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    wireMockServer.resetAll()
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
     when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
       .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = false)))
     when(mockFeatureFlagService.get(ViewPayableGapsToggle))
@@ -1025,7 +1026,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
           homeResponsibilitiesProtection = false,
           LocalDate.of(2016, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2015", underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2014", qualifying = false, underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2013", qualifying = false, payable = true, underInvestigation = false)
           ),
@@ -1132,7 +1133,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
           homeResponsibilitiesProtection = false,
           LocalDate.of(2015, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2015", underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2014", qualifying = false, underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2013", qualifying = false, payable = true, underInvestigation = false)
           ),
@@ -1259,9 +1260,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
           homeResponsibilitiesProtection = false,
           LocalDate.of(2017, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = true),
-            NationalInsuranceTaxYearBuilder("2014", qualifying = true, underInvestigation = false),
-            NationalInsuranceTaxYearBuilder("2013", qualifying = true, underInvestigation = false) /*payable = true*/
+            NationalInsuranceTaxYearBuilder("2015", underInvestigation = true),
+            NationalInsuranceTaxYearBuilder("2014", underInvestigation = false),
+            NationalInsuranceTaxYearBuilder("2013", underInvestigation = false) /*payable = true*/
           ),
           reducedRateElection = false
         )
@@ -1439,7 +1440,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
           homeResponsibilitiesProtection = false,
           LocalDate.of(2017, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = true),
+            NationalInsuranceTaxYearBuilder("2015", underInvestigation = true),
             NationalInsuranceTaxYearBuilder("2014", qualifying = false, underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2013", qualifying = false, underInvestigation = false) /*payable = true*/
           ),
@@ -1506,7 +1507,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockHelper {
           homeResponsibilitiesProtection = false,
           LocalDate.of(2017, 4, 5),
           List(
-            NationalInsuranceTaxYearBuilder("2015", qualifying = true, underInvestigation = true),
+            NationalInsuranceTaxYearBuilder("2015", underInvestigation = true),
             NationalInsuranceTaxYearBuilder("2014", qualifying = false, underInvestigation = false),
             NationalInsuranceTaxYearBuilder("2013", qualifying = false, underInvestigation = false) /*payable = true*/
           ),

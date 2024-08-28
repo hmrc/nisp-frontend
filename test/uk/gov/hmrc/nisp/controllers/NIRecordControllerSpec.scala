@@ -26,6 +26,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -36,7 +37,7 @@ import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessing
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
-import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec, WireMockHelper}
+import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time.TaxYear
@@ -46,7 +47,7 @@ import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach
-  with WireMockHelper {
+  with WireMockSupport {
 
   val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
@@ -68,8 +69,8 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     reset(mockFeatureFlagService)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-    server.resetAll()
-    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${server.port()}")
+    wireMockServer.resetAll()
+    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
     when(mockAppConfig.niRecordPayableYears).thenReturn(17)
     when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
       .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = true)))
@@ -343,7 +344,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showGaps(generateFakeRequest)
       contentAsString(result) should include("View all years of contributions")
-      contentAsString(result) should not include("View payable gaps")
+      contentAsString(result) should not include "View payable gaps"
     }
 
     "return gaps page and display View Payable Gaps button when FriendlyUserFilterToggle is true and users is friendlyUser" in {
@@ -646,7 +647,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showGaps(generateFakeRequest)
 
-      contentAsString(result) should not include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
+      contentAsString(result) should not include s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}"
     }
 
     "return full page for user without gaps" in {
@@ -861,7 +862,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showFull(generateFakeRequest)
       contentAsString(result) should include("View years only showing gaps in your contributions")
-      contentAsString(result) should not include("View payable gaps")
+      contentAsString(result) should not include "View payable gaps"
       contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
 

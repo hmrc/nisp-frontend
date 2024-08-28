@@ -1164,7 +1164,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
     }
 
     "render page with heading 'You’ll reach State Pension age on' " in {
-      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       assertContainsDynamicMessage(
         htmlAccountDoc,
         "[data-spec='excluded_sp__h2_1b']",
@@ -1305,7 +1305,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
     }
 
     "render page with heading 'You’ll reach State Pension age on' " in {
-      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       assertContainsDynamicMessage(
         htmlAccountDoc,
         "[data-spec='excluded_sp__h2_1b']",
@@ -1446,7 +1446,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
     }
 
     "render page with heading 'You’ll reach State Pension age on' " in {
-      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)).toString()
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       assertContainsDynamicMessage(
         htmlAccountDoc,
         "[data-spec='excluded_sp__h2_1b']",

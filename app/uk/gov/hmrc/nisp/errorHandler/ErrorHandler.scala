@@ -45,7 +45,7 @@ class ErrorHandler @Inject() (
   //FIXME sca-wrapper > 9.0.0 will have some breaking changes, views will be based on RequestHeader instead of Request[_]
   private def rhToRequest(rh: RequestHeader): Request[_] = Request(rh, "")
 
-  def internalServerErrorTemplateFuture(implicit request: Request[_]): Future[Html] = {
+  private def internalServerErrorTemplateFuture(implicit request: Request[_]): Future[Html] = {
     featureFlagService.get(ExcessiveTrafficToggle).map{featureFlag =>
       serviceError500(showExcessiveTrafficMessage = featureFlag.isEnabled)
     }

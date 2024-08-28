@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
@@ -30,9 +32,10 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Helpers.{route, status => getStatus, _}
 import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.it_utils.WiremockHelper
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
@@ -40,25 +43,31 @@ import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
 
 import java.lang.System.currentTimeMillis
 import java.time.LocalDate
+import java.util.UUID
 
 class NIRecordControllerISpec extends AnyWordSpec
   with Matchers
   with GuiceOneAppPerSuite
-  with WiremockHelper
+  with WireMockSupport
   with ScalaFutures
   with BeforeAndAfterEach
   with Injecting {
 
-  server.start()
+  val uuid: UUID = UUID.randomUUID()
+  val sessionId: String = s"session-$uuid"
+  val nino = Nino("AA123456A")
+  val server2: WireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
+
+  wireMockServer.start()
   server2.start()
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.auth.port" -> server.port(),
-      "microservice.services.citizen-details.port" -> server.port(),
-      "microservice.services.national-insurance.port" -> server.port(),
+      "microservice.services.auth.port" -> wireMockServer.port(),
+      "microservice.services.citizen-details.port" -> wireMockServer.port(),
+      "microservice.services.national-insurance.port" -> wireMockServer.port(),
       "microservice.services.state-pension.port" -> server2.port(),
-      "microservice.services.pertax-auth.port" -> server.port()
+      "microservice.services.pertax-auth.port" -> wireMockServer.port()
     )
     .build()
 
@@ -72,7 +81,7 @@ class NIRecordControllerISpec extends AnyWordSpec
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
+    wireMockServer.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
       s"""{
          |"nino": "$nino",
          |"confidenceLevel": 200,
@@ -98,7 +107,7 @@ class NIRecordControllerISpec extends AnyWordSpec
          |}
       """.stripMargin)))
 
-    server.stubFor(
+    wireMockServer.stubFor(
       post(urlMatching("/pertax/authorise"))
         .willReturn(
           aResponse()
@@ -109,7 +118,7 @@ class NIRecordControllerISpec extends AnyWordSpec
         )
     )
 
-    server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
+    wireMockServer.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
       .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
   }
 
@@ -158,7 +167,7 @@ class NIRecordControllerISpec extends AnyWordSpec
       server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
 
       val result = route(app, request)
@@ -168,10 +177,10 @@ class NIRecordControllerISpec extends AnyWordSpec
     "send an exclusion after the downstream returns one" in new Test {
       val json = Json.parse("""{"code":"EXCLUSION_COPE_PROCESSING_FAILED","copeDataAvailableDate":"2020-01-01"}""")
 
-      server.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/citizen-details/$nino/designatory-details"))
         .willReturn(ok(Json.toJson(citizenDetailsResponse).toString)))
 
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(json).toString)))
 
       val result = route(app, request)
@@ -190,7 +199,7 @@ class NIRecordControllerISpec extends AnyWordSpec
 
     "redirect with gaps in the national insurance record" in new Test {
 
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
       server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
@@ -201,7 +210,7 @@ class NIRecordControllerISpec extends AnyWordSpec
     }
 
     "redirect to showFull when the number of gaps in the national insurance response is less than 1" in new Test {
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord.copy(numberOfGaps = 0, reducedRateElection = false)).toString)))
       server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
@@ -212,9 +221,9 @@ class NIRecordControllerISpec extends AnyWordSpec
     }
 
     "redirect to showFull when the number of gaps in the national insurance response is more than 1" in new Test {
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord.copy(numberOfGaps = 2, reducedRateElection = false)).toString)))
 
       val result = route(app, request)
@@ -247,7 +256,7 @@ class NIRecordControllerISpec extends AnyWordSpec
       )
 
     "return a 200" in new Test {
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord.copy(reducedRateElection = false)).toString)))
 
       val result = route(app, request)
@@ -257,7 +266,7 @@ class NIRecordControllerISpec extends AnyWordSpec
     }
 
     "redirect to the exclusion controller when a successful error passed" in new Test {
-      server.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
 
       val result = route(app, request)

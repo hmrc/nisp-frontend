@@ -71,7 +71,7 @@ class ExcludedAuthActionImpl @Inject() (
     }
   }
 
-  lazy val ivUpliftURI: URI = new URI(
+  private lazy val ivUpliftURI: URI = new URI(
     s"${applicationConfig.ivUpliftUrl}?origin=NISP&" +
       s"completionURL=${URLEncoder.encode(applicationConfig.postSignInRedirectUrl, "UTF-8")}&" +
       s"failureURL=${URLEncoder.encode(applicationConfig.notAuthorisedRedirectUrl, "UTF-8")}" +

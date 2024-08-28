@@ -57,7 +57,7 @@ class StatePensionSpec extends UnitSpec {
       createStatePension(cope = 0.87).contractedOut shouldBe true
     }
     "return false when the user has a COPE amount of 0" in {
-      createStatePension(cope = 0).contractedOut shouldBe false
+      createStatePension().contractedOut shouldBe false
     }
   }
 
@@ -90,27 +90,24 @@ class StatePensionSpec extends UnitSpec {
     "should be an MQP Scenario if they have less than 10 years" in {
       createStatePension(
         qualifyingYears = 4,
-        currentAmount = 50,
-        forecastAmount = 0,
-        maximumAmount = 0
-      ).mqpScenario.isDefined shouldBe true
+        currentAmount = 50).mqpScenario.isDefined shouldBe true
     }
 
     "be None if they have a Current Amount of more than 0" in {
       createStatePension(currentAmount = 122.34).mqpScenario shouldBe None
     }
     "be ContinueWorking if they have a Current Amount of 0, ForecastAmount more than 0" in {
-      createStatePension(currentAmount = 0, forecastAmount = 89.34).mqpScenario shouldBe Some(
+      createStatePension(forecastAmount = 89.34).mqpScenario shouldBe Some(
         MQPScenario.ContinueWorking
       )
     }
     "be CanGetWithGaps if they have a Current Amount of 0, Forecast Amount of 0 and a Maximum more than 0" in {
-      createStatePension(currentAmount = 0, forecastAmount = 0, maximumAmount = 250.99).mqpScenario shouldBe Some(
+      createStatePension(maximumAmount = 250.99).mqpScenario shouldBe Some(
         MQPScenario.CanGetWithGaps
       )
     }
     "be CantGet if all the amounts are 0" in {
-      createStatePension(currentAmount = 0, forecastAmount = 0, maximumAmount = 0).mqpScenario shouldBe Some(
+      createStatePension().mqpScenario shouldBe Some(
         MQPScenario.CantGet
       )
     }
@@ -155,9 +152,7 @@ class StatePensionSpec extends UnitSpec {
       createStatePension(
         currentAmount = 100,
         forecastAmount = 155.65,
-        maximumAmount = 155.65,
-        fullStatePensionAmount = 155.65
-      ).forecastScenario shouldBe Scenario.ContinueWorkingMax
+        maximumAmount = 155.65).forecastScenario shouldBe Scenario.ContinueWorkingMax
       createStatePension(
         currentAmount = 10,
         forecastAmount = 20,
@@ -169,15 +164,11 @@ class StatePensionSpec extends UnitSpec {
       createStatePension(
         currentAmount = 100,
         forecastAmount = 170.00,
-        maximumAmount = 170.00,
-        fullStatePensionAmount = 155.65
-      ).forecastScenario shouldBe Scenario.ContinueWorkingMax
+        maximumAmount = 170.00).forecastScenario shouldBe Scenario.ContinueWorkingMax
       createStatePension(
         currentAmount = 100,
         forecastAmount = 155.66,
-        maximumAmount = 155.66,
-        fullStatePensionAmount = 155.65
-      ).forecastScenario shouldBe Scenario.ContinueWorkingMax
+        maximumAmount = 155.66).forecastScenario shouldBe Scenario.ContinueWorkingMax
       createStatePension(
         currentAmount = 10,
         forecastAmount = 20.01,
@@ -189,9 +180,7 @@ class StatePensionSpec extends UnitSpec {
       createStatePension(
         currentAmount = 100,
         forecastAmount = 155.64,
-        maximumAmount = 155.64,
-        fullStatePensionAmount = 155.65
-      ).forecastScenario shouldBe Scenario.ContinueWorkingNonMax
+        maximumAmount = 155.64).forecastScenario shouldBe Scenario.ContinueWorkingNonMax
       createStatePension(
         currentAmount = 10,
         forecastAmount = 20.01,
@@ -200,7 +189,7 @@ class StatePensionSpec extends UnitSpec {
       ).forecastScenario shouldBe Scenario.ContinueWorkingNonMax
     }
     "be CantGetPension when maximum is 0" in {
-      createStatePension(maximumAmount = 0).forecastScenario shouldBe Scenario.CantGetPension
+      createStatePension().forecastScenario shouldBe Scenario.CantGetPension
     }
   }
 
@@ -209,7 +198,7 @@ class StatePensionSpec extends UnitSpec {
       createStatePension(statePensionAgeUnderConsideration = true).statePensionAgeUnderConsideration shouldBe true
     }
     "return true when the user does not have a date of birth within the correct range" in {
-      createStatePension(statePensionAgeUnderConsideration = false).statePensionAgeUnderConsideration shouldBe false
+      createStatePension().statePensionAgeUnderConsideration shouldBe false
     }
   }
 

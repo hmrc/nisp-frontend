@@ -27,31 +27,34 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{status => getStatus, _}
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.nisp.it_utils.WiremockHelper
+import uk.gov.hmrc.http.test.WireMockSupport
 
 import java.lang.System.currentTimeMillis
 import java.time.LocalDateTime
+import java.util.UUID
 
 class TermsConditionsControllerISpec extends AnyWordSpec
   with Matchers
   with GuiceOneAppPerSuite
-  with WiremockHelper
+  with WireMockSupport
   with ScalaFutures
   with BeforeAndAfterEach {
 
+  val uuid: UUID = UUID.randomUUID()
+
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
-      "microservice.services.auth.port" -> server.port(),
-      "microservice.services.identity-verification.port" -> server.port()
+      "microservice.services.auth.port" -> wireMockServer.port(),
+      "microservice.services.identity-verification.port" -> wireMockServer.port()
     )
     .build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    server.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
+    wireMockServer.stubFor(post(urlEqualTo("/auth/authorise")).willReturn(ok(
       s"""{
-         |"nino": "$nino",
+         |"nino": "AA123456A",
          |"confidenceLevel": 200,
          |"loginTimes": {
          |  "currentLogin": "${LocalDateTime.now}",

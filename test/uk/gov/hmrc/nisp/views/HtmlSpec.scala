@@ -75,7 +75,6 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     assert(
       StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) != StringEscapeUtils
         .unescapeHtml4(Messages(expectedMessageKey))
-        .toString()
     )
   }
 
@@ -196,18 +195,18 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
   ) = {
 
     val elements      = doc.select(cssSelector)
-    val secondElement = doc.select(cssSelectorSecondElement);
+    val secondElement = doc.select(cssSelectorSecondElement)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    val expectedString    = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey).toString())
-    val elementText       = elements.first().text().replace("\n", "");
-    val secondElementText = secondElement.first().text().replace("\n", "");
-    val mainElementText   = elementText.replace(secondElementText, "");
+    val expectedString    = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey))
+    val elementText       = elements.first().text().replace("\n", "")
+    val secondElementText = secondElement.first().text().replace("\n", "")
+    val mainElementText   = elementText.replace(secondElementText, "")
 
-    assert(StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "").toString()) == expectedString)
+    assert(StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "")) == expectedString)
   }
 
   def assertContainsTextBetweenTags(
@@ -218,16 +217,16 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
   ) = {
 
     val elements      = doc.select(cssSelector)
-    val secondElement = doc.select(cssSelectorSecondElement);
+    val secondElement = doc.select(cssSelectorSecondElement)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     val expectedString    = expectedMessageValue
-    val elementText       = elements.first().text().replace("\n", "");
-    val secondElementText = secondElement.first().text().replace("\n", "");
-    val mainElementText   = elementText.replace(secondElementText, "");
+    val elementText       = elements.first().text().replace("\n", "")
+    val secondElementText = secondElement.first().text().replace("\n", "")
+    val mainElementText   = elementText.replace(secondElementText, "")
 
-    assert(StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "").toString()) == expectedString)
+    assert(StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "")) == expectedString)
   }
 
   def assertLinkHasValue(doc: Document, cssSelector: String, linkValue: String) = {
@@ -251,9 +250,9 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     val sMessage =
       Messages(expectedMessageKey) + " " + Messages(messageArgs1) + " " + Messages(messageArgs2) + " " + Messages(
         messageArgs3
-      );
+      )
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(sMessage.toString());
+    val expectedString = StringEscapeUtils.unescapeHtml4(sMessage)
     assert(
       StringEscapeUtils.unescapeHtml4(elements.first().text().replace("\u00a0", "")) == expectedString
         .replace("\u00a0", "")
@@ -307,7 +306,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
 
     assertMessageKeyHasValue(messageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(messageKey).toString() + stringValue);
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(messageKey) + stringValue)
     assert(
       StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString
         .replace("\u00a0", "")
@@ -320,7 +319,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     if (elements.isEmpty)
       throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(expectedText);
+    val expectedString = StringEscapeUtils.unescapeHtml4(expectedText)
     assert(
       StringEscapeUtils.unescapeHtml4(elements.first().ownText().replace("\u00a0", "")) == expectedString
         .replace("\u00a0", "")
@@ -339,9 +338,9 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, secondMessageValue).toString())
-    val elementText    = elements.first().html().replace("\n", "");
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, secondMessageValue))
+    val elementText    = elements.first().html().replace("\n", "")
 
-    assert(StringEscapeUtils.unescapeHtml4(elementText.replace("\u00a0", "").toString()) == expectedString)
+    assert(StringEscapeUtils.unescapeHtml4(elementText.replace("\u00a0", "")) == expectedString)
   }
 }
