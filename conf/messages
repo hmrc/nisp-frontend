@@ -22,6 +22,7 @@ nisp.breadcrumb.nirecord.gapsandhowtocheck = Gaps in your record and how to chec
 nisp.breadcrumb.excluded = Excluded
 nisp.breadcrumb.cope = Cope Page
 nisp.title.extension = Check your State Pension
+outage-page.serviceDisplayName = Check your State Pension
 
 #*************************
 # Landing page messages

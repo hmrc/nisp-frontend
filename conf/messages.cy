@@ -22,6 +22,7 @@ nisp.breadcrumb.nirecord.gapsandhowtocheck = Bylchau yn eich cofnod a sut i’w 
 nisp.breadcrumb.excluded = Wedi’i eithrio
 nisp.breadcrumb.cope = Tudalen Cope
 nisp.title.extension = Gwirio eich Pensiwn y Wladwriaeth
+outage-page.serviceDisplayName = Gwirio eich Pensiwn y Wladwriaeth
 #*************************
 # Landing page messages
 #*************************
