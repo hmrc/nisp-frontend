@@ -77,7 +77,7 @@ nisp.main.chart.spa.title = Forecast if you contribute until <span class="nowrap
 nisp.main.chart.week = a week
 nisp.main.chart.month = a month
 nisp.main.chart.year = a year
-nisp.main.chart.estimateIfYouContinue.single = Forecast if you contribute another year before <span class="nowrap">5 April {1}</span>
+nisp.main.chart.estimateIfYouContinue.single = Forecast if you contribute another year before <span class="nowrap">5 April {0}</span>
 nisp.main.chart.estimateIfYouContinue.plural = Forecast if you contribute another {0} years before <span class="nowrap">5 April {1}</span>
 nisp.main.chart.estimateIfYouContinue2016 = Forecast if you contribute enough in year up to <span class="nowrap">5 April 2016</span>
 

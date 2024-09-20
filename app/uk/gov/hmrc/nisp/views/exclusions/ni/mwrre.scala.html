@@ -17,46 +17,37 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
 
 @this(
-  p: P,
-  link: Link
+        p: P,
+        link: Link
 )
-@()(implicit messages: Messages)
-
-@************************************************@
-@*                                              *@
-@*  National Insurance Exclusion template for   *@
-@*  married women’s reduced rate contributions  *@
-@*                                              *@
-@************************************************@
-
-@p(
-  content = HtmlContent(messages(
-    "nisp.excluded.mwrre.ni",
-    link(
-      attrs = Map("data-journey-click" -> "checkmystatepension:external:mwrre"),
-      attrTarget = true,
-      fullStop = true,
-      inParagraph = true,
-      link = "https://www.gov.uk/reduced-national-insurance-married-women",
-      messageKey = "nisp.excluded.mwrre.ni.link",
-      specId = Some("exclusions__ni__mwrre__link1")
-    )
-  )),
-  specId = Some("exclusions__ni__mwrre__p1")
+@()(
+        implicit messages: Messages
 )
 
 @p(
-  content = HtmlContent(messages(
-    "nisp.excluded.contactNationalInsuranceHelpline",
-    link(
-      attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
-      attrTarget = true,
-      fullStop = true,
-      inParagraph = true,
-      link = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
-      messageKey = "nisp.excluded.contactNationalInsuranceHelpline.link",
-      specId = Some("exclusions__ni__mwrre__link2")
-    )
-  )),
-  specId = Some("exclusions__ni__mwrre__p2")
+    content = HtmlContent(messages(
+        "nisp.excluded.mwrre.ni",
+        link(
+            attrs = Map("data-journey-click" -> "checkmystatepension:external:mwrre"),
+            fullStop = true,
+            href = "https://www.gov.uk/reduced-national-insurance-married-women",
+            messageKey = "nisp.excluded.mwrre.ni.link",
+            specId = Some("exclusions__ni__mwrre__link1")
+        )
+    )),
+    specId = Some("exclusions__ni__mwrre__p1")
+)
+
+@p(
+    content = HtmlContent(messages(
+        "nisp.excluded.contactNationalInsuranceHelpline",
+        link(
+            attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
+            fullStop = true,
+            href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
+            messageKey = "nisp.excluded.contactNationalInsuranceHelpline.link",
+            specId = Some("exclusions__ni__mwrre__link2")
+        )
+    )),
+    specId = Some("exclusions__ni__mwrre__p2")
 )

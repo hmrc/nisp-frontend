@@ -19,103 +19,106 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  p: P,
-  h1: H1,
-  h2: H2,
-  link: Link
+        main: Main,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link
 )
 
-@(showBackLink : Boolean)(implicit messages: Messages, request: Request[_])
+@(
+        showBackLink: Boolean
+)(
+        implicit messages: Messages,
+        request: Request[_]
+)
 
 @main(
-  pageTitle = messages("nisp.tandcs.title"),
-  hideNavBar = true
+    pageTitle = messages("nisp.tandcs.title"),
+    hideNavBar = true
 ) {
 
-  @h1(
-    elmId = Some("heading-1"),
-    msg = "nisp.tandcs.title",
-    specId = Some("terms_and_conditions__h1")
-  )
-
-  @h2(
-    elmId = Some("heading-2"),
-    msg = "nisp.tandcs.heading",
-    specId = Some("terms_and_conditions__h2_1")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.use")),
-    specId = Some("terms_and_conditions__p1")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.information")),
-    specId = Some("terms_and_conditions__p2")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.service")),
-    specId = Some("terms_and_conditions__p3")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.rely")),
-    specId = Some("terms_and_conditions__p4")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.responsibility")),
-    specId = Some("terms_and_conditions__p5")
-  )
-
-  @p(
-    content = HtmlContent(messages(
-      "nisp.tandcs.licence") +
-      link(
-        link = "http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/",
-        messageKey = "nisp.tandcs.crownCopyright",
-        attrTarget = true,
-        fullStop = true,
-        attrs = Map("data-journey-click" -> "checkmystatepension:external:crowncopyright"),
-        inParagraph = true,
-        specId = Some("terms_and_conditions__link1")
-      )),
-    specId = Some("terms_and_conditions__p6")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.liability")),
-    specId = Some("terms_and_conditions__p7")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.links")),
-    specId = Some("terms_and_conditions__p8")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.law")),
-    specId = Some("terms_and_conditions__p9")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.operated")),
-    specId = Some("terms_and_conditions__p10")
-  )
-
-  @p(
-    content = Text(messages("nisp.tandcs.thanks")),
-    specId = Some("terms_and_conditions__p11")
-  )
-
-  @if(showBackLink) {
-    @link(
-      id = Some("back"),
-      link = routes.StatePensionController.show.url,
-      messageKey = "nisp.back",
-      specId = Some("terms_and_conditions__backlink")
+    @h1(
+        elmId = Some("heading-1"),
+        msg = "nisp.tandcs.title",
+        specId = Some("terms_and_conditions__h1")
     )
-  }
+
+    @h2(
+        elmId = Some("heading-2"),
+        msg = "nisp.tandcs.heading",
+        specId = Some("terms_and_conditions__h2_1")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.use")),
+        specId = Some("terms_and_conditions__p1")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.information")),
+        specId = Some("terms_and_conditions__p2")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.service")),
+        specId = Some("terms_and_conditions__p3")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.rely")),
+        specId = Some("terms_and_conditions__p4")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.responsibility")),
+        specId = Some("terms_and_conditions__p5")
+    )
+
+    @p(
+        content = HtmlContent(
+            messages("nisp.tandcs.licence") +
+            link(
+                href = "http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/",
+                messageKey = "nisp.tandcs.crownCopyright",
+                attrs = Map("data-journey-click" -> "checkmystatepension:external:crowncopyright"),
+                specId = Some("terms_and_conditions__link1")
+            )
+        ),
+        specId = Some("terms_and_conditions__p6")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.liability")),
+        specId = Some("terms_and_conditions__p7")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.links")),
+        specId = Some("terms_and_conditions__p8")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.law")),
+        specId = Some("terms_and_conditions__p9")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.operated")),
+        specId = Some("terms_and_conditions__p10")
+    )
+
+    @p(
+        content = Text(messages("nisp.tandcs.thanks")),
+        specId = Some("terms_and_conditions__p11")
+    )
+
+    @if(showBackLink) {
+        @link(
+            elmId = Some("back"),
+            href = routes.StatePensionController.show.url,
+            messageKey = "nisp.back",
+            specId = Some("terms_and_conditions__backlink")
+        )
+    }
 }

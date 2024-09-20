@@ -21,60 +21,61 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
 @this(
-  langUtils: LanguageUtils,
-  p: P,
-  h2: H2,
-  link: Link
+        langUtils: LanguageUtils,
+        p: P,
+        h2: H2,
+        link: Link
 )
 
-@(statePension: StatePension)(implicit messages: Messages )
+@(
+        statePension: StatePension
+)(
+        implicit messages: Messages
+)
 
 @p(
-  content = Text(messages("nisp.main.caveats")),
-  specId = Some("reached__p__caveats")
+    content = Text(messages("nisp.main.caveats")),
+    specId = Some("reached__p__caveats")
 )
 
 <ul class="govuk-list govuk-list--bullet" data-spec="reached__ul__caveats">
-  <li data-spec="reached__ul__caveats__li1">
-    @messages("nisp.main.notAGuarantee")
-  </li>
-  <li data-spec="reached__ul__caveats__li2">
-    @Html(messages(
-      "nisp.main.isBased",
-      langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)
-    ))
-  </li>
-  <li data-spec="reached__ul__caveats__li3">
-    @messages("nisp.main.inflation")
-  </li>
-  @if(statePension.pensionSharingOrder) {
-  <li data-spec="reached__ul__caveats__li4">
-    @messages("nisp.main.psod")
-  </li>
-  }
+    <li data-spec="reached__ul__caveats__li1">
+        @messages("nisp.main.notAGuarantee")
+    </li>
+    <li data-spec="reached__ul__caveats__li2">
+        @Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))
+    </li>
+    <li data-spec="reached__ul__caveats__li3">
+        @messages("nisp.main.inflation")
+    </li>
+    @if(statePension.pensionSharingOrder) {
+        <li data-spec="reached__ul__caveats__li4">
+            @messages("nisp.main.psod")
+        </li>
+    }
 </ul>
 
 @h2(
-  elmId = Some("mostYouCanGetReached"),
-  msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
-  specId = Some("reached_h2_1")
+    elmId = Some("mostYouCanGetReached"),
+    msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
+    specId = Some("reached_h2_1")
 )
 
 @p(
-  content = Text(messages("nisp.main.cantImprove")),
-  specId = Some("reached__p2")
+    content = Text(messages("nisp.main.cantImprove")),
+    specId = Some("reached__p2")
 )
 
 @p(
-  content = Text(messages(
-    "nisp.main.context.reachMax.needToPay",
-    langUtils.Dates.formatDate(statePension.pensionDate).toString()
-  )),
-  specId = Some("reached__p3")
+    content = Text(messages(
+        "nisp.main.context.reachMax.needToPay",
+        langUtils.Dates.formatDate(statePension.pensionDate)
+    )),
+    specId = Some("reached__p3")
 )
 
 @link(
-  link = routes.NIRecordController.showFull.url,
-  messageKey = "nisp.main.showyourrecord",
-  specId = Some("reached__link1")
+    href = routes.NIRecordController.showFull.url,
+    messageKey = "nisp.main.showyourrecord",
+    specId = Some("reached__link1")
 )

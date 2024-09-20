@@ -72,9 +72,14 @@ class NIRecordController @Inject()(
     val lastDigit: String = nino.filter(_.isDigit).last.toString
     appConfig.allowedUsersEndOfNino.contains(lastDigit)
   }
-  private def sendAuditEvent(nino: Nino, niRecord: NationalInsuranceRecord, yearsToContribute: Int)(implicit
-                                                                                                    hc: HeaderCarrier
-  ): Unit =
+
+  private def sendAuditEvent(
+                              nino: Nino,
+                              niRecord: NationalInsuranceRecord,
+                              yearsToContribute: Int
+                            )(
+                              implicit hc: HeaderCarrier
+                            ): Unit =
     auditConnector.sendEvent(
       NIRecordEvent(
         nino.nino,
@@ -134,13 +139,15 @@ class NIRecordController @Inject()(
     }
 
     for {
-      payableGapsToggle <- featureFlagService.get(ViewPayableGapsToggle)
+      payableGapsToggle  <- featureFlagService.get(ViewPayableGapsToggle)
       friendlyUserToggle <- featureFlagService.get(FriendlyUserFilterToggle)
     } yield {
-      val showViewPayableGapsButton: Boolean = (payableGapsToggle.isEnabled,
+      val showViewPayableGapsButton: Boolean = (
+        payableGapsToggle.isEnabled,
         friendlyUserToggle.isEnabled,
         isFriendlyUser(user.nino.nino),
-        ninoContainsNumberAtEnd(user.nino.nino)) match {
+        ninoContainsNumberAtEnd(user.nino.nino)
+      ) match {
         case(true, false, _, _) => true
         case(true, true, _, _) => ninoContainsNumberAtEnd(user.nino.nino) || isFriendlyUser(user.nino.nino)
         case _ => false

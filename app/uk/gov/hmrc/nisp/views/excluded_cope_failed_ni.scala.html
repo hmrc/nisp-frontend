@@ -19,120 +19,108 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  p: P,
-  h1: H1,
-  h2: H2,
-  h3: H3,
-  link: Link,
-  insetText: insetText
+        main: Main,
+        p: P,
+        h1: H1,
+        h2: H2,
+        h3: H3,
+        link: Link,
+        insetText: insetText
 )
-@()(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
+@()(
+        implicit messages: Messages,
+        request: ExcludedAuthenticatedRequest[_]
+)
 
 @main(
-  pageTitle = messages("nisp.excluded.cope.failed.ni.h1")
+    pageTitle = messages("nisp.excluded.cope.failed.ni.h1")
 ) {
 
-  @h1(
-    elmId = Some("mainTitle"),
-    msg = "nisp.excluded.cope.failed.ni.h1",
-    specId = Some("excluded_cope_failed__h1")
-  )
-
-  @insetText(
-    content = HtmlContent(messages(
-      "nisp.excluded.cope.failed.ni"
-    )),
-    specId = Some("excluded_cope_failed__inset_text1")
-  )
-
-  @h2(
-    msg = "nisp.excluded.cope.failed.ni.h2",
-    specId = Some("excluded_cope_failed__h2_1")
-  )
-
-  @h3(
-    msg = "nisp.excluded.cope.failed.ni.telephone.h3",
-    specId = Some("excluded_cope_failed__h3_1")
-  )
-
-  @p(
-   content = HtmlContent(messages(
-    "nisp.excluded.cope.failed.ni.telephone.line1"
-    )),
-    specId = Some("excluded_cope__p1")
-  )
-
-  @p(
-    content = HtmlContent(messages(
-      "nisp.excluded.cope.failed.ni.telephone.line2"
-    )),
-    specId = Some("excluded_cope__p2")
-  )
-
-  @p(
-   content = HtmlContent(messages(
-      "nisp.excluded.cope.failed.ni.telephone.line3"
-     )),
-     specId = Some("excluded_cope__p3")
-  )
-
-  @h3(
-    msg = "nisp.excluded.cope.failed.relayUK.h3",
-    specId = Some("excluded_cope_failed__h3_3")
-  )
-
-  @p(
-    content = HtmlContent(messages(
-      "nisp.excluded.cope.failed.ni.relayUK.text",
-      link(
-        attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
-        attrTarget = true,
-        inParagraph = true,
-        link = "https://www.relayuk.bt.com/",
-        messageKey = "nisp.excluded.cope.failed.relayUK.linktext",
-        specId = Some("excluded_cope__link1")
+    @h1(
+        elmId = Some("mainTitle"),
+        msg = "nisp.excluded.cope.failed.ni.h1",
+        specId = Some("excluded_cope_failed__h1")
     )
-    )),
-    specId = Some("excluded_cope__p7")
-  )
 
-  @h3(
-    msg = "nisp.excluded.cope.failed.britishSignLanguage.h3",
-    specId = Some("excluded_cope_failed__h3_4")
-  )
+    @insetText(
+        content = HtmlContent(messages("nisp.excluded.cope.failed.ni")),
+        specId = Some("excluded_cope_failed__inset_text1")
+    )
 
-  @p(
-  content = HtmlContent(messages(
-    "nisp.excluded.cope.failed.ni.britishSignLanguage.text",
-    link(
-      attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
-      attrTarget = true,
-      inParagraph = true,
-      link = "https://dwppensionforecasting.signvideo.net/",
-      messageKey = "nisp.excluded.cope.failed.britishSignLanguage.linktext0",
-      specId = Some("excluded_cope__link2")
-    ))),
-    specId = Some("excluded_cope__p8")
-  )
+    @h2(
+        msg = "nisp.excluded.cope.failed.ni.h2",
+        specId = Some("excluded_cope_failed__h2_1")
+    )
 
-  @h3(
-    msg = "nisp.excluded.cope.failed.openingTimes.h3",
-    specId = Some("excluded_cope_failed__h3_5")
-  )
+    @h3(
+        msg = "nisp.excluded.cope.failed.ni.telephone.h3",
+        specId = Some("excluded_cope_failed__h3_1")
+    )
 
-  @p(
-    content = Text(messages(
-      "nisp.excluded.cope.failed.ni.openingTimes.line1"
-    )),
-    specId = Some("excluded_cope__p9")
-  )
+    @p(
+        content = HtmlContent(messages("nisp.excluded.cope.failed.ni.telephone.line1")),
+        specId = Some("excluded_cope__p1")
+    )
 
-  @link(
-    attrTarget = true,
-    fullStop = true,
-    link = "https://www.gov.uk/call-charges",
-    messageKey = "nisp.excluded.cope.failed.openingTimes.linktext",
-    specId = Some("excluded_cope__link4")
-  )
+    @p(
+        content = HtmlContent(messages("nisp.excluded.cope.failed.ni.telephone.line2")),
+        specId = Some("excluded_cope__p2")
+    )
+
+    @p(
+        content = HtmlContent(messages("nisp.excluded.cope.failed.ni.telephone.line3")),
+        specId = Some("excluded_cope__p3")
+    )
+
+    @h3(
+        msg = "nisp.excluded.cope.failed.relayUK.h3",
+        specId = Some("excluded_cope_failed__h3_3")
+    )
+
+    @p(
+        content = HtmlContent(messages(
+            "nisp.excluded.cope.failed.ni.relayUK.text",
+            link(
+                attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+                href = "https://www.relayuk.bt.com/",
+                messageKey = "nisp.excluded.cope.failed.relayUK.linktext",
+                specId = Some("excluded_cope__link1")
+            )
+        )),
+        specId = Some("excluded_cope__p7")
+    )
+
+    @h3(
+        msg = "nisp.excluded.cope.failed.britishSignLanguage.h3",
+        specId = Some("excluded_cope_failed__h3_4")
+    )
+
+    @p(
+        content = HtmlContent(messages(
+            "nisp.excluded.cope.failed.ni.britishSignLanguage.text",
+            link(
+                attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+                href = "https://dwppensionforecasting.signvideo.net/",
+                messageKey = "nisp.excluded.cope.failed.britishSignLanguage.linktext0",
+                specId = Some("excluded_cope__link2")
+            ))),
+        specId = Some("excluded_cope__p8")
+    )
+
+    @h3(
+        msg = "nisp.excluded.cope.failed.openingTimes.h3",
+        specId = Some("excluded_cope_failed__h3_5")
+    )
+
+    @p(
+        content = Text(messages("nisp.excluded.cope.failed.ni.openingTimes.line1")),
+        specId = Some("excluded_cope__p9")
+    )
+
+    @link(
+        fullStop = true,
+        href = "https://www.gov.uk/call-charges",
+        messageKey = "nisp.excluded.cope.failed.openingTimes.linktext",
+        specId = Some("excluded_cope__link4")
+    )
 }

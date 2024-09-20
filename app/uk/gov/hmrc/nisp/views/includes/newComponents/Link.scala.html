@@ -16,30 +16,30 @@
 
 @this()
 
-@(link: String,
-  attrs: Map[String, String] = Map.empty,
-  attrTarget: Boolean = false,
-  classes: Option[String] = None,
-  comma: Boolean = false,
-  fullStop: Boolean = false,
-  id: Option[String] = None,
-  inParagraph: Boolean = false,
-  messageKey: String,
-  messagesArgs: Seq[String] = Seq.empty,
-  specId: Option[String] = None,
-)(implicit messages: Messages)
+@(
+        href: String,
+        attrs: Map[String, String] = Map.empty,
+        classes: Option[String] = None,
+        fullStop: Boolean = false,
+        comma: Boolean = false,
+        elmId: Option[String] = None,
+        messageKey: String,
+        messagesArgs: Seq[String] = Seq.empty,
+        specId: Option[String] = None,
+)(
+        implicit messages: Messages
+)
 
 @attrValues = @{
-  attrs.map{
-    case(key, value) => Html(s" $key=${value.replace(" ", "&#32;")}")
-  }
+    attrs.map {
+        case (key, value) => Html(s" $key=${value.replace(" ", "&#32;")}")
+    }
 }
-
-@if(!inParagraph) {
-<p class="govuk-body govuk-!-margin-bottom-3">
-  <a href="@link" class="@classes.getOrElse("govuk-link")" @id.map(x => s"id=$x") @if(attrTarget) {target="_blank" rel="noopener noreferrer"} @attrValues@if(specId){ data-spec="@specId"}>@messages(messageKey, messagesArgs)</a>@if(comma){,}@if(fullStop) {.}
-</p>
-} else {
-  <a href="@link" class="@classes.getOrElse("govuk-link")" @id.map(x => s"id=$x") @if(attrTarget) {target="_blank" rel="noopener noreferrer"} @attrValues@if(specId){ data-spec="@specId"}>@messages(messageKey, messagesArgs)</a>@if(comma){,}@if(fullStop) {.}
-}
+<a  href="@href"
+    class="@classes.getOrElse("govuk-link")"
+    @elmId.map { id => id="@id" }
+    target="_blank" rel="noopener noreferrer"
+    @attrValues
+    @specId.map { id => data-spec="@id" }
+>@messages(messageKey, messagesArgs)</a>@if(comma){,}@if(fullStop){.}
 

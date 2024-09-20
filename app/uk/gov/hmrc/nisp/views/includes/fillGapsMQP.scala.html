@@ -18,25 +18,27 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
 @this(
-  p: P,
-  h2: H2,
-  link: Link
+        p: P,
+        h2: H2,
+        link: Link
 )
-@()(implicit messages: Messages)
+@()(
+        implicit messages: Messages
+)
 
 @h2(
-  elmId = Some("improveForecast"),
-  msg = "nisp.main.context.fillGaps.improve.title",
-  specId = Some("fill_gaps_mqp__h2_1")
+    elmId = Some("improveForecast"),
+    msg = "nisp.main.context.fillGaps.improve.title",
+    specId = Some("fill_gaps_mqp__h2_1")
 )
 
 @p(
-  content = Text(messages("nisp.main.context.improve.para1.plural")),
-  specId = Some("fill_gaps_mqp__p1")
+    content = Text(messages("nisp.main.context.improve.para1.plural")),
+    specId = Some("fill_gaps_mqp__p1")
 )
 
 @link(
-  link = routes.NIRecordController.showGaps.url,
-  messageKey = "nisp.main.context.fillGaps.viewGaps",
-  specId = Some("fill_gaps_mqp__link1")
+    href = routes.NIRecordController.showGaps.url,
+    messageKey = "nisp.main.context.fillGaps.viewGaps",
+    specId = Some("fill_gaps_mqp__link1")
 )

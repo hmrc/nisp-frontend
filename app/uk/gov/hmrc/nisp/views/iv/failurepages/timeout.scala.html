@@ -20,37 +20,40 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  h1: H1,
-  p: P,
-  govukButton: GovukButton
+        main: Main,
+        h1: H1,
+        p: P,
+        govukButton: GovukButton
 )
 
-@()(implicit messages: Messages, request: Request[_])
+@()(
+        implicit messages: Messages,
+        request: Request[_]
+)
 
 @main(
-  pageTitle = messages("nisp.iv.failure.timeout.title")
+    pageTitle = messages("nisp.iv.failure.timeout.title")
 ) {
 
-  @h1(
-    classes = Some("govuk-heading-xl"),
-    msg = "nisp.iv.failure.timeout.title",
-    specId = Some("nisp_iv_timeout_h1")
-  )
+    @h1(
+        classes = Some("govuk-heading-xl"),
+        msg = "nisp.iv.failure.timeout.title",
+        specId = Some("nisp_iv_timeout_h1")
+    )
 
-  @p(
-    classes = Some("govuk-body-l"),
-    content = Text(messages("nisp.iv.failure.timeout.message")),
-    specId = Some("nisp_iv_timeout_p1")
-  )
+    @p(
+        classes = Some("govuk-body-l"),
+        content = Text(messages("nisp.iv.failure.timeout.message")),
+        specId = Some("nisp_iv_timeout_p1")
+    )
 
-  @p(
-    content = Text(messages("nisp.iv.failure.timeout.data")),
-    specId = Some("nisp_iv_timeout_p2")
-  )
+    @p(
+        content = Text(messages("nisp.iv.failure.timeout.data")),
+        specId = Some("nisp_iv_timeout_p2")
+    )
 
-  @govukButton(Button(
-    content = Text(messages("nisp.iv.failure.timeout.button")),
-    href = Some(routes.StatePensionController.show.url)
-  ))
+    @govukButton(Button(
+        content = Text(messages("nisp.iv.failure.timeout.button")),
+        href = Some(routes.StatePensionController.show.url)
+    ))
 }

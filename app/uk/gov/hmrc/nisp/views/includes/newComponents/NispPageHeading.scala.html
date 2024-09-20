@@ -17,20 +17,22 @@
 @this()
 
 @(
-  classes: Option[String] = None,
-  context: String,
-  elmId: Option[String] = None,
-  section: String,
-  specId: Option[String] = None,
-  text: String,
-)(implicit messages: Messages)
+        classes: Option[String] = None,
+        context: String,
+        elmId: Option[String] = None,
+        section: String,
+        specId: Option[String] = None,
+        text: String,
+)(
+        implicit messages: Messages
+)
 
-<header class="hmrc-page-heading" data-component="nisp_page_heading"@if(specId){ data-spec="@specId"}>
-  <h1 class="@classes.getOrElse("govuk-heading-xl")" data-component="nisp_page_heading__h1" @elmId.map { i => id="@{i}"}>
-    @messages(text)
-  </h1>
-  <p class="govuk-caption-xl hmrc-caption-xl" data-component="nisp_page_heading__p">
-    <span class="govuk-caption-l">@messages(section)</span>
-    <span data-visually-hidden class="govuk-visually-hidden">@messages(context)</span>
-  </p>
+<header class="hmrc-page-heading" data-component="nisp_page_heading" @specId.map { id => data-spec="@id" }>
+    <h1 class="@classes.getOrElse("govuk-heading-xl")" data-component="nisp_page_heading__h1" @elmId.map { id => id="@id" }>
+        @messages(text)
+    </h1>
+    <p class="govuk-caption-xl hmrc-caption-xl" data-component="nisp_page_heading__p">
+        <span class="govuk-caption-l">@messages(section)</span>
+        <span data-visually-hidden class="govuk-visually-hidden">@messages(context)</span>
+    </p>
 </header>

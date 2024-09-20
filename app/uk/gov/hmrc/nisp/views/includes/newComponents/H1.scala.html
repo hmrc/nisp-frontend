@@ -17,12 +17,14 @@
 @this()
 
 @(
-  classes: Option[String] = None,
-  elmId: Option[String] = None,
-  msg: String,
-  specId: Option[String] = None
-)(implicit messages: Messages)
+        classes: Option[String] = None,
+        elmId: Option[String] = None,
+        msg: String,
+        specId: Option[String] = None
+)(
+        implicit messages: Messages
+)
 
-<h1 @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-heading-xl")"@if(specId){ data-spec="@specId"}>
-  @Html(messages(msg))
+<h1 @elmId.map { id => id="@id" } class="@classes.getOrElse("govuk-heading-xl")" @specId.map { id => data-spec="@id" }>
+    @Html(messages(msg))
 </h1>

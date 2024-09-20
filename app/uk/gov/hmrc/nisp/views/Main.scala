@@ -69,9 +69,10 @@ class MainImpl @Inject()(
                     )(
                       contentBlock: Html
                     )(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
-    val fullPageTitle = if (extendedTitle) {
-      s"$pageTitle - ${Messages("nisp.title.extension")} - GOV.UK"
-    } else pageTitle
+
+    val fullPageTitle =
+      if (extendedTitle) s"$pageTitle - ${Messages("nisp.title.extension")} - GOV.UK" else pageTitle
+
     val trustedHelper = Try(request.asInstanceOf[AuthenticatedRequest[_]]) match {
       case Failure(_: java.lang.ClassCastException) => None
       case Success(value) => value.nispAuthedUser.trustedHelper

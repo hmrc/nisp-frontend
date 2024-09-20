@@ -19,12 +19,10 @@
 @this()
 
 @(
-  classes: Option[String] = None,
-  content: Content,
-  elmId: Option[String] = None,
-  specId: Option[String] = None,
+        classes: Option[String] = None,
+        content: Content,
+        elmId: Option[String] = None,
+        specId: Option[String] = None,
 )
 
-<p @if(elmId.isDefined){ id="@{elmId.get}"} class="@classes.getOrElse("govuk-body")"@if(specId){ data-spec="@specId"}>
-  @content.asHtml
-</p>
+<p @elmId.map{ id => id="@id" } class="@classes.getOrElse("govuk-body")" @specId.map{ id => data-spec="@id" }>@content.asHtml</p>

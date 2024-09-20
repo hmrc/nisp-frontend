@@ -16,36 +16,32 @@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.P
 
-@this(viewExclusions: viewExclusions, p: P)
-@()(implicit messages: Messages)
+@this(
+        p: P
+)
+@()(
+        implicit messages: Messages
+)
 
-@********************************************@
-@*                                          *@
-@*  Exclusion template for dead             *@
-@*                                          *@
-@*                                          *@
-@********************************************@
-
-@viewExclusions() {
-  @p(
+@p(
     content = Text(messages("nisp.excluded.dead")),
     specId = Some("exclusions__dead__p1")
-  )
+)
 
-  @p(
+@p(
     content = Text(messages("nisp.excluded.dead.openingtime")),
     specId = Some("exclusions__dead__p2")
-  )
+)
 
-  <ul class="govuk-list govuk-list--bullet" data-spec="exclusions__dead__ul__opening_time">
+<ul class="govuk-list govuk-list--bullet" data-spec="exclusions__dead__ul__opening_time">
     <li data-spec="exclusions__dead__ul__opening_time__li1">
-      @messages("nisp.excluded.dead.openingtime.weekdays")
+        @messages("nisp.excluded.dead.openingtime.weekdays")
     </li>
     <li data-spec="exclusions__dead__ul__opening_time__li2">
-      @messages("nisp.excluded.dead.openingtime.saturday")
+        @messages("nisp.excluded.dead.openingtime.saturday")
     </li>
     <li data-spec="exclusions__dead__ul__opening_time__li3">
-      @messages("nisp.excluded.dead.openingtime.holidays")
+        @messages("nisp.excluded.dead.openingtime.holidays")
     </li>
-  </ul>
-}
+</ul>
+

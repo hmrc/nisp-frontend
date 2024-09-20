@@ -17,30 +17,23 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
 
 @this(
-  p: P,
-  link: Link
+        p: P,
+        link: Link
 )
-@()(implicit messages: Messages)
-
-@************************************************@
-@*                                              *@
-@*  State Pension Exclusion template for        *@
-@*  married women’s reduced rate contributions  *@
-@*                                              *@
-@************************************************@
+@()(
+        implicit messages: Messages
+)
 
 @p(
-  content = HtmlContent(messages(
-    "nisp.excluded.mwrre.sp",
-    link(
-      attrs = Map("data-journey-click" -> "checkmystatepension:external:mwrre"),
-      attrTarget = true,
-      fullStop = true,
-      inParagraph = true,
-      link = "https://www.gov.uk/reduced-national-insurance-married-women",
-      messageKey = "nisp.excluded.mwrre.sp.linktext",
-      specId = Some("exclusions__sp__mwrre__link1")
-    )
-  )),
-  specId = Some("exclusions__sp__mwrre__p1")
+    content = HtmlContent(messages(
+        "nisp.excluded.mwrre.sp",
+        link(
+            attrs = Map("data-journey-click" -> "checkmystatepension:external:mwrre"),
+            fullStop = true,
+            href = "https://www.gov.uk/reduced-national-insurance-married-women",
+            messageKey = "nisp.excluded.mwrre.sp.linktext",
+            specId = Some("exclusions__sp__mwrre__link1")
+        )
+    )),
+    specId = Some("exclusions__sp__mwrre__p1")
 )

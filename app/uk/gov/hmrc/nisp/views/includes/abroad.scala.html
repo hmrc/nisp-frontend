@@ -18,22 +18,22 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.Link
 
 @this(
-  insetText: insetText,
-  link: Link
+        insetText: insetText,
+        link: Link
 )
-@()(implicit messages: Messages)
+@()(
+        implicit messages: Messages
+)
 
 @insetText(
-  content = HtmlContent(
-    messages("nisp.main.overseas.text",
-      link(
-        attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
-        attrTarget = true,
-        inParagraph = true,
-        link = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
-        messageKey = "nisp.main.overseas.linktext",
-        specId = Some("abroad__inset_text__link1")
-      )
-  )),
-  specId = Some("abroad__inset_text_1")
+    content = HtmlContent(messages(
+        "nisp.main.overseas.text",
+        link(
+            attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
+            href = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
+            messageKey = "nisp.main.overseas.linktext",
+            specId = Some("abroad__inset_text__link1")
+        )
+    )),
+    specId = Some("abroad__inset_text_1")
 )

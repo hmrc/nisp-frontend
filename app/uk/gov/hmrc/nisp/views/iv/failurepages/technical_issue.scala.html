@@ -20,38 +20,41 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  h1: H1,
-  p: P,
-  govukButton: GovukButton
+        main: Main,
+        h1: H1,
+        p: P,
+        govukButton: GovukButton
 )
 
-@()(implicit messages: Messages, request: Request[_])
+@()(
+        implicit messages: Messages,
+        request: Request[_]
+)
 
 @main(
-  pageTitle = messages("nisp.iv.failure.technical.title")
+    pageTitle = messages("nisp.iv.failure.technical.title")
 ) {
 
-  @h1(
-    classes = Some("govuk-heading-xl"),
-    msg = "nisp.iv.failure.technical.title",
-    specId = Some("nisp_iv_technical_issue_h1")
-  )
+    @h1(
+        classes = Some("govuk-heading-xl"),
+        msg = "nisp.iv.failure.technical.title",
+        specId = Some("nisp_iv_technical_issue_h1")
+    )
 
-  @p(
-    content = Text(messages("nisp.iv.failure.technical.message")),
-    classes = Some("govuk-body-l"),
-    specId = Some("nisp_iv_technical_issue_p1")
-  )
+    @p(
+        content = Text(messages("nisp.iv.failure.technical.message")),
+        classes = Some("govuk-body-l"),
+        specId = Some("nisp_iv_technical_issue_p1")
+    )
 
-  @p(
-    content = Text(messages("nisp.iv.failure.technical.tryagain")),
-    specId = Some("nisp_iv_technical_issue_p2")
-  )
+    @p(
+        content = Text(messages("nisp.iv.failure.technical.tryagain")),
+        specId = Some("nisp_iv_technical_issue_p2")
+    )
 
-  @govukButton(Button(
-    href = Some(routes.StatePensionController.show.url),
-    content = Text(messages("nisp.iv.failure.technical.button"))
-  ))
+    @govukButton(Button(
+        href = Some(routes.StatePensionController.show.url),
+        content = Text(messages("nisp.iv.failure.technical.button"))
+    ))
 
 }

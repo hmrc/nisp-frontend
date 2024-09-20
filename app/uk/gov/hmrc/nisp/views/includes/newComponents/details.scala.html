@@ -16,16 +16,16 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(govukDetails : GovukDetails)
+@this(govukDetails: GovukDetails)
 
 @(
-  attributes: Map[String, String] = Map.empty,
-  content: Content,
-  summary: String,
+        attributes: Map[String, String] = Map.empty,
+        content: Content,
+        summary: String,
 )
 
 @govukDetails(Details(
-  attributes = attributes,
-  summary = Text(summary),
-  content = content
+    attributes = attributes,
+    summary = Text(summary),
+    content = content
 ))
