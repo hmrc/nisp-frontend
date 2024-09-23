@@ -28,14 +28,22 @@
     content = HtmlContent(messages(
         "nisp.excluded.spa",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:claimstatepension"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:claimstatepension",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             comma = true,
             href = "https://www.gov.uk/claim-state-pension-online",
             messageKey = "nisp.excluded.spa.linktext0",
             specId = Some("post_state_pension_age__link1"),
         ),
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:deferstatepension"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:deferstatepension",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             href = "https://www.gov.uk/deferring-state-pension",
             messageKey = "nisp.excluded.spa.linktext1",
             specId = Some("post_state_pension_age__link2"),

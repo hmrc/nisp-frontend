@@ -139,7 +139,11 @@
                 content = HtmlContent(messages(
                     "nisp.main.overseas.text",
                     link(
-                        attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
+                        attrs = Map(
+                            "data-journey-click" -> "checkmystatepension:external:workingoverseas",
+                            "target" -> "_blank",
+                            "rel" -> "noopener noreferrer"
+                        ),
                         href = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
                         messageKey = "nisp.main.overseas.linktext",
                         specId = Some("state_pension_mqp__is_abroad_link1")
@@ -152,7 +156,11 @@
                 content = HtmlContent(messages(
                     "nisp.mqp.overseas",
                     link(
-                        attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
+                        attrs = Map(
+                            "data-journey-click" -> "checkmystatepension:external:workingoverseas",
+                            "target" -> "_blank",
+                            "rel" -> "noopener noreferrer"
+                        ),
                         comma = true,
                         href = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
                         messageKey = "nisp.mqp.overseas.linktext",

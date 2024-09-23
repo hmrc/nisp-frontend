@@ -50,6 +50,10 @@
         content = HtmlContent(
             messages("nisp.useagain") +
                 link(
+                    attrs = Map(
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
                     fullStop = true,
                     href = routes.LandingController.show.url,
                     messageKey = "nisp.signin",

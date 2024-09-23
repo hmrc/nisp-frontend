@@ -28,7 +28,11 @@
     content = HtmlContent(messages(
         "nisp.excluded.mwrre.ni",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:mwrre"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:mwrre",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             fullStop = true,
             href = "https://www.gov.uk/reduced-national-insurance-married-women",
             messageKey = "nisp.excluded.mwrre.ni.link",
@@ -42,7 +46,11 @@
     content = HtmlContent(messages(
         "nisp.excluded.contactNationalInsuranceHelpline",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             fullStop = true,
             href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
             messageKey = "nisp.excluded.contactNationalInsuranceHelpline.link",

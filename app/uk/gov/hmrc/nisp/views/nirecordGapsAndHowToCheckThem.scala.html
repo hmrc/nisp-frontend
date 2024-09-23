@@ -153,6 +153,10 @@
 
         <p class="govuk-body govuk-!-margin-bottom-3">
             @link(
+                attrs = Map(
+                    "target" -> "_blank",
+                    "rel" -> "noopener noreferrer"
+                ),
                 href = "https://www.gov.uk/national-insurance-credits/eligibility",
                 messageKey = "nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link",
                 specId = Some("ni_record_gaps_and_how_to_check_them__link1")

@@ -81,7 +81,11 @@
             link(
                 href = "http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/",
                 messageKey = "nisp.tandcs.crownCopyright",
-                attrs = Map("data-journey-click" -> "checkmystatepension:external:crowncopyright"),
+                attrs = Map(
+                    "data-journey-click" -> "checkmystatepension:external:crowncopyright",
+                    "target" -> "_blank",
+                    "rel" -> "noopener noreferrer"
+                ),
                 specId = Some("terms_and_conditions__link1")
             )
         ),

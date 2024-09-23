@@ -119,14 +119,22 @@
         content = HtmlContent(messages(
             "nisp.excluded.cope.failed.britishSignLanguage.text",
             link(
-                attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+                attrs = Map(
+                    "data-journey-click" -> "checkmystatepension:landing:verifylink",
+                    "target" -> "_blank",
+                    "rel" -> "noopener noreferrer"
+                ),
                 href = "https://dwppensionforecasting.signvideo.net/",
                 messageKey = "nisp.excluded.cope.failed.britishSignLanguage.linktext0",
                 specId = Some("excluded_cope__link2")
             ),
             link(
                 fullStop = true,
-                attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+                attrs = Map(
+                    "data-journey-click" -> "checkmystatepension:landing:verifylink",
+                    "target" -> "_blank",
+                    "rel" -> "noopener noreferrer"
+                ),
                 href = "https://www.youtube.com/watch?v=Osx7FFxFpNY",
                 messageKey = "nisp.excluded.cope.failed.britishSignLanguage.linktext1",
                 specId = Some("excluded_cope__link3")

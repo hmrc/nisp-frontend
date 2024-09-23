@@ -33,7 +33,11 @@
     content = HtmlContent(messages(
         "nisp.excluded.isleOfMan.sp.line2",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:iom"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:iom",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             fullStop = true,
             href = "https://www.gov.im/categories/benefits-and-financial-support/pensions/",
             messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",

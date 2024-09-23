@@ -60,6 +60,10 @@
         content = HtmlContent(
             messages("nisp.iv.failure.otherways.text") +
                 link(
+                    attrs = Map(
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
                     fullStop = true,
                     href = "https://www.gov.uk/future-pension-centre",
                     messageKey = "nisp.iv.failure.otherways.link",

@@ -120,12 +120,13 @@
             title = Text(s"${messages("nisp.main.basedOn")} ${langUtils.Dates.formatDate(statePension.pensionDate)}"),
             content = HtmlContent(
                 p(
-                    content = Text(
+                    content = HtmlContent(
                         s"${messages("nisp.main.caveats")} ${messages("nisp.is")} ${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.week")}," +
                         s" ${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount)} ${messages("nisp.main.month")}," +
                         s" ${NispMoney.pounds(statePension.amounts.forecast.annualAmount)} ${messages("nisp.main.year")}"
                     ),
-                    specId = Some("state_pension__panel1__caveats")
+                    specId = Some("state_pension__panel1__caveats"),
+                    classes = Some("")
                 )
             ),
             specId = Some("state_pension__panel1")
@@ -198,7 +199,11 @@
                             link(
                                 href = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
                                 messageKey = "nisp.mqp.overseas.linktext",
-                                attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
+                                attrs = Map(
+                                    "data-journey-click" -> "checkmystatepension:external:workingoverseas",
+                                    "target" -> "_blank",
+                                    "rel" -> "noopener noreferrer"
+                                ),
                                 comma = true,
                                 specId = Some("state_pension__link1")
                             )
@@ -310,6 +315,10 @@
             content = HtmlContent(messages(
                 "nisp.legal.forecastChanges",
                 link(
+                    attrs = Map(
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
                     href = s"${routes.TermsConditionsController.show.url}?showBackLink=true",
                     fullStop = true,
                     messageKey = "nisp.legal.terms.and.conditions",

@@ -28,7 +28,11 @@
     content = HtmlContent(messages(
         "nisp.excluded.mwrre.sp",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:mwrre"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:mwrre",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             fullStop = true,
             href = "https://www.gov.uk/reduced-national-insurance-married-women",
             messageKey = "nisp.excluded.mwrre.sp.linktext",

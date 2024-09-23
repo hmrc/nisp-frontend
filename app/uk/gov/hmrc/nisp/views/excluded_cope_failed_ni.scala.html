@@ -81,7 +81,11 @@
         content = HtmlContent(messages(
             "nisp.excluded.cope.failed.ni.relayUK.text",
             link(
-                attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+                attrs = Map(
+                    "data-journey-click" -> "checkmystatepension:landing:verifylink",
+                    "target" -> "_blank",
+                    "rel" -> "noopener noreferrer"
+                ),
                 href = "https://www.relayuk.bt.com/",
                 messageKey = "nisp.excluded.cope.failed.relayUK.linktext",
                 specId = Some("excluded_cope__link1")
@@ -99,7 +103,11 @@
         content = HtmlContent(messages(
             "nisp.excluded.cope.failed.ni.britishSignLanguage.text",
             link(
-                attrs = Map("data-journey-click" -> "checkmystatepension:landing:verifylink"),
+                attrs = Map(
+                    "data-journey-click" -> "checkmystatepension:landing:verifylink",
+                    "target" -> "_blank",
+                    "rel" -> "noopener noreferrer"
+                ),
                 href = "https://dwppensionforecasting.signvideo.net/",
                 messageKey = "nisp.excluded.cope.failed.britishSignLanguage.linktext0",
                 specId = Some("excluded_cope__link2")

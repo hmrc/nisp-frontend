@@ -72,7 +72,11 @@
             content = HtmlContent(messages(
                 "nisp.excluded.contactFuturePensionCentre",
                 link(
-                    attrs = Map("data-journey-click" -> "checkmystatepension:external:futurepensioncentre"),
+                    attrs = Map(
+                        "data-journey-click" -> "checkmystatepension:external:futurepensioncentre",
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
                     href = "https://www.gov.uk/future-pension-centre",
                     messageKey = "nisp.excluded.contactFuturePensionCentre.linktext",
                     specId = Some("excluded_sp__link1")
@@ -138,7 +142,11 @@
                 content = HtmlContent(messages(
                     "nisp.excluded.contactNationalInsuranceHelplineIom",
                     link(
-                        attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
+                        attrs = Map(
+                            "data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline",
+                            "target" -> "_blank",
+                            "rel" -> "noopener noreferrer"
+                        ),
                         fullStop = true,
                         href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
                         messageKey = "nisp.excluded.contactNationalInsuranceHelplineIom.link",

@@ -97,7 +97,11 @@
             } else {
                 "https://www.gov.uk/call-charges"
             },
-            attrs = Map("data-journey-click" -> "checkyourstatepension:external:callcharges"),
+            attrs = Map(
+                "data-journey-click" -> "checkyourstatepension:external:callcharges",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             messageKey = "nisp.excluded.mci.howToContact.link",
             specId = Some("excluded_mci__link1")
         )

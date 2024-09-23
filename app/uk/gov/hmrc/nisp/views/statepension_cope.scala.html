@@ -150,7 +150,11 @@
         @p(
             content = HtmlContent(messages("nisp.main.cope.link",
                 link(
-                    attrs = Map("data-journey-click" -> "checkmystatepension:external:contractedout"),
+                    attrs = Map(
+                        "data-journey-click" -> "checkmystatepension:external:contractedout",
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
                     href = "https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service",
                     messageKey = "nisp.main.cope.linktext",
                     specId = Some("state_pension_cope__link1"),
@@ -160,7 +164,11 @@
         )
 
         @link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:contractedout"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:contractedout",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             classes = Some("backlink govuk-link"),
             href = routes.StatePensionController.show.url,
             messageKey = "nisp.back",

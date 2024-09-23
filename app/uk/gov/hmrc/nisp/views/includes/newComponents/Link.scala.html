@@ -38,7 +38,6 @@
 <a  href="@href"
     class="@classes.getOrElse("govuk-link")"
     @elmId.map { id => id="@id" }
-    target="_blank" rel="noopener noreferrer"
     @attrValues
     @specId.map { id => data-spec="@id" }
 >@messages(messageKey, messagesArgs)</a>@if(comma){,}@if(fullStop){.}

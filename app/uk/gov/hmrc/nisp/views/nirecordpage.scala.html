@@ -92,12 +92,13 @@
             content = Text(messages("nisp.nirecord.gapsinyourrecord.thedeadlineforpaying")),
             specId = Some("nirecordpage__p2")
         )
-
-        @link(
-            href = routes.NIRecordController.showGapsAndHowToCheckThem.url,
-            messageKey = "nisp.nirecord.gapsinyourrecord.findoutmore",
-            specId = Some("nirecordpage_text3__link")
-        )
+        <p class="govuk-body govuk-!-margin-bottom-3">
+            @link(
+                href = routes.NIRecordController.showGapsAndHowToCheckThem.url,
+                messageKey = "nisp.nirecord.gapsinyourrecord.findoutmore",
+                specId = Some("nirecordpage_text3__link")
+            )
+        </p>
 
     } else {
         @p(

@@ -33,7 +33,11 @@
     content = HtmlContent(messages(
         "nisp.excluded.contactNationalInsuranceHelplineIom",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             fullStop = true,
             href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
             messageKey = "nisp.excluded.contactNationalInsuranceHelplineIom.link",

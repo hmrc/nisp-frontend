@@ -29,7 +29,11 @@
     content = HtmlContent(messages(
         "nisp.main.overseas.text",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:workingoverseas",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
             href = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
             messageKey = "nisp.main.overseas.linktext",
             specId = Some("abroad__inset_text__link1")
