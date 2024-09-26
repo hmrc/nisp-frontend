@@ -344,13 +344,15 @@
             @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
         }
 
-        @link(
-            attrs = Map("data-journey-click" -> "link - click:Your State Pension summary:Print your State Pension summary"),
-            elmId = Some("printLink"),
-            href = "#",
-            messageKey = "nisp.print.your.state.pension.summary",
-            specId = Some("state_pension__printlink"),
-        )
+        <p class="govuk-body govuk-!-margin-top-4"></p>
+            @link(
+                attrs = Map("data-journey-click" -> "link - click:Your State Pension summary:Print your State Pension summary"),
+                elmId = Some("printLink"),
+                href = "#",
+                messageKey = "nisp.print.your.state.pension.summary",
+                specId = Some("state_pension__printlink"),
+            )
+        </p>
 
     }
 }
