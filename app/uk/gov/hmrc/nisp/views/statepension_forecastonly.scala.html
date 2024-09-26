@@ -95,7 +95,7 @@
         )
 
         @p(
-            content = HtmlContent(s"""${messages("nisp.national.insurance.number")}<b class="display-block bold">s${user.nino}</b>"""),
+            content = HtmlContent(s"""${messages("nisp.national.insurance.number")} <b class="display-block bold">s${user.nino}</b>"""),
             specId = Some("state_pension_forecast_only__p1")
         )
 
@@ -165,11 +165,13 @@
             specId = Some("state_pension_forecast_only__p4")
         )
 
-        @link(
-            href = routes.NIRecordController.showFull.url,
-            messageKey = "nisp.main.showyourrecord",
-            specId = Some("state_pension_forecast_only__link1")
-        )
+        <p class="govuk-body govuk-!-margin-top-4">
+            @link(
+                href = routes.NIRecordController.showFull.url,
+                messageKey = "nisp.main.showyourrecord",
+                specId = Some("state_pension_forecast_only__link1")
+            )
+        </p>
 
         @if(isAbroad) {
             @abroad()
