@@ -23,6 +23,7 @@
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, details, insetText, NispPageHeading, Panel}
 @import uk.gov.hmrc.nisp.views.html.includes.{abroad, spChart, continueWorking, fillGapsFutureProof, fillGaps, contractedOut, deferral, fillGapsMQP, reached, statePensionAgeUnderConsideration}
+@import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
@@ -47,9 +48,9 @@
         panel: Panel,
         insetText: insetText,
         govukWarningText: GovukWarningText,
-        nispPageHeading: NispPageHeading
+        nispPageHeading: NispPageHeading,
+        statePensionFooter: StatePensionFooter
 )
-
 @(
         statePension: StatePension,
         numberOfGaps: Int,
@@ -69,47 +70,21 @@
         messages: Messages
 )
 
-@sidebar = {
-    <div class="helpline-sidebar govuk-!-padding-top-8">
-        @h2(
-            elmId = Some("heading-sidebar"),
-            msg = "nisp.nirecord.helpline.getHelp",
-            specId = Some("state_pension__sidebar_h2")
-        )
-        @p(
-            content = Text(messages("nisp.nirecord.helpline.number")),
-            specId = Some("state_pension__sidebar_p1")
-        )
-        @p(
-            content = Text(messages("nisp.nirecord.helpline.textNumber")),
-            specId = Some("state_pension__sidebar_p2")
-        )
-        @p(
-            classes = Some("govuk-body-s"),
-            content = Text(messages("nisp.nirecord.helpline.openTimes")),
-            specId = Some("state_pension__sidebar_p3")
-        )
-    </div>
-}
-
 @defining(Some(user)) { _ =>
 
     @main(
-        pageTitle = messages("nisp.main.title"),
-        sidebar = Some(sidebar)
+        pageTitle = messages("nisp.main.title")
     ) {
 
         @nispPageHeading(
-            text = messages("nisp.main.h1.title"),
+            text = s"${messages("nisp.main.h1.title")} TEST",
             section = messages(user.name.getOrElse("")),
             context = messages("nisp.nirecord.context"),
             specId = Some("state_pension__pageheading")
         )
 
         @details(
-            attributes = Map(
-                "data-spec" -> "state_pension__details__nino"
-            ),
+            attributes = Map("data-spec" -> "state_pension__details__nino"),
             content = Text(user.nino.toString),
             summary = messages("nisp.show.nino")
         )
@@ -212,31 +187,33 @@
                 )
             }
 
-            @if(
-                statePension.forecastScenario == Scenario.ContinueWorkingMax ||
-                statePension.forecastScenario == Scenario.ContinueWorkingNonMax
-            ) {
-                @continueWorking(
-                    statePension,
-                    yearsToContributeUntilPensionAge,
-                    currentChart,
-                    forecastChart
-                )
-            } else {
-                @if(statePension.forecastScenario == Scenario.FillGaps) {
+            @statePension.forecastScenario match {
+
+                case Scenario.ContinueWorkingMax | Scenario.ContinueWorkingNonMax => {
+                    @continueWorking(
+                        statePension,
+                        yearsToContributeUntilPensionAge,
+                        currentChart,
+                        forecastChart
+                    )
+                }
+
+                case Scenario.FillGaps => {
                     @fillGapsMQP()
                 }
+
+                case _ => {}
             }
 
         } else {
 
-            @if(statePension.forecastScenario == Scenario.Reached) {
+            @if(statePension.forecastScenario.equals(Scenario.Reached)) {
                 @reached(statePension)
             }
 
             @if(
-                statePension.forecastScenario == Scenario.ContinueWorkingMax ||
-                statePension.forecastScenario == Scenario.ContinueWorkingNonMax
+                statePension.forecastScenario.equals(Scenario.ContinueWorkingMax) ||
+                    statePension.forecastScenario.equals(Scenario.ContinueWorkingNonMax)
             ) {
                 @continueWorking(
                     statePension,
@@ -246,7 +223,7 @@
                 )
             }
 
-            @if(statePension.forecastScenario == Scenario.FillGaps) {
+            @if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
 
                 @p(
                     content = Text(messages("nisp.main.caveats")),
@@ -341,15 +318,14 @@
             @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
         }
 
-        <p class="govuk-body govuk-!-margin-top-4">
-            @link(
-                attrs = Map("data-journey-click" -> "link - click:Your State Pension summary:Print your State Pension summary"),
-                elmId = Some("printLink"),
-                href = "#",
-                messageKey = "nisp.print.your.state.pension.summary",
-                specId = Some("state_pension__printlink"),
-            )
-        </p>
+        @link(
+            attrs = Map("data-journey-click" -> "link - click:Your State Pension summary:Print your State Pension summary"),
+            elmId = Some("printLink"),
+            href = "#",
+            messageKey = "nisp.print.your.state.pension.summary",
+            specId = Some("state_pension__printlink"),
+        )
 
+        @statePensionFooter()
     }
 }

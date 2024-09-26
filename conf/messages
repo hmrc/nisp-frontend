@@ -318,6 +318,7 @@ nisp.nirecord.helpline.getHelp = Get help
 nisp.nirecord.helpline.number = Helpline 0800 731 0181
 nisp.nirecord.helpline.textNumber = Textphone 0800 731 0176
 nisp.nirecord.helpline.openTimes = Monday to Friday: 8:00am to 6:00pm
+nisp.nirecord.forMoreInfoOnGaps = For more information on gaps in your National Insurance record {0}
 
 #****************************
 # Gaps in your record page

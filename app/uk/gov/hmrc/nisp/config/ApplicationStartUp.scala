@@ -23,6 +23,7 @@ class ApplicationStartUp {
   FeatureFlagNamesLibrary.addFlags(List(
     ExcessiveTrafficToggle,
     ViewPayableGapsToggle,
-    FriendlyUserFilterToggle
+    FriendlyUserFilterToggle,
+    NewStatePensionUIToggle
   ))
 }

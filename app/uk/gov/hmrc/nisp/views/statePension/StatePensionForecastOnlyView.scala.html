@@ -91,10 +91,10 @@
             elmId = Some("mainTitle"),
             msg = "nisp.main.h1.title",
             specId = Some("state_pension_forecast_only__h1")
-        )
+        ) TEST
 
         @p(
-            content = HtmlContent(s"""${messages("nisp.national.insurance.number")} <b class="display-block bold">s${user.nino}</b>"""),
+            content = HtmlContent(s"""${messages("nisp.national.insurance.number")}<b class="display-block bold">s${user.nino}</b>"""),
             specId = Some("state_pension_forecast_only__p1")
         )
 
@@ -103,13 +103,12 @@
             title = Text(s"${messages("nisp.main.basedOn")} ${langUtils.Dates.formatDate(statePension.pensionDate)}"),
             content = HtmlContent(
                 p(
-                    content = HtmlContent(
-                        s"${messages("nisp.main.caveats")} ${messages("nisp.is")} ${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.week")},<br/>" +
-                        s"${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount)} ${messages("nisp.main.month")}, " +
-                        s"${NispMoney.pounds(statePension.amounts.forecast.annualAmount)} ${messages("nisp.main.year")}"
-                    ),
                     specId = Some("state_pension__panel1__forecast__caveats"),
-                    classes = Some("")
+                    content = HtmlContent(
+                      s"${messages("nisp.main.caveats")} ${messages("nisp.is")} ${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.week")},<br/>" +
+                      s"${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount)} ${messages("nisp.main.month")}, " +
+                      s"${NispMoney.pounds(statePension.amounts.forecast.annualAmount)} ${messages("nisp.main.year")}"
+                    )
                 )
             ),
             specId = Some("state_pension_forecast_only__panel1")
@@ -164,13 +163,11 @@
             specId = Some("state_pension_forecast_only__p4")
         )
 
-        <p class="govuk-body govuk-!-margin-top-4">
-            @link(
-                href = routes.NIRecordController.showFull.url,
-                messageKey = "nisp.main.showyourrecord",
-                specId = Some("state_pension_forecast_only__link1")
-            )
-        </p>
+        @link(
+            href = routes.NIRecordController.showFull.url,
+            messageKey = "nisp.main.showyourrecord",
+            specId = Some("state_pension_forecast_only__link1")
+        )
 
         @if(isAbroad) {
             @abroad()
