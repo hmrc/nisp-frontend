@@ -187,11 +187,13 @@
             specId = Some("excluded_sp__p5")
         )
 
-        @link(
-            href = routes.StatePensionController.signOut.url,
-            messageKey = "nisp.excluded.mwrre.signOut",
-            specId = Some("excluded_sp__link5")
-        )
+        <p class="govuk-body govuk-!-margin-top-4">
+            @link(
+                href = routes.StatePensionController.signOut.url,
+                messageKey = "nisp.excluded.mwrre.signOut",
+                specId = Some("excluded_sp__link5")
+            )
+        </p>
     }
 
     @for(
