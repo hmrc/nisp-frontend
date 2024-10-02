@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.views
+package uk.gov.hmrc.nisp.views.statePension
 
 import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers._
@@ -39,6 +39,7 @@ import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.views.HtmlSpec
 import uk.gov.hmrc.nisp.views.formatting.Time
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -47,7 +48,10 @@ import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.Future
 
-class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupport {
+class StatePension_MQPViewSpec
+  extends HtmlSpec
+    with Injecting
+    with WireMockSupport {
 
   val expectedMoneyServiceLink          = "https://www.moneyadviceservice.org.uk/en"
   val expectedPensionCreditOverviewLink = "https://www.gov.uk/pension-credit/overview"
@@ -101,6 +105,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
     reset(mockAuditConnector)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
+    reset(mockFeatureFlagService)
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.accessibilityStatementUrl(any())).thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
@@ -108,7 +113,7 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
     wireMockServer.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
     when(mockFeatureFlagService.get(NewStatePensionUIToggle))
-      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = false)))
+      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = true)))
   }
 
   lazy val controller: StatePensionController = standardInjector.instanceOf[StatePensionController]
@@ -158,7 +163,6 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
               homeResponsibilitiesProtection = false,
               LocalDate.of(2017, 4, 5),
               List(
-
                 NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
@@ -181,22 +185,23 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
           )
         }
 
-        "render page with heading 'Your State Pension' " in {
+        "render page with heading 'Your State Pension summary' " in {
           mockSetup
-          assertEqualsMessage(
+          assertEqualsText(
             nonForeignDoc,
             "[data-spec='state_pension_forecast_only__h1']",
-            "nisp.main.h1.title"
+            "Your State Pension summary"
           )
         }
 
-        "render page with text 'You can get your State Pension on 7 june 2020' " in {
+        "render page with text 'When will I reach State Pension age?' " in {
+          println(s"\n\n\n$nonForeignDoc\n\n\n\n")
+
           mockSetup
-          assertEqualsValue(
+          assertEqualsText(
             nonForeignDoc,
-            "[data-spec='state_pension_forecast_only__panel1'] [data-component='nisp_panel__title']",
-            Messages("nisp.main.basedOn") + " " +
-              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
+            "[data-spec='state_pension_forecast_only__h2']",
+            "When will I reach State Pension age?"
           )
         }
 

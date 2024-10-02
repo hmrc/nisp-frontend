@@ -88,6 +88,12 @@ nisp.legal.mqp.forecastChanges = These details may be different if there are any
 nisp.legal.terms.and.conditions = terms and conditions
 nisp.print.your.state.pension.summary = Print your State Pension summary
 
+#**********************
+# Main page messages - New UI
+#**********************
+
+nisp.main.h2.whenWillIReachStatePensionAge = When will I reach State Pension age?
+
 #*********************
 # Scenario messages
 #*********************

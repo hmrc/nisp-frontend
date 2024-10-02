@@ -115,12 +115,17 @@
         pageTitle = messages("nisp.main.title"),
         sidebar = Some(sidebar)
     ) {
-
+        New MQP View
         @h1(
             elmId = Some("mainTitle"),
             msg = "nisp.main.h1.title",
             specId = Some("state_pension_mqp__h1")
-        ) TEST
+        )
+
+        @h2(
+            msg = "nisp.main.h2.whenWillIReachStatePensionAge",
+            specId = Some("state_pension_forecast_only__h2")
+        )
 
         @insetText(
             content = HtmlContent(insetContent),

@@ -86,12 +86,12 @@
         pageTitle = messages("nisp.main.title"),
         sidebar = Some(sidebar)
     ) {
-
+        New Forecast Only View
         @h1(
             elmId = Some("mainTitle"),
             msg = "nisp.main.h1.title",
             specId = Some("state_pension_forecast_only__h1")
-        ) TEST
+        )
 
         @p(
             content = HtmlContent(s"""${messages("nisp.national.insurance.number")}<b class="display-block bold">s${user.nino}</b>"""),

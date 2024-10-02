@@ -40,8 +40,8 @@ case object FriendlyUserFilterToggle extends FeatureFlagName {
 }
 
 case object NewStatePensionUIToggle extends FeatureFlagName {
-  override val name: String = "new-state-pension-ui"
+  override val name: String = "new-state-pension-UI"
   override val description: Option[String] = Some(
-    "Enable/disable new State Pension ui."
+    "Enable/disable new State Pension UI"
   )
 }
