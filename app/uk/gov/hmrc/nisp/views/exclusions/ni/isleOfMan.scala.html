@@ -17,35 +17,32 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
 
 @this(
-  p: P,
-  link: Link
+        p: P,
+        link: Link
 )
-@()(implicit messages: Messages)
-
-@****************************@
-@*                          *@
-@*  State Pension Exclusion *@
-@*  template for            *@
-@*  living in Isle Of Man   *@
-@*                          *@
-@****************************@
-
-@p(
-  content = Text(messages("nisp.excluded.isleOfMan.ni")),
-  specId = Some("exclusion_isleOfMan_ni__p1")
+@()(
+        implicit messages: Messages
 )
 
 @p(
-  content = HtmlContent(messages(
-    "nisp.excluded.contactNationalInsuranceHelplineIom") +
-  link(
-    attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
-    attrTarget = true,
-    fullStop = true,
-    inParagraph = true,
-    link = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
-    messageKey = "nisp.excluded.contactNationalInsuranceHelplineIom.link",
-    specId = Some("exclusion_isleOfMan_ni__link1"),
-  )),
-  specId = Some("exclusion_isleOfMan_ni__p2")
+    content = Text(messages("nisp.excluded.isleOfMan.ni")),
+    specId = Some("exclusion_isleOfMan_ni__p1")
+)
+
+@p(
+    content = HtmlContent(messages(
+        "nisp.excluded.contactNationalInsuranceHelplineIom",
+        link(
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
+            fullStop = true,
+            href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
+            messageKey = "nisp.excluded.contactNationalInsuranceHelplineIom.link",
+            specId = Some("exclusion_isleOfMan_ni__link1"),
+        )
+    )),
+    specId = Some("exclusion_isleOfMan_ni__p2")
 )

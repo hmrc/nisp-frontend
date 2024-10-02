@@ -17,13 +17,13 @@
 @this()
 
 @(
-  args: Seq[String] = Seq.empty,
-  classes: Option[String] = None,
-  content: HtmlContent,
-  elmId: Option[String] = None,
-  specId: Option[String] = None,
+        args: Seq[String] = Seq.empty,
+        classes: Option[String] = None,
+        content: HtmlContent,
+        elmId: Option[String] = None,
+        specId: Option[String] = None,
 )
 
-<div @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-inset-text")"@if(specId){ data-spec="@specId"}>
-  @content.asHtml
+<div @elmId.map { id => id="@id" } class="@classes.getOrElse("govuk-inset-text")" @specId.map { id => data-spec="@id" }>
+    @content.asHtml
 </div>

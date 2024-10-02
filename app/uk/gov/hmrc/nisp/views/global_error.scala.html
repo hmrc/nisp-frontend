@@ -18,30 +18,33 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  h1: H1,
-  p: P
+        main: Main,
+        h1: H1,
+        p: P
 )
 
 @(
-  title: String,
-  heading: String,
-  message: String
-)(implicit request: Request[_], messages: Messages)
+        title: String,
+        heading: String,
+        message: String
+)(
+        implicit request: Request[_],
+        messages: Messages
+)
 
 @main(
-  pageTitle = title,
+    pageTitle = title,
 ) {
 
-  @h1(
-    elmId = Some("heading-1"),
-    msg = heading,
-    specId = Some("global_error__h1")
-  )
+    @h1(
+        elmId = Some("heading-1"),
+        msg = heading,
+        specId = Some("global_error__h1")
+    )
 
-  @p(
-    content = Text(message),
-    specId = Some("global_error__p1")
-  )
+    @p(
+        content = Text(message),
+        specId = Some("global_error__p1")
+    )
 
 }

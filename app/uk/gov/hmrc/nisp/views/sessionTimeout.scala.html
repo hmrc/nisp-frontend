@@ -19,41 +19,46 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  p: P,
-  h1: H1,
-  h2: H2,
-  link: Link
+        main: Main,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(
+        implicit request: Request[_],
+        messages: Messages
+)
 
 @main(
-  pageTitle = messages("nisp.timeout.title")
+    pageTitle = messages("nisp.timeout.title")
 ) {
 
-  @h1(
-    elmId = Some("heading-1"),
-    msg = "nisp.timeout.heading",
-    specId = Some("session_timeout__h1")
-  )
+    @h1(
+        elmId = Some("heading-1"),
+        msg = "nisp.timeout.heading",
+        specId = Some("session_timeout__h1")
+    )
 
-  @p(
-    content = Text(messages("nisp.timeout.body")),
-    specId = Some("session_timeout__p1")
-  )
+    @p(
+        content = Text(messages("nisp.timeout.body")),
+        specId = Some("session_timeout__p1")
+    )
 
-  @p(
-    content = HtmlContent(messages(
-      "nisp.useagain") +
-      link(
-        attrTarget = true,
-        fullStop = true,
-        inParagraph = true,
-        link = routes.LandingController.show.url,
-        messageKey = "nisp.signin",
-        specId = Some("session_timeout__link1")
-    )),
-    specId = Some("session_timeout__2")
-  )
+    @p(
+        content = HtmlContent(
+            messages("nisp.useagain") +
+                link(
+                    attrs = Map(
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
+                    fullStop = true,
+                    href = routes.LandingController.show.url,
+                    messageKey = "nisp.signin",
+                    specId = Some("session_timeout__link1")
+                )),
+        specId = Some("session_timeout__2")
+    )
 }

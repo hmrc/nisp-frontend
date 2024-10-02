@@ -18,189 +18,193 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.Exclusion
 @import uk.gov.hmrc.nisp.models.Exclusion._
-@import uk.gov.hmrc.play.language.LanguageUtils
-@import java.time.LocalDate
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, insetText}
 @import uk.gov.hmrc.nisp.views.Main
+@import uk.gov.hmrc.nisp.views.html.exclusions.sp.{amountDissonance, isleOfMan, mwrre, postStatePensionAge}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, H2, Link, P, insetText}
+@import uk.gov.hmrc.nisp.views.html.includes.statePensionAgeUnderConsideration
+@import uk.gov.hmrc.play.language.LanguageUtils
+
+@import java.time.LocalDate
 
 @this(
-  main: Main,
-  amountDissonance: exclusions.sp.amountDissonance,
-  isleOfMan: exclusions.sp.isleOfMan,
-  mwrre: exclusions.sp.mwrre,
-  postStatePensionAge: exclusions.sp.postStatePensionAge,
-  statePensionAgeUnderConsiderationView: includes.statePensionAgeUnderConsideration,
-  langUtils: LanguageUtils,
-  p: P,
-  h1: H1,
-  h2: H2,
-  link: Link,
-  insetText: insetText
+        main: Main,
+        amountDissonance: amountDissonance,
+        isleOfMan: isleOfMan,
+        mwrre: mwrre,
+        postStatePensionAge: postStatePensionAge,
+        statePensionAgeUnderConsiderationView: statePensionAgeUnderConsideration,
+        langUtils: LanguageUtils,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link,
+        insetText: insetText
 )
 
 @(
-  exclusion: Exclusion,
-  statePensionAge: Option[Int],
-  statePensionAgeDate: Option[LocalDate],
-  canSeeNIRecord: Boolean,
-  statePensionAgeUnderConsideration: Option[Boolean]
-)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
+        exclusion: Exclusion,
+        statePensionAge: Option[Int],
+        statePensionAgeDate: Option[LocalDate],
+        canSeeNIRecord: Boolean,
+        statePensionAgeUnderConsideration: Option[Boolean]
+)(
+        implicit messages: Messages,
+        request: ExcludedAuthenticatedRequest[_]
+)
 
 @insetContent = {
-  @if(exclusion.equals(PostStatePensionAge)) {
-    @postStatePensionAge()
-  } else {
-    @if(exclusion.equals(AmountDissonance)) {
-      @amountDissonance()
+    @if(exclusion.equals(PostStatePensionAge)) {
+        @postStatePensionAge()
     } else {
-      @if(exclusion.equals(IsleOfMan)) {
-        @isleOfMan()
-      } else {
-        @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-          @mwrre()
+        @if(exclusion.equals(AmountDissonance)) {
+            @amountDissonance()
+        } else {
+            @if(exclusion.equals(IsleOfMan)) {
+                @isleOfMan()
+            } else {
+                @if(exclusion.equals(MarriedWomenReducedRateElection)) {
+                    @mwrre()
+                }
+            }
         }
-      }
-    }
 
-    @p(
-      content = HtmlContent(
-        messages("nisp.excluded.contactFuturePensionCentre",
-        link(
-          attrs = Map("data-journey-click" -> "checkmystatepension:external:futurepensioncentre"),
-          attrTarget = true,
-          inParagraph = true,
-          link = "https://www.gov.uk/future-pension-centre",
-          messageKey = "nisp.excluded.contactFuturePensionCentre.linktext",
-          specId = Some("excluded_sp__link1")
-        ))
-      ),
-      specId = Some("excluded_sp__p1")
-    )
-  }
+        @p(
+            content = HtmlContent(messages(
+                "nisp.excluded.contactFuturePensionCentre",
+                link(
+                    attrs = Map(
+                        "data-journey-click" -> "checkmystatepension:external:futurepensioncentre",
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
+                    href = "https://www.gov.uk/future-pension-centre",
+                    messageKey = "nisp.excluded.contactFuturePensionCentre.linktext",
+                    specId = Some("excluded_sp__link1")
+                )
+            )),
+            specId = Some("excluded_sp__p1")
+        )
+    }
 }
 
 @main(
-  pageTitle = messages("nisp.main.title")
+    pageTitle = messages("nisp.main.title")
 ) {
 
-  @h1(
-    elmId = Some("mainTitle"),
-    msg = "nisp.main.h1.title",
-    specId = Some("excluded_sp__h1")
-  )
+    @h1(
+        elmId = Some("mainTitle"),
+        msg = "nisp.main.h1.title",
+        specId = Some("excluded_sp__h1")
+    )
 
-  @for(
-    age <- statePensionAge;
-    date <- statePensionAgeDate
-  ) {
-      @if(exclusion.equals(PostStatePensionAge)) {
-        @h2(
-          elmId = Some("subTitle"),
-          msg = messages(
-            "nisp.excluded.haveReached",
-            langUtils.Dates.formatDate(date)
-          ),
-          specId = Some("excluded_sp__h2_1a")
-        )
-      } else {
-        @h2(
-          elmId = Some("subTitle"),
-          msg = messages(
-            "nisp.excluded.willReach",
-            langUtils.Dates.formatDate(date)
-          ),
-          specId = Some("excluded_sp__h2_1b")
-        )
-      }
+    @for(
+        age  <- statePensionAge;
+        date <- statePensionAgeDate
+    ) {
+        @if(exclusion.equals(PostStatePensionAge)) {
+            @h2(
+                elmId = Some("subTitle"),
+                msg = messages("nisp.excluded.haveReached", langUtils.Dates.formatDate(date)),
+                specId = Some("excluded_sp__h2_1a")
+            )
+        } else {
+            @h2(
+                elmId = Some("subTitle"),
+                msg = messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date)),
+                specId = Some("excluded_sp__h2_1b")
+            )
+        }
     }
 
     @insetText(
-      content = HtmlContent(insetContent),
-      specId = Some("excluded_sp__inset_text1")
+        content = HtmlContent(insetContent),
+        specId = Some("excluded_sp__inset_text1")
     )
 
     @if(canSeeNIRecord) {
 
-      @p(
-        content = HtmlContent(messages("nisp.excluded.niRecordIntro")),
-        specId = Some("excluded_sp__p2")
-      )
+        @p(
+            content = HtmlContent(messages("nisp.excluded.niRecordIntro")),
+            specId = Some("excluded_sp__p2")
+        )
 
-      @link(
-        link = routes.NIRecordController.showFull.url,
-        messageKey = "nisp.main.showyourrecord",
-        specId = Some("excluded_sp__link2")
-      )
+        <p class="govuk-body govuk-!-margin-top-4">
+            @link(
+                href = routes.NIRecordController.showFull.url,
+                messageKey = "nisp.main.showyourrecord",
+                specId = Some("excluded_sp__link2")
+            )
+        </p>
 
     } else {
 
-      @if(exclusion.equals(IsleOfMan)) {
+        @if(exclusion.equals(IsleOfMan)) {
 
-        @p(
-          content = HtmlContent(messages(
-            "nisp.excluded.contactNationalInsuranceHelplineIom",
-            link(
-              attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
-              attrTarget = true,
-              fullStop = true,
-              inParagraph = true,
-              link = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
-              messageKey = "nisp.excluded.contactNationalInsuranceHelplineIom.link",
-              specId = Some("excluded_sp__link3")
+            @p(
+                content = HtmlContent(messages(
+                    "nisp.excluded.contactNationalInsuranceHelplineIom",
+                    link(
+                        attrs = Map(
+                            "data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline",
+                            "target" -> "_blank",
+                            "rel" -> "noopener noreferrer"
+                        ),
+                        fullStop = true,
+                        href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
+                        messageKey = "nisp.excluded.contactNationalInsuranceHelplineIom.link",
+                        specId = Some("excluded_sp__link3")
+                    )
+                )),
+                specId = Some("excluded_sp__p3")
             )
-          )) ,
-          specId = Some("excluded_sp__p3")
-        )
 
-      } else {
+        } else {
 
-        @p(
-          content = HtmlContent(messages(
-            "nisp.excluded.contactNationalInsuranceHelpline",
-            link(
-              attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
-              attrTarget = true,
-              fullStop = true,
-              inParagraph = true,
-              link = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
-              messageKey = "nisp.excluded.contactNationalInsuranceHelpline.link",
-              specId = Some("excluded_sp__link4")
+            @p(
+                content = HtmlContent(messages(
+                    "nisp.excluded.contactNationalInsuranceHelpline",
+                    link(
+                        attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
+                        fullStop = true,
+                        href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
+                        messageKey = "nisp.excluded.contactNationalInsuranceHelpline.link",
+                        specId = Some("excluded_sp__link4")
+                    )
+                )),
+                specId = Some("excluded_sp__p4")
             )
-          )),
-          specId = Some("excluded_sp__p4")
-        )
-      }
+        }
     }
 
     @if(exclusion.equals(MarriedWomenReducedRateElection)) {
 
-      @h2(
-        msg = "nisp.excluded.mwrre.improve",
-        elmId = Some("MarriedWomenReducedRateElection"),
-        specId = Some("excluded_sp__h2_3")
-      )
+        @h2(
+            msg = "nisp.excluded.mwrre.improve",
+            elmId = Some("MarriedWomenReducedRateElection"),
+            specId = Some("excluded_sp__h2_3")
+        )
 
-      @p(
-        content = Text(messages("nisp.excluded.mwrre.futureResearch")),
-        specId = Some("excluded_sp__p5")
-      )
+        @p(
+            content = Text(messages("nisp.excluded.mwrre.futureResearch")),
+            specId = Some("excluded_sp__p5")
+        )
 
-      @link(
-        link = routes.StatePensionController.signOut.url,
-        messageKey = "nisp.excluded.mwrre.signOut",
-        specId = Some("excluded_sp__link5")
-      )
+        <p class="govuk-body govuk-!-margin-top-4">
+            @link(
+                href = routes.StatePensionController.signOut.url,
+                messageKey = "nisp.excluded.mwrre.signOut",
+                specId = Some("excluded_sp__link5")
+            )
+        </p>
     }
 
-  @for(
-    spaUnderConsideration <- statePensionAgeUnderConsideration;
-    date <- statePensionAgeDate
-  ) {
-    @if(spaUnderConsideration
-      && (exclusion.equals(AmountDissonance)
-      || exclusion.equals(IsleOfMan))) {
-      @statePensionAgeUnderConsiderationView(langUtils.Dates.formatDate(date))
+    @for(
+        spaUnderConsideration <- statePensionAgeUnderConsideration;
+        date                  <- statePensionAgeDate
+    ) {
+        @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
+            @statePensionAgeUnderConsiderationView(langUtils.Dates.formatDate(date))
+        }
     }
-  }
 }
 

@@ -21,160 +21,173 @@
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, insetText, Panel}
+@import uk.gov.hmrc.nisp.views.html.includes.{abroad, contractedOut, deferral, statePensionAgeUnderConsideration}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  abroad: includes.abroad,
-  contractedOut: includes.contractedOut,
-  deferral: includes.deferral,
-  statePensionAgeUnderConsideration: includes.statePensionAgeUnderConsideration,
-  langUtils: LanguageUtils,
-  p: P,
-  h1: H1,
-  h2: H2,
-  link: Link,
-  govukPanel: GovukPanel,
-  panel: Panel,
-  insetText: insetText,
-  govukWarningText: GovukWarningText
+        main: Main,
+        abroad: abroad,
+        contractedOut: contractedOut,
+        deferral: deferral,
+        statePensionAgeUnderConsideration: statePensionAgeUnderConsideration,
+        langUtils: LanguageUtils,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link,
+        govukPanel: GovukPanel,
+        panel: Panel,
+        insetText: insetText,
+        govukWarningText: GovukWarningText
 )
 
-@(statePension: StatePension, numberOfGaps: Int, numberOfGapsPayable: Int, customerAge: Int, isAbroad: Boolean,
-isPertaxUrl:Boolean, yearsToContributeUntilPensionAge: Int)(implicit request: AuthenticatedRequest[_], user: NispAuthedUser, messages: Messages)
+@(
+        statePension: StatePension,
+        numberOfGaps: Int,
+        numberOfGapsPayable: Int,
+        customerAge: Int,
+        isAbroad: Boolean,
+        isPertaxUrl: Boolean,
+        yearsToContributeUntilPensionAge: Int
+)(
+        implicit request: AuthenticatedRequest[_],
+        user: NispAuthedUser,
+        messages: Messages
+)
 
 @sidebar = {
-  <div class="helpline-sidebar govuk-!-padding-top-8">
-    @h2(
-      elmId = Some("heading-sidebar"),
-      msg = "nisp.nirecord.helpline.getHelp",
-      specId = Some("state_pension_forecast_only__sidebar_h2")
-    )
+    <div class="helpline-sidebar govuk-!-padding-top-8">
+        @h2(
+            elmId = Some("heading-sidebar"),
+            msg = "nisp.nirecord.helpline.getHelp",
+            specId = Some("state_pension_forecast_only__sidebar_h2")
+        )
 
-    @p(
-      content = Text(messages("nisp.nirecord.helpline.number")),
-      specId = Some("state_pension_forecast_only__sidebar_p1")
-    )
+        @p(
+            content = Text(messages("nisp.nirecord.helpline.number")),
+            specId = Some("state_pension_forecast_only__sidebar_p1")
+        )
 
-    @p(
-      content = Text(messages("nisp.nirecord.helpline.textNumber")),
-      specId = Some("state_pension_forecast_only__sidebar_p2")
-    )
+        @p(
+            content = Text(messages("nisp.nirecord.helpline.textNumber")),
+            specId = Some("state_pension_forecast_only__sidebar_p2")
+        )
 
-    @p(
-      classes = Some("govuk-body-s"),
-      content = Text(messages("nisp.nirecord.helpline.openTimes")),
-      specId = Some("state_pension_forecast_only__sidebar_p3")
-    )
-  </div>
+        @p(
+            classes = Some("govuk-body-s"),
+            content = Text(messages("nisp.nirecord.helpline.openTimes")),
+            specId = Some("state_pension_forecast_only__sidebar_p3")
+        )
+    </div>
 }
 
 @defining(Some(user)) { _ =>
-  @main(
-    pageTitle = messages("nisp.main.title"),
-    sidebar = Some(sidebar)
-  ) {
+    @main(
+        pageTitle = messages("nisp.main.title"),
+        sidebar = Some(sidebar)
+    ) {
 
-    @h1(
-      elmId = Some("mainTitle"),
-      msg = "nisp.main.h1.title",
-      specId = Some("state_pension_forecast_only__h1")
-    )
-
-    @p(
-      content = HtmlContent(s"""
-        ${messages("nisp.national.insurance.number")}
-        <b class="display-block bold">
-          s${user.nino}
-        </b>
-      """),
-      specId = Some("state_pension_forecast_only__p1")
-    )
-
-    @panel(
-      headingLevel = 2,
-      title = Text(messages("nisp.main.basedOn") + " " + langUtils.Dates.formatDate(statePension.pensionDate)),
-      content = HtmlContent(s"""
-        <p role="text" data-spec="state_pension__panel1__forecast__caveats">${messages("nisp.main.caveats")} ${messages("nisp.is")} ${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.week")},<br/>${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount)} ${messages("nisp.main.month")}, ${NispMoney.pounds(statePension.amounts.forecast.annualAmount)} ${messages("nisp.main.year")}</p>
-      """),
-      specId = Some("state_pension_forecast_only__panel1")
-    )
-
-    @if(isPertaxUrl) {
-      @govukWarningText(WarningText(
-        iconFallbackText = Some(messages("global.important_legal_notice")),
-        attributes = Map("id" -> "state_pension__inset_text_2"),
-        content = Text(messages("nisp.landing.estimateprovided"))
-      ))
-    }
-
-
-    @p(
-      content = Text(messages("nisp.main.caveats")),
-      specId = Some("state_pension_forecast_only__p__caveats")
-    )
-
-    <ul class="govuk-list govuk-list--bullet" data-spec="state_pension_forecast_only__ul__caveats">
-      <li data-spec="state_pension_forecast_only__ul__caveats__1">
-        @Html(messages("nisp.main.notAGuarantee"))
-      </li>
-      <li data-spec="state_pension_forecast_only__ul__caveats__2">
-        @Html(
-          messages("nisp.main.isBased",
-          langUtils.Dates.formatDate(statePension.earningsIncludedUpTo))
+        @h1(
+            elmId = Some("mainTitle"),
+            msg = "nisp.main.h1.title",
+            specId = Some("state_pension_forecast_only__h1")
         )
-      </li>
-      <li data-spec="state_pension_forecast_only__ul__caveats__3">
-        @Html(messages("nisp.main.inflation"))
-      </li>
-      @if(statePension.pensionSharingOrder) {
-      <li data-spec="state_pension_forecast_only__ul__caveats__4">
-        @Html(messages("nisp.main.psod"))
-      </li>
-      }
-    </ul>
 
-    @h2(
-      elmId = Some("mostYouCanGetForecast"),
-      msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
-      specId = Some("state_pension_forecast_only__h2_1")
-    )
+        @p(
+            content = HtmlContent(s"""${messages("nisp.national.insurance.number")} <b class="display-block bold">s${user.nino}</b>"""),
+            specId = Some("state_pension_forecast_only__p1")
+        )
 
-    @p(
-      content = HtmlContent(messages("nisp.main.cantImprove")),
-      specId = Some("state_pension_forecast_only__p3")
-    )
+        @panel(
+            headingLevel = 2,
+            title = Text(s"${messages("nisp.main.basedOn")} ${langUtils.Dates.formatDate(statePension.pensionDate)}"),
+            content = HtmlContent(
+                p(
+                    content = HtmlContent(
+                        s"${messages("nisp.main.caveats")} ${messages("nisp.is")} ${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.week")},<br/>" +
+                        s"${NispMoney.pounds(statePension.amounts.forecast.monthlyAmount)} ${messages("nisp.main.month")}, " +
+                        s"${NispMoney.pounds(statePension.amounts.forecast.annualAmount)} ${messages("nisp.main.year")}"
+                    ),
+                    specId = Some("state_pension__panel1__forecast__caveats"),
+                    classes = Some("")
+                )
+            ),
+            specId = Some("state_pension_forecast_only__panel1")
+        )
 
-    @p(
-      content = HtmlContent(messages(
-        "nisp.main.context.reachMax.needToPay",
-        (langUtils.Dates.formatDate(statePension.pensionDate)).toString()
-      )),
-      specId = Some("state_pension_forecast_only__p4")
-    )
+        @if(isPertaxUrl) {
+            @govukWarningText(WarningText(
+                iconFallbackText = Some(messages("global.important_legal_notice")),
+                attributes = Map("id" -> "state_pension__inset_text_2"),
+                content = Text(messages("nisp.landing.estimateprovided"))
+            ))
+        }
 
-    @link(
-      link = routes.NIRecordController.showFull.url,
-      messageKey = "nisp.main.showyourrecord",
-      specId = Some("state_pension_forecast_only__link1")
-    )
+        @p(
+            content = Text(messages("nisp.main.caveats")),
+            specId = Some("state_pension_forecast_only__p__caveats")
+        )
 
-    @if(isAbroad) {
-      @abroad()
+        <ul class="govuk-list govuk-list--bullet" data-spec="state_pension_forecast_only__ul__caveats">
+            <li data-spec="state_pension_forecast_only__ul__caveats__1">
+                @Html(messages("nisp.main.notAGuarantee"))
+            </li>
+            <li data-spec="state_pension_forecast_only__ul__caveats__2">
+                @Html(messages("nisp.main.isBased", langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)))
+            </li>
+            <li data-spec="state_pension_forecast_only__ul__caveats__3">
+                @Html(messages("nisp.main.inflation"))
+            </li>
+            @if(statePension.pensionSharingOrder) {
+                <li data-spec="state_pension_forecast_only__ul__caveats__4">
+                    @Html(messages("nisp.main.psod"))
+                </li>
+            }
+        </ul>
+
+        @h2(
+            elmId = Some("mostYouCanGetForecast"),
+            msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
+            specId = Some("state_pension_forecast_only__h2_1")
+        )
+
+        @p(
+            content = HtmlContent(messages("nisp.main.cantImprove")),
+            specId = Some("state_pension_forecast_only__p3")
+        )
+
+        @p(
+            content = HtmlContent(messages(
+                "nisp.main.context.reachMax.needToPay",
+                langUtils.Dates.formatDate(statePension.pensionDate)
+            )),
+            specId = Some("state_pension_forecast_only__p4")
+        )
+
+        <p class="govuk-body govuk-!-margin-top-4">
+            @link(
+                href = routes.NIRecordController.showFull.url,
+                messageKey = "nisp.main.showyourrecord",
+                specId = Some("state_pension_forecast_only__link1")
+            )
+        </p>
+
+        @if(isAbroad) {
+            @abroad()
+        }
+
+        @if(statePension.statePensionAgeUnderConsideration) {
+            @statePensionAgeUnderConsideration(langUtils.Dates.formatDate(statePension.pensionDate))
+        }
+
+        @if(statePension.contractedOut) {
+            @contractedOut()
+        }
+
+        @if(customerAge > Constants.deferralCutOffAge) {
+            @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
+        }
+
     }
-
-    @if(statePension.statePensionAgeUnderConsideration) {
-      @statePensionAgeUnderConsideration(langUtils.Dates.formatDate(statePension.pensionDate))
-    }
-
-    @if(statePension.contractedOut) {
-      @contractedOut()
-    }
-
-    @if(customerAge > Constants.deferralCutOffAge) {
-      @deferral(langUtils.Dates.formatDate(statePension.pensionDate))
-    }
-
-  }
 }

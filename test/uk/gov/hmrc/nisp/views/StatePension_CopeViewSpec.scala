@@ -500,7 +500,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
       assertEqualsValue(
         htmlAccountDoc,
         "[data-spec='state_pension_cope__p8']",
-        messages("nisp.main.cope.link", messages("nisp.main.cope.linktext"))
+        "Find out more about COPE and contracting out (opens in new tab)."
       )
     }
 

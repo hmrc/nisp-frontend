@@ -16,19 +16,22 @@
 
 @import uk.gov.hmrc.nisp.models.SPChartModel
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
+@import uk.gov.hmrc.nisp.views.html.includes.chart
 
 @this(
-  chart: chart
+        chart: chart
 )
 @(
-  chartTitle: Html,
-  spChartModel: SPChartModel,
-  specId: Option[String] = None
-)(implicit messages: Messages )
+        chartTitle: Html,
+        spChartModel: SPChartModel,
+        specId: Option[String] = None
+)(
+        implicit messages: Messages
+)
 
 @chart(
-  chartTitle = chartTitle,
-  chartWidth = spChartModel.width,
-  innerText = Html(s"${NispMoney.pounds(spChartModel.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
-  specId = specId
+    chartTitle = chartTitle,
+    chartWidth = spChartModel.width,
+    innerText = Html(s"${NispMoney.pounds(spChartModel.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+    specId = specId
 )

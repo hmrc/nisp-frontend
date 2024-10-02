@@ -15,53 +15,55 @@
  *@
 
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, fullWidth}
-@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukInsetText, GovukWarningText}
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  p: P,
-  h1: H1,
-  h2: H2,
-  link: Link,
-  govukButton: GovukButton,
-  govukInsetText: GovukInsetText,
-  govukWarningText: GovukWarningText,
-  fullLayout: fullWidth
+        main: Main,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link,
+        govukButton: GovukButton,
+        govukInsetText: GovukInsetText,
+        govukWarningText: GovukWarningText
 )
 
-@()(implicit messages: Messages, request: Request[_])
+@()(
+        implicit messages: Messages,
+        request: Request[_]
+)
 
 @main(
-  pageTitle = messages("nisp.landing.title")
+    pageTitle = messages("nisp.landing.title")
 ) {
 
-  @h1(
-    classes = Some("govuk-heading-xl"),
-    msg = "nisp.landing.title",
-    specId = Some("identity_verification_landing_h1")
-  )
+    @h1(
+        classes = Some("govuk-heading-xl"),
+        msg = "nisp.landing.title",
+        specId = Some("identity_verification_landing_h1")
+    )
 
-  @h2(
-    elmId = Some("landing-signin-heading"),
-    msg = "nisp.landing.signin.heading",
-    specId = Some("identity_verification_landing_h2_1")
-  )
+    @h2(
+        elmId = Some("landing-signin-heading"),
+        msg = "nisp.landing.signin.heading",
+        specId = Some("identity_verification_landing_h2_1")
+    )
 
-  @p(
-    content = Text(messages("nisp.landing.signin.line1")),
-    specId = Some("identity_verification_landing_line1")
-  )
+    @p(
+        content = Text(messages("nisp.landing.signin.line1")),
+        specId = Some("identity_verification_landing_line1")
+    )
 
-  @p(
-    content = Text(messages("nisp.landing.signin.line2")),
-    specId = Some("identity_verification_landing_line2")
-  )
+    @p(
+        content = Text(messages("nisp.landing.signin.line2")),
+        specId = Some("identity_verification_landing_line2")
+    )
 
-  @govukButton(Button(
-    attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue"),
-    content = Text(messages("nisp.continue")),
-    href = Some(routes.StatePensionController.show.url)
-  ))
+    @govukButton(Button(
+        attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue"),
+        content = Text(messages("nisp.continue")),
+        href = Some(routes.StatePensionController.show.url)
+    ))
 }

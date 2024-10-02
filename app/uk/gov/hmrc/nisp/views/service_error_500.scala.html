@@ -19,39 +19,41 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  p: P,
-  h1: H1,
-  applicationConfig: ApplicationConfig
+        main: Main,
+        p: P,
+        h1: H1,
+        applicationConfig: ApplicationConfig
 )
 
-@(showFirstParagraph: Boolean = true, showExcessiveTrafficMessage: Boolean = false)(implicit messages: Messages, request: Request[_])
+@(
+        showFirstParagraph: Boolean = true,
+        showExcessiveTrafficMessage: Boolean = false
+)(
+        implicit messages: Messages,
+        request: Request[_]
+)
 
 @main(
-  pageTitle = messages("global.error.InternalServerError500.title")
+    pageTitle = messages("global.error.InternalServerError500.title")
 ) {
 
-  @h1(
-    elmId = Some("heading-1"),
-    msg = "global.error.InternalServerError500.title",
-    specId = Some("service_error_500_h1")
-  )
-
-  @if(showExcessiveTrafficMessage) {
-    @p(
-      elmId = Some("excessiveTraffic"),
-      content = Text(messages(
-        "global.error.InternalServerError500.excessiveTraffic.message"
-      )),
-      specId = Some("service_error_500_p1")
+    @h1(
+        elmId = Some("heading-1"),
+        msg = "global.error.InternalServerError500.title",
+        specId = Some("service_error_500_h1")
     )
-  } else {
-      @p(
-      elmId = Some("tryAgainLater"),
-      content = Text(messages(
-      "global.error.InternalServerError500.message"
-      )),
-      specId = Some("service_error_500_p1")
-      )
-  }
+
+    @if(showExcessiveTrafficMessage) {
+        @p(
+            elmId = Some("excessiveTraffic"),
+            content = Text(messages("global.error.InternalServerError500.excessiveTraffic.message")),
+            specId = Some("service_error_500_p1")
+        )
+    } else {
+        @p(
+            elmId = Some("tryAgainLater"),
+            content = Text(messages("global.error.InternalServerError500.message")),
+            specId = Some("service_error_500_p1")
+        )
+    }
 }

@@ -76,7 +76,7 @@ nisp.main.chart.spa.title = Rhagolwg os byddwch yn cyfrannu hyd at <span class="
 nisp.main.chart.week = yr wythnos
 nisp.main.chart.month = y mis
 nisp.main.chart.year = y flwyddyn
-nisp.main.chart.estimateIfYouContinue.single = Rhagolwg os byddwch yn cyfrannu am flwyddyn arall cyn <span class="nowrap">5 Ebrill {1}</span>
+nisp.main.chart.estimateIfYouContinue.single = Rhagolwg os byddwch yn cyfrannu am flwyddyn arall cyn <span class="nowrap">5 Ebrill {0}</span>
 nisp.main.chart.estimateIfYouContinue.plural = Rhagolwg os byddwch yn cyfrannu am {0} o flynyddoedd cyn <span class="nowrap">5 Ebrill {1}</span>
 nisp.main.chart.estimateIfYouContinue2016 = Rhagolwg os byddwch yn cyfrannu digon mewn blwyddyn hyd at <span class="nowrap">5 Ebrill 2016</span>
 

@@ -16,23 +16,25 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(govukPanel : GovukPanel)
-
-@(
-  args: Seq[String] = Seq.empty,
-  classes: Option[String] = None,
-  content: HtmlContent,
-  elmId: Option[String] = None,
-  headingLevel: Int = 1,
-  specId: Option[String] = None,
-  title: Content,
+@this(
+        govukPanel: GovukPanel
 )
 
-<div @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-panel govuk-panel--confirmation")" data-component="nisp_panel"@if(specId){ data-spec="@specId"}>
-  <h@{headingLevel} class="govuk-panel__title" data-component="nisp_panel__title">
-    @title.asHtml
-  </h@{headingLevel}>
-  <div class="govuk-panel__body" data-component="nisp_panel__body">
-    @content.asHtml
-  </div>
+@(
+        args: Seq[String] = Seq.empty,
+        classes: Option[String] = None,
+        content: HtmlContent,
+        elmId: Option[String] = None,
+        headingLevel: Int = 1,
+        specId: Option[String] = None,
+        title: Content,
+)
+
+<div @elmId.map { id => id="@id" } class="@classes.getOrElse("govuk-panel govuk-panel--confirmation")" data-component="nisp_panel" @specId.map { id => data-spec="@id" }>
+    <h@{headingLevel} class="govuk-panel__title" data-component="nisp_panel__title">
+        @title.asHtml
+    </h@{headingLevel}>
+    <div class="govuk-panel__body" data-component="nisp_panel__body">
+        @content.asHtml
+    </div>
 </div>

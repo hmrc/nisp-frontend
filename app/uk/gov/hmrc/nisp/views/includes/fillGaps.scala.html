@@ -17,87 +17,82 @@
 @import uk.gov.hmrc.nisp.models.{StatePension, SPChartModel}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
+@import uk.gov.hmrc.nisp.views.html.includes.spChart
 
 @this(
-  spChart: spChart,
-  p: P,
-  h2: H2,
-  link: Link
+        spChart: spChart,
+        p: P,
+        h2: H2,
+        link: Link
 )
 @(
-  statePension: StatePension,
-  numberOfGaps: Int,
-  personalMaximumChart: SPChartModel
-)(implicit messages: Messages)
+        statePension: StatePension,
+        numberOfGaps: Int,
+        personalMaximumChart: SPChartModel
+)(
+        implicit messages: Messages
+)
+
+@gapsToFill = @{statePension.amounts.maximum.gapsToFill}
 
 @h2(
-  elmId = Some("improveForecast"),
-  msg = "nisp.main.context.fillGaps.improve.title",
-  specId = Some("fill_gaps__h2_1")
+    elmId = Some("improveForecast"),
+    msg = "nisp.main.context.fillGaps.improve.title",
+    specId = Some("fill_gaps__h2_1")
 )
 
 @if(numberOfGaps == 1) {
-  @p(
-    content = Text(messages(
-      "nisp.main.context.fillgaps.para1.singular"
-    )),
-    specId = Some("fill_gaps__p1a")
-  )
+    @p(
+        content = Text(messages("nisp.main.context.fillgaps.para1.singular")),
+        specId = Some("fill_gaps__p1a")
+    )
 
-  @spChart(
-    chartTitle = Html(messages(
-      "nisp.main.context.fillgaps.chart.onlyone"
-    )),
-    spChartModel = personalMaximumChart,
-    specId = Some("fill_gaps__chart1")
-  )
+    @spChart(
+        chartTitle = Html(messages("nisp.main.context.fillgaps.chart.onlyone")),
+        spChartModel = personalMaximumChart,
+        specId = Some("fill_gaps__chart1")
+    )
 } else {
-  @p(
-    content = Text(messages(
-      "nisp.main.context.fillgaps.para1.plural"
-    )),
-    specId = Some("fill_gaps__p1b")
-  )
-
-  <ul class="govuk-list govuk-list--bullet" data-spec="fill_gaps__ul__improve">
-    <li data-spec="fill_gaps__ul__improve__li1">
-      @messages("nisp.main.context.fillgaps.bullet1")
-    </li>
-    @if(statePension.amounts.maximum.gapsToFill == 1) {
-      <li data-spec="fill_gaps__ul__improve__li2">
-        @messages("nisp.main.context.fillgaps.bullet2.singular")
-      </li>
-    </ul>
-
-    @spChart(
-      chartTitle = Html(messages("nisp.main.context.fillgaps.chart.singular")),
-      spChartModel = personalMaximumChart,
-      specId = Some("fill_gaps__chart2")
+    @p(
+        content = Text(messages("nisp.main.context.fillgaps.para1.plural")),
+        specId = Some("fill_gaps__p1b")
     )
 
-    } else {
-      <li data-spec="fill_gaps__ul__improve__li3">
-        @messages(
-          "nisp.main.context.fillgaps.bullet2.plural",
-          statePension.amounts.maximum.gapsToFill
+    <ul class="govuk-list govuk-list--bullet" data-spec="fill_gaps__ul__improve">
+        <li data-spec="fill_gaps__ul__improve__li1">
+            @messages("nisp.main.context.fillgaps.bullet1")
+        </li>
+        @if(gapsToFill == 1) {
+            <li data-spec="fill_gaps__ul__improve__li2">
+                @messages("nisp.main.context.fillgaps.bullet2.singular")
+            </li>
+        } else {
+            <li data-spec="fill_gaps__ul__improve__li3">
+                @messages("nisp.main.context.fillgaps.bullet2.plural", gapsToFill)
+            </li>
+        }
+    </ul>
+
+    @if(gapsToFill == 1) {
+        @spChart(
+            chartTitle = Html(messages("nisp.main.context.fillgaps.chart.singular")),
+            spChartModel = personalMaximumChart,
+            specId = Some("fill_gaps__chart2")
         )
-      </li>
-    </ul>
-
-    @spChart(
-      chartTitle = Html(messages(
-        "nisp.main.context.fillgaps.chart.plural",
-        statePension.amounts.maximum.gapsToFill
-      )),
-      spChartModel = personalMaximumChart,
-      specId = Some("fill_gaps__chart3")
-    )
-  }
+    } else {
+        @spChart(
+            chartTitle = Html(messages("nisp.main.context.fillgaps.chart.plural", gapsToFill)),
+            spChartModel = personalMaximumChart,
+            specId = Some("fill_gaps__chart3")
+        )
+    }
 }
-
-@link(
-  fullStop = true,
-  link = routes.NIRecordController.showGaps.url,
-  messageKey = "nisp.main.context.fillGaps.viewGapsAndCost",
-  specId = Some("fill_gaps__link_1")
-)
+    
+<p class="govuk-body">
+    @link(
+        fullStop = true,
+        href = routes.NIRecordController.showGaps.url,
+        messageKey = "nisp.main.context.fillGaps.viewGapsAndCost",
+        specId = Some("fill_gaps__link_1")
+    )
+</p>

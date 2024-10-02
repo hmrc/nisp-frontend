@@ -21,40 +21,41 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  p: P,
-  h1: H1,
-  insetText: insetText
+        main: Main,
+        p: P,
+        h1: H1,
+        insetText: insetText
 )
 
-@(copeDataAvailableDate: LocalDate)(implicit messages: Messages, request: ExcludedAuthenticatedRequest[_])
-
-@dateFormatter = @{ DateTimeFormatter.ofPattern("d MMMM y") }
+@(
+        copeDataAvailableDate: LocalDate
+)(
+        implicit messages: Messages,
+        request: ExcludedAuthenticatedRequest[_]
+)
 
 @main(
-pageTitle = messages("nisp.excluded.cope.processing.ni.h1")
+    pageTitle = messages("nisp.excluded.cope.processing.ni.h1")
 ) {
 
-@h1(
-elmId = Some("mainTitle"),
-msg = "nisp.excluded.cope.processing.ni.h1",
-specId = Some("excluded_cope__h1")
-)
+    @h1(
+        elmId = Some("mainTitle"),
+        msg = "nisp.excluded.cope.processing.ni.h1",
+        specId = Some("excluded_cope__h1")
+    )
 
-<div>
-  @p(
-  content = Text(messages(
-  "nisp.excluded.cope.processing.manualWork"
-  )),
-  specId = Some("excluded_cope__p1")
-  )
+    <div>
+        @p(
+            content = Text(messages("nisp.excluded.cope.processing.manualWork")),
+            specId = Some("excluded_cope__p1")
+        )
 
-  @p(
-  content = Text(messages(
-  "nisp.excluded.cope.returnDate.ni",
-  copeDataAvailableDate.format(dateFormatter).replace(" ", "\u00a0")
-  )),
-  specId = Some("excluded_cope__p2")
-  )
-</div>
+        @p(
+            content = Text(messages(
+                "nisp.excluded.cope.returnDate.ni",
+                copeDataAvailableDate.format(DateTimeFormatter.ofPattern("d MMMM y")).replace(" ", "\u00a0")
+            )),
+            specId = Some("excluded_cope__p2")
+        )
+    </div>
 }

@@ -17,36 +17,32 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
 
 @this(
-  p: P,
-  link: Link
+        p: P,
+        link: Link
 )
-@()(implicit messages: Messages)
-
-@****************************@
-@*                          *@
-@*  State Pension Exclusion *@
-@*  template for            *@
-@*  living in Isle Of Man   *@
-@*                          *@
-@****************************@
-
-@p(
-  content = Text(messages("nisp.excluded.isleOfMan.sp.line1")),
-  specId = Some("exclusion_isleOfMan_sp__p1")
+@()(
+        implicit messages: Messages
 )
 
 @p(
-  content = HtmlContent(messages(
-    "nisp.excluded.isleOfMan.sp.line2",
-    link(
-      attrs = Map("data-journey-click" -> "checkmystatepension:external:iom"),
-      attrTarget = true,
-      fullStop = true,
-      inParagraph = true,
-      link = "https://www.gov.im/categories/benefits-and-financial-support/pensions/",
-      messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",
-      specId = Some("exclusion_isleOfMan_sp__link1"),
-    )
-  )),
-  specId = Some("exclusion_isleOfMan_sp__p2")
+    content = Text(messages("nisp.excluded.isleOfMan.sp.line1")),
+    specId = Some("exclusion_isleOfMan_sp__p1")
+)
+
+@p(
+    content = HtmlContent(messages(
+        "nisp.excluded.isleOfMan.sp.line2",
+        link(
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:iom",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
+            fullStop = true,
+            href = "https://www.gov.im/categories/benefits-and-financial-support/pensions/",
+            messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",
+            specId = Some("exclusion_isleOfMan_sp__link1"),
+        )
+    )),
+    specId = Some("exclusion_isleOfMan_sp__p2")
 )

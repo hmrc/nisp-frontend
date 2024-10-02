@@ -18,65 +18,67 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  h1: H1,
-  p: P,
-  link: Link
+        main: Main,
+        h1: H1,
+        p: P,
+        link: Link
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(
+        implicit request: Request[_],
+        messages: Messages
+)
 
-@anchor(
-  text: String,
-  url: String
-) = {<a href="@url" target="_blank">@text</a>}
+@anchor(text: String, url: String) = {
+    <a href="@url" target="_blank">@text</a>
+}
 
 @main(
-  pageTitle = messages("global.page.not.found.error.title")
+    pageTitle = messages("global.page.not.found.error.title")
 ) {
 
-  @h1(
-    msg = "global.page.not.found.error.title",
-    specId = Some("page_not_found_template__h1")
-  )
+    @h1(
+        msg = "global.page.not.found.error.title",
+        specId = Some("page_not_found_template__h1")
+    )
 
-  @p(
-    content = Text(messages(
-      "global.page.not.found.error.check.web.address.correct"
-    )),
-    specId = Some("page_not_found_template__p1")
-  )
+    @p(
+        content = Text(messages("global.page.not.found.error.check.web.address.correct")),
+        specId = Some("page_not_found_template__p1")
+    )
 
-  @p(
-    content = Text(messages(
-      "global.page.not.found.error.check.web.address.full"
-    )),
-    specId = Some("page_not_found_template__p2")
-  )
+    @p(
+        content = Text(messages("global.page.not.found.error.check.web.address.full")),
+        specId = Some("page_not_found_template__p2")
+    )
 
-  @p(
-    content = Text(messages(
-      "global.page.not.found.error.your.options"
-    )),
-    specId = Some("page_not_found_template__p3")
-  )
+    @p(
+        content = Text(messages("global.page.not.found.error.your.options")),
+        specId = Some("page_not_found_template__p3")
+    )
 
-  <ul class="govuk-list govuk-list--bullet">
-    <li>@Html(
-      messages(
-        "global.page.not.found.error.contact.future.pension.centre.text",
-        anchor(
-          messages("global.page.not.found.error.contact.future.pension.centre.link.text"),
-          messages("global.page.not.found.error.contact.future.pension.centre.link")
-      )))
-    </li>
-    <li>@Html(
-      messages(
-        "global.page.not.found.error.contact.ni.helpline.text",
-        anchor(
-          messages("global.page.not.found.error.contact.ni.helpline.link.text"),
-          messages("global.page.not.found.error.contact.ni.helpline.link")
-      )))
-    </li>
-  </ul>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>
+            @Html(
+                messages(
+                    "global.page.not.found.error.contact.future.pension.centre.text",
+                    anchor(
+                        messages("global.page.not.found.error.contact.future.pension.centre.link.text"),
+                        messages("global.page.not.found.error.contact.future.pension.centre.link")
+                    )
+                )
+            )
+        </li>
+        <li>
+            @Html(
+                messages(
+                    "global.page.not.found.error.contact.ni.helpline.text",
+                    anchor(
+                        messages("global.page.not.found.error.contact.ni.helpline.link.text"),
+                        messages("global.page.not.found.error.contact.ni.helpline.link")
+                    )
+                )
+            )
+        </li>
+    </ul>
 }

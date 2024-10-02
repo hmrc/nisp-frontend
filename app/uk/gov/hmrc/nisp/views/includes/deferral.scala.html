@@ -17,30 +17,36 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
 @this(
-  p: P,
-  h2: H2,
-  link: Link
+        p: P,
+        h2: H2,
+        link: Link
 )
 
-@(statePensionDate: String)(implicit messages: Messages)
+@(
+        statePensionDate: String
+)(
+        implicit messages: Messages
+)
 
 @h2(
-  msg = "nisp.main.puttingOff",
-  elmId = Some("puttingOff"),
-  specId = Some("deferral__h2_1")
+    msg = "nisp.main.puttingOff",
+    elmId = Some("puttingOff"),
+    specId = Some("deferral__h2_1")
 )
 
 @p(
-  content = Text(messages(
-    "nisp.main.puttingOff.line1",
-    statePensionDate
-  )),
-  specId = Some("deferral__p1")
+    content = Text(messages("nisp.main.puttingOff.line1", statePensionDate)),
+    specId = Some("deferral__p1")
 )
 
-@link(
-  attrTarget = true,
-  link = "https://www.gov.uk/deferring-state-pension",
-  messageKey = "nisp.main.puttingOff.linkTitle",
-  specId = Some("deferral__link1")
-)
+<p class="govuk-body govuk-!-margin-top-4">
+    @link(
+        attrs = Map(
+            "target" -> "_blank",
+            "rel" -> "noopener noreferrer"
+        ),
+        href = "https://www.gov.uk/deferring-state-pension",
+        messageKey = "nisp.main.puttingOff.linkTitle",
+        specId = Some("deferral__link1")
+    )
+</p>

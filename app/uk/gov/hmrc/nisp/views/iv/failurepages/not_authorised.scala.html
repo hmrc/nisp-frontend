@@ -20,59 +20,62 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  p: P,
-  h1: H1,
-  h2: H2,
-  link: Link,
-  appConfig: ApplicationConfig
+        main: Main,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link,
+        appConfig: ApplicationConfig
 )
 
-@(showFirstParagraph: Boolean = true)(implicit messages: Messages, request: Request[_])
+@(
+        showFirstParagraph: Boolean = true
+)(
+        implicit messages: Messages,
+        request: Request[_]
+)
 
-@main(pageTitle = messages("nisp.iv.failure.general.title")) {
+@main(
+    pageTitle = messages("nisp.iv.failure.general.title")
+) {
 
-  @h1(
-    classes = Some("govuk-heading-xl"),
-    msg = "nisp.iv.failure.general.title",
-    specId = Some("nisp_iv_failure_not_authorised_h1")
-  )
+    @h1(
+        classes = Some("govuk-heading-xl"),
+        msg = "nisp.iv.failure.general.title",
+        specId = Some("nisp_iv_failure_not_authorised_h1")
+    )
 
-  @p(
-    content = Text(messages("nisp.iv.failure.general.youcan")),
-    specId = Some("nisp_iv_failure_not_authorised_p1")
-  )
+    @p(
+        content = Text(messages("nisp.iv.failure.general.youcan")),
+        specId = Some("nisp_iv_failure_not_authorised_p1")
+    )
 
-  <ul class="govuk-list govuk-list--bullet">
-    <li>
-      @link(
-        id = Some("confirm-identity-link"),
-        inParagraph = true,
-        link = appConfig.postSignInRedirectUrl,
-        messageKey = "nisp.iv.failure.general.confirmIdentityAgain",
-        specId = Some("nisp_iv_failure_not_authorised_link1"),
-      )
-    </li>
-    <li>
-      @link(
-        attrs = Map("data-journey-click" -> "checkmystatepension:external:helpline"),
-        id = Some("contact-HMRC-link"),
-        inParagraph = true,
-        link = "https://www.gov.uk/contact-hmrc",
-        messageKey = "nisp.iv.failure.general.contactHMRC",
-        specId = Some("nisp_iv_failure_not_authorised_link2")
-      )
-    </li>
-    <li>
-      @link(
-        attrs = Map("data-journey-click" -> "checkmystatepension:external:pensioncentre"),
-        id = Some("contact-pension-link"),
-        inParagraph = true,
-        link = "https://www.gov.uk/future-pension-centre",
-        messageKey = "nisp.iv.failure.general.contactFuturePension",
-        specId = Some("nisp_iv_failure_not_authorised_link_3")
-      )
-    </li>
-  </ul>
-
+    <ul class="govuk-list govuk-list--bullet">
+        <li>
+            @link(
+                elmId = Some("confirm-identity-link"),
+                href = appConfig.postSignInRedirectUrl,
+                messageKey = "nisp.iv.failure.general.confirmIdentityAgain",
+                specId = Some("nisp_iv_failure_not_authorised_link1"),
+            )
+        </li>
+        <li>
+            @link(
+                attrs = Map("data-journey-click" -> "checkmystatepension:external:helpline"),
+                elmId = Some("contact-HMRC-link"),
+                href = "https://www.gov.uk/contact-hmrc",
+                messageKey = "nisp.iv.failure.general.contactHMRC",
+                specId = Some("nisp_iv_failure_not_authorised_link2")
+            )
+        </li>
+        <li>
+            @link(
+                attrs = Map("data-journey-click" -> "checkmystatepension:external:pensioncentre"),
+                elmId = Some("contact-pension-link"),
+                href = "https://www.gov.uk/future-pension-centre",
+                messageKey = "nisp.iv.failure.general.contactFuturePension",
+                specId = Some("nisp_iv_failure_not_authorised_link_3")
+            )
+        </li>
+    </ul>
 }

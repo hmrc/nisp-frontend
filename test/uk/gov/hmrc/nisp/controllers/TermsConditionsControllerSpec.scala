@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nisp.controllers
 
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -66,7 +68,8 @@ class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
       result should include(
         "The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free."
       )
-      result should not include "<a href=\"/check-your-state-pension/account\" class=\"govuk-link\" id=back   data-spec=\"terms_and_conditions__backlink\">Back</a>"
+
+      Jsoup.parse(result).getElementById("back") shouldBe null
     }
 
     "load the T&Cs page with back link" in {
@@ -75,9 +78,13 @@ class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
       result should include(
         "The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free."
       )
-      result should include(
-        "<a href=\"/check-your-state-pension/account\" class=\"govuk-link\" id=back   data-spec=\"terms_and_conditions__backlink\">Back</a>"
-      )
+
+      val backLink: Element = Jsoup.parse(result).getElementById("back")
+
+      backLink.attr("data-spec") shouldBe "terms_and_conditions__backlink"
+      backLink.attr("href") shouldBe "/check-your-state-pension/account"
+      backLink.attr("class") shouldBe "govuk-link"
+      backLink.text() shouldBe "Back"
     }
 
   }
@@ -90,9 +97,8 @@ class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
       contentAsString(result) should include(
         "The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free."
       )
-      contentAsString(
-        result
-      )                       should not include "<a href=\"/check-your-state-pension/account\" class=\"govuk-link\" id=back   data-spec=\"terms_and_conditions__backlink\">Back</a>"
+
+      Jsoup.parse(contentAsString(result)).getElementById("back") shouldBe null
     }
 
     "load the T&Cs page with back link" in {
@@ -101,9 +107,13 @@ class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
       result should include(
         "The information given is based on details from your National Insurance record at the time you use the service. While we will make every effort to keep your record up to date, we do not guarantee that it will be or that it is error and omission free."
       )
-      result should include(
-        "<a href=\"/check-your-state-pension/account\" class=\"govuk-link\" id=back   data-spec=\"terms_and_conditions__backlink\">Back</a>"
-      )
+
+      val backLink: Element = Jsoup.parse(result).getElementById("back")
+
+      backLink.attr("data-spec") shouldBe "terms_and_conditions__backlink"
+      backLink.attr("href") shouldBe "/check-your-state-pension/account"
+      backLink.attr("class") shouldBe "govuk-link"
+      backLink.text() shouldBe "Back"
     }
 
   }

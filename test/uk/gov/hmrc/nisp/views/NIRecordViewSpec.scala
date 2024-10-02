@@ -764,7 +764,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       )
     }
 
-    "render page with link 'Home Responsibilities Protection (HRP) is only available foMore on National Insurance credits (opens in new tab)r'" in {
+    "render page with link 'Home Responsibilities Protection (HRP) is only available foMore on National Insurance credits (opens in new tab)'" in {
       assertEqualsMessage(
         withHRPDoc,
         "#main-content > div > div > p:nth-child(17) > a",

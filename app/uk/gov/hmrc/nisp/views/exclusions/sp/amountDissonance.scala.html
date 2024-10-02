@@ -16,17 +16,14 @@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.P
 
-@this(p: P)
-@()(implicit messages: Messages)
-
-@********************************************@
-@*                                          *@
-@* State Pension Exclusion template         *@
-@* for amount dissonance                    *@
-@*                                          *@
-@********************************************@
+@this(
+        p: P
+)
+@()(
+        implicit messages: Messages
+)
 
 @p(
-  content = Text(messages("nisp.excluded.amountdissonance")),
-  specId = Some("exclusions__sp__amountdissonance__p1")
+    content = Text(messages("nisp.excluded.amountdissonance")),
+    specId = Some("exclusions__sp__amountdissonance__p1")
 )

@@ -18,53 +18,58 @@
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
-  main: Main,
-  h1: H1,
-  h2: H2,
-  p: P,
-  link: Link
+        main: Main,
+        h1: H1,
+        h2: H2,
+        p: P,
+        link: Link
 )
 
-@()(implicit messages: Messages, request: Request[_])
+@()(
+        implicit messages: Messages,
+        request: Request[_]
+)
 
 @main(
-  pageTitle = messages("nisp.iv.failure.lockedout.title")
+    pageTitle = messages("nisp.iv.failure.lockedout.title")
 ) {
 
-  @h1(
-    classes = Some("govuk-heading-xl"),
-    msg = "nisp.iv.failure.lockedout.title",
-    specId = Some("nisp_iv_failure_lockedout_h1")
-  )
+    @h1(
+        classes = Some("govuk-heading-xl"),
+        msg = "nisp.iv.failure.lockedout.title",
+        specId = Some("nisp_iv_failure_lockedout_h1")
+    )
 
-  @p(
-    content = Text(messages("nisp.iv.failure.lockedout.intro")),
-    classes = Some("govuk-body-l"),
-    specId = Some("nisp_iv_failure_lockedout_p1")
-  )
+    @p(
+        content = Text(messages("nisp.iv.failure.lockedout.intro")),
+        classes = Some("govuk-body-l"),
+        specId = Some("nisp_iv_failure_lockedout_p1")
+    )
 
-  @p(
-    content = Text(messages("nisp.iv.failure.lockedout.tryagain")),
-    specId = Some("nisp_iv_failure_lockedout_p2")
-  )
+    @p(
+        content = Text(messages("nisp.iv.failure.lockedout.tryagain")),
+        specId = Some("nisp_iv_failure_lockedout_p2")
+    )
 
-  @h2(
-    msg = "nisp.iv.failure.otherways.heading",
-    specId = Some("nisp_iv_failure_lockedout_h2_1")
-  )
+    @h2(
+        msg = "nisp.iv.failure.otherways.heading",
+        specId = Some("nisp_iv_failure_lockedout_h2_1")
+    )
 
-  @p(
-    content = HtmlContent(messages(
-      "nisp.iv.failure.otherways.text") +
-      link(
-        attrTarget = true,
-        fullStop = true,
-        inParagraph = true,
-        link = "https://www.gov.uk/future-pension-centre",
-        messageKey = "nisp.iv.failure.otherways.link",
-        specId = Some("nisp_iv_failure_lockedout_link1"),
-      )
-    ),
-    specId = Some("nisp_iv_failure_lockedout_p3")
-  )
+    @p(
+        content = HtmlContent(
+            messages("nisp.iv.failure.otherways.text") +
+                link(
+                    attrs = Map(
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
+                    fullStop = true,
+                    href = "https://www.gov.uk/future-pension-centre",
+                    messageKey = "nisp.iv.failure.otherways.link",
+                    specId = Some("nisp_iv_failure_lockedout_link1"),
+                )
+        ),
+        specId = Some("nisp_iv_failure_lockedout_p3")
+    )
 }

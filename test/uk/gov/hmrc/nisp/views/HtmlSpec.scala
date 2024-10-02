@@ -21,7 +21,7 @@ import org.apache.pekko.util.Timeout
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{Assertion, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
@@ -52,7 +52,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
-  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
+  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
@@ -65,7 +65,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     )
   }
 
-  def assertNotEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) = {
+  def assertNotEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
@@ -78,7 +78,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     )
   }
 
-  def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
+  def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
@@ -92,7 +92,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
       s"$expectedMessageKey has no messages file value setup"
     )
 
-  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: String*) = {
+  def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: String*): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
@@ -108,7 +108,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     className: String,
     expectedMessageKey: String,
     args: String*
-  ) = {
+  ): Assertion = {
     val elements = doc.getElementsByClass(className)
 
     if (elements === null) throw new IllegalArgumentException(s"Class Selector $className wasn't rendered.")
@@ -124,7 +124,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     cssSelector: String,
     expectedMessageKey: String,
     args: String*
-  ) = {
+  ): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
@@ -140,7 +140,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     id: String,
     expectedMessageKey: String,
     args: String*
-  ) = {
+  ): Assertion = {
     val elements = doc.getElementById(id)
 
     if (elements === null) throw new IllegalArgumentException(s"id Selector $id wasn't rendered.")
@@ -151,34 +151,34 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     assert(StringEscapeUtils.unescapeHtml4(elements.html().replace("\n", "")) != expectedString)
   }
 
-  def assertPageContainsDynamicMessage(doc: Document, expectedMessageKey: String, args: String*) = {
+  def assertPageContainsDynamicMessage(doc: Document, expectedMessageKey: String, args: String*): Assertion = {
     assertMessageKeyHasValue(expectedMessageKey)
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
     assert(doc.text().contains(expectedString))
   }
 
-  def assertPageDoesNotContainDynamicMessage(doc: Document, expectedMessageKey: String, args: String*) = {
+  def assertPageDoesNotContainDynamicMessage(doc: Document, expectedMessageKey: String, args: String*): Assertion = {
     assertMessageKeyHasValue(expectedMessageKey)
 
     val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
     assert(!doc.text().contains(expectedString))
   }
 
-  def assertPageContainsMessage(doc: Document, expectedMessage: String) = {
+  def assertPageContainsMessage(doc: Document, expectedMessage: String): Assertion = {
     assertMessageKeyHasValue(expectedMessage)
     assert(doc.text().contains(expectedMessage))
   }
 
-  def assertPageDoesNotContainMessage(doc: Document, expectedMessage: String) = {
+  def assertPageDoesNotContainMessage(doc: Document, expectedMessage: String): Assertion = {
     assertMessageKeyHasValue(expectedMessage)
     assert(!doc.text().contains(expectedMessage))
   }
 
-  def assertRenderedByCssSelector(doc: Document, cssSelector: String) =
+  def assertRenderedByCssSelector(doc: Document, cssSelector: String): Assertion =
     assert(!doc.select(cssSelector).isEmpty, "Element " + cssSelector + " was not rendered on the page.")
 
-  def assertElementContainsText(doc: Document, cssSelector: String, text: String) = {
+  def assertElementContainsText(doc: Document, cssSelector: String, text: String): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty)
@@ -192,7 +192,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     cssSelector: String,
     expectedMessageKey: String,
     cssSelectorSecondElement: String
-  ) = {
+  ): Assertion = {
 
     val elements      = doc.select(cssSelector)
     val secondElement = doc.select(cssSelectorSecondElement)
@@ -214,7 +214,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     cssSelector: String,
     expectedMessageValue: String,
     cssSelectorSecondElement: String
-  ) = {
+  ): Assertion = {
 
     val elements      = doc.select(cssSelector)
     val secondElement = doc.select(cssSelectorSecondElement)
@@ -229,7 +229,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     assert(StringEscapeUtils.unescapeHtml4(mainElementText.replace("\u00a0", "")) == expectedString)
   }
 
-  def assertLinkHasValue(doc: Document, cssSelector: String, linkValue: String) = {
+  def assertLinkHasValue(doc: Document, cssSelector: String, linkValue: String): Assertion = {
     val elements = doc.select(cssSelector)
     assert(elements.attr("href") === linkValue)
   }
@@ -241,7 +241,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     messageArgs1: String,
     messageArgs2: String,
     messageArgs3: String
-  ) = {
+  ): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
@@ -259,10 +259,10 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     )
   }
 
-  def assertRenderedById(doc: Document, id: String) =
+  def assertRenderedById(doc: Document, id: String): Assertion =
     assert(doc.getElementById(id) != null, "\n\nElement " + id + " was not rendered on the page.\n")
 
-  def assertElementHasValue(doc: Document, id: String, value: String) = {
+  def assertElementHasValue(doc: Document, id: String, value: String): Assertion = {
     assertRenderedById(doc, id)
 
     assert(
@@ -271,7 +271,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     )
   }
 
-  def assertElementNotContainsText(doc: Document, cssSelector: String, text: String) = {
+  def assertElementNotContainsText(doc: Document, cssSelector: String, text: String): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty)
@@ -280,7 +280,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     assert(!elements.first().html().contains(text), s"\n\nText '$text' was rendered inside '$cssSelector'.\n")
   }
 
-  def assertHasClass(doc: Document, cssSelector: String, className: String) = {
+  def assertHasClass(doc: Document, cssSelector: String, className: String): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty)
@@ -289,7 +289,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     assert(elements.first().hasClass(className), s"\n\nElement '$cssSelector' doesn't have '$className' class.\n")
   }
 
-  def assertDoesNotHaveClass(doc: Document, cssSelector: String, className: String) = {
+  def assertDoesNotHaveClass(doc: Document, cssSelector: String, className: String): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty)
@@ -298,7 +298,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     assert(!elements.first().hasClass(className), s"\n\nElement '$cssSelector' has '$className' class.\n")
   }
 
-  def assertElementsOwnMessage(doc: Document, cssSelector: String, messageKey: String, stringValue: String = "") = {
+  def assertElementsOwnMessage(doc: Document, cssSelector: String, messageKey: String, stringValue: String = ""): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty)
@@ -313,7 +313,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     )
   }
 
-  def assertElementsOwnText(doc: Document, cssSelector: String, expectedText: String) = {
+  def assertElementsOwnText(doc: Document, cssSelector: String, expectedText: String): Assertion = {
     val elements = doc.select(cssSelector)
 
     if (elements.isEmpty)
@@ -331,7 +331,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     cssSelector: String,
     expectedMessageKey: String,
     secondMessageValue: String
-  ) = {
+  ): Assertion = {
 
     val elements = doc.select(cssSelector)
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")

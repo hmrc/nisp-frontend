@@ -20,174 +20,179 @@
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
+@import uk.gov.hmrc.nisp.views.html.includes.chart
 
 @this(
-  chart: chart,
-  langUtils: LanguageUtils,
-  p: P,
-  h2: H2,
-  link: Link
+        chart: chart,
+        langUtils: LanguageUtils,
+        p: P,
+        h2: H2,
+        link: Link
 )
 
 @(
-  statePension: StatePension,
-  yearsToContributeUntilPensionAge: Int,
-  currentChart: SPChartModel,
-  forecastChart: SPChartModel
-)(implicit messages: Messages)
+        statePension: StatePension,
+        yearsToContributeUntilPensionAge: Int,
+        currentChart: SPChartModel,
+        forecastChart: SPChartModel
+)(
+        implicit messages: Messages
+)
 
 @if(statePension.mqpScenario.isDefined) {
 
-  @h2(
-    elmId = Some("mostYouCanGetMQP"),
-    msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
-    specId = Some("continue_working__mqp_scenario_h2_1")
-  )
+    @h2(
+        elmId = Some("mostYouCanGetMQP"),
+        msg = s"${NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
+        specId = Some("continue_working__mqp_scenario_h2_1")
+    )
 
-  @p(
-    content = Text(messages("nisp.main.context.willReach")),
-    specId = Some("continue_working__mqp_scenario_p1")
-  )
+    @p(
+        content = Text(messages("nisp.main.context.willReach")),
+        specId = Some("continue_working__mqp_scenario_p1")
+    )
 
-  @p(
-    content = HtmlContent(messages(
-      "nisp.main.context.reachMax.needToPay",
-      langUtils.Dates.formatDate(statePension.pensionDate)
-    )),
-    specId = Some("continue_working__mqp_scenario_p2")
-  )
+    @p(
+        content = HtmlContent(messages(
+            "nisp.main.context.reachMax.needToPay",
+            langUtils.Dates.formatDate(statePension.pensionDate)
+        )),
+        specId = Some("continue_working__mqp_scenario_p2")
+    )
 
 } else {
 
-  @p(
-    content = Text(messages("nisp.main.caveats")),
-    specId = Some("continue_working__p__caveats")
-  )
+    @p(
+        content = Text(messages("nisp.main.caveats")),
+        specId = Some("continue_working__p__caveats")
+    )
 
-  <ul class="govuk-list govuk-list--bullet" data-spec="continue_working__ul__caveats">
-    <li data-spec="continue_working__ul__caveats__1">
-      @messages("nisp.main.notAGuarantee")
-    </li>
-    <li data-spec="continue_working__ul__caveats__2">
-      @messages("nisp.main.inflation")
-    </li>
-    @if(statePension.pensionSharingOrder) {
-    <li data-spec="continue_working__ul__caveats__3">
-      @messages("nisp.main.psod")
-    </li>
+    <ul class="govuk-list govuk-list--bullet" data-spec="continue_working__ul__caveats">
+        <li data-spec="continue_working__ul__caveats__1">
+            @messages("nisp.main.notAGuarantee")
+        </li>
+        <li data-spec="continue_working__ul__caveats__2">
+            @messages("nisp.main.inflation")
+        </li>
+        @if(statePension.pensionSharingOrder) {
+            <li data-spec="continue_working__ul__caveats__3">
+                @messages("nisp.main.psod")
+            </li>
+        }
+    </ul>
+
+    @h2(
+        elmId = Some("continueContribute"),
+        msg = "nisp.main.continueContribute",
+        specId = Some("continue_working__h2_1")
+    )
+
+    @chart(
+        chartTitle = Html(messages(
+            "nisp.main.chart.lastprocessed.title",
+            statePension.earningsIncludedUpTo.getYear.toString
+        )),
+        chartWidth = currentChart.width,
+        innerText = Html(s"${NispMoney.pounds(currentChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+        specId = Some("continue_working__chart1")
+    )
+
+    @statePension.forecastScenario match {
+        case Scenario.ContinueWorkingMax => {
+
+            @if(statePension.amounts.protectedPayment) {
+
+                @chart(
+                    chartTitle = Html(messages(
+                        "nisp.main.chart.estimateIfYouContinue2016",
+                        statePension.finalRelevantEndYear.toString
+                    )),
+                    chartWidth = forecastChart.width,
+                    innerText = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+                    specId = Some("continue_working__chart2")
+                )
+
+            } else {
+
+                @if(statePension.amounts.forecast.yearsToWork == 1) {
+                    @chart(
+                        chartTitle = Html(messages(
+                            "nisp.main.chart.estimateIfYouContinue.single",
+                            statePension.finalRelevantEndYear.toString
+                        )),
+                        chartWidth = forecastChart.width,
+                        innerText = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+                        specId = Some("continue_working__chart3")
+                    )
+
+                } else {
+
+                    @chart(
+                        chartTitle = Html(messages(
+                            "nisp.main.chart.estimateIfYouContinue.plural",
+                            statePension.amounts.forecast.yearsToWork,
+                            statePension.finalRelevantEndYear.toString
+                        )),
+                        chartWidth = forecastChart.width,
+                        innerText = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+                        specId = Some("continue_working__chart4")
+                    )
+
+                }
+            }
+        }
+
+        case Scenario.ContinueWorkingNonMax => {
+            @chart(
+                chartTitle = Html(messages(
+                    "nisp.main.chart.spa.title",
+                    statePension.finalRelevantEndYear.toString
+                )),
+                chartWidth = forecastChart.width,
+                innerText = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+                specId = Some("continue_working__chart5")
+            )
+        }
+
+        case _ => {}
     }
-  </ul>
 
-  @h2(
-    elmId = Some("continueContribute"),
-    msg = "nisp.main.continueContribute",
-    specId = Some("continue_working__h2_1")
-  )
+    @h2(
+        elmId = Some("mostYouCanGet"),
+        msg = s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
+        specId = Some("continue_working__h2_2")
+    )
 
-  @chart(
-    chartTitle = Html(messages(
-      "nisp.main.chart.lastprocessed.title",
-      statePension.earningsIncludedUpTo.getYear().toString()
-    )),
-    chartWidth = currentChart.width,
-    innerText = Html(s"${NispMoney.pounds(currentChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
-    specId = Some("continue_working__chart1")
-  )
-
-  @statePension.forecastScenario match  {
-    case Scenario.ContinueWorkingMax => {
-
-      @if(statePension.amounts.protectedPayment) {
-
-        @chart(
-          chartTitle = Html(messages(
-            "nisp.main.chart.estimateIfYouContinue2016",
-            (statePension.finalRelevantEndYear).toString())
-          ),
-          chartWidth = forecastChart.width,
-          innerText = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
-          specId = Some("continue_working__chart2")
+    @if(statePension.amounts.forecast.yearsToWork != yearsToContributeUntilPensionAge) {
+        @p(
+            content = Text(messages("nisp.main.context.willReach")),
+            specId = Some("continue_working__p2")
         )
 
-      } else {
-
-        @if(statePension.amounts.forecast.yearsToWork==1) {
-          @chart(
-            chartTitle = Html(messages(
-              "nisp.main.chart.estimateIfYouContinue.single",1,
-              (statePension.finalRelevantEndYear).toString()
+        @p(
+            content = Text(messages(
+                "nisp.main.context.reachMax.needToPay",
+                langUtils.Dates.formatDate(statePension.pensionDate)
             )),
-            chartWidth = forecastChart.width,
-            innerText = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
-            specId = Some("continue_working__chart3")
-          )
-
-        } else {
-
-          @chart(
-            chartTitle = Html(messages(
-              "nisp.main.chart.estimateIfYouContinue.plural",
-              statePension.amounts.forecast.yearsToWork,
-              (statePension.finalRelevantEndYear).toString()
-            )),
-            chartWidth = forecastChart.width,
-            innerText = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
-            specId = Some("continue_working__chart4")
-          )
-
-        }
-      }
+            specId = Some("continue_working__p3")
+        )
     }
 
-    case Scenario.ContinueWorkingNonMax  => {
-      @chart(
-        chartTitle = Html(messages(
-          "nisp.main.chart.spa.title",
-          (statePension.finalRelevantEndYear).toString()
-        )),
-        chartWidth = forecastChart.width,
-        innerText = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
-        specId = Some("continue_working__chart5")
-      )
+    @if(statePension.amounts.forecast.yearsToWork == yearsToContributeUntilPensionAge) {
+        @p(
+            content = HtmlContent(messages(
+                "nisp.main.after",
+                langUtils.Dates.formatDate(statePension.pensionDate)
+            )),
+            specId = Some("continue_working__p4")
+        )
     }
-
-    case _ => {}
-  }
-
-  @h2(
-    elmId = Some("mostYouCanGet"),
-    msg = s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.mostYouCanGet")}",
-    specId = Some("continue_working__h2_2")
-  )
-
-  @if(statePension.amounts.forecast.yearsToWork != yearsToContributeUntilPensionAge) {
-    @p(
-      content = Text(messages("nisp.main.context.willReach")),
-      specId = Some("continue_working__p2")
-    )
-
-    @p(
-      content = Text(messages(
-        "nisp.main.context.reachMax.needToPay",
-        (langUtils.Dates.formatDate(statePension.pensionDate)).toString()
-      )),
-      specId = Some("continue_working__p3")
-    )
-  }
-
-  @if(statePension.amounts.forecast.yearsToWork == yearsToContributeUntilPensionAge){
-    @p(
-      content = HtmlContent(messages(
-        "nisp.main.after",
-        langUtils.Dates.formatDate(statePension.pensionDate)
-      )),
-      specId = Some("continue_working__p4")
-    )
-  }
 }
 
-@link(
-  link = routes.NIRecordController.showFull.url,
-  messageKey = "nisp.main.showyourrecord",
-  specId = Some("continue_working__link1")
-)
+<p class="govuk-body govuk-!-margin-top-4">
+    @link(
+        href = routes.NIRecordController.showFull.url,
+        messageKey = "nisp.main.showyourrecord",
+        specId = Some("continue_working__link1")
+    )
+</p>
