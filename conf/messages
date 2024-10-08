@@ -35,6 +35,8 @@ nisp.landing.signin.heading = You need to confirm your identity
 nisp.landing.signin.line1 = You can sign in with the user ID and password you use to sign in to HMRC online services.
 nisp.landing.signin.line2 = You may need to answer a few questions – they’ll be based on things HMRC already know about you. You can then access other HMRC services securely.
 nisp.landing.estimateprovided = Your State Pension forecast is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
+nisp.landing.estimateprovided.new = Your State Pension forecast is for your information only. This service does not offer financial advice. When planning for your retirement, you should {0}
+nisp.landing.estimateprovided.new.link = seek guidance or financial advice
 nisp.landing.eligibility.heading = You can use this service if you’re
 nisp.landing.eligibility1 = a man born after 5 April 1951
 nisp.landing.eligibility2 = a woman born after 5 April 1953
@@ -415,14 +417,36 @@ nisp.mqp.filling.may.plural = Filling some of these years may get you some State
 
 nisp.mqp.afterSpa = After State Pension age, {0} you no longer pay National Insurance contributions.
 nisp.mqp.whatElse = What else you can do
-nisp.mqp.pensionCredit = You may be eligible for {0} if your retirement income is low.
-nisp.mqp.pensionCredit.linktext = Pension Credit (opens in new tab)
 nisp.mqp.moneyAdvice = Contact the {0} for free impartial advice.
 nisp.mqp.moneyAdvice.linktext = Money Advice Service (opens in new tab)
 
 nisp.mqp.howManyToContribute = assumes that you’ll contribute another {0}
 nisp.mqp.youCurrentlyHaveZero = You do not have any years on your record and you need at least {0} years to get any State Pension.
 nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need at least {1} years to get any State Pension.
+
+#*****************************
+# Minimum qualifying period - New UI messages
+#*****************************
+
+nisp.mqp.whenYouReachStatePensionAge = When you reach State Pension age, you no longer pay National Insurance contributions. State Pension age may change in the future.
+nisp.mqp.forecastChanges = Your forecast may change if there are any updates to your National Insurance information. You can {0}
+nisp.mqp.forecastChanges.link = find out more in the terms and conditions
+
+nisp.mqp.howMuchWillIGet = How much will I get?
+nisp.mqp.doNotQualify = You do not qualify for State Pension.
+nisp.mqp.youNeed10Years = You usually need at least 10 qualifying years on your National Insurance record to get any State Pension. You will not get these by {0}.
+
+nisp.mqp.howCanIIncrease = How can I increase my State Pension?
+nisp.mqp.fillingGaps = You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.
+
+nisp.mqp.otherWays = Other ways to increase my income
+nisp.mqp.findOutAboutNI = Find out about National Insurance.
+nisp.mqp.findOutAboutNIYouPay = Find out how much National Insurance you pay.
+nisp.mqp.findOutAboutNICredits = Find out about getting National Insurance credits.
+nisp.mqp.childBenefits = If you claimed Child Benefit between 6 April 1978 and 5 April 2010, you may be able to claim Home Responsibilities Protection to fill gaps in your National Insurance record. {0}
+nisp.mqp.childBenefits.link = Check if you are eligible to claim Home Responsibilities Protection
+nisp.mqp.pensionCredit = You may be able to claim Pension Credit if you’re on a low income. {0}
+nisp.mqp.pensionCredit.linktext = Find out about claiming Pension Credit (opens in new tab)
 
 #**************************************************
 # State Pension Age under consideration messages

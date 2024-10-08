@@ -75,9 +75,9 @@
     @main(
         pageTitle = messages("nisp.main.title")
     ) {
-        New State Pension View
+        <p class="govuk-body" id="which-view">New State Pension View</p>
         @nispPageHeading(
-            text = s"${messages("nisp.main.h1.title")} TEST",
+            text = s"${messages("nisp.main.h1.title")}",
             section = messages(user.name.getOrElse("")),
             context = messages("nisp.nirecord.context"),
             specId = Some("state_pension__pageheading")
@@ -187,33 +187,9 @@
                 )
             }
 
-            @statePension.forecastScenario match {
-
-                case Scenario.ContinueWorkingMax | Scenario.ContinueWorkingNonMax => {
-                    @continueWorking(
-                        statePension,
-                        yearsToContributeUntilPensionAge,
-                        currentChart,
-                        forecastChart
-                    )
-                }
-
-                case Scenario.FillGaps => {
-                    @fillGapsMQP()
-                }
-
-                case _ => {}
-            }
-
-        } else {
-
-            @if(statePension.forecastScenario.equals(Scenario.Reached)) {
-                @reached(statePension)
-            }
-
             @if(
-                statePension.forecastScenario.equals(Scenario.ContinueWorkingMax) ||
-                    statePension.forecastScenario.equals(Scenario.ContinueWorkingNonMax)
+                statePension.forecastScenario == Scenario.ContinueWorkingMax ||
+                statePension.forecastScenario == Scenario.ContinueWorkingNonMax
             ) {
                 @continueWorking(
                     statePension,
@@ -223,7 +199,29 @@
                 )
             }
 
-            @if(statePension.forecastScenario.equals(Scenario.FillGaps)) {
+            @if(statePension.forecastScenario == Scenario.FillGaps) {
+                @fillGapsMQP()
+            }
+
+        } else {
+
+            @if(statePension.forecastScenario == Scenario.Reached) {
+                @reached(statePension)
+            }
+
+            @if(
+                statePension.forecastScenario == Scenario.ContinueWorkingMax ||
+                statePension.forecastScenario == Scenario.ContinueWorkingNonMax
+            ) {
+                @continueWorking(
+                    statePension,
+                    yearsToContributeUntilPensionAge,
+                    currentChart,
+                    forecastChart
+                )
+            }
+
+            @if(statePension.forecastScenario == Scenario.FillGaps) {
 
                 @p(
                     content = Text(messages("nisp.main.caveats")),

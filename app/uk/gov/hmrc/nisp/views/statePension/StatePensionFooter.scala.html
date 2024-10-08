@@ -22,16 +22,14 @@
         p: P,
         link: Link
 )
-@(
-        cope: Boolean = false
-)(
+@()(
         implicit messages: Messages
 )
-<div class="govuk-body govuk-!-margin-top-4">
+<div class="govuk-body govuk-!-margin-top-6">
     @h2(
         elmId = Some("heading-sidebar"),
         msg = "nisp.nirecord.helpline.getHelp",
-        specId = Some("state_pension_cope__sidebar_h2")
+        specId = Some("state_pension__footer_h2")
     )
 
     @p(
@@ -43,19 +41,6 @@
                 fullStop = true
             )
         )),
-        specId = Some("state_pension_cope__sidebar_p1")
+        specId = Some("state_pension__footer_p1")
     )
-
-    @if(cope) {
-        @p(
-            content = HtmlContent(
-                link(
-                    href = routes.StatePensionController.show.url,
-                    messageKey = "nisp.back"
-                )
-            ),
-            classes = Some("backlink copeback"),
-            specId = Some("state_pension_cope__sidebar_p4")
-        )
-    }
 </div>
