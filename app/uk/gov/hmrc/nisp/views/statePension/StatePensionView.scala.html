@@ -58,7 +58,6 @@
         currentChart: SPChartModel,
         forecastChart: SPChartModel,
         personalMaximumChart: SPChartModel,
-        isPertaxUrl: Boolean,
         hidePersonalMaxYears: Boolean,
         customerAge: Int,
         isAbroad: Boolean,
@@ -106,13 +105,11 @@
             specId = Some("state_pension__panel1")
         )
 
-        @if(isPertaxUrl) {
-            @govukWarningText(WarningText(
-                iconFallbackText = Some(messages("global.important_legal_notice")),
-                attributes = Map("id" -> "state_pension__inset_text_2"),
-                content = Text(messages("nisp.landing.estimateprovided"))
-            ))
-        }
+        @govukWarningText(WarningText(
+            iconFallbackText = Some(messages("global.important_legal_notice")),
+            attributes = Map("id" -> "state_pension__inset_text_2"),
+            content = Text(messages("nisp.landing.estimateprovided"))
+        ))
 
         @if(statePension.mqpScenario.isDefined) {
 

@@ -47,44 +47,16 @@
         numberOfGaps: Int,
         numberOfGapsPayable: Int,
         customerAge: Int,
-        isAbroad: Boolean,
-        isPertaxUrl: Boolean
+        isAbroad: Boolean
 )(
         implicit request: AuthenticatedRequest[_],
         user: NispAuthedUser,
         messages: Messages
 )
 
-@sidebar = {
-    <div class="helpline-sidebar govuk-!-padding-top-8">
-        @h2(
-            elmId = Some("heading-sidebar"),
-            msg = "nisp.nirecord.helpline.getHelp",
-            specId = Some("state_pension_forecast_only__sidebar_h2")
-        )
-
-        @p(
-            content = Text(messages("nisp.nirecord.helpline.number")),
-            specId = Some("state_pension_forecast_only__sidebar_p1")
-        )
-
-        @p(
-            content = Text(messages("nisp.nirecord.helpline.textNumber")),
-            specId = Some("state_pension_forecast_only__sidebar_p2")
-        )
-
-        @p(
-            classes = Some("govuk-body-s"),
-            content = Text(messages("nisp.nirecord.helpline.openTimes")),
-            specId = Some("state_pension_forecast_only__sidebar_p3")
-        )
-    </div>
-}
-
 @defining(Some(user)) { _ =>
     @main(
-        pageTitle = messages("nisp.main.title"),
-        sidebar = Some(sidebar)
+        pageTitle = messages("nisp.main.title")
     ) {
         <p class="govuk-body" id="which-view">New Forecast Only View</p>
         @h1(
@@ -114,13 +86,11 @@
             specId = Some("state_pension_forecast_only__panel1")
         )
 
-        @if(isPertaxUrl) {
-            @govukWarningText(WarningText(
-                iconFallbackText = Some(messages("global.important_legal_notice")),
-                attributes = Map("id" -> "state_pension__inset_text_2"),
-                content = Text(messages("nisp.landing.estimateprovided"))
-            ))
-        }
+        @govukWarningText(WarningText(
+            iconFallbackText = Some(messages("global.important_legal_notice")),
+            attributes = Map("id" -> "state_pension__inset_text_2"),
+            content = Text(messages("nisp.landing.estimateprovided"))
+        ))
 
         @p(
             content = Text(messages("nisp.main.caveats")),

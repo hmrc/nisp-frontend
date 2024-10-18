@@ -71,8 +71,7 @@ class StatePensionController @Inject()(
             Ok(
               if (newUI.isEnabled)
                 newStatePensionCopeView(
-                  statePension.amounts.cope.weeklyAmount,
-                  isPertax
+                  statePension.amounts.cope.weeklyAmount
                 )
               else
                 statePensionCope(
@@ -125,9 +124,7 @@ class StatePensionController @Inject()(
           nationalInsuranceRecord.numberOfGaps,
           nationalInsuranceRecord.numberOfGapsPayable,
           Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears,
-          user.livesAbroad,
-          calculateAge(user.dateOfBirth, LocalDate.now),
-          isPertax
+          calculateAge(user.dateOfBirth, LocalDate.now)
         )
       else
         statePensionMQP(
@@ -160,8 +157,7 @@ class StatePensionController @Inject()(
           nationalInsuranceRecord.numberOfGaps,
           nationalInsuranceRecord.numberOfGapsPayable,
           calculateAge(user.dateOfBirth, LocalDate.now),
-          user.livesAbroad,
-          isPertax
+          user.livesAbroad
         )
       else
         statePensionForecastOnly(
@@ -206,7 +202,6 @@ class StatePensionController @Inject()(
           currentChart,
           forecastChart,
           personalMaximumChart,
-          isPertax,
           hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
           calculateAge(user.dateOfBirth, LocalDate.now),
           user.livesAbroad,

@@ -71,7 +71,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
     assert(
-      StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) ==
+      StringEscapeUtils.unescapeHtml4(elements.first().text().replace("\n", "")) ==
         StringEscapeUtils.unescapeHtml4(expectedText)
     )
   }

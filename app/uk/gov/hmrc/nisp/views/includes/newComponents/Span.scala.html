@@ -22,7 +22,11 @@
         classes: Option[String] = None,
         content: Content,
         elmId: Option[String] = None,
-        specId: Option[String] = None
+        specId: Option[String] = None,
+        fullStop: Boolean = false
 )
 
-<p @elmId.map{ id => id="@id" } class="@classes.getOrElse("govuk-body")" @specId.map{ id => data-spec="@id" }>@content.asHtml</p>
+<span @elmId.map{ id => id="@id" }
+      class="@classes.getOrElse("nowrap")"
+      @specId.map{ id => data-spec="@id" }
+ >@content.asHtml</span>@if(fullStop){.}
