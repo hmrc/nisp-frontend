@@ -332,7 +332,7 @@ class StatePensionMQPViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni']",
-              "#"
+              "https://www.gov.uk/national-insurance"
             )
           }
 
@@ -347,7 +347,7 @@ class StatePensionMQPViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni_you_pay']",
-              "#"
+              "https://www.gov.uk/national-insurance/how-much-you-pay"
             )
           }
 
@@ -362,7 +362,7 @@ class StatePensionMQPViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni_credits']",
-              "#"
+              "https://www.gov.uk/national-insurance-credits"
             )
           }
 
