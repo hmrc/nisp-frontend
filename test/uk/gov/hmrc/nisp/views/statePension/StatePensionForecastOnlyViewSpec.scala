@@ -378,43 +378,6 @@ class StatePensionForecastOnlyViewSpec
             "https://www.gov.uk/deferring-state-pension"
           )
         }
-
-        /*Side bar help*/
-        "render page with heading 'Get help'" in {
-          mockSetup
-          assertEqualsMessage(
-            nonForeignDoc,
-            "[data-spec='state_pension_forecast_only__sidebar_h2']",
-            "nisp.nirecord.helpline.getHelp"
-          )
-        }
-
-        "render page with text 'Helpline 0800 731 0181'" in {
-          mockSetup
-          assertEqualsMessage(
-            nonForeignDoc,
-            "[data-spec='state_pension_forecast_only__sidebar_p1']",
-            "nisp.nirecord.helpline.number"
-          )
-        }
-
-        "render page with text 'Textphone 0800 731 0176'" in {
-          mockSetup
-          assertEqualsMessage(
-            nonForeignDoc,
-            "[data-spec='state_pension_forecast_only__sidebar_p2']",
-            "nisp.nirecord.helpline.textNumber"
-          )
-        }
-
-        "render page with text 'Monday to Friday: 8am to 6pm'" in {
-          mockSetup
-          assertEqualsMessage(
-            nonForeignDoc,
-            "[data-spec='state_pension_forecast_only__sidebar_p3']",
-            "nisp.nirecord.helpline.openTimes"
-          )
-        }
       }
 
       "State Pension page with forecast only: With State Pension age under consideration message" should {

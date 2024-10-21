@@ -278,38 +278,5 @@ class StatePensionCopeViewSpec
         "/check-your-state-pension/account"
       )
     }
-
-    /*Side bar help*/
-    "render page with heading 'Get help'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='state_pension_cope__sidebar_h2']",
-        "nisp.nirecord.helpline.getHelp"
-      )
-    }
-
-    "render page with text 'Helpline 0800 731 0181'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='state_pension_cope__sidebar_p1']",
-        "nisp.nirecord.helpline.number"
-      )
-    }
-
-    "render page with text 'Textphone 0800 731 0176'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='state_pension_cope__sidebar_p2']",
-        "nisp.nirecord.helpline.textNumber"
-      )
-    }
-
-    "render page with text 'Monday to Friday: 8am to 6pm'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='state_pension_cope__sidebar_p3']",
-        "nisp.nirecord.helpline.openTimes"
-      )
-    }
   }
 }
