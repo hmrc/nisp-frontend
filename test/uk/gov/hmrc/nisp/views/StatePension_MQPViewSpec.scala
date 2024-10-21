@@ -28,6 +28,7 @@ import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
@@ -35,6 +36,7 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.formatting.Time
@@ -71,7 +73,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
     .injector
@@ -85,7 +88,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
     .injector
@@ -103,6 +107,8 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     wireMockServer.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
+    when(mockFeatureFlagService.get(NewStatePensionUIToggle))
+      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = false)))
   }
 
   lazy val controller: StatePensionController = standardInjector.instanceOf[StatePensionController]

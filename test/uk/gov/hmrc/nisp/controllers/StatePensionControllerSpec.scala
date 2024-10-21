@@ -29,11 +29,13 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.http.test.WireMockSupport
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -62,6 +64,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
     reset(mockPertaxHelper)
     wireMockServer.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
+    when(mockFeatureFlagService.get(NewStatePensionUIToggle))
+      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = false)))
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -78,7 +82,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
     .injector
@@ -91,7 +96,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthRetrievals].to[FakeAuthAction],
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
 

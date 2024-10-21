@@ -14,34 +14,34 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H2, P, Link}
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 
 @this(
-        p: P,
         h2: H2,
+        p: P,
         link: Link
 )
 @()(
         implicit messages: Messages
 )
+<div class="govuk-body govuk-!-margin-top-6">
+    @h2(
+        elmId = Some("heading-sidebar"),
+        msg = "nisp.nirecord.helpline.getHelp",
+        specId = Some("state_pension__footer_h2")
+    )
 
-@h2(
-    elmId = Some("improveForecast"),
-    msg = "nisp.main.context.fillGaps.improve.title",
-    specId = Some("fill_gaps_mqp__h2_1")
-)
-
-@p(
-    content = Text(messages("nisp.main.context.improve.para1.plural")),
-    specId = Some("fill_gaps_mqp__p1")
-)
-
-@p(
-    classes = Some("govuk-body govuk-!-margin-bottom-3"),
-    content = HtmlContent(link(
-        href = routes.NIRecordController.showGaps.url,
-        messageKey = "nisp.main.context.fillGaps.viewGaps",
-        specId = Some("fill_gaps_mqp__link1")
-    ))
-)
+    @p(
+        content = HtmlContent(messages(
+            "nisp.nirecord.forMoreInfoOnGaps",
+            link(
+                href = "#",
+                messageKey = "global.page.not.found.error.contact.future.pension.centre.link.text",
+                specId = Some("state_pension__footer_link"),
+                fullStop = true
+            )
+        )),
+        specId = Some("state_pension__footer_p1")
+    )
+</div>
