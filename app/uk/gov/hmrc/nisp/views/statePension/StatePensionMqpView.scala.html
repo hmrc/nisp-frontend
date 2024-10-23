@@ -18,11 +18,11 @@
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.StatePension
 @import uk.gov.hmrc.nisp.models.enums.MQPScenario._
-@import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, H3, Link, PrintLink, Span}
-@import uk.gov.hmrc.nisp.views.html.includes.statePensionAgeUnderConsideration
-@import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
 @import uk.gov.hmrc.nisp.views.Main
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents._
+@import uk.gov.hmrc.nisp.views.html.includes.{NiLInks, statePensionAgeUnderConsideration}
+@import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
+@import uk.gov.hmrc.play.language.LanguageUtils
 
 @this(
         main: Main,
@@ -36,7 +36,8 @@
         govukWarningText: GovukWarningText,
         statePensionFooter: StatePensionFooter,
         printLink: PrintLink,
-        span: Span
+        span: Span,
+        niLinks: NiLInks
 )
 @(
         statePension: StatePension,
@@ -72,7 +73,7 @@
 
         @p(
             content = HtmlContent(messages(
-                "nisp.main.description.mqp.new",
+                "nisp.mqp.main.description",
                 span(
                     content = Text(pensionDate),
                     fullStop = true
@@ -91,9 +92,10 @@
             content = HtmlContent(messages(
                 "nisp.landing.estimateprovided.new",
                 link(
-                    href = "#",
+                    href = "/seek-financial-advice",
                     messageKey = "nisp.landing.estimateprovided.new.link",
-                    fullStop = true
+                    fullStop = true,
+                    specId = Some("state_pension_mqp__warning__link")
                 )
             ))
         ))
@@ -162,25 +164,6 @@
             specId = Some("state_pension_mqp__p6")
         )
 
-        @*if(numberOfPayableGaps > 1) {
-            @p(
-                content = Text(messages("nisp.mqp.years.dontCount.plural", Time.years(numberOfPayableGaps))),
-                specId = Some("state_pension__mqp__years_dont_count__plural")
-            )
-        } else {
-            @if(numberOfPayableGaps < 1) {
-                @p(
-                    content = Text(messages("nisp.mqp.years.dontCount.zero")),
-                    specId = Some("state_pension__mqp__years_dont_count__zero")
-                )
-            } else {
-                @p(
-                    content = Text(messages("nisp.mqp.years.dontCount.single")),
-                    specId = Some("state_pension__mqp__years_dont_count__single")
-                )
-            }
-        }*@
-
         @h2(
             elmId = Some("increase"),
             msg = "nisp.mqp.howCanIIncrease",
@@ -188,12 +171,27 @@
             classes = Some("govuk-heading-m govuk-!-margin-top-6")
         )
 
-        @if(numberOfPayableGaps > 0) {
-            @p(
-                content = HtmlContent(messages(s"nisp.mqp.fillingGaps")),
-                specId = Some("state_pension__mqp__filling_gaps")
-            )
+        @statePension.mqpScenario.map { mqp =>
+            @if(mqp == CantGet) {
+                @if(numberOfPayableGaps > 0) {
+                    @p(
+                        content = HtmlContent(messages("nisp.mqp.fillingGaps")),
+                        specId = Some("state_pension__mqp__filling_gaps")
+                    )
+                } else {
+                    @p(
+                        content = HtmlContent(messages("nisp.mqp.cantFillGapsP1")),
+                        specId = Some("state_pension__mqp__cant_fill_gaps_p1")
+                    )
+
+                    @p(
+                        content = HtmlContent(messages("nisp.mqp.cantFillGapsP2")),
+                        specId = Some("state_pension__mqp__cant_fill_gaps_p2")
+                    )
+                }
+            }
         }
+
 
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
@@ -218,32 +216,7 @@
             }
         }
 
-        @p(
-            classes = Some("govuk-body govuk-!-margin-top-4"),
-            content = HtmlContent(link(
-                href = "https://www.gov.uk/national-insurance",
-                messageKey = "nisp.mqp.findOutAboutNI",
-                specId = Some("state_pension__mqp__find_out_ni")
-            ))
-        )
-
-        @p(
-            classes = Some("govuk-body govuk-!-margin-top-4"),
-            content = HtmlContent(link(
-                href = "https://www.gov.uk/national-insurance/how-much-you-pay",
-                messageKey = "nisp.mqp.findOutAboutNIYouPay",
-                specId = Some("state_pension__mqp__find_out_ni_you_pay")
-            ))
-        )
-
-        @p(
-            classes = Some("govuk-body govuk-!-margin-top-4"),
-            content = HtmlContent(link(
-                href = "https://www.gov.uk/national-insurance-credits",
-                messageKey = "nisp.mqp.findOutAboutNICredits",
-                specId = Some("state_pension__mqp__find_out_ni_credits")
-            ))
-        )
+        @niLinks()
 
         @if(statePension.statePensionAgeUnderConsideration) {
             @statePensionAgeUnderConsideration(pensionDate)
@@ -261,7 +234,7 @@
                 "nisp.mqp.childBenefits",
                 link(
                     attrs = Map("data-journey-click" -> "checkmystatepension:external:homeresponsibilitiesprotection"),
-                    href = "#",
+                    href = "https://www.gov.uk/home-responsibilities-protection-hrp",
                     messageKey = "nisp.mqp.childBenefits.link",
                     specId = Some("state_pension_mqp__home_responsibilities_protection_link"),
                     fullStop = true

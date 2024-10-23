@@ -431,7 +431,7 @@ nisp.mqp.youCurrentlyHave = You currently have {0} on your record and you need a
 # Minimum qualifying period - New UI messages
 #*****************************
 
-nisp.main.description.mqp.new = You will reach State Pension age on {0}
+nisp.mqp.main.description = You will reach State Pension age on {0}
 nisp.mqp.whenYouReachStatePensionAge = When you reach State Pension age, you no longer pay National Insurance contributions. State Pension age may change in the future.
 nisp.mqp.forecastChanges = Your forecast may change if there are any updates to your National Insurance information. You can {0}
 nisp.mqp.forecastChanges.link = find out more in the terms and conditions
@@ -443,6 +443,9 @@ nisp.mqp.youNeed10Years.possible = You usually need at least 10 qualifying years
 
 nisp.mqp.howCanIIncrease = How can I increase my State Pension?
 nisp.mqp.fillingGaps = You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.
+
+nisp.mqp.cantFillGapsP1 = You cannot increase your State Pension forecast.
+nisp.mqp.cantFillGapsP2 = This means you are unable to pay for gaps in your National Insurance record online.
 
 nisp.mqp.otherWays = Other ways to increase my income
 nisp.mqp.findOutAboutNI = Find out about National Insurance.

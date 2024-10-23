@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.i18n.{I18nSupport, Messages}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
@@ -31,9 +31,8 @@ import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.Calculate._
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
-import uk.gov.hmrc.nisp.views.html.statePension.{StatePensionView, StatePensionForecastOnlyView, StatePensionMqpView, StatePensionCopeView}
+import uk.gov.hmrc.nisp.views.html.statePension.{StatePensionCopeView, StatePensionForecastOnlyView, StatePensionMqpView, StatePensionView}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.time.LocalDate
@@ -113,9 +112,7 @@ class StatePensionController @Inject()(
                                      newUI: Boolean
                                    )(implicit
                                      user: NispAuthedUser,
-                                     messages: Messages,
-                                     authRequest: AuthenticatedRequest[_],
-                                     request: Request[AnyContent]
+                                     authRequest: AuthenticatedRequest[_]
                                    ): Result =
     Ok(
       if (newUI)
@@ -136,7 +133,7 @@ class StatePensionController @Inject()(
           calculateAge(user.dateOfBirth, LocalDate.now),
           isPertax
         )
-    ).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+    )
 
   private def doShowStatePensionForecast(
                                           statePension: StatePension,
@@ -145,9 +142,7 @@ class StatePensionController @Inject()(
                                           newUI: Boolean
                                         )(implicit
                                           user: NispAuthedUser,
-                                          messages: Messages,
-                                          authRequest: AuthenticatedRequest[_],
-                                          request: Request[AnyContent]
+                                          authRequest: AuthenticatedRequest[_]
                                         ): Result =
 
     Ok(
@@ -168,7 +163,7 @@ class StatePensionController @Inject()(
           user.livesAbroad,
           isPertax
         )
-    ).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+    )
 
   private def doShowStatePension(
                                   statePension: StatePension,
@@ -177,9 +172,7 @@ class StatePensionController @Inject()(
                                   newUI: Boolean
                                 )(implicit
                                   user: NispAuthedUser,
-                                  messages: Messages,
-                                  authRequest: AuthenticatedRequest[_],
-                                  request: Request[AnyContent]
+                                  authRequest: AuthenticatedRequest[_]
                                 ): Result = {
     val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
       statePension.earningsIncludedUpTo,
@@ -221,10 +214,16 @@ class StatePensionController @Inject()(
           user.livesAbroad,
           yearsToContributeUntilPensionAge
         )
-    ).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+    )
   }
 
-  private def sendExclusion(exclusion: Exclusion)(implicit hc: HeaderCarrier, user: NispAuthedUser, request: Request[AnyContent]): Result = {
+  private def sendExclusion(
+                             exclusion: Exclusion
+                           )(
+                             implicit
+                             hc: HeaderCarrier,
+                             user: NispAuthedUser
+                           ): Result = {
     auditConnector.sendEvent(
       AccountExclusionEvent(
         user.nino.nino,
@@ -232,7 +231,7 @@ class StatePensionController @Inject()(
         exclusion
       )
     )
-    Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
+    Redirect(routes.ExclusionController.showSP)
   }
 
   def show: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
@@ -272,14 +271,6 @@ class StatePensionController @Inject()(
     pertaxHelper.setFromPertax
     Redirect(routes.StatePensionController.show)
   }
-
-  private def storeUserInfoInSession(user: NispAuthedUser, contractedOut: Boolean)(implicit
-                                                                                   request: Request[AnyContent]
-  ): Session =
-    request.session +
-      (NAME -> user.name.toString()) +
-      (NINO -> user.nino.nino) +
-      (CONTRACTEDOUT -> contractedOut.toString)
 
   def signOut: Action[AnyContent] = Action { _ =>
     Redirect(applicationConfig.feedbackFrontendUrl).withNewSession

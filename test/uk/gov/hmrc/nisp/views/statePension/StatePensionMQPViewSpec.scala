@@ -236,6 +236,12 @@ class StatePensionMQPViewSpec
               "! Warning Your State Pension forecast is for your information only. This service does not offer financial advice. " +
                 "When planning for your retirement, you should seek guidance or financial advice."
             )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension_mqp__warning__link']",
+              "/seek-financial-advice"
+            )
           }
 
           "render page with text 'Your forecast may change if there are any updates to your National Insurance information.' " in {
@@ -387,7 +393,7 @@ class StatePensionMQPViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension_mqp__home_responsibilities_protection_link']",
-              "#"
+              "https://www.gov.uk/home-responsibilities-protection-hrp"
             )
           }
 
