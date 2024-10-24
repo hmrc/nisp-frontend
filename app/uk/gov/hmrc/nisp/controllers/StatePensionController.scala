@@ -17,20 +17,22 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.i18n.{I18nSupport, Messages}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser, StandardAuthJourney}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountAccessEvent, AccountExclusionEvent}
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.models.enums.{MQPScenario, Scenario}
 import uk.gov.hmrc.nisp.services._
 import uk.gov.hmrc.nisp.utils.Calculate._
 import uk.gov.hmrc.nisp.utils.Constants
-import uk.gov.hmrc.nisp.utils.Constants._
 import uk.gov.hmrc.nisp.views.html._
+import uk.gov.hmrc.nisp.views.html.statePension.{StatePensionCopeView, StatePensionForecastOnlyView, StatePensionMqpView, StatePensionView}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import java.time.LocalDate
@@ -48,31 +50,47 @@ class StatePensionController @Inject()(
                                         statePensionMQP: statepension_mqp,
                                         statePensionCope: statepension_cope,
                                         statePensionForecastOnly: statepension_forecastonly,
-                                        statePensionView: statepension
+                                        statePensionView: statepension,
+                                        featureFlagService: FeatureFlagService,
+                                        newStatePensionView: StatePensionView,
+                                        newStatePensionForecastOnlyView: StatePensionForecastOnlyView,
+                                        newStatePensionMqpView: StatePensionMqpView,
+                                        newStatePensionCopeView: StatePensionCopeView
                                       )(implicit
                                         ec: ExecutionContext
                                       ) extends NispFrontendController(mcc) with I18nSupport {
 
   def showCope: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
-    pertaxHelper.isFromPertax.flatMap { isPertax =>
-      statePensionService.getSummary(user.nino) map {
-        case Right(Right(statePension)) if statePension.contractedOut =>
-          Ok(
-            statePensionCope(
-              statePension.amounts.cope.weeklyAmount,
-              isPertax
+
+    featureFlagService.get(NewStatePensionUIToggle).flatMap { newUI =>
+      pertaxHelper.isFromPertax.flatMap { isPertax =>
+        statePensionService.getSummary(user.nino) map {
+          case Right(Right(statePension)) if statePension.contractedOut =>
+            Ok(
+              if (newUI.isEnabled)
+                newStatePensionCopeView(
+                  statePension.amounts.cope.weeklyAmount
+                )
+              else
+                statePensionCope(
+                  statePension.amounts.cope.weeklyAmount,
+                  isPertax
+                )
             )
-          )
-        case _ =>
-          Redirect(routes.StatePensionController.show)
+          case _ =>
+            Redirect(routes.StatePensionController.show)
+        }
       }
     }
   }
 
-  private def sendAuditEvent(statePension: StatePension, user: NispAuthedUser)(implicit
-                                                                               hc: HeaderCarrier
-  ): Unit =
+  private def sendAuditEvent(
+                              statePension: StatePension,
+                              user: NispAuthedUser
+                            )(implicit
+                              hc: HeaderCarrier
+                            ): Unit =
     auditConnector.sendEvent(
       AccountAccessEvent(
         user.nino.nino,
@@ -90,97 +108,122 @@ class StatePensionController @Inject()(
   private def doShowStatePensionMQP(
                                      statePension: StatePension,
                                      nationalInsuranceRecord: NationalInsuranceRecord,
-                                     isPertax: Boolean
+                                     isPertax: Boolean,
+                                     newUI: Boolean
                                    )(implicit
                                      user: NispAuthedUser,
-                                     messages: Messages,
-                                     authRequest: AuthenticatedRequest[_],
-                                     request: Request[AnyContent]
-                                   ): Result = {
-    val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
-      statePension.earningsIncludedUpTo,
-      statePension.finalRelevantStartYear
-    )
-    val yearsMissing = Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears
+                                     authRequest: AuthenticatedRequest[_]
+                                   ): Result =
     Ok(
-      statePensionMQP(
-        statePension,
-        nationalInsuranceRecord.numberOfGaps,
-        nationalInsuranceRecord.numberOfGapsPayable,
-        yearsMissing,
-        user.livesAbroad,
-        calculateAge(user.dateOfBirth, LocalDate.now),
-        isPertax,
-        yearsToContributeUntilPensionAge
-      )
-    ).withSession(storeUserInfoInSession(user, statePension.contractedOut))
-  }
+      if (newUI)
+        newStatePensionMqpView(
+          statePension,
+          nationalInsuranceRecord.numberOfGaps,
+          nationalInsuranceRecord.numberOfGapsPayable,
+          Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears,
+          calculateAge(user.dateOfBirth, LocalDate.now)
+        )
+      else
+        statePensionMQP(
+          statePension,
+          nationalInsuranceRecord.numberOfGaps,
+          nationalInsuranceRecord.numberOfGapsPayable,
+          Constants.minimumQualifyingYearsNSP - statePension.numberOfQualifyingYears,
+          user.livesAbroad,
+          calculateAge(user.dateOfBirth, LocalDate.now),
+          isPertax
+        )
+    )
 
   private def doShowStatePensionForecast(
                                           statePension: StatePension,
                                           nationalInsuranceRecord: NationalInsuranceRecord,
-                                          isPertax: Boolean
+                                          isPertax: Boolean,
+                                          newUI: Boolean
                                         )(implicit
                                           user: NispAuthedUser,
-                                          messages: Messages,
-                                          authRequest: AuthenticatedRequest[_],
-                                          request: Request[AnyContent]
-                                        ): Result = {
-    val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
-      statePension.earningsIncludedUpTo,
-      statePension.finalRelevantStartYear
-    )
+                                          authRequest: AuthenticatedRequest[_]
+                                        ): Result =
+
     Ok(
-      statePensionForecastOnly(
-        statePension,
-        nationalInsuranceRecord.numberOfGaps,
-        nationalInsuranceRecord.numberOfGapsPayable,
-        calculateAge(user.dateOfBirth, LocalDate.now),
-        user.livesAbroad,
-        isPertax,
-        yearsToContributeUntilPensionAge
-      )
-    ).withSession(storeUserInfoInSession(user, statePension.contractedOut))
-  }
+      if (newUI)
+        newStatePensionForecastOnlyView(
+          statePension,
+          nationalInsuranceRecord.numberOfGaps,
+          nationalInsuranceRecord.numberOfGapsPayable,
+          calculateAge(user.dateOfBirth, LocalDate.now),
+          user.livesAbroad
+        )
+      else
+        statePensionForecastOnly(
+          statePension,
+          nationalInsuranceRecord.numberOfGaps,
+          nationalInsuranceRecord.numberOfGapsPayable,
+          calculateAge(user.dateOfBirth, LocalDate.now),
+          user.livesAbroad,
+          isPertax
+        )
+    )
 
   private def doShowStatePension(
                                   statePension: StatePension,
                                   nationalInsuranceRecord: NationalInsuranceRecord,
-                                  isPertax: Boolean
+                                  isPertax: Boolean,
+                                  newUI: Boolean
                                 )(implicit
                                   user: NispAuthedUser,
-                                  messages: Messages,
-                                  authRequest: AuthenticatedRequest[_],
-                                  request: Request[AnyContent]
+                                  authRequest: AuthenticatedRequest[_]
                                 ): Result = {
     val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
       statePension.earningsIncludedUpTo,
       statePension.finalRelevantStartYear
     )
+
     val (currentChart, forecastChart, personalMaximumChart) =
       calculateChartWidths(
         statePension.amounts.current,
         statePension.amounts.forecast,
         statePension.amounts.maximum
       )
+
     Ok(
-      statePensionView(
-        statePension,
-        nationalInsuranceRecord.numberOfGaps,
-        nationalInsuranceRecord.numberOfGapsPayable,
-        currentChart,
-        forecastChart,
-        personalMaximumChart,
-        isPertax,
-        hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
-        calculateAge(user.dateOfBirth, LocalDate.now),
-        user.livesAbroad,
-        yearsToContributeUntilPensionAge
-      )
-    ).withSession(storeUserInfoInSession(user, statePension.contractedOut))
+      if (newUI)
+        newStatePensionView(
+          statePension,
+          nationalInsuranceRecord.numberOfGaps,
+          nationalInsuranceRecord.numberOfGapsPayable,
+          currentChart,
+          forecastChart,
+          personalMaximumChart,
+          hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
+          calculateAge(user.dateOfBirth, LocalDate.now),
+          user.livesAbroad,
+          yearsToContributeUntilPensionAge
+        )
+      else
+        statePensionView(
+          statePension,
+          nationalInsuranceRecord.numberOfGaps,
+          nationalInsuranceRecord.numberOfGapsPayable,
+          currentChart,
+          forecastChart,
+          personalMaximumChart,
+          isPertax,
+          hidePersonalMaxYears = applicationConfig.futureProofPersonalMax,
+          calculateAge(user.dateOfBirth, LocalDate.now),
+          user.livesAbroad,
+          yearsToContributeUntilPensionAge
+        )
+    )
   }
 
-  private def sendExclusion(exclusion: Exclusion)(implicit hc: HeaderCarrier, user: NispAuthedUser, request: Request[AnyContent]): Result = {
+  private def sendExclusion(
+                             exclusion: Exclusion
+                           )(
+                             implicit
+                             hc: HeaderCarrier,
+                             user: NispAuthedUser
+                           ): Result = {
     auditConnector.sendEvent(
       AccountExclusionEvent(
         user.nino.nino,
@@ -188,38 +231,38 @@ class StatePensionController @Inject()(
         exclusion
       )
     )
-    Redirect(routes.ExclusionController.showSP).withSession(storeUserInfoInSession(user, contractedOut = false))
+    Redirect(routes.ExclusionController.showSP)
   }
 
   def show: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     implicit val user: NispAuthedUser = request.nispAuthedUser
 
-    pertaxHelper.isFromPertax.flatMap { isPertax =>
-      statePensionService.getSummary(user.nino).flatMap {
-        case Right(Left(statePensionExclusion)) =>
-          Future.successful(sendExclusion(statePensionExclusion.exclusion))
-        case Right(Right(statePension)) =>
-          nationalInsuranceService.getSummary(user.nino) map {
-            case Right(Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
-              sendExclusion(nationalInsuranceExclusion.exclusion)
-            case Right(Right(nationalInsuranceRecord)) =>
-              sendAuditEvent(statePension, user)
-              if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
-                doShowStatePensionMQP(statePension, nationalInsuranceRecord, isPertax)
-              }
-              else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
-                doShowStatePensionForecast(statePension, nationalInsuranceRecord, isPertax)
-              }
-              else {
-                doShowStatePension(statePension, nationalInsuranceRecord, isPertax)
-              }
-            case _ => throw new RuntimeException(
-              "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
-            )
-          }
-        case _ => throw new RuntimeException(
-          "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
-        )
+    featureFlagService.get(NewStatePensionUIToggle).flatMap { newUI =>
+      pertaxHelper.isFromPertax.flatMap { isPertax =>
+        statePensionService.getSummary(user.nino).flatMap {
+          case Right(Left(statePensionExclusion)) =>
+            Future.successful(sendExclusion(statePensionExclusion.exclusion))
+          case Right(Right(statePension)) =>
+            nationalInsuranceService.getSummary(user.nino) map {
+              case Right(Left(nationalInsuranceExclusion)) if statePension.reducedRateElection =>
+                sendExclusion(nationalInsuranceExclusion.exclusion)
+              case Right(Right(nationalInsuranceRecord)) =>
+                sendAuditEvent(statePension, user)
+                if (statePension.mqpScenario.fold(false)(_ != MQPScenario.ContinueWorking)) {
+                  doShowStatePensionMQP(statePension, nationalInsuranceRecord, isPertax, newUI.isEnabled)
+                } else if (statePension.forecastScenario.equals(Scenario.ForecastOnly)) {
+                  doShowStatePensionForecast(statePension, nationalInsuranceRecord, isPertax, newUI.isEnabled)
+                } else {
+                  doShowStatePension(statePension, nationalInsuranceRecord, isPertax, newUI.isEnabled)
+                }
+              case _ => throw new RuntimeException(
+                "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
+              )
+            }
+          case _ => throw new RuntimeException(
+            "StatePensionController: SP and NIR are unmatchable. This is probably a logic error."
+          )
+        }
       }
     }
   }
@@ -228,14 +271,6 @@ class StatePensionController @Inject()(
     pertaxHelper.setFromPertax
     Redirect(routes.StatePensionController.show)
   }
-
-  private def storeUserInfoInSession(user: NispAuthedUser, contractedOut: Boolean)(implicit
-                                                                                   request: Request[AnyContent]
-  ): Session =
-    request.session +
-      (NAME -> user.name.toString()) +
-      (NINO -> user.nino.nino) +
-      (CONTRACTEDOUT -> contractedOut.toString)
 
   def signOut: Action[AnyContent] = Action { _ =>
     Redirect(applicationConfig.feedbackFrontendUrl).withNewSession

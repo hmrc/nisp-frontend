@@ -31,7 +31,7 @@ val microservice = Project(appName, file("."))
     PlayKeys.playDefaultPort := 9234,
     CodeCoverageSettings(),
     pipelineStages := Seq(digest),
-    libraryDependencies ++= LibraryDependencies(),
+    libraryDependencies ++= AppDependencies(),
     TwirlKeys.templateImports ++= Seq(
       "uk.gov.hmrc.govukfrontend.views.html.components._",
       "uk.gov.hmrc.hmrcfrontend.views.html.components._",
