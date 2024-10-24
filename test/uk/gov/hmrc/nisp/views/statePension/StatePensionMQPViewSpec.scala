@@ -430,7 +430,7 @@ class StatePensionMQPViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__footer_link']",
-              "#"
+              "https://www.gov.uk/future-pension-centre"
             )
           }
 
