@@ -35,8 +35,8 @@ nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych
 nisp.landing.signin.line1 = Gallwch fewngofnodi gyda’r Dynodydd Defnyddiwr (ID) a’r cyfrinair a ddefnyddiwch i fewngofnodi i wasanaethau ar-lein CThEF.
 nisp.landing.signin.line2 = Mae’n bosibl y bydd angen i chi ateb ychydig o gwestiynau - byddant yn seiliedig ar bethau y mae CThEF eisoes yn gwybod amdanoch chi. Yna, gallwch gael mynediad at wasanaethau eraill CThEF yn ddiogel.
 nisp.landing.estimateprovided = Darperir eich rhagolwg Pensiwn y Wladwriaeth er gwybodaeth yn unig ac nid yw’r gwasanaeth yn cynnig cyngor ariannol. Pan yn cynllunio am eich ymddeoliad, dylech chwilio am gyngor proffesiynol.
-nisp.landing.estimateprovided.new = Your State Pension forecast is for your information only. This service does not offer financial advice. When planning for your retirement, you should {0}
-nisp.landing.estimateprovided.new.link = seek guidance or financial advice
+nisp.landing.estimateprovided.new = Mae’r rhagolwg o’ch Pensiwn y Wladwriaeth er eich gwybodaeth yn unig. Nid yw’r gwasanaeth hwn yn cynnig cyngor ariannol. Wrth fynd ati i gynllunio ar gyfer eich ymddeoliad, dylech {0}
+nisp.landing.estimateprovided.new.link = chwilio am arweiniad neu gyngor ariannol
 nisp.landing.eligibility.heading = Gallwch ddefnyddio’r gwasanaeth hwn os ydych yn
 nisp.landing.eligibility1 = dyn a aned ar ôl 5 Ebrill 1951
 nisp.landing.eligibility2 = dynes a aned ar ôl 5 Ebrill 1953
@@ -96,7 +96,7 @@ nisp.print.your.state.pension.summary = Argraffu crynodeb o’ch Pensiwn y Wladw
 
 nisp.main.h2.whenWillIReachStatePensionAge = When will I reach State Pension age?
 nisp.main.overseas.text.new = If you’ve lived or worked outside the UK, you may be able to use your time outside the UK to make up the 10 qualifying years you need to get any UK State Pension. {0}
-nisp.main.overseas.text.link = Find out more about living or working outside the UK (opens in new tab)
+nisp.main.overseas.text.link = Dysgwch ragor am fyw neu weithio y tu allan i’r DU (yn agor tab newydd)
 
 #*********************
 # Scenario messages
@@ -338,7 +338,7 @@ nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
 nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:00am i 6:00pm
-nisp.nirecord.forMoreInfoOnGaps = For more information on gaps in your National Insurance record {0}
+nisp.nirecord.forMoreInfoOnGaps = I gael rhagor o wybodaeth am fylchau yn eich cofnod Yswiriant Gwladol {0}
 
 #****************************
 # Gaps in your record page
@@ -445,30 +445,30 @@ nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydy
 # Minimum qualifying period - New UI messages
 #*****************************
 
-nisp.mqp.main.description = You will reach State Pension age on {0}
-nisp.mqp.whenYouReachStatePensionAge = When you reach State Pension age, you no longer pay National Insurance contributions. State Pension age may change in the future.
-nisp.mqp.forecastChanges = Your forecast may change if there are any updates to your National Insurance information. You can {0}
-nisp.mqp.forecastChanges.link = find out more in the terms and conditions
+nisp.mqp.main.description = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar {0}
+nisp.mqp.whenYouReachStatePensionAge = Unwaith i chi gyrraedd oedran Pensiwn y Wladwriaeth, nid ydych yn talu cyfraniadau Yswiriant Gwladol mwyach. Gall oedran Pensiwn y Wladwriaeth newid yn y dyfodol.
+nisp.mqp.forecastChanges = Gall eich rhagolwg newid os oes unrhyw ddiweddariadau i’ch gwybodaeth o ran Yswiriant Gwladol. Gallwch {0}
+nisp.mqp.forecastChanges.link = ddysgu mwy yn y telerau ac amodau
 
-nisp.mqp.howMuchWillIGet = How much will I get?
-nisp.mqp.doNotQualify = You do not qualify for State Pension.
-nisp.mqp.youNeed10Years.notPossible = You usually need at least 10 qualifying years on your National Insurance record to get any State Pension. You will not get these by {0}.
-nisp.mqp.youNeed10Years.possible = You usually need at least 10 qualifying years on your National Insurance record to get any State Pension. You will not have these by {0}.
+nisp.mqp.howMuchWillIGet = Faint fyddaf yn ei gael?
+nisp.mqp.doNotQualify = Nid ydych yn gymwys i gael Pensiwn y Wladwriaeth.
+nisp.mqp.youNeed10Years.notPossible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni fyddwch yn cael y rhain erbyn {0}.
+nisp.mqp.youNeed10Years.possible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni fyddwch yn cael y rhain erbyn {0}.
 
-nisp.mqp.howCanIIncrease = How can I increase my State Pension?
-nisp.mqp.fillingGaps = You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.
+nisp.mqp.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
+nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
 
-nisp.mqp.cantFillGapsP1 = You cannot increase your State Pension forecast.
-nisp.mqp.cantFillGapsP2 = This means you are unable to pay for gaps in your National Insurance record online.
+nisp.mqp.cantFillGapsP1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth.
+nisp.mqp.cantFillGapsP2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
 
-nisp.mqp.otherWays = Other ways to increase my income
-nisp.mqp.findOutAboutNI = Find out about National Insurance.
-nisp.mqp.findOutAboutNIYouPay = Find out how much National Insurance you pay.
-nisp.mqp.findOutAboutNICredits = Find out about getting National Insurance credits.
-nisp.mqp.childBenefits = If you claimed Child Benefit between 6 April 1978 and 5 April 2010, you may be able to claim Home Responsibilities Protection to fill gaps in your National Insurance record. {0}
-nisp.mqp.childBenefits.link = Check if you are eligible to claim Home Responsibilities Protection
-nisp.mqp.pensionCredit = You may be able to claim Pension Credit if you’re on a low income. {0}
-nisp.mqp.pensionCredit.linktext = Find out about claiming Pension Credit (opens in new tab)
+nisp.mqp.otherWays = Ffyrdd eraill i gynyddu fy incwm
+nisp.mqp.findOutAboutNI = Dysgwch am Yswiriant Gwladol.
+nisp.mqp.findOutAboutNIYouPay = Dysgwch faint o Yswiriant Gwladol yr ydych yn ei dalu.
+nisp.mqp.findOutAboutNICredits = Dysgwch am gael credydau Yswiriant Gwladol.
+nisp.mqp.childBenefits = Os gwnaethoch hawlio Budd-dal Plant rhwng 6 Ebrill 1978 a 5 Ebrill 2010, efallai byddwch yn gallu hawlio Diogelwch Cyfrifoldebau Cartref i lenwi bylchau yn eich cofnod Yswiriant Gwladol. {0}
+nisp.mqp.childBenefits.link = Gwiriwch a ydych yn gymwys i hawlio Diogelwch Cyfrifoldebau Cartref
+nisp.mqp.pensionCredit = Efallai byddwch y gallu hawlio Credyd Pensiwn os ydych ar incwm isel. {0}
+nisp.mqp.pensionCredit.linktext = Dysgwch am hawlio Credyd Pensiwn (yn agor tab newydd)
 
 
 #**************************************************
