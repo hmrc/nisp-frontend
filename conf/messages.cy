@@ -452,8 +452,8 @@ nisp.mqp.forecastChanges.link = ddysgu mwy yn y telerau ac amodau
 
 nisp.mqp.howMuchWillIGet = Faint fyddaf yn ei gael?
 nisp.mqp.doNotQualify = Nid ydych yn gymwys i gael Pensiwn y Wladwriaeth.
-nisp.mqp.youNeed10Years.notPossible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni fyddwch yn cael y rhain erbyn {0}.
-nisp.mqp.youNeed10Years.possible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni fyddwch yn cael y rhain erbyn {0}.
+nisp.mqp.youNeed10Years.notPossible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni allwch gael y rhain erbyn {0}.
+nisp.mqp.youNeed10Years.possible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni fydd y rhain gennych erbyn {0}.
 
 nisp.mqp.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
 nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
