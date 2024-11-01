@@ -37,7 +37,7 @@ class StatePensionConnector @Inject()(
   val serviceUrl: String = appConfig.statePensionServiceUrl
 
   def getStatePension(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, StatePension]]] = {
-    val urlToRead = s"$serviceUrl/ni/$nino"
+    val urlToRead = s"$serviceUrl/ni/mdtp/$nino"
     val header = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
     connectToMicroservice[StatePension](APIType.StatePension, urlToRead, header)
   }

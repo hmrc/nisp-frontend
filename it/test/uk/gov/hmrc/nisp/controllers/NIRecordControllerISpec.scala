@@ -164,7 +164,7 @@ class NIRecordControllerISpec extends AnyWordSpec
       )
 
     "redirect with a full niRecord" in new Test {
-      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
       wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
@@ -201,7 +201,7 @@ class NIRecordControllerISpec extends AnyWordSpec
 
       wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
-      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
       val result = route(app, request)
@@ -212,7 +212,7 @@ class NIRecordControllerISpec extends AnyWordSpec
     "redirect to showFull when the number of gaps in the national insurance response is less than 1" in new Test {
       wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord.copy(numberOfGaps = 0, reducedRateElection = false)).toString)))
-      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
       val result = route(app, request)
@@ -221,7 +221,7 @@ class NIRecordControllerISpec extends AnyWordSpec
     }
 
     "redirect to showFull when the number of gaps in the national insurance response is more than 1" in new Test {
-      wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
       wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(nationalInsuranceRecord.copy(numberOfGaps = 2, reducedRateElection = false)).toString)))
