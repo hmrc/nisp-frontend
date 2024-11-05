@@ -14,15 +14,22 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
 
-@this()
-
-@(
-        classes: Option[String] = None,
-        content: Content,
-        elmId: Option[String] = None,
-        specId: Option[String] = None
+@this(
+        p: P,
+        link: Link
 )
-
-<p @elmId.map{ id => id="@id" } class="@classes.getOrElse("govuk-body")" @specId.map{ id => data-spec="@id" }>@content.asHtml</p>
+@()(
+        implicit messages: Messages
+)
+@p(
+    classes = Some("govuk-body govuk-!-margin-top-6"),
+    content = HtmlContent(link(
+        attrs = Map("data-journey-click" -> "link - click:Your State Pension summary:Print your State Pension summary"),
+        elmId = Some("printLink"),
+        href = "#",
+        messageKey = "nisp.print.your.state.pension.summary",
+        specId = Some("state_pension__printlink"),
+    ))
+)

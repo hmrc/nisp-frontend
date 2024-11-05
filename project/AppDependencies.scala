@@ -16,7 +16,7 @@
 
 import sbt.*
 
-object LibraryDependencies {
+object AppDependencies {
 
   private val playVersion            = "play-30"
   private val hmrcScaWrapperVersion  = "1.11.0"

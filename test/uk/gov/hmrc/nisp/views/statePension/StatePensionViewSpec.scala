@@ -14,38 +14,46 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.views
+package uk.gov.hmrc.nisp.views.statePension
 
 import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
+import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthRetrievals, AuthenticatedRequest, NispAuthedUser, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.views.HtmlSpec
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 import java.util.UUID
 import scala.concurrent.Future
 
-class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport {
+class StatePensionViewSpec
+  extends HtmlSpec
+    with Injecting
+    with WireMockSupport {
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -92,13 +100,19 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
     reset(mockAuditConnector)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
+    reset(mockFeatureFlagService)
+
     wireMockServer.resetAll()
-    when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
-    when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
-    when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
-    when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
+    when(mockPertaxHelper.isFromPertax(any()))
+      .thenReturn(Future.successful(false))
+    when(mockAppConfig.reportAProblemNonJSUrl)
+      .thenReturn("/reportAProblem")
+    when(mockAppConfig.contactFormServiceIdentifier)
+      .thenReturn("/id")
+    when(mockAppConfig.pertaxAuthBaseUrl)
+      .thenReturn(s"http://localhost:${wireMockServer.port()}")
     when(mockFeatureFlagService.get(NewStatePensionUIToggle))
-      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = false)))
+      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = true)))
   }
 
   lazy val statePensionController: StatePensionController = standardInjector.instanceOf[StatePensionController]
@@ -457,42 +471,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
             )
           }
 
-          "render page with Heading 'Get help'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__sidebar_h2']",
-              "nisp.nirecord.helpline.getHelp"
-            )
-          }
-
-          "render page with text 'Helpline 0800 731 0181'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__sidebar_p1']",
-              "nisp.nirecord.helpline.number"
-            )
-          }
-
-          "render page with text 'Textphone 0800 731 0176'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__sidebar_p2']",
-              "nisp.nirecord.helpline.textNumber"
-            )
-          }
-
-          "render page with text 'Monday to Friday: 8am to 6pm'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__sidebar_p3']",
-              "nisp.nirecord.helpline.openTimes"
-            )
-          }
-
           "render page with print link" in {
             mockSetup
             assertEqualsMessage(
@@ -550,10 +528,8 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
 
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
+          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
           // overseas message
           "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
             "State Pension from the country you are living or working in.'" in {
@@ -955,43 +931,6 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
               abroadUserDoc,
               "[data-spec='deferral__link1']",
               "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          /*Side bar help*/
-          "render page with heading 'Get help'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__sidebar_h2']",
-              "nisp.nirecord.helpline.getHelp"
-            )
-          }
-
-          "render page with text 'Helpline 0800 731 0181'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__sidebar_p1']",
-              "nisp.nirecord.helpline.number"
-            )
-          }
-
-          "render page with text 'Textphone 0800 731 0176'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__sidebar_p2']",
-              "nisp.nirecord.helpline.textNumber"
-            )
-          }
-
-          "render page with text 'Monday to Friday: 8am to 6pm'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__sidebar_p3']",
-              "nisp.nirecord.helpline.openTimes"
             )
           }
 
@@ -2853,6 +2792,240 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
             abroadUserDoc,
             "[data-spec='state_pension__printlink']",
             "nisp.print.your.state.pension.summary"
+          )
+        }
+      }
+
+      "State Pension view with Contracted out User" should {
+        val mockUserNino: Nino = TestAccountBuilder.regularNino
+        implicit val user: NispAuthedUser =
+          NispAuthedUser(mockUserNino, LocalDate.now(), UserName(Name(None, None)), None, None, isSa = false)
+        val authDetails: AuthDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
+
+        def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
+
+          when(mockStatePensionService.getSummary(any())(any()))
+            .thenReturn(Future.successful(Right(Right(StatePension(
+              LocalDate.of(2014, 4, 5),
+              StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(46.38, 201.67, 2420.04),
+                StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
+                StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
+                StatePensionAmountRegular(50, 217.41, 2608.93))
+              ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, pensionSharingOrder = false, 155.65, reducedRateElection = false, statePensionAgeUnderConsideration = false)
+            ))))
+
+          when(mockNationalInsuranceService.getSummary(any())(any()))
+            .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+              qualifyingYears = 11,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 2,
+              numberOfGapsPayable = 2,
+              Some(LocalDate.of(1954, 3, 6)),
+              homeResponsibilitiesProtection = false,
+              LocalDate.of(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
+              ),
+              reducedRateElection = false
+            )
+            ))))
+
+        }
+
+        lazy val result         = statePensionController.show()(AuthenticatedRequest(FakeRequest(), user, authDetails))
+        lazy val htmlAccountDoc = asDocument(contentAsString(result))
+
+        "render with correct page title" in {
+          mockSetup
+          println(s"\n\n\n${htmlAccountDoc.getElementById("which-view").text()}\n\n\n")
+
+          assertElementContainsText(
+            htmlAccountDoc,
+            "head > title",
+            messages("nisp.main.h1.title")
+              + Constants.titleSplitter
+              + messages("nisp.title.extension")
+              + Constants.titleSplitter
+              + messages("nisp.gov-uk")
+          )
+        }
+
+        "render page with heading 'Your State Pension' " in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='state_pension__pageheading'] [data-component='nisp_page_heading__h1']",
+            "nisp.main.h1.title"
+          )
+        }
+
+        "render page with text 'You can get your State Pension on 18 july 2012' " in {
+          assertEqualsValue(
+            htmlAccountDoc,
+            "[data-spec='state_pension__panel1'] [data-component='nisp_panel__title']",
+            Messages("nisp.main.basedOn") + " " + langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18))
+          )
+        }
+
+        "render page with text 'Your forecast is £155.55 a week, £622.35 a month, £76,022.24 a year' " in {
+          val sMessage =
+            Messages("nisp.main.caveats") + " " +
+              Messages("nisp.is") + " £155.55 " +
+              Messages("nisp.main.week") + ", £622.35 " +
+              Messages("nisp.main.month") + ", £76,022.24 " +
+              Messages("nisp.main.year")
+          assertEqualsValue(
+            htmlAccountDoc,
+            "[data-spec='state_pension__panel1__caveats']",
+            sMessage
+          )
+        }
+
+        "render page with text ' Your forecast '" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='continue_working__p__caveats']",
+            "nisp.main.caveats"
+          )
+        }
+
+        "render page with text ' is not a guarantee and is based on the current law '" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='continue_working__ul__caveats__1']",
+            "nisp.main.notAGuarantee"
+          )
+        }
+
+        "render page with text ' does not include any increase due to inflation '" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='continue_working__ul__caveats__2']",
+            "nisp.main.inflation"
+          )
+        }
+
+        "render page with heading 'You need to continue to contribute National Insurance to reach your forecast'" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='continue_working__h2_1']",
+            "nisp.main.continueContribute"
+          )
+        }
+
+        "render page with heading 'Estimate based on your National Insurance record up to 5 April 2014'" in {
+          assertContainsDynamicMessage(
+            htmlAccountDoc,
+            "[data-spec='continue_working__chart1'] [data-component='nisp_chart__title']",
+            "nisp.main.chart.lastprocessed.title",
+            "2014"
+          )
+        }
+
+        "render page with heading '£46.38 a week'" in {
+          val sWeek = "£46.38 " + Messages("nisp.main.week")
+          assertEqualsValue(
+            htmlAccountDoc,
+            "[data-spec='continue_working__chart1'] [data-component='nisp_chart__inner_text']",
+            sWeek
+          )
+        }
+
+        "render page with Heading '£155.55 is the most you can get'" in {
+          val sMaxCanGet = "£155.55 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
+          assertEqualsValue(
+            htmlAccountDoc,
+            "[data-spec='continue_working__h2_2']",
+            sMaxCanGet
+          )
+        }
+
+        "render page with text 'You cannot improve your forecast any further, unless you choose to put off claiming.'" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='continue_working__p2']",
+            "nisp.main.context.willReach"
+          )
+        }
+
+        "render page with text 'If you’re working you may still need to pay National Insurance contributions until 18 " +
+          "July 2021 as they fund other state benefits and the NHS.'" in {
+          assertContainsDynamicMessage(
+            htmlAccountDoc,
+            "[data-spec='continue_working__p3']",
+            "nisp.main.context.reachMax.needToPay",
+            langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18))
+          )
+        }
+
+        "render page with link 'View your National Insurance Record'" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='continue_working__link1']",
+            "nisp.main.showyourrecord"
+          )
+        }
+
+        "render page with href link 'View your National Insurance Record'" in {
+          assertLinkHasValue(
+            htmlAccountDoc,
+            "[data-spec='continue_working__link1']",
+            "/check-your-state-pension/account/nirecord"
+          )
+        }
+
+        /*Contracting out affects*/
+        "render page with text 'You’ve been in a contracted-out pension scheme'" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='contracted_out__h2_1']",
+            "nisp.cope.title1"
+          )
+        }
+
+        "render page with text 'Like most people, you were contracted out of part of the State Pension.'" in {
+          assertEqualsValue(
+            htmlAccountDoc,
+            "[data-spec='contracted_out__p1']",
+            messages("nisp.cope.likeMostPeople", messages("nisp.cope.likeMostPeople.linktext")) + "."
+          )
+        }
+        /*Ends*/
+
+        "render page with heading 'Putting off claiming'" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='deferral__h2_1']",
+            "nisp.main.puttingOff"
+          )
+        }
+
+        "render page with text 'You can put off claiming your State Pension from 18 July 2021. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
+          assertContainsDynamicMessage(
+            htmlAccountDoc,
+            "[data-spec='deferral__p1']",
+            "nisp.main.puttingOff.line1",
+            langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18))
+          )
+        }
+
+        "render page with link 'More on putting off claiming (opens in new tab)'" in {
+          assertEqualsMessage(
+            htmlAccountDoc,
+            "[data-spec='deferral__link1']",
+            "nisp.main.puttingOff.linkTitle"
+          )
+        }
+
+        "render page with href link 'More on putting off claiming (opens in new tab)'" in {
+          assertLinkHasValue(
+            htmlAccountDoc,
+            "[data-spec='deferral__link1']",
+            "https://www.gov.uk/deferring-state-pension"
           )
         }
       }

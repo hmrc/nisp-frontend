@@ -59,7 +59,8 @@ class ExclusionController @Inject()(
           Some(statePension.pensionAge),
           Some(statePension.pensionDate),
           canSeeNIRecord = false,
-          None)))
+          None
+        )))
       case Right(Left(statePensionExclusionFiltered: StatePensionExclusionFiltered)) =>
         if (statePensionExclusionFiltered.exclusion == Dead)
           Future.successful(Ok(excludedDead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge)))
@@ -80,7 +81,7 @@ class ExclusionController @Inject()(
           }
         }
       case Right(Left(spExclusion: StatePensionExclusionFilteredWithCopeDate)) =>
-        if(spExclusion.previousAvailableDate.exists(_.isBefore(spExclusion.copeDataAvailableDate))) {
+        if (spExclusion.previousAvailableDate.exists(_.isBefore(spExclusion.copeDataAvailableDate))) {
           Future.successful(Ok(excludedCopeExtendedView(spExclusion.copeDataAvailableDate)))
         } else {
           Future.successful(Ok(excludedCopeView(spExclusion.copeDataAvailableDate)))

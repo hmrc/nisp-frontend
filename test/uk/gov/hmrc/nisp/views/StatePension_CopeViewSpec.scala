@@ -33,6 +33,7 @@ import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.http.test.WireMockSupport
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
@@ -40,6 +41,7 @@ import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthRetrievals, Authentic
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.repositories.SessionCache
 import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
@@ -90,6 +92,8 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
     mockPertaxAuth(PertaxAuthResponseModel(
       ACCESS_GRANTED, "", None, None
     ), mockUserNino.nino)
+    when(mockFeatureFlagService.get(NewStatePensionUIToggle))
+      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = false)))
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -100,7 +104,8 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
 
