@@ -94,8 +94,8 @@ nisp.print.your.state.pension.summary = Argraffu crynodeb o’ch Pensiwn y Wladw
 # Main page messages - New UI
 #**********************
 
-nisp.main.h2.whenWillIReachStatePensionAge = When will I reach State Pension age?
-nisp.main.overseas.text.new = If you’ve lived or worked outside the UK, you may be able to use your time outside the UK to make up the 10 qualifying years you need to get any UK State Pension. {0}
+nisp.main.h2.whenWillIReachStatePensionAge = Pryd byddaf yn cyrraedd oedran Pensiwn y Wladwriaeth?
+nisp.main.overseas.text.new = Os ydych wedi byw neu wedi gweithio y tu allan i’r DU, efallai y byddwch yn gallu defnyddio’ch amser y tu allan i’r DU tuag at y 10 mlynedd sydd eu hangen arnoch er mwyn cael unrhyw Bensiwn Gwladwriaeth y DU. {0}
 nisp.main.overseas.text.link = Dysgwch ragor am fyw neu weithio y tu allan i’r DU (yn agor tab newydd)
 
 #*********************
