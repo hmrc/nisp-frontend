@@ -19,24 +19,23 @@
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 
 @this()
+
 @(
-barInfo: Seq[(String, BigDecimal)],
-message: String,
-maximum: BigDecimal
-)(implicit messages: Messages)
+        chartKey: Html,
+        chartValue: Html,
+        width: Int,
+        specId: Option[String] = None
+)(
+        implicit messages: Messages
+)
 
 <dl id="barChart" class="govuk-summary-list">
-
-    @{
-        barInfo.map { case (name, percentage) =>
-            <div class="govuk-summary-list__row--no-actions content">
-                <dt id={s"${name.replace(' ','-')}"} class="govuk-summary-list__key">{name}</dt>
-                <dd id={s"${name.replace(' ','-')}-value"} class="govuk-summary-list__value">£{NispMoney.pounds(percentage)} &nbsp; {messages("barChartPartial.a.week")}</dd>
-            </div>
-             <div aria-hidden="true">
-                <dt class="graph-green-bar" style={s"width: ${BarChartCalculator.barPercentage(percentage, maximum)}%"}></dt>
-                 <dd class="graph-grey-bar"></dd>
-            </div>
-        }
-    }
+    <div class="govuk-summary-list__row--no-actions content">
+        <dt @specId.map{ id => data-spec="@id-key" } class="govuk-summary-list__key">@chartKey</dt>
+        <dd @specId.map{ id => data-spec="@id-value" } class="govuk-summary-list__value">@chartValue</dd>
+    </div>
+     <div aria-hidden="true">
+        <dt class="graph-green-bar" style="width: @width%"></dt>
+        <dd class="graph-grey-bar"></dd>
+    </div>
 </dl>

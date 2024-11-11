@@ -23,6 +23,7 @@
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link, details, insetText, NispPageHeading, Panel}
 @import uk.gov.hmrc.nisp.views.html.includes.{abroad, spChart, continueWorking, fillGapsFutureProof, fillGaps, contractedOut, deferral, fillGapsMQP, reached, statePensionAgeUnderConsideration}
+@import uk.gov.hmrc.nisp.views.html.includes.partials.BarChartPartial
 @import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
 @import uk.gov.hmrc.nisp.views.Main
 
@@ -30,6 +31,7 @@
         main: Main,
         abroad: abroad,
         spChart: spChart,
+        barChartPartial: BarChartPartial,
         continueWorking: continueWorking,
         fillGapsFutureProof: fillGapsFutureProof,
         fillGaps: fillGaps,
@@ -255,10 +257,27 @@
                     specId = Some("state_pension__chart1")
                 )
 
+                @barChartPartial(
+                    chartKey = Html(messages(
+                        "nisp.main.chart.lastprocessed.title",
+                        statePension.earningsIncludedUpTo.getYear.toString
+                    )),
+                    chartValue = Html(s"${NispMoney.pounds(currentChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+                    width = currentChart.width,
+                    specId = Some("state_pension__chart1")
+                )
+
                 @if(statePension.amounts.protectedPayment) {
                     @spChart(
                         chartTitle = Html(messages("nisp.main.chart.estimateIfYouContinue2016")),
                         spChartModel = forecastChart,
+                        specId = Some("state_pension__chart2")
+                    )
+
+                    @barChartPartial(
+                        chartKey = Html(messages("nisp.main.chart.estimateIfYouContinue2016")),
+                        chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+                        width = forecastChart.width,
                         specId = Some("state_pension__chart2")
                     )
                 } else {
@@ -268,6 +287,16 @@
                             statePension.finalRelevantEndYear.toString
                         )),
                         spChartModel = forecastChart,
+                        specId = Some("state_pension__chart3")
+                    )
+
+                    @barChartPartial(
+                        chartKey = Html(messages(
+                            "nisp.main.chart.spa.title",
+                            statePension.finalRelevantEndYear.toString
+                        )),
+                        chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+                        width = forecastChart.width,
                         specId = Some("state_pension__chart3")
                     )
                 }
