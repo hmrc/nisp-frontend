@@ -1,7 +1,7 @@
 {
   "_links": {
     "self": {
-      "href": "/national-insurance-record/ni/<NINO>"
+      "href": "/national-insurance-record/ni/mdtp/<NINO>"
     }
   },
   "qualifyingYears": 0,

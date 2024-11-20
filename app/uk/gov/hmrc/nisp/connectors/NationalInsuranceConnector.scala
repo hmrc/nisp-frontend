@@ -37,7 +37,7 @@ class NationalInsuranceConnector @Inject()(
   val serviceUrl: String = appConfig.nationalInsuranceServiceUrl
 
   def getNationalInsurance(nino: Nino)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]] = {
-    val urlToRead = s"$serviceUrl/ni/$nino"
+    val urlToRead = s"$serviceUrl/ni/mdtp/$nino"
     val header    = Seq("Accept" -> "application/vnd.hmrc.1.0+json")
     connectToMicroservice[NationalInsuranceRecord](APIType.NationalInsurance, urlToRead, header)
   }

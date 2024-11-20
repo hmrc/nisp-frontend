@@ -217,7 +217,7 @@ class ExclusionControllerISpec extends AnyWordSpec
       "an exclusion with cope date and previousAvailableDate is returned" in {
         val json = Json.parse("""{"code":"EXCLUSION_COPE_PROCESSING_FAILED","copeDataAvailableDate":"2020-01-01", "previousAvailableDate": "2019-01-01"}""")
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(forbidden.withBody(json.toString())))
 
         val result = route(app, request)
@@ -227,7 +227,7 @@ class ExclusionControllerISpec extends AnyWordSpec
       "an exclusion with cope date and no previousAvailableDate is returned" in {
         val json = Json.parse("""{"code":"EXCLUSION_COPE_PROCESSING_FAILED","copeDataAvailableDate":"2020-01-01"}""")
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(forbidden.withBody(json.toString())))
 
         val result = route(app, request)
@@ -237,7 +237,7 @@ class ExclusionControllerISpec extends AnyWordSpec
       "Exclusion CopeProcessingFailed is returned" in {
         val json = Json.parse("""{"code":"EXCLUSION_COPE_PROCESSING_FAILED","message":"The customer needs to contact the National Insurance helpline"}""")
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(forbidden.withBody(json.toString)))
 
         val result = route(app, request)
@@ -247,7 +247,7 @@ class ExclusionControllerISpec extends AnyWordSpec
       "Exclusion Dead is returned" in {
         val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(forbidden.withBody(json.toString())))
 
         val result = route(app, request)
@@ -257,7 +257,7 @@ class ExclusionControllerISpec extends AnyWordSpec
       "Exclusion ManualCorrespondenceIndicator is returned" in {
         val json = Json.parse("""{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline"}""")
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(forbidden.withBody(json.toString())))
 
         val result = route(app, request)
@@ -267,7 +267,7 @@ class ExclusionControllerISpec extends AnyWordSpec
       "Any other exclusion is returned" in {
         val json = Json.parse("""{"code":"EXCLUSION_CONTRACTED_OUT","message":"The customer needs to contact the National Insurance helpline"}""")
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(forbidden.withBody(json.toString())))
 
         val result = route(app, request)

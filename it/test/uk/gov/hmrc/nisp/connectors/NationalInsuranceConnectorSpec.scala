@@ -66,7 +66,7 @@ class NationalInsuranceConnectorSpec
     inject[NationalInsuranceConnector]
 
   private val apiUrl: String =
-    s"/ni/$nino"
+    s"/ni/mdtp/$nino"
 
   private val apiGetRequest: RequestPatternBuilder =
     getRequestedFor(urlEqualTo(apiUrl))

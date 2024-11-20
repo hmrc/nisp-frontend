@@ -243,7 +243,7 @@ class StatePensionControllerISpec extends UnitSpec
 
         val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(forbidden.withBody(json.toString)))
 
         val result = route(app, request)
@@ -258,7 +258,7 @@ class StatePensionControllerISpec extends UnitSpec
 
         val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(forbidden.withBody(json.toString)))
 
         val result = route(app, request)
@@ -278,7 +278,7 @@ class StatePensionControllerISpec extends UnitSpec
             StatePensionAmountRegular(0, 0, 0)
           ))
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
         server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(mqpResponse).toString)))
@@ -296,7 +296,7 @@ class StatePensionControllerISpec extends UnitSpec
           StatePensionAmountRegular(0, 0, 0)
         ))
 
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
         server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(forecastOnlyResponse).toString)))
@@ -306,7 +306,7 @@ class StatePensionControllerISpec extends UnitSpec
       }
 
       "a successful standard request is supplied" in new Test {
-        wireMockServer.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
         server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
           .willReturn(ok(Json.toJson(statePensionResponse).toString)))

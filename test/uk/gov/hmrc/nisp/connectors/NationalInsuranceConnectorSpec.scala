@@ -86,7 +86,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec
 
       val headerCaptor: ArgumentCaptor[(String,String)] = ArgumentCaptor.forClass(classOf[(String,String)])
 
-      when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/AB123456C"))(any())
+      when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/mdtp/AB123456C"))(any())
         .setHeader(headerCaptor.capture())
         .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](any(), any()))
         .thenReturn(Future.successful(Right(Right(nir))))
@@ -103,7 +103,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec
 
     "return an error" in {
       val errorResponse = new IllegalArgumentException("test")
-      when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/AB123456C"))(any())
+      when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/mdtp/AB123456C"))(any())
         .setHeader(any())
         .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](any(), any()))
         .thenReturn(Future.failed(errorResponse))
