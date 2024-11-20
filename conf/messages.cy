@@ -23,6 +23,7 @@ nisp.breadcrumb.excluded = Wedi’i eithrio
 nisp.breadcrumb.cope = Tudalen Cope
 nisp.title.extension = Gwirio eich Pensiwn y Wladwriaeth
 outage-page.serviceDisplayName = Gwirio eich Pensiwn y Wladwriaeth
+
 #*************************
 # Landing page messages
 #*************************
@@ -34,6 +35,8 @@ nisp.landing.signin.heading = Mae angen i chi gadarnhau pwy ydych
 nisp.landing.signin.line1 = Gallwch fewngofnodi gyda’r Dynodydd Defnyddiwr (ID) a’r cyfrinair a ddefnyddiwch i fewngofnodi i wasanaethau ar-lein CThEF.
 nisp.landing.signin.line2 = Mae’n bosibl y bydd angen i chi ateb ychydig o gwestiynau - byddant yn seiliedig ar bethau y mae CThEF eisoes yn gwybod amdanoch chi. Yna, gallwch gael mynediad at wasanaethau eraill CThEF yn ddiogel.
 nisp.landing.estimateprovided = Darperir eich rhagolwg Pensiwn y Wladwriaeth er gwybodaeth yn unig ac nid yw’r gwasanaeth yn cynnig cyngor ariannol. Pan yn cynllunio am eich ymddeoliad, dylech chwilio am gyngor proffesiynol.
+nisp.landing.estimateprovided.new = Mae’r rhagolwg o’ch Pensiwn y Wladwriaeth er eich gwybodaeth yn unig. Nid yw’r gwasanaeth hwn yn cynnig cyngor ariannol. Wrth fynd ati i gynllunio ar gyfer eich ymddeoliad, dylech {0}
+nisp.landing.estimateprovided.new.link = chwilio am arweiniad neu gyngor ariannol
 nisp.landing.eligibility.heading = Gallwch ddefnyddio’r gwasanaeth hwn os ydych yn
 nisp.landing.eligibility1 = dyn a aned ar ôl 5 Ebrill 1951
 nisp.landing.eligibility2 = dynes a aned ar ôl 5 Ebrill 1953
@@ -86,6 +89,14 @@ nisp.legal.forecastChanges = Gallai eich rhagolwg fod yn wahanol os bydd unrhyw 
 nisp.legal.mqp.forecastChanges = Gallai’r manylion fod yn wahanol os bydd unrhyw newidiadau i’ch gwybodaeth Yswiriant Gwladol. Mae mwy am hyn yn y {0}
 nisp.legal.terms.and.conditions = telerau ac amodau
 nisp.print.your.state.pension.summary = Argraffu crynodeb o’ch Pensiwn y Wladwriaeth
+
+#**********************
+# Main page messages - New UI
+#**********************
+
+nisp.main.h2.whenWillIReachStatePensionAge = Pryd byddaf yn cyrraedd oedran Pensiwn y Wladwriaeth?
+nisp.main.overseas.text.new = Os ydych wedi byw neu wedi gweithio y tu allan i’r DU, efallai y byddwch yn gallu defnyddio’ch amser y tu allan i’r DU tuag at y 10 mlynedd sydd eu hangen arnoch er mwyn cael unrhyw Bensiwn Gwladwriaeth y DU. {0}
+nisp.main.overseas.text.link = Dysgwch ragor am fyw neu weithio y tu allan i’r DU (yn agor tab newydd)
 
 #*********************
 # Scenario messages
@@ -327,6 +338,7 @@ nisp.nirecord.helpline.getHelp = Cael help
 nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
 nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:00am i 6:00pm
+nisp.nirecord.forMoreInfoOnGaps = I gael rhagor o wybodaeth am fylchau yn eich cofnod Yswiriant Gwladol {0}
 
 #****************************
 # Gaps in your record page
@@ -418,6 +430,7 @@ nisp.mqp.filling.never.single = Ni fydd llenwi hwn yn ddigon i gael unrhyw Bensi
 nisp.mqp.filling.never.plural = Nid yw llenwi’r rhain yn ddigon i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.filling.may.single = Efallai bydd llenwi un flwyddyn yn rhoi ychydig o Bensiwn y Wladwriaeth i chi.
 nisp.mqp.filling.may.plural = Efallai bydd llenwi rhai o’r blynyddoedd hyn yn rhoi ychydig o Bensiwn y Wladwriaeth i chi.
+
 nisp.mqp.afterSpa = Ar ôl oedran Pensiwn y Wladwriaeth, {0} ni fyddwch bellach yn talu cyfraniadau Yswiriant Gwladol.
 nisp.mqp.whatElse = Beth arall allwch chi ei wneud
 nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael {0} os yw eich incwm mewn ymddeoliad yn isel.
@@ -427,6 +440,35 @@ nisp.mqp.moneyAdvice.linktext = Gwasanaeth Cynghori Ariannol (agor mewn tab newy
 nisp.mqp.howManyToContribute = yn cymryd eich bod yn cyfrannu {0} arall
 nisp.mqp.youCurrentlyHaveZero = Nid oes gennych unrhyw flynyddoedd ar eich cofnod ac rydych angen o leiaf {0} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydych angen o leiaf {1} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
+
+#*****************************
+# Minimum qualifying period - New UI messages
+#*****************************
+
+nisp.mqp.main.description = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar {0}
+nisp.mqp.whenYouReachStatePensionAge = Unwaith i chi gyrraedd oedran Pensiwn y Wladwriaeth, nid ydych yn talu cyfraniadau Yswiriant Gwladol mwyach. Gall oedran Pensiwn y Wladwriaeth newid yn y dyfodol.
+nisp.mqp.forecastChanges = Gall eich rhagolwg newid os oes unrhyw ddiweddariadau i’ch gwybodaeth o ran Yswiriant Gwladol. Gallwch {0}
+nisp.mqp.forecastChanges.link = ddysgu mwy yn y telerau ac amodau
+
+nisp.mqp.howMuchWillIGet = Faint fyddaf yn ei gael?
+nisp.mqp.doNotQualify = Nid ydych yn gymwys i gael Pensiwn y Wladwriaeth.
+nisp.mqp.youNeed10Years.notPossible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni allwch gael y rhain erbyn {0}.
+nisp.mqp.youNeed10Years.possible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni fydd y rhain gennych erbyn {0}.
+
+nisp.mqp.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
+nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
+
+nisp.mqp.cantFillGapsP1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth.
+nisp.mqp.cantFillGapsP2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
+
+nisp.mqp.otherWays = Ffyrdd eraill i gynyddu fy incwm
+nisp.mqp.findOutAboutNI = Dysgwch am Yswiriant Gwladol.
+nisp.mqp.findOutAboutNIYouPay = Dysgwch faint o Yswiriant Gwladol yr ydych yn ei dalu.
+nisp.mqp.findOutAboutNICredits = Dysgwch am gael credydau Yswiriant Gwladol.
+nisp.mqp.childBenefits = Os gwnaethoch hawlio Budd-dal Plant rhwng 6 Ebrill 1978 a 5 Ebrill 2010, efallai byddwch yn gallu hawlio Diogelwch Cyfrifoldebau Cartref i lenwi bylchau yn eich cofnod Yswiriant Gwladol. {0}
+nisp.mqp.childBenefits.link = Gwiriwch a ydych yn gymwys i hawlio Diogelwch Cyfrifoldebau Cartref
+nisp.mqp.pensionCredit = Efallai byddwch y gallu hawlio Credyd Pensiwn os ydych ar incwm isel. {0}
+nisp.mqp.pensionCredit.linktext = Dysgwch am hawlio Credyd Pensiwn (yn agor tab newydd)
 
 
 #**************************************************

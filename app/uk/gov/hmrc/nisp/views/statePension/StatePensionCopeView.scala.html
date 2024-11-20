@@ -1,0 +1,142 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nisp.views.formatting.NispMoney
+@import uk.gov.hmrc.nisp.controllers.auth.NispAuthedUser
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link}
+@import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
+@import uk.gov.hmrc.nisp.views.Main
+
+@this(
+        main: Main,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link
+)
+
+@(
+        copeEstimate: BigDecimal
+)(
+        implicit request: AuthenticatedRequest[_],
+        user: NispAuthedUser,
+        messages: Messages
+)
+
+@defining(Some(user)) { _ =>
+    @main(
+        pageTitle = messages("nisp.cope.youWereContractedOut")
+    ) {
+        <p class="govuk-body" id="which-view">New COPE View</p>
+        @h1(
+            elmId = Some("mainTitle"),
+            msg = "nisp.cope.youWereContractedOut",
+            specId = Some("state_pension_cope__h1")
+        )
+
+        @p(
+            content = HtmlContent(messages("nisp.cope.inThePast")),
+            specId = Some("state_pension_cope__p1")
+        )
+
+        @p(
+            content = Text(messages("nisp.cope.why")),
+            specId = Some("state_pension_cope__p2")
+        )
+
+        <ul class="govuk-list govuk-list--bullet" data-spec="state_pension_cope__list1">
+            <li data-spec="state_pension_cope__list1__item1">
+                @Html(messages("nisp.cope.why.bullet1"))
+            </li>
+            <li data-spec="state_pension_cope__list1__item2">
+                @Html(messages("nisp.cope.why.bullet2"))
+            </li>
+        </ul>
+
+        @p(
+            content = Text(messages("nisp.cope.copeequivalent")),
+            specId = Some("state_pension_cope__p3")
+        )
+
+        @h2(
+            elmId = Some("title2"),
+            msg = "nisp.cope.title2",
+            specId = Some("state_pension_cope__h2_1")
+        )
+
+      @p(
+            content = HtmlContent(
+                s"""${messages("nisp.cope.table.estimate.title")}<b class="bold-intext">${NispMoney.pounds(copeEstimate)} ${messages("nisp.main.chart.week")}</b>"""
+            ),
+            specId = Some("state_pension_cope__p4")
+        )
+
+        @p(
+            content = HtmlContent(messages("nisp.cope.definition")),
+            specId = Some("state_pension_cope__p5")
+        )
+
+        @p(
+            content = HtmlContent(messages("nisp.cope.definition.mostcases")),
+            specId = Some("state_pension_cope__p6")
+        )
+
+        <ul class="govuk-list govuk-list--bullet" data-spec="state_pension_cope__list2">
+            <li data-spec="state_pension_cope__list2__item1">
+                @Html(messages("nisp.cope.definition.mostcases.bullet1"))
+            </li>
+            <li data-spec="state_pension_cope__list2__item2">
+                @Html(messages("nisp.cope.definition.mostcases.bullet2"))
+            </li>
+        </ul>
+
+        @p(
+            content = HtmlContent(messages("nisp.cope.workplace")),
+            specId = Some("state_pension_cope__p7")
+        )
+
+        @p(
+            content = HtmlContent(messages(
+                "nisp.main.cope.link",
+                link(
+                    attrs = Map(
+                        "data-journey-click" -> "checkmystatepension:external:contractedout",
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
+                    href = "https://www.gov.uk/government/publications/state-pension-fact-sheets/contracting-out-and-why-we-may-have-included-a-contracted-out-pension-equivalent-cope-amount-when-you-used-the-online-service",
+                    messageKey = "nisp.main.cope.linktext",
+                    specId = Some("state_pension_cope__link1"),
+                    fullStop = true
+                )
+            )),
+            specId = Some("state_pension_cope__p8")
+        )
+
+        @link(
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:contractedout",
+                "target" -> "_blank",
+                "rel" -> "noopener noreferrer"
+            ),
+            classes = Some("backlink govuk-link"),
+            href = routes.StatePensionController.show.url,
+            messageKey = "nisp.back",
+            specId = Some("state_pension_cope__backlink"),
+        )
+    }
+}
