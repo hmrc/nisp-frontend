@@ -103,7 +103,7 @@ class StatePensionConnectorSpec
   "getStatePension" should {
     "return the correct response for the regular test user" in {
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/$nino"))
+        get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(expectedStatePension).toString()))
       )
 
@@ -114,7 +114,7 @@ class StatePensionConnectorSpec
       }
 
       wireMockServer.verify(
-        getRequestedFor(urlEqualTo(s"/ni/$nino"))
+        getRequestedFor(urlEqualTo(s"/ni/mdtp/$nino"))
           .withHeader("Accept", equalTo("application/vnd.hmrc.1.0+json"))
       )
 
@@ -125,7 +125,7 @@ class StatePensionConnectorSpec
       val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAll}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.excludedAll}"))
           .willReturn(
             forbidden()
               .withBody(json.toString)
@@ -146,7 +146,7 @@ class StatePensionConnectorSpec
       val json = Json.parse("""{"code":"EXCLUSION_MANUAL_CORRESPONDENCE","message":"The customer needs to contact the National Insurance helpline"}""")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAllButDead}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.excludedAllButDead}"))
           .willReturn(forbidden().withBody(json.toString()))
       )
 
@@ -165,7 +165,7 @@ class StatePensionConnectorSpec
       val expectedExclusion = TestAccountBuilder.getRawJson(TestAccountBuilder.excludedAllButDeadMCI, "state-pension")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.excludedAllButDeadMCI}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.excludedAllButDeadMCI}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
@@ -190,7 +190,7 @@ class StatePensionConnectorSpec
         TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino, "state-pension")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.spaUnderConsiderationExclusionAmountDisNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
@@ -212,7 +212,7 @@ class StatePensionConnectorSpec
         TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionIoMNino, "state-pension")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionIoMNino}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.spaUnderConsiderationExclusionIoMNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
@@ -233,7 +233,7 @@ class StatePensionConnectorSpec
         TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino, "state-pension")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.spaUnderConsiderationExclusionMwrreNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
@@ -254,7 +254,7 @@ class StatePensionConnectorSpec
         TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino, "state-pension")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.spaUnderConsiderationExclusionOverSpaNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
@@ -275,7 +275,7 @@ class StatePensionConnectorSpec
         TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino, "state-pension")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.spaUnderConsiderationExclusionMultipleNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 
@@ -299,7 +299,7 @@ class StatePensionConnectorSpec
         TestAccountBuilder.getRawJson(TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino, "state-pension")
 
       wireMockServer.stubFor(
-        get(urlEqualTo(s"/ni/${TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino}"))
+        get(urlEqualTo(s"/ni/mdtp/${TestAccountBuilder.spaUnderConsiderationExclusionNoFlagNino}"))
           .willReturn(ok(Json.toJson(expectedExclusion).toString()))
       )
 

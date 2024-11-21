@@ -204,7 +204,7 @@ class StatePensionControllerISpec extends UnitSpec
       )
 
     "return a 200 when a successful request is sent" in new Test {
-      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
       val result = route(app, request)
@@ -221,7 +221,7 @@ class StatePensionControllerISpec extends UnitSpec
           StatePensionAmountRegular(0, 0, 0)
         ))
 
-      server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+      server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
         .willReturn(ok(Json.toJson(contractedOutResponse).toString)))
 
       val result = route(app, request)
@@ -253,7 +253,7 @@ class StatePensionControllerISpec extends UnitSpec
 
       "a national insurance exclusion is returned" in new Test {
 
-        server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
         val json = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
@@ -280,7 +280,7 @@ class StatePensionControllerISpec extends UnitSpec
 
         wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
-        server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(mqpResponse).toString)))
 
         val result = route(app, request)
@@ -298,7 +298,7 @@ class StatePensionControllerISpec extends UnitSpec
 
         wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
-        server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(forecastOnlyResponse).toString)))
 
         val result = route(app, request)
@@ -308,7 +308,7 @@ class StatePensionControllerISpec extends UnitSpec
       "a successful standard request is supplied" in new Test {
         wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
-        server2.stubFor(get(urlEqualTo(s"/ni/$nino"))
+        server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
           .willReturn(ok(Json.toJson(statePensionResponse).toString)))
 
         val result = route(app, request)
