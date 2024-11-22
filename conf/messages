@@ -95,6 +95,25 @@ nisp.print.your.state.pension.summary = Print your State Pension summary
 #**********************
 
 nisp.main.h2.whenWillIReachStatePensionAge = When will I reach State Pension age?
+nisp.main.spa = You will reach State Pension age on {0}
+nisp.main.spaNotAGuarantee = Your State Pension age and forecast are not a guarantee and are based on the current law. Your State Pension age may change in the future.
+nisp.main.caveats.new = Your forecast:
+nisp.main.howManyToContribute.single = assumes that you’ll contribute another year
+nisp.main.howManyToContribute = assumes that you’ll contribute another {0}
+
+nisp.main.howMuchWillIGet = How much will I get?
+nisp.main.chart.current = Current estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
+nisp.main.chart.forecast = Forecast if you contribute National Insurance until <span class="nowrap">5 April {0}</span>
+nisp.main.newStatePension = The full new State Pension is {0} a week.
+
+nisp.main.howCanIIncrease = How can I increase my State Pension?
+
+nisp.main.forecastChanges = Your forecast may change if there are any updates to your National Insurance information. You can {0}
+nisp.main.terms.and.conditions = find out more in the terms and conditions
+
+nisp.main.deferral.text = You can delay claiming your State Pension. This means you may get extra State Pension when you do claim it. {0}
+nisp.main.deferral.text.link = Find out about delaying your State Pension
+
 nisp.main.overseas.text.new = If you’ve lived or worked outside the UK, you may be able to use your time outside the UK to make up the 10 qualifying years you need to get any UK State Pension. {0}
 nisp.main.overseas.text.link = Find out more about living or working outside the UK
 
@@ -129,6 +148,20 @@ nisp.main.context.fillgaps.para1.futurePersonalMax =  You have shortfalls in you
 nisp.main.context.fillgaps.chart.maxamount = The most you can increase your forecast to is
 
 nisp.main.context.fillgaps.futureproof.para = You have years on your National Insurance record where you did not contribute enough. Filling years can improve your forecast.
+
+#*********************
+# Scenario messages - new UI messages
+#*********************
+
+nisp.main.context.fillGaps.gaps.plural = You have {0} gaps in your National Insurance record that you may be able to fill to increase your State Pension.
+nisp.main.context.fillGaps.gap.single = You have {0} gap in your National Insurance record that you may be able to fill to increase your State Pension.
+nisp.main.context.fillGaps.viewGaps = You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.
+
+nisp.main.context.cantFillGaps.p1 = You cannot increase your State Pension forecast. {0} a week is the most you can get.
+nisp.main.context.cantFillGaps.p2 = This means you are unable to pay for gaps in your National Insurance record online.
+
+nisp.main.context.additionalStatePension = You may get more than this if you have some Additional State Pension. {0}
+nisp.main.context.additionalStatePension.linktext = Find out about Additional State Pension and protected payment
 
 #**********************
 # Exclusion messages
@@ -439,10 +472,12 @@ nisp.mqp.forecastChanges.link = find out more in the terms and conditions
 nisp.mqp.howMuchWillIGet = How much will I get?
 nisp.mqp.doNotQualify = You do not qualify for State Pension.
 nisp.mqp.youNeed10Years.notPossible = You usually need at least 10 qualifying years on your National Insurance record to get any State Pension. You will not get these by {0}.
+nisp.mqp.currentQualifyingYears.single = You have {0} qualifying year on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
+nisp.mqp.currentQualifyingYears.plural = You have {0} qualifying years on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
+nisp.mqp.currentQualifyingYears.zero = You have no qualifying years on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
 
 nisp.mqp.howCanIIncrease = How can I increase my State Pension?
 nisp.mqp.fillingGaps = You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.
-
 
 nisp.mqp.cantFillGapsP1 = You cannot increase your State Pension forecast.
 nisp.mqp.cantFillGapsP2 = This means you are unable to pay for gaps in your National Insurance record online.
@@ -488,6 +523,14 @@ nisp.cope.table.estimate.title = Your COPE estimate is
 
 nisp.main.cope.link = Find out more about {0}
 nisp.main.cope.linktext = COPE and contracting out (opens in new tab)
+
+#*****************
+# COPE messages - New UI messages
+#*****************
+
+nisp.cope.contractedOut = Like most people, you were contracted out of the additional State Pension. This means you paid less National Insurance into your State Pension. Your State Pension forecast takes this into account.
+nisp.cope.contractedOut.findOutMore = Find out more about being contracted out of the State Pension
+nisp.cope.contractedOut.findOutNewStatePension = Find out more about the new State Pension
 
 #******************************
 # Not authorised IV messages

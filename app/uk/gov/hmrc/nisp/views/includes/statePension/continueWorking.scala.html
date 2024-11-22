@@ -1,0 +1,91 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.models.enums.Scenario
+@import uk.gov.hmrc.nisp.models.{SPChartModel, StatePension}
+@import uk.gov.hmrc.nisp.views.formatting.NispMoney
+@import uk.gov.hmrc.play.language.LanguageUtils
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
+@import uk.gov.hmrc.nisp.views.html.includes.{chart, BarChart}
+
+@this(
+        chart: chart,
+        barChart: BarChart,
+        langUtils: LanguageUtils,
+        p: P,
+        h2: H2,
+        link: Link
+)
+
+@(
+        statePension: StatePension,
+        yearsToContributeUntilPensionAge: Int,
+        currentChart: SPChartModel,
+        forecastChart: SPChartModel,
+        personalMaximumChart: SPChartModel
+)(
+        implicit messages: Messages
+)
+
+@if(statePension.mqpScenario.isDefined) {
+
+    @barChart(
+        chartKey = Html(messages(
+            "nisp.main.chart.forecast",
+            statePension.finalRelevantEndYear.toString)),
+        chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+        width = forecastChart.width,
+        specId = Some("continue_working__mqp_forecast__chart1")
+    )
+
+    @barChart(
+        chartKey = Html(messages(
+            "nisp.main.context.fillgaps.chart.maxamount")),
+        chartValue = Html(s"${NispMoney.pounds(personalMaximumChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+        width = personalMaximumChart.width,
+        specId = Some("continue_working__mqp_personal_max__chart2")
+    )
+
+} else {
+
+    @barChart(
+        chartKey = Html(messages(
+            "nisp.main.chart.lastprocessed.title",
+            statePension.earningsIncludedUpTo.getYear.toString
+        )),
+        chartValue = Html(s"${NispMoney.pounds(currentChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+        width = currentChart.width,
+        specId = Some("continue_working_current__chart1")
+    )
+
+    @barChart(
+        chartKey = Html(messages(
+            "nisp.main.chart.forecast",
+            statePension.finalRelevantEndYear.toString)),
+        chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+        width = forecastChart.width,
+        specId = Some("continue_working_forecast__chart2")
+    )
+
+    @barChart(
+        chartKey = Html(messages("nisp.main.context.fillgaps.chart.maxamount")),
+        chartValue = Html(s"${NispMoney.pounds(personalMaximumChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+        width = personalMaximumChart.width,
+        specId = Some("continue_working_personal_max__chart3")
+    )
+
+}

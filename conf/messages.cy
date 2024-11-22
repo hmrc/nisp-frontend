@@ -95,6 +95,22 @@ nisp.print.your.state.pension.summary = Argraffu crynodeb o’ch Pensiwn y Wladw
 #**********************
 
 nisp.main.h2.whenWillIReachStatePensionAge = Pryd byddaf yn cyrraedd oedran Pensiwn y Wladwriaeth?
+nisp.main.spa = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar {0}
+nisp.main.spaNotAGuarantee = Your State Pension age and forecast are not a guarantee and are based on the current law. Your State Pension age may change in the future.
+nisp.main.caveats.new = Eich rhagolwg:
+nisp.main.howManyToContribute.single = assumes that you’ll contribute another year
+nisp.main.howManyToContribute = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar {0}
+
+nisp.main.howMuchWillIGet = How much will I get?
+nisp.main.chart.current = Current estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
+nisp.main.chart.forecast = Forecast if you contribute National Insurance until <span class="nowrap">5 April {0}</span>
+nisp.main.newStatePension = The full new State Pension is {0} a week.
+
+nisp.main.howCanIIncrease = How can I increase my State Pension?
+
+nisp.main.forecastChanges = Your forecast may change if there are any updates to your National Insurance information. You can {0}
+nisp.main.terms.and.conditions = find out more in the terms and conditions
+
 nisp.main.overseas.text.new = Os ydych wedi byw neu wedi gweithio y tu allan i’r DU, efallai y byddwch yn gallu defnyddio’ch amser y tu allan i’r DU tuag at y 10 mlynedd sydd eu hangen arnoch er mwyn cael unrhyw Bensiwn Gwladwriaeth y DU. {0}
 nisp.main.overseas.text.link = Dysgwch ragor am fyw neu weithio y tu allan i’r DU
 
@@ -129,6 +145,20 @@ nisp.main.context.fillgaps.para1.futurePersonalMax = Mae gennych ddiffygion yn e
 nisp.main.context.fillgaps.chart.maxamount = Y mwyaf y gallwch gynyddu eich rhagolwg i, yw
 
 nisp.main.context.fillgaps.futureproof.para = Mae gennych flynyddoedd ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon. Gall llenwi blynyddoedd wella eich rhagolwg.
+
+#*********************
+# Scenario messages - new UI messages
+#*********************
+
+nisp.main.context.fillGaps.gaps.plural = You have {0} gaps in your National Insurance record that you may be able to fill to increase your State Pension.
+nisp.main.context.fillGaps.gap.single = You have {0} gap in your National Insurance record that you may be able to fill to increase your State Pension.
+nisp.main.context.fillGaps.viewGaps = You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.
+
+nisp.main.context.cantFillGaps.p1 = You cannot increase your State Pension forecast. {0} a week is the most you can get.
+nisp.main.context.cantFillGaps.p2 = This means you are unable to pay for gaps in your National Insurance record online.
+
+nisp.main.context.additionalStatePension = You may get more than this if you have some Additional State Pension. {0}
+nisp.main.context.additionalStatePension.linktext = Find out about Additional State Pension and protected payment
 
 #**********************
 # Exclusion messages
@@ -434,6 +464,7 @@ nisp.mqp.filling.may.plural = Efallai bydd llenwi rhai o’r blynyddoedd hyn yn 
 nisp.mqp.afterSpa = Ar ôl oedran Pensiwn y Wladwriaeth, {0} ni fyddwch bellach yn talu cyfraniadau Yswiriant Gwladol.
 nisp.mqp.whatElse = Beth arall allwch chi ei wneud
 nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael {0} os yw eich incwm mewn ymddeoliad yn isel.
+nisp.mqp.pensionCredit.linktext = Credyd Pensiwn (agor mewn tab newydd)
 nisp.mqp.moneyAdvice = Cysylltwch â’r {0} am gyngor di-duedd ac am ddim.
 nisp.mqp.moneyAdvice.linktext = Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)
 nisp.mqp.howManyToContribute = yn cymryd eich bod yn cyfrannu {0} arall
@@ -452,6 +483,9 @@ nisp.mqp.forecastChanges.link = ddysgu mwy yn y telerau ac amodau
 nisp.mqp.howMuchWillIGet = Faint fyddaf yn ei gael?
 nisp.mqp.doNotQualify = Nid ydych yn gymwys i gael Pensiwn y Wladwriaeth.
 nisp.mqp.youNeed10Years.notPossible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni allwch gael y rhain erbyn {0}.
+nisp.mqp.currentQualifyingYears.single = You have {0} qualifying year on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
+nisp.mqp.currentQualifyingYears.plural = You have {0} qualifying years on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
+nisp.mqp.currentQualifyingYears.zero = You have no qualifying years on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
 
 nisp.mqp.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
 nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
@@ -503,6 +537,13 @@ nisp.cope.table.estimate.title = Eich amcangyfrif COPE yw
 nisp.main.cope.link = Darganfyddwch fwy am {0}
 nisp.main.cope.linktext = COPE ac eithrio allan (agor mewn tab newydd)
 
+#*****************
+# COPE messages - New UI messages
+#*****************
+
+nisp.cope.contractedOut = Like most people, you were contracted out of the additional State Pension. This means you paid less National Insurance into your State Pension. Your State Pension forecast takes this into account.
+nisp.cope.contractedOut.findOutMore = Find out more about being contracted out of the State Pension
+nisp.cope.contractedOut.findOutNewStatePension = Find out more about the new State Pension
 
 #******************************
 # Not authorised IV messages
