@@ -551,7 +551,13 @@ class StatePensionMQPViewSpec
               .thenReturn(Future.successful(Right(Right(statePension(
                 pensionDate       = LocalDate.of(2018, 5, 4),
                 finalRelevantYear = "2017-18",
-                amounts           = statePensionAmounts(StatePensionAmountMaximum(2, 2, 12, 0, 0))
+                amounts           = statePensionAmounts(StatePensionAmountMaximum(
+                  yearsToWork   = 2,
+                  gapsToFill    = 2,
+                  weeklyAmount  = 12,
+                  monthlyAmount = 0,
+                  annualAmount  = 0
+                ))
               )))))
 
             when(mockNationalInsuranceService.getSummary(any())(any()))
@@ -613,7 +619,13 @@ class StatePensionMQPViewSpec
                 pensionDate           = LocalDate.of(2018, 5, 4),
                 finalRelevantYear     = "2017-18",
                 ageUnderConsideration = true,
-                amounts               = statePensionAmounts(StatePensionAmountMaximum(2, 2, 12, 0, 0))
+                amounts               = statePensionAmounts(StatePensionAmountMaximum(
+                  yearsToWork   = 2,
+                  gapsToFill    = 2,
+                  weeklyAmount  = 12,
+                  monthlyAmount = 0,
+                  annualAmount  = 0
+                ))
               )))))
 
             when(mockNationalInsuranceService.getSummary(any())(any()))
