@@ -172,35 +172,39 @@
         )
 
         @statePension.mqpScenario.map { mqp =>
+            @if(mqp == CanGetWithGaps) {
+                @p(
+                    content = HtmlContent(messages("nisp.mqp.fillingGaps")),
+                    specId  = Some("state_pension__mqp__filling_gaps")
+                )
+            }
             @if(mqp == CantGet) {
                 @if(numberOfPayableGaps > 0) {
                     @p(
-                        content = HtmlContent(messages("nisp.mqp.fillingGaps")),
-                        specId = Some("state_pension__mqp__filling_gaps")
+                        content = HtmlContent(messages("nisp.mqp.cantFillGapsP3")),
+                        specId  = Some("state_pension__mqp__cant_fill_gaps_p3")
                     )
                 } else {
                     @p(
                         content = HtmlContent(messages("nisp.mqp.cantFillGapsP1")),
-                        specId = Some("state_pension__mqp__cant_fill_gaps_p1")
-                    )
-
-                    @p(
-                        content = HtmlContent(messages("nisp.mqp.cantFillGapsP2")),
-                        specId = Some("state_pension__mqp__cant_fill_gaps_p2")
+                        specId  = Some("state_pension__mqp__cant_fill_gaps_p1")
                     )
                 }
+                @p(
+                    content = HtmlContent(messages("nisp.mqp.cantFillGapsP2")),
+                    specId  = Some("state_pension__mqp__cant_fill_gaps_p2")
+                )
             }
         }
-
 
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
                 @p(
                     content = HtmlContent(link(
                         href = routes.NIRecordController.showGaps.url,
-                        messageKey = "nisp.main.context.fillGaps.viewGapsAndCost",
+                        messageKey = "nisp.main.showyourrecord",
                         specId = Some("state_pension__mqp__cant_get_with_gaps"),
-                        classes = Some("govuk-button")
+                        classes = Some("govuk-button govuk-!-margin-top-4")
                     ))
                 )
             }
@@ -210,7 +214,7 @@
                         href = routes.NIRecordController.showFull.url,
                         messageKey = "nisp.main.showyourrecord",
                         specId = Some("state_pension__mqp__cant_get"),
-                        classes = Some("govuk-button")
+                        classes = Some("govuk-button govuk-!-margin-top-4")
                     ))
                 )
             }
