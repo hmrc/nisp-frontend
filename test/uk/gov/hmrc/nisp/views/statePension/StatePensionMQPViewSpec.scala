@@ -318,12 +318,12 @@ class StatePensionMQPViewSpec
             )
           }
 
-          "render page with 'You cannot improve your State Pension forecast.'" in {
+          "render page with 'You cannot increase your State Pension forecast.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__mqp__cant_fill_gaps_p1']",
-              "You cannot improve your State Pension forecast."
+              "You cannot increase your State Pension forecast."
             )
           }
 
