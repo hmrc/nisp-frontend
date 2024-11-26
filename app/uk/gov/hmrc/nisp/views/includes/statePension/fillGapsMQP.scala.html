@@ -27,7 +27,7 @@
 @(
     statePension: StatePension,
     forecastChart: SPChartModel,
-    numberOfGaps: Int,
+    numberOfGapsPayable: Int,
     personalMaximumChart: SPChartModel
 )(
     implicit messages: Messages
@@ -42,11 +42,11 @@
     specId = Some("fill_gaps_MQP__chart1")
 )
 
-@if(numberOfGaps == 1){
+@if(numberOfGapsPayable == 1){
     @p(
         content = Text(messages(
-            "nisp.main.context.fillGaps.gaps.single",
-            numberOfGaps
+            "nisp.main.context.fillGaps.gap.single",
+            numberOfGapsPayable
         )),
     specId = Some("state_pension__gaps_to_fill_MQP__p1_single")
     )
@@ -54,7 +54,7 @@
     @p(
         content = Text(messages(
             "nisp.main.context.fillGaps.gaps.plural",
-            numberOfGaps
+            numberOfGapsPayable
         )),
     specId = Some("state_pension__gaps_to_fill_MQP__p1_plural")
     )

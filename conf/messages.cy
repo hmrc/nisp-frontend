@@ -111,6 +111,9 @@ nisp.main.howCanIIncrease = How can I increase my State Pension?
 nisp.main.forecastChanges = Your forecast may change if there are any updates to your National Insurance information. You can {0}
 nisp.main.terms.and.conditions = find out more in the terms and conditions
 
+nisp.main.deferral.text = You can delay claiming your State Pension. This means you may get extra State Pension when you do claim it. {0}
+nisp.main.deferral.text.link = Find out about delaying your State Pension
+
 nisp.main.overseas.text.new = Os ydych wedi byw neu wedi gweithio y tu allan i’r DU, efallai y byddwch yn gallu defnyddio’ch amser y tu allan i’r DU tuag at y 10 mlynedd sydd eu hangen arnoch er mwyn cael unrhyw Bensiwn Gwladwriaeth y DU. {0}
 nisp.main.overseas.text.link = Dysgwch ragor am fyw neu weithio y tu allan i’r DU
 
@@ -467,6 +470,7 @@ nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael {0} os yw eich incwm
 nisp.mqp.pensionCredit.linktext = Credyd Pensiwn (agor mewn tab newydd)
 nisp.mqp.moneyAdvice = Cysylltwch â’r {0} am gyngor di-duedd ac am ddim.
 nisp.mqp.moneyAdvice.linktext = Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)
+
 nisp.mqp.howManyToContribute = yn cymryd eich bod yn cyfrannu {0} arall
 nisp.mqp.youCurrentlyHaveZero = Nid oes gennych unrhyw flynyddoedd ar eich cofnod ac rydych angen o leiaf {0} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydych angen o leiaf {1} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.

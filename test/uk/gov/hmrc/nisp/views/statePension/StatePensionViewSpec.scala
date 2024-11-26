@@ -16,11 +16,9 @@
 
 package uk.gov.hmrc.nisp.views.statePension
 
-import org.apache.commons.text.StringEscapeUtils
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
-import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsEmpty
@@ -57,11 +55,11 @@ class StatePensionViewSpec
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
-  val mockStatePensionService: StatePensionService           = mock[StatePensionService]
-  val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
-  val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
+  val mockStatePensionService: StatePensionService = mock[StatePensionService]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockPertaxHelper: PertaxHelper = mock[PertaxHelper]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -119,11 +117,969 @@ class StatePensionViewSpec
   lazy val abroadUserController: StatePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withSession(
-    SessionKeys.sessionId            -> s"session-${UUID.randomUUID()}",
+    SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
     SessionKeys.lastRequestTimestamp -> LocalDate.now.toEpochDay.toString
   )
 
   "The State Pension page" when {
+
+    "the user is a MQP" when {
+      "The scenario is continue working || No Gaps" when {
+
+        "State Pension view with MQP : No Gaps || Full Rate & Personal Max" should {
+
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
+            when(mockStatePensionService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(118.65, 590.10, 7081.15),
+                  StatePensionAmountForecast(10, 150.65, 676.80, 8121.59),
+                  StatePensionAmountMaximum(0, 0, 150.65, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2022, 6, 7),
+                "2021-22",
+                4,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 151.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = false
+              )
+              ))))
+
+            when(mockNationalInsuranceService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 4,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 0,
+                numberOfGapsPayable = 0,
+                Some(LocalDate.of(1989, 3, 6)),
+                homeResponsibilitiesProtection = false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
+              )
+              ))))
+
+          }
+
+          lazy val doc =
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+
+          "render with correct page title" in {
+            mockSetup
+            assertElementContainsText(
+              doc,
+              "head > title",
+              messages("nisp.main.h1.title") + Constants.titleSplitter + messages(
+                "nisp.title.extension"
+              ) + Constants.titleSplitter + messages("nisp.gov-uk")
+            )
+          }
+
+          "render page with Page Heading 'Your State Pension summary'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__pageheading']",
+              "Your State Pension summary"
+            )
+          }
+
+          "render page with heading 'When will I reach State Pension age?'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__h2_1']",
+              "When will I reach State Pension age?"
+            )
+          }
+
+          "render page with text 'You will reach State Pension age on 7 June 2022.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__p1']",
+              "You will reach State Pension age on 7 June 2022."
+            )
+          }
+
+          "render page with text 'Your State Pension age and forecast are not a guarantee and are based on the current law." +
+            " Your State Pension age may change in the future.' " in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__p2']",
+              "Your State Pension age and forecast are not a guarantee and are based on the current law. Your State Pension age may change in the future."
+            )
+          }
+
+          "render page with text 'Your forecast:'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__p_caveats']",
+              "Your forecast:"
+            )
+          }
+
+          "render page with bullet text 'is based on your National Insurance record up to 5th April 2016'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__ul__caveats__li1']",
+              "is based on your National Insurance record up to 5 April 2016"
+            )
+          }
+
+          "render page with bullet text 'assumes that you’ll contribute another 10 years'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__ul__caveats__li2__plural']",
+              "assumes that you’ll contribute another 10 years"
+            )
+          }
+
+          "render page with bullet text 'does not include any increase due to inflation'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__ul__caveats_inflation__li3']",
+              "does not include any increase due to inflation"
+            )
+          }
+
+          "render page with warning text" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "#state_pension__warning_text",
+              "! Warning Your State Pension forecast is for your information only. This service does not offer financial advice. " +
+                "When planning for your retirement, you should seek guidance or financial advice."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__warning__link']",
+              "/seek-financial-advice"
+            )
+          }
+
+          "render page with heading 'How much will I get?'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__h2_2']",
+              "How much will I get?"
+            )
+          }
+
+          "render page with text 'The full new State Pension is £151.65 a week.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='new_state_pension__p1']",
+              "The full new State Pension is £151.65 a week."
+            )
+          }
+
+          "render page with text and link 'Your forecast may change if there are any updates to your National Insurance information." +
+            " You can find out more in the terms and conditions.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__legal__forecast_changes__p']",
+              "Your forecast may change if there are any updates to your National Insurance information." +
+                " You can find out more in the terms and conditions."
+            )
+            mockSetup
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__legal__forecast_changes__link']",
+              "/check-your-state-pension/terms-and-conditions?showBackLink=true"
+            )
+          }
+
+          "render page with heading 'How can I increase my State Pension?'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__h2_3']",
+              "How can I increase my State Pension?"
+            )
+          }
+
+          "render page with button 'View your National Insurance Record'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__showyourrecord']",
+              "View your National Insurance record"
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__showyourrecord']",
+              "/check-your-state-pension/account/nirecord"
+            )
+          }
+
+          "render page with link 'Find out about National Insurance.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni']",
+              "Find out about National Insurance."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni']",
+              "https://www.gov.uk/national-insurance"
+            )
+          }
+
+          "render page with link 'Find out how much National Insurance you pay.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni_you_pay']",
+              "Find out how much National Insurance you pay."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni_you_pay']",
+              "https://www.gov.uk/national-insurance/how-much-you-pay"
+            )
+          }
+
+          "render page with link 'Find out about getting National Insurance credits.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni_credits']",
+              "Find out about getting National Insurance credits."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni_credits']",
+              "https://www.gov.uk/national-insurance-credits"
+            )
+          }
+
+          "render page with section 'Other ways to increase my income'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__h3_1']",
+              "Other ways to increase my income"
+            )
+          }
+
+          "render page with 'Home Responsibilities Protection' paragraph with link" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension_other_ways__p1']",
+              "If you claimed Child Benefit between 6 April 1978 and 5 April 2010, you may be able to claim " +
+                "Home Responsibilities Protection to fill gaps in your National Insurance record. Check if you are eligible to claim Home Responsibilities Protection."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__home_responsibilities_protection__link']",
+              "https://www.gov.uk/home-responsibilities-protection-hrp"
+            )
+          }
+
+          "render page with 'Pension Credit' paragraph with link" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension_other_ways__p2']",
+              "You may be able to claim Pension Credit if you’re on a low income. " +
+                "Find out about claiming Pension Credit."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__pension_credit__link']",
+              "https://www.gov.uk/pension-credit/overview"
+            )
+          }
+
+          "render page with 'Delaying your State Pension' paragraph with link" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__deferral__p1']",
+              "You can delay claiming your State Pension. " +
+                "This means you may get extra State Pension when you do claim it. " +
+                "Find out about delaying your State Pension."
+
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__deferral__link']",
+              "https://www.gov.uk/deferring-state-pension"
+            )
+          }
+
+          "render page with State Pension footer" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__footer_h2']",
+              "Get help"
+            )
+
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__footer_p1']",
+              "For more information on gaps in your National Insurance record contact the Future Pension Centre."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__footer_link']",
+              "https://www.gov.uk/future-pension-centre"
+            )
+          }
+
+          "render page with Print Link" in {
+            mockSetup
+            doc.getElementById("printLink") shouldNot be(null)
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__printlink']",
+              "Print your State Pension summary"
+            )
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__printlink']",
+              "#"
+            )
+          }
+
+          // MQP message
+          "render page with text 'You have 4 qualifying years on your National Insurance record." +
+            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__current_qualifying_years__plural']",
+              "You have 4 qualifying years on your National Insurance record. You usually need at least 10 qualifying years to get any State Pension."
+            )
+          }
+
+          // overseas message
+          "render page with text and link 'If you’ve lived or worked outside the UK...'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension_outside_uk__p1']",
+              "If you’ve lived or worked outside the UK, you may be able to use your time outside the UK " +
+                "to make up the 10 qualifying years you need to get any UK State Pension. " +
+                "Find out more about living or working outside the UK."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension_outside_uk__link']",
+              "https://www.gov.uk/new-state-pension/living-and-working-overseas"
+            )
+          }
+
+          // MQP bar charts
+          "render page with forecast chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working__mqp_forecast__chart1-key']",
+              "Forecast if you contribute National Insurance until 5 April 2022"
+            )
+          }
+
+          "render page with forecast chart text '£150.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working__mqp_forecast__chart1-value']",
+              "£150.65 a week"
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working__mqp_personal_max__chart2-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£150.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working__mqp_personal_max__chart2-value']",
+              "£150.65 a week"
+            )
+          }
+
+          // no gaps
+          "render page with text 'You cannot increase your State Pension forecast." +
+            " £150.65 a week is the most you can get.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__cant_pay_gaps__p1']",
+              "You cannot increase your State Pension forecast. " +
+                "£150.65 a week is the most you can get."
+            )
+          }
+
+          "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__cant_pay_gaps__p2']",
+              "This means you are unable to pay for gaps in your National Insurance record online."
+            )
+          }
+
+          // SPA not under consideration
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
+            mockSetup
+            assertPageDoesNotContainMessage(
+              doc,
+              "nisp.spa.under.consideration.title"
+            )
+          }
+
+          "Not render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            mockSetup
+            assertPageDoesNotContainDynamicMessage(
+              doc,
+              "nisp.spa.under.consideration.detail",
+              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
+            )
+          }
+
+        }
+
+        "State Pension view with MQP : No Gaps || Full Rate & Personal Max: With State Pension age under consideration message" should {
+
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
+            when(mockStatePensionService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(118.65, 590.10, 7081.15),
+                  StatePensionAmountForecast(20, 150.65, 676.80, 8121.59),
+                  StatePensionAmountMaximum(0, 0, 150.65, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2022, 6, 7),
+                "2021-22",
+                1,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 151.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = true
+              )
+              ))))
+
+            when(mockNationalInsuranceService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 1,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 0,
+                numberOfGapsPayable = 0,
+                Some(LocalDate.of(1989, 3, 6)),
+                homeResponsibilitiesProtection = false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
+              )
+              ))))
+          }
+
+          lazy val doc =
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+
+          lazy val abroadUserDoc =
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+
+          // MQP message
+          "render page with text 'You have 1 qualifying year on your National Insurance record." +
+            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__current_qualifying_years__single']",
+              "You have 1 qualifying year on your National Insurance record. " +
+                "You usually need at least 10 qualifying years to get any State Pension."
+            )
+          }
+
+          // Overseas message
+          "render page with text and link 'If you’ve lived or worked outside the UK...'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension_outside_uk__p1']",
+              "If you’ve lived or worked outside the UK, you may be able to use your time outside the UK " +
+                "to make up the 10 qualifying years you need to get any UK State Pension. " +
+                "Find out more about living or working outside the UK."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension_outside_uk__link']",
+              "https://www.gov.uk/new-state-pension/living-and-working-overseas"
+            )
+          }
+
+          // MQP bar charts
+          "render page with forecast chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working__mqp_forecast__chart1-key']",
+              "Forecast if you contribute National Insurance until 5 April 2022"
+            )
+          }
+
+          "render page with forecast chart text '£150.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working__mqp_forecast__chart1-value']",
+              "£150.65 a week"
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working__mqp_personal_max__chart2-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£150.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working__mqp_personal_max__chart2-value']",
+              "£150.65 a week"
+            )
+          }
+
+          "Not render page with current chart 'Current estimate based on your National Insurance record up to'" in {
+            mockSetup
+            assertPageDoesNotContainMessage(
+              doc,
+              "nisp.main.chart.current"
+            )
+
+          }
+
+          // No gaps
+          "render page with text 'You cannot increase your State Pension forecast. £150.65 a week is the most you can get.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__cant_pay_gaps__p1']",
+              "You cannot increase your State Pension forecast." +
+                " £150.65 a week is the most you can get."
+            )
+          }
+
+          "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__cant_pay_gaps__p2']",
+              "This means you are unable to pay for gaps in your National Insurance record online."
+            )
+          }
+
+          // SPA under consideration message
+          "render page with Heading 'Proposed change to your State Pension age'" in {
+            mockSetup
+            assertEqualsText(
+              abroadUserDoc,
+              "[data-spec='state_pension_age_under_consideration__h2_1']",
+              "Proposed change to your State Pension age"
+            )
+          }
+
+          "render page with text 'You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year.'" in {
+            mockSetup
+            assertEqualsText(
+              abroadUserDoc,
+              "[data-spec='state_pension_age_under_consideration__p1']",
+              "You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year."
+            )
+          }
+        }
+
+      }
+
+      "The scenario is continue working || Fill Gaps" when {
+
+        "State Pension view with MQP :  Personal Max" should {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
+            when(mockStatePensionService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(149.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 148.71, 590.10, 7081.15),
+                  StatePensionAmountMaximum(4, 2, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                0,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 149.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = false
+              )
+              ))))
+
+            when(mockNationalInsuranceService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 0,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 1,
+                numberOfGapsPayable = 1,
+                Some(LocalDate.of(1954, 3, 6)),
+                homeResponsibilitiesProtection = false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
+                ),
+                reducedRateElection = false
+              )
+              ))))
+
+          }
+
+          lazy val doc =
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+
+          "render page with text 'You do not qualify for State Pension'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__do_not_qualify']",
+              "You do not qualify for State Pension."
+            )
+          }
+
+          // MQP message
+          "render page with text 'You have no qualifying years on your National Insurance record." +
+            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__no_qualifying_years']",
+              "You have no qualifying years on your National Insurance record." +
+                " You usually need at least 10 qualifying years to get any State Pension."
+            )
+          }
+
+          // Overseas message
+          "render page with text and link 'If you’ve lived or worked outside the UK...'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension_outside_uk__p1']",
+              "If you’ve lived or worked outside the UK, you may be able to use your time outside the UK " +
+                "to make up the 10 qualifying years you need to get any UK State Pension. " +
+                "Find out more about living or working outside the UK."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension_outside_uk__link']",
+              "https://www.gov.uk/new-state-pension/living-and-working-overseas"
+            )
+          }
+
+          // MQP bar charts
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_MQP__chart1-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£148.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_MQP__chart1-value']",
+              "£148.71 a week"
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_MQP__chart2-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£149.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_MQP__chart2-value']",
+              "£149.71 a week"
+            )
+          }
+
+          "Not render page with current chart 'Current estimate based on your National Insurance record up to'" in {
+            mockSetup
+            assertPageDoesNotContainMessage(
+              doc,
+              "nisp.main.chart.current"
+            )
+
+          }
+
+          // Fill gaps
+          "render page with text 'You have 1 gap in your National Insurance record that you may be able to fill to increase your State Pension'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__gaps_to_fill_MQP__p1_single']",
+              "You have 1 gap in your National Insurance record that you may be able to fill to increase your State Pension."
+            )
+          }
+
+          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__view_gaps__p1']",
+              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
+            )
+          }
+
+          // SPA not under consideration
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
+            mockSetup
+            assertPageDoesNotContainMessage(
+              doc,
+              "nisp.spa.under.consideration.title"
+            )
+          }
+
+          "Not render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            mockSetup
+            assertPageDoesNotContainDynamicMessage(
+              doc,
+              "nisp.spa.under.consideration.detail",
+              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
+            )
+          }
+
+        }
+
+        "State Pension view with MQP : Personal Max: With State Pension age under consideration message" should {
+
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
+            when(mockStatePensionService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(StatePension(
+                LocalDate.of(2016, 4, 5),
+                amounts = StatePensionAmounts(
+                  protectedPayment = false,
+                  StatePensionAmountRegular(149.71, 590.10, 7081.15),
+                  StatePensionAmountForecast(4, 148.71, 590.10, 7081.15),
+                  StatePensionAmountMaximum(4, 2, 149.71, 590.10, 7081.15),
+                  StatePensionAmountRegular(0, 0, 0)
+                ),
+                pensionAge = 67,
+                LocalDate.of(2020, 6, 7),
+                "2019-20",
+                1,
+                pensionSharingOrder = false,
+                currentFullWeeklyPensionAmount = 149.65,
+                reducedRateElection = false,
+                statePensionAgeUnderConsideration = true
+              )
+              ))))
+
+            when(mockNationalInsuranceService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+                qualifyingYears = 1,
+                qualifyingYearsPriorTo1975 = 0,
+                numberOfGaps = 2,
+                numberOfGapsPayable = 2,
+                Some(LocalDate.of(1954, 3, 6)),
+                homeResponsibilitiesProtection = false,
+                LocalDate.of(2017, 4, 5),
+                List(
+
+                  NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                ),
+                reducedRateElection = false
+              )
+              ))))
+          }
+
+          lazy val doc =
+            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+          lazy val abroadUserDoc =
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+
+          // MQP message
+          "render page with text 'You have 1 qualifying year on your National Insurance record." +
+            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__current_qualifying_years__single']",
+              "You have 1 qualifying year on your National Insurance record. " +
+                "You usually need at least 10 qualifying years to get any State Pension."
+            )
+          }
+
+          // Overseas message
+          "render page with text and link 'If you’ve lived or worked outside the UK...'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension_outside_uk__p1']",
+              "If you’ve lived or worked outside the UK, you may be able to use your time outside the UK " +
+                "to make up the 10 qualifying years you need to get any UK State Pension. " +
+                "Find out more about living or working outside the UK."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension_outside_uk__link']",
+              "https://www.gov.uk/new-state-pension/living-and-working-overseas"
+            )
+          }
+
+          // MQP bar charts
+          "render page with forecast chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_MQP__chart1-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£148.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_MQP__chart1-value']",
+              "£148.71 a week"
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_MQP__chart2-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£149.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_MQP__chart2-value']",
+              "£149.71 a week"
+            )
+          }
+
+          "Not render page with current chart 'Current estimate based on your National Insurance record up to'" in {
+            mockSetup
+            assertPageDoesNotContainMessage(
+              doc,
+              "nisp.main.chart.current"
+            )
+
+          }
+
+          // Fill gaps
+          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__gaps_to_fill_MQP__p1_plural']",
+              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
+            )
+          }
+
+          // SPA under consideration message
+          "render page with Heading 'Proposed change to your State Pension age'" in {
+            mockSetup
+            assertEqualsText(
+              abroadUserDoc,
+              "[data-spec='state_pension_age_under_consideration__h2_1']",
+              "Proposed change to your State Pension age"
+            )
+          }
+
+          "render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
+            mockSetup
+            assertEqualsText(
+              abroadUserDoc,
+              "[data-spec='state_pension_age_under_consideration__p1']",
+              "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
+            )
+          }
+
+
+        }
+
+      }
+    }
 
     "the user is a NON-MQP" when {
 
@@ -176,9 +1132,7 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
+          // static content
           "render with correct page title" in {
             mockSetup
             assertElementContainsText(
@@ -190,215 +1144,125 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with Heading 'Your State Pension' " in {
+          "render page with Page Heading 'Your State Pension summary'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_page_heading__h1']",
-              "nisp.main.h1.title"
+              "[data-spec='state_pension__pageheading']",
+              "Your State Pension summary"
             )
           }
 
-          "render page with text 'You can get your State Pension on 7 june 2020' " in {
+          "render page with heading 'When will I reach State Pension age?'" in {
             mockSetup
-            assertEqualsValue(
-              doc,
-              "[data-component='nisp_panel'] [data-component='nisp_panel__title']",
-              messages("nisp.main.basedOn") + " " +
-                langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
-            )
-          }
-
-          "render page with text 'Your forecast is £148.71 a week, £590.10 a month, £7,081.15 a year' " in {
-            mockSetup
-            val sMessage =
-              messages("nisp.main.caveats") + " " +
-                messages("nisp.is") + " £148.71 " +
-                messages("nisp.main.week") + ", £590.10 " +
-                messages("nisp.main.month") + ", £7,081.15 " +
-                messages("nisp.main.year")
-            assertEqualsValue(
-              doc,
-              "[data-spec='state_pension__panel1__caveats']",
-              sMessage
-            )
-          }
-
-          "render page with text 'Your forecast '" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__p_caveats__forecast']",
-              "nisp.main.caveats"
-            )
-          }
-
-          "render page with text 'is not a guarantee and is based on the current law '" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__ul__caveats__forecast_scenario__1']",
-              "nisp.main.notAGuarantee"
-            )
-          }
-
-          "render page with text 'does not include any increase due to inflation '" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__ul__caveats__forecast_scenario__2']",
-              "nisp.main.inflation"
-            )
-          }
-
-          "render page with Heading 'You need to continue to contribute National Insurance to reach your forecast'" in {
-            mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
               "[data-spec='state_pension__h2_1']",
-              "nisp.main.continueContribute"
+              "When will I reach State Pension age?"
             )
           }
 
-          "render page with text 'Estimate based on your National Insurance record up to '" in {
+          "render page with text 'You will reach State Pension age on 7 June 2020.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__chart1'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.lastprocessed.title",
-              "2016"
+              "[data-spec='state_pension__p1']",
+              "You will reach State Pension age on 7 June 2020."
             )
           }
 
-          "render page with text '£149.71 a week '" in {
+          "render page with text 'Your State Pension age and forecast are not a guarantee and are based on the current law." +
+            " Your State Pension age may change in the future.' " in {
             mockSetup
-            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
-              sMessage
+              "[data-spec='state_pension__p2']",
+              "Your State Pension age and forecast are not a guarantee and are based on the current law. Your State Pension age may change in the future."
             )
           }
 
-          "render page with text 'Forecast if you contribute until '" in {
+          "render page with text 'Your forecast:'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__chart3'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.spa.title",
-              "2020"
+              "[data-spec='state_pension__p_caveats']",
+              "Your forecast:"
             )
           }
 
-          "render page with text '£148.71 a week '" in {
+          "render page with bullet text 'is based on your National Insurance record up to 5th April 2016'" in {
             mockSetup
-            val sMessage = "£148.71 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__chart3'] [data-component='nisp_chart__inner_text']",
-              sMessage
+              "[data-spec='state_pension__ul__caveats__li1']",
+              "is based on your National Insurance record up to 5 April 2016"
             )
           }
 
-          "render page with text 'You can improve your forecast'" in {
+          "render page with bullet text 'assumes that you’ll contribute another 4 years'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='fill_gaps__h2_1']",
-              "nisp.main.context.fillGaps.improve.title"
+              "[data-spec='state_pension__ul__caveats__li2__plural']",
+              "assumes that you’ll contribute another 4 years"
             )
           }
 
-          "render page with text 'You have years on your National Insurance record where you did not contribute enough.'" in {
+          "render page with bullet text 'does not include any increase due to inflation'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='fill_gaps__p1b']",
-              "nisp.main.context.fillgaps.para1.plural"
+              "[data-spec='state_pension__ul__caveats_inflation__li3']",
+              "does not include any increase due to inflation"
             )
           }
 
-          "render page with text 'filling years can improve your forecast.'" in {
+          "render page with warning text" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='fill_gaps__ul__improve__li1']",
-              "nisp.main.context.fillgaps.bullet1"
+              "#state_pension__warning_text",
+              "! Warning Your State Pension forecast is for your information only. This service does not offer financial advice. " +
+                "When planning for your retirement, you should seek guidance or financial advice."
             )
-          }
 
-          "render page with text 'you only need to fill 2 years to get the most you can'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='fill_gaps__ul__improve__li3']",
-              "nisp.main.context.fillgaps.bullet2.plural",
-              "2"
-            )
-          }
-
-          "render page with text 'The most you can get by filling any 2 years in your record is'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__title']",
-              "nisp.main.context.fillgaps.chart.plural",
-              "2"
-            )
-          }
-
-          "render page with text '£149.71 a week'" in {
-            mockSetup
-            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with link 'Gaps in your record and the cost of filling them'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__link_1']",
-              "nisp.main.context.fillGaps.viewGapsAndCost"
-            )
-          }
-
-          "render page with href link 'Gaps in your record and the cost of filling them'" in {
-            mockSetup
             assertLinkHasValue(
               doc,
-              "[data-spec='fill_gaps__link_1']",
-              "/check-your-state-pension/account/nirecord/gaps"
+              "[data-spec='state_pension__warning__link']",
+              "/seek-financial-advice"
             )
           }
 
-          "render page with text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
+          "render page with heading 'How much will I get?'" in {
             mockSetup
-            assertEqualsValue(
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__h2_2']",
+              "How much will I get?"
+            )
+          }
+
+          "render page with text 'The full new State Pension is £149.65 a week.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='new_state_pension__p1']",
+              "The full new State Pension is £149.65 a week."
+            )
+          }
+
+          "render page with href text 'Your forecast may change if there are any updates to your National Insurance information." +
+            " You can find out more in the terms and conditions.'" in {
+            mockSetup
+            assertEqualsText(
               doc,
               "[data-spec='state_pension__legal__forecast_changes__p']",
-              messages("nisp.legal.forecastChanges", messages("nisp.legal.terms.and.conditions")) + "."
-            )
-            assertLinkHasValue(
-              doc,
-              "[data-spec='state_pension__legal__forecast_changes__link']",
-              "/check-your-state-pension/terms-and-conditions?showBackLink=true"
+              "Your forecast may change if there are any updates to your National Insurance information. You can find out more in the terms and conditions."
             )
           }
 
-          "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions -terms and condition'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__legal__forecast_changes__link']",
-              "nisp.legal.terms.and.conditions"
-            )
-          }
-
-          "render page with href link 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions -terms and condition'" in {
+          "render page with href link 'Your forecast may be different if there are any changes to your National Insurance information. " +
+            "There is more about this in the terms and conditions -terms and condition'" in {
             mockSetup
             assertLinkHasValue(
               doc,
@@ -407,16 +1271,245 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
+          "render page with heading 'How can I increase my State Pension?'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__h2_3']",
+              "How can I increase my State Pension?"
+            )
+          }
 
+          "render page with button 'View your National Insurance Record'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__showyourrecord']",
+              "View your National Insurance record"
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__showyourrecord']",
+              "/check-your-state-pension/account/nirecord"
+            )
+          }
+
+          "render page with link 'Find out about National Insurance.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni']",
+              "Find out about National Insurance."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni']",
+              "https://www.gov.uk/national-insurance"
+            )
+          }
+
+          "render page with link 'Find out how much National Insurance you pay.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni_you_pay']",
+              "Find out how much National Insurance you pay."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni_you_pay']",
+              "https://www.gov.uk/national-insurance/how-much-you-pay"
+            )
+          }
+
+          "render page with link 'Find out about getting National Insurance credits.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni_credits']",
+              "Find out about getting National Insurance credits."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__mqp__find_out_ni_credits']",
+              "https://www.gov.uk/national-insurance-credits"
+            )
+          }
+
+          "render page with section 'Other ways to increase my income'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__h3_1']",
+              "Other ways to increase my income"
+            )
+          }
+
+          "render page with 'Home Responsibilities Protection' paragraph with link" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension_other_ways__p1']",
+              "If you claimed Child Benefit between 6 April 1978 and 5 April 2010, you may be able to claim " +
+                "Home Responsibilities Protection to fill gaps in your National Insurance record. Check if you are eligible to claim Home Responsibilities Protection."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__home_responsibilities_protection__link']",
+              "https://www.gov.uk/home-responsibilities-protection-hrp"
+            )
+          }
+
+          "render page with 'Pension Credit' paragraph with link" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension_other_ways__p2']",
+              "You may be able to claim Pension Credit if you’re on a low income. " +
+                "Find out about claiming Pension Credit."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__pension_credit__link']",
+              "https://www.gov.uk/pension-credit/overview"
+            )
+          }
+
+          "render page with 'Delaying your State Pension' paragraph with link" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__deferral__p1']",
+              "You can delay claiming your State Pension. " +
+                "This means you may get extra State Pension when you do claim it. " +
+                "Find out about delaying your State Pension."
+
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__deferral__link']",
+              "https://www.gov.uk/deferring-state-pension"
+            )
+          }
+
+          "render page with State Pension footer" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__footer_h2']",
+              "Get help"
+            )
+
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__footer_p1']",
+              "For more information on gaps in your National Insurance record contact the Future Pension Centre."
+            )
+
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__footer_link']",
+              "https://www.gov.uk/future-pension-centre"
+            )
+          }
+
+          "render page with Print Link" in {
+            mockSetup
+            doc.getElementById("printLink") shouldNot be(null)
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__printlink']",
+              "Print your State Pension summary"
+            )
+            assertLinkHasValue(
+              doc,
+              "[data-spec='state_pension__printlink']",
+              "#"
+            )
+          }
+
+          // Bar charts - Fill gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
+            )
+          }
+
+          "render page with current chart text '£149.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_current__chart1-value']",
+              "£149.71 a week"
+            )
+          }
+
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£148.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_forecast__chart2-value']",
+              "£148.71 a week"
+            )
+          }
+
+          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
+              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£149.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
+              "£149.71 a week"
+            )
+          }
+
+          // Fill gaps
+          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__view_gaps__p1']",
+              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
+            )
+          }
+
+          // SPA not under consideration
           "Not render page with heading 'Proposed change to your State Pension age'" in {
             mockSetup
             assertPageDoesNotContainMessage(
@@ -433,53 +1526,6 @@ class StatePensionViewSpec
               langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
             )
           }
-
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
-            )
-          }
-
-          "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
-            )
-          }
-
         }
 
         "State Pension view with NON-MQP : Personal Max: With State Pension age under consideration message" should {
@@ -529,83 +1575,101 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
           lazy val abroadUserDoc =
-          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-          // overseas message
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
+            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+
+          // Bar charts - Fill gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
+            )
+          }
+
+          "render page with current chart text '£149.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_current__chart1-value']",
+              "£149.71 a week"
+            )
+          }
+
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£148.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_forecast__chart2-value']",
+              "£148.71 a week"
+            )
+          }
+
+          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
+              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£149.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
+              "£149.71 a week"
+            )
+          }
+
+          // Fill gaps
+          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__view_gaps__p1']",
+              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
+            )
+          }
 
           // SPA under consideration message
           "render page with Heading 'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               abroadUserDoc,
               "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "nisp.spa.under.consideration.title"
+              "Proposed change to your State Pension age"
             )
           }
 
           "render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               abroadUserDoc,
               "[data-spec='state_pension_age_under_consideration__p1']",
-              "nisp.spa.under.consideration.detail",
-              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
+              "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
             )
           }
 
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
-            )
-          }
-
-          "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
-            )
-          }
         }
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65" should {
@@ -655,230 +1719,81 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
-          "render with correct page title" in {
+          // Bar charts - Fill gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               doc,
-              "head > title",
-              messages("nisp.main.h1.title")
-                + Constants.titleSplitter
-                + messages("nisp.title.extension")
-                + Constants.titleSplitter
-                + messages("nisp.gov-uk")
+              "dt[data-spec='fill_gaps_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
-          "render page with Heading 'Your State Pension' " in {
+          "render page with current chart text '£162.34 a week'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_page_heading__h1']",
-              "nisp.main.h1.title"
+              "dd[data-spec='fill_gaps_current__chart1-value']",
+              "£162.34 a week"
             )
           }
 
-          "render page with text 'You can get your State Pension on 7 june 2020' " in {
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
             mockSetup
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_panel'] [data-component='nisp_panel__title']",
-              messages("nisp.main.basedOn") + " " +
-                langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
+              "dt[data-spec='fill_gaps_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
             )
           }
 
-          "render page with text 'Your forecast is £168.08 a week, £590.10 a month, £7,081.15 a year' " in {
+          "render page with forecast chart text '£168.08 a week'" in {
             mockSetup
-            val sMessage =
-              messages("nisp.main.caveats") + " " +
-                messages("nisp.is") + " £168.08 " +
-                messages("nisp.main.week") + ", £590.10 " +
-                messages("nisp.main.month") + ", £7,081.15 " +
-                messages("nisp.main.year")
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__panel1__caveats']",
-              sMessage
+              "dd[data-spec='fill_gaps_forecast__chart2-value']",
+              "£168.08 a week"
             )
           }
 
-          "render page with text 'Your forecast '" in {
+          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__p_caveats__forecast']",
-              "nisp.main.caveats"
+              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
+              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
             )
           }
 
-          "render page with text 'is not a guarantee and is based on the current law '" in {
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__ul__caveats__forecast_scenario__1']",
-              "nisp.main.notAGuarantee"
+              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
             )
           }
 
-          "render page with text 'does not include any increase due to inflation '" in {
+          "render page with personal max chart text '£172.71 a week'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__ul__caveats__forecast_scenario__2']",
-              "nisp.main.inflation"
+              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
+              "£172.71 a week"
             )
           }
 
-          "render page with Heading 'You need to continue to contribute National Insurance to reach your forecast'" in {
+          // Fill gaps
+          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__h2_1']",
-              "nisp.main.continueContribute"
+              "[data-spec='state_pension__view_gaps__p1']",
+              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
             )
           }
 
-          "render page with text 'Estimate based on your National Insurance record up to '" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='state_pension__chart1'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.lastprocessed.title",
-              "2016"
-            )
-          }
-
-          "render page with text '£162.34 a week '" in {
-            mockSetup
-            val sMessage = "£162.34 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with text 'Forecast if you contribute enough in year up to 5 April 2016'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__chart2'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.estimateIfYouContinue2016"
-            )
-          }
-
-          "render page with text '£168.08 a week '" in {
-            mockSetup
-            val sMessage = "£168.08 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='state_pension__chart2'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with text 'You can improve your forecast'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__h2_1']",
-              "nisp.main.context.fillGaps.improve.title"
-            )
-          }
-
-          "render page with text 'You have years on your National Insurance record where you did not contribute enough.'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__p1b']",
-              "nisp.main.context.fillgaps.para1.plural"
-            )
-          }
-
-          "render page with text 'filling years can improve your forecast.'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__ul__improve__li1']",
-              "nisp.main.context.fillgaps.bullet1"
-            )
-          }
-
-          "render page with text 'you only need to fill 2 years to get the most you can'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='fill_gaps__ul__improve__li3']",
-              "nisp.main.context.fillgaps.bullet2.plural",
-              "2"
-            )
-          }
-
-          "render page with text 'The most you can get by filling any 2 years in your record is'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__title']",
-              "nisp.main.context.fillgaps.chart.plural",
-              "2"
-            )
-          }
-
-          "render page with text '£172.71 a week'" in {
-            mockSetup
-            val sMessage = "£172.71 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with link 'Gaps in your record and the cost of filling them'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__link_1']",
-              "nisp.main.context.fillGaps.viewGapsAndCost"
-            )
-          }
-
-          "render page with href link 'Gaps in your record and the cost of filling them'" in {
-            mockSetup
-            assertLinkHasValue(
-              doc,
-              "[data-spec='fill_gaps__link_1']",
-              "/check-your-state-pension/account/nirecord/gaps"
-            )
-          }
-
-          "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
-            mockSetup
-            assertEqualsValue(
-              doc,
-              "[data-spec='state_pension__legal__forecast_changes__p']",
-              messages("nisp.legal.forecastChanges", messages("nisp.legal.terms.and.conditions")) + "."
-            )
-            assertLinkHasValue(
-              doc,
-              "[data-spec='state_pension__legal__forecast_changes__link']",
-              "/check-your-state-pension/terms-and-conditions?showBackLink=true"
-            )
-          }
-
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
-
+          // SPA not under consideration
           "Not render page with heading 'Proposed change to your State Pension age'" in {
             mockSetup
             assertPageDoesNotContainMessage(
@@ -895,53 +1810,7 @@ class StatePensionViewSpec
               langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
             )
           }
-          /*Ends*/
 
-          "render page with heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
-            )
-          }
-
-          "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
-            )
-          }
         }
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65: With State Pension age under consideration message" should {
@@ -994,84 +1863,99 @@ class StatePensionViewSpec
           lazy val abroadUserDoc =
             asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
-          // overseas message
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
+          // Bar charts - Fill gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
+            )
+          }
+
+          "render page with current chart text '£162.34 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_current__chart1-value']",
+              "£162.34 a week"
+            )
+          }
+
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£168.08 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_forecast__chart2-value']",
+              "£168.08 a week"
+            )
+          }
+
+          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
+              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£172.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
+              "£172.71 a week"
+            )
+          }
+
+          // Fill gaps
+          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__view_gaps__p1']",
+              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
+            )
+          }
 
           // SPA under consideration message
           "render page with Heading 'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               abroadUserDoc,
               "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "nisp.spa.under.consideration.title"
+              "Proposed change to your State Pension age"
             )
           }
 
           "render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               abroadUserDoc,
               "[data-spec='state_pension_age_under_consideration__p1']",
-              "nisp.spa.under.consideration.detail",
-              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
-            )
-          }
-          /*Ends*/
-
-          // deferral message
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
+              "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
             )
           }
 
-          "render page with text 'You can put off claiming your State Pension from 7 June 2020. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
-            )
-          }
         }
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps" should {
@@ -1121,233 +2005,81 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
-          "render with correct page title" in {
+          // Bar charts - Fill gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               doc,
-              "head > title",
-              messages("nisp.main.h1.title")
-                + Constants.titleSplitter
-                + messages("nisp.title.extension")
-                + Constants.titleSplitter
-                + messages("nisp.gov-uk")
+              "dt[data-spec='fill_gaps_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
-          "render page with Heading 'Your State Pension' " in {
+          "render page with current chart text '£133.71 a week'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_page_heading__h1']",
-              "nisp.main.h1.title"
+              "dd[data-spec='fill_gaps_current__chart1-value']",
+              "£133.71 a week"
             )
           }
 
-          "render page with text 'You can get your State Pension on 7 june 2017' " in {
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
             mockSetup
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_panel'] [data-component='nisp_panel__title']",
-              messages("nisp.main.basedOn") + " " + langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
+              "dt[data-spec='fill_gaps_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
             )
           }
 
-          "render page with text 'Your forecast is £148.71 a week, £590.10 a month, £7,081.15 a year' " in {
+          "render page with forecast chart text '£148.71 a week'" in {
             mockSetup
-            val sMessage =
-              messages("nisp.main.caveats") + " " +
-                messages("nisp.is") + " £148.71 " +
-                messages("nisp.main.week") + ", £590.10 " +
-                messages("nisp.main.month") + ", £7,081.15 " +
-                messages("nisp.main.year")
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__panel1__caveats']",
-              sMessage
+              "dd[data-spec='fill_gaps_forecast__chart2-value']",
+              "£148.71 a week"
             )
           }
 
-          "render page with text 'Your forecast '" in {
+          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__p_caveats__forecast']",
-              "nisp.main.caveats"
+              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
+              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
             )
           }
 
-          "render page with text 'is not a guarantee and is based on the current law '" in {
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__ul__caveats__forecast_scenario__1']",
-              "nisp.main.notAGuarantee"
+              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
             )
           }
 
-          "render page with text 'does not include any increase due to inflation '" in {
+          "render page with personal max chart text '£149.71 a week'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__ul__caveats__forecast_scenario__2']",
-              "nisp.main.inflation"
+              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
+              "£149.71 a week"
             )
           }
 
-          "render page with Heading 'You need to continue to contribute National Insurance to reach your forecast'" in {
+          // Fill gaps
+          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__h2_1']",
-              "nisp.main.continueContribute"
+              "[data-spec='state_pension__view_gaps__p1']",
+              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
             )
           }
 
-          "render page with text 'Estimate based on your National Insurance record up to '" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='state_pension__chart1'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.lastprocessed.title",
-              "2016"
-            )
-          }
-
-          "render page with text '£133.71 a week '" in {
-            mockSetup
-            val sMessage = "£133.71 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='state_pension__chart1'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with text 'Forecast if you contribute until '" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='state_pension__chart3'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.spa.title",
-              "2020"
-            )
-          }
-
-          "render page with text '£148.71 a week '" in {
-            mockSetup
-            val sMessage = "£148.71 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='state_pension__chart3'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with text 'You can improve your forecast'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__h2_1']",
-              "nisp.main.context.fillGaps.improve.title"
-            )
-          }
-
-          "render page with text 'You have years on your National Insurance record where you did not contribute enough.'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__p1b']",
-              "nisp.main.context.fillgaps.para1.plural"
-            )
-          }
-
-          "render page with text 'filling years can improve your forecast.'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__ul__improve__li1']",
-              "nisp.main.context.fillgaps.bullet1"
-            )
-          }
-
-          "render page with text 'you only need to fill 2 years to get the most you can'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='fill_gaps__ul__improve__li3']",
-              "nisp.main.context.fillgaps.bullet2.plural",
-              "2"
-            )
-          }
-
-          "render page with text 'The most you can get by filling any 2 years in your record is'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__title']",
-              "nisp.main.context.fillgaps.chart.plural",
-              "2"
-            )
-          }
-
-          "render page with text '£149.71 a week'" in {
-            mockSetup
-            val sMessage = "£149.71 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='fill_gaps__chart3'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with link 'Gaps in your record and the cost of filling them'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='fill_gaps__link_1']",
-              "nisp.main.context.fillGaps.viewGapsAndCost"
-            )
-          }
-
-          "render page with href link 'Gaps in your record and the cost of filling them'" in {
-            mockSetup
-            assertLinkHasValue(
-              doc,
-              "[data-spec='fill_gaps__link_1']",
-              "/check-your-state-pension/account/nirecord/gaps"
-            )
-          }
-
-          "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
-            mockSetup
-            assertEqualsValue(
-              doc,
-              "[data-spec='state_pension__legal__forecast_changes__p']",
-              messages("nisp.legal.forecastChanges", messages("nisp.legal.terms.and.conditions")) + "."
-            )
-            assertLinkHasValue(
-              doc,
-              "[data-spec='state_pension__legal__forecast_changes__link']",
-              "/check-your-state-pension/terms-and-conditions?showBackLink=true"
-            )
-          }
-
-          /*overseas message*/
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
-          /*Ends*/
-
-          /*Start of Non SPA Checks*/
+          // SPA not under consideration
           "Not render page with Heading 'Proposed change to your State Pension age'" in {
             mockSetup
             assertPageDoesNotContainMessage(
@@ -1364,53 +2096,7 @@ class StatePensionViewSpec
               langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
             )
           }
-          /*Ends*/
 
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
-            )
-          }
-
-          "render page with text 'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
-            )
-          }
         }
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps: With State Pension age under consideration message" should {
@@ -1463,84 +2149,99 @@ class StatePensionViewSpec
           lazy val abroadUserDoc =
             asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
-          // overseas message
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
+          // Bar charts - Fill gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
+            )
+          }
+
+          "render page with current chart text '£133.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_current__chart1-value']",
+              "£133.71 a week"
+            )
+          }
+
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£148.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_forecast__chart2-value']",
+              "£148.71 a week"
+            )
+          }
+
+          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
+              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£149.71 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
+              "£149.71 a week"
+            )
+          }
+
+          // Fill gaps
+          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__view_gaps__p1']",
+              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
+            )
+          }
 
           // SPA under consideration message
           "render page with Heading 'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               abroadUserDoc,
               "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "nisp.spa.under.consideration.title"
+              "Proposed change to your State Pension age"
             )
           }
 
           "render page with text 'You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               abroadUserDoc,
               "[data-spec='state_pension_age_under_consideration__p1']",
-              "nisp.spa.under.consideration.detail",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-            )
-          }
-          /*Ends*/
-
-          // deferral message
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
+              "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
             )
           }
 
-          "render page with text 'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
-            )
-          }
         }
       }
 
@@ -1594,198 +2295,92 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
-          "render with correct page title" in {
+          // Bar charts - no gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               doc,
-              "head > title",
-              messages("nisp.main.title") +
-                Constants.titleSplitter +
-                messages("nisp.title.extension") +
-                Constants.titleSplitter +
-                messages("nisp.gov-uk")
+              "dt[data-spec='continue_working_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
-          "render page with Heading 'Your State Pension' " in {
+          "render page with current chart text '£150.65 a week'" in {
             mockSetup
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_page_heading__h1']",
-              messages("nisp.main.h1.title")
+              "dd[data-spec='continue_working_forecast__chart2-value']",
+              "£150.65 a week"
             )
           }
 
-          "render page with text 'You can get your State Pension on 7 june 2022' " in {
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
             mockSetup
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_panel'] [data-component='nisp_panel__title']",
-              messages("nisp.main.basedOn") + " " +
-                langUtils.Dates.formatDate(LocalDate.of(2022, 6, 7))
+              "dt[data-spec='continue_working_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2022"
             )
           }
 
-          "render page with text 'Your forecast is £150.65  a week, £676.80 a month, £8,121.59 a year' " in {
+          "render page with forecast chart text '£150.65 a week'" in {
             mockSetup
-            val sMessage =
-              messages("nisp.main.caveats") + " " +
-                messages("nisp.is") + " £150.65 " +
-                messages("nisp.main.week") + ", £676.80 " +
-                messages("nisp.main.month") + ", £8,121.59 " +
-                messages("nisp.main.year")
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__panel1__caveats']",
-              sMessage
+              "dd[data-spec='continue_working_forecast__chart2-value']",
+              "£150.65 a week"
             )
           }
 
-          "render page with text 'Your forecast '" in {
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='continue_working__p__caveats']",
-              "nisp.main.caveats"
+              "dt[data-spec='continue_working_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
             )
           }
 
-          "render page with text 'is not a guarantee and is based on the current law '" in {
+          "render page with personal max chart text '£150.65 a week'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='continue_working__ul__caveats__1']",
-              "nisp.main.notAGuarantee"
+              "dd[data-spec='continue_working_personal_max__chart3-value']",
+              "£150.65 a week"
             )
           }
 
-          "render page with text 'does not include any increase due to inflation '" in {
+          // No gaps
+          "render page with text 'You cannot increase your State Pension forecast. £150.65 a week is the most you can get.'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='continue_working__ul__caveats__2']",
-              "nisp.main.inflation"
+              "[data-spec='state_pension__cant_pay_gaps__p1']",
+              "You cannot increase your State Pension forecast." +
+                " £150.65 a week is the most you can get."
             )
           }
 
-          "render page with Heading 'You need to continue to contribute National Insurance to reach your forecast'" in {
+          "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='continue_working__h2_1']",
-              "nisp.main.continueContribute"
+              "[data-spec='state_pension__cant_pay_gaps__p2']",
+              "This means you are unable to pay for gaps in your National Insurance record online."
             )
           }
 
-          "render page with text 'Estimate based on your National Insurance record up to '" in {
+          "Not render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertPageDoesNotContainMessage(
               doc,
-              "[data-spec='continue_working__chart1'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.lastprocessed.title",
-              "2016"
+              "nisp.main.context.fillGaps.viewGaps"
             )
           }
 
-          "render page with text '£118.65 a week '" in {
-            mockSetup
-            val sMessage = "£118.65 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='continue_working__chart1'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with text 'Forecast if you contribute until 5 April 2022'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='continue_working__chart5'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.spa.title",
-              "2022"
-            )
-          }
-
-          "render page with text '£150.65 a week '" in {
-            mockSetup
-            val sMessage = "£150.65 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='continue_working__chart5'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with text '£150.65 is the most you can get'" in {
-            mockSetup
-            val sMessage = "£150.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
-            assertEqualsValue(
-              doc,
-              "[data-spec='continue_working__h2_2']",
-              sMessage
-            )
-          }
-
-          "render page with text 'After State Pension age, 7 June 2022 you no longer pay National Insurance contributions.'" in {
-            mockSetup
-            assertContainsExpectedValue(
-              doc,
-              "[data-spec='continue_working__p4']",
-              "nisp.main.after",
-              langUtils.Dates.formatDate(LocalDate.of(2022, 6, 7))
-            )
-          }
-
-          "render page with link 'View your National Insurance Record'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='continue_working__link1']",
-              "nisp.main.showyourrecord"
-            )
-          }
-
-          "render page with href link 'View your National Insurance Record'" in {
-            mockSetup
-            assertLinkHasValue(
-              doc,
-              "[data-spec='continue_working__link1']",
-              "/check-your-state-pension/account/nirecord"
-            )
-          }
-
-          "render page with href text 'Your forecast may be different if there are any changes to your National Insurance information. There is more about this in the terms and conditions'" in {
-            mockSetup
-            assertEqualsValue(
-              doc,
-              "[data-spec='state_pension__legal__forecast_changes__p']",
-              messages("nisp.legal.forecastChanges", messages("nisp.legal.terms.and.conditions")) + "."
-            )
-            assertLinkHasValue(
-              doc,
-              "[data-spec='state_pension__legal__forecast_changes__link']",
-              "/check-your-state-pension/terms-and-conditions?showBackLink=true"
-            )
-          }
-
-          /*overseas message*/
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
-          /*Ends*/
-
-          // Non SPA under consideration message
-          "render page with Heading 'Proposed change to your State Pension age'" in {
+          // No SPA under consideration
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
             mockSetup
             assertPageDoesNotContainMessage(
               doc,
@@ -1793,61 +2388,15 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with text 'You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year.'" in {
+          "Not render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
             assertPageDoesNotContainDynamicMessage(
-              abroadUserDoc,
-              "nisp.spa.under.consideration.detail",
-              langUtils.Dates.formatDate(LocalDate.of(2022, 6, 7))
-            )
-          }
-          /*Ends*/
-
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
-            )
-          }
-
-          "render page with text 'You can put off claiming your State Pension from 7 June 2022. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2022, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
               doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
+              "nisp.spa.under.consideration.detail",
+              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
             )
           }
+
         }
 
         "State Pension view with NON-MQP : No Gaps || Full Rate & Personal Max: With State Pension age under consideration message" should {
@@ -1897,87 +2446,108 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+          // Bar charts - no gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
+            )
+          }
 
-          // overseas message
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
+          "render page with current chart text '£150.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working_forecast__chart2-value']",
+              "£150.65 a week"
+            )
+          }
 
-          // SPA under consideration message
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2022"
+            )
+          }
+
+          "render page with forecast chart text '£150.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working_forecast__chart2-value']",
+              "£150.65 a week"
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£150.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working_personal_max__chart3-value']",
+              "£150.65 a week"
+            )
+          }
+
+          // No gaps
+          "render page with text 'You cannot increase your State Pension forecast. £150.65 a week is the most you can get.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__cant_pay_gaps__p1']",
+              "You cannot increase your State Pension forecast." +
+                " £150.65 a week is the most you can get."
+            )
+          }
+
+          "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__cant_pay_gaps__p2']",
+              "This means you are unable to pay for gaps in your National Insurance record online."
+            )
+          }
+
+          "Not render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
+            mockSetup
+            assertPageDoesNotContainMessage(
+              doc,
+              "nisp.main.context.fillGaps.viewGaps"
+            )
+          }
+
+          // SPA under consideration
           "render page with Heading 'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
+            assertEqualsText(
+              doc,
               "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "nisp.spa.under.consideration.title"
+              "Proposed change to your State Pension age"
             )
           }
 
           "render page with text 'You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "nisp.spa.under.consideration.detail",
-              langUtils.Dates.formatDate(LocalDate.of(2022, 6, 7))
-            )
-          }
-          /*Ends*/
-
-          // deferral message
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
-            )
-          }
-
-          "render page with text 'You can put off claiming your State Pension from 7 June 2022. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2022, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
+              "[data-spec='state_pension_age_under_consideration__p1']",
+              "You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year."
             )
           }
+
         }
 
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
@@ -2027,193 +2597,91 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
-          "render with correct page title" in {
+          // Bar charts - no gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               doc,
-              "head > title",
-              messages("nisp.main.title")
-                + Constants.titleSplitter
-                + messages("nisp.title.extension")
-                + Constants.titleSplitter
-                + messages("nisp.gov-uk")
+              "dt[data-spec='continue_working_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
-          "render page with Heading 'Your State Pension' " in {
+          "render page with current chart text '£155.65 a week'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_page_heading__h1']",
-              "nisp.main.h1.title"
+              "dd[data-spec='continue_working_forecast__chart2-value']",
+              "£155.65 a week"
             )
           }
 
-          "render page with text 'You can get your State Pension on 7 june 2017' " in {
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
             mockSetup
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-component='nisp_panel'] [data-component='nisp_panel__title']",
-              messages("nisp.main.basedOn") + " " + langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
+              "dt[data-spec='continue_working_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
             )
           }
 
-          "render page with text 'Your forecast is £155.65 a week, £676.80 a month, £8,121.59 a year' " in {
+          "render page with forecast chart text '£155.65 a week'" in {
             mockSetup
-            val sMessage =
-              messages("nisp.main.caveats") + " " +
-                messages("nisp.is") + " £155.65 " +
-                messages("nisp.main.week") + ", £676.80 " +
-                messages("nisp.main.month") + ", £8,121.59 " +
-                messages("nisp.main.year")
-            assertEqualsValue(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__panel1__caveats']",
-              sMessage
+              "dd[data-spec='continue_working_forecast__chart2-value']",
+              "£155.65 a week"
             )
           }
 
-          "render page with text 'Your forecast '" in {
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='continue_working__p__caveats']",
-              "nisp.main.caveats"
+              "dt[data-spec='continue_working_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
             )
           }
 
-          "render page with text 'is not a guarantee and is based on the current law '" in {
+          "render page with personal max chart text '£155.65 a week'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='continue_working__ul__caveats__1']",
-              "nisp.main.notAGuarantee"
+              "dd[data-spec='continue_working_personal_max__chart3-value']",
+              "£155.65 a week"
             )
           }
 
-          "render page with text 'does not include any increase due to inflation '" in {
+          // No gaps
+          "render page with text 'You cannot increase your State Pension forecast. £155.65 a week is the most you can get.'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='continue_working__ul__caveats__2']",
-              "nisp.main.inflation"
+              "[data-spec='state_pension__cant_pay_gaps__p1']",
+              "You cannot increase your State Pension forecast." +
+                " £155.65 a week is the most you can get."
             )
           }
 
-          "render page with Heading 'You need to continue to contribute National Insurance to reach your forecast'" in {
+          "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='continue_working__h2_1']",
-              "nisp.main.continueContribute"
+              "[data-spec='state_pension__cant_pay_gaps__p2']",
+              "This means you are unable to pay for gaps in your National Insurance record online."
             )
           }
 
-          "render page with text 'Estimate based on your National Insurance record up to '" in {
+          "Not render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertPageDoesNotContainMessage(
               doc,
-              "[data-spec='continue_working__chart1'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.lastprocessed.title",
-              "2016"
+              "nisp.main.context.fillGaps.viewGaps"
             )
           }
 
-          "render page with text '£149.65 a week '" in {
-            mockSetup
-            val sMessage = "£149.65 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='continue_working__chart1'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with text 'Forecast if you contribute another 4 years before 5 April 2020'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='continue_working__chart4'] [data-component='nisp_chart__title']",
-              "nisp.main.chart.estimateIfYouContinue.plural",
-              "4",
-              "2020"
-            )
-          }
-
-          "render page with text '£155.65 a week '" in {
-            mockSetup
-            val sMessage = "£155.65 " + messages("nisp.main.chart.week")
-            assertEqualsValue(
-              doc,
-              "[data-spec='continue_working__chart4'] [data-component='nisp_chart__inner_text']",
-              sMessage
-            )
-          }
-
-          "render page with text '£155.65 is the most you can get'" in {
-            mockSetup
-            val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
-            assertEqualsValue(
-              doc,
-              "[data-spec='continue_working__h2_2']",
-              sMessage
-            )
-          }
-
-          "render page with text 'You cannot improve your forecast any further, unless you choose to put off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='continue_working__p2']",
-              "nisp.main.context.willReach"
-            )
-          }
-
-          "render page with text 'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              doc,
-              "[data-spec='continue_working__p3']",
-              "nisp.main.context.reachMax.needToPay",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-            )
-          }
-
-          "render page with link 'View your National Insurance Record'" in {
-            mockSetup
-            assertEqualsMessage(
-              doc,
-              "[data-spec='continue_working__link1']",
-              "nisp.main.showyourrecord"
-            )
-          }
-
-          "render page with href link 'View your National Insurance Record'" in {
-            mockSetup
-            assertLinkHasValue(
-              doc,
-              "[data-spec='continue_working__link1']",
-              "/check-your-state-pension/account/nirecord"
-            )
-          }
-
-          // overseas message
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
-          /*Ends*/
-
-          // SPA under consideration message
-          "Not render page with Heading 'Proposed change to your State Pension age'" in {
+          // No SPA under consideration
+          "Not render page with heading 'Proposed change to your State Pension age'" in {
             mockSetup
             assertPageDoesNotContainMessage(
               doc,
@@ -2221,59 +2689,12 @@ class StatePensionViewSpec
             )
           }
 
-          "Not render page with text 'You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
+          "Not render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
             mockSetup
             assertPageDoesNotContainDynamicMessage(
-              abroadUserDoc,
-              "nisp.spa.under.consideration.detail",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-            )
-          }
-          /*Ends*/
-
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
-            )
-          }
-
-          "render page with text 'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
               doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
+              "nisp.spa.under.consideration.detail",
+              langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
             )
           }
 
@@ -2327,87 +2748,108 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+          // Bar charts - no gaps
+          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working_current__chart1-key']",
+              "Estimate based on your National Insurance record up to 5 April 2016"
+            )
+          }
 
-          // overseas message
-          "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-            "State Pension from the country you are living or working in.'" in {
-              mockSetup
-              assertEqualsMessage(
-                abroadUserDoc,
-                "[data-spec='abroad__inset_text__link1']",
-                "nisp.main.overseas.linktext"
-              )
-            }
+          "render page with current chart text '£155.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working_forecast__chart2-value']",
+              "£155.65 a week"
+            )
+          }
 
-          // SPA under consideration message
+          "render page with forecast chart title 'Forecast if you contribute until '" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£155.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working_forecast__chart2-value']",
+              "£155.65 a week"
+            )
+          }
+
+          "render page with personal max chart title 'Forecast if you contribute until'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='continue_working_personal_max__chart3-key']",
+              "The most you can increase your forecast to is"
+            )
+          }
+
+          "render page with personal max chart text '£155.65 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='continue_working_personal_max__chart3-value']",
+              "£155.65 a week"
+            )
+          }
+
+          // No gaps
+          "render page with text 'You cannot increase your State Pension forecast. £155.65 a week is the most you can get.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__cant_pay_gaps__p1']",
+              "You cannot increase your State Pension forecast." +
+                " £155.65 a week is the most you can get."
+            )
+          }
+
+          "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__cant_pay_gaps__p2']",
+              "This means you are unable to pay for gaps in your National Insurance record online."
+            )
+          }
+
+          "Not render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
+            mockSetup
+            assertPageDoesNotContainMessage(
+              doc,
+              "nisp.main.context.fillGaps.viewGaps"
+            )
+          }
+
+          //  SPA under consideration
           "render page with Heading 'Proposed change to your State Pension age'" in {
             mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
+            assertEqualsText(
+              doc,
               "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "nisp.spa.under.consideration.title"
+              "Proposed change to your State Pension age"
             )
           }
 
           "render page with text 'You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
             mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "nisp.spa.under.consideration.detail",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-            )
-          }
-          /*Ends*/
-
-          // deferral message
-          "render page with Heading 'Putting off claiming'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__h2_1']",
-              "nisp.main.puttingOff"
-            )
-          }
-
-          "render page with text 'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-            mockSetup
-            assertContainsDynamicMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__p1']",
-              "nisp.main.puttingOff.line1",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-            )
-          }
-
-          "render page with link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "nisp.main.puttingOff.linkTitle"
-            )
-          }
-
-          "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-            mockSetup
-            assertLinkHasValue(
-              abroadUserDoc,
-              "[data-spec='deferral__link1']",
-              "https://www.gov.uk/deferring-state-pension"
-            )
-          }
-
-          "render page with print link" in {
-            mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
-              "[data-spec='state_pension__printlink']",
-              "nisp.print.your.state.pension.summary"
+              "[data-spec='state_pension_age_under_consideration__p1']",
+              "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
             )
           }
+
         }
       }
 
@@ -2458,213 +2900,110 @@ class StatePensionViewSpec
         lazy val doc =
           asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-        lazy val abroadUserDoc =
-          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
-        "render with correct page title" in {
+        // Bar charts - reached
+        "render page with forecast chart title 'Forecast if you contribute until '" in {
           mockSetup
-          assertElementContainsText(
+          assertEqualsText(
             doc,
-            "head > title",
-            messages("nisp.main.title")
-              + Constants.titleSplitter
-              + messages("nisp.title.extension")
-              + Constants.titleSplitter
-              + messages("nisp.gov-uk")
+            "dt[data-spec='reached__chart1-key']",
+            "Forecast if you contribute National Insurance until 5 April 2020"
           )
         }
 
-        "render page with Heading 'Your State Pension' " in {
+        "render page with forecast chart text '£155.65 a week'" in {
           mockSetup
-          assertEqualsMessage(
+          assertEqualsText(
             doc,
-            "[data-component='nisp_page_heading__h1']",
-            "nisp.main.h1.title"
+            "dd[data-spec='reached__chart1-value']",
+            "£155.65 a week"
           )
         }
 
-        "render page with text 'You can get your State Pension on 7 june 2017' " in {
+        "render page with personal max chart title 'Forecast if you contribute until'" in {
           mockSetup
-          assertEqualsValue(
+          assertEqualsText(
             doc,
-            "[data-component='nisp_panel'] [data-component='nisp_panel__title']",
-            messages("nisp.main.basedOn") + " " + langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
+            "dt[data-spec='reached__chart2-key']",
+            "The most you can increase your forecast to is"
           )
         }
 
-        "render page with text 'Your forecast is £155.65 a week, £676.80 a month, £8,121.59 a year ' " in {
+        "render page with personal max chart text '£155.65 a week'" in {
           mockSetup
-          val sMessage =
-            messages("nisp.main.caveats") + " " +
-              messages("nisp.is") + " £155.65 " +
-              messages("nisp.main.week") + ", £676.80 " +
-              messages("nisp.main.month") + ", £8,121.59 " +
-              messages("nisp.main.year")
-          assertEqualsValue(
+          assertEqualsText(
             doc,
-            "[data-spec='state_pension__panel1__caveats']",
-            sMessage
+            "dd[data-spec='reached__chart2-value']",
+            "£155.65 a week"
           )
         }
 
-        "render page with text 'Your forecast '" in {
+        "Not render page with current chart 'Current estimate based on your National Insurance record up to'" in {
           mockSetup
-          assertEqualsMessage(
+          assertPageDoesNotContainMessage(
             doc,
-            "[data-spec='reached__p__caveats']",
-            "nisp.main.caveats"
+            "nisp.main.chart.current"
+          )
+
+        }
+
+        // No gaps
+        "render page with text 'You cannot increase your State Pension forecast. £155.65 a week is the most you can get.'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__cant_pay_gaps__p1']",
+            "You cannot increase your State Pension forecast." +
+              " £155.65 a week is the most you can get."
           )
         }
 
-        "render page with text 'is not a guarantee and is based on the current law '" in {
+        "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
           mockSetup
-          assertEqualsMessage(
+          assertEqualsText(
             doc,
-            "[data-spec='reached__ul__caveats__li1']",
-            "nisp.main.notAGuarantee"
+            "[data-spec='state_pension__cant_pay_gaps__p2']",
+            "This means you are unable to pay for gaps in your National Insurance record online."
           )
         }
 
-        "render page with text 'is based on your National Insurance record up to 5 April 2016 '" in {
+        "Not render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
           mockSetup
-          assertContainsDynamicMessage(
+          assertPageDoesNotContainMessage(
             doc,
-            "[data-spec='reached__ul__caveats__li2']",
-            "nisp.main.isBased",
-            langUtils.Dates.formatDate(LocalDate.of(2016, 4, 5))
+            "nisp.main.context.fillGaps.viewGaps"
           )
         }
 
-        "render page with text 'does not include any increase due to inflation '" in {
+        // Additional State Pension
+        "render page with 'Additional State Pension' paragraph with link" in {
           mockSetup
-          assertEqualsMessage(
+          assertEqualsText(
             doc,
-            "[data-spec='reached__ul__caveats__li3']",
-            "nisp.main.inflation"
-          )
-        }
+            "[data-spec='state_pension__additional_state_pension__p1']",
+            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
 
-        "render page with text '£155.65 is the most you can get'" in {
-          mockSetup
-          val sMessage = "£155.65 " + StringEscapeUtils.unescapeHtml4(messages("nisp.main.mostYouCanGet"))
-          assertEqualsValue(
-            doc,
-            "[data-spec='reached_h2_1']",
-            sMessage
-          )
-        }
-
-        "render page with text 'You cannot improve your forecast any more'" in {
-          mockSetup
-          assertEqualsMessage(
-            doc,
-            "[data-spec='reached__p2']",
-            "nisp.main.cantImprove"
-          )
-        }
-
-        "render page with text 'If you’re working you may still need to pay National Insurance contributions until 7 June 2020 as they fund other state benefits and the NHS.'" in {
-          mockSetup
-          assertContainsDynamicMessage(
-            doc,
-            "[data-spec='reached__p3']",
-            "nisp.main.context.reachMax.needToPay",
-            langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-          )
-        }
-
-        "render page with link 'View your National Insurance Record'" in {
-          mockSetup
-          assertEqualsMessage(
-            doc,
-            "[data-spec='reached__link1']",
-            "nisp.main.showyourrecord"
-          )
-        }
-
-        "render page with href link 'View your National Insurance Record'" in {
-          mockSetup
           assertLinkHasValue(
             doc,
-            "[data-spec='reached__link1']",
-            "/check-your-state-pension/account/nirecord"
+            "[data-spec='state_pension__additional_state_pension__link']",
+            "https://www.gov.uk/additional-state-pension"
           )
         }
 
-        /*overseas message*/
-        "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-          "State Pension from the country you are living or working in.'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='abroad__inset_text__link1']",
-              "nisp.main.overseas.linktext"
-            )
-          }
-        /*Ends*/
-
-        // SPA under consideration message
+        // No SPA under consideration
         "Not render page with heading 'Proposed change to your State Pension age'" in {
           mockSetup
           assertPageDoesNotContainMessage(
-            abroadUserDoc,
+            doc,
             "nisp.spa.under.consideration.title"
           )
         }
 
-        "Not render page with text 'You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
+        "Not render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
           mockSetup
           assertPageDoesNotContainDynamicMessage(
-            abroadUserDoc,
-            "nisp.spa.under.consideration.detail",
-            langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-          )
-        }
-        /*Ends*/
-
-        "render page with Heading 'Putting off claiming'" in {
-          mockSetup
-          assertEqualsMessage(
-            abroadUserDoc,
-            "[data-spec='deferral__h2_1']",
-            "nisp.main.puttingOff"
-          )
-        }
-
-        "render page with text 'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          mockSetup
-          assertContainsDynamicMessage(
-            abroadUserDoc,
-            "[data-spec='deferral__p1']",
-            "nisp.main.puttingOff.line1",
-            langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-          )
-        }
-
-        "render page with link 'More on putting off claiming (opens in new tab)'" in {
-          mockSetup
-          assertEqualsMessage(
-            abroadUserDoc,
-            "[data-spec='deferral__link1']",
-            "nisp.main.puttingOff.linkTitle"
-          )
-        }
-
-        "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-          mockSetup
-          assertLinkHasValue(
-            abroadUserDoc,
-            "[data-spec='deferral__link1']",
-            "https://www.gov.uk/deferring-state-pension"
-          )
-        }
-
-        "render page with print link" in {
-          mockSetup
-          assertEqualsMessage(
             doc,
-            "[data-spec='state_pension__printlink']",
-            "nisp.print.your.state.pension.summary"
+            "nisp.spa.under.consideration.detail",
+            langUtils.Dates.formatDate(LocalDate.of(2020, 6, 7))
           )
         }
 
@@ -2717,83 +3056,115 @@ class StatePensionViewSpec
         lazy val abroadUserDoc =
           asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
-        // overseas message
-        "render page with text 'As you are living or working overseas (opens in new tab), you may be entitled to a " +
-          "State Pension from the country you are living or working in.'" in {
-            mockSetup
-            assertEqualsMessage(
-              abroadUserDoc,
-              "[data-spec='abroad__inset_text__link1']",
-              "nisp.main.overseas.linktext"
-            )
-          }
 
-        // SPA under consideration message
+        // Bar charts - reached
+        "render page with forecast chart title 'Forecast if you contribute until '" in {
+          mockSetup
+          assertEqualsText(
+            abroadUserDoc,
+            "dt[data-spec='reached__chart1-key']",
+            "Forecast if you contribute National Insurance until 5 April 2020"
+          )
+        }
+
+        "render page with forecast chart text '£155.65 a week'" in {
+          mockSetup
+          assertEqualsText(
+            abroadUserDoc,
+            "dd[data-spec='reached__chart1-value']",
+            "£155.65 a week"
+          )
+        }
+
+        "render page with personal max chart title 'Forecast if you contribute until'" in {
+          mockSetup
+          assertEqualsText(
+            abroadUserDoc,
+            "dt[data-spec='reached__chart2-key']",
+            "The most you can increase your forecast to is"
+          )
+        }
+
+        "render page with personal max chart text '£155.65 a week'" in {
+          mockSetup
+          assertEqualsText(
+            abroadUserDoc,
+            "dd[data-spec='reached__chart2-value']",
+            "£155.65 a week"
+          )
+        }
+
+        "Not render page with current chart 'Current estimate based on your National Insurance record up to'" in {
+          mockSetup
+          assertPageDoesNotContainMessage(
+            abroadUserDoc,
+            "nisp.main.chart.current"
+          )
+
+        }
+
+        // No gaps
+        "render page with text 'You cannot increase your State Pension forecast. £155.65 a week is the most you can get.'" in {
+          mockSetup
+          assertEqualsText(
+            abroadUserDoc,
+            "[data-spec='state_pension__cant_pay_gaps__p1']",
+            "You cannot increase your State Pension forecast." +
+              " £155.65 a week is the most you can get."
+          )
+        }
+
+        "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
+          mockSetup
+          assertEqualsText(
+            abroadUserDoc,
+            "[data-spec='state_pension__cant_pay_gaps__p2']",
+            "This means you are unable to pay for gaps in your National Insurance record online."
+          )
+        }
+
+        "Not render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
+          mockSetup
+          assertPageDoesNotContainMessage(
+            abroadUserDoc,
+            "nisp.main.context.fillGaps.viewGaps"
+          )
+        }
+
+        // Additional State Pension
+        "render page with 'Additional State Pension' paragraph with link" in {
+          mockSetup
+          assertEqualsText(
+            abroadUserDoc,
+            "[data-spec='state_pension__additional_state_pension__p1']",
+            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
+
+          assertLinkHasValue(
+            abroadUserDoc,
+            "[data-spec='state_pension__additional_state_pension__link']",
+            "https://www.gov.uk/additional-state-pension"
+          )
+        }
+
+        // SPA under consideration
         "render page with Heading 'Proposed change to your State Pension age'" in {
           mockSetup
-          assertEqualsMessage(
+          assertEqualsText(
             abroadUserDoc,
             "[data-spec='state_pension_age_under_consideration__h2_1']",
-            "nisp.spa.under.consideration.title"
+            "Proposed change to your State Pension age"
           )
         }
 
         "render page with text 'You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
           mockSetup
-          assertContainsDynamicMessage(
+          assertEqualsText(
             abroadUserDoc,
             "[data-spec='state_pension_age_under_consideration__p1']",
-            "nisp.spa.under.consideration.detail",
-            langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-          )
-        }
-        /*Ends*/
-
-        // deferral message
-        "render page with Heading 'Putting off claiming'" in {
-          mockSetup
-          assertEqualsMessage(
-            abroadUserDoc,
-            "[data-spec='deferral__h2_1']",
-            "nisp.main.puttingOff"
+            "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
           )
         }
 
-        "render page with text 'You can put off claiming your State Pension from 7 June 2017. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          mockSetup
-          assertContainsDynamicMessage(
-            abroadUserDoc,
-            "[data-spec='deferral__p1']",
-            "nisp.main.puttingOff.line1",
-            langUtils.Dates.formatDate(LocalDate.of(2017, 6, 7))
-          )
-        }
-
-        "render page with link 'More on putting off claiming (opens in new tab)'" in {
-          mockSetup
-          assertEqualsMessage(
-            abroadUserDoc,
-            "[data-spec='deferral__link1']",
-            "nisp.main.puttingOff.linkTitle"
-          )
-        }
-
-        "render page with href link 'More on putting off claiming (opens in new tab)'" in {
-          mockSetup
-          assertLinkHasValue(
-            abroadUserDoc,
-            "[data-spec='deferral__link1']",
-            "https://www.gov.uk/deferring-state-pension"
-          )
-        }
-        "render page with print link" in {
-          mockSetup
-          assertEqualsMessage(
-            abroadUserDoc,
-            "[data-spec='state_pension__printlink']",
-            "nisp.print.your.state.pension.summary"
-          )
-        }
       }
 
       "State Pension view with Contracted out User" should {
@@ -2813,7 +3184,7 @@ class StatePensionViewSpec
                 StatePensionAmountForecast(3, 155.55, 622.35, 76022.24),
                 StatePensionAmountMaximum(3, 0, 155.55, 622.35, 76022.24),
                 StatePensionAmountRegular(50, 217.41, 2608.93))
-              ,64, LocalDate.of(2021, 7, 18), "2017-18", 30, pensionSharingOrder = false, 155.65, reducedRateElection = false, statePensionAgeUnderConsideration = false)
+              , 64, LocalDate.of(2021, 7, 18), "2017-18", 30, pensionSharingOrder = false, 155.65, reducedRateElection = false, statePensionAgeUnderConsideration = false)
             ))))
 
           when(mockNationalInsuranceService.getSummary(any())(any()))
@@ -2837,15 +3208,15 @@ class StatePensionViewSpec
 
         }
 
-        lazy val result         = statePensionController.show()(AuthenticatedRequest(FakeRequest(), user, authDetails))
-        lazy val htmlAccountDoc = asDocument(contentAsString(result))
+        lazy val result = statePensionController.show()(AuthenticatedRequest(FakeRequest(), user, authDetails))
+        lazy val doc = asDocument(contentAsString(result))
 
         "render with correct page title" in {
           mockSetup
-          println(s"\n\n\n${htmlAccountDoc.getElementById("which-view").text()}\n\n\n")
+          println(s"\n\n\n${doc.getElementById("which-view").text()}\n\n\n")
 
           assertElementContainsText(
-            htmlAccountDoc,
+            doc,
             "head > title",
             messages("nisp.main.h1.title")
               + Constants.titleSplitter
@@ -2855,177 +3226,166 @@ class StatePensionViewSpec
           )
         }
 
-        "render page with heading 'Your State Pension' " in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='state_pension__pageheading'] [data-component='nisp_page_heading__h1']",
-            "nisp.main.h1.title"
+        // Contracted Out
+        "render page with heading 'You’ve been in a contracted-out pension scheme'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__contracted_out__h2']",
+            "You’ve been in a contracted-out pension scheme"
           )
         }
 
-        "render page with text 'You can get your State Pension on 18 july 2012' " in {
-          assertEqualsValue(
-            htmlAccountDoc,
-            "[data-spec='state_pension__panel1'] [data-component='nisp_panel__title']",
-            Messages("nisp.main.basedOn") + " " + langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18))
+        "render page with text 'Like most people, you were contracted out of the additional State Pension...'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__contracted_out__p1']",
+            "Like most people, you were contracted out of the additional State Pension. This means you paid less National Insurance into your State Pension. Your State Pension forecast takes this into account."
           )
         }
 
-        "render page with text 'Your forecast is £155.55 a week, £622.35 a month, £76,022.24 a year' " in {
-          val sMessage =
-            Messages("nisp.main.caveats") + " " +
-              Messages("nisp.is") + " £155.55 " +
-              Messages("nisp.main.week") + ", £622.35 " +
-              Messages("nisp.main.month") + ", £76,022.24 " +
-              Messages("nisp.main.year")
-          assertEqualsValue(
-            htmlAccountDoc,
-            "[data-spec='state_pension__panel1__caveats']",
-            sMessage
+        "render page with link 'Find out more about being contracted out of the State Pension'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__contracted_out__link_1']",
+            "Find out more about being contracted out of the State Pension"
           )
-        }
 
-        "render page with text ' Your forecast '" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='continue_working__p__caveats']",
-            "nisp.main.caveats"
-          )
-        }
-
-        "render page with text ' is not a guarantee and is based on the current law '" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='continue_working__ul__caveats__1']",
-            "nisp.main.notAGuarantee"
-          )
-        }
-
-        "render page with text ' does not include any increase due to inflation '" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='continue_working__ul__caveats__2']",
-            "nisp.main.inflation"
-          )
-        }
-
-        "render page with heading 'You need to continue to contribute National Insurance to reach your forecast'" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='continue_working__h2_1']",
-            "nisp.main.continueContribute"
-          )
-        }
-
-        "render page with heading 'Estimate based on your National Insurance record up to 5 April 2014'" in {
-          assertContainsDynamicMessage(
-            htmlAccountDoc,
-            "[data-spec='continue_working__chart1'] [data-component='nisp_chart__title']",
-            "nisp.main.chart.lastprocessed.title",
-            "2014"
-          )
-        }
-
-        "render page with heading '£46.38 a week'" in {
-          val sWeek = "£46.38 " + Messages("nisp.main.week")
-          assertEqualsValue(
-            htmlAccountDoc,
-            "[data-spec='continue_working__chart1'] [data-component='nisp_chart__inner_text']",
-            sWeek
-          )
-        }
-
-        "render page with Heading '£155.55 is the most you can get'" in {
-          val sMaxCanGet = "£155.55 " + StringEscapeUtils.unescapeHtml4(Messages("nisp.main.mostYouCanGet"))
-          assertEqualsValue(
-            htmlAccountDoc,
-            "[data-spec='continue_working__h2_2']",
-            sMaxCanGet
-          )
-        }
-
-        "render page with text 'You cannot improve your forecast any further, unless you choose to put off claiming.'" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='continue_working__p2']",
-            "nisp.main.context.willReach"
-          )
-        }
-
-        "render page with text 'If you’re working you may still need to pay National Insurance contributions until 18 " +
-          "July 2021 as they fund other state benefits and the NHS.'" in {
-          assertContainsDynamicMessage(
-            htmlAccountDoc,
-            "[data-spec='continue_working__p3']",
-            "nisp.main.context.reachMax.needToPay",
-            langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18))
-          )
-        }
-
-        "render page with link 'View your National Insurance Record'" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='continue_working__link1']",
-            "nisp.main.showyourrecord"
-          )
-        }
-
-        "render page with href link 'View your National Insurance Record'" in {
           assertLinkHasValue(
-            htmlAccountDoc,
-            "[data-spec='continue_working__link1']",
-            "/check-your-state-pension/account/nirecord"
+            doc,
+            "[data-spec='state_pension__contracted_out__link_1']",
+            "https://www.gov.uk/contracted-out"
           )
         }
 
-        /*Contracting out affects*/
-        "render page with text 'You’ve been in a contracted-out pension scheme'" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='contracted_out__h2_1']",
-            "nisp.cope.title1"
+        "render page with link 'Find out more about the new State Pension'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__contracted_out__link_2']",
+            "Find out more about the new State Pension"
           )
+
         }
 
-        "render page with text 'Like most people, you were contracted out of part of the State Pension.'" in {
-          assertEqualsValue(
-            htmlAccountDoc,
-            "[data-spec='contracted_out__p1']",
-            messages("nisp.cope.likeMostPeople", messages("nisp.cope.likeMostPeople.linktext")) + "."
-          )
-        }
-        /*Ends*/
+        // Additional State Pension
+        "render page with 'Additional State Pension' paragraph with link" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__additional_state_pension__p1']",
+            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
 
-        "render page with heading 'Putting off claiming'" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='deferral__h2_1']",
-            "nisp.main.puttingOff"
-          )
-        }
-
-        "render page with text 'You can put off claiming your State Pension from 18 July 2021. Doing this may mean you get extra State Pension when you do come to claim it. The extra amount, along with your State Pension, forms part of your taxable income.'" in {
-          assertContainsDynamicMessage(
-            htmlAccountDoc,
-            "[data-spec='deferral__p1']",
-            "nisp.main.puttingOff.line1",
-            langUtils.Dates.formatDate(LocalDate.of(2021, 7, 18))
-          )
-        }
-
-        "render page with link 'More on putting off claiming (opens in new tab)'" in {
-          assertEqualsMessage(
-            htmlAccountDoc,
-            "[data-spec='deferral__link1']",
-            "nisp.main.puttingOff.linkTitle"
-          )
-        }
-
-        "render page with href link 'More on putting off claiming (opens in new tab)'" in {
           assertLinkHasValue(
-            htmlAccountDoc,
-            "[data-spec='deferral__link1']",
-            "https://www.gov.uk/deferring-state-pension"
+            doc,
+            "[data-spec='state_pension__additional_state_pension__link']",
+            "https://www.gov.uk/additional-state-pension"
+          )
+        }
+
+      }
+
+      "State Pension view with Pension Sharing Order" should {
+        def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
+          when(mockStatePensionService.getSummary(any())(any()))
+            .thenReturn(Future.successful(Right(Right(StatePension(
+              LocalDate.of(2016, 4, 5),
+              amounts = StatePensionAmounts(
+                protectedPayment = false,
+                StatePensionAmountRegular(155.65, 590.10, 7081.15),
+                StatePensionAmountForecast(4, 155.65, 676.80, 8121.59),
+                StatePensionAmountMaximum(4, 2, 155.65, 590.10, 7081.15),
+                StatePensionAmountRegular(0, 0, 0)
+              ),
+              pensionAge = 67,
+              LocalDate.of(2017, 6, 7),
+              "2019-20",
+              11,
+              pensionSharingOrder = true,
+              currentFullWeeklyPensionAmount = 149.65,
+              reducedRateElection = false,
+              statePensionAgeUnderConsideration = false
+            )
+            ))))
+
+          when(mockNationalInsuranceService.getSummary(any())(any()))
+            .thenReturn(Future.successful(Right(Right(NationalInsuranceRecord(
+              qualifyingYears = 11,
+              qualifyingYearsPriorTo1975 = 0,
+              numberOfGaps = 0,
+              numberOfGapsPayable = 0,
+              Some(LocalDate.of(1989, 3, 6)),
+              homeResponsibilitiesProtection = false,
+              LocalDate.of(2017, 4, 5),
+              List(
+
+                NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
+                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+              ),
+              reducedRateElection = false
+            )
+            ))))
+        }
+
+        lazy val doc =
+          asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+
+        "render with correct page title" in {
+          mockSetup
+          assertElementContainsText(
+            doc,
+            "head > title",
+            messages("nisp.main.h1.title") + Constants.titleSplitter + messages(
+              "nisp.title.extension"
+            ) + Constants.titleSplitter + messages("nisp.gov-uk")
+          )
+        }
+
+        "render page with text 'Your forecast:'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__p_caveats']",
+            "Your forecast:"
+          )
+        }
+
+        "render page with bullet text 'is based on your National Insurance record up to 5th April 2016'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__ul__caveats__li1']",
+            "is based on your National Insurance record up to 5 April 2016"
+          )
+        }
+
+        "render page with bullet text 'assumes that you’ll contribute another 4 years'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__ul__caveats__li2__plural']",
+            "assumes that you’ll contribute another 4 years"
+          )
+        }
+
+        "render page with bullet text 'does not include any increase due to inflation'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__ul__caveats_inflation__li3']",
+            "does not include any increase due to inflation"
+          )
+        }
+
+        "render page with bullet text 'does not include the pension sharing order you have in effect'" in {
+          mockSetup
+          assertEqualsText(
+            doc,
+            "[data-spec='state_pension__ul__caveats__li4']",
+            "does not include the pension sharing order you have in effect"
           )
         }
       }

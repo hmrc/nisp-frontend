@@ -231,7 +231,7 @@
                 @fillGapsMQP(
                     statePension,
                     forecastChart,
-                    numberOfGaps,
+                    numberOfGapsPayable,
                     personalMaximumChart
                 )
             }
@@ -264,7 +264,7 @@
                     statePension,
                     currentChart,
                     forecastChart,
-                    numberOfGaps,
+                    numberOfGapsPayable,
                     personalMaximumChart
                 )
             }
@@ -336,7 +336,7 @@
                 href = routes.NIRecordController.showFull.url,
                 messageKey = "nisp.main.showyourrecord",
                 specId = Some("state_pension__showyourrecord"),
-                classes = Some("govuk-button")
+                classes = Some("govuk-button govuk-!-margin-top-4")
             ))
         )
 
