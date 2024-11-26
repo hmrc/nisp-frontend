@@ -163,7 +163,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -617,7 +617,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -958,7 +958,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -1565,7 +1565,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -1850,7 +1850,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -1995,7 +1995,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -2136,7 +2136,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -2284,7 +2284,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -2436,7 +2436,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -2587,7 +2587,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -2737,7 +2737,7 @@ class StatePensionViewSpec
 
                   NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                   NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                  NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
                 ),
                 reducedRateElection = false
               )
@@ -2890,7 +2890,7 @@ class StatePensionViewSpec
 
                 NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
               ),
               reducedRateElection = false
             )
@@ -3046,7 +3046,7 @@ class StatePensionViewSpec
 
                 NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
               ),
               reducedRateElection = false
             )
@@ -3323,7 +3323,7 @@ class StatePensionViewSpec
 
                 NationalInsuranceTaxYearBuilder("2015-16", underInvestigation = false),
                 NationalInsuranceTaxYearBuilder("2014-15", qualifying = false, underInvestigation = false),
-                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false) /*payable = true*/
+                NationalInsuranceTaxYearBuilder("2013-14", underInvestigation = false)
               ),
               reducedRateElection = false
             )
