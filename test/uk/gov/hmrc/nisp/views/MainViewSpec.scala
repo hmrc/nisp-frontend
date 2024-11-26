@@ -44,7 +44,7 @@ class MainViewSpec extends HtmlSpec {
 
     override val accessibilityReferrerUrl: String = "9234%2Fsome-url"
 
-    override val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?newTab=true&service=NISP&referrerUrl=%2Fsome-url"
+    override val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?service=NISP&referrerUrl=%2Fsome-url"
   }
 
   object CommonValues {

@@ -96,7 +96,7 @@ nisp.print.your.state.pension.summary = Print your State Pension summary
 
 nisp.main.h2.whenWillIReachStatePensionAge = When will I reach State Pension age?
 nisp.main.overseas.text.new = If you’ve lived or worked outside the UK, you may be able to use your time outside the UK to make up the 10 qualifying years you need to get any UK State Pension. {0}
-nisp.main.overseas.text.link = Find out more about living or working outside the UK (opens in new tab)
+nisp.main.overseas.text.link = Find out more about living or working outside the UK
 
 #*********************
 # Scenario messages
@@ -444,8 +444,10 @@ nisp.mqp.youNeed10Years.possible = You usually need at least 10 qualifying years
 nisp.mqp.howCanIIncrease = How can I increase my State Pension?
 nisp.mqp.fillingGaps = You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.
 
-nisp.mqp.cantFillGapsP1 = You cannot increase your State Pension forecast.
+
+nisp.mqp.cantFillGapsP1 = You cannot improve your State Pension forecast.
 nisp.mqp.cantFillGapsP2 = This means you are unable to pay for gaps in your National Insurance record online.
+nisp.mqp.cantFillGapsP3 = Filling the gaps in your record is not enough to get State Pension.
 
 nisp.mqp.otherWays = Other ways to increase my income
 nisp.mqp.findOutAboutNI = Find out about National Insurance.
@@ -454,7 +456,7 @@ nisp.mqp.findOutAboutNICredits = Find out about getting National Insurance credi
 nisp.mqp.childBenefits = If you claimed Child Benefit between 6 April 1978 and 5 April 2010, you may be able to claim Home Responsibilities Protection to fill gaps in your National Insurance record. {0}
 nisp.mqp.childBenefits.link = Check if you are eligible to claim Home Responsibilities Protection
 nisp.mqp.pensionCredit = You may be able to claim Pension Credit if you’re on a low income. {0}
-nisp.mqp.pensionCredit.linktext = Find out about claiming Pension Credit (opens in new tab)
+nisp.mqp.pensionCredit.linktext = Find out about claiming Pension Credit
 
 #**************************************************
 # State Pension Age under consideration messages

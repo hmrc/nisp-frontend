@@ -118,7 +118,13 @@ class StatePensionMQPViewSpec
     )
 
   def statePensionAmounts(
-    maximum: StatePensionAmountMaximum = StatePensionAmountMaximum(0, 0, 0, 0, 0)
+    maximum: StatePensionAmountMaximum = StatePensionAmountMaximum(
+      yearsToWork   = 0,
+      gapsToFill    = 0,
+      weeklyAmount  = 0,
+      monthlyAmount = 0,
+      annualAmount  = 0
+    )
   ): StatePensionAmounts = StatePensionAmounts(
     protectedPayment = false,
     current          = StatePensionAmountRegular(0, 0, 0),
@@ -299,7 +305,7 @@ class StatePensionMQPViewSpec
               "[data-spec='state_pension_mqp__p6']",
               "If you’ve lived or worked outside the UK, you may be able to use your time outside the UK " +
                 "to make up the 10 qualifying years you need to get any UK State Pension. " +
-                "Find out more about living or working outside the UK (opens in new tab)."
+                "Find out more about living or working outside the UK."
             )
           }
 
@@ -309,6 +315,24 @@ class StatePensionMQPViewSpec
               doc,
               "[data-spec='state_pension_mqp__h2_3']",
               "How can I increase my State Pension?"
+            )
+          }
+
+          "render page with 'You cannot improve your State Pension forecast.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__cant_fill_gaps_p1']",
+              "You cannot improve your State Pension forecast."
+            )
+          }
+
+          "render page with 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__cant_fill_gaps_p2']",
+              "This means you are unable to pay for gaps in your National Insurance record online."
             )
           }
 
@@ -403,7 +427,7 @@ class StatePensionMQPViewSpec
               doc,
               "[data-spec='state_pension_mqp__p8']",
               "You may be able to claim Pension Credit if you’re on a low income. " +
-                "Find out about claiming Pension Credit (opens in new tab)."
+                "Find out about claiming Pension Credit."
             )
 
             assertLinkHasValue(
@@ -485,6 +509,41 @@ class StatePensionMQPViewSpec
           }
         }
 
+        "State Pension page with MQP: has fillable Gaps: Cant get pension" should {
+          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
+            when(mockStatePensionService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(statePension(
+                pensionDate       = LocalDate.of(2018, 5, 4),
+                finalRelevantYear = "2017-18",
+                amounts           = statePensionAmounts(StatePensionAmountMaximum(
+                  yearsToWork   = 2,
+                  gapsToFill    = 2,
+                  weeklyAmount  = 0,
+                  monthlyAmount = 0,
+                  annualAmount  = 0
+                ))
+              )))))
+
+            when(mockNationalInsuranceService.getSummary(any())(any()))
+              .thenReturn(Future.successful(Right(Right(nationalInsuranceRecord(
+                numberOfGaps        = 2,
+                numberOfGapsPayable = 2
+              )))))
+          }
+
+          lazy val doc =
+            asDocument(contentAsString(controller.show()(FakeRequest())))
+
+          "render page with 'Filling the gaps in your record is not enough to get State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__cant_fill_gaps_p3']",
+              "Filling the gaps in your record is not enough to get State Pension."
+            )
+          }
+        }
+
         "State Pension page with MQP: has fillable Gaps || Personal Max" should {
 
           def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
@@ -492,7 +551,13 @@ class StatePensionMQPViewSpec
               .thenReturn(Future.successful(Right(Right(statePension(
                 pensionDate       = LocalDate.of(2018, 5, 4),
                 finalRelevantYear = "2017-18",
-                amounts           = statePensionAmounts(StatePensionAmountMaximum(2, 2, 12, 0, 0))
+                amounts           = statePensionAmounts(StatePensionAmountMaximum(
+                  yearsToWork   = 2,
+                  gapsToFill    = 2,
+                  weeklyAmount  = 12,
+                  monthlyAmount = 0,
+                  annualAmount  = 0
+                ))
               )))))
 
             when(mockNationalInsuranceService.getSummary(any())(any()))
@@ -518,10 +583,21 @@ class StatePensionMQPViewSpec
 
           "render page with link 'Gaps in your record and the cost of filling them'" in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               doc,
               "[data-spec='state_pension__mqp__cant_get_with_gaps']",
-              "nisp.main.context.fillGaps.viewGapsAndCost"
+              "View your National Insurance record"
+            )
+          }
+
+          "render page with 'You can view your National Insurance record to check for gaps that you may be " +
+            "able to fill to increase your State Pension.' " in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__filling_gaps']",
+              "You can view your National Insurance record to check for gaps that you may be " +
+                "able to fill to increase your State Pension."
             )
           }
 
@@ -543,7 +619,13 @@ class StatePensionMQPViewSpec
                 pensionDate           = LocalDate.of(2018, 5, 4),
                 finalRelevantYear     = "2017-18",
                 ageUnderConsideration = true,
-                amounts               = statePensionAmounts(StatePensionAmountMaximum(2, 2, 12, 0, 0))
+                amounts               = statePensionAmounts(StatePensionAmountMaximum(
+                  yearsToWork   = 2,
+                  gapsToFill    = 2,
+                  weeklyAmount  = 12,
+                  monthlyAmount = 0,
+                  annualAmount  = 0
+                ))
               )))))
 
             when(mockNationalInsuranceService.getSummary(any())(any()))
@@ -573,6 +655,17 @@ class StatePensionMQPViewSpec
               "[data-spec='state_pension_age_under_consideration__p1']",
               "nisp.spa.under.consideration.detail",
               langUtils.Dates.formatDate(LocalDate.of(2018, 5, 4))
+            )
+          }
+
+          "render page with 'You can view your National Insurance record to check for gaps that you may be " +
+            "able to fill to increase your State Pension.' " in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__mqp__filling_gaps']",
+              "You can view your National Insurance record to check for gaps that you may be " +
+                "able to fill to increase your State Pension."
             )
           }
         }

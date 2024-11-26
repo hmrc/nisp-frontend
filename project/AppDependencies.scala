@@ -19,19 +19,18 @@ import sbt.*
 object AppDependencies {
 
   private val playVersion            = "play-30"
-  private val hmrcScaWrapperVersion  = "1.14.0"
-  private val hmrcMongoToggleVersion = "1.7.0"
+  private val hmrcScaWrapperVersion  = "2.1.0"
+  private val hmrcMongoToggleVersion = "1.8.0"
 
   private val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc" %% s"sca-wrapper-$playVersion"                   % hmrcScaWrapperVersion,
     "uk.gov.hmrc" %% s"mongo-feature-toggles-client-$playVersion"  % hmrcMongoToggleVersion,
-    "uk.gov.hmrc" %% s"play-conditional-form-mapping-$playVersion" % "3.2.0",
-    "uk.gov.hmrc" %% "tax-year"                                    % "5.0.0",
+    "uk.gov.hmrc" %% "tax-year"                                    % "5.0.0"
   )
 
   private val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc" %% s"sca-wrapper-test-$playVersion"                  % hmrcScaWrapperVersion,
-    "uk.gov.hmrc" %% s"mongo-feature-toggles-client-test-$playVersion" % hmrcMongoToggleVersion,
+    "uk.gov.hmrc" %% s"mongo-feature-toggles-client-test-$playVersion" % hmrcMongoToggleVersion
   ).map(_ % Test)
 
   def apply(): Seq[ModuleID] = compile ++ test
