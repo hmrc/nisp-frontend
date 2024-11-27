@@ -157,7 +157,7 @@ nisp.main.context.fillGaps.gaps.plural = You have {0} gaps in your National Insu
 nisp.main.context.fillGaps.gap.single = You have {0} gap in your National Insurance record that you may be able to fill to increase your State Pension.
 nisp.main.context.fillGaps.viewGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
 
-nisp.main.context.cantFillGaps.p1 = You cannot increase your State Pension forecast. {0} a week is the most you can get.
+nisp.main.context.cantFillGaps.p1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth. {0} a week is the most you can get.
 nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
 
 nisp.main.context.additionalStatePension = You may get more than this if you have some Additional State Pension. {0}

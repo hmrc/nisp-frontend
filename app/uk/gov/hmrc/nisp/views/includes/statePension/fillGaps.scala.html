@@ -44,14 +44,24 @@
     specId = Some("fill_gaps_current__chart1")
 )
 
-@barChart(
-    chartKey = Html(messages(
-        "nisp.main.chart.forecast",
-        statePension.finalRelevantEndYear.toString)),
-    chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
-    width = forecastChart.width,
-    specId = Some("fill_gaps_forecast__chart2")
-)
+
+@if(statePension.amounts.protectedPayment) {
+    @barChart(
+        chartKey = Html(messages("nisp.main.chart.estimateIfYouContinue2016")),
+        chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+        width = forecastChart.width,
+        specId = Some("fill_gaps__protected_payment__chart")
+    )
+} else {
+    @barChart(
+        chartKey = Html(messages(
+            "nisp.main.chart.forecast",
+            statePension.finalRelevantEndYear.toString)),
+        chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
+        width = forecastChart.width,
+        specId = Some("fill_gaps_forecast__chart2")
+    )
+}
 
 @if(numberOfGapsPayable == 1){
     @p(
