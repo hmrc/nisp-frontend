@@ -344,19 +344,21 @@
 
         @otherWaysToIncreaseIncome()
 
-        @p(
-            content = HtmlContent(messages(
-                "nisp.main.deferral.text",
-                link(
-                    href = "https://www.gov.uk/deferring-state-pension",
-                    messageKey = "nisp.main.deferral.text.link",
-                    specId = Some("state_pension__deferral__link"),
-                    fullStop = true
-                )
-            )),
-            specId = Some("state_pension__deferral__p1")
-        )
 
+        @if(customerAge > Constants.deferralCutOffAge) {
+            @p(
+                content = HtmlContent(messages(
+                    "nisp.main.deferral.text",
+                    link(
+                        href = "https://www.gov.uk/deferring-state-pension",
+                        messageKey = "nisp.main.deferral.text.link",
+                        specId = Some("state_pension__deferral__link"),
+                        fullStop = true
+                    )
+                )),
+                specId = Some("state_pension__deferral__p1")
+            )
+        }
 
         @if(statePension.contractedOut) {
             @contractedOut()
