@@ -292,7 +292,7 @@ class StatePensionMQPViewSpec
             mockSetup
             assertEqualsText(
               doc,
-              "[data-spec='state_pension_mqp__p5b']",
+              "[data-spec='state_pension_mqp__p5']",
               "You usually need at least 10 qualifying years on your National Insurance record to " +
                 "get any State Pension. You will not get these by 4 May 2017."
             )
@@ -569,17 +569,6 @@ class StatePensionMQPViewSpec
 
           lazy val doc =
             asDocument(contentAsString(controller.show()(FakeRequest())))
-
-          "render page 'You usually need at least 10 qualifying years on your National Insurance record to " +
-            "get any State Pension. You will not have these by 4 May 2018.' " in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension_mqp__p5a']",
-              "You usually need at least 10 qualifying years on your National Insurance record to " +
-                "get any State Pension. You will not have these by 4 May 2018."
-            )
-          }
 
           "render page with link 'Gaps in your record and the cost of filling them'" in {
             mockSetup
