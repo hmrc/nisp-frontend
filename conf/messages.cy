@@ -96,23 +96,23 @@ nisp.print.your.state.pension.summary = Argraffu crynodeb o’ch Pensiwn y Wladw
 
 nisp.main.h2.whenWillIReachStatePensionAge = Pryd byddaf yn cyrraedd oedran Pensiwn y Wladwriaeth?
 nisp.main.spa = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar {0}
-nisp.main.spaNotAGuarantee = Your State Pension age and forecast are not a guarantee and are based on the current law. Your State Pension age may change in the future.
+nisp.main.spaNotAGuarantee = Nid yw eich oedran a’ch rhagolwg Pensiwn y Wladwriaeth yn warant ac maent yn seiliedig ar y gyfraith bresennol. Gall eich oedran Pensiwn y Wladwriaeth newid yn y dyfodol.
 nisp.main.caveats.new = Eich rhagolwg:
-nisp.main.howManyToContribute.single = assumes that you’ll contribute another year
+nisp.main.howManyToContribute.single = yn tybio y byddwch yn cyfrannu am flwyddyn arall
 nisp.main.howManyToContribute = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar {0}
 
 nisp.main.howMuchWillIGet = Faint fyddaf yn ei gael?
-nisp.main.chart.current = Current estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
-nisp.main.chart.forecast = Forecast if you contribute National Insurance until <span class="nowrap">5 April {0}</span>
-nisp.main.newStatePension = The full new State Pension is {0} a week.
+nisp.main.chart.current = Amcangyfrif presennol yn seiliedig ar eich cofnod Yswiriant Gwladol hyd at <span class="nowrap">5 Ebrill {0}</span>
+nisp.main.chart.forecast = Y rhagolwg os byddwch yn gwneud cyfraniadau Yswiriant Gwladol hyd nes <span class="nowrap">5 Ebrill {0}</span>
+nisp.main.newStatePension = Swm Pensiwn y Wladwriaeth newydd llawn yw {0} yr wythnos.
 
 nisp.main.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
 
 nisp.main.forecastChanges = Gall eich rhagolwg newid os oes unrhyw ddiweddariadau i’ch gwybodaeth o ran Yswiriant Gwladol. Gallwch {0}
 nisp.main.terms.and.conditions = ddysgu mwy yn y telerau ac amodau
 
-nisp.main.deferral.text = You can delay claiming your State Pension. This means you may get extra State Pension when you do claim it. {0}
-nisp.main.deferral.text.link = Find out about delaying your State Pension
+nisp.main.deferral.text = Gallwch ohirio hawlio’ch Pensiwn y Wladwriaeth. Mae hyn yn golygu y gallech gael Pensiwn y Wladwriaeth ychwanegol pan fyddwch yn ei hawlio. {0}
+nisp.main.deferral.text.link = Dysgwch ragor am ohirio’ch Pensiwn y Wladwriaeth
 
 nisp.main.overseas.text.new = Os ydych wedi byw neu wedi gweithio y tu allan i’r DU, efallai y byddwch yn gallu defnyddio’ch amser y tu allan i’r DU tuag at y 10 mlynedd sydd eu hangen arnoch er mwyn cael unrhyw Bensiwn Gwladwriaeth y DU. {0}
 nisp.main.overseas.text.link = Dysgwch ragor am fyw neu weithio y tu allan i’r DU
@@ -153,15 +153,15 @@ nisp.main.context.fillgaps.futureproof.para = Mae gennych flynyddoedd ar eich co
 # Scenario messages - new UI messages
 #*********************
 
-nisp.main.context.fillGaps.gaps.plural = You have {0} gaps in your National Insurance record that you may be able to fill to increase your State Pension.
-nisp.main.context.fillGaps.gap.single = You have {0} gap in your National Insurance record that you may be able to fill to increase your State Pension.
+nisp.main.context.fillGaps.gaps.plural = Mae gennych {0} o fylchau yn eich cofnod Yswiriant Gwladol y gallech eu llenwi i gynyddu eich Pensiwn y Wladwriaeth.
+nisp.main.context.fillGaps.gap.single = Mae gennych 1 bwlch yn eich cofnod Yswiriant Gwladol y gallech ei lenwi i gynyddu eich Pensiwn y Wladwriaeth.
 nisp.main.context.fillGaps.viewGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
 
-nisp.main.context.cantFillGaps.p1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth. {0} a week is the most you can get.
+nisp.main.context.cantFillGaps.p1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth. {0} yr wythnos yw’r swm mwyaf y gallwch ei gael.
 nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
 
-nisp.main.context.additionalStatePension = You may get more than this if you have some Additional State Pension. {0}
-nisp.main.context.additionalStatePension.linktext = Find out about Additional State Pension and protected payment
+nisp.main.context.additionalStatePension = Mae’n bosibl y gallwch gael mwy na hyn os oes gennych rywfaint o Bensiwn Ychwanegol y Wladwriaeth. {0}
+nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am Bensiwn Ychwanegol y Wladwriaeth a thaliadau wedi’u diogelu.
 
 #**********************
 # Exclusion messages
@@ -487,9 +487,9 @@ nisp.mqp.forecastChanges.link = ddysgu mwy yn y telerau ac amodau
 nisp.mqp.howMuchWillIGet = Faint fyddaf yn ei gael?
 nisp.mqp.doNotQualify = Nid ydych yn gymwys i gael Pensiwn y Wladwriaeth.
 nisp.mqp.youNeed10Years.notPossible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni allwch gael y rhain erbyn {0}.
-nisp.mqp.currentQualifyingYears.single = You have {0} qualifying year on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
-nisp.mqp.currentQualifyingYears.plural = You have {0} qualifying years on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
-nisp.mqp.currentQualifyingYears.zero = You have no qualifying years on your National Insurance record. You usually need at least {1} qualifying years to get any State Pension.
+nisp.mqp.currentQualifyingYears.single = Mae gennych {0} flwyddyn gymhwysol ar eich cofnod Yswiriant Gwladol. Fel arfer mae angen o leiaf {0} o flynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
+nisp.mqp.currentQualifyingYears.plural = Mae gennych {0} o flynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol. Fel arfer mae angen o leiaf {0} o flynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
+nisp.mqp.currentQualifyingYears.zero = Does dim blynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol. Fel arfer mae angen o leiaf {0} o flynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
 
 nisp.mqp.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
 nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
@@ -545,9 +545,9 @@ nisp.main.cope.linktext = COPE ac eithrio allan (agor mewn tab newydd)
 # COPE messages - New UI messages
 #*****************
 
-nisp.cope.contractedOut = Like most people, you were contracted out of the additional State Pension. This means you paid less National Insurance into your State Pension. Your State Pension forecast takes this into account.
-nisp.cope.contractedOut.findOutMore = Find out more about being contracted out of the State Pension
-nisp.cope.contractedOut.findOutNewStatePension = Find out more about the new State Pension
+nisp.cope.contractedOut = Fel y mwyafrif o bobl, cawsoch eich contractio allan o Bensiwn ychwanegol y Wladwriaeth. Mae hyn yn golygu y gwnaethoch dalu llai o Yswiriant Gwladol i’ch Pensiwn y Wladwriaeth. Mae eich rhagolwg Pensiwn y Wladwriaeth yn cymryd hyn i ystyriaeth.
+nisp.cope.contractedOut.findOutMore = Dysgwch ragor am gael eich contractio allan o Bensiwn y Wladwriaeth.
+nisp.cope.contractedOut.findOutNewStatePension = Dysgwch ragor am Bensiwn newydd y Wladwriaeth
 
 #******************************
 # Not authorised IV messages
