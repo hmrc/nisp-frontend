@@ -439,7 +439,6 @@ nisp.mqp.forecastChanges.link = find out more in the terms and conditions
 nisp.mqp.howMuchWillIGet = How much will I get?
 nisp.mqp.doNotQualify = You do not qualify for State Pension.
 nisp.mqp.youNeed10Years.notPossible = You usually need at least 10 qualifying years on your National Insurance record to get any State Pension. You will not get these by {0}.
-nisp.mqp.youNeed10Years.possible = You usually need at least 10 qualifying years on your National Insurance record to get any State Pension. You will not have these by {0}.
 
 nisp.mqp.howCanIIncrease = How can I increase my State Pension?
 nisp.mqp.fillingGaps = You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.

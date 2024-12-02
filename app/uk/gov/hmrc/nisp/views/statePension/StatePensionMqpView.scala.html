@@ -125,36 +125,19 @@
             specId = Some("state_pension_mqp__p4")
         )
 
-        @statePension.mqpScenario.map { mqp =>
-            @if(mqp == CanGetWithGaps) {
-                @p(
-                    content = Text(messages(
-                        "nisp.mqp.youNeed10Years.possible",
-                        pensionDate
-                    )),
-                    specId = Some("state_pension_mqp__p5a")
-                )
-            }
-            @if(mqp == CantGet) {
-                @p(
-                    content = Text(messages(
-                        "nisp.mqp.youNeed10Years.notPossible",
-                        pensionDate
-                    )),
-                    specId = Some("state_pension_mqp__p5b")
-                )
-            }
-        }
+        @p(
+            content = Text(messages(
+                "nisp.mqp.youNeed10Years.notPossible",
+                pensionDate
+            )),
+            specId = Some("state_pension_mqp__p5")
+        )
 
         @p(
             content = HtmlContent(messages(
                 "nisp.main.overseas.text.new",
                 link(
-                    attrs = Map(
-                        "data-journey-click" -> "checkmystatepension:external:workingoverseas",
-                        "target" -> "_blank",
-                        "rel" -> "noopener noreferrer"
-                    ),
+                    attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
                     href = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
                     messageKey = "nisp.main.overseas.text.link",
                     specId = Some("state_pension_mqp__is_abroad_link1"),

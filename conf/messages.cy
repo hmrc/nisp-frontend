@@ -452,14 +452,13 @@ nisp.mqp.forecastChanges.link = ddysgu mwy yn y telerau ac amodau
 nisp.mqp.howMuchWillIGet = Faint fyddaf yn ei gael?
 nisp.mqp.doNotQualify = Nid ydych yn gymwys i gael Pensiwn y Wladwriaeth.
 nisp.mqp.youNeed10Years.notPossible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni allwch gael y rhain erbyn {0}.
-nisp.mqp.youNeed10Years.possible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni fydd y rhain gennych erbyn {0}.
 
 nisp.mqp.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
 nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
 
 nisp.mqp.cantFillGapsP1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth.
 nisp.mqp.cantFillGapsP2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
-nisp.mqp.cantFillGapsP3 = Filling the gaps in your record is not enough to get State Pension.
+nisp.mqp.cantFillGapsP3 = Nid yw llenwi'r bylchau yn eich cofnod yn ddigon i gael Pensiwn y Wladwriaeth.
 
 nisp.mqp.otherWays = Ffyrdd eraill i gynyddu fy incwm
 nisp.mqp.findOutAboutNI = Dysgwch am Yswiriant Gwladol.
