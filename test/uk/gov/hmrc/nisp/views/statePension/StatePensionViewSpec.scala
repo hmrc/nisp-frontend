@@ -1699,6 +1699,24 @@ class StatePensionViewSpec
             )
           }
 
+          "render page with forecast chart title 'Forecast if you contribute National Insurance until 5 April 2020'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£168.08 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_forecast__chart2-value']",
+              "£168.08 a week"
+            )
+          }
+
           "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
             mockSetup
             assertEqualsText(
@@ -1723,25 +1741,6 @@ class StatePensionViewSpec
               doc,
               "dd[data-spec='fill_gaps_personal_max__chart3-value']",
               "£172.71 a week"
-            )
-          }
-
-          // Protected Payment
-          "render page with forecast chart title 'Forecast if you contribute enough in year up to 5 April 2016'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps__protected_payment__chart-key']",
-              "Forecast if you contribute enough in year up to 5 April 2016"
-            )
-          }
-
-          "render page with forecast chart text '£168.08 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps__protected_payment__chart-value']",
-              "£168.08 a week"
             )
           }
 
@@ -1819,6 +1818,24 @@ class StatePensionViewSpec
             )
           }
 
+          "render page with forecast chart title 'Forecast if you contribute National Insurance until 5 April 2020'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dt[data-spec='fill_gaps_forecast__chart2-key']",
+              "Forecast if you contribute National Insurance until 5 April 2020"
+            )
+          }
+
+          "render page with forecast chart text '£168.08 a week'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "dd[data-spec='fill_gaps_forecast__chart2-value']",
+              "£168.08 a week"
+            )
+          }
+
           "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
             mockSetup
             assertEqualsText(
@@ -1843,25 +1860,6 @@ class StatePensionViewSpec
               doc,
               "dd[data-spec='fill_gaps_personal_max__chart3-value']",
               "£172.71 a week"
-            )
-          }
-
-          // Protected Payment
-          "render page with forecast chart title 'Forecast if you contribute enough in year up to 5 April 2016'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps__protected_payment__chart-key']",
-              "Forecast if you contribute enough in year up to 5 April 2016"
-            )
-          }
-
-          "render page with forecast chart text '£168.08 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps__protected_payment__chart-value']",
-              "£168.08 a week"
             )
           }
 

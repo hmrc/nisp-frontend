@@ -61,16 +61,6 @@
 
 } else {
 
-    @if(statePension.forecastScenario == Scenario.ContinueWorkingMax && statePension.amounts.protectedPayment) {
-        @barChart(
-            chartKey = Html(messages("nisp.main.chart.estimateIfYouContinue2016")),
-            chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
-            width = forecastChart.width,
-            specId = Some("continue_working__protected_payment__chart")
-        )
-
-    } else {
-
     @barChart(
         chartKey = Html(messages(
             "nisp.main.chart.lastprocessed.title",
@@ -80,7 +70,6 @@
         width = currentChart.width,
         specId = Some("continue_working_current__chart1")
     )
-    }
 
     @barChart(
         chartKey = Html(messages(
