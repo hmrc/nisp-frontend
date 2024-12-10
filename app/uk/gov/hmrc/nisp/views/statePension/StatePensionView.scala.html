@@ -21,15 +21,17 @@
 @import uk.gov.hmrc.nisp.utils.Constants
 @import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
 @import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, H3, Link, details, insetText, NispPageHeading, Panel, Span, PrintLink}
-@import uk.gov.hmrc.nisp.views.html.includes.{BarChart, NiLInks, abroad, spChart, deferral}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, H3, Link, NispPageHeading, Span, PrintLink}
+@import uk.gov.hmrc.nisp.views.html.includes.{BarChart, NiLInks}
 @import uk.gov.hmrc.nisp.views.html.includes.statePension.{continueWorking, reached, fillGapsMQP, fillGaps, otherWaysToIncreaseIncome, statePensionAgeUnderConsideration, contractedOutPensionScheme, outsideUK}
 @import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.views.Main
 
 @this(
         main: Main,
         langUtils: LanguageUtils,
+        appConfig: ApplicationConfig,
         p: P,
         h1: H1,
         h2: H2,
@@ -38,15 +40,12 @@
         link: Link,
         niLinks: NiLInks,
         span: Span,
-        details: details,
         govukWarningText: GovukWarningText,
         nispPageHeading: NispPageHeading,
         outsideUK: outsideUK,
-        abroad: abroad,
         fillGapsMQP: fillGapsMQP,
         continueWorking: continueWorking,
         fillGaps: fillGaps,
-        deferral: deferral,
         reached: reached,
         otherWaysToIncreaseIncome: otherWaysToIncreaseIncome,
         statePensionAgeUnderConsideration: statePensionAgeUnderConsideration,
@@ -118,8 +117,8 @@
         <ul class="govuk-list govuk-list--bullet" data-spec="state_pension__ul__caveats">
             <li data-spec="state_pension__ul__caveats__li1">
                 @Html(messages(
-                "nisp.main.isBased",
-                langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)
+                    "nisp.main.isBased",
+                    langUtils.Dates.formatDate(statePension.earningsIncludedUpTo)
                 ))
             </li>
 
@@ -127,8 +126,8 @@
                 @if(statePension.amounts.forecast.yearsToWork == 1) {
                     <li data-spec="state_pension__ul__caveats__li2__single">
                         @messages(
-                        "nisp.main.howManyToContribute.single",
-                        statePension.amounts.forecast.yearsToWork
+                            "nisp.main.howManyToContribute.single",
+                            statePension.amounts.forecast.yearsToWork
                         )
                     </li>
                     <li data-spec="state_pension__ul__caveats_inflation__li3">
@@ -137,8 +136,8 @@
                 }else{
                     <li data-spec="state_pension__ul__caveats__li2__plural">
                         @messages(
-                        "nisp.main.howManyToContribute",
-                        Time.years(statePension.amounts.forecast.yearsToWork)
+                            "nisp.main.howManyToContribute",
+                            Time.years(statePension.amounts.forecast.yearsToWork)
                         )
                     </li>
                     <li data-spec="state_pension__ul__caveats_inflation__li3">
@@ -146,20 +145,22 @@
                     </li>
                 }
             }else{
-            <li data-spec="state_pension__ul__caveats_inflation__li2">
-                @messages("nisp.main.inflation")
-            </li>
+                <li data-spec="state_pension__ul__caveats_inflation__li2">
+                    @messages("nisp.main.inflation")
+                </li>
             }
 
             @if(statePension.pensionSharingOrder) {
-            <li data-spec="state_pension__ul__caveats__li4">
-                @messages("nisp.main.psod")
-            </li>
+                <li data-spec="state_pension__ul__caveats__li4">
+                    @messages("nisp.main.psod")
+                </li>
             }
         </ul>
 
         @govukWarningText(WarningText(
-            attributes = Map("id" -> "state_pension__warning_text"),
+            attributes = Map(
+                "id" -> "state_pension__warning_text"
+            ),
             content = HtmlContent(messages(
                 "nisp.landing.estimateprovided.new",
                 link(
@@ -199,19 +200,19 @@
                         specId = Some("state_pension__current_qualifying_years__plural")
                     )
                 }
-
             } else {
                 @p(
                     content = Text(messages("nisp.mqp.doNotQualify")),
                     specId = Some("state_pension__do_not_qualify")
                 )
+
                 @p(
                     content = Text(messages(
                         "nisp.mqp.currentQualifyingYears.zero",
                         statePension.numberOfQualifyingYears,
                         Constants.minimumQualifyingYearsNSP
-                )),
-                specId = Some("state_pension__no_qualifying_years")
+                    )),
+                    specId = Some("state_pension__no_qualifying_years")
                 )
             }
 
@@ -274,7 +275,10 @@
         }
 
         @p(
-            content = HtmlContent(messages("nisp.main.newStatePension", NispMoney.pounds(statePension.currentFullWeeklyPensionAmount))),
+            content = HtmlContent(messages(
+                "nisp.main.newStatePension",
+                NispMoney.pounds(statePension.currentFullWeeklyPensionAmount)
+            )),
             specId = Some("new_state_pension__p1")
         )
 
@@ -282,13 +286,13 @@
             @p(
                 content = HtmlContent(messages(
                     "nisp.main.context.additionalStatePension",
-                        link(
-                            href = "https://www.gov.uk/additional-state-pension",
-                            messageKey = "nisp.main.context.additionalStatePension.linktext",
-                            specId = Some("state_pension__additional_state_pension__link"),
-                            fullStop = true
-                        )
-                    )),
+                    link(
+                        href = appConfig.additionalStatePensionLink,
+                        messageKey = "nisp.main.context.additionalStatePension.linktext",
+                        specId = Some("state_pension__additional_state_pension__link"),
+                        fullStop = true
+                    )
+                )),
                 specId = Some("state_pension__additional_state_pension__p1")
             )
         }
@@ -297,12 +301,8 @@
             content = HtmlContent(messages(
                 "nisp.main.forecastChanges",
                 link(
-                    attrs = Map(
-                        "target" -> "_blank",
-                        "rel" -> "noopener noreferrer"
-                    ),
-                    href = s"${routes.TermsConditionsController.show.url}?showBackLink=true",
                     fullStop = true,
+                    href = s"${routes.TermsConditionsController.show.url}?showBackLink=true",
                     messageKey = "nisp.main.terms.and.conditions",
                     specId = Some("state_pension__legal__forecast_changes__link")
                 )
@@ -317,15 +317,17 @@
 
         @if(statePension.forecastScenario == Scenario.FillGaps){
             @p(
-                content = HtmlContent(messages("nisp.main.context.fillGaps.viewGaps")),
+                content = HtmlContent(messages(
+                    "nisp.main.context.fillGaps.viewGaps"
+                )),
                 specId = Some("state_pension__view_gaps__p1")
             )
         }else{
             @p(
-                content = HtmlContent(
-                        messages("nisp.main.context.cantFillGaps.p1",
-                        NispMoney.pounds(statePension.amounts.forecast.weeklyAmount))
-                        ),
+                content = HtmlContent(messages(
+                    "nisp.main.context.cantFillGaps.p1",
+                    NispMoney.pounds(statePension.amounts.forecast.weeklyAmount)
+                )),
                 specId = Some("state_pension__cant_pay_gaps__p1")
             )
             @p(
@@ -347,13 +349,12 @@
 
         @otherWaysToIncreaseIncome()
 
-
         @if(customerAge > Constants.deferralCutOffAge) {
             @p(
                 content = HtmlContent(messages(
                     "nisp.main.deferral.text",
                     link(
-                        href = "https://www.gov.uk/deferring-state-pension",
+                        href = appConfig.pensionDeferralLink,
                         messageKey = "nisp.main.deferral.text.link",
                         specId = Some("state_pension__deferral__link"),
                         fullStop = true

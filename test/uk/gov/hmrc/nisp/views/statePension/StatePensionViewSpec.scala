@@ -31,7 +31,6 @@ import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
-import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthRetrievals, AuthenticatedRequest, NispAuthedUser, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
@@ -58,7 +57,6 @@ class StatePensionViewSpec
   val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
-  val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
@@ -69,7 +67,6 @@ class StatePensionViewSpec
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
-      bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       featureFlagServiceBinding
     )
@@ -81,7 +78,6 @@ class StatePensionViewSpec
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
-      bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
@@ -96,19 +92,12 @@ class StatePensionViewSpec
     reset(mockStatePensionService)
     reset(mockNationalInsuranceService)
     reset(mockAuditConnector)
-    reset(mockAppConfig)
     reset(mockPertaxHelper)
     reset(mockFeatureFlagService)
 
     wireMockServer.resetAll()
     when(mockPertaxHelper.isFromPertax(any()))
       .thenReturn(Future.successful(false))
-    when(mockAppConfig.reportAProblemNonJSUrl)
-      .thenReturn("/reportAProblem")
-    when(mockAppConfig.contactFormServiceIdentifier)
-      .thenReturn("/id")
-    when(mockAppConfig.pertaxAuthBaseUrl)
-      .thenReturn(s"http://localhost:${wireMockServer.port()}")
     when(mockFeatureFlagService.get(NewStatePensionUIToggle))
       .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = true)))
   }
@@ -219,19 +208,18 @@ class StatePensionViewSpec
                 currentFullWeeklyPensionAmount = 151.65,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 118.65,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork   = 10,
                       weeklyAmount  = 150.65,
                       monthlyAmount = 676.80,
                       annualAmount  = 8121.59
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork   = 0,
                       gapsToFill    = 0,
                       weeklyAmount  = 150.65,
@@ -636,7 +624,6 @@ class StatePensionViewSpec
               "This means you are unable to pay for gaps in your National Insurance record online."
             )
           }
-
         }
 
         "State Pension view with MQP : No Gaps || Full Rate & Personal Max: With State Pension age under consideration message" should {
@@ -650,19 +637,18 @@ class StatePensionViewSpec
                 ageUnderConsideration = true,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 118.65,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork   = 20,
                       weeklyAmount  = 150.65,
                       monthlyAmount = 676.80,
                       annualAmount  = 8121.59
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork   = 0,
                       gapsToFill    = 0,
                       weeklyAmount  = 150.65,
@@ -791,7 +777,6 @@ class StatePensionViewSpec
             )
           }
         }
-
       }
 
       "The scenario is continue working || Fill Gaps" when {
@@ -803,24 +788,22 @@ class StatePensionViewSpec
                 numberOfQualifyingYears = 0,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 149.71,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
-                      yearsToWork  = 4,
-                      weeklyAmount = 148.71,
-                      monthlyAmount  = 590.10,
+                    forecast = StatePensionAmountForecast(
+                      yearsToWork   = 4,
+                      weeklyAmount  = 148.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
-
                     ),
-                    StatePensionAmountMaximum(
-                      yearsToWork  = 4,
-                      gapsToFill  = 2,
-                      weeklyAmount = 149.71,
-                      monthlyAmount  = 590.10,
+                    maximum = StatePensionAmountMaximum(
+                      yearsToWork   = 4,
+                      gapsToFill    = 2,
+                      weeklyAmount  = 149.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     )
                   )
@@ -931,7 +914,6 @@ class StatePensionViewSpec
               "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
             )
           }
-
         }
 
         "State Pension view with MQP : Personal Max: With State Pension age under consideration message" should {
@@ -942,24 +924,23 @@ class StatePensionViewSpec
                 ageUnderConsideration = true,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 149.71,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
-                      yearsToWork  = 4,
-                      weeklyAmount = 148.71,
-                      monthlyAmount  = 590.10,
+                    forecast = StatePensionAmountForecast(
+                      yearsToWork   = 4,
+                      weeklyAmount  = 148.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
 
                     ),
-                    StatePensionAmountMaximum(
-                      yearsToWork  = 4,
-                      gapsToFill  = 2,
-                      weeklyAmount = 149.71,
-                      monthlyAmount  = 590.10,
+                    maximum = StatePensionAmountMaximum(
+                      yearsToWork   = 4,
+                      gapsToFill    = 2,
+                      weeklyAmount  = 149.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     )
                   )
@@ -972,7 +953,6 @@ class StatePensionViewSpec
                 numberOfGapsPayable = 2
               )))))
           }
-
 
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
@@ -1074,10 +1054,7 @@ class StatePensionViewSpec
               "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
             )
           }
-
-
         }
-
       }
     }
 
@@ -1091,24 +1068,22 @@ class StatePensionViewSpec
               .thenReturn(Future.successful(Right(Right(statePension(
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 149.71,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
-                      yearsToWork  = 4,
-                      weeklyAmount = 148.71,
-                      monthlyAmount  = 590.10,
+                    forecast = StatePensionAmountForecast(
+                      yearsToWork   = 4,
+                      weeklyAmount  = 148.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
-
                     ),
-                    StatePensionAmountMaximum(
-                      yearsToWork  = 4,
-                      gapsToFill  = 2,
-                      weeklyAmount = 149.71,
-                      monthlyAmount  = 590.10,
+                    maximum = StatePensionAmountMaximum(
+                      yearsToWork   = 4,
+                      gapsToFill    = 2,
+                      weeklyAmount  = 149.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     )
                   )
@@ -1500,7 +1475,6 @@ class StatePensionViewSpec
               "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
             )
           }
-
         }
 
         "State Pension view with NON-MQP : Personal Max: With State Pension age under consideration message" should {
@@ -1511,24 +1485,22 @@ class StatePensionViewSpec
                 ageUnderConsideration = true,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 149.71,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
-                      yearsToWork  = 4,
-                      weeklyAmount = 148.71,
-                      monthlyAmount  = 590.10,
+                    forecast = StatePensionAmountForecast(
+                      yearsToWork   = 4,
+                      weeklyAmount  = 148.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
-
                     ),
-                    StatePensionAmountMaximum(
-                      yearsToWork  = 4,
-                      gapsToFill  = 2,
-                      weeklyAmount = 149.71,
-                      monthlyAmount  = 590.10,
+                    maximum = StatePensionAmountMaximum(
+                      yearsToWork   = 4,
+                      gapsToFill    = 2,
+                      weeklyAmount  = 149.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     )
                   )
@@ -1638,7 +1610,6 @@ class StatePensionViewSpec
               "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
             )
           }
-
         }
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65" should {
@@ -1648,23 +1619,23 @@ class StatePensionViewSpec
                 amounts =
                   statePensionAmounts(
                     protectedPayment = true,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 162.34,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
-                      yearsToWork  = 4,
-                      weeklyAmount = 168.08,
-                      monthlyAmount  = 590.10,
+                    forecast = StatePensionAmountForecast(
+                      yearsToWork   = 4,
+                      weeklyAmount  = 168.08,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
 
                     ),
-                    StatePensionAmountMaximum(
-                      yearsToWork  = 4,
-                      gapsToFill  = 2,
-                      weeklyAmount = 172.71,
-                      monthlyAmount  = 590.10,
+                    maximum = StatePensionAmountMaximum(
+                      yearsToWork   = 4,
+                      gapsToFill    = 2,
+                      weeklyAmount  = 172.71,
+                      monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     )
                   )
@@ -1753,7 +1724,6 @@ class StatePensionViewSpec
               "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
             )
           }
-
         }
 
         "State Pension view with NON-MQP : Full Rate current more than 155.65: With State Pension age under consideration message" should {
@@ -1764,19 +1734,19 @@ class StatePensionViewSpec
                 amounts =
                   statePensionAmounts(
                     protectedPayment = true,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 162.34,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork     = 4,
                       weeklyAmount    = 168.08,
                       monthlyAmount   = 590.10,
                       annualAmount    = 7081.15
 
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork    = 4,
                       gapsToFill     = 2,
                       weeklyAmount   = 172.71,
@@ -1891,7 +1861,6 @@ class StatePensionViewSpec
               "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
             )
           }
-
         }
 
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps" should {
@@ -1901,19 +1870,18 @@ class StatePensionViewSpec
                 pensionDate = LocalDate.of(2017, 6, 7),
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount   = 133.71,
                       monthlyAmount  = 590.10,
                       annualAmount   = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork    = 4,
                       weeklyAmount   = 148.71,
                       monthlyAmount  = 590.10,
                       annualAmount   = 7081.15
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork    = 4,
                       gapsToFill     = 2,
                       weeklyAmount   = 149.71,
@@ -2017,19 +1985,18 @@ class StatePensionViewSpec
                 ageUnderConsideration = true,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount   = 133.71,
                       monthlyAmount  = 590.10,
                       annualAmount   = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork    = 4,
                       weeklyAmount   = 148.71,
                       monthlyAmount  = 590.10,
                       annualAmount   = 7081.15
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork    = 4,
                       gapsToFill     = 2,
                       weeklyAmount   = 149.71,
@@ -2145,7 +2112,6 @@ class StatePensionViewSpec
               "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
             )
           }
-
         }
       }
 
@@ -2160,19 +2126,18 @@ class StatePensionViewSpec
                 currentFullWeeklyPensionAmount = 151.65,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 118.65,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork   = 0,
                       weeklyAmount  = 150.65,
                       monthlyAmount = 676.80,
                       annualAmount  = 8121.59
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork   = 0,
                       gapsToFill    = 0,
                       weeklyAmount  = 150.65,
@@ -2190,7 +2155,6 @@ class StatePensionViewSpec
 
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-
 
           // Bar charts - no gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -2279,19 +2243,18 @@ class StatePensionViewSpec
                 ageUnderConsideration = true,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 118.65,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork   = 0,
                       weeklyAmount  = 150.65,
                       monthlyAmount = 676.80,
                       annualAmount  = 8121.59
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork   = 0,
                       gapsToFill    = 0,
                       weeklyAmount  = 150.65,
@@ -2403,7 +2366,6 @@ class StatePensionViewSpec
               "You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year."
             )
           }
-
         }
 
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
@@ -2413,19 +2375,18 @@ class StatePensionViewSpec
                 pensionDate = LocalDate.of(2022, 6, 7),
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 149.65,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork   = 4,
                       weeklyAmount  = 155.65,
                       monthlyAmount = 676.80,
                       annualAmount  = 8121.59
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork   = 4,
                       gapsToFill    = 2,
                       weeklyAmount  = 155.65,
@@ -2520,7 +2481,6 @@ class StatePensionViewSpec
               "This means you are unable to pay for gaps in your National Insurance record online."
             )
           }
-
         }
 
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left: With State Pension age under consideration message" should {
@@ -2531,19 +2491,18 @@ class StatePensionViewSpec
                 ageUnderConsideration = true,
                 amounts =
                   statePensionAmounts(
-                    protectedPayment = false,
-                    StatePensionAmountRegular(
+                    current = StatePensionAmountRegular(
                       weeklyAmount  = 149.65,
                       monthlyAmount = 590.10,
                       annualAmount  = 7081.15
                     ),
-                    StatePensionAmountForecast(
+                    forecast = StatePensionAmountForecast(
                       yearsToWork   = 4,
                       weeklyAmount  = 155.65,
                       monthlyAmount = 676.80,
                       annualAmount  = 8121.59
                     ),
-                    StatePensionAmountMaximum(
+                    maximum = StatePensionAmountMaximum(
                       yearsToWork   = 4,
                       gapsToFill    = 2,
                       weeklyAmount  = 155.65,
@@ -2665,7 +2624,6 @@ class StatePensionViewSpec
               "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
             )
           }
-
         }
       }
 
@@ -2676,19 +2634,18 @@ class StatePensionViewSpec
               pensionDate = LocalDate.of(2017, 6, 7),
               amounts =
                 statePensionAmounts(
-                  protectedPayment = false,
-                  StatePensionAmountRegular(
+                  current = StatePensionAmountRegular(
                     weeklyAmount  = 155.65,
                     monthlyAmount = 590.10,
                     annualAmount  = 7081.15
                   ),
-                  StatePensionAmountForecast(
+                  forecast = StatePensionAmountForecast(
                     yearsToWork   = 4,
                     weeklyAmount  = 155.65,
                     monthlyAmount = 676.80,
                     annualAmount  = 8121.59
                   ),
-                  StatePensionAmountMaximum(
+                  maximum = StatePensionAmountMaximum(
                     yearsToWork   = 4,
                     gapsToFill    = 2,
                     weeklyAmount  = 155.65,
@@ -2744,7 +2701,6 @@ class StatePensionViewSpec
           )
         }
 
-
         // No gaps
         "render page with text 'You cannot increase your State Pension forecast. £155.65 a week is the most you can get.'" in {
           mockSetup
@@ -2789,19 +2745,18 @@ class StatePensionViewSpec
               ageUnderConsideration = true,
               amounts =
                 statePensionAmounts(
-                  protectedPayment = false,
-                  StatePensionAmountRegular(
+                  current = StatePensionAmountRegular(
                     weeklyAmount  = 155.65,
                     monthlyAmount = 590.10,
                     annualAmount  = 7081.15
                   ),
-                  StatePensionAmountForecast(
+                  forecast = StatePensionAmountForecast(
                     yearsToWork   = 4,
                     weeklyAmount  = 155.65,
                     monthlyAmount = 676.80,
                     annualAmount  = 8121.59
                   ),
-                  StatePensionAmountMaximum(
+                  maximum = StatePensionAmountMaximum(
                     yearsToWork   = 4,
                     gapsToFill    = 2,
                     weeklyAmount  = 155.65,
@@ -2819,7 +2774,6 @@ class StatePensionViewSpec
 
         lazy val abroadUserDoc =
           asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
 
         // Bar charts - reached
         "render page with forecast chart title 'Forecast if you contribute until '" in {
@@ -2911,7 +2865,6 @@ class StatePensionViewSpec
             "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
           )
         }
-
       }
 
       "State Pension view with Contracted out User" should {
@@ -2946,8 +2899,6 @@ class StatePensionViewSpec
 
         "render with correct page title" in {
           mockSetup
-          println(s"\n\n\n${doc.getElementById("which-view").text()}\n\n\n")
-
           assertElementContainsText(
             doc,
             "head > title",
@@ -3017,7 +2968,6 @@ class StatePensionViewSpec
             "https://www.gov.uk/additional-state-pension"
           )
         }
-
       }
 
       "State Pension view with Pension Sharing Order" should {
@@ -3029,19 +2979,18 @@ class StatePensionViewSpec
               pensionSharingOrder = true,
               amounts =
                 statePensionAmounts(
-                  protectedPayment = false,
-                  StatePensionAmountRegular(
+                  current = StatePensionAmountRegular(
                     weeklyAmount  = 155.65,
                     monthlyAmount = 590.10,
                     annualAmount  = 7081.15
                   ),
-                  StatePensionAmountForecast(
+                  forecast = StatePensionAmountForecast(
                     yearsToWork   = 4,
                     weeklyAmount  = 155.65,
                     monthlyAmount = 676.80,
                     annualAmount  = 8121.59
                   ),
-                  StatePensionAmountMaximum(
+                  maximum = StatePensionAmountMaximum(
                     yearsToWork   = 4,
                     gapsToFill    = 2,
                     weeklyAmount  = 155.65,

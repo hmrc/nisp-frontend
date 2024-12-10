@@ -28,7 +28,6 @@ import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
-import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
@@ -59,7 +58,6 @@ class StatePensionMQPViewSpec
 
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
-  val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
@@ -69,7 +67,6 @@ class StatePensionMQPViewSpec
       bind[AuthRetrievals].to[FakeAuthAction],
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
-      bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       featureFlagServiceBinding
@@ -81,21 +78,11 @@ class StatePensionMQPViewSpec
     super.beforeEach()
     reset(mockStatePensionService)
     reset(mockNationalInsuranceService)
-    reset(mockAppConfig)
     reset(mockPertaxHelper)
     reset(mockFeatureFlagService)
 
     when(mockPertaxHelper.isFromPertax(any()))
       .thenReturn(Future.successful(false))
-    when(mockAppConfig.accessibilityStatementUrl(any()))
-      .thenReturn("/foo")
-    when(mockAppConfig.reportAProblemNonJSUrl)
-      .thenReturn("/reportAProblem")
-    when(mockAppConfig.contactFormServiceIdentifier)
-      .thenReturn("/id")
-    wireMockServer.resetAll()
-    when(mockAppConfig.pertaxAuthBaseUrl)
-      .thenReturn(s"http://localhost:${wireMockServer.port()}")
     when(mockFeatureFlagService.get(NewStatePensionUIToggle))
       .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = true)))
   }

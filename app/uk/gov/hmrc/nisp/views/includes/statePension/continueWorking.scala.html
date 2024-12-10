@@ -19,16 +19,12 @@
 @import uk.gov.hmrc.nisp.models.{SPChartModel, StatePension}
 @import uk.gov.hmrc.nisp.views.formatting.NispMoney
 @import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H2, Link}
 @import uk.gov.hmrc.nisp.views.html.includes.{chart, BarChart}
 
 @this(
         chart: chart,
         barChart: BarChart,
-        langUtils: LanguageUtils,
-        p: P,
-        h2: H2,
-        link: Link
+        langUtils: LanguageUtils
 )
 
 @(
@@ -45,7 +41,8 @@
     @barChart(
         chartKey = Html(messages(
             "nisp.main.chart.forecast",
-            statePension.finalRelevantEndYear.toString)),
+            statePension.finalRelevantEndYear.toString
+        )),
         chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
         width = forecastChart.width,
         specId = Some("continue_working__mqp_forecast__chart1")
@@ -53,7 +50,8 @@
 
     @barChart(
         chartKey = Html(messages(
-            "nisp.main.context.fillgaps.chart.maxamount")),
+            "nisp.main.context.fillgaps.chart.maxamount"
+        )),
         chartValue = Html(s"${NispMoney.pounds(personalMaximumChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
         width = personalMaximumChart.width,
         specId = Some("continue_working__mqp_personal_max__chart2")
@@ -74,14 +72,17 @@
     @barChart(
         chartKey = Html(messages(
             "nisp.main.chart.forecast",
-            statePension.finalRelevantEndYear.toString)),
+            statePension.finalRelevantEndYear.toString
+        )),
         chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
         width = forecastChart.width,
         specId = Some("continue_working_forecast__chart2")
     )
 
     @barChart(
-        chartKey = Html(messages("nisp.main.context.fillgaps.chart.maxamount")),
+        chartKey = Html(messages(
+            "nisp.main.context.fillgaps.chart.maxamount"
+        )),
         chartValue = Html(s"${NispMoney.pounds(personalMaximumChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
         width = personalMaximumChart.width,
         specId = Some("continue_working_personal_max__chart3")

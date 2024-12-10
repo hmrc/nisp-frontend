@@ -15,10 +15,12 @@
  *@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         p: P,
-        link: Link
+        link: Link,
+        appConfig: ApplicationConfig
 )
 @()(
         implicit messages: Messages
@@ -28,13 +30,14 @@
     content = HtmlContent(messages(
         "nisp.main.overseas.text.new",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
-            href = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:workingoverseas"
+            ),
+            href = appConfig.abroadLink,
             messageKey = "nisp.main.overseas.text.link",
             specId = Some("state_pension_outside_uk__link"),
             fullStop = true
         )
-
     )),
     specId = Some("state_pension_outside_uk__p1")
 )

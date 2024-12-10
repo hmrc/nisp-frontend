@@ -15,11 +15,13 @@
  *@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H2, Link, P}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         p: P,
         h2: H2,
-        link: Link
+        link: Link,
+        appConfig: ApplicationConfig
 )
 @()(
         implicit messages: Messages
@@ -39,7 +41,7 @@
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href = "https://www.gov.uk/contracted-out",
+        href = appConfig.copeLink,
         messageKey = "nisp.cope.contractedOut.findOutMore",
         specId = Some("state_pension__contracted_out__link_1")
     ))
@@ -48,7 +50,7 @@
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href = "https://www.gov.uk/new-state-pension",
+        href = appConfig.newStatePensionLink,
         messageKey = "nisp.cope.contractedOut.findOutNewStatePension",
         specId = Some("state_pension__contracted_out__link_2")
     ))

@@ -23,7 +23,7 @@
 @this(
     barChart: BarChart,
     p: P
-    )
+)
 @(
     statePension: StatePension,
     forecastChart: SPChartModel,
@@ -36,7 +36,8 @@
 @barChart(
     chartKey = Html(messages(
         "nisp.main.chart.forecast",
-        statePension.finalRelevantEndYear.toString)),
+        statePension.finalRelevantEndYear.toString
+    )),
     chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
     width = forecastChart.width,
     specId = Some("fill_gaps_MQP__chart1")
@@ -48,7 +49,7 @@
             "nisp.main.context.fillGaps.gap.single",
             numberOfGapsPayable
         )),
-    specId = Some("state_pension__gaps_to_fill_MQP__p1_single")
+        specId = Some("state_pension__gaps_to_fill_MQP__p1_single")
     )
 } else {
     @p(
@@ -56,12 +57,14 @@
             "nisp.main.context.fillGaps.gaps.plural",
             numberOfGapsPayable
         )),
-    specId = Some("state_pension__gaps_to_fill_MQP__p1_plural")
+        specId = Some("state_pension__gaps_to_fill_MQP__p1_plural")
     )
 }
 
 @barChart(
-    chartKey = Html(messages("nisp.main.context.fillgaps.chart.maxamount")),
+    chartKey = Html(messages(
+        "nisp.main.context.fillgaps.chart.maxamount"
+    )),
     chartValue = Html(s"${NispMoney.pounds(personalMaximumChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
     width = personalMaximumChart.width,
     specId = Some("fill_gaps_MQP__chart2")

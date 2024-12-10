@@ -35,14 +35,17 @@
 @barChart(
     chartKey = Html(messages(
         "nisp.main.chart.forecast",
-        statePension.finalRelevantEndYear.toString)),
+        statePension.finalRelevantEndYear.toString
+    )),
     chartValue = Html(s"${NispMoney.pounds(forecastChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
     width = forecastChart.width,
     specId = Some("reached__chart1")
 )
 
 @barChart(
-    chartKey = Html(messages("nisp.main.context.fillgaps.chart.maxamount")),
+    chartKey = Html(messages(
+        "nisp.main.context.fillgaps.chart.maxamount"
+    )),
     chartValue = Html(s"${NispMoney.pounds(personalMaximumChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
     width = personalMaximumChart.width,
     specId = Some("reached__chart2")

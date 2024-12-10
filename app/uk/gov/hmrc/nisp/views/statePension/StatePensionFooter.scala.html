@@ -16,14 +16,16 @@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H2, P, Link}
 @import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         h2: H2,
         p: P,
-        link: Link
+        link: Link,
+        appConfig: ApplicationConfig
 )
 @()(
-        implicit messages: Messages
+        implicit messages: Messages,
 )
 <div class="govuk-body govuk-!-margin-top-6">
     @h2(
@@ -36,7 +38,7 @@
         content = HtmlContent(messages(
             "nisp.nirecord.forMoreInfoOnGaps",
             link(
-                href = "https://www.gov.uk/future-pension-centre",
+                href = appConfig.futurePensionLink,
                 messageKey = "global.page.not.found.error.contact.future.pension.centre.link.text",
                 specId = Some("state_pension__footer_link"),
                 fullStop = true

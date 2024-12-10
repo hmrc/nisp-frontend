@@ -15,11 +15,13 @@
  *@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H3, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         h3: H3,
         p: P,
         link: Link,
+        appConfig: ApplicationConfig
 )
 @()(
         implicit messages: Messages
@@ -37,8 +39,10 @@
     content = HtmlContent(messages(
         "nisp.mqp.childBenefits",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:homeresponsibilitiesprotection"),
-            href = "https://www.gov.uk/home-responsibilities-protection-hrp",
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:homeresponsibilitiesprotection"
+            ),
+            href = appConfig.homeResponsibilitiesLink,
             messageKey = "nisp.mqp.childBenefits.link",
             specId = Some("state_pension__home_responsibilities_protection__link"),
             fullStop = true
@@ -51,8 +55,10 @@
     content = HtmlContent(messages(
         "nisp.mqp.pensionCredit",
         link(
-            attrs = Map("data-journey-click" -> "checkmystatepension:external:pensioncredit"),
-            href = "https://www.gov.uk/pension-credit/overview",
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:pensioncredit"
+            ),
+            href = appConfig.pensionCreditLink,
             messageKey = "nisp.mqp.pensionCredit.linktext",
             specId = Some("state_pension__pension_credit__link"),
             fullStop = true

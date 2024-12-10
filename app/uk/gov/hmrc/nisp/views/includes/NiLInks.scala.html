@@ -15,10 +15,12 @@
  *@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         p: P,
-        link: Link
+        link: Link,
+        appConfig: ApplicationConfig
 )
 
 @()(
@@ -28,7 +30,7 @@
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href = "https://www.gov.uk/national-insurance",
+        href = appConfig.nationalInsuranceLink,
         messageKey = "nisp.mqp.findOutAboutNI",
         specId = Some("state_pension__mqp__find_out_ni")
     ))
@@ -37,7 +39,7 @@
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href = "https://www.gov.uk/national-insurance/how-much-you-pay",
+        href =  appConfig.niHowMuchYouPayLink,
         messageKey = "nisp.mqp.findOutAboutNIYouPay",
         specId = Some("state_pension__mqp__find_out_ni_you_pay")
     ))
@@ -46,7 +48,7 @@
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href = "https://www.gov.uk/national-insurance-credits",
+        href =  appConfig.nationalInsuranceCreditLink,
         messageKey = "nisp.mqp.findOutAboutNICredits",
         specId = Some("state_pension__mqp__find_out_ni_credits")
     ))
