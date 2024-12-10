@@ -14,42 +14,44 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H2, Link, P}
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         p: P,
+        h2: H2,
         link: Link,
         appConfig: ApplicationConfig
 )
-
 @()(
         implicit messages: Messages
 )
 
+@h2(
+    elmId = Some("contractedOut"),
+    msg = "nisp.cope.title1",
+    specId = Some("state_pension__contracted_out__h2")
+)
+
+@p(
+    content = Text(messages("nisp.cope.contractedOut")),
+    specId = Some("state_pension__contracted_out__p1")
+)
+
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href = appConfig.nationalInsuranceLink,
-        messageKey = "nisp.mqp.findOutAboutNI",
-        specId = Some("state_pension__mqp__find_out_ni")
+        href = appConfig.copeLink,
+        messageKey = "nisp.cope.contractedOut.findOutMore",
+        specId = Some("state_pension__contracted_out__link_1")
     ))
 )
 
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href =  appConfig.niHowMuchYouPayLink,
-        messageKey = "nisp.mqp.findOutAboutNIYouPay",
-        specId = Some("state_pension__mqp__find_out_ni_you_pay")
-    ))
-)
-
-@p(
-    classes = Some("govuk-body govuk-!-margin-top-4"),
-    content = HtmlContent(link(
-        href =  appConfig.nationalInsuranceCreditLink,
-        messageKey = "nisp.mqp.findOutAboutNICredits",
-        specId = Some("state_pension__mqp__find_out_ni_credits")
+        href = appConfig.newStatePensionLink,
+        messageKey = "nisp.cope.contractedOut.findOutNewStatePension",
+        specId = Some("state_pension__contracted_out__link_2")
     ))
 )

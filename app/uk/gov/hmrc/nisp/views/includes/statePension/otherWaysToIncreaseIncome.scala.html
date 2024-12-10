@@ -1,0 +1,68 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H3, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
+
+@this(
+        h3: H3,
+        p: P,
+        link: Link,
+        appConfig: ApplicationConfig
+)
+@()(
+        implicit messages: Messages
+)
+
+
+@h3(
+    elmId = Some("otherWays"),
+    msg = "nisp.mqp.otherWays",
+    specId = Some("state_pension__h3_1"),
+    classes = Some("govuk-heading-s govuk-!-margin-top-6")
+)
+
+@p(
+    content = HtmlContent(messages(
+        "nisp.mqp.childBenefits",
+        link(
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:homeresponsibilitiesprotection"
+            ),
+            href = appConfig.homeResponsibilitiesLink,
+            messageKey = "nisp.mqp.childBenefits.link",
+            specId = Some("state_pension__home_responsibilities_protection__link"),
+            fullStop = true
+        )
+    )),
+    specId = Some("state_pension_other_ways__p1")
+)
+
+@p(
+    content = HtmlContent(messages(
+        "nisp.mqp.pensionCredit",
+        link(
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:pensioncredit"
+            ),
+            href = appConfig.pensionCreditLink,
+            messageKey = "nisp.mqp.pensionCredit.linktext",
+            specId = Some("state_pension__pension_credit__link"),
+            fullStop = true
+        )
+    )),
+    specId = Some("state_pension_other_ways__p2")
+)
