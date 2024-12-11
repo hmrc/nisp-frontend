@@ -549,6 +549,17 @@ nisp.cope.contractedOut = Fel y mwyafrif o bobl, cawsoch eich contractio allan o
 nisp.cope.contractedOut.findOutMore = Dysgwch ragor am gael eich contractio allan o Bensiwn y Wladwriaeth.
 nisp.cope.contractedOut.findOutNewStatePension = Dysgwch ragor am Bensiwn newydd y Wladwriaeth
 
+#*****************
+# Seek Guidance or Financial Advice messages - New UI messages
+#*****************
+nisp.seekGuidanceOrFinancialAdvice.title = Chwiliwch am arweiniad neu gyngor ariannol
+nisp.seekGuidanceOrFinancialAdvice.voluntary.contributions = Mae’n bosibl nad talu cyfraniadau gwirfoddol fydd eich dewis gorau wrth gynllunio ar gyfer eich ymddeoliad.
+nisp.seekGuidanceOrFinancialAdvice.impartial.guidance = I gael arweiniad diduedd yn rhad am ddim (nid ar GOV.UK):
+nisp.seekGuidanceOrFinancialAdvice.citizen.advice.link = Cyngor Ar Bopeth
+nisp.seekGuidanceOrFinancialAdvice.moneyHelper.service.link = Gwasanaeth MoneyHelper
+nisp.seekGuidanceOrFinancialAdvice.pension.wise.link = Pension Wise
+nisp.seekGuidanceOrFinancialAdvice.advice.over.50 = {0} — cyngor ar bensiynau preifat i bobl dros 50 oed
+
 #******************************
 # Not authorised IV messages
 #******************************

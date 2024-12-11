@@ -92,7 +92,7 @@
             content = HtmlContent(messages(
                 "nisp.landing.estimateprovided.new",
                 link(
-                    href = "/seek-financial-advice",
+                    href = s"${routes.SeekGuidanceOrFinancialAdviceController.showView.url}",
                     messageKey = "nisp.landing.estimateprovided.new.link",
                     fullStop = true,
                     specId = Some("state_pension_mqp__warning__link")

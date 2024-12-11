@@ -335,7 +335,7 @@ class StatePensionViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__warning__link']",
-              "/seek-financial-advice"
+              "/check-your-state-pension/seek-financial-advice"
             )
           }
 
@@ -1196,7 +1196,7 @@ class StatePensionViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__warning__link']",
-              "/seek-financial-advice"
+              "/check-your-state-pension/seek-financial-advice"
             )
           }
 

@@ -233,7 +233,7 @@ class StatePensionMQPViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension_mqp__warning__link']",
-              "/seek-financial-advice"
+              "/check-your-state-pension/seek-financial-advice"
             )
           }
 

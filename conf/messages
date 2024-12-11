@@ -532,6 +532,18 @@ nisp.cope.contractedOut = Like most people, you were contracted out of the addit
 nisp.cope.contractedOut.findOutMore = Find out more about being contracted out of the State Pension
 nisp.cope.contractedOut.findOutNewStatePension = Find out more about the new State Pension
 
+#*****************
+# Seek Guidance or Financial Advice messages - New UI messages
+#*****************
+
+nisp.seekGuidanceOrFinancialAdvice.title = Seek guidance or financial advice
+nisp.seekGuidanceOrFinancialAdvice.voluntary.contributions = Paying voluntary contributions may not be your best option when planning for your retirement.
+nisp.seekGuidanceOrFinancialAdvice.impartial.guidance = For free impartial guidance (not on GOV.UK):
+nisp.seekGuidanceOrFinancialAdvice.citizen.advice.link = Citizens Advice
+nisp.seekGuidanceOrFinancialAdvice.moneyHelper.service.link = MoneyHelper Service
+nisp.seekGuidanceOrFinancialAdvice.pension.wise.link = Pension Wise
+nisp.seekGuidanceOrFinancialAdvice.advice.over.50 = {0} — advice on private pensions for over 50s
+
 #******************************
 # Not authorised IV messages
 #******************************
