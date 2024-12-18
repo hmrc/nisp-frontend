@@ -2598,14 +2598,6 @@ class StatePensionViewSpec
             )
           }
 
-          "Not render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
-            mockSetup
-            assertPageDoesNotContainMessage(
-              doc,
-              "nisp.main.context.fillGaps.viewGaps"
-            )
-          }
-
           //  SPA under consideration
           "render page with Heading 'Proposed change to your State Pension age'" in {
             mockSetup

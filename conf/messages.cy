@@ -155,7 +155,7 @@ nisp.main.context.fillgaps.futureproof.para = Mae gennych flynyddoedd ar eich co
 
 nisp.main.context.fillGaps.gaps.plural = Mae gennych {0} o fylchau yn eich cofnod Yswiriant Gwladol y gallech eu llenwi i gynyddu eich Pensiwn y Wladwriaeth.
 nisp.main.context.fillGaps.gap.single = Mae gennych 1 bwlch yn eich cofnod Yswiriant Gwladol y gallech ei lenwi i gynyddu eich Pensiwn y Wladwriaeth.
-nisp.main.context.fillGaps.viewGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
+nisp.main.context.fillGaps.gap.viewGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
 
 nisp.main.context.cantFillGaps.p1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth. {0} yr wythnos yw’r swm mwyaf y gallwch ei gael.
 nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
