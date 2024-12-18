@@ -1,0 +1,96 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, P, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
+@import uk.gov.hmrc.nisp.views.Main
+
+@this(
+        main: Main,
+        h1: H1,
+        p: P,
+        link: Link,
+        appConfig: ApplicationConfig
+)
+@()(
+        implicit messages: Messages,
+        request: Request[_]
+)
+
+@main(
+    pageTitle = messages("nisp.seekGuidanceOrFinancialAdvice.title")
+) {
+
+    @h1(
+        elmId = Some("mainTitle"),
+        msg = "nisp.seekGuidanceOrFinancialAdvice.title",
+        specId = Some("seek_financial_advice__h1")
+    )
+
+    @p(
+        content = Text(messages("nisp.seekGuidanceOrFinancialAdvice.voluntary.contributions")),
+        specId = Some("seek_financial_advice__p1")
+    )
+
+    @p(
+        content = Text(messages("nisp.seekGuidanceOrFinancialAdvice.impartial.guidance")),
+        specId = Some("seek_financial_advice__p2")
+    )
+
+    <ul class="govuk-list govuk-list--bullet" data-spec="seek_guidance_or_financial_advice__list">
+
+        <li data-spec="seek_financial_advice__list__item1">
+            @link(
+                href = if(messages.lang.code == "cy") {
+                    appConfig.citizenAdviceLinkCy
+                } else {
+                    appConfig.citizenAdviceLinkEn
+                },
+                messageKey = "nisp.seekGuidanceOrFinancialAdvice.citizen.advice.link",
+                specId = Some("seek_financial_advice__citizen_advice__link")
+            )
+        </li>
+        <li data-spec="seek_financial_advice__list__item2">
+            @link(
+                href = if(messages.lang.code == "cy") {
+                    appConfig.moneyAdviceLinkCy
+                } else {
+                    appConfig.moneyAdviceLinkEn
+                },
+                messageKey = "nisp.seekGuidanceOrFinancialAdvice.moneyHelper.service.link",
+                specId = Some("seek_financial_advice__moneyHelper_service__link")
+            )
+        </li>
+        <li data-spec="seek_financial_advice__list__item3">
+            @p(
+                content = HtmlContent(messages(
+                    "nisp.seekGuidanceOrFinancialAdvice.advice.over.50",
+                    link(
+                        href = if(messages.lang.code == "cy") {
+                            appConfig.pensionWiseLinkCy
+                        } else {
+                            appConfig.pensionWiseLink
+                        },
+                        messageKey = "nisp.seekGuidanceOrFinancialAdvice.pension.wise.link",
+                        specId = Some("seek_financial_advice__pension_wise__link"),
+                    )
+                )),
+                specId = Some("seek_financial_advice__pension_wise")
+            )
+        </li>
+    </ul>
+}
