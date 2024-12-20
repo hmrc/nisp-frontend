@@ -1408,7 +1408,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -1524,7 +1524,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -1657,7 +1657,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -1775,7 +1775,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -1908,7 +1908,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -2026,7 +2026,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -2162,7 +2162,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -2279,7 +2279,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -2413,7 +2413,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 
@@ -2529,7 +2529,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working_current__chart1-key']",
-              "Estimate based on your National Insurance record up to 5 April 2016"
+              "Current estimate based on your National Insurance record up to 5 April 2016"
             )
           }
 

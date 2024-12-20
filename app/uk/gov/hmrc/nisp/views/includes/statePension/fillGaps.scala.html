@@ -36,7 +36,7 @@
 
 @barChart(
     chartKey = Html(messages(
-        "nisp.main.chart.lastprocessed.title",
+        "nisp.main.chart.current",
         statePension.earningsIncludedUpTo.getYear.toString
     )),
     chartValue = Html(s"${NispMoney.pounds(currentChart.amountModel.weeklyAmount)} ${messages("nisp.main.chart.week")}"),
