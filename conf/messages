@@ -102,8 +102,8 @@ nisp.main.howManyToContribute.single = assumes that you’ll contribute another 
 nisp.main.howManyToContribute = assumes that you’ll contribute another {0}
 
 nisp.main.howMuchWillIGet = How much will I get?
-nisp.main.chart.current = Current estimate based on your National Insurance record up to <span class="nowrap">5 April {0}</span>
-nisp.main.chart.forecast = Forecast if you contribute National Insurance until <span class="nowrap">5 April {0}</span>
+nisp.main.chart.current = Current estimate based on your National Insurance record up to<span class="nowrap"> 5 April {0}</span>
+nisp.main.chart.forecast = Forecast if you contribute National Insurance until<span class="nowrap"> 5 April {0}</span>
 nisp.main.newStatePension = The full new State Pension is {0} a week.
 
 nisp.main.howCanIIncrease = How can I increase my State Pension?
