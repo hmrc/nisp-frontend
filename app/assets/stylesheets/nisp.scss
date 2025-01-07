@@ -14,6 +14,9 @@
  * Cope page
  *
  * Survey form styling
+ *
+ * New bar chart
+ *
  */
 
 $breadcrumb: "/check-your-state-pension/assets/images/icons/breadcrumb-separator.png";
@@ -341,6 +344,7 @@ div.panel-indent {
   }
 }
 
+
 /*----------------------------------*\
     # Cope Page
 \*----------------------------------*/
@@ -477,3 +481,43 @@ h1 + details .govuk-details__text,
     visibility: visible;
   }
 }
+
+/*----------------------------------*\
+    # New bar chart
+\*----------------------------------*/
+
+    #barChart .graph-green-bar {
+        border-bottom: 10px solid #28a197;
+    }
+
+    #barChart .graph-grey-bar {
+        border-top: 2px solid #b1b4b6;
+    }
+
+    #barChart .content, #tax-spent-header, #tax-spent-footer {
+        display: flex;
+        flex-flow: row nowrap;
+        margin: 0.5em 0 0.2em;
+    }
+
+    #barChart dd {
+        flex-grow: 1;
+        padding: 0;
+        margin: 0;
+        align-self: end
+    }
+
+    #barChart dt {
+        flex-grow: 3;
+        padding: 0;
+        margin: 0;
+    }
+
+    #barChart dd {
+        text-align: right;
+    }
+
+    .govuk-summary-list__row--no-actions:after {
+        width: 0;
+    }
+

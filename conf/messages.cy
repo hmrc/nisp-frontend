@@ -95,6 +95,25 @@ nisp.print.your.state.pension.summary = Argraffu crynodeb o’ch Pensiwn y Wladw
 #**********************
 
 nisp.main.h2.whenWillIReachStatePensionAge = Pryd byddaf yn cyrraedd oedran Pensiwn y Wladwriaeth?
+nisp.main.spa = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar {0}
+nisp.main.spaNotAGuarantee = Nid yw eich oedran a’ch rhagolwg Pensiwn y Wladwriaeth yn warant ac maent yn seiliedig ar y gyfraith bresennol. Gall eich oedran Pensiwn y Wladwriaeth newid yn y dyfodol.
+nisp.main.caveats.new = Eich rhagolwg:
+nisp.main.howManyToContribute.single = yn tybio y byddwch yn cyfrannu am flwyddyn arall
+nisp.main.howManyToContribute = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar {0}
+
+nisp.main.howMuchWillIGet = Faint fyddaf yn ei gael?
+nisp.main.chart.current = Amcangyfrif presennol yn seiliedig ar eich cofnod Yswiriant Gwladol hyd at<span class="nowrap"> 5 Ebrill {0}</span>
+nisp.main.chart.forecast = Y rhagolwg os byddwch yn gwneud cyfraniadau Yswiriant Gwladol hyd nes<span class="nowrap"> 5 Ebrill {0}</span>
+nisp.main.newStatePension = Swm Pensiwn y Wladwriaeth newydd llawn yw {0} yr wythnos.
+
+nisp.main.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
+
+nisp.main.forecastChanges = Gall eich rhagolwg newid os oes unrhyw ddiweddariadau i’ch gwybodaeth o ran Yswiriant Gwladol. Gallwch {0}
+nisp.main.terms.and.conditions = ddysgu mwy yn y telerau ac amodau
+
+nisp.main.deferral.text = Gallwch ohirio hawlio’ch Pensiwn y Wladwriaeth. Mae hyn yn golygu y gallech gael Pensiwn y Wladwriaeth ychwanegol pan fyddwch yn ei hawlio. {0}
+nisp.main.deferral.text.link = Dysgwch ragor am ohirio’ch Pensiwn y Wladwriaeth
+
 nisp.main.overseas.text.new = Os ydych wedi byw neu wedi gweithio y tu allan i’r DU, efallai y byddwch yn gallu defnyddio’ch amser y tu allan i’r DU tuag at y 10 mlynedd sydd eu hangen arnoch er mwyn cael unrhyw Bensiwn Gwladwriaeth y DU. {0}
 nisp.main.overseas.text.link = Dysgwch ragor am fyw neu weithio y tu allan i’r DU
 
@@ -129,6 +148,20 @@ nisp.main.context.fillgaps.para1.futurePersonalMax = Mae gennych ddiffygion yn e
 nisp.main.context.fillgaps.chart.maxamount = Y mwyaf y gallwch gynyddu eich rhagolwg i, yw
 
 nisp.main.context.fillgaps.futureproof.para = Mae gennych flynyddoedd ar eich cofnod Yswiriant Gwladol ble na wnaethoch gyfrannu digon. Gall llenwi blynyddoedd wella eich rhagolwg.
+
+#*********************
+# Scenario messages - new UI messages
+#*********************
+
+nisp.main.context.fillGaps.gaps.plural = Mae gennych {0} o fylchau yn eich cofnod Yswiriant Gwladol y gallech eu llenwi i gynyddu eich Pensiwn y Wladwriaeth.
+nisp.main.context.fillGaps.gap.single = Mae gennych 1 bwlch yn eich cofnod Yswiriant Gwladol y gallech ei lenwi i gynyddu eich Pensiwn y Wladwriaeth.
+nisp.main.context.fillGaps.gap.viewGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
+
+nisp.main.context.cantFillGaps.p1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth. {0} yr wythnos yw’r swm mwyaf y gallwch ei gael.
+nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
+
+nisp.main.context.additionalStatePension = Mae’n bosibl y gallwch gael mwy na hyn os oes gennych rywfaint o Bensiwn Ychwanegol y Wladwriaeth. {0}
+nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am Bensiwn Ychwanegol y Wladwriaeth a thaliadau wedi’u diogelu.
 
 #**********************
 # Exclusion messages
@@ -434,8 +467,10 @@ nisp.mqp.filling.may.plural = Efallai bydd llenwi rhai o’r blynyddoedd hyn yn 
 nisp.mqp.afterSpa = Ar ôl oedran Pensiwn y Wladwriaeth, {0} ni fyddwch bellach yn talu cyfraniadau Yswiriant Gwladol.
 nisp.mqp.whatElse = Beth arall allwch chi ei wneud
 nisp.mqp.pensionCredit = Efallai y byddwch yn gymwys i gael {0} os yw eich incwm mewn ymddeoliad yn isel.
+nisp.mqp.pensionCredit.linktext = Credyd Pensiwn (agor mewn tab newydd)
 nisp.mqp.moneyAdvice = Cysylltwch â’r {0} am gyngor di-duedd ac am ddim.
 nisp.mqp.moneyAdvice.linktext = Gwasanaeth Cynghori Ariannol (agor mewn tab newydd)
+
 nisp.mqp.howManyToContribute = yn cymryd eich bod yn cyfrannu {0} arall
 nisp.mqp.youCurrentlyHaveZero = Nid oes gennych unrhyw flynyddoedd ar eich cofnod ac rydych angen o leiaf {0} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
 nisp.mqp.youCurrentlyHave = Ar hyn o bryd mae gennych {0} ar eich cofnod ac rydych angen o leiaf {1} o flynyddoedd i gael unrhyw Bensiwn y Wladwriaeth.
@@ -452,6 +487,9 @@ nisp.mqp.forecastChanges.link = ddysgu mwy yn y telerau ac amodau
 nisp.mqp.howMuchWillIGet = Faint fyddaf yn ei gael?
 nisp.mqp.doNotQualify = Nid ydych yn gymwys i gael Pensiwn y Wladwriaeth.
 nisp.mqp.youNeed10Years.notPossible = Fel arfer mae angen o leiaf 10 mlynedd gymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth. Ni allwch gael y rhain erbyn {0}.
+nisp.mqp.currentQualifyingYears.single = Mae gennych {0} flwyddyn gymhwysol ar eich cofnod Yswiriant Gwladol. Fel arfer mae angen o leiaf {0} o flynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
+nisp.mqp.currentQualifyingYears.plural = Mae gennych {0} o flynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol. Fel arfer mae angen o leiaf {0} o flynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
+nisp.mqp.currentQualifyingYears.zero = Does dim blynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol. Fel arfer mae angen o leiaf {0} o flynyddoedd cymhwysol ar eich cofnod Yswiriant Gwladol i gael unrhyw Bensiwn y Wladwriaeth.
 
 nisp.mqp.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
 nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y mae’n bosibl y byddwch yn gallu eu llenwi er mwy cynyddu’ch Pensiwn y Wladwriaeth.
@@ -503,6 +541,24 @@ nisp.cope.table.estimate.title = Eich amcangyfrif COPE yw
 nisp.main.cope.link = Darganfyddwch fwy am {0}
 nisp.main.cope.linktext = COPE ac eithrio allan (agor mewn tab newydd)
 
+#*****************
+# COPE messages - New UI messages
+#*****************
+
+nisp.cope.contractedOut = Fel y mwyafrif o bobl, cawsoch eich contractio allan o Bensiwn ychwanegol y Wladwriaeth. Mae hyn yn golygu y gwnaethoch dalu llai o Yswiriant Gwladol i’ch Pensiwn y Wladwriaeth. Mae eich rhagolwg Pensiwn y Wladwriaeth yn cymryd hyn i ystyriaeth.
+nisp.cope.contractedOut.findOutMore = Dysgwch ragor am gael eich contractio allan o Bensiwn y Wladwriaeth.
+nisp.cope.contractedOut.findOutNewStatePension = Dysgwch ragor am Bensiwn newydd y Wladwriaeth
+
+#*****************
+# Seek Guidance or Financial Advice messages - New UI messages
+#*****************
+nisp.seekGuidanceOrFinancialAdvice.title = Chwiliwch am arweiniad neu gyngor ariannol
+nisp.seekGuidanceOrFinancialAdvice.voluntary.contributions = Mae’n bosibl nad talu cyfraniadau gwirfoddol fydd eich dewis gorau wrth gynllunio ar gyfer eich ymddeoliad.
+nisp.seekGuidanceOrFinancialAdvice.impartial.guidance = I gael arweiniad diduedd yn rhad am ddim (nid ar GOV.UK):
+nisp.seekGuidanceOrFinancialAdvice.citizen.advice.link = Cyngor Ar Bopeth
+nisp.seekGuidanceOrFinancialAdvice.moneyHelper.service.link = Gwasanaeth MoneyHelper
+nisp.seekGuidanceOrFinancialAdvice.pension.wise.link = Pension Wise
+nisp.seekGuidanceOrFinancialAdvice.advice.over.50 = {0} — cyngor ar bensiynau preifat i bobl dros 50 oed
 
 #******************************
 # Not authorised IV messages

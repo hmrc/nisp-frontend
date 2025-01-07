@@ -22,34 +22,22 @@
         link: Link,
         appConfig: ApplicationConfig
 )
-
 @()(
         implicit messages: Messages
 )
 
 @p(
-    classes = Some("govuk-body govuk-!-margin-top-4"),
-    content = HtmlContent(link(
-        href = appConfig.nationalInsuranceLink,
-        messageKey = "nisp.mqp.findOutAboutNI",
-        specId = Some("state_pension__mqp__find_out_ni")
-    ))
-)
-
-@p(
-    classes = Some("govuk-body govuk-!-margin-top-4"),
-    content = HtmlContent(link(
-        href =  appConfig.niHowMuchYouPayLink,
-        messageKey = "nisp.mqp.findOutAboutNIYouPay",
-        specId = Some("state_pension__mqp__find_out_ni_you_pay")
-    ))
-)
-
-@p(
-    classes = Some("govuk-body govuk-!-margin-top-4"),
-    content = HtmlContent(link(
-        href =  appConfig.nationalInsuranceCreditLink,
-        messageKey = "nisp.mqp.findOutAboutNICredits",
-        specId = Some("state_pension__mqp__find_out_ni_credits")
-    ))
+    content = HtmlContent(messages(
+        "nisp.main.overseas.text.new",
+        link(
+            attrs = Map(
+                "data-journey-click" -> "checkmystatepension:external:workingoverseas"
+            ),
+            href = appConfig.abroadLink,
+            messageKey = "nisp.main.overseas.text.link",
+            specId = Some("state_pension_outside_uk__link"),
+            fullStop = true
+        )
+    )),
+    specId = Some("state_pension_outside_uk__p1")
 )
