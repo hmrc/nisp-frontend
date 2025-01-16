@@ -517,7 +517,12 @@ h1 + details .govuk-details__text,
         text-align: right;
     }
 
-    .govuk-summary-list__row--no-actions:after {
+    .govuk-summary-list {
+      &__row--no-actions:after {
         width: 0;
+      }
+      &__no-margin-bottom {
+        margin-bottom: 0;
+      }
     }
 

@@ -274,7 +274,7 @@
             </dl>
 
         } else {
-            <dl class="govuk-summary-list">
+            <dl class="govuk-summary-list @if(niRecord.taxYears.filter(_.taxYear.toInt <= niRecordCutoffYear - 1).length > 0) {govuk-summary-list__no-margin-bottom}">
                 @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
@@ -303,7 +303,7 @@
                 }
             </dl>
 
-            @if(niRecord.numberOfGaps > 0) {
+            @if(niRecord.numberOfGapsPayable > 0) {
                 @if(viewPayableGapsToggle) {
                     <a href="@nispModellingPayableGapsURL" role="button" draggable="false" class="govuk-button govuk-!-margin-top-5" data-module="govuk-button">
                         @messages("nisp.main.context.fillGaps.viewPayableGaps")
