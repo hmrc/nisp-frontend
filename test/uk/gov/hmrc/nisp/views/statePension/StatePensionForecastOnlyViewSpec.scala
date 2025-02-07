@@ -179,9 +179,6 @@ class StatePensionForecastOnlyViewSpec
 
         "render with correct page title" in {
           mockSetup
-          println(s"\n\n\n${nonForeignDoc.getElementById("which-view").text()}\n\n\n")
-          println(s"\n\n\n${foreignDoc.getElementById("which-view").text()}\n\n\n")
-
           assertElementContainsText(
             nonForeignDoc,
             "head > title",
@@ -430,8 +427,6 @@ class StatePensionForecastOnlyViewSpec
         "render page with text 'As you are living or working overseas (opens in new tab), " +
           "you may be entitled to a State Pension from the country you are living or working in.'" in {
           mockSetup
-          println(s"\n\n\n${foreignDoc.getElementById("which-view").text()}\n\n\n")
-
           assertEqualsValue(
             foreignDoc,
             "[data-spec='abroad__inset_text__link1']",

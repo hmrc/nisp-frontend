@@ -122,7 +122,6 @@ class StatePensionCopeViewSpec
     lazy val htmlAccountDoc = asDocument(sResult(99.54).toString)
 
     "render with correct page title" in {
-      println(s"\n\n\n${htmlAccountDoc.getElementById("which-view").text()}\n\n\n")
       assertElementContainsText(
         htmlAccountDoc,
         "head > title",
