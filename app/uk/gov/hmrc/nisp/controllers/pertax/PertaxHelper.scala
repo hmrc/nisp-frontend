@@ -33,7 +33,7 @@ class PertaxHelper @Inject() (
   ec: ExecutionContext
 ) {
 
-  def setFromPertax(implicit request: Request[_]): Unit = {
+  def setFromPertax(implicit request: Request[?]): Unit = {
     val keystoreTimerContext: Timer.Context =
       metricsService.keystoreWriteTimer.time()
     val cacheF: Future[Unit]                =
@@ -47,7 +47,7 @@ class PertaxHelper @Inject() (
     }
   }
 
-  def isFromPertax(implicit request: Request[_]): Future[Boolean] = {
+  def isFromPertax(implicit request: Request[?]): Future[Boolean] = {
     val keystoreTimerContext =
       metricsService.keystoreReadTimer.time()
 

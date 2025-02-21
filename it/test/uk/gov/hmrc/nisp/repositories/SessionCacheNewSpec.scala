@@ -45,7 +45,7 @@ class SessionCacheNewSpec extends UnitSpec with MongoSupport {
 
     "support cache operations" in {
 
-      implicit val request: Request[_] = FakeRequest().withSession(SessionKeys.sessionId -> UUID.randomUUID().toString)
+      implicit val request: Request[?] = FakeRequest().withSession(SessionKeys.sessionId -> UUID.randomUUID().toString)
 
       val testValue = true
 

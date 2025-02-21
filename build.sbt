@@ -16,13 +16,15 @@
 
 val appName = "nisp-frontend"
 
-ThisBuild / scalaVersion := "2.13.16"
+ThisBuild / scalaVersion := "3.6.3"
 ThisBuild / majorVersion := 10
 ThisBuild / scalacOptions ++= Seq(
   "-feature",
   "-Werror",
-  "-Xlint:-missing-interpolator,_",
-  "-Wconf:src=routes/.*:is,src=twirl/.*:is"
+  "-Wconf:src=routes/.*:s",
+  "-Wconf:msg=unused.import&src=html/.*:s",
+  "-Wconf:msg=unused.explicit.parameter&src=html/.*:s",
+  "-Wconf:msg=Flag.*repeatedly:s"
 )
 
 val microservice = Project(appName, file("."))

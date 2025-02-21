@@ -19,7 +19,6 @@ package uk.gov.hmrc.nisp.connectors
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, times, verify, when}
 import org.mockito.{ArgumentCaptor, ArgumentMatchers, Mockito}
-import org.scalatest.concurrent.Eventually.eventually
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterEach, RecoverMethods}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -88,24 +87,23 @@ class NationalInsuranceConnectorSpec extends UnitSpec
 
       when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/mdtp/AB123456C"))(any())
         .setHeader(headerCaptor.capture())
-        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](any(), any()))
+        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](using any(), any()))
         .thenReturn(Future.successful(Right(Right(nir))))
 
       await(
         connector.getNationalInsurance(nino)
       ) shouldBe Right(Right(nir))
 
-      eventually {
-        headerCaptor.getValue shouldBe List("Accept" -> "application/vnd.hmrc.1.0+json")
-        verify(mockMetricService.startTimer(ArgumentMatchers.eq(APIType.NationalInsurance)), times(1)).stop()
-      }
+      headerCaptor.getAllValues.toArray.mkString shouldBe "List((Accept,application/vnd.hmrc.1.0+json))"
+
+      verify(mockMetricService.startTimer(ArgumentMatchers.eq(APIType.NationalInsurance)), times(1)).stop()
     }
 
     "return an error" in {
       val errorResponse = new IllegalArgumentException("test")
       when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/mdtp/AB123456C"))(any())
         .setHeader(any())
-        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](any(), any()))
+        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](using any(), any()))
         .thenReturn(Future.failed(errorResponse))
 
       whenReady(connector.getNationalInsurance(nino).failed) { e =>

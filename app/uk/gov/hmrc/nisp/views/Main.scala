@@ -45,7 +45,7 @@ trait Main {
            )(
              contentBlock: Html
            )(implicit
-             request: Request[_],
+             request: Request[?],
              messages: Messages
            ): HtmlFormat.Appendable
 }
@@ -68,12 +68,12 @@ class MainImpl @Inject()(
                       hideNavBar: Boolean
                     )(
                       contentBlock: Html
-                    )(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
+                    )(implicit request: Request[?], messages: Messages): HtmlFormat.Appendable = {
 
     val fullPageTitle =
       if (extendedTitle) s"$pageTitle - ${Messages("nisp.title.extension")} - GOV.UK" else pageTitle
 
-    val trustedHelper = Try(request.asInstanceOf[AuthenticatedRequest[_]]) match {
+    val trustedHelper = Try(request.asInstanceOf[AuthenticatedRequest[?]]) match {
       case Failure(_: java.lang.ClassCastException) => None
       case Success(value) => value.nispAuthedUser.trustedHelper
       case Failure(exception) => throw exception

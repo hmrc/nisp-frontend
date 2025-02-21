@@ -96,8 +96,8 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
       ninoOption ~ ConfidenceLevel.L200 ~ Some(credentialStrength) ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper
     )
 
-  object Stubs {
-    def successBlock(request: AuthenticatedRequest[_]): Future[Result] = Future.successful(Ok)
+  class Stubs {
+    def successBlock(request: AuthenticatedRequest[?]): Future[Result] = Future.successful(Ok)
   }
 
   val ggSignInUrlTail           =
@@ -120,7 +120,7 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
         when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-        val stubs   = spy(Stubs)
+        val stubs   = spy(new Stubs)
         val request = FakeRequest("", "")
         val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
@@ -150,7 +150,7 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
         when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-        val stubs   = spy(Stubs)
+        val stubs   = spy(new Stubs)
         val request = FakeRequest("", "")
         val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
@@ -180,7 +180,7 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
         when(mockCitizenDetailsService.retrievePerson(any())(any()))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
-        val stubs   = spy(Stubs)
+        val stubs   = spy(new Stubs)
         val request = FakeRequest("", "")
         val result  = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
@@ -210,7 +210,8 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(NOT_FOUND)))
 
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+      val stubs = new Stubs
+      val result = authAction.invokeBlock(FakeRequest("", ""), stubs.successBlock)
       an[InternalServerException] should be thrownBy await(result)
     }
 
@@ -220,7 +221,8 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
       )
         .thenReturn(makeRetrievalResults(ninoOption = None))
 
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+      val stubs = new Stubs
+      val result = authAction.invokeBlock(FakeRequest("", ""), stubs.successBlock)
       an[RuntimeException] should be thrownBy await(result)
     }
 
@@ -233,7 +235,8 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(TECHNICAL_DIFFICULTIES)))
 
-      val result = authAction.invokeBlock(FakeRequest("", ""), Stubs.successBlock)
+      val stubs = new Stubs
+      val result = authAction.invokeBlock(FakeRequest("", ""), stubs.successBlock)
       an[InternalServerException] should be thrownBy await(result)
     }
 
@@ -246,7 +249,8 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
 
-      val result = authAction.invokeBlock(FakeRequest("", "a-uri-with-nirecord"), Stubs.successBlock)
+      val stubs = new Stubs
+      val result = authAction.invokeBlock(FakeRequest("", "a-uri-with-nirecord"), stubs.successBlock)
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusionni")
     }
@@ -260,7 +264,8 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
 
-      val result = authAction.invokeBlock(FakeRequest("", "a-non-ni-record-uri"), Stubs.successBlock)
+      val stubs = new Stubs
+      val result = authAction.invokeBlock(FakeRequest("", "a-non-ni-record-uri"), stubs.successBlock)
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/check-your-state-pension/exclusion")
     }
