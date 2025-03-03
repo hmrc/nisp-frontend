@@ -193,7 +193,7 @@ class StatePensionControllerISpec extends UnitSpec
     )
   }
 
-  def block: Request[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
+  def block: Request[?] => Future[Result] = _ => Future.successful(Ok("Successful"))
 
   "showCope" should {
     val request = FakeRequest("GET", s"/check-your-state-pension/account/cope")

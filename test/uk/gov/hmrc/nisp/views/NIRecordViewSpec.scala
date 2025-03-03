@@ -54,8 +54,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
   val authDetails: AuthDetails = AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
   implicit val user: NispAuthedUser                 = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
   implicit val abroadUser: NispAuthedUser           = NispAuthedUserFixture.user(TestAccountBuilder.abroadNino)
-  implicit val fakeRequest: AuthenticatedRequest[_] = AuthenticatedRequest(FakeRequest(), user, authDetails)
-  implicit val abroadRequest: AuthenticatedRequest[_] = AuthenticatedRequest(FakeRequest(), abroadUser, authDetails)
+  implicit val fakeRequest: AuthenticatedRequest[?] = AuthenticatedRequest(FakeRequest(), user, authDetails)
+  implicit val abroadRequest: AuthenticatedRequest[?] = AuthenticatedRequest(FakeRequest(), abroadUser, authDetails)
 
   val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]

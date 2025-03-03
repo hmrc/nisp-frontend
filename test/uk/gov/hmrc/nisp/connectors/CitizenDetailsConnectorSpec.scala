@@ -92,7 +92,7 @@ class CitizenDetailsConnectorSpec
 
   "CitizenDetailsConnector connectToGetPersonDetails" should {
     "return Right(CitizenDetailsResponse)" in {
-      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](using any(), any()))
         .thenReturn(Future.successful(Right(HttpResponse(Status.OK, Json.toJson(response), Map("" -> Seq(""))))))
 
       await(
@@ -101,7 +101,7 @@ class CitizenDetailsConnectorSpec
     }
 
     "return Left(UpstreamErrorResponse)" in {
-      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](using any(), any()))
         .thenReturn(Future.successful(Left(UpstreamErrorResponse("This is the error", 502, 502))))
 
       await(
@@ -110,7 +110,7 @@ class CitizenDetailsConnectorSpec
     }
 
     "return Left(Throwable)" in {
-      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](using any(), any()))
         .thenReturn(Future.successful(Left(UpstreamErrorResponse("This is the error", 500, 500))))
 
       await(
@@ -119,7 +119,7 @@ class CitizenDetailsConnectorSpec
     }
 
     "return a Throwable for failed request" in {
-      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](using any(), any()))
         .thenReturn(Future.failed(new Throwable("This is a Throwable")))
 
       await(
@@ -128,7 +128,7 @@ class CitizenDetailsConnectorSpec
     }
 
     "return a Left(UpstreamErrorResponse) for failed request HttpException" in {
-      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](any(), any()))
+      when(mockHttp.get(any())(any()).execute[Either[UpstreamErrorResponse, HttpResponse]](using any(), any()))
         .thenReturn(Future.failed(new HttpException("This is an error", 503)))
 
       recoverToSucceededIf[HttpException] {

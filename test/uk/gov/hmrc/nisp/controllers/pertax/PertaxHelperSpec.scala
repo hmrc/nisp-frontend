@@ -40,7 +40,7 @@ class PertaxHelperSpec
     with Injecting
     with BeforeAndAfterEach {
 
-  implicit val request: FakeRequest[_] = FakeRequest()
+  implicit val request: FakeRequest[?] = FakeRequest()
 
   implicit val headerCarrier: HeaderCarrier =
     HeaderCarrier()

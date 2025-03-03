@@ -111,7 +111,7 @@ class NIRecordController @Inject()(
     (sixteenthBirthdayDiff, dateOfEntryDiff) match {
       case (sb, Some(doe)) => sb.min(doe) > 0
       case (sb, _) => sb > 0
-      case _ => pre1975Years > 0
+//      case _ => pre1975Yea0rs > 0 // sixteenthBirthdayDiff is an Int, this condition can never be reached
     }
   }
 
@@ -127,7 +127,7 @@ class NIRecordController @Inject()(
   }
 
   private def showNiRecordPage(gapsOnlyView: Boolean, yearsToContribute: Int, finalRelevantStartYear: Int, niRecord: NationalInsuranceRecord)
-                              (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Future[Result] = {
+                              (implicit authRequest: AuthenticatedRequest[?], user: NispAuthedUser): Future[Result] = {
     val recordHasEnded = yearsToContribute < 1
     val yearsPayable = TaxYear.current.startYear - appConfig.niRecordPayableYears
     val tableStart: String =

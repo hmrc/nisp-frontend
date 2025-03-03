@@ -112,7 +112,7 @@ class StatePensionController @Inject()(
                                      newUI: Boolean
                                    )(implicit
                                      user: NispAuthedUser,
-                                     authRequest: AuthenticatedRequest[_]
+                                     authRequest: AuthenticatedRequest[?]
                                    ): Result =
     Ok(
       if (newUI)
@@ -142,7 +142,7 @@ class StatePensionController @Inject()(
                                           newUI: Boolean
                                         )(implicit
                                           user: NispAuthedUser,
-                                          authRequest: AuthenticatedRequest[_]
+                                          authRequest: AuthenticatedRequest[?]
                                         ): Result =
 
     Ok(
@@ -172,7 +172,7 @@ class StatePensionController @Inject()(
                                   newUI: Boolean
                                 )(implicit
                                   user: NispAuthedUser,
-                                  authRequest: AuthenticatedRequest[_]
+                                  authRequest: AuthenticatedRequest[?]
                                 ): Result = {
     val yearsToContributeUntilPensionAge = statePensionService.yearsToContributeUntilPensionAge(
       statePension.earningsIncludedUpTo,
