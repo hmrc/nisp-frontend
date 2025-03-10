@@ -32,7 +32,7 @@ function accordionToggleShowHide() {
         e.preventDefault();
         if (this.getAttribute('class') !== 'govuk-summary-list__row active') {
           this.setAttribute('class', 'govuk-summary-list__row active')
-          this.nextElementSibling.style.display = 'table-row'
+          this.nextElementSibling.removeAttribute("style")
           this.querySelector('.view-details').setAttribute('aria-expanded', 'true')
         } else {
           this.setAttribute('class', 'govuk-summary-list__row expandable')
