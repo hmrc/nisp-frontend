@@ -526,3 +526,6 @@ h1 + details .govuk-details__text,
       }
     }
 
+.govuk-summary-list__row:has([aria-expanded="true"]) {
+    border-bottom: none;
+ }
