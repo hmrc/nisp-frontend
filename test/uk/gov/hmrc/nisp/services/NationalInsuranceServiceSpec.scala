@@ -184,7 +184,7 @@ class NationalInsuranceServiceSpec
           .thenReturn(Future.successful(Right(Right(jumbledRecord))))
 
         whenReady(nationalInsuranceService.getSummary(generateNino)) {
-          result: Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]] =>
+          (result: Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]) =>
             result.map(_.map(_.taxYears shouldBe mockNationalInsuranceRecord.taxYears))
         }
 

@@ -21,7 +21,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.nisp.controllers.auth._
 
 class NispModule extends Module {
-  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
+  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[?]] =
     Seq(
       bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
       bind[AuthRetrievals].to[AuthRetrievalsImpl],

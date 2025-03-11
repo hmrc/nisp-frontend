@@ -32,7 +32,7 @@
 @(
         copeEstimate: BigDecimal
 )(
-        implicit request: AuthenticatedRequest[_],
+        implicit request: AuthenticatedRequest[?],
         user: NispAuthedUser,
         messages: Messages
 )

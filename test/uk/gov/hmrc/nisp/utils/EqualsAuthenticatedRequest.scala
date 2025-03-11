@@ -22,24 +22,24 @@ import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 import scala.language.implicitConversions
 
-case class EqualsAuthenticatedRequest(n: AuthenticatedRequest[_])
-    extends ArgumentMatcher[AuthenticatedRequest[_]]
+case class EqualsAuthenticatedRequest(n: AuthenticatedRequest[?])
+    extends ArgumentMatcher[AuthenticatedRequest[?]]
     with Matchers {
 
   class LocalPrettifier extends Prettifier {
     override def apply(o: Any): String =
       o match {
-        case request: AuthenticatedRequest[_] =>
+        case request: AuthenticatedRequest[?] =>
           s"AuthenticatedRequest { request: ${request.request}, nispAuthedUser: ${request.nispAuthedUser}, authDetails: ${request.authDetails}"
         case _                                => o.toString
       }
   }
 
-  override implicit def convertToAnyShouldWrapper[T](o: T)(
+  implicit def convertToAnyShouldWrapper[T](o: T)(
     implicit pos: source.Position, prettifier: Prettifier): AnyShouldWrapper[T] =
     new AnyShouldWrapper(o, pos, new LocalPrettifier)
 
-  override def matches(argument: AuthenticatedRequest[_]): Boolean = {
+  override def matches(argument: AuthenticatedRequest[?]): Boolean = {
     withClue(s"Argument doesn't match: ") {
       argument shouldBe n
     }

@@ -31,8 +31,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[NispSessionCacheRepository])
 trait SessionCache {
-  def get[T](key: CacheKey[T])(implicit format: Format[T], request: Request[_]): Future[Option[T]]
-  def put[T](key: CacheKey[T], value: T)(implicit format: Format[T], request: Request[_]): Future[Unit]
+  def get[T](key: CacheKey[T])(implicit format: Format[T], request: Request[?]): Future[Option[T]]
+  def put[T](key: CacheKey[T], value: T)(implicit format: Format[T], request: Request[?]): Future[Unit]
 }
 
 object SessionCache {
@@ -55,9 +55,9 @@ class NispSessionCacheRepository @Inject() (
       sessionIdKey = SessionKeys.sessionId
     ) with SessionCache {
 
-  override def get[T](key: CacheKey[T])(implicit format: Format[T], request: Request[_]): Future[Option[T]] =
+  override def get[T](key: CacheKey[T])(implicit format: Format[T], request: Request[?]): Future[Option[T]] =
     getFromSession(key.dataKey)
 
-  override def put[T](key: CacheKey[T], value: T)(implicit format: Format[T], request: Request[_]): Future[Unit] =
+  override def put[T](key: CacheKey[T], value: T)(implicit format: Format[T], request: Request[?]): Future[Unit] =
     putSession(key.dataKey, value).map(_ => ())
 }
