@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,15 +163,5 @@
                 specId = Some("ni_record_gaps_and_how_to_check_them__link1")
             ))
         )
-
-        @p(
-            classes = Some("govuk-body govuk-!-margin-bottom-3"),
-            content = HtmlContent(link(
-                href = routes.NIRecordController.showGaps.url,
-                messageKey = "nisp.back",
-                specId = Some("ni_record_gaps_and_how_to_check_them__link2")
-            ))
-        )
-
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -779,22 +779,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         "https://www.gov.uk/national-insurance-credits/eligibility"
       )
     }
-
-    "render page with  link back " in {
-      assertEqualsMessage(
-        withHRPDoc,
-        "#main-content > div > div > p:nth-child(18) > a",
-        "nisp.back"
-      )
-    }
-
-    "render page with href link back " in {
-      assertLinkHasValue(
-        withHRPDoc,
-        "#main-content > div > div > p:nth-child(18) > a",
-        "/check-your-state-pension/account/nirecord/gaps"
-      )
-    }
   }
 
   "Render Ni Record without HRP Message" should {
@@ -989,22 +973,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         withoutHRPDoc,
         "[data-spec='ni_record_gaps_and_how_to_check_them__link1']",
         "https://www.gov.uk/national-insurance-credits/eligibility"
-      )
-    }
-
-    "render page with  link back " in {
-      assertEqualsMessage(
-        withoutHRPDoc,
-        "[data-spec='ni_record_gaps_and_how_to_check_them__link2']",
-        "nisp.back"
-      )
-    }
-
-    "render page with href link back " in {
-      assertLinkHasValue(
-        withoutHRPDoc,
-        "[data-spec='ni_record_gaps_and_how_to_check_them__link2']",
-        "/check-your-state-pension/account/nirecord/gaps"
       )
     }
   }
