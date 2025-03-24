@@ -16,7 +16,7 @@
 
 val appName = "nisp-frontend"
 
-ThisBuild / scalaVersion := "2.13.15"
+ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / majorVersion := 10
 ThisBuild / scalacOptions ++= Seq(
   "-feature",
