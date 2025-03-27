@@ -31,6 +31,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.admin.ExcessiveTrafficToggle
+import uk.gov.hmrc.nisp.services.NIPayGapExtensionService
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.util.Locale
@@ -42,10 +43,12 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
   implicit val request: Request[_] = FakeRequest()
 
   lazy val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       featureFlagServiceBinding
     )
     .build()

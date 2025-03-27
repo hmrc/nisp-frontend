@@ -36,7 +36,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
-import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{NIPayGapExtensionService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -54,6 +54,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
+  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -64,6 +65,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       featureFlagServiceBinding
     )
@@ -77,6 +79,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
@@ -92,6 +95,7 @@ class StatePensionViewSpec extends HtmlSpec with Injecting with WireMockSupport 
     reset(mockAuditConnector)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
+    reset(mockNIPayGapExtensionService)
     wireMockServer.resetAll()
     when(mockPertaxHelper.isFromPertax(any())).thenReturn(Future.successful(false))
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")

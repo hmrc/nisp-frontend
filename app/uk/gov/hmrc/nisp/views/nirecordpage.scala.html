@@ -22,6 +22,7 @@
 @import uk.gov.hmrc.nisp.views.html.includes.{nirecordtaxyear, nirecordtaxyearNoFull}
 @import uk.gov.hmrc.nisp.views.formatting.TaxYearFormat
 @import uk.gov.hmrc.nisp.views.Main
+@import uk.gov.hmrc.nisp.models.PayableGapInfo
 
 @this(
         main: Main,
@@ -48,7 +49,8 @@
         currentDate: LocalDate,
         niRecordCutoffYear: Int,
         viewPayableGapsToggle: Boolean,
-        nispModellingPayableGapsURL: String
+        nispModellingPayableGapsURL: String,
+        payableGapInfo: PayableGapInfo
 )(
         implicit messages: Messages,
         request: AuthenticatedRequest[_],
@@ -84,14 +86,10 @@
 
     @if(viewPayableGapsToggle) {
         @p(
-            content = Text(messages("nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay")),
+            content = Text(messages("nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay", payableGapInfo.numberOfGapYears)),
             specId = Some("nirecordpage__p1")
         )
 
-        @p(
-            content = Text(messages("nisp.nirecord.gapsinyourrecord.thedeadlineforpaying")),
-            specId = Some("nirecordpage__p2")
-        )
         @p(
             classes = Some("govuk-body govuk-!-margin-bottom-3"),
             content = HtmlContent(link(
@@ -231,11 +229,11 @@
                 @if(niRecord.taxYears.filter(!_.qualifying).exists(_.taxYear.toInt <= niRecordCutoffYear - 1)) {
 
                     <h2 class="govuk-heading-m @if(!viewPayableGapsToggle) {govuk-!-margin-top-5}">
-                        @messages("nisp.main.context.fillGaps.niRecordCutOff", niRecordCutoffYear.toString)
+                        @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
                     </h2>
 
                     <p class="govuk-body govuk-!-margin-bottom-5">
-                        @Messages("nisp.main.context.fillGaps.tooLate", niRecordCutoffYear.toString)
+                        @Messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
                     </p>
                 }
             </div>
@@ -312,10 +310,10 @@
                 @if(niRecord.taxYears.exists(_.taxYear.toInt <= niRecordCutoffYear - 1)) {
 
                     <h2 class="govuk-heading-m govuk-!-margin-top-5">
-                        @messages("nisp.main.context.fillGaps.niRecordCutOff", niRecordCutoffYear.toString)
+                        @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
                     </h2>
                     <p class="govuk-body govuk-!-margin-bottom-5">
-                        @Messages("nisp.main.context.fillGaps.tooLate", niRecordCutoffYear.toString)
+                        @Messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
                     </p>
                 }
             }

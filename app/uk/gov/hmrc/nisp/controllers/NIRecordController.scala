@@ -48,7 +48,8 @@ class NIRecordController @Inject()(
                                     dateProvider: DateProvider,
                                     niRecordPage: nirecordpage,
                                     niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
-                                    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
+                                    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
+                                    niPayGapExtensionService: NIPayGapExtensionService
                                   )(
                                     implicit ec: ExecutionContext,
                                     val featureFlagService: FeatureFlagService
@@ -153,9 +154,11 @@ class NIRecordController @Inject()(
         case _ => false
       }
 
+      val tableList = generateTableList(tableStart, tableEnd)
+
       Ok(
         niRecordPage(
-          tableList = generateTableList(tableStart, tableEnd),
+          tableList = tableList,
           niRecord = niRecord,
           gapsOnlyView = gapsOnlyView,
           recordHasEnded = recordHasEnded,
@@ -170,7 +173,8 @@ class NIRecordController @Inject()(
           currentDate = dateProvider.currentDate,
           yearsPayable,
           showViewPayableGapsButton,
-          appConfig.nispModellingFrontendUrl
+          appConfig.nispModellingFrontendUrl,
+          niPayGapExtensionService.payableGapInfo(tableList)
         )
       )
     }

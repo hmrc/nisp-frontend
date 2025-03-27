@@ -39,7 +39,7 @@ import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.repositories.SessionCache
-import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{MetricsService, NIPayGapExtensionService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
 import uk.gov.hmrc.nisp.utils.{Constants, PertaxAuthMockingHelper}
 import uk.gov.hmrc.nisp.views.HtmlSpec
@@ -74,6 +74,7 @@ class StatePensionCopeViewSpec
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockMetricsService: MetricsService                     = mock[MetricsService]
   val mockSessionCache: SessionCache                         = mock[SessionCache]
+  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -85,6 +86,7 @@ class StatePensionCopeViewSpec
     reset(mockAppConfig)
     reset(mockPertaxHelper)
     reset(mockFeatureFlagService)
+    reset(mockNIPayGapExtensionService)
 
     wireMockServer.resetAll()
     when(mockPertaxHelper.isFromPertax(any()))
@@ -110,6 +112,7 @@ class StatePensionCopeViewSpec
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       featureFlagServiceBinding
     )

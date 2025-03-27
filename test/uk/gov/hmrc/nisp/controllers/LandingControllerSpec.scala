@@ -30,6 +30,7 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
+import uk.gov.hmrc.nisp.services.NIPayGapExtensionService
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.util.Locale
@@ -38,14 +39,16 @@ import scala.concurrent.Future
 class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
 
   implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
-  val fakeRequestWelsh: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/cymraeg")
-  val mockApplicationConfig: ApplicationConfig       = mock[ApplicationConfig]
-  val mockIVConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
+  val fakeRequestWelsh: FakeRequest[AnyContentAsEmpty.type]  = FakeRequest("GET", "/cymraeg")
+  val mockApplicationConfig: ApplicationConfig               = mock[ApplicationConfig]
+  val mockIVConnector: IdentityVerificationConnector         = mock[IdentityVerificationConnector]
+  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
-      bind[ApplicationConfig].toInstance(mockApplicationConfig)
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService)
     )
     .build()
 

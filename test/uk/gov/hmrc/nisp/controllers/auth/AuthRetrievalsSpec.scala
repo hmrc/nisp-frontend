@@ -39,7 +39,7 @@ import uk.gov.hmrc.nisp.common.RetrievalOps._
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen._
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, NIPayGapExtensionService}
 import uk.gov.hmrc.nisp.utils.{EqualsAuthenticatedRequest, UnitSpec}
 
 import java.time.{Instant, LocalDate}
@@ -63,6 +63,7 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
   val mockCitizenDetailsService: CitizenDetailsService = mock[CitizenDetailsService]
+  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   val nino: String = new Generator().nextNino.nino
   val fakeLoginTimes: LoginTimes = LoginTimes(Instant.now(), None)
@@ -75,7 +76,8 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
     .overrides(
       bind[AuthConnector].toInstance(mockAuthConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[CitizenDetailsService].toInstance(mockCitizenDetailsService)
+      bind[CitizenDetailsService].toInstance(mockCitizenDetailsService),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService)
     )
     .build()
 
@@ -84,6 +86,7 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
     reset(mockAuthConnector)
     reset(mockApplicationConfig)
     reset(mockCitizenDetailsService)
+    reset(mockNIPayGapExtensionService)
   }
 
   def makeRetrievalResults(

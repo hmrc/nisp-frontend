@@ -36,7 +36,7 @@ import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessing
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
-import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{NIPayGapExtensionService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -55,6 +55,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockDateProvider: DateProvider                         = mock[DateProvider]
+  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
   implicit val executionContext: ExecutionContext            = ExecutionContext.global
   implicit val hc: HeaderCarrier                             = HeaderCarrier()
 
@@ -67,6 +68,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     reset(mockAuditConnector)
     reset(mockDateProvider)
     reset(mockFeatureFlagService)
+    reset(mockNIPayGapExtensionService)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     wireMockServer.resetAll()
@@ -87,6 +89,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[DateProvider].toInstance(mockDateProvider),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       featureFlagServiceBinding
     )

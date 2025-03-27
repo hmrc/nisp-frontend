@@ -39,7 +39,7 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
-import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{NIPayGapExtensionService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -63,6 +63,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockDateProvider: DateProvider                         = mock[DateProvider]
+  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -75,6 +76,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[DateProvider].toInstance(mockDateProvider),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       featureFlagServiceBinding
     )
@@ -1486,6 +1488,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         bind[AuthRetrievals].to[FakeAuthActionWithNino],
         bind[NinoContainer].toInstance(AbroadNinoContainer),
         bind[DateProvider].toInstance(mockDateProvider),
+        bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
         bind[PertaxAuthAction].to[FakePertaxAuthAction]
       )
       .build()
