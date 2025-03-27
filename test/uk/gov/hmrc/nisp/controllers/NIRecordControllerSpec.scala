@@ -40,8 +40,6 @@ import uk.gov.hmrc.nisp.services.{NIPayGapExtensionService, NationalInsuranceSer
 import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.time.TaxYear
-
 import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
@@ -73,11 +71,13 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     wireMockServer.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
-    when(mockAppConfig.niRecordPayableYears).thenReturn(17)
     when(mockFeatureFlagService.get(FriendlyUserFilterToggle))
       .thenReturn(Future.successful(FeatureFlag(FriendlyUserFilterToggle, isEnabled = true)))
     when(mockAppConfig.friendlyUsers).thenReturn(Seq())
     when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
+    when(mockNIPayGapExtensionService.payableGapInfo(mockAny()))
+      .thenReturn(PayableGapInfo(BeforeDeadline, 17, 2007))
+    when(mockAppConfig.payableGapExtensions).thenReturn(Seq(PayableGapExtensionDetails(2007, 17)))
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -585,7 +585,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showGaps(generateFakeRequest)
 
-      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
+      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${mockNIPayGapExtensionService.payableGapInfo(Seq("2001")).startYear}")
     }
 
     "Not show it's too late to pay text when user has gaps before cutoff point " in {
@@ -650,7 +650,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showGaps(generateFakeRequest)
 
-      contentAsString(result) should not include s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}"
+      contentAsString(result) should not include s"It’s too late to pay for gaps in your National Insurance record before April ${mockNIPayGapExtensionService.payableGapInfo(Seq("2001")).startYear}"
     }
 
     "return full page for user without gaps" in {
@@ -866,7 +866,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       val result = niRecordController.showFull(generateFakeRequest)
       contentAsString(result) should include("View years only showing gaps in your contributions")
       contentAsString(result) should not include "View payable gaps"
-      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
+      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${mockNIPayGapExtensionService.payableGapInfo(Seq("2001")).startYear}")
     }
 
     "return gaps page for user with gaps and show button and text if user has payable gaps" in {
@@ -959,7 +959,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       val result = niRecordController.showFull(generateFakeRequest)
       contentAsString(result) should include("Find out more about gaps in your record and how to check them")
       contentAsString(result) should include("View payable gaps")
-      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
+      contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${mockNIPayGapExtensionService.payableGapInfo(Seq("2001")).startYear}")
     }
 
     "return gaps page for user with gaps and show button even if user has no gaps after 2006 cutoff year" in {

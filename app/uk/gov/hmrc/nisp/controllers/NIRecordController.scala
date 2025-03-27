@@ -130,7 +130,7 @@ class NIRecordController @Inject()(
   private def showNiRecordPage(gapsOnlyView: Boolean, yearsToContribute: Int, finalRelevantStartYear: Int, niRecord: NationalInsuranceRecord)
                               (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Future[Result] = {
     val recordHasEnded = yearsToContribute < 1
-    val yearsPayable = TaxYear.current.startYear - appConfig.niRecordPayableYears
+
     val tableStart: String =
       if (recordHasEnded) finalRelevantStartYear.toString
       else niRecord.earningsIncludedUpTo.getYear.toString
@@ -156,6 +156,8 @@ class NIRecordController @Inject()(
 
       val tableList = generateTableList(tableStart, tableEnd)
 
+      val payableGapInfo = niPayGapExtensionService.payableGapInfo(tableList)
+
       Ok(
         niRecordPage(
           tableList = tableList,
@@ -171,10 +173,10 @@ class NIRecordController @Inject()(
           ),
           showFullNI = showFullNI,
           currentDate = dateProvider.currentDate,
-          yearsPayable,
+          payableGapInfo.startYear,
           showViewPayableGapsButton,
           appConfig.nispModellingFrontendUrl,
-          niPayGapExtensionService.payableGapInfo(tableList)
+          payableGapInfo
         )
       )
     }

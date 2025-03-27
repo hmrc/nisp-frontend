@@ -67,11 +67,9 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   lazy val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)
   lazy val isWelshEnabled: Boolean               = getConfBool("features.welsh-translation", false)
   lazy val feedbackFrontendUrl: String           = getString("feedback-frontend.url")
-  lazy val niRecordPayableYears: Int             = getInt("numberOfPayableTaxYears")
   lazy val friendlyUsers: Seq[String]            = config.get[Seq[String]]("allowedUsers.friendly")
   lazy val allowedUsersEndOfNino: Seq[String]    = config.get[Seq[String]]("allowedUsers.endOfNino")
   lazy val nispModellingFrontendUrl: String      = getString("nisp-modelling.url")
-
 
   lazy val citizenDetailsServiceUrl: String       = baseUrl("citizen-details")
   lazy val identityVerificationServiceUrl: String = baseUrl("identity-verification")

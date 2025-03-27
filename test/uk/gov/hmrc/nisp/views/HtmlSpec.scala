@@ -52,8 +52,13 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
-  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String): Assertion = {
+  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageValue: Option[Int] = None): Assertion = {
     val elements = doc.select(cssSelector)
+    val messageText = messageValue.fold(
+      Messages(expectedMessageKey)
+    )(
+      value => Messages(expectedMessageKey, value)
+    )
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
@@ -61,7 +66,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
 
     assert(
       StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils
-        .unescapeHtml4(Messages(expectedMessageKey))
+        .unescapeHtml4(messageText)
     )
   }
 

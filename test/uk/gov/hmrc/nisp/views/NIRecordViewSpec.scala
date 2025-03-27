@@ -103,6 +103,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       .thenReturn(Future.successful(FeatureFlag(ViewPayableGapsToggle, isEnabled = false)))
     when(mockAppConfig.friendlyUsers).thenReturn(Seq())
     when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
+    when(mockNIPayGapExtensionService.payableGapInfo(mockAny()))
+      .thenReturn(PayableGapInfo(BeforeDeadline, 17, 2017))
+    when(mockAppConfig.payableGapExtensions).thenReturn(Seq(PayableGapExtensionDetails(2017, 17)))
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -1640,17 +1643,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertEqualsMessage(
         doc,
         "[data-spec='nirecordpage__p1']",
-        "nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay"
-      )
-    }
-
-    "return correct content in second paragraph" in {
-      mockViewPayableGapsFeatureFlag(true)
-      mockSetup
-      assertEqualsMessage(
-        doc,
-        "[data-spec='nirecordpage__p2']",
-        "nisp.nirecord.gapsinyourrecord.thedeadlineforpaying"
+        "nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay",
+        Some(17)
       )
     }
 
