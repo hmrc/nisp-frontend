@@ -27,7 +27,7 @@ import java.time.LocalDate
 
 class NIPayGapExtensionServiceSpec extends UnitSpec {
 
-  "Calling payableGapInfo" should {
+  "Calling payableGapInfo for year 2025" should {
     "Return status of 'BeforeDeadline' and start year of 2006" when {
       "yearsPayable includes years before 6 years ago, TaxYear is 2024 and day is 1st April" in new Setup {
 
@@ -55,7 +55,7 @@ class NIPayGapExtensionServiceSpec extends UnitSpec {
     }
 
     "Return status of 'AfterDeadline' and start year of 2019" when {
-      "yearsPayable includes none before 6 years ago, TaxYear is 2025 and day is 6st April" in new Setup(6) {
+      "yearsPayable includes none before 6 years ago, TaxYear is 2025 and day is 6th April" in new Setup(6) {
 
         val yearsPayable: Seq[String] = Seq("2023", "2022")
 
@@ -68,7 +68,7 @@ class NIPayGapExtensionServiceSpec extends UnitSpec {
     }
 
     "Return status of 'AfterDeadlineExtended' and start year of 2006" when {
-      "yearsPayable includes some years before 6 years ago, TaxYear is 2025 and day is 6st April" in new Setup(6) {
+      "yearsPayable includes some years before 6 years ago, TaxYear is 2025 and day is 6th April" in new Setup(6) {
 
         val yearsPayable: Seq[String] = Seq("2023", "2022","2010", "2006")
 
@@ -81,7 +81,61 @@ class NIPayGapExtensionServiceSpec extends UnitSpec {
     }
   }
 
-  class Setup(day: Int = 1) {
+  "Calling payableGapInfo for year 2026" should {
+    "Return status of 'BeforeDeadline' and start year of 2019" when {
+      "yearsPayable includes years before 6 years ago, TaxYear is 2025 and day is 1st April" in new Setup(year = 2026) {
+
+        val yearsPayable: Seq[String] = Seq("2023", "2022","2010")
+
+        val gapInfo: PayableGapInfo = service.payableGapInfo(yearsPayable)
+
+        gapInfo.payableGapExtensionStatus shouldBe BeforeDeadline
+        gapInfo.startYear shouldBe 2019
+        gapInfo.numberOfGapYears shouldBe 6
+      }
+    }
+
+    "Return status of 'BeforeDeadline' and start year of 2019" when {
+      "yearsPayable includes no years before 6 years ago, TaxYear is 2025 and day is 1st April" in new Setup(year = 2026) {
+
+        val yearsPayable: Seq[String] = Seq("2023", "2022")
+
+        val gapInfo: PayableGapInfo = service.payableGapInfo(yearsPayable)
+
+        gapInfo.payableGapExtensionStatus shouldBe BeforeDeadline
+        gapInfo.startYear shouldBe 2019
+        gapInfo.numberOfGapYears shouldBe 6
+      }
+    }
+
+    "Return status of 'AfterDeadline' and start year of 2020" when {
+      "yearsPayable includes none before 6 years ago, TaxYear is 2025 and day is 6th April" in new Setup(6, 2026) {
+
+        val yearsPayable: Seq[String] = Seq("2023", "2022")
+
+        val gapInfo: PayableGapInfo = service.payableGapInfo(yearsPayable)
+
+        gapInfo.payableGapExtensionStatus shouldBe AfterDeadline
+        gapInfo.startYear shouldBe 2020
+        gapInfo.numberOfGapYears shouldBe 6
+      }
+    }
+
+    "Return status of 'AfterDeadlineExtended' and start year of 2019" when {
+      "yearsPayable includes one year before 6 years ago, TaxYear is 2025 and day is 6th April" in new Setup(6, 2026) {
+
+        val yearsPayable: Seq[String] = Seq("2023", "2022","2018")
+
+        val gapInfo: PayableGapInfo = service.payableGapInfo(yearsPayable)
+
+        gapInfo.payableGapExtensionStatus shouldBe AfterDeadlineExtended
+        gapInfo.startYear shouldBe 2019
+        gapInfo.numberOfGapYears shouldBe 7
+      }
+    }
+  }
+
+  class Setup(day: Int = 1, year: Int = 2025) {
 
     val validConfig: String =
       s"""
@@ -99,7 +153,7 @@ class NIPayGapExtensionServiceSpec extends UnitSpec {
     }
 
     val service: NIPayGapExtensionService = new NIPayGapExtensionService(appConfig(validConfig)) {
-      override def now: () => LocalDate = () => LocalDate.of(2025, 4, day)
+      override def now: () => LocalDate = () => LocalDate.of(year, 4, day)
     }
   }
 }
