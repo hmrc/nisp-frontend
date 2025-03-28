@@ -36,7 +36,7 @@ import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
-import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{NIPayGapExtensionService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
@@ -54,6 +54,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
+  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -62,6 +63,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
     reset(mockStatePensionService)
     reset(mockAppConfig)
     reset(mockPertaxHelper)
+    reset(mockNIPayGapExtensionService)
     wireMockServer.resetAll()
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
     when(mockFeatureFlagService.get(NewStatePensionUIToggle))
@@ -80,6 +82,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
@@ -95,6 +98,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
+      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[AuthRetrievals].to[FakeAuthAction],
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       featureFlagServiceBinding

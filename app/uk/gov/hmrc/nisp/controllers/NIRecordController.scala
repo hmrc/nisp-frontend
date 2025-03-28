@@ -48,7 +48,8 @@ class NIRecordController @Inject()(
                                     dateProvider: DateProvider,
                                     niRecordPage: nirecordpage,
                                     niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
-                                    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions
+                                    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
+                                    niPayGapExtensionService: NIPayGapExtensionService
                                   )(
                                     implicit ec: ExecutionContext,
                                     val featureFlagService: FeatureFlagService
@@ -129,7 +130,7 @@ class NIRecordController @Inject()(
   private def showNiRecordPage(gapsOnlyView: Boolean, yearsToContribute: Int, finalRelevantStartYear: Int, niRecord: NationalInsuranceRecord)
                               (implicit authRequest: AuthenticatedRequest[_], user: NispAuthedUser): Future[Result] = {
     val recordHasEnded = yearsToContribute < 1
-    val yearsPayable = TaxYear.current.startYear - appConfig.niRecordPayableYears
+
     val tableStart: String =
       if (recordHasEnded) finalRelevantStartYear.toString
       else niRecord.earningsIncludedUpTo.getYear.toString
@@ -153,9 +154,13 @@ class NIRecordController @Inject()(
         case _ => false
       }
 
+      val tableList = generateTableList(tableStart, tableEnd)
+
+      val payableGapInfo = niPayGapExtensionService.payableGapInfo(tableList)
+
       Ok(
         niRecordPage(
-          tableList = generateTableList(tableStart, tableEnd),
+          tableList = tableList,
           niRecord = niRecord,
           gapsOnlyView = gapsOnlyView,
           recordHasEnded = recordHasEnded,
@@ -168,9 +173,9 @@ class NIRecordController @Inject()(
           ),
           showFullNI = showFullNI,
           currentDate = dateProvider.currentDate,
-          yearsPayable,
           showViewPayableGapsButton,
-          appConfig.nispModellingFrontendUrl
+          appConfig.nispModellingFrontendUrl,
+          payableGapInfo
         )
       )
     }
