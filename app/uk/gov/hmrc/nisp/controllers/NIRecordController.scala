@@ -173,7 +173,6 @@ class NIRecordController @Inject()(
           ),
           showFullNI = showFullNI,
           currentDate = dateProvider.currentDate,
-          payableGapInfo.startYear,
           showViewPayableGapsButton,
           appConfig.nispModellingFrontendUrl,
           payableGapInfo

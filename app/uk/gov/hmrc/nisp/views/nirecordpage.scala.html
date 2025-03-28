@@ -47,7 +47,6 @@
         showPre1975Years: Boolean,
         showFullNI: Boolean,
         currentDate: LocalDate,
-        niRecordCutoffYear: Int,
         viewPayableGapsToggle: Boolean,
         nispModellingPayableGapsURL: String,
         payableGapInfo: PayableGapInfo
@@ -201,7 +200,7 @@
 
             }
 
-            @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt > niRecordCutoffYear - 1)) {
+            @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt > payableGapInfo.startYear - 1)) {
                 @if(showFullNI) {
                     @nirecordtaxyear(
                         niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
@@ -226,7 +225,7 @@
                     </a>
                 }
 
-                @if(niRecord.taxYears.filter(!_.qualifying).exists(_.taxYear.toInt <= niRecordCutoffYear - 1)) {
+                @if(niRecord.taxYears.filter(!_.qualifying).exists(_.taxYear.toInt <= payableGapInfo.startYear - 1)) {
 
                     <h2 class="govuk-heading-m @if(!viewPayableGapsToggle) {govuk-!-margin-top-5}">
                         @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
@@ -240,7 +239,7 @@
         }
 
         <dl class="govuk-summary-list">
-            @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt <= niRecordCutoffYear - 1)) {
+            @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt <= payableGapInfo.startYear - 1)) {
                 @if(showFullNI) {
                     @nirecordtaxyear(
                         niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
@@ -272,7 +271,7 @@
             </dl>
 
         } else {
-            <dl class="govuk-summary-list @if(niRecord.taxYears.filter(_.taxYear.toInt <= niRecordCutoffYear - 1).length > 0) {govuk-summary-list__no-margin-bottom}">
+            <dl class="govuk-summary-list @if(niRecord.taxYears.filter(_.taxYear.toInt <= payableGapInfo.startYear - 1).length > 0) {govuk-summary-list__no-margin-bottom}">
                 @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
@@ -285,7 +284,7 @@
                     </div>
                 }
 
-                @for(niTaxYear <- niRecord.taxYears.filter(_.taxYear.toInt > niRecordCutoffYear - 1)) {
+                @for(niTaxYear <- niRecord.taxYears.filter(_.taxYear.toInt > payableGapInfo.startYear - 1)) {
                     @if(showFullNI) {
                         @nirecordtaxyear(
                             niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
@@ -307,7 +306,7 @@
                         @messages("nisp.main.context.fillGaps.viewPayableGaps")
                     </a>
                 }
-                @if(niRecord.taxYears.exists(_.taxYear.toInt <= niRecordCutoffYear - 1)) {
+                @if(niRecord.taxYears.exists(_.taxYear.toInt <= payableGapInfo.startYear - 1)) {
 
                     <h2 class="govuk-heading-m govuk-!-margin-top-5">
                         @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
@@ -319,7 +318,7 @@
             }
 
             <dl class="govuk-summary-list">
-                @for(niTaxYear <- niRecord.taxYears.filter(_.taxYear.toInt <= niRecordCutoffYear - 1)) {
+                @for(niTaxYear <- niRecord.taxYears.filter(_.taxYear.toInt <= payableGapInfo.startYear - 1)) {
                     @if(showFullNI) {
                         @nirecordtaxyear(
                             niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
