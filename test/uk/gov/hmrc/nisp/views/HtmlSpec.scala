@@ -97,8 +97,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     )
 
   def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: String*): Assertion = {
-
-    println(doc)
+    
     val elements = doc.select(cssSelector)
 
 
