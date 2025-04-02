@@ -579,6 +579,32 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         "nisp.print.this.ni.record"
       )
     }
+
+    "render page with payable gaps after startYear split from those it's to late too late to pay from before startYear" when {
+      "startYear is set at 2010" in {
+        when(mockNIPayGapExtensionService.payableGapInfo(mockAny()))
+          .thenReturn(PayableGapInfo(BeforeDeadline, 17, 2010))
+        when(mockAppConfig.payableGapExtensions).thenReturn(Seq(PayableGapExtensionDetails(2010, 17)))
+
+        lazy val doc2 = asDocument(contentAsString(controller.showGaps(generateFakeRequest)))
+
+        assertGapYearBefore(
+          doc = doc2, expectedPreviousGap = "2011 to 2012"
+        )
+      }
+
+      "startYear is set at 2012" in {
+        when(mockNIPayGapExtensionService.payableGapInfo(mockAny()))
+          .thenReturn(PayableGapInfo(BeforeDeadline, 17, 2012))
+        when(mockAppConfig.payableGapExtensions).thenReturn(Seq(PayableGapExtensionDetails(2012, 17)))
+
+        lazy val doc2 = asDocument(contentAsString(controller.showGaps(generateFakeRequest)))
+
+        assertGapYearBefore(
+          doc = doc2, expectedPreviousGap = "2013 to 2014"
+        )
+      }
+    }
   }
 
   "Render Ni Record view With HRP Message" should {
