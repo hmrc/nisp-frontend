@@ -33,6 +33,7 @@ import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.util.Locale
 import scala.concurrent.duration._
+import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
@@ -96,7 +97,10 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     )
 
   def assertContainsDynamicMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: String*): Assertion = {
+
+    println(doc)
     val elements = doc.select(cssSelector)
+
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
@@ -239,5 +243,15 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
     val elementText    = elements.first().html().replace("\n", "")
 
     assert(StringEscapeUtils.unescapeHtml4(elementText.replace("\u00a0", "")) == expectedString)
+  }
+
+  def assertGapYearBefore(
+      doc: Document,
+      expectedPreviousGap: String
+  ): Assertion = {
+    val summaryListContainsYear = doc.selectFirst("[class='govuk-summary-list']").children().asScala
+      .exists(e => e.select("[class='govuk-summary-list__key ni-years']").text() == expectedPreviousGap)
+
+    assert(summaryListContainsYear)
   }
 }
