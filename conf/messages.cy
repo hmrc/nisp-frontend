@@ -368,8 +368,8 @@ nisp.nirecord.pre75QualifyingYears = Mae ein cofnodion yn dangos bod gennych {0}
 nisp.nirecord.pre75QualifyingYearsZero = Mae ein cofnodion yn dangos nad oes gennych unrhyw flynyddoedd llawn hyd at <span class="nowrap">5 Ebrill 1975</span>
 
 nisp.nirecord.helpline.getHelp = Cael help
-nisp.nirecord.helpline.number = Llinell gymorth 0800 731 7936
-nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 7013
+nisp.nirecord.helpline.number = Llinell gymorth 0800 731 0453
+nisp.nirecord.helpline.textNumber = Ffôn testun 0800 731 0456
 nisp.nirecord.helpline.openTimes = Dydd Llun i ddydd Gwener: 8:00am i 6:00pm
 nisp.nirecord.forMoreInfoOnGaps = I gael rhagor o wybodaeth am fylchau yn eich cofnod Yswiriant Gwladol {0}
 
@@ -419,7 +419,7 @@ nisp.nirecord.voluntarycontributions.title.message = Cyn i chi ystyried talu cyf
 
 nisp.nirecord.voluntarycontributions.h2title.1 = 1. Darganfyddwch sut mae talu cyfraniadau gwirfoddol yn effeithio eich Pensiwn y Wladwriaeth
 nisp.nirecord.voluntarycontributions.h2title.1.link1 = eich rhagolwg Pensiwn y Wladwriaeth
-nisp.nirecord.voluntarycontributions.h2title.1.message =  Gallwch ffonio Canolfan Bensiwn y Dyfodol ar 0800 731 0181 i ddarganfod mwy am sut y gall llenwi bylchau effeithio
+nisp.nirecord.voluntarycontributions.h2title.1.message =  Gallwch ffonio Canolfan Bensiwn y Dyfodol ar 0800 731 0453 i ddarganfod mwy am sut y gall llenwi bylchau effeithio
 
 nisp.nirecord.voluntarycontributions.h2title.2 = 2. Chwiliwch am arweiniad neu gyngor ariannol
 nisp.nirecord.voluntarycontributions.h2title.2.message = Efallai nad talu cyfraniadau gwirfoddol fydd eich opsiwn gorau wrth gynllunio am eich ymddeoliad.
