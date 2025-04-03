@@ -86,4 +86,9 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
 
   lazy val payableGapExtensions: Seq[PayableGapExtensionDetails] = config.get[Seq[PayableGapExtensionDetails]]("payableGapsExtensions.extensions")
   lazy val payableGapDefault: Int = getInt("payableGapsExtensions.defaults.payableGaps")
+
+  lazy val testTaxYearAddDaysToNow: Int = config
+    .getOptional[Int]("payableGapsExtensions.test.taxYear.addDaysToNow")
+    .getOrElse(0)
+
 }

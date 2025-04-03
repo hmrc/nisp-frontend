@@ -63,5 +63,5 @@ class NIPayGapExtensionService @Inject() (
         PayableGapExtensionDetails(taxYear, appConfig.payableGapDefault)
       )(p => p)
 
-  override def now: () => LocalDate = () => LocalDate.now(ukTime)
+  override def now: () => LocalDate = () => LocalDate.now(ukTime).plusDays(appConfig.testTaxYearAddDaysToNow)
 }

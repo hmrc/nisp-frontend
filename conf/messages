@@ -358,7 +358,7 @@ nisp.nirecord.pre75QualifyingYears = Our records show you have {0} full years up
 nisp.nirecord.pre75QualifyingYearsZero = Our records show you do not have any full years up to <span class="nowrap">5 April 1975</span>
 
 nisp.nirecord.helpline.getHelp = Get help
-nisp.nirecord.helpline.number = Helpline 0800 731 0181
+nisp.nirecord.helpline.number = Helpline 0800 731 0175
 nisp.nirecord.helpline.textNumber = Textphone 0800 731 0176
 nisp.nirecord.helpline.openTimes = Monday to Friday: 8:00am to 6:00pm
 nisp.nirecord.forMoreInfoOnGaps = For more information on gaps in your National Insurance record {0}
@@ -407,7 +407,7 @@ nisp.nirecord.voluntarycontributions.heading = Voluntary contributions
 nisp.nirecord.voluntarycontributions.title.message = Before considering paying voluntary contributions you should:
 
 nisp.nirecord.voluntarycontributions.h2title.1 = 1. Find out how paying voluntary contributions affects your State Pension
-nisp.nirecord.voluntarycontributions.h2title.1.message = You can call the Future Pension Centre on 0800 731 0181 to find out more about how filling gaps can affect
+nisp.nirecord.voluntarycontributions.h2title.1.message = You can call the Future Pension Centre on 0800 731 0175 to find out more about how filling gaps can affect
 nisp.nirecord.voluntarycontributions.h2title.1.link1 = your State Pension forecast
 
 nisp.nirecord.voluntarycontributions.h2title.2 = 2. Seek guidance or financial advice
