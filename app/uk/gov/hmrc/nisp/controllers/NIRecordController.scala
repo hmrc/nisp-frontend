@@ -34,7 +34,7 @@ import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVolun
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.TaxYear
 
-import java.time.{LocalDate, ZoneId}
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class NIRecordController @Inject()(
@@ -49,7 +49,6 @@ class NIRecordController @Inject()(
                                     niRecordPage: nirecordpage,
                                     niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
                                     nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
-                                    niPayGapExtensionService: NIPayGapExtensionService
                                   )(
                                     implicit ec: ExecutionContext,
                                     val featureFlagService: FeatureFlagService
@@ -153,13 +152,7 @@ class NIRecordController @Inject()(
         case(true, true, _, _) => ninoContainsNumberAtEnd(user.nino.nino) || isFriendlyUser(user.nino.nino)
         case _ => false
       }
-
-      val ukTime: ZoneId = ZoneId.of("Europe/London")
-      val payableGapYear: List[String] = niRecord.taxYears
-        .filter(_.currentDateAfterCutOff(LocalDate.now(ukTime)))
-        .map(_.taxYear)
-
-      val payableGapInfo = niPayGapExtensionService.payableGapInfo(payableGapYear)
+      val payableGapInfo = PayableGapInfo(appConfig.niRecordPayableYears)
 
       Ok(
         niRecordPage(

@@ -16,8 +16,10 @@
 
 package uk.gov.hmrc.nisp.models
 
-case class PayableGapInfo(
-                           payableGapExtensionStatus: PayableGapExtensionStatus,
-                           numberOfGapYears: Int,
-                           startYear: Int
-)
+import uk.gov.hmrc.time.TaxYear
+
+case class PayableGapInfo(numberOfGapYears: Int, startYear: Int)
+
+object PayableGapInfo {
+  def apply(numGapYears: Int): PayableGapInfo = PayableGapInfo(numGapYears, TaxYear.current.currentYear - numGapYears)
+}

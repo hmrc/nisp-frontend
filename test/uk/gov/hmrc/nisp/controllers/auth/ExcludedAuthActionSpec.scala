@@ -35,7 +35,6 @@ import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.common.RetrievalOps._
-import uk.gov.hmrc.nisp.services.NIPayGapExtensionService
 
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,8 +43,6 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
-  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
-
   val nino: String = new Generator().nextNino.nino
   val fakeLoginTimes: LoginTimes = LoginTimes(Instant.now(), None)
   val credentials: Credentials = Credentials("providerId", "providerType")
@@ -63,7 +60,6 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   override def fakeApplication(): Application  = GuiceApplicationBuilder()
     .overrides(
       bind[AuthConnector].toInstance(mockAuthConnector),
-      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[ApplicationConfig].toInstance(mockApplicationConfig)
     ).build()
 
@@ -71,7 +67,6 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     super.beforeEach()
     reset(mockAuthConnector)
     reset(mockApplicationConfig)
-    reset(mockNIPayGapExtensionService)
   }
 
   object Stubs {

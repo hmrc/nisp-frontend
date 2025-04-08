@@ -39,7 +39,7 @@ import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
 import uk.gov.hmrc.nisp.helpers._
 import uk.gov.hmrc.nisp.models._
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
-import uk.gov.hmrc.nisp.services.{NIPayGapExtensionService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -63,7 +63,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockDateProvider: DateProvider                         = mock[DateProvider]
-  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -76,7 +75,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[DateProvider].toInstance(mockDateProvider),
-      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       featureFlagServiceBinding
     )
@@ -103,9 +101,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       .thenReturn(Future.successful(FeatureFlag(ViewPayableGapsToggle, isEnabled = false)))
     when(mockAppConfig.friendlyUsers).thenReturn(Seq())
     when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
-    when(mockNIPayGapExtensionService.payableGapInfo(mockAny()))
-      .thenReturn(PayableGapInfo(BeforeDeadline, 17, 2017))
-    when(mockAppConfig.payableGapExtensions).thenReturn(Seq(PayableGapExtensionDetails(2017, 17)))
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -578,32 +573,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         "[data-spec='nirecordpage__printlink_l']",
         "nisp.print.this.ni.record"
       )
-    }
-
-    "render page with payable gaps after startYear split from those it's to late too late to pay from before startYear" when {
-      "startYear is set at 2010" in {
-        when(mockNIPayGapExtensionService.payableGapInfo(mockAny()))
-          .thenReturn(PayableGapInfo(BeforeDeadline, 17, 2010))
-        when(mockAppConfig.payableGapExtensions).thenReturn(Seq(PayableGapExtensionDetails(2010, 17)))
-
-        lazy val doc2 = asDocument(contentAsString(controller.showGaps(generateFakeRequest)))
-
-        assertGapYearBefore(
-          doc = doc2, expectedPreviousGap = "2011 to 2012"
-        )
-      }
-
-      "startYear is set at 2012" in {
-        when(mockNIPayGapExtensionService.payableGapInfo(mockAny()))
-          .thenReturn(PayableGapInfo(BeforeDeadline, 17, 2012))
-        when(mockAppConfig.payableGapExtensions).thenReturn(Seq(PayableGapExtensionDetails(2012, 17)))
-
-        lazy val doc2 = asDocument(contentAsString(controller.showGaps(generateFakeRequest)))
-
-        assertGapYearBefore(
-          doc = doc2, expectedPreviousGap = "2013 to 2014"
-        )
-      }
     }
   }
 
@@ -1485,7 +1454,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         bind[AuthRetrievals].to[FakeAuthActionWithNino],
         bind[NinoContainer].toInstance(AbroadNinoContainer),
         bind[DateProvider].toInstance(mockDateProvider),
-        bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService),
         bind[PertaxAuthAction].to[FakePertaxAuthAction]
       )
       .build()

@@ -29,19 +29,16 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.services.NIPayGapExtensionService
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 class TermsConditionsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type]  = FakeRequest("GET", "/")
   val mockApplicationConfig: ApplicationConfig          = mock[ApplicationConfig]
-  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService)
+      bind[ApplicationConfig].toInstance(mockApplicationConfig)
     )
     .build()
 

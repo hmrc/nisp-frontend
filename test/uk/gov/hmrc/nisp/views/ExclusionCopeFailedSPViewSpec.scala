@@ -29,7 +29,6 @@ import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
 import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
-import uk.gov.hmrc.nisp.services.NIPayGapExtensionService
 import uk.gov.hmrc.nisp.views.html.excluded_cope_failed_sp
 
 import java.time.{Instant, LocalDate}
@@ -37,7 +36,6 @@ import java.time.{Instant, LocalDate}
 class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
-  val mockNIPayGapExtensionService: NIPayGapExtensionService = mock[NIPayGapExtensionService]
 
   implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
     FakeRequest(),
@@ -54,8 +52,7 @@ class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure("future-pension-link.url" -> "pensionUrl")
     .overrides(
-      bind[ApplicationConfig].toInstance(mockAppConfig),
-      bind[NIPayGapExtensionService].toInstance(mockNIPayGapExtensionService)
+      bind[ApplicationConfig].toInstance(mockAppConfig)
     )
     .build()
 
