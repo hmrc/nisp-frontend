@@ -28,7 +28,7 @@ import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 
 trait PertaxAuthMockingHelper {
-  this: WireMockSupport with GuiceOneAppPerSuite =>
+  this: WireMockSupport & GuiceOneAppPerSuite =>
 
   lazy val config: Map[String, Any] = Map[String, Any](
     "microservice.services.pertax-auth.port" -> wireMockServer.port()

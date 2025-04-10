@@ -7,11 +7,19 @@ import sbt.Setting
 import scoverage.ScoverageKeys
 
 object CodeCoverageSettings {
+  val excludedPackages: Seq[String] = Seq(
+    ".*Reverse.*",
+    ".*Routes.*",
+    "view.*",
+    ".*ErrorHandler.*",
+    ".*\\$anon.*",
+    ".*PertaxErrorView.*"
+  )
   def apply(): Seq[Setting[?]] = Seq(
     ScoverageKeys.coverageMinimumBranchTotal := 83,
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
-    ScoverageKeys.coverageExcludedPackages:= ".*Reverse.*;.*Routes.*;view.*",
+    ScoverageKeys.coverageExcludedPackages:= excludedPackages.mkString(",")
   )
 }

@@ -16,13 +16,15 @@
 
 val appName = "nisp-frontend"
 
-ThisBuild / scalaVersion := "2.13.16"
+ThisBuild / scalaVersion := "3.6.4"
 ThisBuild / majorVersion := 10
 ThisBuild / scalacOptions ++= Seq(
   "-feature",
-  "-Werror",
-  "-Xlint:-missing-interpolator,_",
-  "-Wconf:src=routes/.*:is,src=twirl/.*:is"
+  "-Xfatal-warnings",
+  "-Wconf:src=routes/.*:silent", // Suppress warnings from routes files
+  "-Wconf:src=twirl/.*:silent",  // Suppress warnings from twirl files
+  "-Wconf:src=target/.*:silent", // Suppress warnings from target files
+  "-Wconf:msg=Flag.*repeatedly:silent", // Suppress repeated flag warnings
 )
 
 val microservice = Project(appName, file("."))

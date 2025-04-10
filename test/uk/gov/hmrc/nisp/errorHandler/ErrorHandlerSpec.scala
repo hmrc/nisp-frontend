@@ -39,7 +39,7 @@ import scala.concurrent.Future
 
 class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
 
-  implicit val request: Request[_] = FakeRequest()
+  implicit val request: Request[?] = FakeRequest()
 
   lazy val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
 

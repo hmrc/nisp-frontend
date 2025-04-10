@@ -87,7 +87,7 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
 
   "StatePensionConnection" should {
 
-    implicit val headerCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
+    implicit val headerCarrier: HeaderCarrier = HeaderCarrier(extraHeaders = Seq("Accept" -> "application/vnd.hmrc.1.0+json"))
 
     "transform the Dead 403 into a Left(StatePensionExclusion(Dead))" in {
       when(mockStatePensionConnector.getStatePension(mockEQ(excludedAll))(mockAny())).thenReturn(
@@ -127,16 +127,16 @@ class StatePensionServiceSpec extends UnitSpec with ScalaFutures with BeforeAndA
         Future.successful(Right(Right(statePensionResponse[StatePension](regularNino))))
       )
 
-     statePensionService.getSummary(regularNino).futureValue shouldBe Right(Right(StatePension(
-          LocalDate.of(2015, 4, 5),
-          StatePensionAmounts(
-            false,
-            StatePensionAmountRegular(133.41, 580.1, 6961.14),
-            StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
-            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
-            StatePensionAmountRegular(0, 0, 0)
-          ),
-          64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
+      statePensionService.getSummary(regularNino).futureValue shouldBe Right(Right(StatePension(
+        LocalDate.of(2015, 4, 5),
+        StatePensionAmounts(
+          false,
+          StatePensionAmountRegular(133.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ),
+        64, LocalDate.of(2018, 7, 6), "2017-18", 30, false, 155.65, false, false
       )))
     }
 

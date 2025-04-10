@@ -143,7 +143,7 @@ object StatePension {
       (JsPath \ "currentFullWeeklyPensionAmount").read[BigDecimal] and
       readNullableBoolean(JsPath \ "reducedRateElection") and
       readNullableBoolean(JsPath \ "statePensionAgeUnderConsideration")
-  )(StatePension.apply _)
+  )(StatePension.apply)
 
   implicit val writes: OWrites[StatePension] = Json.writes[StatePension]
 }

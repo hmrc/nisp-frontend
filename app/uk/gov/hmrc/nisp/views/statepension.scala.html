@@ -64,7 +64,7 @@
         yearsToContributeUntilPensionAge: Int
 )(
         implicit
-        request: AuthenticatedRequest[_],
+        request: AuthenticatedRequest[?],
         user: NispAuthedUser,
         messages: Messages
 )

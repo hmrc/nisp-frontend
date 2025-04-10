@@ -69,8 +69,8 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     reset(mockApplicationConfig)
   }
 
-  object Stubs {
-    def successBlock(request: ExcludedAuthenticatedRequest[_]): Future[Result] = Future.successful(Ok)
+  class Stubs {
+    def successBlock(request: ExcludedAuthenticatedRequest[?]): Future[Result] = Future.successful(Ok)
   }
 
   val authAction: ExcludedAuthActionImpl = inject[ExcludedAuthActionImpl]
@@ -84,7 +84,7 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
         ).thenReturn(makeRetrievalResults())
 
         val request = FakeRequest("", "")
-        val stubs = spy(Stubs)
+        val stubs = spy(new Stubs)
         val result = authAction.invokeBlock(request, stubs.successBlock)
         status(result) shouldBe OK
       }
@@ -96,7 +96,7 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       ).thenReturn(makeRetrievalResults(ninoOption = None))
 
       val request = FakeRequest("", "")
-      val stubs = spy(Stubs)
+      val stubs = spy(new Stubs)
       val result = authAction.invokeBlock(request, stubs.successBlock)
       an[RuntimeException] should be thrownBy await(result)
     }
@@ -111,7 +111,7 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       when(mockApplicationConfig.postSignInRedirectUrl).thenReturn("http://localhost:9234/check-your-state-pension/account")
 
       val request = FakeRequest("", "")
-      val stubs = spy(Stubs)
+      val stubs = spy(new Stubs)
       val result = authAction.invokeBlock(request, stubs.successBlock)
       status(result) shouldBe SEE_OTHER
     }
@@ -127,7 +127,7 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       when(mockApplicationConfig.notAuthorisedRedirectUrl).thenReturn("http://localhost:9234/check-your-state-pension/not-authorised")
 
       val request = FakeRequest("", "")
-      val stubs = spy(Stubs)
+      val stubs = spy(new Stubs)
       val result = authAction.invokeBlock(request, stubs.successBlock)
       status(result) shouldBe SEE_OTHER
     }

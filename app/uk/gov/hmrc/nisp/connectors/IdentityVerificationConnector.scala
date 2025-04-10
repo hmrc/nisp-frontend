@@ -19,7 +19,6 @@ package uk.gov.hmrc.nisp.connectors
 import com.google.inject.Inject
 import play.api.http.Status._
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.HttpReadsInstances.readEitherOf
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.nisp.config.ApplicationConfig
