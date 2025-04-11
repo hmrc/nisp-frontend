@@ -81,4 +81,9 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/check-your-state-pension?referrerUrl=" + RedirectUrl(frontendHost + relativeReferrerPath).get(UnsafePermitAll).encodedUrl
 
+  val gracePeriodStartMonth: Int              = getConfInt("gracePeriod.start.month", 4)
+  val gracePeriodStartDay: Int                = getConfInt("gracePeriod.start.day", 5)
+  val gracePeriodEndMonth: Int                = getConfInt("gracePeriod.end.month", 5)
+  val gracePeriodEndDay: Int                  = getConfInt("gracePeriod.end.day", 6)
+
 }

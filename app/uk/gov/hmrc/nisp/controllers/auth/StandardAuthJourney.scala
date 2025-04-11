@@ -20,6 +20,8 @@ import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
 
 import javax.inject.Inject
 
-class StandardAuthJourney @Inject()(auth: AuthRetrievals, pertaxAuth: PertaxAuthAction, defaultActionBuilder: DefaultActionBuilder) {
+class StandardAuthJourney @Inject()(auth: AuthRetrievals, pertaxAuth: PertaxAuthAction, defaultActionBuilder: DefaultActionBuilder, gracePeriodAction: GracePeriodAction) {
   val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedRequest, AnyContent] = defaultActionBuilder andThen pertaxAuth andThen auth
+  
+  val pertaxAuthActionWithGracePeriod: ActionBuilder[AuthenticatedRequest, AnyContent] = defaultActionBuilder andThen pertaxAuth andThen auth andThen gracePeriodAction
 }
