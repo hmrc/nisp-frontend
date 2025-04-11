@@ -330,7 +330,7 @@
                     <h2 class="govuk-heading-m govuk-!-margin-top-5">
                         @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
                     </h2>
-                  
+
                     @if(gracePeriodService.inGracePeriod) {
                         @govukWarningText(WarningText(
                             iconFallbackText = Some("Warning"),

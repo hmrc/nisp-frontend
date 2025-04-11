@@ -19,12 +19,12 @@ package uk.gov.hmrc.nisp.services
 import com.google.inject.Inject
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 
-import java.time.{LocalDate, ZoneId}
+import java.time.{LocalDate, ZoneOffset}
 
 class GracePeriodService @Inject()(appConfig: ApplicationConfig) {
   
-  private val currentYear: Int = LocalDate.now(ZoneId.of("Europe/London")).getYear
-  private def now: LocalDate = LocalDate.now(ZoneId.of("Europe/London"))
+  private val currentYear: Int = LocalDate.now(ZoneOffset.UTC).getYear
+  private def now: LocalDate = LocalDate.now(ZoneOffset.UTC)
   
   private val graceStartDate: LocalDate = LocalDate.of(currentYear, appConfig.gracePeriodStartMonth, appConfig.gracePeriodStartDay)
   private val graceEndDate: LocalDate = LocalDate.of(currentYear, appConfig.gracePeriodEndMonth, appConfig.gracePeriodEndDay)
