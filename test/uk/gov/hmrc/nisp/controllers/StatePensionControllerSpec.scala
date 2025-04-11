@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
+import org.mockito.ArgumentMatchers.{any as mockAny, eq as mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -24,19 +24,19 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsEmpty
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, GracePeriodAction, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.helpers.*
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
-import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{GracePeriodService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
@@ -54,6 +54,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
+  val mocGracePeriodService: GracePeriodService              = mock[GracePeriodService]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -66,6 +67,10 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
     when(mockAppConfig.pertaxAuthBaseUrl).thenReturn(s"http://localhost:${wireMockServer.port()}")
     when(mockFeatureFlagService.get(NewStatePensionUIToggle))
       .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = false)))
+    when(mockAppConfig.gracePeriodStartDay).thenReturn(5)
+    when(mockAppConfig.gracePeriodStartMonth).thenReturn(4)
+    when(mockAppConfig.gracePeriodEndDay).thenReturn(7)
+    when(mockAppConfig.gracePeriodEndMonth).thenReturn(5)
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -83,6 +88,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService),
       featureFlagServiceBinding
     )
     .build()
@@ -97,6 +104,8 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthRetrievals].to[FakeAuthAction],
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService),
       featureFlagServiceBinding
     )
     .build()

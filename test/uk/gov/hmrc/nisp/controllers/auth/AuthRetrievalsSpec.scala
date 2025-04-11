@@ -71,6 +71,11 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
   val address: Address = Address(Some("Country"))
   val citizenDetailsResponse: CitizenDetailsResponse = CitizenDetailsResponse(citizen, Some(address))
 
+  when(mockApplicationConfig.gracePeriodStartDay).thenReturn(5)
+  when(mockApplicationConfig.gracePeriodStartMonth).thenReturn(4)
+  when(mockApplicationConfig.gracePeriodEndDay).thenReturn(7)
+  when(mockApplicationConfig.gracePeriodEndMonth).thenReturn(5)
+
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[AuthConnector].toInstance(mockAuthConnector),

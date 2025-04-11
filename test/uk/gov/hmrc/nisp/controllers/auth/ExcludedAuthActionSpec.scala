@@ -34,7 +34,8 @@ import uk.gov.hmrc.auth.core.retrieve.{Credentials, LoginTimes, ~}
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.common.RetrievalOps._
+import uk.gov.hmrc.nisp.common.RetrievalOps.*
+import uk.gov.hmrc.nisp.services.GracePeriodService
 
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,6 +47,7 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   val nino: String = new Generator().nextNino.nino
   val fakeLoginTimes: LoginTimes = LoginTimes(Instant.now(), None)
   val credentials: Credentials = Credentials("providerId", "providerType")
+  val mocGracePeriodService: GracePeriodService = mock[GracePeriodService]
 
   type AuthRetrievalType =
     Option[String] ~ ConfidenceLevel ~ Option[Credentials] ~ LoginTimes
@@ -60,7 +62,8 @@ class ExcludedAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   override def fakeApplication(): Application  = GuiceApplicationBuilder()
     .overrides(
       bind[AuthConnector].toInstance(mockAuthConnector),
-      bind[ApplicationConfig].toInstance(mockApplicationConfig)
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[GracePeriodService].toInstance(mocGracePeriodService)
     ).build()
 
   override def beforeEach(): Unit = {

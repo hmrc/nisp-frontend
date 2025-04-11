@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.views
 
 import org.apache.commons.text.StringEscapeUtils
-import org.mockito.ArgumentMatchers._
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.concurrent.ScalaFutures
@@ -37,14 +37,14 @@ import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthRetrievals, AuthenticatedRequest, NispAuthedUser, PertaxAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthRetrievals, AuthenticatedRequest, GracePeriodAction, NispAuthedUser, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.helpers.*
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.repositories.SessionCache
-import uk.gov.hmrc.nisp.services.{MetricsService, NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{GracePeriodService, MetricsService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
 import uk.gov.hmrc.nisp.utils.{Constants, PertaxAuthMockingHelper}
 import uk.gov.hmrc.nisp.views.html.statepension_cope
@@ -73,6 +73,7 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockMetricsService: MetricsService                     = mock[MetricsService]
   val mockSessionCache: SessionCache                         = mock[SessionCache]
+  val mocGracePeriodService: GracePeriodService              = mock[GracePeriodService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -105,6 +106,8 @@ class StatePension_CopeViewSpec extends HtmlSpec with ScalaFutures with Injectin
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService),
       featureFlagServiceBinding
     )
     .build()

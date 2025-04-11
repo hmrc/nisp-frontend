@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.auth
+package uk.gov.hmrc.nisp.helpers
 
-import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
+import play.api.mvc.Result
+import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, GracePeriodAction}
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-class StandardAuthJourney @Inject()(auth: AuthRetrievals, pertaxAuth: PertaxAuthAction, defaultActionBuilder: DefaultActionBuilder, gracePeriodAction: GracePeriodAction) {
-  val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedRequest, AnyContent] = defaultActionBuilder andThen pertaxAuth andThen auth
-  
-  val pertaxAuthActionWithGracePeriod: ActionBuilder[AuthenticatedRequest, AnyContent] = defaultActionBuilder andThen pertaxAuth andThen auth andThen gracePeriodAction
+class FakeGracePeriodAction @Inject()(implicit val executionContext: ExecutionContext) extends GracePeriodAction {
+  override protected def filter[A](request: AuthenticatedRequest[A]): Future[Option[Result]] = {
+    Future.successful(None)
+  }
+
 }

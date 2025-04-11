@@ -17,8 +17,8 @@
 package uk.gov.hmrc.nisp.controllers
 
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.{any as mockAny, eq as mockEQ}
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -26,10 +26,13 @@ import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContentAsEmpty
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.{IdentityVerificationConnector, IdentityVerificationSuccessResponse}
+import uk.gov.hmrc.nisp.controllers.auth.GracePeriodAction
+import uk.gov.hmrc.nisp.helpers.FakeGracePeriodAction
+import uk.gov.hmrc.nisp.services.GracePeriodService
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.util.Locale
@@ -41,11 +44,14 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
   val fakeRequestWelsh: FakeRequest[AnyContentAsEmpty.type]  = FakeRequest("GET", "/cymraeg")
   val mockApplicationConfig: ApplicationConfig               = mock[ApplicationConfig]
   val mockIVConnector: IdentityVerificationConnector         = mock[IdentityVerificationConnector]
+  val mocGracePeriodService: GracePeriodService              = mock[GracePeriodService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[IdentityVerificationConnector].toInstance(mockIVConnector),
-      bind[ApplicationConfig].toInstance(mockApplicationConfig)
+      bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService)
     )
     .build()
 

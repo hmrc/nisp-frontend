@@ -30,7 +30,10 @@ import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.controllers.auth.GracePeriodAction
+import uk.gov.hmrc.nisp.helpers.FakeGracePeriodAction
 import uk.gov.hmrc.nisp.models.admin.ExcessiveTrafficToggle
+import uk.gov.hmrc.nisp.services.GracePeriodService
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.util.Locale
@@ -42,10 +45,13 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
   implicit val request: Request[?] = FakeRequest()
 
   lazy val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mocGracePeriodService: GracePeriodService = mock[GracePeriodService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService),
       featureFlagServiceBinding
     )
     .build()

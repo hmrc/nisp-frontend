@@ -23,6 +23,7 @@
 @import uk.gov.hmrc.nisp.views.formatting.TaxYearFormat
 @import uk.gov.hmrc.nisp.views.Main
 @import uk.gov.hmrc.nisp.models.PayableGapInfo
+@import uk.gov.hmrc.nisp.services.GracePeriodService
 
 @this(
         main: Main,
@@ -35,7 +36,9 @@
         details: details,
         insetText: insetText,
         govukPanel: GovukPanel,
-        nispPageHeading: NispPageHeading
+        nispPageHeading: NispPageHeading,
+        gracePeriodService: GracePeriodService,
+        govukWarningText: GovukWarningText
 )
 @(
         tableList: Seq[String],
@@ -231,9 +234,25 @@
                         @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
                     </h2>
 
-                    <p class="govuk-body govuk-!-margin-bottom-5">
+
+
+                    @if(gracePeriodService.inGracePeriod) {
+                        @govukWarningText(WarningText(
+                            iconFallbackText = Some("Warning"),
+                            content = HtmlContent(
+                                messages("nisp.grace.period.banner.text") +
+                                link(
+                                    href = routes.GracePeriodController.showGracePeriod.url,
+                                    messageKey = "nisp.grace.period.banner.url.text",
+                                    specId = Some("nirecordpage_text3__link")
+                                )
+                            )
+                        ))
+                    } else {
+                        <p class="govuk-body govuk-!-margin-bottom-5">
                         @Messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
-                    </p>
+                        </p>
+                    }
                 }
             </div>
         }
@@ -311,9 +330,24 @@
                     <h2 class="govuk-heading-m govuk-!-margin-top-5">
                         @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
                     </h2>
-                    <p class="govuk-body govuk-!-margin-bottom-5">
+
+                    @if(gracePeriodService.inGracePeriod) {
+                        @govukWarningText(WarningText(
+                            iconFallbackText = Some("Warning"),
+                            content = HtmlContent(
+                                messages("nisp.grace.period.banner.text") +
+                                        link(
+                                            href = routes.GracePeriodController.showGracePeriod.url,
+                                            messageKey = "nisp.grace.period.banner.url.text",
+                                            specId = Some("nirecordpage_text3__link")
+                                        )
+                            )
+                        ))
+                    } else {
+                        <p class="govuk-body govuk-!-margin-bottom-5">
                         @Messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
-                    </p>
+                        </p>
+                    }
                 }
             }
 

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.views.statePension
 
-import org.mockito.ArgumentMatchers._
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import play.api.i18n.Messages
@@ -31,12 +31,12 @@ import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, GracePeriodAction, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.helpers.*
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
-import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{GracePeriodService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.HtmlSpec
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -64,6 +64,7 @@ class StatePensionForecastOnlyViewSpec
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
+  val mocGracePeriodService: GracePeriodService              = mock[GracePeriodService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -76,6 +77,8 @@ class StatePensionForecastOnlyViewSpec
       bind[ApplicationConfig].toInstance(mockAppConfig),
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService),
       featureFlagServiceBinding
     )
     .build()
@@ -91,6 +94,8 @@ class StatePensionForecastOnlyViewSpec
       bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService),
       featureFlagServiceBinding
     )
     .build()

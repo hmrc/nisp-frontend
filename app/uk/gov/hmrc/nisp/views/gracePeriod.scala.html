@@ -1,0 +1,124 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link}
+@import uk.gov.hmrc.nisp.views.Main
+
+@this(
+        main: Main,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link
+)
+
+@(
+        showBackLink: Boolean
+)(
+        implicit messages: Messages,
+        request: Request[?]
+)
+
+@main(
+    pageTitle = messages("nisp.grace.period.view.h1"),
+    hideNavBar = true
+) {
+
+    @h1(
+        elmId = Some("heading-1"),
+        msg = "nisp.grace.period.view.h1",
+        specId = Some("paying_for_gaps__h1")
+    )
+
+    @p(
+        content = Text(messages("nisp.grace.period.view.p1")),
+        specId = Some("paying_for_gaps__p1")
+    )
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("nisp.grace.period.view.list1.1")</li>
+        <li>@messages("nisp.grace.period.view.list1.2")</li>
+        <li>@messages("nisp.grace.period.view.list1.3")</li>
+    </ul>
+
+    @p(
+        content = Text(messages("nisp.grace.period.view.p2")),
+        specId = Some("paying_for_gaps__p2")
+    )
+
+    @h2(
+        elmId = Some("heading-2"),
+        msg = "nisp.grace.period.view.h2",
+        specId = Some("paying_for_gaps__h2_1")
+    )
+
+    @p(
+        content = Text(messages("nisp.grace.period.view.p3")),
+        specId = Some("paying_for_gaps__p3")
+    )
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("nisp.grace.period.view.list2.1")</li>
+        <li>@messages("nisp.grace.period.view.list2.2")</li>
+    </ul>
+
+    @link(
+        href = messages("nisp.grace.period.view.link.url"),
+        messageKey = "nisp.grace.period.view.link.text",
+        specId = Some("paying_for_gaps__link_1")
+    )
+
+    <p class="govuk-!-margin-bottom-8"></p>
+
+    @h2(
+        elmId = Some("heading-2-2"),
+        msg = "nisp.grace.period.view.h2.2",
+        specId = Some("paying_for_gaps__h2_2")
+    )
+
+    @p(
+        content = HtmlContent(
+            HtmlFormat.fill(Seq(
+            link(
+                href = messages("nisp.grace.period.view.link.2.url"),
+                messageKey = "nisp.grace.period.view.link.2.text",
+                specId = Some("paying_for_gaps__link_2")
+            ), Html(messages("nisp.grace.period.view.p4"))
+            ))
+        ),
+        specId = Some("paying_for_gaps__p4")
+    )
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("nisp.grace.period.view.list3.1")</li>
+        <li>@messages("nisp.grace.period.view.list3.2")</li>
+    </ul>
+
+    @p(
+        content = HtmlContent(
+            messages("nisp.grace.period.view.p5") +
+            link(
+                href = routes.NIRecordController.showFull.url,
+                messageKey = "nisp.grace.period.view.link.3.text",
+                specId = Some("paying_for_gaps__link_3"),
+                fullStop = true
+            )
+        ),
+        specId = Some("paying_for_gaps__p5")
+    )
+
+}

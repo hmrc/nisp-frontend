@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.views
 
-import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
+import org.mockito.ArgumentMatchers.{any as mockAny, eq as mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import play.api.Application
@@ -33,13 +33,13 @@ import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.NIRecordController
-import uk.gov.hmrc.nisp.controllers.auth._
+import uk.gov.hmrc.nisp.controllers.auth.*
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.helpers.*
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
-import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{GracePeriodService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -63,6 +63,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockDateProvider: DateProvider                         = mock[DateProvider]
+  val mocGracePeriodService: GracePeriodService              = mock[GracePeriodService]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -76,6 +77,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[DateProvider].toInstance(mockDateProvider),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService),
       featureFlagServiceBinding
     )
     .build()
@@ -1454,7 +1457,9 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         bind[AuthRetrievals].to[FakeAuthActionWithNino],
         bind[NinoContainer].toInstance(AbroadNinoContainer),
         bind[DateProvider].toInstance(mockDateProvider),
-        bind[PertaxAuthAction].to[FakePertaxAuthAction]
+        bind[PertaxAuthAction].to[FakePertaxAuthAction],
+        bind[GracePeriodAction].to[FakeGracePeriodAction],
+        bind[GracePeriodService].toInstance(mocGracePeriodService)
       )
       .build()
       .injector
