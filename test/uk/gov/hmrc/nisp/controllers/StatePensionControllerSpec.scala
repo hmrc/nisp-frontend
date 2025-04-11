@@ -241,7 +241,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
     "GET /statepension" should {
 
       "return the forecast only page for a user with a forecast lower than current amount" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(Right(nationalInsuranceRecord)))
@@ -260,7 +260,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "return 200, with exclusion message for excluded user" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.Dead))))
@@ -281,7 +281,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "return content about COPE for contracted out (B) user" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         val expectedNationalInsuranceRecord = NationalInsuranceRecord(
           28,
@@ -315,7 +315,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "return COPE page for contracted out (B) user" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionCopeResponse)))
@@ -330,7 +330,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "return abroad message for abroad user" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
           Future.successful(Right(Right(nationalInsuranceRecord)))
@@ -351,7 +351,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "return /exclusion for MWRRE user" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(Left(StatePensionExclusionFiltered(Exclusion.MarriedWomenReducedRateElection))))
@@ -371,7 +371,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "return abroad message for forecast only user" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
           Future.successful(Right(Right(nationalInsuranceRecord)))
@@ -393,7 +393,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "return abroad message for an mqp user instead of standard mqp overseas message" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         when(mockNationalInsuranceService.getSummary(mockEQ(foreignNino))(mockAny())).thenReturn(
           Future.successful(Right(Right(nationalInsuranceRecord)))
@@ -415,7 +415,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "redirect to statepension page for non contracted out user" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         when(mockStatePensionService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
           Future.successful(Right(Right(statePensionVariation2)))
@@ -426,7 +426,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
       }
 
       "return page with MQP messaging for MQP user" in {
-        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+        when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
         val expectedNationalInsuranceRecord = NationalInsuranceRecord(
           3,
@@ -462,7 +462,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
     "when there is a Fill Gaps Scenario" when {
       "the future config is set to off" should {
         "show year information when there is multiple years" in {
-          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
           when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(
             Future.successful(Right(Right(nationalInsuranceRecordVariant2)))
@@ -485,7 +485,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
           contentAsString(result) should include("The most you can get by filling any 7 years in your record is")
         }
         "show specific text when is only one payable gap" in {
-          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
 
           val expectedNationalInsuranceRecord = NationalInsuranceRecord(
             28,
@@ -548,7 +548,7 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
 
       "the future proof config is set to true" should {
         "show new personal max text when there are multiple/single year" in {
-          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(false)
+          when(mockPertaxHelper.isFromPertax(mockAny())).thenReturn(Future.successful(false))
           when(mockAppConfig.futureProofPersonalMax).thenReturn(true)
 
           when(mockNationalInsuranceService.getSummary(mockEQ(standardNino))(mockAny())).thenReturn(

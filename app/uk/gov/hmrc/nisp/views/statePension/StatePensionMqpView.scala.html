@@ -46,7 +46,7 @@
         numberOfYearsMissing: Int,
         customerAge: Int
 )(
-        implicit request: AuthenticatedRequest[_],
+        implicit request: AuthenticatedRequest[?],
         user: NispAuthedUser,
         messages: Messages
 )

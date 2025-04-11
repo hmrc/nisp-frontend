@@ -84,7 +84,7 @@ trait BackendConnector {
 
     http
       .get(url"$urlToRead")
-      .setHeader(headers:_*)
+      .setHeader(headers*)
       .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, A]]]
       .andThen(_ => timerContext.stop())
       .recover {

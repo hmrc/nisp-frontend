@@ -88,7 +88,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec
 
       when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/mdtp/AB123456C"))(any())
         .setHeader(headerCaptor.capture())
-        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](any(), any()))
+        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](using any(), any()))
         .thenReturn(Future.successful(Right(Right(nir))))
 
       await(
@@ -96,7 +96,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec
       ) shouldBe Right(Right(nir))
 
       eventually {
-        headerCaptor.getValue shouldBe List("Accept" -> "application/vnd.hmrc.1.0+json")
+        headerCaptor.getAllValues.toArray.mkString shouldBe "List((Accept,application/vnd.hmrc.1.0+json))"
         verify(mockMetricService.startTimer(ArgumentMatchers.eq(APIType.NationalInsurance)), times(1)).stop()
       }
     }
@@ -105,7 +105,7 @@ class NationalInsuranceConnectorSpec extends UnitSpec
       val errorResponse = new IllegalArgumentException("test")
       when(mockHttp.get(ArgumentMatchers.eq(url"http://localhost:9312/ni/mdtp/AB123456C"))(any())
         .setHeader(any())
-        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](any(), any()))
+        .execute[Either[UpstreamErrorResponse, Either[StatePensionExclusion, NationalInsuranceRecord]]](using any(), any()))
         .thenReturn(Future.failed(errorResponse))
 
       whenReady(connector.getNationalInsurance(nino).failed) { e =>

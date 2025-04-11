@@ -103,7 +103,7 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args*))
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
   }
 
@@ -119,14 +119,14 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
 
     assertMessageKeyHasValue(expectedMessageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args*))
     assert(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == expectedString)
   }
 
   def assertPageDoesNotContainDynamicMessage(doc: Document, expectedMessageKey: String, args: String*): Assertion = {
     assertMessageKeyHasValue(expectedMessageKey)
 
-    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args: _*))
+    val expectedString = StringEscapeUtils.unescapeHtml4(Messages(expectedMessageKey, args*))
     assert(!doc.text().contains(expectedString))
   }
 

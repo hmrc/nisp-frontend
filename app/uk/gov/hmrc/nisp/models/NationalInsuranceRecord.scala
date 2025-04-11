@@ -51,7 +51,7 @@ object NationalInsuranceRecord {
         case other         => other.as[List[NationalInsuranceTaxYear]]
       } and
       readNullableBoolean(JsPath \ "reducedRateElection")
-  )(NationalInsuranceRecord.apply _)
+  )(NationalInsuranceRecord.apply)
 
   implicit val writes: Writes[NationalInsuranceRecord] = (
     (JsPath \ "qualifyingYears").write[Int] and
@@ -63,7 +63,7 @@ object NationalInsuranceRecord {
       (JsPath \ "earningsIncludedUpTo").write[LocalDate] and
       (JsPath \ "_embedded" \ "taxYears").write[List[NationalInsuranceTaxYear]] and
       (JsPath \ "reducedRateElection").write[Boolean]
-  )(unlift(NationalInsuranceRecord.unapply))
+  )(o => Tuple.fromProductTyped(o))
 
   implicit val formats: Format[NationalInsuranceRecord] = Format(reads, writes)
 }
