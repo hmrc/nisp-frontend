@@ -27,8 +27,9 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.LoginTimes
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest}
-import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest, GracePeriodAction}
+import uk.gov.hmrc.nisp.helpers.{FakeGracePeriodAction, TestAccountBuilder}
+import uk.gov.hmrc.nisp.services.GracePeriodService
 import uk.gov.hmrc.nisp.views.html.excluded_cope_failed_sp
 
 import java.time.{Instant, LocalDate}
@@ -36,6 +37,7 @@ import java.time.{Instant, LocalDate}
 class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mocGracePeriodService: GracePeriodService = mock[GracePeriodService]
 
   implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
     FakeRequest(),
@@ -52,7 +54,9 @@ class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure("future-pension-link.url" -> "pensionUrl")
     .overrides(
-      bind[ApplicationConfig].toInstance(mockAppConfig)
+      bind[ApplicationConfig].toInstance(mockAppConfig),
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService)
     )
     .build()
 

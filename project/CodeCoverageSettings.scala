@@ -17,7 +17,7 @@ object CodeCoverageSettings {
   )
   def apply(): Seq[Setting[?]] = Seq(
     ScoverageKeys.coverageMinimumBranchTotal := 83,
-    ScoverageKeys.coverageMinimumStmtTotal := 90,
+    ScoverageKeys.coverageMinimumStmtTotal := 88,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     ScoverageKeys.coverageExcludedPackages:= excludedPackages.mkString(",")

@@ -639,3 +639,40 @@ global.page.not.found.error.contact.ni.helpline.link.text=cysylltu â Gwasanaeth
 global.page.not.found.error.contact.ni.helpline.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines
 global.page.not.found.error.contact.ni.helpline.text={0} os ydych am siarad â rhywun am eich cofnod Yswiriant Gwladol.
 
+#**********************
+# Grace Period Banner
+#**********************
+nisp.grace.period.banner.text = You can no longer pay for gaps before April 2019 – unless you used this service between 13 March and 4 April 2025 and are now returning to pay.
+nisp.grace.period.banner.url.text = Find out how to pay for gaps before April 2019
+
+nisp.grace.period.view.h1 = Paying for gaps before April 2019
+nisp.grace.period.view.p1 = You can no longer pay for gaps in your National Insurance record before April 2019 – unless you:
+
+nisp.grace.period.view.list1.1 = used this service between 13 March and 4 April 2025
+nisp.grace.period.view.list1.2 = were given an 18-digit payment reference number
+nisp.grace.period.view.list1.3 = were given a payment amount, this is the amount it would cost to fill the gaps
+
+nisp.grace.period.view.p2 = And are now returning to complete your payment.
+
+nisp.grace.period.view.h2 = Pay online
+nisp.grace.period.view.p3 = To pay online, you’ll need:
+
+nisp.grace.period.view.list2.1 = your 18-digit payment reference number
+nisp.grace.period.view.list2.2 = the payment amount
+
+nisp.grace.period.view.link.text = Pay National Insurance gaps online
+nisp.grace.period.view.link.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
+
+nisp.grace.period.view.h2.2 = Get help with your payment
+nisp.grace.period.view.p4 = if you:
+
+nisp.grace.period.view.link.2.text = Contact National Insurance general enquiries
+nisp.grace.period.view.link.2.url = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals
+
+nisp.grace.period.view.list3.1 = do not have your 18-digit payment reference number or the payment amount
+nisp.grace.period.view.list3.2 = have changed your mind about which gaps to fill
+
+nisp.grace.period.view.p5 = If you only want to fill gaps from April 2019 onwards,
+
+nisp.grace.period.view.link.3.text = return to your National Insurance record
+nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account

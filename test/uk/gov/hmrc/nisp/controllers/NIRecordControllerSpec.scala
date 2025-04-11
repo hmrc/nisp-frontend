@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
+import org.mockito.ArgumentMatchers.{any as mockAny, eq as mockEQ}
 import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -24,19 +24,19 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, PertaxAuthAction}
+import uk.gov.hmrc.nisp.controllers.auth.{AuthRetrievals, GracePeriodAction, PertaxAuthAction}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.helpers._
+import uk.gov.hmrc.nisp.helpers.*
 import uk.gov.hmrc.nisp.models.Exclusion.CopeProcessing
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
-import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
+import uk.gov.hmrc.nisp.services.{GracePeriodService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -55,6 +55,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   val mockAppConfig: ApplicationConfig                       = mock[ApplicationConfig]
   val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockDateProvider: DateProvider                         = mock[DateProvider]
+  val mocGracePeriodService: GracePeriodService              = mock[GracePeriodService]
   implicit val executionContext: ExecutionContext            = ExecutionContext.global
   implicit val hc: HeaderCarrier                             = HeaderCarrier()
 
@@ -88,6 +89,8 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[DateProvider].toInstance(mockDateProvider),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      bind[GracePeriodAction].to[FakeGracePeriodAction],
+      bind[GracePeriodService].toInstance(mocGracePeriodService),
       featureFlagServiceBinding
     )
     .build()
