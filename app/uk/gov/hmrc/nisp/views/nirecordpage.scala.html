@@ -231,30 +231,30 @@
                 @if(niRecord.taxYears.filter(!_.qualifying).exists(_.taxYear.toInt <= payableGapInfo.startYear - 1)) {
 
                     <h2 class="govuk-heading-m @if(!viewPayableGapsToggle) {govuk-!-margin-top-5}">
-                        @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
+                    @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
                     </h2>
 
-
-
-                    @if(gracePeriodService.inGracePeriod) {
-                        @govukWarningText(WarningText(
-                            iconFallbackText = Some("Warning"),
-                            content = HtmlContent(
-                                messages("nisp.grace.period.banner.text") +
-                                link(
-                                    href = routes.GracePeriodController.showGracePeriod.url,
-                                    messageKey = "nisp.grace.period.banner.url.text",
-                                    specId = Some("nirecordpage_text3__link")
-                                )
-                            )
-                        ))
-                    } else {
+                    @if(!gracePeriodService.inGracePeriod) {
                         <p class="govuk-body govuk-!-margin-bottom-5">
                         @Messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
                         </p>
                     }
                 }
             </div>
+        }
+
+        @if(gracePeriodService.inGracePeriod) {
+            @govukWarningText(WarningText(
+                iconFallbackText = Some("Warning"),
+                content = HtmlContent(
+                    messages("nisp.grace.period.banner.text") +
+                            link(
+                                href = routes.GracePeriodController.showGracePeriod.url,
+                                messageKey = "nisp.grace.period.banner.url.text",
+                                specId = Some("nirecordpage_text3__link")
+                            )
+                )
+            ))
         }
 
         <dl class="govuk-summary-list">
@@ -331,24 +331,26 @@
                         @messages("nisp.main.context.fillGaps.niRecordCutOff", payableGapInfo.startYear.toString)
                     </h2>
 
-                    @if(gracePeriodService.inGracePeriod) {
-                        @govukWarningText(WarningText(
-                            iconFallbackText = Some("Warning"),
-                            content = HtmlContent(
-                                messages("nisp.grace.period.banner.text") +
-                                        link(
-                                            href = routes.GracePeriodController.showGracePeriod.url,
-                                            messageKey = "nisp.grace.period.banner.url.text",
-                                            specId = Some("nirecordpage_text3__link")
-                                        )
-                            )
-                        ))
-                    } else {
+                    @if(!gracePeriodService.inGracePeriod) {
                         <p class="govuk-body govuk-!-margin-bottom-5">
                         @Messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
                         </p>
                     }
                 }
+            }
+
+            @if(gracePeriodService.inGracePeriod) {
+                @govukWarningText(WarningText(
+                    iconFallbackText = Some("Warning"),
+                    content = HtmlContent(
+                        messages("nisp.grace.period.banner.text") +
+                                link(
+                                    href = routes.GracePeriodController.showGracePeriod.url,
+                                    messageKey = "nisp.grace.period.banner.url.text",
+                                    specId = Some("nirecordpage_text3__link")
+                                )
+                    )
+                ))
             }
 
             <dl class="govuk-summary-list">
