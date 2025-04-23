@@ -642,37 +642,37 @@ global.page.not.found.error.contact.ni.helpline.text={0} os ydych am siarad â r
 #**********************
 # Grace Period Banner
 #**********************
-nisp.grace.period.banner.text = You can no longer pay for gaps before April 2019 – unless you used this service between 13 March and 4 April 2025 and are now returning to pay.
-nisp.grace.period.banner.url.text = Find out how to pay for gaps before April 2019
+nisp.grace.period.banner.text = Ni allwch dalu am fylchau cyn 2019 bellach - oni bai eich bod chi wedi defnyddio’r gwasanaeth hwn rhwng 13 Mawrth a 4 Ebrill 2025 a nawr yn dychwelyd er mwyn talu.
+nisp.grace.period.banner.url.text = Dysgwch sut i dalu am fylchau cyn mis Ebrill 2019
 
-nisp.grace.period.view.h1 = Paying for gaps before April 2019
-nisp.grace.period.view.p1 = You can no longer pay for gaps in your National Insurance record before April 2019 – unless you:
+nisp.grace.period.view.h1 = Talu am fylchau cyn 2019
+nisp.grace.period.view.p1 = Ni allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol cyn mis Ebrill 2019 bellach - oni bai:
 
-nisp.grace.period.view.list1.1 = used this service between 13 March and 4 April 2025
-nisp.grace.period.view.list1.2 = were given an 18-digit payment reference number
-nisp.grace.period.view.list1.3 = were given a payment amount, this is the amount it would cost to fill the gaps
+nisp.grace.period.view.list1.1 = eich bod chi wedi defnyddio’r gwasanaeth hwn rhwng 13 Mawrth a 4 Ebrill 2025
+nisp.grace.period.view.list1.2 = y cawsoch chi gyfeirnod talu 18 digid
+nisp.grace.period.view.list1.3 = y cawsoch chi swm i’w dalu, sef y swm y byddai’n costio i lenwi’r bylchau
 
-nisp.grace.period.view.p2 = And are now returning to complete your payment.
+nisp.grace.period.view.p2 = Ac rydych chi nawr yn dychwelyd er mwyn gorffen talu.
 
-nisp.grace.period.view.h2 = Pay online
-nisp.grace.period.view.p3 = To pay online, you’ll need:
+nisp.grace.period.view.h2 = Talu ar-lein
+nisp.grace.period.view.p3 = I dalu ar-lein, bydd angen y canlynol arnoch chi:
 
-nisp.grace.period.view.list2.1 = your 18-digit payment reference number
-nisp.grace.period.view.list2.2 = the payment amount
+nisp.grace.period.view.list2.1 = eich cyfeirnod talu 18 digid
+nisp.grace.period.view.list2.2 = y swm i’w dalu
 
-nisp.grace.period.view.link.text = Pay National Insurance gaps online
+nisp.grace.period.view.link.text = Talu am fylchau Yswiriant Gwladol ar-lein
 nisp.grace.period.view.link.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
 
-nisp.grace.period.view.h2.2 = Get help with your payment
-nisp.grace.period.view.p4 = if you:
+nisp.grace.period.view.h2.2 = Cael help gyda’ch taliad
+nisp.grace.period.view.p4 = :
 
-nisp.grace.period.view.link.2.text = Contact National Insurance general enquiries
+nisp.grace.period.view.link.2.text = Cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF
 nisp.grace.period.view.link.2.url = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals
 
-nisp.grace.period.view.list3.1 = do not have your 18-digit payment reference number or the payment amount
-nisp.grace.period.view.list3.2 = have changed your mind about which gaps to fill
+nisp.grace.period.view.list3.1 = os nad oes gennych chi’r swm i’w dalu na’ch cyfeirnod talu 18 digid
+nisp.grace.period.view.list3.2 = os ydych chi wedi newid eich meddwl ynghylch pa fylchau i’w llenwi
 
-nisp.grace.period.view.p5 = If you only want to fill gaps from April 2019 onwards,
+nisp.grace.period.view.p5 = Os hoffech chi lenwi bylchau a hynny dim ond o fis Ebrill 2019 ymlaen,
 
-nisp.grace.period.view.link.3.text = return to your National Insurance record
+nisp.grace.period.view.link.3.text = ewch yn ôl at eich cofnod Yswiriant Gwladol
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
