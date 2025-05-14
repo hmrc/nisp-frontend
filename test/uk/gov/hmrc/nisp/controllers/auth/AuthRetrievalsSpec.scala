@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import org.apache.pekko.util.Timeout
-import org.mockito.ArgumentMatchers._
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.{reset, spy, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -26,24 +26,24 @@ import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
-import play.api.mvc.Results._
+import play.api.mvc.Results.*
 import play.api.test.Helpers.redirectLocation
 import play.api.test.{FakeRequest, Injecting}
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve._
+import uk.gov.hmrc.auth.core.retrieve.*
 import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
-import uk.gov.hmrc.nisp.common.RetrievalOps._
+import uk.gov.hmrc.nisp.common.RetrievalOps.*
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.models.UserName
-import uk.gov.hmrc.nisp.models.citizen._
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.models.citizen.*
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, FandFService}
 import uk.gov.hmrc.nisp.utils.{EqualsAuthenticatedRequest, UnitSpec}
 
 import java.time.{Instant, LocalDate}
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
@@ -58,11 +58,12 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
   }
 
   type AuthRetrievalType =
-    Option[String] ~ ConfidenceLevel ~ Option[String] ~ Option[Credentials] ~ LoginTimes ~ Enrolments ~ Option[TrustedHelper]
+    Option[String] ~ ConfidenceLevel ~ Option[String] ~ Option[Credentials] ~ LoginTimes ~ Enrolments
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
   val mockCitizenDetailsService: CitizenDetailsService = mock[CitizenDetailsService]
+  val mockFandFService: FandFService = mock[FandFService]
 
   val nino: String = new Generator().nextNino.nino
   val fakeLoginTimes: LoginTimes = LoginTimes(Instant.now(), None)
@@ -80,7 +81,8 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
     .overrides(
       bind[AuthConnector].toInstance(mockAuthConnector),
       bind[ApplicationConfig].toInstance(mockApplicationConfig),
-      bind[CitizenDetailsService].toInstance(mockCitizenDetailsService)
+      bind[CitizenDetailsService].toInstance(mockCitizenDetailsService),
+      bind[FandFService].toInstance(mockFandFService)
     )
     .build()
 
@@ -89,16 +91,16 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
     reset(mockAuthConnector)
     reset(mockApplicationConfig)
     reset(mockCitizenDetailsService)
+    reset(mockFandFService)
   }
 
   def makeRetrievalResults(
     ninoOption: Option[String] = Some(nino),
     enrolments: Enrolments = Enrolments(Set.empty),
-    credentialStrength: String = CredentialStrength.strong,
-    trustedHelper: Option[TrustedHelper] = None
+    credentialStrength: String = CredentialStrength.strong
   ): Future[AuthRetrievalType] =
     Future.successful(
-      ninoOption ~ ConfidenceLevel.L200 ~ Some(credentialStrength) ~ Some(credentials) ~ fakeLoginTimes ~ enrolments ~ trustedHelper
+      ninoOption ~ ConfidenceLevel.L200 ~ Some(credentialStrength) ~ Some(credentials) ~ fakeLoginTimes ~ enrolments
     )
 
   class Stubs {
@@ -124,6 +126,9 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
 
         when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+
+        when(mockFandFService.getTrustedHelper()(any[HeaderCarrier], any[ExecutionContext]))
+          .thenReturn(Future.successful(None))
 
         val stubs   = spy(new Stubs)
         val request = FakeRequest("", "")
@@ -155,6 +160,9 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
         when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
 
+        when(mockFandFService.getTrustedHelper()(any[HeaderCarrier], any[ExecutionContext]))
+          .thenReturn(Future.successful(None))
+
         val stubs   = spy(new Stubs)
         val request = FakeRequest("", "")
         val result  = authAction.invokeBlock(request, stubs.successBlock)
@@ -180,10 +188,13 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
         val trustedHelper     = TrustedHelper("pName", "aName", "link", Some(trustedHelperNino))
 
         when(mockAuthConnector.authorise[AuthRetrievalType](any(), any())(any(), any()))
-          .thenReturn(makeRetrievalResults(trustedHelper = Some(trustedHelper)))
+          .thenReturn(makeRetrievalResults())
 
         when(mockCitizenDetailsService.retrievePerson(any())(any()))
           .thenReturn(Future.successful(Right(citizenDetailsResponse)))
+
+        when(mockFandFService.getTrustedHelper()(any[HeaderCarrier], any[ExecutionContext]))
+          .thenReturn(Future.successful(Some(trustedHelper)))
 
         val stubs   = spy(new Stubs)
         val request = FakeRequest("", "")
@@ -215,6 +226,9 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(NOT_FOUND)))
 
+      when(mockFandFService.getTrustedHelper()(any[HeaderCarrier], any[ExecutionContext]))
+        .thenReturn(Future.successful(None))
+
       val stubs = new Stubs
 
       val result = authAction.invokeBlock(FakeRequest("", ""), stubs.successBlock)
@@ -242,6 +256,9 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(TECHNICAL_DIFFICULTIES)))
 
+      when(mockFandFService.getTrustedHelper()(any[HeaderCarrier], any[ExecutionContext]))
+        .thenReturn(Future.successful(None))
+
       val stubs = new Stubs
 
       val result = authAction.invokeBlock(FakeRequest("", ""), stubs.successBlock)
@@ -256,6 +273,9 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
 
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
+
+      when(mockFandFService.getTrustedHelper()(any[HeaderCarrier], any[ExecutionContext]))
+        .thenReturn(Future.successful(None))
 
       val stubs = new Stubs
 
@@ -272,6 +292,9 @@ class AuthRetrievalsSpec extends UnitSpec with GuiceOneAppPerSuite with Injectin
 
       when(mockCitizenDetailsService.retrievePerson(any[Nino])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(MCI_EXCLUSION)))
+
+      when(mockFandFService.getTrustedHelper()(any[HeaderCarrier], any[ExecutionContext]))
+        .thenReturn(Future.successful(None))
 
       val stubs = new Stubs
 
