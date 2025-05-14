@@ -56,7 +56,6 @@ class AuthRetrievalsImpl @Inject()(
           and Retrievals.credentials
           and Retrievals.loginTimes
           and Retrievals.allEnrolments
-//          and Retrievals.trustedHelper
       ) {
 
         case Some(nino)
@@ -65,7 +64,6 @@ class AuthRetrievalsImpl @Inject()(
           ~ _
           ~ loginTimes
           ~ Enrolments(enrolments) =>
-//          ~ trustedHelper =>
             getTrustedHelper.flatMap( trustedHelper =>
               authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, trustedHelper)
             )
