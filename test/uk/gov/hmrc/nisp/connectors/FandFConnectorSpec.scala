@@ -52,16 +52,10 @@ class FandFConnectorSpec extends AnyWordSpec
   implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(10, Seconds), interval = Span(500, Millis))
 
-  wireMockServer.start()
-
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(
       "microservice.services.fandf.port" -> wireMockServer.port()
     ).build()
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-  }
 
   lazy val connector: FandFConnector = new FandFConnector(
     inject[HttpClientV2],
