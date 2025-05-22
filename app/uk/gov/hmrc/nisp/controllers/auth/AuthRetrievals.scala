@@ -17,17 +17,17 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import com.google.inject.Inject
-import play.api.mvc.Results._
-import play.api.mvc._
-import uk.gov.hmrc.auth.core._
+import play.api.mvc.Results.*
+import play.api.mvc.*
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.{Retrievals, TrustedHelper}
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name, ~}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.models.UserName
-import uk.gov.hmrc.nisp.models.citizen._
-import uk.gov.hmrc.nisp.services.CitizenDetailsService
+import uk.gov.hmrc.nisp.models.citizen.*
+import uk.gov.hmrc.nisp.services.{CitizenDetailsService, FandFService}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,11 +35,15 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthRetrievalsImpl @Inject()(
   override val authConnector: AuthConnector,
   cds: CitizenDetailsService,
-  val parser: BodyParsers.Default)(
+  val parser: BodyParsers.Default,
+  fandFService: FandFService)(
   implicit val executionContext: ExecutionContext
 ) extends AuthRetrievals
   with AuthorisedFunctions {
 
+  private def getTrustedHelper(implicit hc: HeaderCarrier): Future[Option[TrustedHelper]] =
+    fandFService.getTrustedHelper()
+  
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
@@ -52,7 +56,6 @@ class AuthRetrievalsImpl @Inject()(
           and Retrievals.credentials
           and Retrievals.loginTimes
           and Retrievals.allEnrolments
-          and Retrievals.trustedHelper
       ) {
 
         case Some(nino)
@@ -60,9 +63,11 @@ class AuthRetrievalsImpl @Inject()(
           ~ _
           ~ _
           ~ loginTimes
-          ~ Enrolments(enrolments)
-          ~ trustedHelper =>
-          authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, trustedHelper)
+          ~ Enrolments(enrolments) =>
+            getTrustedHelper.flatMap( trustedHelper =>
+              authenticate(request, block, nino, confidenceLevel, loginTimes, enrolments, trustedHelper)
+            )
+          
 
         case _ => throw new RuntimeException("Can't find credentials for user")
       }
