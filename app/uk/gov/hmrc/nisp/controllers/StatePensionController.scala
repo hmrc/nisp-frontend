@@ -273,7 +273,7 @@ class StatePensionController @Inject()(
   }
 
   def signOut: Action[AnyContent] = Action { _ =>
-    Redirect(applicationConfig.feedbackFrontendUrl).withNewSession
+    Redirect(applicationConfig.signOutUrl)
   }
 
   def timeout: Action[AnyContent] = Action { implicit request =>

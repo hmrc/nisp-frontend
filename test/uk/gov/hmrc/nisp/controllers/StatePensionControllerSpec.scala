@@ -583,14 +583,14 @@ class StatePensionControllerSpec extends UnitSpec with BeforeAndAfterEach with G
 
     "GET /signout" should {
       "redirect to the questionnaire page when govuk done page is disabled" in {
-        when(mockAppConfig.feedbackFrontendUrl).thenReturn("/foo")
+        when(mockAppConfig.signOutUrl).thenReturn("/foo")
 
         val result = statePensionController.signOut(fakeRequest)
         redirectLocation(result).get shouldBe "/foo"
       }
 
       "redirect to the feedback questionnaire page when govuk done page is enabled" in {
-        when(mockAppConfig.feedbackFrontendUrl).thenReturn("/foo")
+        when(mockAppConfig.signOutUrl).thenReturn("/foo")
         when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
 
         val result = statePensionController.signOut(fakeRequest)
