@@ -79,7 +79,7 @@
 
       @p(
             content = HtmlContent(
-                s"""${messages("nisp.cope.table.estimate.title")}<b class="bold-intext">${NispMoney.pounds(copeEstimate)} ${messages("nisp.main.chart.week")}</b>"""
+                s"""${messages("nisp.cope.table.estimate.title")} <b class="bold-intext">${NispMoney.pounds(copeEstimate)} ${messages("nisp.main.chart.week")}</b>"""
             ),
             specId = Some("state_pension_cope__p4")
         )
@@ -126,16 +126,16 @@
             specId = Some("state_pension_cope__p8")
         )
 
-        @link(
-            attrs = Map(
-                "data-journey-click" -> "checkmystatepension:external:contractedout",
-                "target" -> "_blank",
-                "rel" -> "noopener noreferrer"
-            ),
-            classes = Some("backlink govuk-link"),
-            href = routes.StatePensionController.show.url,
-            messageKey = "nisp.back",
-            specId = Some("state_pension_cope__backlink"),
-        )
+        <p class="govuk-body govuk-!-margin-top-4">
+            @link(
+                attrs = Map(
+                    "data-journey-click" -> "checkmystatepension:external:contractedout"
+                ),
+                classes = Some("backlink govuk-link"),
+                href = routes.StatePensionController.showNew.url,
+                messageKey = "nisp.back",
+                specId = Some("state_pension_cope__backlink"),
+            )
+        </p>
     }
 }

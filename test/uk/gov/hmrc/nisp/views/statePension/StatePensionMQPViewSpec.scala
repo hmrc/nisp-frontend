@@ -173,7 +173,7 @@ class StatePensionMQPViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(controller.show()(FakeRequest())))
+            asDocument(contentAsString(controller.showNew()(FakeRequest())))
 
           "render with correct page title" in {
             mockSetup
@@ -473,7 +473,7 @@ class StatePensionMQPViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(controller.show()(FakeRequest())))
+            asDocument(contentAsString(controller.showNew()(FakeRequest())))
 
           // SPA under consideration message
           "render page with heading 'Proposed change to your State Pension age'" in {
@@ -519,7 +519,7 @@ class StatePensionMQPViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(controller.show()(FakeRequest())))
+            asDocument(contentAsString(controller.showNew()(FakeRequest())))
 
           "render page with 'Filling the gaps in your record is not enough to get State Pension.'" in {
             mockSetup
@@ -555,7 +555,7 @@ class StatePensionMQPViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(controller.show()(FakeRequest())))
+            asDocument(contentAsString(controller.showNew()(FakeRequest())))
 
           "render page with link 'Gaps in your record and the cost of filling them'" in {
             mockSetup
@@ -612,7 +612,7 @@ class StatePensionMQPViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(controller.show()(FakeRequest())))
+            asDocument(contentAsString(controller.showNew()(FakeRequest())))
 
           // SPA under consideration message
           "render page with heading 'Proposed change to your State Pension age'" in {

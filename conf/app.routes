@@ -10,8 +10,11 @@ GET        /not-authorised                            uk.gov.hmrc.nisp.controlle
 GET        /keep-alive                                uk.gov.hmrc.nisp.controllers.TimeoutController.keep_alive
 
 GET        /account                                   uk.gov.hmrc.nisp.controllers.StatePensionController.show
+GET        /account-new                               uk.gov.hmrc.nisp.controllers.StatePensionController.showNew
 GET        /account/pta                               uk.gov.hmrc.nisp.controllers.StatePensionController.pta()
+GET        /account/pta-new                           uk.gov.hmrc.nisp.controllers.StatePensionController.ptaNew()
 GET        /account/cope                              uk.gov.hmrc.nisp.controllers.StatePensionController.showCope
+GET        /account/cope-new                          uk.gov.hmrc.nisp.controllers.StatePensionController.showCopeNew
 GET        /sign-out                                  uk.gov.hmrc.nisp.controllers.StatePensionController.signOut
 GET        /timeout                                   uk.gov.hmrc.nisp.controllers.StatePensionController.timeout
 

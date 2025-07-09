@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.views.statePension
 
-import org.mockito.ArgumentMatchers._
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -29,14 +29,11 @@ import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
-import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.controllers.StatePensionController
-import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, AuthRetrievals, AuthenticatedRequest, NispAuthedUser, PertaxAuthAction}
-import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
-import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
+import uk.gov.hmrc.nisp.controllers.auth.*
+import uk.gov.hmrc.nisp.helpers.*
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.Constants
 import uk.gov.hmrc.nisp.views.HtmlSpec
@@ -57,7 +54,6 @@ class StatePensionViewSpec
   val mockAuditConnector: AuditConnector                     = mock[AuditConnector]
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
-  val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
 
   lazy val langUtils: LanguageUtils = inject[LanguageUtils]
 
@@ -68,7 +64,6 @@ class StatePensionViewSpec
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
     )
     .build()
     .injector
@@ -78,11 +73,9 @@ class StatePensionViewSpec
       bind[StatePensionService].toInstance(mockStatePensionService),
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
-      bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[AuthRetrievals].to[FakeAuthActionWithNino],
       bind[NinoContainer].toInstance(AbroadNinoContainer),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
     .injector
@@ -92,14 +85,8 @@ class StatePensionViewSpec
     reset(mockStatePensionService)
     reset(mockNationalInsuranceService)
     reset(mockAuditConnector)
-    reset(mockPertaxHelper)
-    reset(mockFeatureFlagService)
 
     wireMockServer.resetAll()
-    when(mockPertaxHelper.isFromPertax(any()))
-      .thenReturn(Future.successful(false))
-    when(mockFeatureFlagService.get(NewStatePensionUIToggle))
-      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = true)))
   }
 
   val taxYears: List[NationalInsuranceTaxYear] =
@@ -237,7 +224,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           "render with correct page title" in {
             mockSetup
@@ -666,10 +653,10 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+            asDocument(contentAsString(abroadUserController.showNew()(generateFakeRequest)))
 
           // MQP message
           "render page with text 'You have 1 qualifying year on your National Insurance record." +
@@ -818,7 +805,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           "render page with text 'You do not qualify for State Pension'" in {
             mockSetup
@@ -955,9 +942,9 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+            asDocument(contentAsString(abroadUserController.showNew()(generateFakeRequest)))
 
           // MQP message
           "render page with text 'You have 1 qualifying year on your National Insurance record." +
@@ -1097,7 +1084,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           // static content
           "render with correct page title" in {
@@ -1514,9 +1501,9 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+            asDocument(contentAsString(abroadUserController.showNew()(generateFakeRequest)))
 
           // Bar charts - Fill gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -1649,7 +1636,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           // Bar charts - Fill gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -1764,10 +1751,10 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+            asDocument(contentAsString(abroadUserController.showNew()(generateFakeRequest)))
 
           // Bar charts - Fill gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -1900,7 +1887,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           // Bar charts - Fill gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -2015,10 +2002,10 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+            asDocument(contentAsString(abroadUserController.showNew()(generateFakeRequest)))
 
           // Bar charts - Fill gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -2154,7 +2141,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           // Bar charts - no gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -2271,7 +2258,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           // Bar charts - no gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -2405,7 +2392,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           // Bar charts - no gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -2521,7 +2508,7 @@ class StatePensionViewSpec
           }
 
           lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+            asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
           // Bar charts - no gaps
           "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
@@ -2654,7 +2641,7 @@ class StatePensionViewSpec
         }
 
         lazy val doc =
-          asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+          asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
         // Bar charts - reached
         "render page with forecast chart title 'Forecast if you contribute until '" in {
@@ -2765,7 +2752,7 @@ class StatePensionViewSpec
         }
 
         lazy val abroadUserDoc =
-          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
+          asDocument(contentAsString(abroadUserController.showNew()(generateFakeRequest)))
 
         // Bar charts - reached
         "render page with forecast chart title 'Forecast if you contribute until '" in {
@@ -2886,7 +2873,7 @@ class StatePensionViewSpec
             )))))
         }
 
-        lazy val result = statePensionController.show()(AuthenticatedRequest(FakeRequest(), user, authDetails))
+        lazy val result = statePensionController.showNew()(AuthenticatedRequest(FakeRequest(), user, authDetails))
         lazy val doc = asDocument(contentAsString(result))
 
         "render with correct page title" in {
@@ -2999,7 +2986,7 @@ class StatePensionViewSpec
         }
 
         lazy val doc =
-          asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
+          asDocument(contentAsString(statePensionController.showNew()(generateFakeRequest)))
 
         "render with correct page title" in {
           mockSetup
