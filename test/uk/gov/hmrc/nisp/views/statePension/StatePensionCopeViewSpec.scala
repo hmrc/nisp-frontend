@@ -29,14 +29,11 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.test.WireMockSupport
-import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.auth.*
-import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.helpers.*
 import uk.gov.hmrc.nisp.models.*
-import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.repositories.SessionCache
 import uk.gov.hmrc.nisp.services.{GracePeriodService, MetricsService, NationalInsuranceService, StatePensionService}
@@ -48,7 +45,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 
 import java.time.{Instant, LocalDate}
-import scala.concurrent.Future
 
 class StatePensionCopeViewSpec
   extends HtmlSpec
@@ -71,7 +67,6 @@ class StatePensionCopeViewSpec
   val mockNationalInsuranceService: NationalInsuranceService = mock[NationalInsuranceService]
   val mockStatePensionService: StatePensionService           = mock[StatePensionService]
   implicit val mockAppConfig: ApplicationConfig              = mock[ApplicationConfig]
-  val mockPertaxHelper: PertaxHelper                         = mock[PertaxHelper]
   val mockMetricsService: MetricsService                     = mock[MetricsService]
   val mockSessionCache: SessionCache                         = mock[SessionCache]
   val mocGracePeriodService: GracePeriodService              = mock[GracePeriodService]
@@ -84,12 +79,8 @@ class StatePensionCopeViewSpec
     reset(mockNationalInsuranceService)
     reset(mockAuditConnector)
     reset(mockAppConfig)
-    reset(mockPertaxHelper)
-    reset(mockFeatureFlagService)
 
     wireMockServer.resetAll()
-    when(mockPertaxHelper.isFromPertax(any()))
-      .thenReturn(Future.successful(false))
     when(mockAppConfig.accessibilityStatementUrl(any()))
       .thenReturn("/foo")
     when(mockAppConfig.reportAProblemNonJSUrl)
@@ -99,8 +90,6 @@ class StatePensionCopeViewSpec
     when(mockAppConfig.pertaxAuthBaseUrl)
       .thenReturn(s"http://localhost:${wireMockServer.port()}")
     mockPertaxAuth(PertaxAuthResponseModel(ACCESS_GRANTED, "", None, None), mockUserNino.nino)
-    when(mockFeatureFlagService.get(NewStatePensionUIToggle))
-      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = true)))
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -110,11 +99,9 @@ class StatePensionCopeViewSpec
       bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
       bind[AuditConnector].toInstance(mockAuditConnector),
       bind[ApplicationConfig].toInstance(mockAppConfig),
-      bind[PertaxHelper].toInstance(mockPertaxHelper),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
       bind[GracePeriodAction].to[FakeGracePeriodAction],
-      bind[GracePeriodService].toInstance(mocGracePeriodService),
-      featureFlagServiceBinding
+      bind[GracePeriodService].toInstance(mocGracePeriodService)
     )
     .build()
 
@@ -277,7 +264,7 @@ class StatePensionCopeViewSpec
       assertLinkHasValue(
         htmlAccountDoc,
         "[data-spec='state_pension_cope__backlink']",
-        "/check-your-state-pension/account"
+        "/check-your-state-pension/account-new"
       )
     }
   }

@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -29,10 +29,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Results.Ok
 import play.api.mvc.{AnyContent, Request, Result}
-import play.api.test.Helpers.{defaultAwaitTimeout, redirectLocation, route, writeableOf_AnyContentAsEmpty, status => getStatus}
+import play.api.test.Helpers.{defaultAwaitTimeout, redirectLocation, route, writeableOf_AnyContentAsEmpty, status as getStatus}
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
@@ -41,8 +41,8 @@ import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId, SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
-import uk.gov.hmrc.nisp.controllers.auth._
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.controllers.auth.*
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.citizen.{Citizen, CitizenDetailsResponse}
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
@@ -161,7 +161,7 @@ class StatePensionControllerISpec extends UnitSpec
   }
 
   trait Test {
-    val statePensionResponse = StatePension(
+    val statePensionResponse: StatePension = StatePension(
       earningsIncludedUpTo = LocalDate.of(2015, 4, 5),
       amounts = StatePensionAmounts(
         protectedPayment = false,
@@ -227,6 +227,41 @@ class StatePensionControllerISpec extends UnitSpec
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)
       result flatMap redirectLocation shouldBe Some("/check-your-state-pension/account")
+    }
+  }
+
+  "showCopeNew" should {
+    val request = FakeRequest("GET", s"/check-your-state-pension/account/cope-new")
+      .withSession(
+        SessionKeys.sessionId -> s"session-$uuid",
+        SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString,
+        SessionKeys.authToken -> "Bearer 123"
+      )
+
+    "return a 200 when a successful request is sent" in new Test {
+      server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+        .willReturn(ok(Json.toJson(statePensionResponse).toString)))
+
+      val result: Option[Future[Result]] = route(app, request)
+      result map getStatus shouldBe Some(OK)
+    }
+
+    "redirect to the show new state pension page when the state pension returned isn't contracted out" in new Test {
+      val contractedOutResponse: StatePension = statePensionResponse.copy(
+        amounts = StatePensionAmounts(
+          false,
+          StatePensionAmountRegular(0, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 0, 690.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ))
+
+      server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+        .willReturn(ok(Json.toJson(contractedOutResponse).toString)))
+
+      val result: Option[Future[Result]] = route(app, request)
+      result map getStatus shouldBe Some(SEE_OTHER)
+      result flatMap redirectLocation shouldBe Some("/check-your-state-pension/account-new")
     }
   }
 
@@ -317,6 +352,93 @@ class StatePensionControllerISpec extends UnitSpec
     }
   }
 
+  "showNew" should {
+    val request = FakeRequest("GET", s"/check-your-state-pension/account-new")
+      .withSession(
+        SessionKeys.sessionId -> s"session-$uuid",
+        SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString,
+        SessionKeys.authToken -> "Bearer 123"
+      )
+
+    "send an exclusion" when {
+      "a state pension exclusion is returned" in new Test {
+
+        val json: JsValue = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
+
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(forbidden.withBody(json.toString)))
+
+        val result: Option[Future[Result]] = route(app, request)
+        result map getStatus shouldBe Some(SEE_OTHER)
+        result flatMap redirectLocation shouldBe Some("/check-your-state-pension/exclusion")
+      }
+
+      "a national insurance exclusion is returned" in new Test {
+
+        server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(ok(Json.toJson(statePensionResponse).toString)))
+
+        val json: JsValue = Json.parse("""{"code":"EXCLUSION_DEAD","message":"The customer needs to contact the National Insurance helpline"}""")
+
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(forbidden.withBody(json.toString)))
+
+        val result: Option[Future[Result]] = route(app, request)
+        result map getStatus shouldBe Some(SEE_OTHER)
+        result flatMap redirectLocation shouldBe Some("/check-your-state-pension/exclusion")
+      }
+    }
+
+    "return a 200" when {
+      "the state pension returned has a mqpscenario that isn't continueWorking" in new Test {
+        val mqpResponse: StatePension = statePensionResponse.copy(
+          amounts = StatePensionAmounts(
+            false,
+            StatePensionAmountRegular(0, 580.1, 6961.14),
+            StatePensionAmountForecast(3, 0, 690.14, 7657.73),
+            StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+            StatePensionAmountRegular(0, 0, 0)
+          ))
+
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
+        server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(ok(Json.toJson(mqpResponse).toString)))
+
+        val result: Option[Future[Result]] = route(app, request)
+        result map getStatus shouldBe Some(OK)
+      }
+
+      "a forecast only state pension is returned" in new Test {
+        val forecastOnlyResponse: StatePension = statePensionResponse.copy(amounts = StatePensionAmounts(
+          false,
+          StatePensionAmountRegular(183.41, 580.1, 6961.14),
+          StatePensionAmountForecast(3, 176.76, 690.14, 7657.73),
+          StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+          StatePensionAmountRegular(0, 0, 0)
+        ))
+
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
+        server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(ok(Json.toJson(forecastOnlyResponse).toString)))
+
+        val result: Option[Future[Result]] = route(app, request)
+        result map getStatus shouldBe Some(OK)
+      }
+
+      "a successful standard request is supplied" in new Test {
+        wireMockServer.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(ok(Json.toJson(nationalInsuranceRecord).toString)))
+        server2.stubFor(get(urlEqualTo(s"/ni/mdtp/$nino"))
+          .willReturn(ok(Json.toJson(statePensionResponse).toString)))
+
+        val result: Option[Future[Result]] = route(app, request)
+        result map getStatus shouldBe Some(OK)
+      }
+    }
+  }
+
   "pta" should {
     "redirect to the show state pension page when hit" in {
       val request = FakeRequest("GET", s"/check-your-state-pension/account/pta")
@@ -329,6 +451,21 @@ class StatePensionControllerISpec extends UnitSpec
       val result = route(app, request)
       result map getStatus shouldBe Some(SEE_OTHER)
       result flatMap redirectLocation shouldBe Some("/check-your-state-pension/account")
+    }
+  }
+
+  "ptaNew" should {
+    "redirect to the show new state pension page when hit" in {
+      val request = FakeRequest("GET", s"/check-your-state-pension/account/pta-new")
+        .withSession(
+          SessionKeys.sessionId -> s"session-$uuid",
+          SessionKeys.lastRequestTimestamp -> currentTimeMillis().toString,
+          SessionKeys.authToken -> "Bearer 123"
+        )
+
+      val result = route(app, request)
+      result map getStatus shouldBe Some(SEE_OTHER)
+      result flatMap redirectLocation shouldBe Some("/check-your-state-pension/account-new")
     }
   }
 
