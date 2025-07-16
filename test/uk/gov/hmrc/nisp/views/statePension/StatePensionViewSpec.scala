@@ -573,12 +573,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can get is'" in {
             mockSetup
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working__mqp_personal_max__chart2-key']",
-              "The most you can increase your forecast to is"
+              "The most you can get is"
             )
           }
 
@@ -707,12 +707,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can get is'" in {
             mockSetup
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working__mqp_personal_max__chart2-key']",
-              "The most you can increase your forecast to is"
+              "The most you can get is"
             )
           }
 
@@ -865,7 +865,7 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -995,7 +995,7 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -1435,7 +1435,7 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -1551,7 +1551,7 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -1684,7 +1684,7 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -1802,7 +1802,7 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -1935,7 +1935,7 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -2053,7 +2053,7 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -2180,12 +2180,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can get is'" in {
             mockSetup
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working_personal_max__chart3-key']",
-              "The most you can increase your forecast to is"
+              "The most you can get is"
             )
           }
 
@@ -2297,12 +2297,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can get is'" in {
             mockSetup
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working_personal_max__chart3-key']",
-              "The most you can increase your forecast to is"
+              "The most you can get is"
             )
           }
 
@@ -2431,12 +2431,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can get is'" in {
             mockSetup
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working_personal_max__chart3-key']",
-              "The most you can increase your forecast to is"
+              "The most you can get is"
             )
           }
 
@@ -2547,12 +2547,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with personal max chart title 'Forecast if you contribute until'" in {
+          "render page with personal max chart title 'The most you can get is'" in {
             mockSetup
             assertEqualsText(
               doc,
               "dt[data-spec='continue_working_personal_max__chart3-key']",
-              "The most you can increase your forecast to is"
+              "The most you can get is"
             )
           }
 
@@ -2662,12 +2662,12 @@ class StatePensionViewSpec
           )
         }
 
-        "render page with personal max chart title 'Forecast if you contribute until'" in {
+        "render page with personal max chart title 'The most you can get is'" in {
           mockSetup
           assertEqualsText(
             doc,
             "dt[data-spec='reached__chart2-key']",
-            "The most you can increase your forecast to is"
+            "The most you can get is"
           )
         }
 
@@ -2773,12 +2773,12 @@ class StatePensionViewSpec
           )
         }
 
-        "render page with personal max chart title 'Forecast if you contribute until'" in {
+        "render page with personal max chart title 'The most you can get is'" in {
           mockSetup
           assertEqualsText(
             abroadUserDoc,
             "dt[data-spec='reached__chart2-key']",
-            "The most you can increase your forecast to is"
+            "The most you can get is"
           )
         }
 

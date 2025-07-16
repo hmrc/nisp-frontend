@@ -104,6 +104,7 @@ nisp.main.howManyToContribute = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth
 nisp.main.howMuchWillIGet = Faint fyddaf yn ei gael?
 nisp.main.chart.current = Amcangyfrif presennol yn seiliedig ar eich cofnod Yswiriant Gwladol hyd at<span class="nowrap"> 5 Ebrill {0}</span>
 nisp.main.chart.forecast = Y rhagolwg os byddwch yn gwneud cyfraniadau Yswiriant Gwladol hyd nes<span class="nowrap"> 5 Ebrill {0}</span>
+nisp.main.chart.max.mostYouCanGet = Y mwyaf y gallwch ei gael yw
 nisp.main.newStatePension = Swm Pensiwn y Wladwriaeth newydd llawn yw {0} yr wythnos.
 
 nisp.main.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
