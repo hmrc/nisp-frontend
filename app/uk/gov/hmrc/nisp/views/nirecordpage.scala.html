@@ -52,7 +52,8 @@
         currentDate: LocalDate,
         viewPayableGapsToggle: Boolean,
         nispModellingPayableGapsURL: String,
-        payableGapInfo: PayableGapInfo
+        payableGapInfo: PayableGapInfo,
+        niUpdateYearURL: String
 )(
         implicit messages: Messages,
         request: AuthenticatedRequest[?],
@@ -208,12 +209,14 @@
                     @nirecordtaxyear(
                         niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
                         currentDate = currentDate,
-                        newContentWithButtonToggle = viewPayableGapsToggle
+                        newContentWithButtonToggle = viewPayableGapsToggle,
+                        niUpdateYearURL = niUpdateYearURL
                     )
                 } else {
                     @nirecordtaxyearNoFull(
                         niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
-                        currentDate = currentDate
+                        currentDate = currentDate,
+                        niUpdateYearURL = niUpdateYearURL
                     )
                 }
             }
@@ -263,12 +266,14 @@
                     @nirecordtaxyear(
                         niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
                         currentDate = currentDate,
-                        newContentWithButtonToggle = viewPayableGapsToggle
+                        newContentWithButtonToggle = viewPayableGapsToggle,
+                        niUpdateYearURL = niUpdateYearURL
                     )
                 } else {
                     @nirecordtaxyearNoFull(
                         niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
-                        currentDate = currentDate
+                        currentDate = currentDate,
+                        niUpdateYearURL = niUpdateYearURL
                     )
                 }
             }
@@ -308,12 +313,14 @@
                         @nirecordtaxyear(
                             niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
                             currentDate = currentDate,
-                            newContentWithButtonToggle = viewPayableGapsToggle
+                            newContentWithButtonToggle = viewPayableGapsToggle,
+                            niUpdateYearURL = niUpdateYearURL
                         )
                     } else {
                         @nirecordtaxyearNoFull(
                             niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
-                            currentDate = currentDate
+                            currentDate = currentDate,
+                            niUpdateYearURL = niUpdateYearURL
                         )
                     }
                 }
@@ -359,12 +366,14 @@
                         @nirecordtaxyear(
                             niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
                             currentDate = currentDate,
-                            newContentWithButtonToggle = viewPayableGapsToggle
+                            newContentWithButtonToggle = viewPayableGapsToggle,
+                            niUpdateYearURL = niUpdateYearURL
                         )
                     } else {
                         @nirecordtaxyearNoFull(
                             niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
-                            currentDate = currentDate
+                            currentDate = currentDate,
+                            niUpdateYearURL = niUpdateYearURL
                         )
                     }
                 }

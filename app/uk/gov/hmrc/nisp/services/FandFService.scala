@@ -34,7 +34,11 @@ class FandFService @Inject() (
       .getTrustedHelper()
       .foldF(
         { ex =>
-          if (ex.statusCode != NOT_FOUND) logger.warn(s"Call to fanaf failed with status ${ex.statusCode} and message ${ex.message}")
+          if (ex.statusCode != NOT_FOUND) {
+            logger.warn(s"Call to fanaf failed with status ${ex.statusCode} and message ${ex.message}")
+          } else {
+            logger.warn("Call to fanaf failed with status NOT-FOUND")
+          }
           Future.successful(None)
         },
         trustedHelper => Future.successful(Some(trustedHelper))

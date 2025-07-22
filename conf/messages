@@ -341,7 +341,8 @@ nisp.nirecord.gap.payvoluntarycontribaftercutoff = Pay a voluntary contribution 
 nisp.nirecord.gap.youCanPayvoluntarycontribaftercutoff = You can pay a voluntary contribution of <strong>{0}</strong> by <strong>{1}</strong>.
 nisp.nirecord.gap.findoutmore = Find out more about <a href="{0}">voluntary contributions</a>.
 nisp.nirecord.gap.latePaymentMessage = It’s too late to pay for this year. You can usually only pay for the last 6 years.
-nisp.nirecord.gap.underInvestigation = We are checking this year to see if it counts towards your pension. We’ll update your record when this is finished, you do not need to do anything.
+nisp.nirecord.gap.underInvestigation = This year is not included in your State Pension forecast because your record needs updating.
+nisp.nirecord.gap.contactHMRC = <a href="{0}">Contact HMRC to update this tax year</a>
 
 nisp.nirecord.youdidnotmakeanycontrib = You did not make any contributions this year
 

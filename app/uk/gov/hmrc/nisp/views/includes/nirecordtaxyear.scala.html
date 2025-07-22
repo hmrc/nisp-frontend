@@ -27,7 +27,8 @@
 @(
         niTaxYear: NationalInsuranceTaxYear,
         currentDate: LocalDate,
-        newContentWithButtonToggle: Boolean
+        newContentWithButtonToggle: Boolean,
+        niUpdateYearURL: String
 )(
         implicit messages: Messages
 )
@@ -57,6 +58,7 @@
         <dt class="govuk-summary-list__key"></dt>
         <dd class="govuk-summary-list__value">
             @Html(messages("nisp.nirecord.gap.underInvestigation"))
+            <p>@Html(messages("nisp.nirecord.gap.contactHMRC", niUpdateYearURL))</p>
         </dd>
         <dd class="govuk-summary-list__actions"></dd>
     } else {

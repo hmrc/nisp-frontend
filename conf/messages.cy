@@ -350,7 +350,8 @@ nisp.nirecord.gap.youCanPayvoluntarycontribaftercutoff = Gallwch dalu cyfraniad 
 
 nisp.nirecord.gap.findoutmore = Darganfyddwch fwy am <a href="{0}">gyfraniadau gwirfoddol</a>.
 nisp.nirecord.gap.latePaymentMessage = Mae’n rhy hwyr i dalu am y flwyddyn hon. Fel arfer gallwch ond talu am y 6 mlynedd diwethaf.
-nisp.nirecord.gap.underInvestigation = Rydym yn gwirio’r flwyddyn hon i weld os yw’n cyfri tuag at eich pensiwn. Byddwn yn diweddaru eich cofnod pan mae hyn wedi gorffen, nid oes angen i chi wneud dim.
+nisp.nirecord.gap.underInvestigation = Nid yw’r flwyddyn hon wedi’i chynnwys yn rhagolygon eich Pensiwn y Wladwriaeth gan fod angen diweddaru eich cofnodion.
+nisp.nirecord.gap.contactHMRC = <a href="{0}">Cysylltwch â CThEF er mwyn diweddaru’r flwyddyn dreth hon</a>
 
 nisp.nirecord.youdidnotmakeanycontrib = Ni wnaethoch chi wneud unrhyw gyfraniadau flwyddyn yma
 

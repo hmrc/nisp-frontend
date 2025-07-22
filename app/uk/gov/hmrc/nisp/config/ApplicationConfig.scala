@@ -47,20 +47,21 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val pensionWiseLink: String               = getString("pension-wise-link.url")
   val pensionWiseLinkCy: String             = getString("pension-wise-link-cy.url")
 
-  val futurePensionLink: String             = getString("govUkLinks.future-pension-link.url")
-  val nationalInsuranceLink: String         = getString("govUkLinks.national-insurance-link.url")
-  val niHowMuchYouPayLink: String           = getString("govUkLinks.ni-how-much-you-pay-link.url")
-  val nationalInsuranceCreditLink: String   = getString("govUkLinks.national-insurance-credits-link.url")
-  val additionalStatePensionLink: String    = getString("govUkLinks.additional-state-pension-link.url")
-  val pensionDeferralLink: String           = getString("govUkLinks.pension-deferral-link.url")
-  val newStatePensionLink: String           = getString("govUkLinks.new-state-pension-link.url")
-  val copeLink: String                      = getString("govUkLinks.contracted-out-pension-link.url")
-  val homeResponsibilitiesLink: String      = getString("govUkLinks.home-responsibilities-protection-link.url")
-  val pensionCreditLink: String             = getString("govUkLinks.pension-credit-link.url")
-  val abroadLink: String                    = getString("govUkLinks.living-and-working-overseas-link.url")
+  val futurePensionLink: String               = getString("govUkLinks.future-pension-link.url")
+  val nationalInsuranceLink: String           = getString("govUkLinks.national-insurance-link.url")
+  val niHowMuchYouPayLink: String             = getString("govUkLinks.ni-how-much-you-pay-link.url")
+  val nationalInsuranceCreditLink: String     = getString("govUkLinks.national-insurance-credits-link.url")
+  val additionalStatePensionLink: String      = getString("govUkLinks.additional-state-pension-link.url")
+  val pensionDeferralLink: String             = getString("govUkLinks.pension-deferral-link.url")
+  val newStatePensionLink: String             = getString("govUkLinks.new-state-pension-link.url")
+  val copeLink: String                        = getString("govUkLinks.contracted-out-pension-link.url")
+  val homeResponsibilitiesLink: String        = getString("govUkLinks.home-responsibilities-protection-link.url")
+  val pensionCreditLink: String               = getString("govUkLinks.pension-credit-link.url")
+  val abroadLink: String                      = getString("govUkLinks.living-and-working-overseas-link.url")
+  val nationalInsuranceUpdateYearLink: String = getString("govUkLinks.national-insurance-update-year-link.url")
 
   private val frontendHost                  = getString("nisp-frontend.host")
-  private val accessibilityStatementHost: String    = getString("accessibility-statement.url") + "/accessibility-statement"
+  private val accessibilityStatementHost: String  = getString("accessibility-statement.url") + "/accessibility-statement"
 
   val showFullNI: Boolean                   = getConfBool("features.fullNIrecord", false)
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)
