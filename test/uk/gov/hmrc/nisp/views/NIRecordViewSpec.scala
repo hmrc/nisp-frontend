@@ -1304,12 +1304,13 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       )
     }
 
-    "render page with text 'we are checking this year to see if it counts towards your pension. We will update your records '" in {
+    "render page with text 'This year is not included in your State Pension forecast because your record needs updating.'" in {
       mockSetup
-      assertEqualsMessage(
+      assertEqualsMessages(
         doc,
         ".govuk-grid-column-two-thirds>dl>.contributions-details>dd",
-        "nisp.nirecord.gap.underInvestigation"
+        List(("nisp.nirecord.gap.underInvestigation", None), ("nisp.nirecord.gap.contactHMRC", Some("null"))),
+        includes
       )
     }
 

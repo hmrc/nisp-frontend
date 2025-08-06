@@ -169,9 +169,10 @@ class NIRecordController @Inject()(
           ),
           showFullNI = showFullNI,
           currentDate = dateProvider.currentDate,
-          showViewPayableGapsButton,
-          appConfig.nispModellingFrontendUrl,
-          payableGapInfo
+          viewPayableGapsToggle = showViewPayableGapsButton,
+          nispModellingPayableGapsURL = appConfig.nispModellingFrontendUrl,
+          payableGapInfo = payableGapInfo,
+          niUpdateYearURL = appConfig.nationalInsuranceUpdateYearLink
         )
       )
     }

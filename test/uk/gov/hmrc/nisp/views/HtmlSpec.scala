@@ -21,7 +21,8 @@ import org.apache.pekko.util.Timeout
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito
-import org.scalatest.{Assertion, BeforeAndAfterEach}
+import org.scalatest.compatible.Assertion
+import org.scalatest.{BeforeAndAfterEach, Succeeded}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
@@ -32,7 +33,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
 import java.util.Locale
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with BeforeAndAfterEach {
@@ -53,22 +54,39 @@ trait HtmlSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting with Bef
 
   def asDocument(html: String): Document = Jsoup.parse(html)
 
-  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageValue: Option[Int] = None): Assertion = {
+  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String, messageValue: Option[Any] = None): Assertion =
+    assertEqualsMessages(doc, cssSelector, List((expectedMessageKey, messageValue)))
+
+  def eq(body: String, message: String): Boolean = body == message
+  def includes(body: String, message: String): Boolean = body.contains(message)
+
+  def assertEqualsMessages(
+                            doc: Document,
+                            cssSelector: String,
+                            messages: List[(String, Option[Any])],
+                            f: (String, String) => Boolean = eq): Assertion = {
     val elements = doc.select(cssSelector)
-    val messageText = messageValue.fold(
-      Messages(expectedMessageKey)
-    )(
-      value => Messages(expectedMessageKey, value)
-    )
+    messages.map {
+      case message@(expectedMessageKey, messageValue) =>
+        val messageText = messageValue.fold(
+          Messages(expectedMessageKey)
+        )(
+          value => Messages(expectedMessageKey, value)
+        )
 
-    if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
+        if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
-    assertMessageKeyHasValue(expectedMessageKey)
+        assertMessageKeyHasValue(expectedMessageKey)
 
-    assert(
-      StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "")) == StringEscapeUtils
-        .unescapeHtml4(messageText)
-    )
+        assert(
+          f(StringEscapeUtils.unescapeHtml4(elements.first().html().replace("\n", "").replace("\"", "'")),
+            StringEscapeUtils.unescapeHtml4(messageText.replace("\"", "'"))
+          )
+        )
+    }.filter(assert => assert != Succeeded) match {
+      case ::(head, _) => head      // return first failed assertion
+      case Nil         => Succeeded // success, no failed assertions
+    }
   }
 
   def assertEqualsText(doc: Document, cssSelector: String, expectedText: String): Assertion = {
