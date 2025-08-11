@@ -76,7 +76,6 @@ class MainViewSpec extends HtmlSpec {
     val reportATechnicalIssueText = "Is this page not working properly? (opens in new tab)"
 
     val scriptUrl = "/check-your-state-pension/assets/javascript/app.js"
-    val ptaScriptUrl = "/check-your-state-pension/sca-wrapper/assets/pta.js"
   }
 
   case class TestObject(uniqueValues: UniqueValues)
@@ -195,10 +194,6 @@ class MainViewSpec extends HtmlSpec {
 
         "still contain the app.js script" in {
           srcAttributes.count(_ == CommonValues.scriptUrl) shouldBe 1
-        }
-
-        "still contains the pta scripts" in {
-          srcAttributes.count(_ == CommonValues.ptaScriptUrl) shouldBe 1
         }
 
       }

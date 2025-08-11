@@ -26,10 +26,11 @@ import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
-import uk.gov.hmrc.nisp.utils.Constants._
+import uk.gov.hmrc.nisp.utils.Constants.*
 import uk.gov.hmrc.nisp.views.Main
 import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.binders.{RedirectUrl, UnsafePermitAll}
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.*
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.partials.HtmlPartial
 
@@ -71,7 +72,7 @@ class PertaxAuthActionImpl @Inject()(
       case Right(PertaxAuthResponseModel(ACCESS_GRANTED, _, _, _))                              =>
         Future.successful(None)
       case Right(PertaxAuthResponseModel(NO_HMRC_PT_ENROLMENT, _, Some(redirect), _))           =>
-        Future.successful(Some(Redirect(s"$redirect?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}")))
+        Future.successful(Some(Redirect(s"$redirect?redirectUrl=${RedirectUrl(request.uri).get(UnsafePermitAll).encodedUrl}")))
       case Right(PertaxAuthResponseModel("CONFIDENCE_LEVEL_UPLIFT_REQUIRED", _, Some(redirect), _)) =>
         Future.successful(Some(Redirect(
           redirect,
