@@ -50,6 +50,8 @@ nisp.landing.noteligible.linktext = Canolfan Pensiwn y Dyfodol
 
 nisp.main.title = Crynodeb o’ch Pensiwn y Wladwriaeth
 nisp.main.h1.title = Crynodeb o’ch Pensiwn y Wladwriaeth
+nisp.main.COPE.P1 =A system update planned for 13 February 2026 will further improve the accuracy of forecasts for customers who reach State Pension age after 5th April 2029.
+nisp.main.COPE.P2= You should wait until after this date to request a State Pension forecast using this tool.
 nisp.main.caveats = Eich rhagolwg
 nisp.main.continueContribute = Bydd angen i chi barhau i gyfrannu Yswiriant Gwladol i gyrraedd eich rhagolwg
 nisp.main.mostYouCanGet = yw’r mwyaf y gallwch ei gael
