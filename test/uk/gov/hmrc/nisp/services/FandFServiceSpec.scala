@@ -23,12 +23,12 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.GET
-import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.connectors.FandFConnector
 import uk.gov.hmrc.nisp.utils.UnitSpec
 import play.api.http.Status.INTERNAL_SERVER_ERROR
+import uk.gov.hmrc.sca.models.TrustedHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 

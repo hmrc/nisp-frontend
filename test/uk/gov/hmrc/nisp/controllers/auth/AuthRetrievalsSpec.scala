@@ -32,7 +32,6 @@ import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.*
-import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.nisp.common.RetrievalOps.*
@@ -41,6 +40,7 @@ import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen.*
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, FandFService}
 import uk.gov.hmrc.nisp.utils.{EqualsAuthenticatedRequest, UnitSpec}
+import uk.gov.hmrc.sca.models.TrustedHelper
 
 import java.time.{Instant, LocalDate}
 import scala.concurrent.duration.*

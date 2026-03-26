@@ -19,7 +19,7 @@ import sbt.*
 object AppDependencies {
 
   private val playVersion            = "play-30"
-  private val hmrcScaWrapperVersion  = "4.3.0"
+  private val hmrcScaWrapperVersion  = "4.14.0"
   private val hmrcMongoToggleVersion = "2.3.0"
 
   private val compile: Seq[ModuleID] = Seq(

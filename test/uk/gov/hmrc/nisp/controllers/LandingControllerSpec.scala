@@ -41,10 +41,9 @@ import scala.concurrent.Future
 class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
 
   implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
-  val fakeRequestWelsh: FakeRequest[AnyContentAsEmpty.type]  = FakeRequest("GET", "/cymraeg")
-  val mockApplicationConfig: ApplicationConfig               = mock[ApplicationConfig]
-  val mockIVConnector: IdentityVerificationConnector         = mock[IdentityVerificationConnector]
-  val mocGracePeriodService: GracePeriodService              = mock[GracePeriodService]
+  val mockApplicationConfig: ApplicationConfig                  = mock[ApplicationConfig]
+  val mockIVConnector: IdentityVerificationConnector            = mock[IdentityVerificationConnector]
+  val mocGracePeriodService: GracePeriodService                 = mock[GracePeriodService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -218,26 +217,6 @@ class LandingControllerSpec extends UnitSpec with BeforeAndAfterEach with GuiceO
       status(result)        shouldBe UNAUTHORIZED
       contentAsString(result) should include("We cannot confirm your identity")
       contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
-    }
-  }
-
-  "GET /cymraeg" must {
-    "return 200" in {
-      val result = landingController.show(fakeRequestWelsh)
-      status(result) shouldBe OK
-    }
-
-    "return HTML" in {
-      val result = landingController.show(fakeRequestWelsh)
-      Helpers.contentType(result) shouldBe Some("text/html")
-      charset(result)             shouldBe Some("utf-8")
-    }
-    "load the landing page in welsh" in {
-      when(mockApplicationConfig.isWelshEnabled).thenReturn(true)
-
-      val result = landingController.show(fakeRequestWelsh)
-
-      contentAsString(result) should include("data-journey-click=\"link - click:lang-select:Cymraeg\"")
     }
   }
 }

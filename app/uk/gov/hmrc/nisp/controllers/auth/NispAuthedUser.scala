@@ -17,11 +17,11 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import java.time.LocalDate
-import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen.Address
 import uk.gov.hmrc.nisp.utils.Country
+import uk.gov.hmrc.sca.models.TrustedHelper
 
 final case class NispAuthedUser(
   nino: Nino,
