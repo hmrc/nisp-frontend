@@ -644,13 +644,13 @@ global.page.not.found.error.contact.ni.helpline.text={0} os ydych am siarad â r
 #**********************
 # Grace Period Banner
 #**********************
-nisp.grace.period.banner.text = Ni allwch dalu am fylchau cyn 2019 bellach - oni bai eich bod chi wedi defnyddio’r gwasanaeth hwn rhwng 13 Mawrth a 4 Ebrill 2025 a nawr yn dychwelyd er mwyn talu.
-nisp.grace.period.banner.url.text = Dysgwch sut i dalu am fylchau cyn mis Ebrill 2019
+nisp.grace.period.banner.text = Ni allwch dalu am fylchau cyn {0} bellach - oni bai eich bod chi wedi defnyddio’r gwasanaeth hwn rhwng 6 Mawrth a 5 Ebrill {1} a nawr yn dychwelyd er mwyn talu.
+nisp.grace.period.banner.url.text = Dysgwch sut i dalu am fylchau cyn mis Ebrill {0}
 
-nisp.grace.period.view.h1 = Talu am fylchau cyn 2019
-nisp.grace.period.view.p1 = Ni allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol cyn mis Ebrill 2019 bellach - oni bai:
+nisp.grace.period.view.h1 = Talu am fylchau cyn {0}
+nisp.grace.period.view.p1 = Ni allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol cyn mis Ebrill {0} bellach - oni bai:
 
-nisp.grace.period.view.list1.1 = eich bod chi wedi defnyddio’r gwasanaeth hwn rhwng 13 Mawrth a 4 Ebrill 2025
+nisp.grace.period.view.list1.1 = eich bod chi wedi defnyddio’r gwasanaeth hwn rhwng 13 Mawrth a 4 Ebrill {0}
 nisp.grace.period.view.list1.2 = y cawsoch chi gyfeirnod talu 18 digid
 nisp.grace.period.view.list1.3 = y cawsoch chi swm i’w dalu, sef y swm y byddai’n costio i lenwi’r bylchau
 
@@ -674,7 +674,7 @@ nisp.grace.period.view.link.2.url = https://www.gov.uk/government/organisations/
 nisp.grace.period.view.list3.1 = os nad oes gennych chi’r swm i’w dalu na’ch cyfeirnod talu 18 digid
 nisp.grace.period.view.list3.2 = os ydych chi wedi newid eich meddwl ynghylch pa fylchau i’w llenwi
 
-nisp.grace.period.view.p5 = Os hoffech chi lenwi bylchau a hynny dim ond o fis Ebrill 2019 ymlaen,
+nisp.grace.period.view.p5 = Os hoffech chi lenwi bylchau a hynny dim ond o fis Ebrill {0} ymlaen,
 
 nisp.grace.period.view.link.3.text = ewch yn ôl at eich cofnod Yswiriant Gwladol
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account

@@ -26,15 +26,15 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser, StandardAuthJourney}
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.events.{AccountExclusionEvent, NIRecordEvent, NIRecordNoGapsEvent}
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
-import uk.gov.hmrc.nisp.services._
+import uk.gov.hmrc.nisp.services.*
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.time.TaxYear
+import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
 
-import java.time.LocalDate
+import java.time.{Clock, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
 
 class NIRecordController @Inject()(
@@ -49,11 +49,14 @@ class NIRecordController @Inject()(
                                     niRecordPage: nirecordpage,
                                     niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
                                     nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
+                                    clock: Clock
                                   )(
                                     implicit ec: ExecutionContext,
                                     val featureFlagService: FeatureFlagService
-                                  ) extends NispFrontendController(mcc) with I18nSupport {
+                                  ) extends NispFrontendController(mcc) with I18nSupport with CurrentTaxYear {
 
+  override def now: () => LocalDate = () => LocalDate.now(clock)
+  
   val showFullNI: Boolean = appConfig.showFullNI
 
   def showFull: Action[AnyContent] = show(gapsOnlyView = false)
@@ -172,7 +175,8 @@ class NIRecordController @Inject()(
           viewPayableGapsToggle = showViewPayableGapsButton,
           nispModellingPayableGapsURL = appConfig.nispModellingFrontendUrl,
           payableGapInfo = payableGapInfo,
-          niUpdateYearURL = appConfig.nationalInsuranceUpdateYearLink
+          niUpdateYearURL = appConfig.nationalInsuranceUpdateYearLink,
+          currentTaxYear = current
         )
       )
     }

@@ -18,13 +18,16 @@ package uk.gov.hmrc.nisp.config
 
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.nisp.controllers.auth._
+import uk.gov.hmrc.nisp.controllers.auth.*
+
+import java.time.Clock
 
 class NispModule extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[?]] =
     Seq(
       bind[ExcludedAuthAction].to[ExcludedAuthActionImpl],
       bind[AuthRetrievals].to[AuthRetrievalsImpl],
-      bind[ApplicationStartUp].toSelf.eagerly()
+      bind[ApplicationStartUp].toSelf.eagerly(),
+      bind[Clock].toInstance(Clock.systemDefaultZone())
     )
 }

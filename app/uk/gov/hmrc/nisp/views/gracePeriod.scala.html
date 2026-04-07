@@ -15,8 +15,10 @@
  *@
 
 @import uk.gov.hmrc.nisp.controllers.routes
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, Link}
+@import uk.gov.hmrc.nisp.models.PayableGapInfo
 @import uk.gov.hmrc.nisp.views.Main
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, H2, Link, P}
+@import uk.gov.hmrc.time.TaxYear
 
 @this(
         main: Main,
@@ -27,30 +29,31 @@
 )
 
 @(
-        showBackLink: Boolean
+        currentTaxYear: TaxYear,
+        payableGapInfo: PayableGapInfo
 )(
         implicit messages: Messages,
         request: Request[?]
 )
 
 @main(
-    pageTitle = messages("nisp.grace.period.view.h1"),
+    pageTitle = messages("nisp.grace.period.view.h1", payableGapInfo.startYear.toString),
     hideNavBar = true
 ) {
 
     @h1(
         elmId = Some("heading-1"),
-        msg = "nisp.grace.period.view.h1",
+        msg = messages("nisp.grace.period.view.h1", payableGapInfo.startYear.toString),
         specId = Some("paying_for_gaps__h1")
     )
 
     @p(
-        content = Text(messages("nisp.grace.period.view.p1")),
+        content = Text(messages("nisp.grace.period.view.p1", payableGapInfo.startYear.toString)),
         specId = Some("paying_for_gaps__p1")
     )
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("nisp.grace.period.view.list1.1")</li>
+        <li>@messages("nisp.grace.period.view.list1.1", currentTaxYear.back(1).finishYear.toString)</li>
         <li>@messages("nisp.grace.period.view.list1.2")</li>
         <li>@messages("nisp.grace.period.view.list1.3")</li>
     </ul>
@@ -93,11 +96,12 @@
     @p(
         content = HtmlContent(
             HtmlFormat.fill(Seq(
-            link(
-                href = messages("nisp.grace.period.view.link.2.url"),
-                messageKey = "nisp.grace.period.view.link.2.text",
-                specId = Some("paying_for_gaps__link_2")
-            ), Html(messages("nisp.grace.period.view.p4"))
+                link(
+                    href = messages("nisp.grace.period.view.link.2.url"),
+                    messageKey = "nisp.grace.period.view.link.2.text",
+                    specId = Some("paying_for_gaps__link_2")
+                ),
+                Html(messages("nisp.grace.period.view.p4"))
             ))
         ),
         specId = Some("paying_for_gaps__p4")
@@ -110,7 +114,7 @@
 
     @p(
         content = HtmlContent(
-            messages("nisp.grace.period.view.p5") +
+            messages("nisp.grace.period.view.p5", payableGapInfo.startYear.toString) +
             link(
                 href = routes.NIRecordController.showFull.url,
                 messageKey = "nisp.grace.period.view.link.3.text",
