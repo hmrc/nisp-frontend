@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.nisp.views.Main
 @import uk.gov.hmrc.nisp.models.PayableGapInfo
 @import uk.gov.hmrc.nisp.services.GracePeriodService
+@import uk.gov.hmrc.time.TaxYear
 
 @this(
         main: Main,
@@ -53,7 +54,8 @@
         viewPayableGapsToggle: Boolean,
         nispModellingPayableGapsURL: String,
         payableGapInfo: PayableGapInfo,
-        niUpdateYearURL: String
+        niUpdateYearURL: String,
+        currentTaxYear: TaxYear
 )(
         implicit messages: Messages,
         request: AuthenticatedRequest[?],
@@ -162,7 +164,6 @@
                             fullStop = true,
                             href = routes.NIRecordController.showGaps.url,
                             messageKey = "nisp.nirecord.showgaps",
-                            messagesArgs = Seq("niRecord.numberOfGaps"),
                             specId = Some("nirecordpage__inset_text2__link")
                         )
                     ),
@@ -239,7 +240,7 @@
 
                     @if(!gracePeriodService.inGracePeriod) {
                         <p class="govuk-body govuk-!-margin-bottom-5">
-                        @Messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
+                        @messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
                         </p>
                     }
                 }
@@ -250,12 +251,17 @@
             @govukWarningText(WarningText(
                 iconFallbackText = Some("Warning"),
                 content = HtmlContent(
-                    messages("nisp.grace.period.banner.text") +
-                            link(
-                                href = routes.GracePeriodController.showGracePeriod.url,
-                                messageKey = "nisp.grace.period.banner.url.text",
-                                specId = Some("nirecordpage_text3__link")
-                            )
+                    messages(
+                        "nisp.grace.period.banner.text",
+                        payableGapInfo.startYear.toString,
+                        currentTaxYear.back(1).finishYear.toString
+                    ) +
+                    link(
+                        href = routes.GracePeriodController.showGracePeriod.url,
+                        messageKey = "nisp.grace.period.banner.url.text",
+                        messagesArgs = Seq(payableGapInfo.startYear.toString),
+                        specId = Some("nirecordpage_text3__link")
+                    )
                 )
             ))
         }
@@ -350,12 +356,17 @@
                 @govukWarningText(WarningText(
                     iconFallbackText = Some("Warning"),
                     content = HtmlContent(
-                        messages("nisp.grace.period.banner.text") +
-                                link(
-                                    href = routes.GracePeriodController.showGracePeriod.url,
-                                    messageKey = "nisp.grace.period.banner.url.text",
-                                    specId = Some("nirecordpage_text3__link")
-                                )
+                        messages(
+                            "nisp.grace.period.banner.text",
+                            payableGapInfo.startYear.toString,
+                            currentTaxYear.back(1).finishYear.toString
+                        ) +
+                        link(
+                            href = routes.GracePeriodController.showGracePeriod.url,
+                            messageKey = "nisp.grace.period.banner.url.text",
+                            messagesArgs = Seq(payableGapInfo.startYear.toString),
+                            specId = Some("nirecordpage_text3__link")
+                        )
                     )
                 ))
             }

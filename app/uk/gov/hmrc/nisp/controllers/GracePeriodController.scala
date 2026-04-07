@@ -17,24 +17,33 @@
 package uk.gov.hmrc.nisp.controllers
 
 import com.google.inject.Inject
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.StandardAuthJourney
+import uk.gov.hmrc.nisp.models.PayableGapInfo
 import uk.gov.hmrc.nisp.views.html.gracePeriod
+import uk.gov.hmrc.time.CurrentTaxYear
 
+import java.time.{Clock, LocalDate}
 import scala.concurrent.ExecutionContext
 
 class GracePeriodController @Inject()(
   authenticate: StandardAuthJourney,
   mcc: MessagesControllerComponents,
-  gracePeriodView: gracePeriod
+  gracePeriodView: gracePeriod,
+  clock: Clock,
+  appConfig: ApplicationConfig
 )(
   implicit val executor: ExecutionContext
 ) extends NispFrontendController(mcc)
-with I18nSupport
-with Logging {
-  def showGracePeriod: Action[AnyContent] = authenticate.pertaxAuthActionWithGracePeriod { implicit request =>
-    Ok(gracePeriodView(false))
-  }
+    with I18nSupport
+    with CurrentTaxYear {
+
+  override def now: () => LocalDate = () => LocalDate.now(clock)
+
+  def showGracePeriod: Action[AnyContent] =
+    authenticate.pertaxAuthActionWithGracePeriod { implicit request =>
+      Ok(gracePeriodView(current, PayableGapInfo(appConfig.niRecordPayableYears)))
+    }
 }
