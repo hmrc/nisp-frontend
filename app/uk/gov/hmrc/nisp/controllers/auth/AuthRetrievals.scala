@@ -17,10 +17,10 @@
 package uk.gov.hmrc.nisp.controllers.auth
 
 import com.google.inject.Inject
-import play.api.mvc.Results.*
 import play.api.mvc.*
+import play.api.mvc.Results.*
 import uk.gov.hmrc.auth.core.*
-import uk.gov.hmrc.auth.core.retrieve.v2.{Retrievals, TrustedHelper}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name, ~}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
@@ -29,6 +29,7 @@ import uk.gov.hmrc.nisp.models.UserName
 import uk.gov.hmrc.nisp.models.citizen.*
 import uk.gov.hmrc.nisp.services.{CitizenDetailsService, FandFService}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import uk.gov.hmrc.sca.models.TrustedHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 

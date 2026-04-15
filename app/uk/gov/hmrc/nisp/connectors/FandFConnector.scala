@@ -19,11 +19,11 @@ package uk.gov.hmrc.nisp.connectors
 import cats.data.EitherT
 import com.google.inject.Inject
 import play.api.libs.json.Reads
-import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.sca.models.TrustedHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 

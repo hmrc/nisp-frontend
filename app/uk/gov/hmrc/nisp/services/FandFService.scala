@@ -18,10 +18,10 @@ package uk.gov.hmrc.nisp.services
 
 import com.google.inject.Inject
 import play.api.Logging
-import uk.gov.hmrc.auth.core.retrieve.v2.TrustedHelper
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nisp.connectors.FandFConnector
 import play.api.http.Status.NOT_FOUND
+import uk.gov.hmrc.sca.models.TrustedHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
