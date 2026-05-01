@@ -29,11 +29,13 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.test.WireMockSupport
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.StatePensionController
 import uk.gov.hmrc.nisp.controllers.auth.*
 import uk.gov.hmrc.nisp.helpers.*
 import uk.gov.hmrc.nisp.models.*
+import uk.gov.hmrc.nisp.models.admin.NewStatePensionUIToggle
 import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.nisp.repositories.SessionCache
 import uk.gov.hmrc.nisp.services.{GracePeriodService, MetricsService, NationalInsuranceService, StatePensionService}
@@ -45,6 +47,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
 
 import java.time.{Instant, LocalDate}
+import scala.concurrent.Future
 
 class StatePensionCopeViewSpec
   extends HtmlSpec
@@ -90,6 +93,8 @@ class StatePensionCopeViewSpec
     when(mockAppConfig.pertaxAuthBaseUrl)
       .thenReturn(s"http://localhost:${wireMockServer.port()}")
     mockPertaxAuth(PertaxAuthResponseModel(ACCESS_GRANTED, "", None, None), mockUserNino.nino)
+    when(mockFeatureFlagService.get(NewStatePensionUIToggle))
+      .thenReturn(Future.successful(FeatureFlag(NewStatePensionUIToggle, isEnabled = true)))
   }
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -264,7 +269,7 @@ class StatePensionCopeViewSpec
       assertLinkHasValue(
         htmlAccountDoc,
         "[data-spec='state_pension_cope__backlink']",
-        "/check-your-state-pension/account-new"
+        "/check-your-state-pension/account"
       )
     }
   }
