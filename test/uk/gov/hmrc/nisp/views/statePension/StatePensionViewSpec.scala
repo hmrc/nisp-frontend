@@ -825,13 +825,13 @@ class StatePensionViewSpec
 
           // MQP message
           "render page with text 'You have no qualifying years on your National Insurance record." +
-            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+            " You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 7 June 2020.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__no_qualifying_years']",
               "You have no qualifying years on your National Insurance record." +
-                " You usually need at least 10 qualifying years to get any State Pension."
+                " You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 7 June 2020."
             )
           }
 
