@@ -342,12 +342,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with text 'The full new State Pension is £151.65 a week.'" in {
+          "render page with text 'The full rate of the new State Pension is £151.65 a week.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='new_state_pension__p1']",
-              "The full new State Pension is £151.65 a week."
+              "The full rate of the new State Pension is £151.65 a week."
             )
           }
 
@@ -1203,12 +1203,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with text 'The full new State Pension is £149.65 a week.'" in {
+          "render page with text 'The full rate of the new State Pension is £149.65 a week.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='new_state_pension__p1']",
-              "The full new State Pension is £149.65 a week."
+              "The full rate of the new State Pension is £149.65 a week."
             )
           }
 
@@ -2713,7 +2713,7 @@ class StatePensionViewSpec
           assertEqualsText(
             doc,
             "[data-spec='state_pension__additional_state_pension__p1']",
-            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
+            "You may get more than this if you are entitled to a protected payment. Find out more about protected payments and the new State Pension.")
 
           assertLinkHasValue(
             doc,
@@ -2824,7 +2824,7 @@ class StatePensionViewSpec
           assertEqualsText(
             abroadUserDoc,
             "[data-spec='state_pension__additional_state_pension__p1']",
-            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
+            "You may get more than this if you are entitled to a protected payment. Find out more about protected payments and the new State Pension.")
 
           assertLinkHasValue(
             abroadUserDoc,
@@ -2946,7 +2946,7 @@ class StatePensionViewSpec
           assertEqualsText(
             doc,
             "[data-spec='state_pension__additional_state_pension__p1']",
-            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
+            "You may get more than this if you are entitled to a protected payment. Find out more about protected payments and the new State Pension.")
 
           assertLinkHasValue(
             doc,

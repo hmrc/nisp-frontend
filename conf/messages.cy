@@ -105,7 +105,7 @@ nisp.main.howMuchWillIGet = Faint fyddaf yn ei gael?
 nisp.main.chart.current = Amcangyfrif presennol yn seiliedig ar eich cofnod Yswiriant Gwladol hyd at<span class="nowrap"> 5 Ebrill {0}</span>
 nisp.main.chart.forecast = Y rhagolwg os byddwch yn gwneud cyfraniadau Yswiriant Gwladol hyd nes<span class="nowrap"> 5 Ebrill {0}</span>
 nisp.main.chart.max.mostYouCanGet = Y mwyaf y gallwch ei gael yw
-nisp.main.newStatePension = Swm Pensiwn y Wladwriaeth newydd llawn yw {0} yr wythnos.
+nisp.main.newStatePension = Y gyfradd lawn ar gyfer y Pensiwn y Wladwriaeth newydd yw {0} yr wythnos.
 
 nisp.main.howCanIIncrease = Sut allaf gynyddu fy Mhensiwn y Wladwriaeth?
 
@@ -161,8 +161,8 @@ nisp.main.context.fillGaps.gap.viewGaps = Gallwch fwrw golwg dros eich cofnod Ys
 nisp.main.context.cantFillGaps.p1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth. {0} yr wythnos yw’r swm mwyaf y gallwch ei gael.
 nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
 
-nisp.main.context.additionalStatePension = Mae’n bosibl y gallwch gael mwy na hyn os oes gennych rywfaint o Bensiwn Ychwanegol y Wladwriaeth. {0}
-nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am Bensiwn Ychwanegol y Wladwriaeth a thaliadau wedi’u diogelu.
+nisp.main.context.additionalStatePension = Efallai y byddwch yn cael mwy na hyn os oes gennych hawl i daliad sydd wedi’i ddiogelu. {0}
+nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am daliadau sydd wedi’u diogelu a Phensiwn y Wladwriaeth newydd.
 
 #**********************
 # Exclusion messages

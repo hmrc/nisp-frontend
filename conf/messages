@@ -105,7 +105,7 @@ nisp.main.howMuchWillIGet = How much will I get?
 nisp.main.chart.current = Current estimate based on your National Insurance record up to<span class="nowrap"> 5 April {0}</span>
 nisp.main.chart.forecast = Forecast if you contribute National Insurance until<span class="nowrap"> 5 April {0}</span>
 nisp.main.chart.max.mostYouCanGet = The most you can get is
-nisp.main.newStatePension = The full new State Pension is {0} a week.
+nisp.main.newStatePension = The full rate of the new State Pension is {0} a week.
 
 nisp.main.howCanIIncrease = How can I increase my State Pension?
 
@@ -161,8 +161,8 @@ nisp.main.context.fillGaps.gap.viewGaps = You can view your National Insurance r
 nisp.main.context.cantFillGaps.p1 = You cannot increase your State Pension forecast. {0} a week is the most you can get.
 nisp.main.context.cantFillGaps.p2 = This means you are unable to pay for gaps in your National Insurance record online.
 
-nisp.main.context.additionalStatePension = You may get more than this if you have some Additional State Pension. {0}
-nisp.main.context.additionalStatePension.linktext = Find out about Additional State Pension and protected payment
+nisp.main.context.additionalStatePension = You may get more than this if you are entitled to a protected payment. {0}
+nisp.main.context.additionalStatePension.linktext = Find out more about protected payments and the new State Pension
 
 #**********************
 # Exclusion messages
