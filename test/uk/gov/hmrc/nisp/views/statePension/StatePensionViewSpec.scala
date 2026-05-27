@@ -342,12 +342,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with text 'The full new State Pension is £151.65 a week.'" in {
+          "render page with text 'The full rate of the new State Pension is £151.65 a week.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='new_state_pension__p1']",
-              "The full new State Pension is £151.65 a week."
+              "The full rate of the new State Pension is £151.65 a week."
             )
           }
 
@@ -1203,12 +1203,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with text 'The full new State Pension is £149.65 a week.'" in {
+          "render page with text 'The full rate of the new State Pension is £149.65 a week.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='new_state_pension__p1']",
-              "The full new State Pension is £149.65 a week."
+              "The full rate of the new State Pension is £149.65 a week."
             )
           }
 
