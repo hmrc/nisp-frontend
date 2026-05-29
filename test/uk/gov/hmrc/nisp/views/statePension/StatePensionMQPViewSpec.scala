@@ -274,13 +274,13 @@ class StatePensionMQPViewSpec
             )
           }
 
-          "render page 'You usually need at least 10 qualifying years on your National Insurance record to " +
+          "render page 'You usually need at least 10 qualifying years on your National Insurance record at State Pension age to " +
             "get any State Pension. You will not get these by 4 May 2017.' " in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension_mqp__p5']",
-              "You usually need at least 10 qualifying years on your National Insurance record to " +
+              "You usually need at least 10 qualifying years on your National Insurance record at State Pension age to " +
                 "get any State Pension. You will not get these by 4 May 2017."
             )
           }

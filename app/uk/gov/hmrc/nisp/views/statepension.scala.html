@@ -173,21 +173,33 @@
             </ul>
 
             @if(statePension.numberOfQualifyingYears > 0) {
-                @p(
-                    content = Text(messages(
-                        "nisp.mqp.youCurrentlyHave",
-                        Time.years(statePension.numberOfQualifyingYears),
-                        Constants.minimumQualifyingYearsNSP
-                    )),
-                    specId = Some("state_pension__p2a")
-                )
+                @if(statePension.numberOfQualifyingYears == 1){
+                    @p(
+                        content = Text(messages(
+                            "nisp.mqp.currentQualifyingYears.single",
+                            statePension.numberOfQualifyingYears,
+                            Constants.minimumQualifyingYearsNSP
+                        )),
+                        specId = Some("state_pension__current_qualifying_years__single")
+                    )
+                } else {
+                    @p(
+                        content = Text(messages(
+                            "nisp.mqp.currentQualifyingYears.plural",
+                            statePension.numberOfQualifyingYears,
+                            Constants.minimumQualifyingYearsNSP
+                        )),
+                        specId = Some("state_pension__current_qualifying_years__plural")
+                    )
+                }
             } else {
                 @p(
                     content = Text(messages(
-                        "nisp.mqp.youCurrentlyHaveZero",
+                        "nisp.mqp.currentQualifyingYears.zero",
+                        0,
                         Constants.minimumQualifyingYearsNSP
                     )),
-                    specId = Some("state_pension__p2b")
+                    specId = Some("state_pension__current_qualifying_years__zero")
                 )
             }
 

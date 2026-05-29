@@ -672,13 +672,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with text ' You currently have 4 years on your record and you need at least 10 years to get any State Pension. '" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               nonForeignDoc,
-              "[data-spec='state_pension__p2a']",
-              "nisp.mqp.youCurrentlyHave",
-              Time.years(4),
-              Constants.minimumQualifyingYearsNSP.toString,
-              null
+              "[data-spec='state_pension__current_qualifying_years__plural']",
+              "You have 4 qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension."
             )
           }
 
@@ -1104,13 +1101,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with text ' You currently have 4 years on your record and you need at least 10 years to get any State Pension. '" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               nonForeignDoc,
-              "[data-spec='state_pension__p2a']",
-              "nisp.mqp.youCurrentlyHave",
-              Time.years(4),
-              Constants.minimumQualifyingYearsNSP.toString,
-              null
+              "[data-spec='state_pension__current_qualifying_years__plural']",
+              "You have 4 qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension."
             )
           }
 
@@ -1505,11 +1499,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with text 'You do not have any years on your record and you need at least 10 years to get any State Pension. '" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               nonForeignDoc,
-              "[data-spec='state_pension__p2b']",
-              "nisp.mqp.youCurrentlyHaveZero",
-              Constants.minimumQualifyingYearsNSP.toString
+              "[data-spec='state_pension__current_qualifying_years__zero']",
+              "You have no qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension."
             )
           }
 
@@ -1899,13 +1892,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with text ' You currently have 9 years on your record and you need at least 10 years to get any State Pension. '" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               nonForeignDoc,
-              "[data-spec='state_pension__p2a']",
-              "nisp.mqp.youCurrentlyHave",
-              Time.years(9),
-              Constants.minimumQualifyingYearsNSP.toString,
-              null
+              "[data-spec='state_pension__current_qualifying_years__plural']",
+              "You have 9 qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension."
             )
           }
 
