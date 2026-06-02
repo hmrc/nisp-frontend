@@ -533,13 +533,21 @@ class StatePensionViewSpec
           }
 
           // MQP message
-          "render page with text 'You have 4 qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+          "render page with text 'You have 4 qualifying years on your National Insurance record.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               doc,
               "[data-spec='state_pension__current_qualifying_years__plural']",
-              "nisp.mqp.currentQualifyingYears.plural",
-              "4", "10"
+              messages("nisp.mqp.currentQualifyingYears.plural", 4)
+            )
+          }
+
+          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__you_need_10_years']",
+              messages("nisp.mqp.youNeed10Years", 10)
             )
           }
 
@@ -666,14 +674,21 @@ class StatePensionViewSpec
             asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           // MQP message
-          "render page with text 'You have 1 qualifying year on your National Insurance record." +
-            " You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+          "render page with text 'You have 1 qualifying year on your National Insurance record.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               doc,
               "[data-spec='state_pension__current_qualifying_years__single']",
-              "nisp.mqp.currentQualifyingYears.single",
-              "1", "10"
+              messages("nisp.mqp.currentQualifyingYears.single", 1)
+            )
+          }
+
+          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__you_need_10_years']",
+              messages("nisp.mqp.youNeed10Years", 10)
             )
           }
 
@@ -824,14 +839,12 @@ class StatePensionViewSpec
           }
 
           // MQP message
-          "render page with text 'You have no qualifying years on your National Insurance record." +
-            " You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+          "render page with text 'You have no qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               doc,
               "[data-spec='state_pension__no_qualifying_years']",
-              "nisp.mqp.currentQualifyingYears.zero",
-              "10"
+              messages("nisp.mqp.currentQualifyingYears.zero", 10)
             )
           }
 
@@ -954,14 +967,21 @@ class StatePensionViewSpec
             asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           // MQP message
-          "render page with text 'You have 1 qualifying year on your National Insurance record." +
-            " You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+          "render page with text 'You have 1 qualifying year on your National Insurance record.'" in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               doc,
               "[data-spec='state_pension__current_qualifying_years__single']",
-              "nisp.mqp.currentQualifyingYears.single",
-              "1", "10"
+              messages("nisp.mqp.currentQualifyingYears.single", 1)
+            )
+          }
+
+          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+            mockSetup
+            assertEqualsText(
+              doc,
+              "[data-spec='state_pension__you_need_10_years']",
+              messages("nisp.mqp.youNeed10Years", 10)
             )
           }
 
