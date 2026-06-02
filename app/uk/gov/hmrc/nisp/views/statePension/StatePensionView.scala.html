@@ -178,14 +178,6 @@
 
         @if(statePension.mqpScenario.isDefined) {
 
-            @p(
-                content = Text(messages(
-                    "nisp.mqp.youNeed10Years",
-                    Constants.minimumQualifyingYearsNSP
-                )),
-                specId = Some("state_pension__you_need_10_years")
-            )
-
             @if(statePension.numberOfQualifyingYears > 0) {
 
                 @if(statePension.numberOfQualifyingYears == 1){
@@ -218,6 +210,14 @@
                     specId = Some("state_pension__no_qualifying_years")
                 )
             }
+
+            @p(
+                content = Text(messages(
+                    "nisp.mqp.youNeed10Years",
+                    pensionDate
+            )),
+            specId = Some("state_pension__you_need_10_years")
+            )
 
             @outsideUK()
 

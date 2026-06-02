@@ -538,16 +538,16 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "[data-spec='state_pension__current_qualifying_years__plural']",
-              messages("nisp.mqp.currentQualifyingYears.plural", 4)
+              "You have 4 qualifying years on your National Insurance record."
             )
           }
 
-          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 7 June 2022.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__you_need_10_years']",
-              messages("nisp.mqp.youNeed10Years", 10)
+              "You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 7 June 2022."
             )
           }
 
@@ -679,16 +679,16 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "[data-spec='state_pension__current_qualifying_years__single']",
-              messages("nisp.mqp.currentQualifyingYears.single", 1)
+              "You have 1 qualifying year on your National Insurance record."
             )
           }
 
-          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 7 June 2022.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__you_need_10_years']",
-              messages("nisp.mqp.youNeed10Years", 10)
+              "You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 7 June 2022."
             )
           }
 
@@ -844,7 +844,7 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "[data-spec='state_pension__no_qualifying_years']",
-              messages("nisp.mqp.currentQualifyingYears.zero")
+              "You have no qualifying years on your National Insurance record."
             )
           }
 
@@ -972,16 +972,16 @@ class StatePensionViewSpec
             assertEqualsText(
               doc,
               "[data-spec='state_pension__current_qualifying_years__single']",
-              messages("nisp.mqp.currentQualifyingYears.single", 1)
+              "You have 1 qualifying year on your National Insurance record."
             )
           }
 
-          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 7 June 2020.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__you_need_10_years']",
-              messages("nisp.mqp.youNeed10Years", 10)
+              "You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 7 June 2020."
             )
           }
 
