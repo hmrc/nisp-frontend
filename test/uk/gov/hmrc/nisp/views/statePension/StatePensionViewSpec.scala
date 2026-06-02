@@ -342,12 +342,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with text 'The full new State Pension is £151.65 a week.'" in {
+          "render page with text 'The full rate of the new State Pension is £151.65 a week.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='new_state_pension__p1']",
-              "The full new State Pension is £151.65 a week."
+              "The full rate of the new State Pension is £151.65 a week."
             )
           }
 
@@ -533,13 +533,13 @@ class StatePensionViewSpec
           }
 
           // MQP message
-          "render page with text 'You have 4 qualifying years on your National Insurance record." +
-            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+          "render page with text 'You have 4 qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
             mockSetup
-            assertEqualsText(
+            assertContainsDynamicMessage(
               doc,
               "[data-spec='state_pension__current_qualifying_years__plural']",
-              "You have 4 qualifying years on your National Insurance record. You usually need at least 10 qualifying years to get any State Pension."
+              "nisp.mqp.currentQualifyingYears.plural",
+              "4", "10"
             )
           }
 
@@ -667,13 +667,13 @@ class StatePensionViewSpec
 
           // MQP message
           "render page with text 'You have 1 qualifying year on your National Insurance record." +
-            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+            " You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
             mockSetup
-            assertEqualsText(
+            assertContainsDynamicMessage(
               doc,
               "[data-spec='state_pension__current_qualifying_years__single']",
-              "You have 1 qualifying year on your National Insurance record. " +
-                "You usually need at least 10 qualifying years to get any State Pension."
+              "nisp.mqp.currentQualifyingYears.single",
+              "1", "10"
             )
           }
 
@@ -825,13 +825,13 @@ class StatePensionViewSpec
 
           // MQP message
           "render page with text 'You have no qualifying years on your National Insurance record." +
-            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+            " You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
             mockSetup
-            assertEqualsText(
+            assertContainsDynamicMessage(
               doc,
               "[data-spec='state_pension__no_qualifying_years']",
-              "You have no qualifying years on your National Insurance record." +
-                " You usually need at least 10 qualifying years to get any State Pension."
+              "nisp.mqp.currentQualifyingYears.zero",
+              "10"
             )
           }
 
@@ -955,13 +955,13 @@ class StatePensionViewSpec
 
           // MQP message
           "render page with text 'You have 1 qualifying year on your National Insurance record." +
-            " You usually need at least 10 qualifying years to get any State Pension.'" in {
+            " You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
             mockSetup
-            assertEqualsText(
+            assertContainsDynamicMessage(
               doc,
               "[data-spec='state_pension__current_qualifying_years__single']",
-              "You have 1 qualifying year on your National Insurance record. " +
-                "You usually need at least 10 qualifying years to get any State Pension."
+              "nisp.mqp.currentQualifyingYears.single",
+              "1", "10"
             )
           }
 
@@ -1203,12 +1203,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with text 'The full new State Pension is £149.65 a week.'" in {
+          "render page with text 'The full rate of the new State Pension is £149.65 a week.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='new_state_pension__p1']",
-              "The full new State Pension is £149.65 a week."
+              "The full rate of the new State Pension is £149.65 a week."
             )
           }
 
