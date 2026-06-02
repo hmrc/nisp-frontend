@@ -192,8 +192,7 @@
                     @p(
                         content = Text(messages(
                             "nisp.mqp.currentQualifyingYears.single",
-                            statePension.numberOfQualifyingYears,
-                            Constants.minimumQualifyingYearsNSP
+                            statePension.numberOfQualifyingYears
                         )),
                         specId = Some("state_pension__current_qualifying_years__single")
                     )
@@ -201,8 +200,7 @@
                     @p(
                         content = Text(messages(
                             "nisp.mqp.currentQualifyingYears.plural",
-                            statePension.numberOfQualifyingYears,
-                            Constants.minimumQualifyingYearsNSP
+                            statePension.numberOfQualifyingYears
                         )),
                         specId = Some("state_pension__current_qualifying_years__plural")
                     )
@@ -215,9 +213,7 @@
 
                 @p(
                     content = Text(messages(
-                        "nisp.mqp.currentQualifyingYears.zero",
-                        statePension.numberOfQualifyingYears,
-                        Constants.minimumQualifyingYearsNSP
+                        "nisp.mqp.currentQualifyingYears.zero"
                     )),
                     specId = Some("state_pension__no_qualifying_years")
                 )

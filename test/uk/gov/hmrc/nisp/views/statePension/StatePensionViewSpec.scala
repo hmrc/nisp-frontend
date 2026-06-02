@@ -839,12 +839,12 @@ class StatePensionViewSpec
           }
 
           // MQP message
-          "render page with text 'You have no qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record to get any State Pension.'" in {
+          "render page with text 'You have no qualifying years on your National Insurance record.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__no_qualifying_years']",
-              messages("nisp.mqp.currentQualifyingYears.zero", 10)
+              messages("nisp.mqp.currentQualifyingYears.zero")
             )
           }
 
