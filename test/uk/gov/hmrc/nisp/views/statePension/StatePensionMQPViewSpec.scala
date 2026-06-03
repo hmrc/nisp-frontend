@@ -278,12 +278,10 @@ class StatePensionMQPViewSpec
           "render page 'You usually need at least 10 qualifying years on your National Insurance record at State Pension age to " +
             "get any State Pension. You will not get these by 4 May 2017.' " in {
             mockSetup
-            assertContainsDynamicMessage(
+            assertEqualsText(
               doc,
               "[data-spec='state_pension_mqp__p5']",
-              "nisp.mqp.youNeed10Years.notPossible",
-              langUtils.Dates.formatDate(LocalDate.of(2017, 5, 4))
-
+              "You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension. You will not get these by 4 May 2017."
             )
           }
 
