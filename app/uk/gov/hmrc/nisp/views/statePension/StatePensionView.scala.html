@@ -197,6 +197,14 @@
                         specId = Some("state_pension__current_qualifying_years__plural")
                     )
                 }
+
+                @p(
+                    content = Text(messages(
+                        "nisp.mqp.youNeed10Years",
+                        pensionDate
+                    )),
+                    specId = Some("state_pension__you_need_10_years")
+                )
             } else {
                 @p(
                     content = Text(messages("nisp.mqp.doNotQualify")),
@@ -210,14 +218,6 @@
                     specId = Some("state_pension__no_qualifying_years")
                 )
             }
-
-            @p(
-                content = Text(messages(
-                    "nisp.mqp.youNeed10Years",
-                    pensionDate
-            )),
-            specId = Some("state_pension__you_need_10_years")
-            )
 
             @outsideUK()
 
