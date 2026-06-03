@@ -829,7 +829,8 @@ class StatePensionViewSpec
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
 
-          "render page with text 'You do not qualify for State Pension'" in {
+          // MQP message
+          "render page with text 'You do not qualify for State Pension.'" in {
             mockSetup
             assertEqualsText(
               doc,
@@ -838,13 +839,12 @@ class StatePensionViewSpec
             )
           }
 
-          // MQP message
-          "render page with text 'You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension.'" in {
+          "render page with text 'You have no qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension.'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__no_qualifying_years']",
-              "You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension."
+              "You have no qualifying years on your National Insurance record. You usually need at least 10 qualifying years on your National Insurance record at State Pension age to get any State Pension."
             )
           }
 
