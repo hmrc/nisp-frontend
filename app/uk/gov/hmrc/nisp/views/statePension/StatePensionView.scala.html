@@ -201,7 +201,7 @@
                 @p(
                     content = Text(messages(
                         "nisp.mqp.youNeed10Years",
-                        pensionDate
+                        Constants.minimumQualifyingYearsNSP
                     )),
                     specId = Some("state_pension__you_need_10_years")
                 )
@@ -211,7 +211,11 @@
                     specId = Some("state_pension__do_not_qualify")
                 )
                 @p(
-                    content = Text(messages("nisp.mqp.currentQualifyingYears.zero")),
+                    content = Text(messages(
+                        "nisp.mqp.currentQualifyingYears.zero",
+                        statePension.numberOfQualifyingYears,
+                        Constants.minimumQualifyingYearsNSP
+                    )),
                     specId = Some("state_pension__no_qualifying_years")
                 )
             }
