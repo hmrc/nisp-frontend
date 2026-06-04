@@ -2733,7 +2733,7 @@ class StatePensionViewSpec
           assertEqualsText(
             doc,
             "[data-spec='state_pension__additional_state_pension__p1']",
-            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
+            "You may get more than this if you are entitled to a protected payment. Find out more about protected payments and the new State Pension.")
 
           assertLinkHasValue(
             doc,
@@ -2844,7 +2844,7 @@ class StatePensionViewSpec
           assertEqualsText(
             abroadUserDoc,
             "[data-spec='state_pension__additional_state_pension__p1']",
-            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
+            "You may get more than this if you are entitled to a protected payment. Find out more about protected payments and the new State Pension.")
 
           assertLinkHasValue(
             abroadUserDoc,
@@ -2966,7 +2966,7 @@ class StatePensionViewSpec
           assertEqualsText(
             doc,
             "[data-spec='state_pension__additional_state_pension__p1']",
-            "You may get more than this if you have some Additional State Pension. Find out about Additional State Pension and protected payment.")
+            "You may get more than this if you are entitled to a protected payment. Find out more about protected payments and the new State Pension.")
 
           assertLinkHasValue(
             doc,
