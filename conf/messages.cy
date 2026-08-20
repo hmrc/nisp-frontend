@@ -546,8 +546,8 @@ nisp.main.cope.linktext = COPE ac eithrio allan (agor mewn tab newydd)
 # COPE messages - New UI messages
 #*****************
 
-nisp.cope.contractedOut = Fel y mwyafrif o bobl, cawsoch eich contractio allan o Bensiwn ychwanegol y Wladwriaeth. Mae hyn yn golygu y gwnaethoch dalu llai o Yswiriant Gwladol i’ch Pensiwn y Wladwriaeth. Mae eich rhagolwg Pensiwn y Wladwriaeth yn cymryd hyn i ystyriaeth.
-nisp.cope.contractedOut.findOutMore = Dysgwch ragor am gael eich contractio allan o Bensiwn y Wladwriaeth.
+nisp.cope.contractedOut = Fel y mwyafrif o bobl, cawsoch eich contractio allan o Bensiwn Ychwanegol y Wladwriaeth. Mae hyn yn golygu y gwnaethoch dalu llai o Yswiriant Gwladol i’ch Pensiwn y Wladwriaeth. Mae eich rhagolwg Pensiwn y Wladwriaeth yn cymryd hyn i ystyriaeth.
+nisp.cope.contractedOut.findOutMore = Dysgwch ragor am gael eich contractio allan o Bensiwn Ychwanegol y Wladwriaeth
 nisp.cope.contractedOut.findOutNewStatePension = Dysgwch ragor am Bensiwn newydd y Wladwriaeth
 
 #*****************

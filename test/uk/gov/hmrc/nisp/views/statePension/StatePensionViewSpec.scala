@@ -2926,21 +2926,21 @@ class StatePensionViewSpec
           )
         }
 
-        "render page with text 'Like most people, you were contracted out of the additional State Pension...'" in {
+        "render page with text 'Like most people, you were contracted out of the Additional State Pension...'" in {
           mockSetup
           assertEqualsText(
             doc,
             "[data-spec='state_pension__contracted_out__p1']",
-            "Like most people, you were contracted out of the additional State Pension. This means you paid less National Insurance into your State Pension. Your State Pension forecast takes this into account."
+            "Like most people, you were contracted out of the Additional State Pension. This means you paid less National Insurance into your State Pension. Your State Pension forecast takes this into account."
           )
         }
 
-        "render page with link 'Find out more about being contracted out of the State Pension'" in {
+        "render page with link 'Find out more about being contracted out of the Additional State Pension'" in {
           mockSetup
           assertEqualsText(
             doc,
             "[data-spec='state_pension__contracted_out__link_1']",
-            "Find out more about being contracted out of the State Pension"
+            "Find out more about being contracted out of the Additional State Pension"
           )
 
           assertLinkHasValue(
