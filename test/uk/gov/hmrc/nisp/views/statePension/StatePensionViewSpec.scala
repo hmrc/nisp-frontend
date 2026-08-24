@@ -2718,12 +2718,12 @@ class StatePensionViewSpec
           )
         }
 
-        "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
+        "render page with text 'You have no gaps to pay in your National Insurance record.'" in {
           mockSetup
           assertEqualsText(
             doc,
-            "[data-spec='state_pension__cant_pay_gaps__p2']",
-            "This means you are unable to pay for gaps in your National Insurance record online."
+            "[data-spec='state_pension__cant_pay_gaps_reached__p2']",
+            "You have no gaps to pay in your National Insurance record."
           )
         }
 
@@ -2738,7 +2738,7 @@ class StatePensionViewSpec
           assertLinkHasValue(
             doc,
             "[data-spec='state_pension__additional_state_pension__link']",
-            "https://www.gov.uk/additional-state-pension"
+            "https://www.gov.uk/government/publications/your-new-state-pension-explained"
           )
         }
       }
@@ -2829,12 +2829,12 @@ class StatePensionViewSpec
           )
         }
 
-        "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
+        "render page with text 'You have no gaps to pay in your National Insurance record.'" in {
           mockSetup
           assertEqualsText(
             abroadUserDoc,
-            "[data-spec='state_pension__cant_pay_gaps__p2']",
-            "This means you are unable to pay for gaps in your National Insurance record online."
+            "[data-spec='state_pension__cant_pay_gaps_reached__p2']",
+            "You have no gaps to pay in your National Insurance record."
           )
         }
 
@@ -2849,7 +2849,7 @@ class StatePensionViewSpec
           assertLinkHasValue(
             abroadUserDoc,
             "[data-spec='state_pension__additional_state_pension__link']",
-            "https://www.gov.uk/additional-state-pension"
+            "https://www.gov.uk/government/publications/your-new-state-pension-explained"
           )
         }
 
@@ -2971,7 +2971,7 @@ class StatePensionViewSpec
           assertLinkHasValue(
             doc,
             "[data-spec='state_pension__additional_state_pension__link']",
-            "https://www.gov.uk/additional-state-pension"
+            "https://www.gov.uk/government/publications/your-new-state-pension-explained"
           )
         }
       }

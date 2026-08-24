@@ -160,6 +160,7 @@ nisp.main.context.fillGaps.gap.viewGaps = Gallwch fwrw golwg dros eich cofnod Ys
 
 nisp.main.context.cantFillGaps.p1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth. {0} yr wythnos yw’r swm mwyaf y gallwch ei gael.
 nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
+nisp.main.context.cantFillGaps.reached.p2 = Nid oes unrhyw fylchau yn eich cofnod Yswiriant Gwladol y mae angen i chi dalu amdanynt.
 
 nisp.main.context.additionalStatePension = Efallai y byddwch yn cael mwy na hyn os oes gennych hawl i daliad sydd wedi’i ddiogelu. {0}
 nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am daliadau sydd wedi’u diogelu a Phensiwn y Wladwriaeth newydd.

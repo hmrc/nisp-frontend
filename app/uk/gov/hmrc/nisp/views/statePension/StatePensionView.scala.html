@@ -132,7 +132,7 @@
                     <li data-spec="state_pension__ul__caveats_inflation__li3">
                         @messages("nisp.main.inflation")
                     </li>
-                }else{
+                } else {
                     <li data-spec="state_pension__ul__caveats__li2__plural">
                         @messages(
                             "nisp.main.howManyToContribute",
@@ -143,7 +143,7 @@
                         @messages("nisp.main.inflation")
                     </li>
                 }
-            }else{
+            } else {
                 <li data-spec="state_pension__ul__caveats_inflation__li2">
                     @messages("nisp.main.inflation")
                 </li>
@@ -180,7 +180,7 @@
 
             @if(statePension.numberOfQualifyingYears > 0) {
 
-                @if(statePension.numberOfQualifyingYears == 1){
+                @if(statePension.numberOfQualifyingYears == 1) {
                     @p(
                         content = Text(messages(
                             "nisp.mqp.currentQualifyingYears.single",
@@ -318,14 +318,14 @@
             specId = Some("state_pension__h2_3")
         )
 
-        @if(statePension.forecastScenario == Scenario.FillGaps){
+        @if(statePension.forecastScenario == Scenario.FillGaps) {
             @p(
                 content = HtmlContent(messages(
                     "nisp.main.context.fillGaps.gap.viewGaps"
                 )),
                 specId = Some("state_pension__view_gaps__p1")
             )
-        }else{
+        } else {
             @p(
                 content = HtmlContent(messages(
                     "nisp.main.context.cantFillGaps.p1",
@@ -333,10 +333,18 @@
                 )),
                 specId = Some("state_pension__cant_pay_gaps__p1")
             )
-            @p(
-                content = HtmlContent(messages("nisp.main.context.cantFillGaps.p2")),
-                specId = Some("state_pension__cant_pay_gaps__p2")
-            )
+
+            @if(statePension.forecastScenario == Scenario.Reached) {
+                @p(
+                    content = HtmlContent(messages("nisp.main.context.cantFillGaps.reached.p2")),
+                    specId = Some("state_pension__cant_pay_gaps_reached__p2")
+                )
+            } else {
+                @p(
+                    content = HtmlContent(messages("nisp.main.context.cantFillGaps.p2")),
+                    specId = Some("state_pension__cant_pay_gaps__p2")
+                )
+            }
         }
 
         @p(
