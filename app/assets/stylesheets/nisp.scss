@@ -477,7 +477,7 @@ h1 + details .govuk-details__text,
   visibility: hidden;
 
   .js-enabled & {
-    display: block;
+    display: inline-block;
     visibility: visible;
   }
 }

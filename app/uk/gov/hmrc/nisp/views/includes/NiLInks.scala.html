@@ -14,42 +14,40 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{Link}
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
-        p: P,
-        link: Link,
-        appConfig: ApplicationConfig
+    link: Link,
+    appConfig: ApplicationConfig
 )
 
 @()(
-        implicit messages: Messages
+    implicit messages: Messages
 )
 
-@p(
-    classes = Some("govuk-body govuk-!-margin-top-4"),
-    content = HtmlContent(link(
-        href = appConfig.nationalInsuranceLink,
-        messageKey = "nisp.mqp.findOutAboutNI",
-        specId = Some("state_pension__mqp__find_out_ni")
-    ))
-)
+<ul class="govuk-list">
+    <li class="govuk-!-margin-top-4">
+        @link(
+            href = appConfig.nationalInsuranceLink,
+            messageKey = "nisp.mqp.findOutAboutNI",
+            specId = Some("state_pension__mqp__find_out_ni")
+        )
+    </li>
 
-@p(
-    classes = Some("govuk-body govuk-!-margin-top-4"),
-    content = HtmlContent(link(
-        href =  appConfig.niHowMuchYouPayLink,
-        messageKey = "nisp.mqp.findOutAboutNIYouPay",
-        specId = Some("state_pension__mqp__find_out_ni_you_pay")
-    ))
-)
+    <li class="govuk-!-margin-top-4">
+        @link(
+            href =  appConfig.niHowMuchYouPayLink,
+            messageKey = "nisp.mqp.findOutAboutNIYouPay",
+            specId = Some("state_pension__mqp__find_out_ni_you_pay")
+        )
+    </li>
 
-@p(
-    classes = Some("govuk-body govuk-!-margin-top-4"),
-    content = HtmlContent(link(
-        href =  appConfig.nationalInsuranceCreditLink,
-        messageKey = "nisp.mqp.findOutAboutNICredits",
-        specId = Some("state_pension__mqp__find_out_ni_credits")
-    ))
-)
+    <li class="govuk-!-margin-top-4">
+        @link(
+            href =  appConfig.nationalInsuranceCreditLink,
+            messageKey = "nisp.mqp.findOutAboutNICredits",
+            specId = Some("state_pension__mqp__find_out_ni_credits")
+        )
+    </li>
+</ul>

@@ -486,9 +486,9 @@ nisp.mqp.cantFillGapsP2 = This means you are unable to pay for gaps in your Nati
 nisp.mqp.cantFillGapsP3 = Filling the gaps in your record is not enough to get State Pension.
 
 nisp.mqp.otherWays = Other ways to increase my income
-nisp.mqp.findOutAboutNI = Find out about National Insurance.
-nisp.mqp.findOutAboutNIYouPay = Find out how much National Insurance you pay.
-nisp.mqp.findOutAboutNICredits = Find out about getting National Insurance credits.
+nisp.mqp.findOutAboutNI = Find out about National Insurance
+nisp.mqp.findOutAboutNIYouPay = Find out how much National Insurance you pay
+nisp.mqp.findOutAboutNICredits = Find out about getting National Insurance credits
 nisp.mqp.childBenefits = If you claimed Child Benefit between 6 April 1978 and 5 April 2010, you may be able to claim Home Responsibilities Protection to fill gaps in your National Insurance record. {0}
 nisp.mqp.childBenefits.link = Check if you are eligible to claim Home Responsibilities Protection
 nisp.mqp.pensionCredit = You may be able to claim Pension Credit if you’re on a low income. {0}
