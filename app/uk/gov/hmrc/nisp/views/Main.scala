@@ -26,6 +26,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.views.html.components.{additionalScripts, additionalStylesheets}
+import uk.gov.hmrc.sca.config.BackLinkConfig
 import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 import uk.gov.hmrc.sca.views.html.PtaHead
@@ -89,9 +90,7 @@ class MainImpl @Inject()(
         accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri))
       ),
       sidebarContent = sidebar,
-      timeOutUrl = None,
-      keepAliveUrl = routes.TimeoutController.keep_alive.url,
-      showBackLinkJS = true,
+      backLinkConfig = Some(BackLinkConfig.JsBack),
       scripts = Seq(additionalScripts()),
       styleSheets = Seq(
         additionalStyles(),
