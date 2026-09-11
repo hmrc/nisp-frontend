@@ -66,10 +66,71 @@ function goBack() {
   }
 }
 
+function initialiseToggleButtons2() {
+
+    const buttons = document.querySelectorAll(".govuk-accordion__section-button");
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const targetId = button.getAttribute("aria-controls");
+            const target = document.getElementById(targetId);
+            const toggleText = button.querySelector(".govuk-accordion__section-toggle-text");
+            if (!target || !toggleText) {
+                return;
+            }
+            const isHidden = target.hidden;
+            target.hidden = !isHidden;
+            button.setAttribute("aria-expanded", String(isHidden));
+            toggleText.textContent = isHidden ? "Hide" : "Show";
+        });
+    });
+
+}
+
+function initialiseToggleButtons() {
+
+    const buttons = document.querySelectorAll(".govuk-accordion__section-button");
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const target = document.getElementById(
+                button.getAttribute("aria-controls")
+            );
+            const toggleText = button.querySelector(".govuk-accordion__section-toggle-text");
+
+            if (!target || !toggleText) {
+                return;
+            }
+
+            if (target.hidden) {
+                target.hidden = false;
+                button.setAttribute("aria-expanded", "true");
+                toggleText.textContent = "Hide";
+            } else {
+                target.hidden = true;
+                button.setAttribute("aria-expanded", "false");
+                toggleText.textContent = "Show";
+            }
+        });
+
+    });
+
+}
+
+function hideShowAllSections() {
+    const element = document.querySelector(".govuk-accordion__controls");
+
+    if (element) {
+        element.hidden = true;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function (){
   hideDetails();
-  hideAccordion();
+  //hideAccordion();
   accordionToggleShowHide();
+  initialiseToggleButtons()
+  hideShowAllSections()
   printLink();
   goBack();
 }, false);

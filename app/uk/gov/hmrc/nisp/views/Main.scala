@@ -41,7 +41,8 @@ trait Main {
              extendedTitle: Boolean = true,
              optCustomLayout: Option[Html => Html] = None,
              sidebar: Option[Html] = None,
-             hideNavBar: Boolean = false
+             hideNavBar: Boolean = false, 
+             fullWidth: Boolean = false
            )(
              contentBlock: Html
            )(implicit
@@ -65,7 +66,8 @@ class MainImpl @Inject()(
                       extendedTitle: Boolean,
                       optCustomLayout: Option[Html => Html],
                       sidebar: Option[Html],
-                      hideNavBar: Boolean
+                      hideNavBar: Boolean,
+                      fullWidth: Boolean
                     )(
                       contentBlock: Html
                     )(implicit request: Request[?], messages: Messages): HtmlFormat.Appendable = {
@@ -103,7 +105,7 @@ class MainImpl @Inject()(
         showHelpImproveBanner = showUrBanner
       ),
       optTrustedHelper = trustedHelper,
-      fullWidth = false,
+      fullWidth = fullWidth,
       hideMenuBar = hideNavBar
     )(messages, request)
   }
