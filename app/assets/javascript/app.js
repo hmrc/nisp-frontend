@@ -66,27 +66,6 @@ function goBack() {
   }
 }
 
-function initialiseToggleButtons2() {
-
-    const buttons = document.querySelectorAll(".govuk-accordion__section-button");
-
-    buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const targetId = button.getAttribute("aria-controls");
-            const target = document.getElementById(targetId);
-            const toggleText = button.querySelector(".govuk-accordion__section-toggle-text");
-            if (!target || !toggleText) {
-                return;
-            }
-            const isHidden = target.hidden;
-            target.hidden = !isHidden;
-            button.setAttribute("aria-expanded", String(isHidden));
-            toggleText.textContent = isHidden ? "Hide" : "Show";
-        });
-    });
-
-}
-
 function initialiseToggleButtons() {
 
     const buttons = document.querySelectorAll(".govuk-accordion__section-button");
@@ -127,7 +106,7 @@ function hideShowAllSections() {
 
 document.addEventListener('DOMContentLoaded', function (){
   hideDetails();
-  //hideAccordion();
+  hideAccordion();
   accordionToggleShowHide();
   initialiseToggleButtons()
   hideShowAllSections()
