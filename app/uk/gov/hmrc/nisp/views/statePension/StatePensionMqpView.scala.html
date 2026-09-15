@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton}
 @import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.StatePension
@@ -33,6 +34,7 @@
         h2: H2,
         h3: H3,
         link: Link,
+        govukButton: GovukButton,
         govukWarningText: GovukWarningText,
         statePensionFooter: StatePensionFooter,
         printLink: PrintLink,
@@ -181,24 +183,20 @@
 
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
-                @p(
-                    content = HtmlContent(link(
-                        href = routes.NIRecordController.showGaps.url,
-                        messageKey = "nisp.main.showyourrecord",
-                        specId = Some("state_pension__mqp__cant_get_with_gaps"),
-                        classes = Some("govuk-button govuk-!-margin-top-4")
-                    ))
-                )
+                @govukButton(Button(
+                    href= Some(routes.NIRecordController.showGaps.url),
+                    content = Text(messages("nisp.main.showyourrecord")),
+                    attributes = Map("data-spec" -> "state_pension__mqp__cant_get_with_gaps"),
+                    classes = "govuk-!-margin-top-4"
+                ))
             }
             @if(mqp == CantGet) {
-                @p(
-                    content = HtmlContent(link(
-                        href = routes.NIRecordController.showFull.url,
-                        messageKey = "nisp.main.showyourrecord",
-                        specId = Some("state_pension__mqp__cant_get"),
-                        classes = Some("govuk-button govuk-!-margin-top-4")
-                    ))
-                )
+                @govukButton(Button(
+                    href= Some(routes.NIRecordController.showFull.url),
+                    content = Text(messages("nisp.main.showyourrecord")),
+                    attributes = Map("data-spec" -> "state_pension__mqp__cant_get"),
+                    classes = "govuk-!-margin-top-4"
+                ))
             }
         }
 
