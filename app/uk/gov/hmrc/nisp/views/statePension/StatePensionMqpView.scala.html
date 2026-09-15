@@ -186,7 +186,7 @@
                 @govukButton(Button(
                     href= Some(routes.NIRecordController.showGaps.url),
                     content = Text(messages("nisp.main.showyourrecord")),
-                    id = Some("state_pension__mqp__cant_get_with_gaps"),
+                    attributes = Map("data-spec" -> "state_pension__mqp__cant_get_with_gaps"),
                     classes = "govuk-!-margin-top-4"
                 ))
             }
@@ -194,7 +194,7 @@
                 @govukButton(Button(
                     href= Some(routes.NIRecordController.showFull.url),
                     content = Text(messages("nisp.main.showyourrecord")),
-                    id = Some("state_pension__mqp__cant_get"),
+                    attributes = Map("data-spec" -> "state_pension__mqp__cant_get"),
                     classes = "govuk-!-margin-top-4"
                 ))
             }

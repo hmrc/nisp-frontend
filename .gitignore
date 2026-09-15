@@ -49,3 +49,4 @@ test-result/
 tmp/
 xunit.xml
 .metals/metals.lock.db
+.metals/.reports/

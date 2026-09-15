@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.*
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton}
 @import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.enums.Scenario
@@ -348,11 +348,11 @@
                 )
             }
         }
-        
+
         @govukButton(Button(
             href= Some(routes.NIRecordController.showFull.url),
             content = Text(messages("nisp.main.showyourrecord")),
-            id = Some("state_pension__showyourrecord"),
+            attributes = Map("data-spec" -> "state_pension__showyourrecord"),
             classes = "govuk-!-margin-top-4"
         ))
 
