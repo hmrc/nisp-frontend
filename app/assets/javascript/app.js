@@ -96,11 +96,15 @@ function initialiseToggleButtons() {
 
 }
 
-function hideShowAllSections() {
-    const element = document.querySelector(".govuk-accordion__controls");
+function hideShowNonPayableGaps() {
+    const showHideElement = document.querySelector(".govuk-accordion__controls");
+    const mainElement = document.querySelector('main');
 
-    if (element) {
-        element.hidden = true;
+    if (showHideElement) {
+        showHideElement.hidden = true;
+    }
+    if (mainElement) {
+        mainElement.className = "govuk-main-wrapper govuk-!-padding-top-0";
     }
 }
 
@@ -109,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function (){
   hideAccordion();
   accordionToggleShowHide();
   initialiseToggleButtons()
-  hideShowAllSections()
+  hideShowNonPayableGaps()
   printLink();
   goBack();
 }, false);
