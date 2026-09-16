@@ -27,12 +27,19 @@
         implicit messages: Messages
 )
 
+@toTitleCase(input: String) = @{
+    Option(input)
+    .map(_.trim)
+    .filter(_.nonEmpty)
+    .map(_.toLowerCase.split(" ").map(_.capitalize).mkString(" "))
+    .getOrElse("")
+}
 <header class="hmrc-page-heading" data-component="nisp_page_heading" @specId.map { id => data-spec="@id" }>
+    <h2 id="journey-caption" class="govuk-caption-l hmrc-caption-l">
+        <span class="govuk-caption-l">@messages(toTitleCase(section))</span>
+        <span data-visually-hidden class="govuk-visually-hidden">@messages(context)</span>
+    </h2>
     <h1 class="@classes.getOrElse("govuk-heading-xl")" data-component="nisp_page_heading__h1" @elmId.map { id => id="@id" }>
         @messages(text)
     </h1>
-    <p class="govuk-caption-xl hmrc-caption-xl" data-component="nisp_page_heading__p">
-        <span class="govuk-caption-l">@messages(section)</span>
-        <span data-visually-hidden class="govuk-visually-hidden">@messages(context)</span>
-    </p>
 </header>

@@ -86,12 +86,6 @@
         specId = Some("nirecordpage__pageheading")
     )
 
-    @details(
-        attributes = Map("data-spec" -> "nirecordpage__details__nino"),
-        content = Text(user.nino.toString),
-        summary = messages("nisp.show.nino")
-    )
-
     @if(viewPayableGapsToggle) {
         @p(
             content = Text(messages("nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay")),
@@ -190,6 +184,55 @@
 
         }
     }
+
+    <div class="govuk-!-margin-top-8">
+        <h2 class="govuk-heading-m">Your payable gaps</h2>
+        <p class="govuk-body govuk-!-margin-bottom-5">Unpaid gap amounts may increase each tax year.</p>
+    </div>
+
+<table class="govuk-table">
+    <!-- Table Headers -->
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Tax year</th>
+        <th scope="col" class="govuk-table__header">Gap status</th>
+        <th scope="col" class="govuk-table__header">Gap class</th>
+        <th scope="col" class="govuk-table__header">Gap amount</th>
+        <th scope="col" class="govuk-table__header">Payable until</th>
+    </tr>
+    </thead>
+    <!-- Table Content -->
+    <tbody class="govuk-table__body">
+    <!-- 2026 to 2027 -->
+    <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">2026 to 2027</th>
+        <td class="govuk-table__cell">Not available yet</td>
+        <!-- Visually hidden 'not available yet' for screenreaders/accessibility -->
+        <td class="govuk-table__cell">
+            <span class="govuk-visually-hidden">Not available yet</span>
+        </td>
+        <td class="govuk-table__cell">
+            <span class="govuk-visually-hidden">Not available yet</span>
+        </td>
+        <td class="govuk-table__cell">
+            <span class="govuk-visually-hidden">Not available yet</span>
+        </td>
+    </tr>
+    <!-- 2025 to 2026 -->
+    <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">2025 to 2026</th>
+        <td class="govuk-table__cell">
+            <strong class="govuk-tag">
+                Full year not paid
+            </strong>
+        </td>
+        <td class="govuk-table__cell">Class 2 gap</td>
+        <td class="govuk-table__cell">£35</td>
+        <td class="govuk-table__cell">5 April 2032</td>
+    </tr>
+    </tbody>
+</table>
+
 
     @if(gapsOnlyView) {
         <dl class="govuk-summary-list">
