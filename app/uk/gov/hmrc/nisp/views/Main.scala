@@ -99,7 +99,7 @@ class MainImpl @Inject()(
       ),
       bannerConfig = BannerConfig(
         showAlphaBanner = false,
-        showBetaBanner = false,
+        showBetaBanner = showUrBanner,
         showHelpImproveBanner = showUrBanner
       ),
       optTrustedHelper = trustedHelper,
