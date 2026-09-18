@@ -663,3 +663,14 @@ nisp.grace.period.view.p5 = If you only want to fill gaps from April {0} onwards
 
 nisp.grace.period.view.link.3.text = return to your National Insurance record
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
+
+
+#******************************
+# Time spent outside the UK
+#******************************
+nisp.timeSpentOutsideUK.title = Time spent outside the UK
+nisp.timeSpentOutsideUK.heading = Have you lived or worked outside the UK since 2015?
+nisp.timeSpentOutsideUK.question = Have you lived or worked outside the UK since 2015?
+nisp.timeSpentOutsideUK.yes = Yes, I have
+nisp.timeSpentOutsideUK.no = No, I haven’t
+nisp.timeSpentOutsideUK.error.required = Select yes if you have lived or worked outside the UK since 2015
