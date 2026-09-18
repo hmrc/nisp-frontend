@@ -25,6 +25,9 @@ GET        /account/nirecord/gapsandhowtocheck        uk.gov.hmrc.nisp.controlle
 GET        /account/nirecord/voluntarycontribs        uk.gov.hmrc.nisp.controllers.NIRecordController.showVoluntaryContributions
 GET        /account/nirecord/graceperiod              uk.gov.hmrc.nisp.controllers.GracePeriodController.showGracePeriod
 
+GET        /time-spent-outside-uk                     uk.gov.hmrc.nisp.controllers.TimeSpentOutsideUKController.show
+POST       /time-spent-outside-uk                     uk.gov.hmrc.nisp.controllers.TimeSpentOutsideUKController.submit
+
 GET        /seek-financial-advice                     uk.gov.hmrc.nisp.controllers.SeekGuidanceOrFinancialAdviceController.showView
 
 GET        /terms-and-conditions                      uk.gov.hmrc.nisp.controllers.TermsConditionsController.show
