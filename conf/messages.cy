@@ -679,3 +679,14 @@ nisp.grace.period.view.p5 = Os hoffech chi lenwi bylchau a hynny dim ond o fis E
 
 nisp.grace.period.view.link.3.text = ewch yn ôl at eich cofnod Yswiriant Gwladol
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
+
+
+#******************************
+# Amser a dreuliwyd y tu allan i'r DU
+#******************************
+nisp.timeSpentOutsideUK.title = Amser a dreuliwyd y tu allan i’r DU
+nisp.timeSpentOutsideUK.heading = A ydych wedi byw neu weithio y tu allan i’r DU ers 2015?
+nisp.timeSpentOutsideUK.question = A ydych wedi byw neu weithio y tu allan i’r DU ers 2015?
+nisp.timeSpentOutsideUK.yes = Ydw
+nisp.timeSpentOutsideUK.no = Nac ydw
+nisp.timeSpentOutsideUK.error.required = Dewiswch ‘Ydw’ os ydych wedi byw neu weithio y tu allan i’r DU ers 2015
