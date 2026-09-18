@@ -1,0 +1,81 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *@
+
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.views.Main
+
+@this(main: Main)
+
+@(form: Form[String])(implicit messages: Messages, request: Request[?])
+
+@main(
+    pageTitle = messages("nisp.timeSpentOutsideUK.title"),
+    showUrBanner = true
+) {
+    @if(form.hasErrors) {
+        <div class="govuk-error-summary" data-module="govuk-error-summary" data-spec="time_spent_outside_uk__error_summary">
+            <div role="alert">
+                <h2 class="govuk-error-summary__title">@messages("error.summary.title")</h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        <li>
+                            <a href="#timeSpentOutsideUK">@messages("nisp.timeSpentOutsideUK.error.required")</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+
+    <h1 class="govuk-heading-xl" data-spec="time_spent_outside_uk__h1">
+        @messages("nisp.timeSpentOutsideUK.heading")
+    </h1>
+
+    <form action="@routes.TimeSpentOutsideUKController.submit.url" method="POST" novalidate>
+        <div class="govuk-form-group @if(form.hasErrors){govuk-form-group--error}" data-spec="time_spent_outside_uk__radios">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    @messages("nisp.timeSpentOutsideUK.question")
+                </legend>
+
+                @if(form.hasErrors) {
+                    <p id="timeSpentOutsideUK-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">@messages("error.prefix")</span>
+                        @messages("nisp.timeSpentOutsideUK.error.required")
+                    </p>
+                }
+
+                <div class="govuk-radios" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="timeSpentOutsideUK" name="timeSpentOutsideUK" type="radio" value="yes"
+                            @if(form("timeSpentOutsideUK").value.contains("yes")) { checked }>
+                        <label class="govuk-label govuk-radios__label" for="timeSpentOutsideUK">
+                            @messages("nisp.timeSpentOutsideUK.yes")
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="timeSpentOutsideUK-no" name="timeSpentOutsideUK" type="radio" value="no"
+                            @if(form("timeSpentOutsideUK").value.contains("no")) { checked }>
+                        <label class="govuk-label govuk-radios__label" for="timeSpentOutsideUK-no">
+                            @messages("nisp.timeSpentOutsideUK.no")
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <button class="govuk-button" data-module="govuk-button" data-spec="time_spent_outside_uk__continue">
+            @messages("nisp.continue")
+        </button>
+    </form>
+
+    <p class="govuk-body">
+        <a class="govuk-link" href="@routes.NIRecordController.showGaps.url" data-spec="time_spent_outside_uk__back">
+            @messages("nisp.back")
+        </a>
+    </p>
+}
