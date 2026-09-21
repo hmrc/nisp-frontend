@@ -34,43 +34,33 @@
 )
 
 <div class="govuk-summary-list__row expandable">
-    <dt class="govuk-summary-list__key ni-years">
+    <dt class="govuk-summary-list__key ni-years govuk-!-width-one-quarter">
         @niTaxYear.taxYear
     </dt>
     @if(niTaxYear.qualifying) {
-        <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive">
-            @messages("nisp.nirecord.fullyear")
+        <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive govuk-!-width-one-quarter">
+            <p class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear")</p>
         </dd>
     } else {
-        <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull">
-            @Html(messages("nisp.nirecord.gap"))
+        <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull govuk-!-width-one-quarter">
+            <p class="govuk-tag">@Html(messages("nisp.nirecord.gap"))</p>
         </dd>
     }
-    <dd class="govuk-summary-list__actions ni-action">
-        <a id="view-year-link" href="#" class="govuk-link view-details" aria-expanded="false" aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
-            @Html(messages("nisp.nirecord.gap.viewdetails", niTaxYear.taxYear))
-        </a>
-    </dd>
-</div>
 
-<div class="govuk-summary-list__row contributions-details" id="tax-year-@niTaxYear.taxYear.replace(" ", "")">
     @if(niTaxYear.underInvestigation) {
-        <dt class="govuk-summary-list__key"></dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value govuk-!-width-three-quarters">
             @Html(messages("nisp.nirecord.gap.underInvestigation"))
             <p>@Html(messages("nisp.nirecord.gap.contactHMRC", niUpdateYearURL))</p>
         </dd>
-        <dd class="govuk-summary-list__actions"></dd>
     } else {
-        <dt class="govuk-summary-list__key"></dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value   govuk-!-width-three-quarters">
 
             @if(niTaxYear.classOneContributions > 0
                     || niTaxYear.otherCredits > 0
                     || niTaxYear.classThreeCredits > 0
                     || niTaxYear.classTwoCredits > 0
             ) {
-                <p id="you-have-contribution-from" class="govuk-body contributions-header">
+                <p id="you-have-contribution-from" class="contributions-header">
                     @messages("nisp.nirecord.yourcontributionfrom")
                 </p>
             }
@@ -146,7 +136,8 @@
 
             @if(!niTaxYear.qualifying && !newContentWithButtonToggle) {
                 <p class="govuk-body">
-                    @Html(messages("nisp.nirecord.gap.findoutmoreabout", routes.NIRecordController.showGapsAndHowToCheckThem.url))
+                    @Html(messages("nisp.nirecord.gap.findoutmoreabout",
+                    routes.NIRecordController.showGapsAndHowToCheckThem.url))
                 </p>
             }
 
@@ -155,7 +146,7 @@
                     && !niTaxYear.qualifying
             ) {
                 @for(
-                    classThreePayableByDate      <- niTaxYear.classThreePayableBy;
+                    classThreePayableByDate <- niTaxYear.classThreePayableBy;
                     classThreePayableWithPenalty <- niTaxYear.classThreePayableByPenalty
                 ) {
                     @if(!newContentWithButtonToggle) {
@@ -204,12 +195,11 @@
                 }
             } else {
                 @if(!niTaxYear.qualifying) {
-                    <div class="govuk-inset-text @if(newContentWithButtonToggle) {govuk-!-margin-top-3}">
+                    <p class="govuk-body">
                         @Html(messages("nisp.nirecord.gap.latePaymentMessage"))
-                    </div>
+                    </p>
                 }
             }
         </dd>
-        <dd class="govuk-summary-list__actions"></dd>
     }
 </div>
