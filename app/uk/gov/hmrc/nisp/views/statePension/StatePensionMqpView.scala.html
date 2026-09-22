@@ -183,7 +183,7 @@
             @if(mqp == CanGetWithGaps) {
                 @p(
                     content = HtmlContent(link(
-                        href = routes.CL3AndCL2NIRecordController.showGaps.url,
+                        href = routes.MultiClassNIRecordController.showGaps.url,
                         messageKey = "nisp.main.showyourrecord",
                         specId = Some("state_pension__mqp__cant_get_with_gaps"),
                         classes = Some("govuk-button govuk-!-margin-top-4")
@@ -193,7 +193,7 @@
             @if(mqp == CantGet) {
                 @p(
                     content = HtmlContent(link(
-                        href = routes.CL3AndCL2NIRecordController.showFull.url,
+                        href = routes.MultiClassNIRecordController.showFull.url,
                         messageKey = "nisp.main.showyourrecord",
                         specId = Some("state_pension__mqp__cant_get"),
                         classes = Some("govuk-button govuk-!-margin-top-4")

@@ -309,7 +309,7 @@ class StatePensionForecastOnlyViewSpec
           assertLinkHasValue(
             foreignDoc,
             "[data-spec='state_pension_forecast_only__link1']",
-            "/check-your-state-pension/account/nirecord"
+            "/check-your-state-pension/account/national-insurance-record"
           )
         }
 

@@ -37,7 +37,7 @@ import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
 import java.time.{Clock, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
 
-class CL3AndCL2NIRecordController @Inject()(
+class MultiClassNIRecordController @Inject()(
                                     auditConnector: AuditConnector,
                                     authenticate: StandardAuthJourney,
                                     nationalInsuranceService: NationalInsuranceService,

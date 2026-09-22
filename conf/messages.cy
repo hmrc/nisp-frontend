@@ -679,3 +679,15 @@ nisp.grace.period.view.p5 = Os hoffech chi lenwi bylchau a hynny dim ond o fis E
 
 nisp.grace.period.view.link.3.text = ewch yn ôl at eich cofnod Yswiriant Gwladol
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
+
+#**********************
+# NI Record Payable gaps
+#**********************
+
+nisp.main.context.fillGaps.yourPayableGaps.h2 = nisp.main.context.fillGaps.yourPayableGaps.h2
+nisp.main.context.fillGaps.yourPayableGaps.p1 = nisp.main.context.fillGaps.yourPayableGaps.p1
+
+nisp.main.context.fillGaps.yourPayableGaps.table.column1Name = nisp.main.context.fillGaps.yourPayableGaps.table.column1Name
+nisp.main.context.fillGaps.yourPayableGaps.table.column2Name = nisp.main.context.fillGaps.yourPayableGaps.table.column2Name
+nisp.main.context.fillGaps.yourPayableGaps.table.column3Name = nisp.main.context.fillGaps.yourPayableGaps.table.column3Name
+nisp.main.context.fillGaps.yourPayableGaps.table.column4Name = nisp.main.context.fillGaps.yourPayableGaps.table.column4Name
