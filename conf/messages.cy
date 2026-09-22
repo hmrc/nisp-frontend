@@ -684,6 +684,8 @@ nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-nat
 # NI Record Payable gaps
 #**********************
 
+nisp.main.context.fillGaps.yourNonPayableGaps.h2 = nisp.main.context.fillGaps.yourNonPayableGaps.h2
+
 nisp.main.context.fillGaps.yourPayableGaps.h2 = nisp.main.context.fillGaps.yourPayableGaps.h2
 nisp.main.context.fillGaps.yourPayableGaps.p1 = nisp.main.context.fillGaps.yourPayableGaps.p1
 
