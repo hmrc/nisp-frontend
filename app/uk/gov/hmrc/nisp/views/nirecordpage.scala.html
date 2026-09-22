@@ -204,16 +204,16 @@
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header">
-                        @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column1Name")
+                        @messages("nisp.main.context.fillGaps.yourPayableGaps.table.taxYear")
                     </th>
                     <th scope="col" class="govuk-table__header">
-                        @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column2Name")
+                        @messages("nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus")
                     </th>
                     <th scope="col" class="govuk-table__header">
-                        @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column3Name")
+                        @messages("nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount")
                     </th>
                     <th scope="col" class="govuk-table__header">
-                        @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column4Name")
+                        @messages("nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil")
                     </th>
                 </tr>
                 </thead>
@@ -250,23 +250,16 @@
                     </th>
                     <td class="govuk-table__cell">
                         @if(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")).qualifying) {
-                            <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive govuk-!-width-one-quarter">
-                                <p class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear")</p>
-                            </dd>
+                            <strong class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear.paid")</strong>
                         } else {
-                        <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull govuk-!-width-one-quarter">
-                            <p class="govuk-tag">@Html(messages("nisp.nirecord.gap"))</p>
-                        </dd>
+                            <strong class="govuk-tag">@Html(messages("nisp.nirecord.fullyear.notpaid"))</strong>
                         }
                     </td>
                     <td class="govuk-table__cell">
                         @if(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")).qualifying) {
-                            <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive govuk-!-width-one-quarter">
-                            </dd>
+                            <span class="govuk-visually-hidden">@NispMoney.pounds(classThreePayableAmount)</span>
                         } else {
-                            <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull govuk-!-width-one-quarter">
                                 @NispMoney.pounds(classThreePayableAmount)
-                            </dd>
                         }
                     </td>
                     <td class="govuk-table__cell">
@@ -375,16 +368,16 @@
     <thead class="govuk-table__head">
     <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header">
-            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column1Name")
+            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.taxYear")
         </th>
         <th scope="col" class="govuk-table__header">
-            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column2Name")
+            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus")
         </th>
         <th scope="col" class="govuk-table__header">
-            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column3Name")
+            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount")
         </th>
         <th scope="col" class="govuk-table__header">
-            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column4Name")
+            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil")
         </th>
     </tr>
     </thead>
@@ -421,23 +414,18 @@
         </th>
         <td class="govuk-table__cell">
             @if(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")).qualifying) {
-                <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive govuk-!-width-one-quarter">
-                    <p class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear")</p>
-                </dd>
+                <strong class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear.paid")</strong>
             } else {
             <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull govuk-!-width-one-quarter">
-                <p class="govuk-tag">@Html(messages("nisp.nirecord.gap"))</p>
+                <strong class="govuk-tag">@Html(messages("nisp.nirecord.fullyear.notpaid"))</strong>
             </dd>
             }
         </td>
         <td class="govuk-table__cell">
             @if(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")).qualifying) {
-                <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive govuk-!-width-one-quarter">
-                </dd>
+                <span class="govuk-visually-hidden">@NispMoney.pounds(classThreePayableAmount)</span>
             } else {
-                <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull govuk-!-width-one-quarter">
-                    @NispMoney.pounds(classThreePayableAmount)
-                </dd>
+                @NispMoney.pounds(classThreePayableAmount)
             }
         </td>
         <td class="govuk-table__cell">
@@ -516,16 +504,16 @@
     <thead class="govuk-table__head">
     <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header">
-            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column1Name")
+            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.taxYear")
         </th>
         <th scope="col" class="govuk-table__header">
-            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column2Name")
+            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus")
         </th>
         <th scope="col" class="govuk-table__header">
-            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column3Name")
+            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount")
         </th>
         <th scope="col" class="govuk-table__header">
-            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.column4Name")
+            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil")
         </th>
     </tr>
     </thead>
@@ -562,23 +550,16 @@
             </th>
             <td class="govuk-table__cell">
                 @if(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")).qualifying) {
-                    <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive govuk-!-width-one-quarter">
-                        <p class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear")</p>
-                    </dd>
+                    <strong class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear.paid")</strong>
                 } else {
-                <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull govuk-!-width-one-quarter">
-                    <p class="govuk-tag">@Html(messages("nisp.nirecord.gap"))</p>
-                </dd>
+                    <strong class="govuk-tag">@Html(messages("nisp.nirecord.fullyear.notpaid"))</strong>
                 }
             </td>
             <td class="govuk-table__cell">
                 @if(TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")).qualifying) {
-                <dd id="full-year" class="govuk-summary-list__value ni-notfull full-inactive govuk-!-width-one-quarter">
-                </dd>
+                    <span class="govuk-visually-hidden">@NispMoney.pounds(classThreePayableAmount)</span>
                 } else {
-                    <dd id="year-is-not-full" class="govuk-summary-list__value ni-notfull govuk-!-width-one-quarter">
-                        @NispMoney.pounds(classThreePayableAmount)
-                    </dd>
+                    @NispMoney.pounds(classThreePayableAmount)
                 }
             </td>
             <td class="govuk-table__cell">
@@ -634,6 +615,7 @@
                 </a>
             }
         }
+
 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-with-summary-sections" data-govuk-accordion-init="">
     <div class="govuk-accordion__section">
 
@@ -653,7 +635,7 @@
                             <span class="govuk-accordion__section-summary-focus">
                             @if(!gracePeriodService.inGracePeriod) {
                                 <p class="govuk-body govuk-!-margin-bottom-5">
-                                    @Messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
+                                    @messages("nisp.main.context.fillGaps.tooLate", payableGapInfo.startYear.toString)
                                 </p>
                             }
                             </span>
@@ -662,7 +644,9 @@
                         <span class="govuk-accordion__section-toggle" data-nosnippet="">
                             <span class="govuk-accordion__section-toggle-focus">
                                 <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
-                                <span class="govuk-accordion__section-toggle-text">Show</span>
+                                <span class="govuk-accordion__section-toggle-text">
+                                    @messages("nisp.main.context.fillGaps.yourNonPayableGaps.show")
+                                </span>
                             </span>
                         </span>
                     </button>

@@ -30,17 +30,17 @@
         implicit messages: Messages
 )
 
-<div class="govuk-summary-list__row expandable">
+<div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
         @niTaxYear.taxYear
     </dt>
     @if(niTaxYear.qualifying) {
-        <dd id="full-year" class="govuk-summary-list__value inactive govuk-!-width-one-quarter">
-            @messages("nisp.nirecord.fullyear")
+        <dd id="full-year" class="govuk-summary-list__value govuk-!-width-one-quarter">
+            <strong class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear.paid")</strong>
         </dd>
     } else {
         <dd id="year-is-not-full" class="govuk-summary-list__value govuk-!-width-one-quarter">
-            @messages("nisp.nirecord.gap")
+            <strong class="govuk-tag">@messages("nisp.nirecord.fullyear.notpaid")</strong>
         </dd>
     }
 

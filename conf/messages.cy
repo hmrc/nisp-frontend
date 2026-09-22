@@ -689,7 +689,12 @@ nisp.main.context.fillGaps.yourNonPayableGaps.h2 = nisp.main.context.fillGaps.yo
 nisp.main.context.fillGaps.yourPayableGaps.h2 = nisp.main.context.fillGaps.yourPayableGaps.h2
 nisp.main.context.fillGaps.yourPayableGaps.p1 = nisp.main.context.fillGaps.yourPayableGaps.p1
 
-nisp.main.context.fillGaps.yourPayableGaps.table.column1Name = nisp.main.context.fillGaps.yourPayableGaps.table.column1Name
-nisp.main.context.fillGaps.yourPayableGaps.table.column2Name = nisp.main.context.fillGaps.yourPayableGaps.table.column2Name
-nisp.main.context.fillGaps.yourPayableGaps.table.column3Name = nisp.main.context.fillGaps.yourPayableGaps.table.column3Name
-nisp.main.context.fillGaps.yourPayableGaps.table.column4Name = nisp.main.context.fillGaps.yourPayableGaps.table.column4Name
+nisp.main.context.fillGaps.yourPayableGaps.table.taxYear = nisp.main.context.fillGaps.yourPayableGaps.table.taxYear
+nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus = nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus
+nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount = nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount
+nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil = nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil
+
+nisp.nirecord.fullyear.paid = nisp.nirecord.fullyear.paid
+nisp.nirecord.fullyear.notpaid = nisp.nirecord.fullyear.notpaid
+
+nisp.main.context.fillGaps.yourNonPayableGaps.show = nisp.main.context.fillGaps.yourNonPayableGaps.show

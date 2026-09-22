@@ -673,7 +673,12 @@ nisp.main.context.fillGaps.yourNonPayableGaps.h2 = Your non-payable gaps and his
 nisp.main.context.fillGaps.yourPayableGaps.h2 = Your payable gaps
 nisp.main.context.fillGaps.yourPayableGaps.p1 = Unpaid gap amounts may increase each tax year.
 
-nisp.main.context.fillGaps.yourPayableGaps.table.column1Name = Tax year
-nisp.main.context.fillGaps.yourPayableGaps.table.column2Name = Gap status
-nisp.main.context.fillGaps.yourPayableGaps.table.column3Name = Gap amount
-nisp.main.context.fillGaps.yourPayableGaps.table.column4Name = Payable until
+nisp.main.context.fillGaps.yourPayableGaps.table.taxYear = Tax year
+nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus = Gap status
+nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount = Gap amount
+nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil = Payable until
+
+nisp.nirecord.fullyear.paid = Full year paid
+nisp.nirecord.fullyear.notpaid = Full year not paid
+
+nisp.main.context.fillGaps.yourNonPayableGaps.show = Show
