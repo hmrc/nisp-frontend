@@ -30,47 +30,37 @@
         implicit messages: Messages
 )
 
-<div class="govuk-summary-list__row expandable">
-    <dt class="govuk-summary-list__key">
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
         @niTaxYear.taxYear
     </dt>
     @if(niTaxYear.qualifying) {
-        <dd id="full-year" class="govuk-summary-list__value inactive">
-            @messages("nisp.nirecord.fullyear")
+        <dd id="full-year" class="govuk-summary-list__value govuk-!-width-one-quarter">
+            <strong class="govuk-tag govuk-tag--grey">@messages("nisp.nirecord.fullyear.paid")</strong>
         </dd>
-        <dd class="govuk-summary-list__value"></dd>
     } else {
-        <dd id="year-is-not-full" class="govuk-summary-list__value">
-            @messages("nisp.nirecord.gap")
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a id="view-year-link" href="#" class="govuk-link view-details" aria-expanded="false" aria-controls="tax-year-@niTaxYear.taxYear.replace(" ", "")">
-                @Html(messages("nisp.nirecord.gap.viewdetails", niTaxYear.taxYear))
-            </a>
+        <dd id="year-is-not-full" class="govuk-summary-list__value govuk-!-width-one-quarter">
+            <strong class="govuk-tag">@messages("nisp.nirecord.fullyear.notpaid")</strong>
         </dd>
     }
 
-</div>
 
-@if(!niTaxYear.qualifying) {
-    <div class="govuk-summary-list__row contributions-details" id="tax-year-@niTaxYear.taxYear.replace(" ", "")">
+    @if(!niTaxYear.qualifying) {
         @if(niTaxYear.underInvestigation) {
-            <dt class="govuk-summary-list__key"></dt>
-            <dd class="govuk-summary-list__value">
+            <dd class="govuk-summary-list__value govuk-!-width-three-quarters">
                 @Html(messages("nisp.nirecord.gap.underInvestigation"))
                 <p>@Html(messages("nisp.nirecord.gap.contactHMRC", niUpdateYearURL))</p>
+                <p>one</p>
             </dd>
-            <dd class="govuk-summary-list__actions"></dd>
         } else {
 
-            <dt class="govuk-summary-list__key"></dt>
-            <dd class="govuk-summary-list__value">
+            <dd class="govuk-summary-list__value govuk-!-width-three-quarters">
                 @if(niTaxYear.classOneContributions > 0
                         || niTaxYear.otherCredits > 0
                         || niTaxYear.classThreeCredits > 0
                         || niTaxYear.classTwoCredits > 0
                 ) {
-                    <p id="you-have-contribution-from" class="govuk-body contributions-header">
+                    <p id="you-have-contribution-from" class="contributions-header">
                         @messages("nisp.nirecord.yourcontributionfrom")
                     </p>
                 }
@@ -181,12 +171,11 @@
                         </p>
                     }
                 } else {
-                    <div class="govuk-inset-text">
+                    <p class="govuk-body">
                         @Html(messages("nisp.nirecord.gap.latePaymentMessage"))
-                    </div>
+                    </p>
                 }
             </dd>
-            <dd class="govuk-summary-list__actions"></dd>
         }
-    </div>
-}
+    }
+</div>

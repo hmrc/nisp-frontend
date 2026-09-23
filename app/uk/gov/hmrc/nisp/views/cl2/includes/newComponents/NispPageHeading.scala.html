@@ -1,0 +1,46 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this()
+
+@(
+        classes: Option[String] = None,
+        context: String,
+        elmId: Option[String] = None,
+        section: String,
+        specId: Option[String] = None,
+        text: String,
+)(
+        implicit messages: Messages
+)
+
+@toTitleCase(input: String) = @{
+    Option(input)
+    .map(_.trim)
+    .filter(_.nonEmpty)
+    .map(_.toLowerCase.split(" ").map(_.capitalize).mkString(" "))
+    .getOrElse("")
+}
+
+<header class="hmrc-page-heading" data-component="nisp_page_heading" @specId.map { id => data-spec="@id" }>
+    <h2 id="journey-caption" class="govuk-caption-l hmrc-caption-l">
+        <span class="govuk-caption-l">@messages(toTitleCase(section))</span>
+        <span data-visually-hidden class="govuk-visually-hidden">@messages(context)</span>
+    </h2>
+    <h1 class="@classes.getOrElse("govuk-heading-xl")" data-component="nisp_page_heading__h1" @elmId.map { id => id="@id" }>
+        @messages(text)
+    </h1>
+</header>

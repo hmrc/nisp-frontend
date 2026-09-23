@@ -1765,6 +1765,8 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
 
       val result = niRecordController.showGaps(generateFakeRequest)
 
+      println(s"contentAsString(result) = ${contentAsString(result)}")
+
       contentAsString(result) should include("shortfall may increase")
     }
 

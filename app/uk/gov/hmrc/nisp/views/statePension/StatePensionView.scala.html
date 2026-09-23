@@ -75,6 +75,14 @@
     langUtils.Dates.formatDate(statePension.pensionDate)
 }
 
+@showFull = @{
+    if(appConfig.isCL2Enabled){
+        routes.MultiClassNIRecordController.showFull.url
+    } else {
+        routes.NIRecordController.showFull.url
+    }
+}
+
 @defining(Some(user)) { _ =>
 
     @main(
@@ -349,7 +357,7 @@
 
         @p(
             content = HtmlContent(link(
-                href = routes.MultiClassNIRecordController.showFull.url,
+                href = showFull,
                 messageKey = "nisp.main.showyourrecord",
                 specId = Some("state_pension__showyourrecord"),
                 classes = Some("govuk-button govuk-!-margin-top-4")

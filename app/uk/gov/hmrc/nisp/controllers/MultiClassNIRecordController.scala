@@ -30,7 +30,8 @@ import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services.*
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
-import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
+import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions}
+import uk.gov.hmrc.nisp.views.html.cl2.nirecordpage
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
 
