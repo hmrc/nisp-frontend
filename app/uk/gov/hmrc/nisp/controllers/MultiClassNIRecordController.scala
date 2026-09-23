@@ -66,7 +66,7 @@ class MultiClassNIRecordController @Inject()(
 
   def pta: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     pertaxHelper.setFromPertax
-    Redirect(routes.NIRecordController.showFull)
+    Redirect(routes.MultiClassNIRecordController.showFull)
   }
 
   private def isFriendlyUser(nino: String): Boolean =
@@ -202,12 +202,12 @@ class MultiClassNIRecordController @Inject()(
           spExclusion.finalRelevantStartYear
             .getOrElse(
               throw new RuntimeException(
-                s"NIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion"
+                s"MultiClassNIRecordController: Can't get pensionDate from StatePensionExclusion $spExclusion"
               )
             )
         )
       case Right(sp) => Some(sp.finalRelevantStartYear)
-      case Left(_) => throw new RuntimeException("NIRecordController: an unexpected error has occurred")
+      case Left(_) => throw new RuntimeException("MultiClassNIRecordController: an unexpected error has occurred")
     }
   }
 
@@ -223,7 +223,7 @@ class MultiClassNIRecordController @Inject()(
           case Right(Right(nationalInsuranceRecord)) =>
             if (nationalInsuranceRecord.numberOfGaps == 0) sendNoGapsAuditEvent(nino)
             if (gapsOnlyView && nationalInsuranceRecord.numberOfGaps < 1)
-              Future.successful(Redirect(routes.NIRecordController.showFull))
+              Future.successful(Redirect(routes.MultiClassNIRecordController.showFull))
             else {
               finalRelevantStartYear(statePensionResponse)
                 .map { finalRelevantStartYear =>
@@ -239,10 +239,10 @@ class MultiClassNIRecordController @Inject()(
           case Right(Left(exclusion)) =>
             Future.successful(sendExclusion(exclusion.exclusion))
           case Left(_) =>
-            throw new RuntimeException("NIRecordController: an unexpected error has occurred")
+            throw new RuntimeException("MultiClassNIRecordController: an unexpected error has occurred")
         }
       case Left(_) =>
-        throw new RuntimeException("NIRecordController: an unexpected error has occurred")
+        throw new RuntimeException("MultiClassNIRecordController: an unexpected error has occurred")
     }
   }
 

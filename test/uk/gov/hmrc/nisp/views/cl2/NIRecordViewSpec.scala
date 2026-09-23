@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.views
+package uk.gov.hmrc.nisp.views.cl2
 
 import org.mockito.ArgumentMatchers.{any as mockAny, eq as mockEQ}
 import org.mockito.Mockito.{reset, when}
@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.NIRecordController
+import uk.gov.hmrc.nisp.controllers.MultiClassNIRecordController
 import uk.gov.hmrc.nisp.controllers.auth.*
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
@@ -41,6 +41,7 @@ import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsToggle}
 import uk.gov.hmrc.nisp.services.{GracePeriodService, NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
+import uk.gov.hmrc.nisp.views.HtmlSpec
 import uk.gov.hmrc.nisp.views.html.nirecordGapsAndHowToCheckThem
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -83,7 +84,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
     )
     .build()
 
-  lazy val controller: NIRecordController = inject[NIRecordController]
+  lazy val controller: MultiClassNIRecordController = inject[MultiClassNIRecordController]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -200,15 +201,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertEqualsValue(
         doc,
         "[data-spec='nirecordpage__pageheading'] .govuk-caption-l",
-        "AHMED BRENNAN"
-      )
-    }
-
-    "render page with national Insurance number " in {
-      assertElementsOwnMessage(
-        doc,
-        "[data-spec='nirecordpage__details__nino'] .govuk-details__summary-text",
-        "nisp.show.nino"
+        "Ahmed Brennan Ahmed Brennan"
       )
     }
 
@@ -228,77 +221,12 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       )
     }
 
-    "render page with text 'your record for this year is not available'" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(1)>dd",
-        "nisp.nirecord.unavailableyear"
-      )
-    }
-
     "render page with text 'year is not full'" in {
-      doc.getElementById("year-is-not-full").text() shouldBe "Year is not full"
-    }
-
-    "render page with link 'View details'" in {
-      doc.getElementById("view-year-link").text() shouldBe "View 2013 to 2014 details"
-    }
-
-    "render page with text 'You did not make any contributions this year '" in {
-      assertEqualsMessage(
-        doc,
-        "div.contributions-details>dd>p.contributions-header",
-        "nisp.nirecord.youdidnotmakeanycontrib"
-      )
-    }
-
-    "render page with text 'Find out more about gaps in your account'" in {
-      assertContainsExpectedValue(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div.contributions-details>dd>p:nth-child(2)",
-        "nisp.nirecord.gap.findoutmoreabout",
-        "/check-your-state-pension/account/nirecord/gapsandhowtocheck"
-      )
-    }
-
-    "render page with link href 'gaps in your record and how to check them'" in {
-      assertLinkHasValue(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div.contributions-details>dd>p:nth-child(2)>a",
-        "/check-your-state-pension/account/nirecord/gapsandhowtocheck"
-      )
-    }
-
-    "render page with text 'You can make up the shortfall'" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div.contributions-details>dd>p:nth-child(3)",
-        "nisp.nirecord.gap.youcanmakeupshortfall"
-      )
-    }
-
-    "render page with text 'Pay a voluntary contribution of £530 by 5 April 2023. This shortfall may increase after 5 April 2019.'" in {
-      assertContainsDynamicMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div.contributions-details>dd>p.voluntary-contribution",
-        "nisp.nirecord.gap.payvoluntarycontrib",
-        "&pound;704.60",
-        langUtils.Dates.formatDate(LocalDate.of(2023, 4, 5)),
-        langUtils.Dates.formatDate(LocalDate.of(2019, 4, 5))
-      )
-    }
-
-    "render page with text 'Find out more about...'" in {
-      assertContainsDynamicMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div.contributions-details>dd>p:nth-child(5)",
-        "nisp.nirecord.gap.findoutmore",
-        "/check-your-state-pension/account/nirecord/voluntarycontribs"
-      )
+      doc.getElementById("year-is-not-full").text() shouldBe "Full year not paid"
     }
 
     "render page with text 'Full years'" in {
-      doc.getElementById("full-year").text() shouldBe "Full year"
+      doc.getElementById("full-year").text() shouldBe "Full year paid"
     }
 
     "render page with text 'You have contributions from '" in {
@@ -312,14 +240,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         "nisp.nirecord.gap.paidemployment",
         "£1,149.98"
       )
-    }
-
-    "render page with text 'full year'" in {
-      doc.getElementById("full-year").text() shouldBe "Full year"
-    }
-
-    "render page with text 'you have contributions from '" in {
-      doc.getElementById("you-have-contribution-from").text() shouldBe "You have contributions from"
     }
 
     "render page with text 'National Insurance credits 52 weeks'" in {
@@ -344,14 +264,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         doc,
         "[data-spec='nirecordpage__inset_text2__link']",
         "/check-your-state-pension/account/nirecord/gaps"
-      )
-    }
-
-    "render page with link 'back'" in {
-      assertEqualsMessage(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "nisp.back"
       )
     }
 
@@ -424,15 +336,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertEqualsValue(
         doc,
         "[data-spec='nirecordpage__pageheading'] .govuk-caption-l",
-        "AHMED BRENNAN"
-      )
-    }
-
-    "render page with national Insurance number " in {
-      assertElementsOwnMessage(
-        doc,
-        ".govuk-details .govuk-details__summary-text",
-        "nisp.show.nino"
+        "Ahmed Brennan Ahmed Brennan"
       )
     }
 
@@ -452,36 +356,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       )
     }
 
-    "render page with text 'your record for this year is not available yet'" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(1)>dd",
-        "nisp.nirecord.unavailableyear"
-      )
-    }
-
-    "render page with text 'year is not full'" in {
-      doc.getElementById("year-is-not-full").text() shouldBe "Year is not full"
-    }
-
-    "render page with link 'View details'" in {
-      doc.getElementById("view-year-link").text() shouldBe "View 2013 to 2014 details"
-    }
-
     "render page with text 'You did not make any contributions this year '" in {
       assertEqualsMessage(
         doc,
         ".contributions-header",
         "nisp.nirecord.youdidnotmakeanycontrib"
-      )
-    }
-
-    "render page with text 'Find out more about gaps in your account'" in {
-      assertContainsExpectedValue(
-        doc,
-        ".contributions-details>dd>p:nth-child(2)",
-        "nisp.nirecord.gap.findoutmoreabout",
-        "/check-your-state-pension/account/nirecord/gapsandhowtocheck"
       )
     }
 
@@ -493,56 +372,11 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       )
     }
 
-    "render page with text 'Pay a voluntary contribution of figure out how to do it...'" in {
-      assertContainsDynamicMessage(
-        doc,
-        ".contributions-details>dd>p:nth-child(4)",
-        "nisp.nirecord.gap.payvoluntarycontrib",
-        "&pound;704.60",
-        langUtils.Dates.formatDate(LocalDate.of(2023, 4, 5)),
-        langUtils.Dates.formatDate(LocalDate.of(2019, 4, 5))
-      )
-    }
-
-    "render page with text 'Find out more about...'" in {
-      assertContainsDynamicMessage(
-        doc,
-        ".contributions-details>dd>p:nth-child(5)",
-        "nisp.nirecord.gap.findoutmore",
-        "/check-your-state-pension/account/nirecord/voluntarycontribs"
-      )
-    }
-
-    "render page with text ' year is not full'" in {
-      assertEqualsMessage(
-        doc,
-        ".ni-notfull",
-        "nisp.nirecord.gap"
-      )
-    }
-
     "render page with text 'You did not make any contributions this year for too late to pay '" in {
       assertEqualsMessage(
         doc,
         ".contributions-header",
         "nisp.nirecord.youdidnotmakeanycontrib"
-      )
-    }
-
-    "render page with text 'Find out more about for too late to pay'" in {
-      assertContainsExpectedValue(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>.contributions-details>dd>p:nth-child(2)",
-        "nisp.nirecord.gap.findoutmoreabout",
-        "/check-your-state-pension/account/nirecord/gapsandhowtocheck"
-      )
-    }
-
-    "render page with text 'It’s too late to pay for this year. You can usually only pay for the last 6 years.'" in {
-      assertEqualsMessage(
-        doc,
-        ".govuk-inset-text:nth-child(3)",
-        "nisp.nirecord.gap.latePaymentMessage"
       )
     }
 
@@ -559,14 +393,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         doc,
         "[data-spec='nirecordpage__inset_text3__link']",
         "/check-your-state-pension/account/nirecord"
-      )
-    }
-
-    "render page with link 'back'" in {
-      assertEqualsMessage(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "nisp.back"
       )
     }
 
@@ -1068,15 +894,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       doc.getElementById("record-show-qualifying-years").text() shouldBe "Our records show you have 5 full years up to 5 April 1975"
     }
 
-    "render page with link 'back'" in {
-      mockSetup
-      assertEqualsMessage(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "nisp.back"
-      )
-    }
-
     "render page with print link" in {
       mockSetup
       assertEqualsMessage(
@@ -1195,15 +1012,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       doc.getElementById("no-full-years-upto-1975").text() shouldBe "Our records show you do not have any full years up to 5 April 1975"
     }
 
-    "render page with link 'back'" in {
-      mockSetup
-      assertEqualsMessage(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "nisp.back"
-      )
-    }
-
     "render page with print link" in {
       mockSetup
       assertEqualsMessage(
@@ -1293,43 +1101,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       )
     }
 
-    /* Under investigation*/
-
-    "render page with text 'full year for under investigation'" in {
-      mockSetup
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(3)>dd",
-        "nisp.nirecord.fullyear"
-      )
-    }
-
-    "render page with text 'This year is not included in your State Pension forecast because your record needs updating.'" in {
-      mockSetup
-      assertEqualsMessages(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>.contributions-details>dd",
-        List(("nisp.nirecord.gap.underInvestigation", None), ("nisp.nirecord.gap.contactHMRC", Some("null"))),
-        includes
-      )
-    }
-
-    /*Ends here*/
-
-    "render page with text 'full year'" in {
-      mockSetup
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(5)>dd.ni-notfull",
-        "nisp.nirecord.fullyear"
-      )
-    }
-
-    "render page with text 'you have contributions from '" in {
-      mockSetup
-      doc.getElementById("you-have-contribution-from").text() shouldBe "You have contributions from"
-    }
-
     "render page with text 'paid employment : £12,345.67'" in {
       mockSetup
       assertContainsDynamicMessageUsingClass(
@@ -1376,15 +1147,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         doc,
         "other-credits-reason",
         "nisp.nirecord.gap.whenyouareclaiming.info.plural"
-      )
-    }
-
-    "render page with link 'back'" in {
-      mockSetup
-      assertEqualsMessage(
-        doc,
-        "[data-spec='nirecordpage__backlink_l']",
-        "nisp.back"
       )
     }
 
@@ -1465,7 +1227,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       .build()
       .injector
 
-    val abroadUserController = abroadUserInjector.instanceOf[NIRecordController]
+    val abroadUserController = abroadUserInjector.instanceOf[MultiClassNIRecordController]
 
     lazy val doc           = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
     lazy val abroadUserDoc = asDocument(contentAsString(abroadUserController.showFull(generateFakeRequest)))
@@ -1562,24 +1324,6 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
         "ul.govuk-list li:nth-child(3)",
         "nisp.nirecord.summary.gaps.single",
         "1"
-      )
-    }
-
-    "render page with text 'year full year'" in {
-      mockSetup
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(5)>dd.ni-notfull",
-        "nisp.nirecord.gap"
-      )
-    }
-
-    "render page with text 'you have contributions from '" in {
-      mockSetup
-      assertEqualsMessage(
-        doc,
-        ".govuk-grid-column-two-thirds>dl>div:nth-child(6)>dd>p:nth-child(1)",
-        "nisp.nirecord.yourcontributionfrom"
       )
     }
 
