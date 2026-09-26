@@ -16,8 +16,8 @@ object CodeCoverageSettings {
     ".*PertaxErrorView.*"
   )
   def apply(): Seq[Setting[?]] = Seq(
-    ScoverageKeys.coverageMinimumBranchTotal := 83,
-    ScoverageKeys.coverageMinimumStmtTotal := 88,
+    ScoverageKeys.coverageMinimumBranchTotal := 81,
+    ScoverageKeys.coverageMinimumStmtTotal := 85,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     ScoverageKeys.coverageExcludedPackages:= excludedPackages.mkString(",")

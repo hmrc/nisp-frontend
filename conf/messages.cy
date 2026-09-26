@@ -679,3 +679,22 @@ nisp.grace.period.view.p5 = Os hoffech chi lenwi bylchau a hynny dim ond o fis E
 
 nisp.grace.period.view.link.3.text = ewch yn ôl at eich cofnod Yswiriant Gwladol
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
+
+#**********************
+# NI Record Payable gaps
+#**********************
+
+nisp.main.context.fillGaps.yourNonPayableGaps.h2 = nisp.main.context.fillGaps.yourNonPayableGaps.h2
+
+nisp.main.context.fillGaps.yourPayableGaps.h2 = nisp.main.context.fillGaps.yourPayableGaps.h2
+nisp.main.context.fillGaps.yourPayableGaps.p1 = nisp.main.context.fillGaps.yourPayableGaps.p1
+
+nisp.main.context.fillGaps.yourPayableGaps.table.taxYear = nisp.main.context.fillGaps.yourPayableGaps.table.taxYear
+nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus = nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus
+nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount = nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount
+nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil = nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil
+
+nisp.nirecord.fullyear.paid = nisp.nirecord.fullyear.paid
+nisp.nirecord.fullyear.notpaid = nisp.nirecord.fullyear.notpaid
+
+nisp.main.context.fillGaps.yourNonPayableGaps.show = nisp.main.context.fillGaps.yourNonPayableGaps.show

@@ -332,7 +332,7 @@ nisp.nirecord.gap.whenyouareclaiming.plural= National Insurance credits: <strong
 nisp.nirecord.gap.whenyouareclaiming.info.singular = This week may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.
 nisp.nirecord.gap.whenyouareclaiming.info.plural = These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.
 
-nisp.nirecord.unavailableyear = Your record for this year is not available yet
+nisp.nirecord.unavailableyear = Not available yet
 nisp.nirecord.yourcontributionfrom = You have contributions from
 
 nisp.nirecord.gap.findoutmoreabout = Find out more about <a href="{0}">gaps in your record and how to check them</a>.
@@ -398,7 +398,7 @@ nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.title = National Insuran
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.desc = If you were claiming benefits because you were unable to work, unemployed or caring for someone full time, these should have been credited automatically. If you think you were entitled to credits that are not on your record, check your eligibility and find out how to get them.
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.hrp = Home Responsibilities Protection (HRP) is only available for <strong>full</strong> tax years, from 6 April to 5 April, between 1978 and 2010.
 nisp.nirecord.gapsinyourrecord.nationalinsurancecredits.link = More on National Insurance credits (opens in new tab)
-nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay = You can usually only pay for gaps in your National Insurance record from the past 6 years.
+nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay = You can pay for gaps in your National Insurance record for the last 6 years. The gap class is the type of payment due for that year.
 nisp.nirecord.gapsinyourrecord.findoutmore = Find out more about gaps in your record and how to check them
 
 #*******************************
@@ -663,3 +663,22 @@ nisp.grace.period.view.p5 = If you only want to fill gaps from April {0} onwards
 
 nisp.grace.period.view.link.3.text = return to your National Insurance record
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
+
+#**********************
+# NI Record Payable gaps
+#**********************
+
+nisp.main.context.fillGaps.yourNonPayableGaps.h2 = Your non-payable gaps and history
+
+nisp.main.context.fillGaps.yourPayableGaps.h2 = Your payable gaps
+nisp.main.context.fillGaps.yourPayableGaps.p1 = Unpaid gap amounts may increase each tax year.
+
+nisp.main.context.fillGaps.yourPayableGaps.table.taxYear = Tax year
+nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus = Gap status
+nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount = Gap amount
+nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil = Payable until
+
+nisp.nirecord.fullyear.paid = Full year paid
+nisp.nirecord.fullyear.notpaid = Full year not paid
+
+nisp.main.context.fillGaps.yourNonPayableGaps.show = Show
