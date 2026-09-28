@@ -684,10 +684,12 @@ nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-nat
 # NI Record Payable gaps
 #**********************
 
+nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay.p = nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay.p
+
 nisp.main.context.fillGaps.yourNonPayableGaps.h2 = nisp.main.context.fillGaps.yourNonPayableGaps.h2
 
 nisp.main.context.fillGaps.yourPayableGaps.h2 = nisp.main.context.fillGaps.yourPayableGaps.h2
-nisp.main.context.fillGaps.yourPayableGaps.p1 = nisp.main.context.fillGaps.yourPayableGaps.p1
+nisp.main.context.fillGaps.yourPayableGaps.p = nisp.main.context.fillGaps.yourPayableGaps.p
 
 nisp.main.context.fillGaps.yourPayableGaps.table.taxYear = nisp.main.context.fillGaps.yourPayableGaps.table.taxYear
 nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus = nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus
@@ -698,3 +700,5 @@ nisp.nirecord.fullyear.paid = nisp.nirecord.fullyear.paid
 nisp.nirecord.fullyear.notpaid = nisp.nirecord.fullyear.notpaid
 
 nisp.main.context.fillGaps.yourNonPayableGaps.show = nisp.main.context.fillGaps.yourNonPayableGaps.show
+
+nisp.nirecord.notAvailableYet = nisp.nirecord.notAvailableYet

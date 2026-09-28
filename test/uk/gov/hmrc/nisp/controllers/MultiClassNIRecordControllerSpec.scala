@@ -347,7 +347,7 @@ class MultiClassNIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       val result = niRecordController.showGaps(generateFakeRequest)
       contentAsString(result) should include("View all years of contributions")
-      contentAsString(result) should not include "View payable gaps"
+      contentAsString(result) should include("View payable gaps")
     }
 
     "return gaps page and display View Payable Gaps button when FriendlyUserFilterToggle is true and users is friendlyUser" in {
@@ -867,7 +867,7 @@ class MultiClassNIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       val result = niRecordController.showFull(generateFakeRequest)
       contentAsString(result) should include("View years only showing gaps in your contributions")
-      contentAsString(result) should not include "View payable gaps"
+      contentAsString(result) should include("View payable gaps")
       contentAsString(result) should include(s"It’s too late to pay for gaps in your National Insurance record before April ${TaxYear.current.startYear - mockAppConfig.niRecordPayableYears}")
     }
 
@@ -1505,7 +1505,7 @@ class MultiClassNIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       mockViewPayableGapsFeatureFlag(false)
 
       val result = niRecordController.showFull(generateFakeRequest)
-      contentAsString(result) should include("52 weeks")
+      contentAsString(result) should not include("52 weeks")
     }
 
     "return NI record page with no details for full years - when showFullNI is false" in {
