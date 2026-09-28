@@ -1387,7 +1387,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertEqualsMessage(
         doc,
         "[data-spec='nirecordpage__p1']",
-        "nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay",
+        "nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay.p",
         Some(17)
       )
     }
