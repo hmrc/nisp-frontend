@@ -404,7 +404,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertElementContainsText(
         doc,
         "head > title",
-        "Gaps in your National Insurance record"
+        "Your National Insurance record"
           + Constants.titleSplitter
           + "Check your State Pension"
           + Constants.titleSplitter
@@ -416,7 +416,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertEqualsMessage(
         doc,
         "[data-spec='nirecordpage__pageheading'] [data-component='nisp_page_heading__h1']",
-        "nisp.nirecord.gaps.heading"
+        "nisp.nirecord.heading"
       )
     }
 
@@ -1506,7 +1506,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertElementContainsText(
         abroadUserDoc,
         "head > title",
-        "Your UK National Insurance record"
+        "Your National Insurance record"
           + Constants.titleSplitter
           + "Check your State Pension"
           + Constants.titleSplitter
@@ -1519,7 +1519,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertEqualsMessage(
         abroadUserDoc,
         "[data-spec='nirecordpage__pageheading'] [data-component='nisp_page_heading__h1']",
-        "nisp.nirecord.heading.uk"
+        "nisp.nirecord.heading"
       )
     }
 

@@ -66,15 +66,7 @@
         user: NispAuthedUser
 )
 
-@headingOrTitle = @{
-    if(user.livesAbroad) {
-        messages("nisp.nirecord.heading.uk")
-    } else if(niRecord.numberOfGaps > 0 && gapsOnlyView) {
-        messages("nisp.nirecord.gaps.heading")
-    } else {
-        messages("nisp.nirecord.heading")
-    }
-}
+@headingOrTitle = @{ messages("nisp.nirecord.heading") }
 
 @main(
     pageTitle = headingOrTitle,
@@ -190,20 +182,59 @@
 
     <!-- if(gapsOnlyView) begin -->
     @if(gapsOnlyView) {
-        <dl class="govuk-summary-list">
 
-            @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0">
 
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        @(TaxYearFormat.convertTaxYear(tableList.head, messages("nisp.nirecord.seperator")))
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @messages("nisp.nirecord.notAvailableYet")
-                    </dd>
-                    <dd class="govuk-summary-list__actions"></dd>
-                </div>
-
+            @if( niRecord.numberOfGapsPayable > 0 &&
+                (!niRecord.taxYears.exists(_.taxYear == tableList.head) ||
+                !(niRecord.taxYears.filter(_.taxYear.toInt > payableGapInfo.startYear - 1)).isEmpty)
+            ) {
+                <table class="govuk-table govuk-!-margin-bottom-0">
+                    <caption class="govuk-table__caption govuk-table__caption--m">
+                        @messages("nisp.main.context.fillGaps.yourPayableGaps.h2")
+                        <p></p>
+                        <p class="govuk-body"> @messages("nisp.main.context.fillGaps.yourPayableGaps.p")</p>
+                    </caption>
+                    <!-- Table Headers -->
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">
+                            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.taxYear")
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus")
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount")
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            @messages("nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil")
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    @if(!niRecord.taxYears.exists(_.taxYear == tableList.head)) {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">
+                            @(TaxYearFormat.convertTaxYear(tableList.head, messages("nisp.nirecord.seperator")))
+                        </th>
+                        <td class="govuk-table__cell">
+                            @messages("nisp.nirecord.notAvailableYet")
+                        </td>
+                        <td class="govuk-table__cell">
+                                <span class="govuk-visually-hidden">
+                                    @messages("nisp.nirecord.notAvailableYet")
+                                </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                                <span class="govuk-visually-hidden">
+                                    @messages("nisp.nirecord.notAvailableYet")
+                                </span>
+                        </td>
+                    </tr>
+                    }
+                    </tbody>
+                </table>
             }
 
             @for(niTaxYear <- niRecord.taxYears.filter(!_.qualifying).filter(_.taxYear.toInt > payableGapInfo.startYear - 1)) {
@@ -308,12 +339,12 @@
         } else {
 
             <!-- Payable gaps table  -->
-            <dl class="govuk-summary-list @if(niRecord.taxYears.filter(_.taxYear.toInt <= payableGapInfo.startYear - 1).length > 0) {govuk-summary-list__no-margin-bottom}">
+            <dl class="govuk-summary-list govuk-!-margin-bottom-0 @if(niRecord.taxYears.filter(_.taxYear.toInt <= payableGapInfo.startYear - 1).length > 0) {govuk-summary-list__no-margin-bottom}">
             @if( niRecord.numberOfGapsPayable > 0 &&
                 (!niRecord.taxYears.exists(_.taxYear == tableList.head) ||
                 !(niRecord.taxYears.filter(_.taxYear.toInt > payableGapInfo.startYear - 1)).isEmpty)
             ) {
-                <table class="govuk-table">
+                <table class="govuk-table govuk-!-margin-bottom-0">
                     <caption class="govuk-table__caption govuk-table__caption--m">
                         @messages("nisp.main.context.fillGaps.yourPayableGaps.h2")
                         <p></p>
@@ -445,42 +476,41 @@
                 }
 
                 @if(gracePeriodService.inGracePeriod) {
-                @govukWarningText(WarningText(
-                iconFallbackText = Some("Warning"),
-                content = HtmlContent(
-                messages(
-                "nisp.grace.period.banner.text",
-                payableGapInfo.startYear.toString,
-                currentTaxYear.back(1).finishYear.toString
-                ) +
-                link(
-                href = routes.GracePeriodController.showGracePeriod.url,
-                messageKey = "nisp.grace.period.banner.url.text",
-                messagesArgs = Seq(payableGapInfo.startYear.toString),
-                specId = Some("nirecordpage_text3__link")
-                )
-                )
-                ))
+                    @govukWarningText(WarningText(
+                            iconFallbackText = Some("Warning"),
+                            content = HtmlContent(
+                            messages(
+                                "nisp.grace.period.banner.text",
+                                payableGapInfo.startYear.toString,
+                                currentTaxYear.back(1).finishYear.toString
+                            ) +
+                        link(
+                            href = routes.GracePeriodController.showGracePeriod.url,
+                            messageKey = "nisp.grace.period.banner.url.text",
+                            messagesArgs = Seq(payableGapInfo.startYear.toString),
+                            specId = Some("nirecordpage_text3__link")
+                        ))
+                    ))
                 }
 
                 <!-- Content -->
-                <div id="accordion-with-summary-sections-content-1" class="govuk-accordion__section-content1" hidden>
+                <div id="accordion-with-summary-sections-content-1" class="govuk-accordion__section-content1" @if(niRecord.numberOfGapsPayable > 0){ hidden } >
                     <dl class="govuk-summary-list">
                         @for(niTaxYear <- niRecord.taxYears.filter(_.taxYear.toInt <= payableGapInfo.startYear - 1)) {
-                        @if(showFullNI) {
-                        @nirecordtaxyear(
-                        niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
-                        currentDate = currentDate,
-                        newContentWithButtonToggle = viewPayableGapsToggle,
-                        niUpdateYearURL = niUpdateYearURL
-                        )
-                        } else {
-                        @nirecordtaxyearNoFull(
-                        niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
-                        currentDate = currentDate,
-                        niUpdateYearURL = niUpdateYearURL
-                        )
-                        }
+                            @if(showFullNI) {
+                                @nirecordtaxyear(
+                                    niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
+                                    currentDate = currentDate,
+                                    newContentWithButtonToggle = viewPayableGapsToggle,
+                                    niUpdateYearURL = niUpdateYearURL
+                                )
+                            } else {
+                                @nirecordtaxyearNoFull(
+                                    niTaxYear = TaxYearFormat.convertTaxYear(niTaxYear, messages("nisp.nirecord.seperator")),
+                                    currentDate = currentDate,
+                                    niUpdateYearURL = niUpdateYearURL
+                                )
+                            }
                         }
 
                         @if(showPre1975Years) {
