@@ -388,7 +388,7 @@ class StatePensionViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__showyourrecord']",
-              "/check-your-state-pension/account/nirecord"
+              "/check-your-state-pension/account/national-insurance-record"
             )
           }
 
@@ -1272,7 +1272,7 @@ class StatePensionViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__showyourrecord']",
-              "/check-your-state-pension/account/nirecord"
+              "/check-your-state-pension/account/national-insurance-record"
             )
           }
 

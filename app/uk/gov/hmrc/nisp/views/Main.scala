@@ -37,11 +37,12 @@ import scala.util.{Failure, Success, Try}
 trait Main {
   def apply(
              pageTitle: String,
-             showUrBanner: Boolean = false,
+             showUrBanner: Boolean = true,
              extendedTitle: Boolean = true,
              optCustomLayout: Option[Html => Html] = None,
              sidebar: Option[Html] = None,
-             hideNavBar: Boolean = false
+             hideNavBar: Boolean = false,
+             fullWidth: Boolean = false
            )(
              contentBlock: Html
            )(implicit
@@ -65,7 +66,8 @@ class MainImpl @Inject()(
                       extendedTitle: Boolean,
                       optCustomLayout: Option[Html => Html],
                       sidebar: Option[Html],
-                      hideNavBar: Boolean
+                      hideNavBar: Boolean,
+                      fullWidth: Boolean
                     )(
                       contentBlock: Html
                     )(implicit request: Request[?], messages: Messages): HtmlFormat.Appendable = {
@@ -99,11 +101,11 @@ class MainImpl @Inject()(
       ),
       bannerConfig = BannerConfig(
         showAlphaBanner = false,
-        showBetaBanner = false,
+        showBetaBanner = true,
         showHelpImproveBanner = showUrBanner
       ),
       optTrustedHelper = trustedHelper,
-      fullWidth = false,
+      fullWidth = fullWidth,
       hideMenuBar = hideNavBar
     )(messages, request)
   }
