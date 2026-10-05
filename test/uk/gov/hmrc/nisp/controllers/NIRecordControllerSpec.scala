@@ -1764,7 +1764,7 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
       mockViewPayableGapsFeatureFlag(false)
 
       val result = niRecordController.showGaps(generateFakeRequest)
-      
+
       contentAsString(result) should include("shortfall may increase")
     }
 

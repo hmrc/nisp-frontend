@@ -72,7 +72,6 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
       val expectedTitle = "testTitle - Check your State Pension - GOV.UK"
       val heading = "testHeading"
       val message = "testMessage"
-      val expectedMsg = "testMessage Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
 
       val standardErrorTemplate: Html = await(errorHandler.standardErrorTemplate(title, heading, message))
       val doc: Document               = Jsoup.parse(standardErrorTemplate.toString())
@@ -83,7 +82,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting 
 
       docTitle   should include(expectedTitle)
       docHeading shouldBe heading
-      docMessage shouldBe expectedMsg
+      docMessage shouldBe message
     }
   }
 
