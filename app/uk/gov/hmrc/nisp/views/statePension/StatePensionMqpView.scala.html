@@ -23,7 +23,6 @@
 @import uk.gov.hmrc.nisp.views.html.includes.{NiLInks, statePensionAgeUnderConsideration}
 @import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
 @import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         main: Main,
@@ -38,10 +37,8 @@
         statePensionFooter: StatePensionFooter,
         printLink: PrintLink,
         span: Span,
-        niLinks: NiLInks,
-        appConfig: ApplicationConfig
+        niLinks: NiLInks
 )
-
 @(
         statePension: StatePension,
         numberOfGaps: Int,
@@ -56,22 +53,6 @@
 
 @pensionDate = @{
     langUtils.Dates.formatDate(statePension.pensionDate)
-}
-
-@showFull = @{
-    if(appConfig.isCL2Enabled){
-        routes.MultiClassNIRecordController.showFull.url
-    } else {
-        routes.NIRecordController.showFull.url
-    }
-}
-
-@showGaps = @{
-    if(appConfig.isCL2Enabled){
-        routes.MultiClassNIRecordController.showGaps.url
-    } else {
-        routes.NIRecordController.showFull.url
-    }
 }
 
 @defining(Some(user)) { _ =>
@@ -202,7 +183,7 @@
             @if(mqp == CanGetWithGaps) {
                 @p(
                     content = HtmlContent(link(
-                        href = showGaps,
+                        href = routes.NIRecordController.showGaps.url,
                         messageKey = "nisp.main.showyourrecord",
                         specId = Some("state_pension__mqp__cant_get_with_gaps"),
                         classes = Some("govuk-button govuk-!-margin-top-4")
@@ -212,7 +193,7 @@
             @if(mqp == CantGet) {
                 @p(
                     content = HtmlContent(link(
-                        href = showFull,
+                        href = routes.NIRecordController.showFull.url,
                         messageKey = "nisp.main.showyourrecord",
                         specId = Some("state_pension__mqp__cant_get"),
                         classes = Some("govuk-button govuk-!-margin-top-4")
