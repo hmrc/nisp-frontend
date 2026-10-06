@@ -334,7 +334,7 @@ class StatePensionMQPViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__mqp__cant_get']",
-              "/check-your-state-pension/account/nirecord"
+              "/check-your-state-pension/account/national-insurance-record"
             )
           }
 
@@ -582,7 +582,7 @@ class StatePensionMQPViewSpec
             assertLinkHasValue(
               doc,
               "[data-spec='state_pension__mqp__cant_get_with_gaps']",
-              "/check-your-state-pension/account/nirecord/gaps"
+              "/check-your-state-pension/account/national-insurance-record/gaps"
             )
           }
         }

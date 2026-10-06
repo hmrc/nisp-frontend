@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.nisp.views.html.includes.{abroad, contractedOut, deferral, statePensionAgeUnderConsideration}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.nisp.views.Main
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         main: Main,
@@ -39,7 +40,8 @@
         govukPanel: GovukPanel,
         panel: Panel,
         insetText: insetText,
-        govukWarningText: GovukWarningText
+        govukWarningText: GovukWarningText,
+        appConfig: ApplicationConfig
 )
 
 @(
@@ -53,6 +55,14 @@
         user: NispAuthedUser,
         messages: Messages
 )
+
+@showFull = @{
+    if(appConfig.isCL2Enabled){
+        routes.MultiClassNIRecordController.showFull.url
+    } else {
+        routes.NIRecordController.showFull.url
+    }
+}
 
 @defining(Some(user)) { _ =>
     @main(
@@ -133,7 +143,7 @@
         )
 
         @link(
-            href = routes.NIRecordController.showFull.url,
+            href = showFull,
             messageKey = "nisp.main.showyourrecord",
             specId = Some("state_pension_forecast_only__link1")
         )
