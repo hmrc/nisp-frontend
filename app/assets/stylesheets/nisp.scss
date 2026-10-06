@@ -415,6 +415,10 @@ a:focus {
   outline: 3px solid #ffdd00;
 }
 
+a.govuk-button:focus {
+  color: #fff !important;
+}
+
 .button:focus {
   background-color: #fd0;
   border-bottom-color: black;
