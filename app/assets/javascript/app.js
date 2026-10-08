@@ -66,12 +66,55 @@ function goBack() {
   }
 }
 
+function initialiseToggleButtons() {
+
+    const buttons = document.querySelectorAll(".govuk-accordion__section-button");
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const target = document.getElementById(
+                button.getAttribute("aria-controls")
+            );
+            const toggleText = button.querySelector(".govuk-accordion__section-toggle-text");
+
+            if (!target || !toggleText) {
+                return;
+            }
+
+            if (target.hidden) {
+                target.hidden = false;
+                button.setAttribute("aria-expanded", "true");
+                toggleText.textContent = "Hide";
+            } else {
+                target.hidden = true;
+                button.setAttribute("aria-expanded", "false");
+                toggleText.textContent = "Show";
+            }
+        });
+
+    });
+
+}
+
+function hideShowNonPayableGaps() {
+    const showHideElement = document.querySelector(".govuk-accordion__controls");
+    const mainElement = document.querySelector('main');
+
+    if (showHideElement) {
+        showHideElement.hidden = true;
+    }
+    if (mainElement) {
+        mainElement.className = "govuk-main-wrapper govuk-!-padding-top-0";
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function (){
   hideDetails();
   hideAccordion();
   accordionToggleShowHide();
+  initialiseToggleButtons()
+  hideShowNonPayableGaps()
   printLink();
   goBack();
 }, false);
-
 
