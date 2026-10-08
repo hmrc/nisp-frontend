@@ -31,3 +31,7 @@ GET        /terms-and-conditions                      uk.gov.hmrc.nisp.controlle
 
 #Welsh Translation
 GET        /language/:lang                            uk.gov.hmrc.nisp.controllers.CustomLanguageController.switchToLanguage(lang: String)
+
+
+GET        /account/national-insurance-record         uk.gov.hmrc.nisp.controllers.MultiClassNIRecordController.showFull
+GET        /account/national-insurance-record/gaps    uk.gov.hmrc.nisp.controllers.MultiClassNIRecordController.showGaps

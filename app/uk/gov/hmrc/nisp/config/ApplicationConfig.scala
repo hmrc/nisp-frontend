@@ -77,6 +77,8 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val showFullNI: Boolean                   = getConfBool("features.fullNIrecord", false)
   val futureProofPersonalMax: Boolean       = getConfBool("features.future-proof.personalMax", false)
   val isWelshEnabled: Boolean               = getConfBool("features.welsh-translation", false)
+  val class2Enabled: Boolean                = getConfBool("features.class2Enabled", false)
+
   val signOutUrl: String                    = getString("sign-out.url")
   val niRecordPayableYears: Int             = getInt("numberOfPayableTaxYears")
   val friendlyUsers: Seq[String]            = config.get[Seq[String]]("allowedUsers.friendly")

@@ -26,6 +26,7 @@ import uk.gov.hmrc.nisp.config.ApplicationConfig
 import uk.gov.hmrc.nisp.controllers.auth.AuthenticatedRequest
 import uk.gov.hmrc.nisp.controllers.routes
 import uk.gov.hmrc.nisp.views.html.components.{additionalScripts, additionalStylesheets}
+import uk.gov.hmrc.sca.config.BackLinkConfig
 import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 import uk.gov.hmrc.sca.views.html.PtaHead
@@ -37,11 +38,12 @@ import scala.util.{Failure, Success, Try}
 trait Main {
   def apply(
              pageTitle: String,
-             showUrBanner: Boolean = false,
+             showUrBanner: Boolean = true,
              extendedTitle: Boolean = true,
              optCustomLayout: Option[Html => Html] = None,
              sidebar: Option[Html] = None,
-             hideNavBar: Boolean = false
+             hideNavBar: Boolean = false,
+             fullWidth: Boolean = false
            )(
              contentBlock: Html
            )(implicit
@@ -65,7 +67,8 @@ class MainImpl @Inject()(
                       extendedTitle: Boolean,
                       optCustomLayout: Option[Html => Html],
                       sidebar: Option[Html],
-                      hideNavBar: Boolean
+                      hideNavBar: Boolean,
+                      fullWidth: Boolean
                     )(
                       contentBlock: Html
                     )(implicit request: Request[?], messages: Messages): HtmlFormat.Appendable = {
@@ -89,9 +92,7 @@ class MainImpl @Inject()(
         accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri))
       ),
       sidebarContent = sidebar,
-      timeOutUrl = None,
-      keepAliveUrl = routes.TimeoutController.keep_alive.url,
-      showBackLinkJS = true,
+      backLinkConfig = Some(BackLinkConfig.JsBack),
       scripts = Seq(additionalScripts()),
       styleSheets = Seq(
         additionalStyles(),
@@ -99,11 +100,11 @@ class MainImpl @Inject()(
       ),
       bannerConfig = BannerConfig(
         showAlphaBanner = false,
-        showBetaBanner = false,
+        showBetaBanner = true,
         showHelpImproveBanner = showUrBanner
       ),
       optTrustedHelper = trustedHelper,
-      fullWidth = false,
+      fullWidth = fullWidth,
       hideMenuBar = hideNavBar
     )(messages, request)
   }
