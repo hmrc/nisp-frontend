@@ -60,6 +60,17 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val abroadLink: String                      = getString("govUkLinks.living-and-working-overseas-link.url")
   val nationalInsuranceUpdateYearLink: String = getString("govUkLinks.national-insurance-update-year-link.url")
 
+  val futurePensionLinkCy: String             = getString("govUkLinks.cy.future-pension-link.url")
+  val nationalInsuranceLinkCy: String         = getString("govUkLinks.cy.national-insurance-link.url")
+  val niHowMuchYouPayLinkCy: String           = getString("govUkLinks.cy.ni-how-much-you-pay-link.url")
+  val nationalInsuranceCreditLinkCy: String   = getString("govUkLinks.cy.national-insurance-credits-link.url")
+  val pensionDeferralLinkCy: String           = getString("govUkLinks.cy.pension-deferral-link.url")
+  val newStatePensionLinkCy: String           = getString("govUkLinks.cy.new-state-pension-link.url")
+  val copeLinkCy: String                      = getString("govUkLinks.cy.contracted-out-pension-link.url")
+  val homeResponsibilitiesLinkCy: String      = getString("govUkLinks.cy.home-responsibilities-protection-link.url")
+  val pensionCreditLinkCy: String             = getString("govUkLinks.cy.pension-credit-link.url")
+  val abroadLinkCy: String                    = getString("govUkLinks.cy.living-and-working-overseas-link.url")
+
   private val frontendHost                  = getString("nisp-frontend.host")
   private val accessibilityStatementHost: String  = getString("accessibility-statement.url") + "/accessibility-statement"
 

@@ -38,7 +38,11 @@
         content = HtmlContent(messages(
             "nisp.nirecord.forMoreInfoOnGaps",
             link(
-                href = appConfig.futurePensionLink,
+                href = if(messages.lang.code == "cy") {
+                    appConfig.futurePensionLinkCy
+                } else {
+                    appConfig.futurePensionLink
+                },
                 messageKey = "global.page.not.found.error.contact.future.pension.centre.link.text",
                 specId = Some("state_pension__footer_link"),
                 fullStop = true
