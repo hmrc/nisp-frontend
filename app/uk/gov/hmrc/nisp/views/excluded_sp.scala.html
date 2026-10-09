@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nisp.views.Main
 @import uk.gov.hmrc.nisp.views.html.exclusions.sp.{amountDissonance, isleOfMan, mwrre, postStatePensionAge}
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, H2, Link, P, insetText}
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukButton
 @import uk.gov.hmrc.nisp.views.html.includes.statePensionAgeUnderConsideration
 @import uk.gov.hmrc.play.language.LanguageUtils
 
@@ -38,7 +39,8 @@
         h1: H1,
         h2: H2,
         link: Link,
-        insetText: insetText
+        insetText: insetText,
+        govukButton: GovukButton,
 )
 
 @(
@@ -97,26 +99,29 @@
         specId = Some("excluded_sp__h1")
     )
 
+    @h2(
+        msg = "nisp.main.h2.whenWillIReachStatePensionAge",
+        specId = Some("state_pension_mqp__h2_1")
+    )
+
     @for(
         age  <- statePensionAge;
         date <- statePensionAgeDate
     ) {
         @if(exclusion.equals(PostStatePensionAge)) {
-            @h2(
-                elmId = Some("subTitle"),
-                msg = messages("nisp.excluded.haveReached", langUtils.Dates.formatDate(date)),
-                specId = Some("excluded_sp__h2_1a")
+            @p(
+                content = HtmlContent(messages("nisp.excluded.haveReached", langUtils.Dates.formatDate(date))),
+                specId = Some("excluded_sp__h2_1a")  // MAY NEED AMENDING
             )
         } else {
-            @h2(
-                elmId = Some("subTitle"),
-                msg = messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date)),
-                specId = Some("excluded_sp__h2_1b")
+            @p(
+                content = HtmlContent(messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date))),
+                specId = Some("excluded_sp__h2_1b")  // MAY NEED AMENDING
             )
         }
     }
 
-    @insetText(
+    @p(
         content = HtmlContent(insetContent),
         specId = Some("excluded_sp__inset_text1")
     )
@@ -128,13 +133,11 @@
             specId = Some("excluded_sp__p2")
         )
 
-        <p class="govuk-body govuk-!-margin-top-4">
-            @link(
-                href = routes.NIRecordController.showFull.url,
-                messageKey = "nisp.main.showyourrecord",
-                specId = Some("excluded_sp__link2")
-            )
-        </p>
+        @govukButton(Button(
+            attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue"),
+            content = Text(messages("nisp.main.showyourrecord")),
+            href = Some(routes.NIRecordController.showFull.url),    //TO ADD OR AMEND TEST
+        ))
 
     } else {
 

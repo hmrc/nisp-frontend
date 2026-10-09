@@ -217,9 +217,13 @@ nisp.excluded.mwrre.signOut = Sign out and leave feedback
 
 nisp.excluded.overseas = We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad.
 
-nisp.excluded.spa = If you have not already started {0} you can {1} and this may mean you get extra State Pension when you do want to claim it.
-nisp.excluded.spa.linktext0 = claiming your State Pension
-nisp.excluded.spa.linktext1= put off claiming your State Pension (opens in new tab)
+
+
+nisp.excluded.spa = You can {0} if you have not already claimed it.
+nisp.excluded.spa.linktext0 = claim your State Pension online
+
+nisp.excluded.spa.defer = You can delay claiming your State Pension. This means you may get extra State Pension when you do claim it. {0}
+nisp.excluded.spa.defer.linktext0 = Find out about delaying your State Pension
 
 nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.

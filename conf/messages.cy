@@ -219,7 +219,9 @@ nisp.excluded.overseas = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwria
 
 nisp.excluded.spa = Os nad ydych eisoes wedi dechrau {0} gallwch {1} a gallai hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan rydych eisiau gwneud cais amdano.
 nisp.excluded.spa.linktext0 = hawlio eich Pensiwn y Wladwriaeth
-nisp.excluded.spa.linktext1 = oedi gwneud cais am eich Pensiwn y Wladwriaeth (agor mewn tab newydd)
+
+nisp.excluded.spa.defer = Gallwch ohirio hawlio’ch Pensiwn y Wladwriaeth. Mae hyn yn golygu y gallech gael Pensiwn y Wladwriaeth ychwanegol pan fyddwch yn ei hawlio. {0}
+nisp.excluded.spa.defer.linktext0 = Dysgwch ragor am ohirio’ch Pensiwn y Wladwriaeth
 
 nisp.excluded.niRecordIntro = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol sy’n cyfri tuag at eich Pensiwn y Wladwriaeth ac edrych am unrhyw fylchau.
 nisp.excluded.niRecordIntroUK = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol y DU sy’n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.

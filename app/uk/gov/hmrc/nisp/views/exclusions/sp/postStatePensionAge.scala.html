@@ -33,21 +33,27 @@
                 "target" -> "_blank",
                 "rel" -> "noopener noreferrer"
             ),
-            comma = true,
             href = "https://www.gov.uk/claim-state-pension-online",
             messageKey = "nisp.excluded.spa.linktext0",
             specId = Some("post_state_pension_age__link1"),
-        ),
+        )
+    )),
+    specId = Some("post_state_pension_age__p1")
+)
+@p(
+    content = HtmlContent(messages(
+        "nisp.excluded.spa.defer",
         link(
             attrs = Map(
                 "data-journey-click" -> "checkmystatepension:external:deferstatepension",
                 "target" -> "_blank",
                 "rel" -> "noopener noreferrer"
             ),
+            fullStop = true,
             href = "https://www.gov.uk/deferring-state-pension",
-            messageKey = "nisp.excluded.spa.linktext1",
-            specId = Some("post_state_pension_age__link2"),
+            messageKey = "nisp.excluded.spa.defer.linktext0",
+            specId = Some("post_state_pension_age_defer__link1"), // ADD TESTS FOR
         )
     )),
-    specId = Some("post_state_pension_age__p1")
+    specId = Some("post_state_pension_age_defer__p1")  // ADD TESTS FOR
 )
