@@ -163,7 +163,7 @@ nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau 
 nisp.main.context.cantFillGaps.reached.p2 = Nid oes unrhyw fylchau yn eich cofnod Yswiriant Gwladol y mae angen i chi dalu amdanynt.
 
 nisp.main.context.additionalStatePension = Efallai y byddwch yn cael mwy na hyn os oes gennych hawl i daliad sydd wedi’i ddiogelu. {0}
-nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am daliadau sydd wedi’u diogelu a Phensiwn y Wladwriaeth newydd (yn Saesneg).
+nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am daliadau sydd wedi’u diogelu a Phensiwn y Wladwriaeth newydd (yn Saesneg)
 
 #**********************
 # Exclusion messages
