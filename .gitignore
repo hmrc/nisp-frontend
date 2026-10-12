@@ -48,3 +48,7 @@ target/
 test-result/
 tmp/
 xunit.xml
+.vscode/settings.json
+.metals/metals.lock.db
+.metals/metals.log
+.metals/metals.mv.db
