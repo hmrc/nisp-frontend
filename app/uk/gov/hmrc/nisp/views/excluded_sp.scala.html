@@ -128,11 +128,6 @@
 
     @if(canSeeNIRecord) {
 
-        @p(
-            content = HtmlContent(messages("nisp.excluded.niRecordIntro")),
-            specId = Some("excluded_sp__p2")
-        )
-
         @govukButton(Button(
             attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue"),
             content = Text(messages("nisp.main.showyourrecord")),
