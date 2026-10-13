@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,12 +64,11 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
   val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
   val mciMessaging  = "We need to talk to you about an MCI error before you sign in."
 
-  val postSPAMessagingText1     = "If you have not already started"
+  val postSPAMessagingText1     = "You can "
   val postSPAMessagingHref1     = "href=\"https://www.gov.uk/claim-state-pension-online\""
-  val postSPAMessagingLinkText1 = "claiming your State Pension"
+  val postSPAMessagingLinkText = "claim your State Pension online"
   val postSPAMessagingHref2     = "href=\"https://www.gov.uk/deferring-state-pension\""
-  val postSPAMessagingLinkText2 = "put off claiming your State Pension (opens in new tab)"
-  val postSPAMessagingText2     = "and this may mean you get extra State Pension when you do want to claim it."
+  val postSPAMessagingText2     = "if you have not already claimed it."
 
   val dissonanceMessaging  =
     "We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this."
@@ -78,9 +77,9 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
   val isleOfManMessagingNI =
     "We’re unable to show your National Insurance record as you have contributions from the Isle of Man."
 
-  val mwrreMessagingSP         = "We’re unable to calculate your State Pension forecast as you have"
+  val mwrreMessagingSP         = "We’re unable to calculate your State Pension forecast. You have paid a"
   val mwrreMessagingSPHref     = "href=\"https://www.gov.uk/reduced-national-insurance-married-women\""
-  val mwrreMessagingSPLinkText = "paid a reduced rate of National Insurance as a married woman (opens in new tab)"
+  val mwrreMessagingSPLinkText = "reduced rate of National Insurance as a married woman"
 
   val mwrreMessagingNI         = "We’re currently unable to show your National Insurance Record as you have"
   val mwrreMessagingNIHref     = "href=\"https://www.gov.uk/reduced-national-insurance-married-women\""
@@ -333,9 +332,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should not include mciMessaging
           contentAsString(result)    should include(postSPAMessagingText1)
           contentAsString(result)    should include(postSPAMessagingHref1)
-          contentAsString(result)    should include(postSPAMessagingLinkText1)
+          contentAsString(result)    should include(postSPAMessagingLinkText)
           contentAsString(result)    should include(postSPAMessagingHref2)
-          contentAsString(result)    should include(postSPAMessagingLinkText2)
           contentAsString(result)    should include(postSPAMessagingText2)
           contentAsString(result)    should not include dissonanceMessaging
           contentAsString(result)    should not include isleOfManMessagingSP

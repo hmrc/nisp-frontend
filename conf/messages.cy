@@ -188,8 +188,8 @@ nisp.excluded.title = Rydych yn methu defnyddio’r gwasanaeth
 
 nisp.excluded.amountdissonance = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth ar hyn o bryd ac rydym yn gweithio i gywiro hyn.
 
-nisp.excluded.contactFuturePensionCentre = Yn y cyfamser, gallwch {0} i gael amcangyfrif o’ch Pensiwn y Wladwriaeth, yn seiliedig ar eich cofnod Yswiriant Gwladol presennol.
-nisp.excluded.contactFuturePensionCentre.linktext = gysylltu â Chanolfan Bensiwn y Dyfodol (agor mewn tab newydd)
+nisp.excluded.contactFuturePensionCentre = {0} i weld a fyddwch yn elwa o dalu cyfraniadau gwirfoddol.
+nisp.excluded.contactFuturePensionCentre.linktext = Cysylltwch â Chanolfan Pensiwn y Dyfodol
 
 nisp.excluded.contactNationalInsuranceHelpline = I gael copi o’ch cofnod Yswiriant Gwladol hyd yn hyn, {0}
 nisp.excluded.contactNationalInsuranceHelpline.link = cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)
@@ -207,23 +207,21 @@ nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymdde
 nisp.excluded.isleOfMan.sp.line2.linktext = GOV.IM – Retirement Pension (agor mewn tab newydd)
 nisp.excluded.isleOfMan.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol oherwydd bod gennych gyfraniadau o Ynys Manaw.
 
-nisp.excluded.mwrre.sp = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth oherwydd eich bod wedi {0}
-nisp.excluded.mwrre.sp.linktext = talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)
+nisp.excluded.mwrre.sp = Ni allwn gyfrifo’ch rhagolwg Pensiwn y Wladwriaeth.Rydych wedi talu {0}
+nisp.excluded.mwrre.sp.linktext = cyfradd is o Yswiriant Gwladol fel gwraig briod
 nisp.excluded.mwrre.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol ar hyn o bryd oherwydd eich bod wedi {0}
 nisp.excluded.mwrre.ni.link = talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)
-nisp.excluded.mwrre.improve = Helpwch ni i wella’r gwasanaeth hwn
-nisp.excluded.mwrre.futureResearch = Os hoffech gymryd rhan mewn unrhyw ymchwil yn y dyfodol i ni gael darganfod beth yr hoffai pobl yn eich amgylchiadau chi gael gwybod, a fyddech yn gadael eich manylion cyswllt pan fyddwch yn allgofnodi.
 nisp.excluded.mwrre.signOut = Allgofnodi a gadael adborth
 
 nisp.excluded.overseas = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth y DU oherwydd eich bod wedi byw neu weithio dramor.
 
-nisp.excluded.spa = Os nad ydych eisoes wedi dechrau {0} gallwch {1} a gallai hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan rydych eisiau gwneud cais amdano.
-nisp.excluded.spa.linktext0 = hawlio eich Pensiwn y Wladwriaeth
+nisp.excluded.spa = Gallwch {0} os nad ydych eisoes wedi ei hawlio.
+nisp.excluded.spa.linktext0 = hawlio’ch Pensiwn y Wladwriaeth ar-lein
 
 nisp.excluded.spa.defer = Gallwch ohirio hawlio’ch Pensiwn y Wladwriaeth. Mae hyn yn golygu y gallech gael Pensiwn y Wladwriaeth ychwanegol pan fyddwch yn ei hawlio. {0}
 nisp.excluded.spa.defer.linktext0 = Dysgwch ragor am ohirio’ch Pensiwn y Wladwriaeth
 
-nisp.excluded.niRecordIntro = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol sy’n cyfri tuag at eich Pensiwn y Wladwriaeth ac edrych am unrhyw fylchau.
+nisp.excluded.niRecordIntro = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y gallech eu llenwi a'u cyfrif tuag at eich Pensiwn y Wladwriaeth.
 nisp.excluded.niRecordIntroUK = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol y DU sy’n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
 nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
