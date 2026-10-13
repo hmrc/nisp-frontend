@@ -581,10 +581,10 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with help message 'View your National Insurance record' " in {
+    "render page with 'View your National Insurance record' button text" in {
       assertEqualsMessage(
         htmlAccountDoc,
-        "[data-spec='excluded_sp__link2']",
+        "[data-spec='excluded_sp__govukButton']",
         "nisp.main.showyourrecord"
       )
     }
@@ -674,10 +674,10 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with help message 'View your National Insurance record' " in {
+    "render page with 'View your National Insurance record' button text" in {
       assertEqualsMessage(
         htmlAccountDoc,
-        "[data-spec='excluded_sp__link2']",
+        "[data-spec='excluded_sp__govukButton']",
         "nisp.main.showyourrecord"
       )
     }
@@ -762,10 +762,10 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with help message 'View your National Insurance record' " in {
+    "render page with 'View your National Insurance record' button text" in {
       assertEqualsMessage(
         htmlAccountDoc,
-        "[data-spec='excluded_sp__link2']",
+        "[data-spec='excluded_sp__govukButton']",
         "nisp.main.showyourrecord"
       )
     }
@@ -850,7 +850,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
     "render page with text View your National Insurance record for Dissonance" in {
       assertEqualsMessage(
         htmlAccountDoc,
-        "[data-spec='excluded_sp__link2']",
+        "[data-spec='excluded_sp__govukButton']",
         "nisp.main.showyourrecord"
       )
     }
@@ -936,7 +936,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
     "render page with text View your National Insurance record for Dissonance" in {
       assertEqualsMessage(
         htmlAccountDoc,
-        "[data-spec='excluded_sp__link2']",
+        "[data-spec='excluded_sp__govukButton']",
         "nisp.main.showyourrecord"
       )
     }
@@ -1027,10 +1027,10 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with text View your National Insurance record for Dissonance" in {
+    "render page with View your National Insurance record for Dissonance test" in {
       assertEqualsMessage(
         htmlAccountDoc,
-        "[data-spec='excluded_sp__link2']",
+        "[data-spec='excluded_sp__govukButton']",
         "nisp.main.showyourrecord"
       )
     }
