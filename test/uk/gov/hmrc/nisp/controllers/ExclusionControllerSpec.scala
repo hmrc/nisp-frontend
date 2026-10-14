@@ -71,9 +71,9 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
   val postSPAMessagingText2     = "if you have not already claimed it."
 
   val dissonanceMessaging  =
-    "We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this."
+    "We’re unable to calculate your State Pension forecast. We are working on fixing this."
   val isleOfManMessagingSP =
-    "We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme."
+    "We’re unable to calculate your State Pension forecast. You have paid National Insurance in the Isle of Man."
   val isleOfManMessagingNI =
     "We’re unable to show your National Insurance record as you have contributions from the Isle of Man."
 
@@ -223,7 +223,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
         )
       )
 
-      redirectLocation(result) shouldBe Some("/check-your-state-pension/account/nirecord/gaps")
+      redirectLocation(result) `shouldBe` Some("/check-your-state-pension/account/nirecord/gaps")
     }
 
     "Exclusion Controller" when {
@@ -370,7 +370,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           redirectLocation(result) shouldBe None
           contentAsString(result)    should not include deadMessaging
           contentAsString(result)    should not include mciMessaging
-          contentAsString(result)    should not include postSPAMessagingText1
+          contentAsString(result)    should not include postSPAMessagingLinkText
           contentAsString(result)    should include(dissonanceMessaging)
           contentAsString(result)    should not include isleOfManMessagingSP
           contentAsString(result)    should not include mwrreMessagingSP
@@ -406,7 +406,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           redirectLocation(result) shouldBe None
           contentAsString(result)    should not include deadMessaging
           contentAsString(result)    should not include mciMessaging
-          contentAsString(result)    should not include postSPAMessagingText1
+          contentAsString(result)    should not include postSPAMessagingLinkText
           contentAsString(result)    should not include dissonanceMessaging
           contentAsString(result)    should include(isleOfManMessagingSP)
           contentAsString(result)    should not include mwrreMessagingSP

@@ -177,7 +177,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       assertLinkHasValue(
         htmlAccountDoc,
         "[data-spec='exclusion_isleOfMan_sp__link1']",
-        "https://www.gov.im/categories/benefits-and-financial-support/pensions/"
+        "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/"
       )
     }
 
@@ -271,7 +271,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       assertLinkHasValue(
         htmlAccountDoc,
         "[data-spec='exclusion_isleOfMan_sp__link1']",
-        "https://www.gov.im/categories/benefits-and-financial-support/pensions/"
+        "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/"
       )
     }
 
@@ -365,7 +365,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       assertLinkHasValue(
         htmlAccountDoc,
         "[data-spec='exclusion_isleOfMan_sp__link1']",
-        "https://www.gov.im/categories/benefits-and-financial-support/pensions/"
+        "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/"
       )
     }
 
@@ -576,7 +576,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
       assertLinkHasValue(
         htmlAccountDoc,
-        "[data-spec='post_state_pension_age__link2']",
+        "[data-spec='post_state_pension_age_defer__link1']",
         "https://www.gov.uk/deferring-state-pension"
       )
     }
@@ -661,7 +661,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
       assertLinkHasValue(
         htmlAccountDoc,
-        "[data-spec='post_state_pension_age__link2']",
+        "[data-spec='post_state_pension_age_defer__link1']",
         "https://www.gov.uk/deferring-state-pension"
       )
     }
@@ -757,7 +757,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
       assertLinkHasValue(
         htmlAccountDoc,
-        "[data-spec='post_state_pension_age__link2']",
+        "[data-spec='post_state_pension_age_defer__link1']",
         "https://www.gov.uk/deferring-state-pension"
       )
     }

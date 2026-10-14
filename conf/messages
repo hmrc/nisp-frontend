@@ -186,9 +186,9 @@ nisp.excluded.mci.howToContact.link = Find out about call charges (opens in a ne
 
 nisp.excluded.title = You are unable to use this service
 
-nisp.excluded.amountdissonance = We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this.
+nisp.excluded.amountdissonance = We’re unable to calculate your State Pension forecast. We are working on fixing this.
 
-nisp.excluded.contactFuturePensionCentre = {0} to find out if you'll benefit from paying voluntary contributions.
+nisp.excluded.contactFuturePensionCentre = {0} to find out if you’ll benefit from paying voluntary contributions.
 nisp.excluded.contactFuturePensionCentre.linktext = Contact the Future Pension Centre
 
 nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, {0}
@@ -202,9 +202,9 @@ nisp.excluded.dead.openingtime.weekdays = 8am to 8pm, Monday to Friday
 nisp.excluded.dead.openingtime.saturday = 8am to 4pm, Saturday
 nisp.excluded.dead.openingtime.holidays = Closed Sundays and bank holidays
 
-nisp.excluded.isleOfMan.sp.line1 = We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.
-nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit {0}
-nisp.excluded.isleOfMan.sp.line2.linktext = GOV.IM – Retirement Pension (opens in new tab)
+nisp.excluded.isleOfMan.sp.line1 = We’re unable to calculate your State Pension forecast. You have paid National Insurance in the Isle of Man.
+nisp.excluded.isleOfMan.sp.line2 = You can find out more about your Isle of Man Pension from the {0}
+nisp.excluded.isleOfMan.sp.line2.linktext = Isle of Man Pension Centre
 nisp.excluded.isleOfMan.ni = We’re unable to show your National Insurance record as you have contributions from the Isle of Man.
 
 nisp.excluded.mwrre.sp = We’re unable to calculate your State Pension forecast. You have paid a {0}

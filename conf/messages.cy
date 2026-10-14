@@ -186,7 +186,7 @@ nisp.excluded.mci.howToContact.link = Darganfyddwch am gostau galwadau (agor mew
 
 nisp.excluded.title = Rydych yn methu defnyddio’r gwasanaeth
 
-nisp.excluded.amountdissonance = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth ar hyn o bryd ac rydym yn gweithio i gywiro hyn.
+nisp.excluded.amountdissonance = Ni allwn gyfrifo’ch rhagolwg Pensiwn y Wladwriaeth. Rydym yn gweithio ar drwsio hyn.
 
 nisp.excluded.contactFuturePensionCentre = {0} i weld a fyddwch yn elwa o dalu cyfraniadau gwirfoddol.
 nisp.excluded.contactFuturePensionCentre.linktext = Cysylltwch â Chanolfan Pensiwn y Dyfodol
@@ -202,7 +202,7 @@ nisp.excluded.dead.openingtime.weekdays = 08:00 - 20:00, Dydd Llun - Dydd Gwener
 nisp.excluded.dead.openingtime.saturday = 08:00 - 16:00, Dydd Sadwrn
 nisp.excluded.dead.openingtime.holidays = Ar gau ar Ddydd Sul ac ar wyliau’r banc
 
-nisp.excluded.isleOfMan.sp.line1 = Rydym yn methu cyfrifo eich Pensiwn y Wladwriaeth, oherwydd bod Llywodraeth Ynys Manaw ar hyn o bryd yn ymgymryd ag adolygiad o’i gynllun Pensiwn Ymddeol. Ni fydd yn mabwysiadu’r diwygiadau newydd i Bensiwn y Wladwriaeth.
+nisp.excluded.isleOfMan.sp.line1 = Ni allwn gyfrifo’ch rhagolwg Pensiwn y Wladwriaeth. Rydych wedi talu Yswiriant Gwladol yn Ynys Manaw.
 nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i
 nisp.excluded.isleOfMan.sp.line2.linktext = GOV.IM – Retirement Pension (agor mewn tab newydd)
 nisp.excluded.isleOfMan.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol oherwydd bod gennych gyfraniadau o Ynys Manaw.

@@ -30,6 +30,11 @@
 )
 
 @p(
+    content = HtmlContent(messages("nisp.main.context.cantFillGaps.p2"  //TEST TO ADD specId?
+    ))
+)
+
+@p(
     content = HtmlContent(messages(
         "nisp.excluded.isleOfMan.sp.line2",
         link(
@@ -39,7 +44,7 @@
                 "rel" -> "noopener noreferrer"
             ),
             fullStop = true,
-            href = "https://www.gov.im/categories/benefits-and-financial-support/pensions/",
+            href = "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/",
             messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",
             specId = Some("exclusion_isleOfMan_sp__link1"),
         )

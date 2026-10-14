@@ -22,10 +22,10 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.errorHandler.ErrorHandler
-import uk.gov.hmrc.nisp.models.Exclusion._
+import uk.gov.hmrc.nisp.models.Exclusion.*
 import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
-import uk.gov.hmrc.nisp.services._
-import uk.gov.hmrc.nisp.views.html._
+import uk.gov.hmrc.nisp.services.*
+import uk.gov.hmrc.nisp.views.html.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,6 +44,7 @@ class ExclusionController @Inject()(
   excludedDead: excluded_dead,
   excludedMci: excluded_mci,
   excludedNi: excluded_ni,
+ // excludedIOM: isleOfMan,
   errorHandler: ErrorHandler
 )(
   implicit val executor: ExecutionContext
@@ -66,6 +67,8 @@ class ExclusionController @Inject()(
           Future.successful(Ok(excludedDead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge)))
         else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
           Future.successful(Ok(excludedMci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge)))
+        //else if (statePensionExclusionFiltered.exclusion == IsleOfMan)
+         // Future.successful(Ok(excludedIOM(Exclusion.IsleOfMan)))
         else if (statePensionExclusionFiltered.exclusion == CopeProcessingFailed)
           Future.successful(Ok(excludedCopeFailedView()))
         else {
