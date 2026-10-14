@@ -65,7 +65,7 @@ class MainViewSpec extends HtmlSpec {
     val urBannerHeader = "Help make GOV.UK better"
     val urBannerLinkText = "Sign up to take part in research (opens in new tab)"
     val urBannerLink =
-      "https://signup.take-part-in-research.service.gov.uk/home?utm_campaign=checkyourstatepensionPTA&utm_source=Other&utm_medium=other&t=HMRC&id=183"
+      "https://survey.take-part-in-research.service.gov.uk/jfe/form/SV_74GjifgnGv6GsMC?Source=BannerList_HMRC_check_your_state_pension_nirecord_gaps"
 
     val accessibilityStatementText = "Accessibility statement"
     val accessibilityStatementBaseUrl =
@@ -109,6 +109,13 @@ class MainViewSpec extends HtmlSpec {
           doc.title() shouldBe CommonValues.pageTitle
         }
 
+      }
+
+      "the research banner" should {
+
+        "link to the NISP research panel" in {
+          doc.getElementById("full-width-banner").select("a").attr("href") shouldBe CommonValues.urBannerLink
+        }
       }
 
       lazy val navigationLinks = doc.select(".govuk-service-navigation__list .govuk-service-navigation__link")

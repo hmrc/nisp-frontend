@@ -1,0 +1,101 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
+@import uk.gov.hmrc.nisp.views.Main
+
+@this(main: Main)
+
+@()(implicit messages: Messages, request: AuthenticatedRequest[?], user: NispAuthedUser)
+
+@main(pageTitle = messages("nisp.nirecord.selectedGaps.title")) {
+    <h1 class="govuk-heading-xl">@messages("nisp.nirecord.selectedGaps.heading", 2)</h1>
+
+    <p class="govuk-body">@messages("nisp.nirecord.selectedGaps.intro")</p>
+
+    <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">@messages("nisp.nirecord.selectedGaps.option", 2, 8)</h2>
+            <strong class="govuk-tag govuk-tag--red">@messages("nisp.nirecord.selectedGaps.oldest")</strong>
+        </div>
+        <div class="govuk-summary-card__content">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">@messages("nisp.nirecord.selectedGaps.taxYears")</th>
+                        <th class="govuk-table__header" scope="col">@messages("nisp.nirecord.selectedGaps.cost")</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">@messages("nisp.nirecord.selectedGaps.taxYear")</th>
+                        <td class="govuk-table__cell">£105</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">@messages("nisp.nirecord.selectedGaps.totalCost")</th>
+                        <td class="govuk-table__cell"><strong>£105</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="govuk-body">
+                @messages("nisp.nirecord.selectedGaps.availableUntil") <strong>5 April 2029</strong>
+            </p>
+            <a class="govuk-link" href="@routes.MultiClassNIRecordController.showGaps.url">
+                @messages("nisp.nirecord.selectedGaps.selectDifferent")
+            </a>
+        </div>
+    </div>
+
+    <h2 class="govuk-heading-m">@messages("nisp.nirecord.selectedGaps.pensionImpact")</h2>
+    <div class="govuk-table__container">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col"></th>
+                    <th class="govuk-table__header" scope="col">@messages("nisp.nirecord.selectedGaps.currentYear")</th>
+                    <th class="govuk-table__header" scope="col">@messages("nisp.nirecord.selectedGaps.pensionAge")</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">@messages("nisp.nirecord.selectedGaps.forecastIfPay", 2)</th>
+                    <td class="govuk-table__cell">£158.19 per week</td>
+                    <td class="govuk-table__cell">£201.47 per week</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">@messages("nisp.nirecord.selectedGaps.maximumForecast")</th>
+                    <td class="govuk-table__cell">£198.02 per week</td>
+                    <td class="govuk-table__cell">£241.30 per week</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="govuk-body">@messages("nisp.nirecord.selectedGaps.forecastLabel")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("nisp.nirecord.selectedGaps.forecastDisclaimer1")</li>
+        <li>@messages("nisp.nirecord.selectedGaps.forecastDisclaimer2")</li>
+    </ul>
+
+    <p class="govuk-body">
+        @messages("nisp.nirecord.selectedGaps.paymentMessage1")<br>
+        @messages("nisp.nirecord.selectedGaps.paymentMessage2")
+    </p>
+    <a class="govuk-button" href="/declaration" role="button" data-module="govuk-button">
+        @messages("nisp.nirecord.selectedGaps.makePayment")
+    </a>
+}

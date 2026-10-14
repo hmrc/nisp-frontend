@@ -35,3 +35,4 @@ GET        /language/:lang                            uk.gov.hmrc.nisp.controlle
 
 GET        /account/national-insurance-record         uk.gov.hmrc.nisp.controllers.MultiClassNIRecordController.showFull
 GET        /account/national-insurance-record/gaps    uk.gov.hmrc.nisp.controllers.MultiClassNIRecordController.showGaps
+GET        /your-selected-gaps                        uk.gov.hmrc.nisp.controllers.MultiClassNIRecordController.showSelectedGaps

@@ -1455,6 +1455,20 @@ class MultiClassNIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
   }
 
+  "GET /your-selected-gaps" should {
+
+    "render the selected gap page for an authenticated user" in {
+      when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+      when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+
+      val result = niRecordController.showSelectedGaps(generateFakeRequest)
+
+      status(result) shouldBe OK
+      contentAsString(result) should include("You have selected to pay for Option 2")
+      contentAsString(result) should include("Make a payment")
+    }
+  }
+
   "GET /account/national-insurance-record (full)" should {
 
     "return NI record page with details for full years - when showFullNI is true" in {

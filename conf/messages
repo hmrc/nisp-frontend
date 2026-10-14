@@ -433,6 +433,33 @@ nisp.nirecord.voluntarycontributions.h2title.3.linktitle3 = lived or worked in t
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1 = You may be entitled to some Retirement Pension from the Isle of Man. For more information about the Retirement Pension scheme,
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.link = visit GOV.IM – Retirement Pension (opens in new window)
 
+#*******************************
+# Selected gaps page
+#*******************************
+
+nisp.nirecord.selectedGaps.title = Your selected gaps
+nisp.nirecord.selectedGaps.heading = You have selected to pay for Option {0}
+nisp.nirecord.selectedGaps.intro = Your State Pension forecast may change based on your record and contributions in the future.
+nisp.nirecord.selectedGaps.option = Option {0} of {1}
+nisp.nirecord.selectedGaps.oldest = Oldest
+nisp.nirecord.selectedGaps.taxYears = Tax years
+nisp.nirecord.selectedGaps.taxYear = 2015 to 2016
+nisp.nirecord.selectedGaps.cost = Cost
+nisp.nirecord.selectedGaps.totalCost = Total cost
+nisp.nirecord.selectedGaps.availableUntil = This option is available until
+nisp.nirecord.selectedGaps.selectDifferent = Select a different option
+nisp.nirecord.selectedGaps.pensionImpact = How this will affect your State Pension
+nisp.nirecord.selectedGaps.currentYear = If you contribute until 5 April 2026
+nisp.nirecord.selectedGaps.pensionAge = If you contribute until 5 April 2048
+nisp.nirecord.selectedGaps.forecastIfPay = Your forecast if you pay for Option {0}
+nisp.nirecord.selectedGaps.maximumForecast = The most you can increase your forecast to
+nisp.nirecord.selectedGaps.forecastLabel = Your forecast:
+nisp.nirecord.selectedGaps.forecastDisclaimer1 = is not a guarantee and is based on the current law
+nisp.nirecord.selectedGaps.forecastDisclaimer2 = does not account for inflation
+nisp.nirecord.selectedGaps.paymentMessage1 = You must pay for the full amount of the gap in your National Insurance record.
+nisp.nirecord.selectedGaps.paymentMessage2 = You cannot pay in instalments.
+nisp.nirecord.selectedGaps.makePayment = Make a payment
+
 #*****************************
 # Minimum qualifying period
 #*****************************

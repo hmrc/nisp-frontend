@@ -445,6 +445,33 @@ nisp.nirecord.voluntarycontributions.h2title.3.linktitle3 = wedi byw neu weithio
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.message1 = Efallai y bydd gennych hawl i rywfaint o Bensiwn Ymddeol o Ynys Manaw. Am fwy o wybodaeth am y cynllun Pensiwn Ymddeol,
 nisp.nirecord.voluntarycontributions.h2title.3.linktitle3.link = ewch i GOV.IM – Retirement Pension (agor mewn ffenestr newydd)
 
+#*******************************
+# Selected gaps page
+#*******************************
+
+nisp.nirecord.selectedGaps.title = Eich bylchau a ddewiswyd
+nisp.nirecord.selectedGaps.heading = Rydych wedi dewis talu am Opsiwn {0}
+nisp.nirecord.selectedGaps.intro = Efallai y bydd eich rhagolwg Pensiwn y Wladwriaeth yn newid yn seiliedig ar eich cofnod a’ch cyfraniadau yn y dyfodol.
+nisp.nirecord.selectedGaps.option = Opsiwn {0} o {1}
+nisp.nirecord.selectedGaps.oldest = Hynaf
+nisp.nirecord.selectedGaps.taxYears = Blynyddoedd treth
+nisp.nirecord.selectedGaps.taxYear = 2015 i 2016
+nisp.nirecord.selectedGaps.cost = Cost
+nisp.nirecord.selectedGaps.totalCost = Cyfanswm y gost
+nisp.nirecord.selectedGaps.availableUntil = Mae’r opsiwn hwn ar gael tan
+nisp.nirecord.selectedGaps.selectDifferent = Dewiswch opsiwn gwahanol
+nisp.nirecord.selectedGaps.pensionImpact = Sut bydd hyn yn effeithio ar eich Pensiwn y Wladwriaeth
+nisp.nirecord.selectedGaps.currentYear = Os byddwch yn cyfrannu tan 5 Ebrill 2026
+nisp.nirecord.selectedGaps.pensionAge = Os byddwch yn cyfrannu tan 5 Ebrill 2048
+nisp.nirecord.selectedGaps.forecastIfPay = Eich rhagolwg os byddwch yn talu am Opsiwn {0}
+nisp.nirecord.selectedGaps.maximumForecast = Y mwyaf y gallwch gynyddu eich rhagolwg iddo
+nisp.nirecord.selectedGaps.forecastLabel = Eich rhagolwg:
+nisp.nirecord.selectedGaps.forecastDisclaimer1 = nid yw’n warant ac mae’n seiliedig ar y gyfraith bresennol
+nisp.nirecord.selectedGaps.forecastDisclaimer2 = nid yw’n ystyried chwyddiant
+nisp.nirecord.selectedGaps.paymentMessage1 = Rhaid i chi dalu swm llawn y bwlch yn eich cofnod Yswiriant Gwladol.
+nisp.nirecord.selectedGaps.paymentMessage2 = Ni allwch dalu mewn rhandaliadau.
+nisp.nirecord.selectedGaps.makePayment = Talu
+
 
 #*****************************
 # Minimum qualifying period
