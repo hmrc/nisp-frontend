@@ -373,7 +373,11 @@
                 content = HtmlContent(messages(
                     "nisp.main.deferral.text",
                     link(
-                        href = appConfig.pensionDeferralLink,
+                        href = if(messages.lang.code == "cy") {
+                            appConfig.pensionDeferralLinkCy
+                        } else {
+                            appConfig.pensionDeferralLink
+                        },
                         messageKey = "nisp.main.deferral.text.link",
                         specId = Some("state_pension__deferral__link"),
                         fullStop = true

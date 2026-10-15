@@ -42,7 +42,11 @@
             attrs = Map(
                 "data-journey-click" -> "checkmystatepension:external:homeresponsibilitiesprotection"
             ),
-            href = appConfig.homeResponsibilitiesLink,
+            href = if(messages.lang.code == "cy") {
+                appConfig.homeResponsibilitiesLinkCy
+            } else {
+                appConfig.homeResponsibilitiesLink
+            },
             messageKey = "nisp.mqp.childBenefits.link",
             specId = Some("state_pension__home_responsibilities_protection__link"),
             fullStop = true
@@ -58,7 +62,11 @@
             attrs = Map(
                 "data-journey-click" -> "checkmystatepension:external:pensioncredit"
             ),
-            href = appConfig.pensionCreditLink,
+            href = if(messages.lang.code == "cy") {
+                appConfig.pensionCreditLinkCy
+            } else {
+                appConfig.pensionCreditLink
+            },
             messageKey = "nisp.mqp.pensionCredit.linktext",
             specId = Some("state_pension__pension_credit__link"),
             fullStop = true

@@ -14,12 +14,13 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.StatePension
-@import uk.gov.hmrc.nisp.models.enums.MQPScenario._
+@import uk.gov.hmrc.nisp.models.enums.MQPScenario.*
 @import uk.gov.hmrc.nisp.views.Main
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents._
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.*
 @import uk.gov.hmrc.nisp.views.html.includes.{NiLInks, statePensionAgeUnderConsideration}
 @import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
 @import uk.gov.hmrc.play.language.LanguageUtils
@@ -29,6 +30,7 @@
         main: Main,
         statePensionAgeUnderConsideration: statePensionAgeUnderConsideration,
         langUtils: LanguageUtils,
+        appConfig: ApplicationConfig,
         p: P,
         h1: H1,
         h2: H2,
@@ -38,8 +40,7 @@
         statePensionFooter: StatePensionFooter,
         printLink: PrintLink,
         span: Span,
-        niLinks: NiLInks,
-        appConfig: ApplicationConfig
+        niLinks: NiLInks
 )
 
 @(
@@ -156,7 +157,11 @@
                 "nisp.main.overseas.text.new",
                 link(
                     attrs = Map("data-journey-click" -> "checkmystatepension:external:workingoverseas"),
-                    href = "https://www.gov.uk/new-state-pension/living-and-working-overseas",
+                    href = if(messages.lang.code == "cy") {
+                        appConfig.abroadLinkCy
+                    } else {
+                        appConfig.abroadLink
+                    },
                     messageKey = "nisp.main.overseas.text.link",
                     specId = Some("state_pension_mqp__is_abroad_link1"),
                     fullStop = true
@@ -176,24 +181,24 @@
             @if(mqp == CanGetWithGaps) {
                 @p(
                     content = HtmlContent(messages("nisp.mqp.fillingGaps")),
-                    specId  = Some("state_pension__mqp__filling_gaps")
+                    specId = Some("state_pension__mqp__filling_gaps")
                 )
             }
             @if(mqp == CantGet) {
                 @if(numberOfPayableGaps > 0) {
                     @p(
                         content = HtmlContent(messages("nisp.mqp.cantFillGapsP3")),
-                        specId  = Some("state_pension__mqp__cant_fill_gaps_p3")
+                        specId = Some("state_pension__mqp__cant_fill_gaps_p3")
                     )
                 } else {
                     @p(
                         content = HtmlContent(messages("nisp.mqp.cantFillGapsP1")),
-                        specId  = Some("state_pension__mqp__cant_fill_gaps_p1")
+                        specId = Some("state_pension__mqp__cant_fill_gaps_p1")
                     )
                 }
                 @p(
                     content = HtmlContent(messages("nisp.mqp.cantFillGapsP2")),
-                    specId  = Some("state_pension__mqp__cant_fill_gaps_p2")
+                    specId = Some("state_pension__mqp__cant_fill_gaps_p2")
                 )
             }
         }
@@ -239,7 +244,11 @@
                 "nisp.mqp.childBenefits",
                 link(
                     attrs = Map("data-journey-click" -> "checkmystatepension:external:homeresponsibilitiesprotection"),
-                    href = "https://www.gov.uk/home-responsibilities-protection-hrp",
+                    href = if(messages.lang.code == "cy") {
+                        appConfig.homeResponsibilitiesLinkCy
+                    } else {
+                        appConfig.homeResponsibilitiesLink
+                    },
                     messageKey = "nisp.mqp.childBenefits.link",
                     specId = Some("state_pension_mqp__home_responsibilities_protection_link"),
                     fullStop = true
@@ -253,7 +262,11 @@
                 "nisp.mqp.pensionCredit",
                 link(
                     attrs = Map("data-journey-click" -> "checkmystatepension:external:pensioncredit"),
-                    href = "https://www.gov.uk/pension-credit/overview",
+                    href = if(messages.lang.code == "cy") {
+                        appConfig.pensionCreditLinkCy
+                    } else {
+                        appConfig.pensionCreditLink
+                    },
                     messageKey = "nisp.mqp.pensionCredit.linktext",
                     specId = Some("state_pension_mqp__pension_credit_link"),
                     fullStop = true
