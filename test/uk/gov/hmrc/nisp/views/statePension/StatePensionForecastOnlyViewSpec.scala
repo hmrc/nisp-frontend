@@ -128,12 +128,16 @@ class StatePensionForecastOnlyViewSpec
   lazy val controller: StatePensionController = standardInjector.instanceOf[StatePensionController]
   lazy val abroadUserController: StatePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
+  val class2Enabled = true
+  
   "The State Pension page" when {
 
     "the user is a MQP" when {
 
       "State Pension page with forecast only" should {
 
+        when(mockAppConfig.class2Enabled).thenReturn(class2Enabled)
+        
         lazy val nonForeignDoc =
           asDocument(contentAsString(controller.show()(generateFakeRequest)))
 

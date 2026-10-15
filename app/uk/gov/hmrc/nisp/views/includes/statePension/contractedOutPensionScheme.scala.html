@@ -41,7 +41,11 @@
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href = appConfig.copeLink,
+        href = if(messages.lang.code == "cy") {
+            appConfig.copeLinkCy
+        } else {
+            appConfig.copeLink
+        },
         messageKey = "nisp.cope.contractedOut.findOutMore",
         specId = Some("state_pension__contracted_out__link_1")
     ))
@@ -50,7 +54,11 @@
 @p(
     classes = Some("govuk-body govuk-!-margin-top-4"),
     content = HtmlContent(link(
-        href = appConfig.newStatePensionLink,
+        href = if(messages.lang.code == "cy") {
+            appConfig.newStatePensionLinkCy
+        } else {
+            appConfig.newStatePensionLink
+        },
         messageKey = "nisp.cope.contractedOut.findOutNewStatePension",
         specId = Some("state_pension__contracted_out__link_2")
     ))

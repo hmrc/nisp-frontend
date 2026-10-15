@@ -663,3 +663,26 @@ nisp.grace.period.view.p5 = If you only want to fill gaps from April {0} onwards
 
 nisp.grace.period.view.link.3.text = return to your National Insurance record
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
+
+#**********************
+# NI Record Payable gaps
+#**********************
+
+nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay.p = You can pay for gaps in your National Insurance record for the last 6 years.
+
+nisp.main.context.fillGaps.yourNonPayableGaps.h2 = Your non-payable gaps and history
+
+nisp.main.context.fillGaps.yourPayableGaps.h2 = Your payable gaps
+nisp.main.context.fillGaps.yourPayableGaps.p = Unpaid gap amounts may increase each tax year.
+
+nisp.main.context.fillGaps.yourPayableGaps.table.taxYear = Tax year
+nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus = Gap status
+nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount = Gap amount
+nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil = Payable until
+
+nisp.nirecord.fullyear.paid = Full year paid
+nisp.nirecord.fullyear.notpaid = Full year not paid
+
+nisp.main.context.fillGaps.yourNonPayableGaps.show = Show
+
+nisp.nirecord.notAvailableYet = Not available yet

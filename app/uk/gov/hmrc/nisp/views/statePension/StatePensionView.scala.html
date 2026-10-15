@@ -77,6 +77,14 @@
     langUtils.Dates.formatDate(statePension.pensionDate)
 }
 
+@showFull = @{
+    if(appConfig.class2Enabled){
+        routes.MultiClassNIRecordController.showFull.url
+    } else {
+        routes.NIRecordController.showFull.url
+    }
+}
+
 @defining(Some(user)) { _ =>
 
     @main(
@@ -350,7 +358,7 @@
         }
 
         @govukButton(Button(
-            href= Some(routes.NIRecordController.showFull.url),
+            href= showFull,
             content = Text(messages("nisp.main.showyourrecord")),
             attributes = Map("data-spec" -> "state_pension__showyourrecord"),
             classes = "govuk-!-margin-top-4"
@@ -365,7 +373,11 @@
                 content = HtmlContent(messages(
                     "nisp.main.deferral.text",
                     link(
-                        href = appConfig.pensionDeferralLink,
+                        href = if(messages.lang.code == "cy") {
+                            appConfig.pensionDeferralLinkCy
+                        } else {
+                            appConfig.pensionDeferralLink
+                        },
                         messageKey = "nisp.main.deferral.text.link",
                         specId = Some("state_pension__deferral__link"),
                         fullStop = true

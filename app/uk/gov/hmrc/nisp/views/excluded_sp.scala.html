@@ -23,6 +23,7 @@
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, H2, Link, P, insetText}
 @import uk.gov.hmrc.nisp.views.html.includes.statePensionAgeUnderConsideration
 @import uk.gov.hmrc.play.language.LanguageUtils
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @import java.time.LocalDate
 
@@ -38,7 +39,8 @@
         h1: H1,
         h2: H2,
         link: Link,
-        insetText: insetText
+        insetText: insetText,
+        appConfig: ApplicationConfig
 )
 
 @(
@@ -87,6 +89,14 @@
     }
 }
 
+@showFull = @{
+    if(appConfig.class2Enabled){
+        routes.MultiClassNIRecordController.showFull.url
+    } else {
+        routes.NIRecordController.showFull.url
+    }
+}
+
 @main(
     pageTitle = messages("nisp.main.title")
 ) {
@@ -130,7 +140,7 @@
 
         <p class="govuk-body govuk-!-margin-top-4">
             @link(
-                href = routes.NIRecordController.showFull.url,
+                href = showFull,
                 messageKey = "nisp.main.showyourrecord",
                 specId = Some("excluded_sp__link2")
             )

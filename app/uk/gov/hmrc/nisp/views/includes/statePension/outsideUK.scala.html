@@ -33,7 +33,11 @@
             attrs = Map(
                 "data-journey-click" -> "checkmystatepension:external:workingoverseas"
             ),
-            href = appConfig.abroadLink,
+            href = if(messages.lang.code == "cy") {
+                appConfig.abroadLinkCy
+            } else {
+                appConfig.abroadLink
+            },
             messageKey = "nisp.main.overseas.text.link",
             specId = Some("state_pension_outside_uk__link"),
             fullStop = true

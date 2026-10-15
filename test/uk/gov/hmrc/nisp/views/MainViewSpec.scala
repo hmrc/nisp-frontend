@@ -62,8 +62,6 @@ class MainViewSpec extends HtmlSpec {
     val localMessagesLink = "http://localhost:9232/personal-account/messages"
     val localTrackProgressLink = "http://localhost:9100/track"
     val signOutUrl = "/check-your-state-pension/sign-out"
-    val keepAliveUrl = "/check-your-state-pension/keep-alive"
-
     val urBannerHeader = "Help make GOV.UK better"
     val urBannerLinkText = "Sign up to take part in research (opens in new tab)"
     val urBannerLink =
@@ -82,7 +80,7 @@ class MainViewSpec extends HtmlSpec {
 
   Seq(TestObject(NewMainUnique)).foreach { testObject =>
 
-    lazy val main = inject[Main]
+    lazy val main = inject[uk.gov.hmrc.nisp.views.Main]
 
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some-url")
 
@@ -95,8 +93,7 @@ class MainViewSpec extends HtmlSpec {
 
       "the page header should" should {
 
-        lazy val pageHeader = doc.select(".govuk-header__service-name")
-
+        lazy val pageHeader = doc.select(".govuk-service-navigation__service-name .govuk-service-navigation__link")
         "contain the text 'Check your State Pension forecast'" in {
           pageHeader.text() shouldBe CommonValues.pageHeader
         }
@@ -114,12 +111,12 @@ class MainViewSpec extends HtmlSpec {
 
       }
 
-      lazy val accountLinks = doc.select(".hmrc-account-menu__link")
-      lazy val accountHome = accountLinks.first()
-      lazy val messagesLink = accountLinks.get(3)
-      lazy val checkProgressLink = accountLinks.get(4)
-      lazy val profileAndSettingsLink = accountLinks.get(5)
-      lazy val signOutLink = accountLinks.get(6)
+      lazy val navigationLinks = doc.select(".govuk-service-navigation__list .govuk-service-navigation__link")
+      lazy val accountHome = navigationLinks.get(0)
+      lazy val messagesLink = navigationLinks.get(1)
+      lazy val checkProgressLink = navigationLinks.get(2)
+      lazy val profileAndSettingsLink = navigationLinks.get(3)
+      lazy val signOutLink = doc.select(".hmrc-sign-out-nav__link")
 
       "the account link" should {
 
@@ -200,8 +197,7 @@ class MainViewSpec extends HtmlSpec {
 
       "the accessibility link" should {
 
-        lazy val accessibilityLink = doc
-          .select("body > footer > div > div > div.govuk-footer__meta-item.govuk-footer__meta-item--grow > ul > li:nth-child(2) > a")
+        lazy val accessibilityLink = doc.select("a[href*=\"/accessibility-statement/check-your-state-pension\"]")
 
         "contain the text 'Accessibility statement'" in {
           accessibilityLink.text() shouldBe CommonValues.accessibilityStatementText
@@ -228,7 +224,7 @@ class MainViewSpec extends HtmlSpec {
         }
 
         "have the correct keep alive url" in {
-          timeoutDialogueData.attr("data-keep-alive-url") shouldBe CommonValues.keepAliveUrl
+          timeoutDialogueData.attr("data-keep-alive-url") should endWith("/refresh-session")
         }
 
         "have the correct sign out url" in {
@@ -236,7 +232,7 @@ class MainViewSpec extends HtmlSpec {
         }
 
         "have an empty time out url" in {
-          timeoutDialogueData.attr("data-timeout-url") shouldBe ""
+          timeoutDialogueData.attr("data-timeout-url") shouldBe "http://localhost:8420/single-customer-account/signin"
         }
 
       }
@@ -250,7 +246,8 @@ class MainViewSpec extends HtmlSpec {
         }
 
         "contains the correct link" in {
-          isThePageNotWorkingCorrectly.attr("href") shouldBe testObject.uniqueValues.reportTechnicalProblemUrl
+          isThePageNotWorkingCorrectly.attr("href") should startWith(testObject.uniqueValues.reportTechnicalProblemUrl)
+          isThePageNotWorkingCorrectly.attr("href") `should` include("useServiceNavigation")
         }
 
       }
