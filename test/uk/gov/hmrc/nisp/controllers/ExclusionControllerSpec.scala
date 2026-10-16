@@ -61,7 +61,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
   val testExclusionController: ExclusionController = inject[ExclusionController]
 
-  val deadMessaging = "Please contact HMRC National Insurance helpline on 0300 200 3500."
+  val deadMessaging = "Contact HMRC"
+  val deadMessagingText = "to find out about your State Pension forecast."
   val mciMessaging  = "We need to talk to you about an MCI error before you sign in."
 
   val postSPAMessagingText1     = "If you have not already started"
@@ -259,6 +260,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should include(deadMessaging)
+          contentAsString(result)    should include(deadMessagingText)
           contentAsString(result)    should not include mciMessaging
           contentAsString(result)    should not include postSPAMessagingText1
           contentAsString(result)    should not include dissonanceMessaging
@@ -275,6 +277,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateNIRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should include(deadMessaging)
+          contentAsString(result)    should include(deadMessagingText)
           contentAsString(result)    should not include mciMessaging
           contentAsString(result)    should not include isleOfManMessagingNI
           contentAsString(result)    should not include mwrreMessagingNI
