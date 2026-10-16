@@ -141,12 +141,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with heading 'You’ll reach State Pension age on 6 sep 2019' " in {
@@ -235,12 +243,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with heading 'You’ll reach State Pension age on 6 sep 2019' " in {
@@ -329,12 +345,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with heading 'You’ll reach State Pension age on 6 Sep 2019' " in {
@@ -541,15 +565,23 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
     }
 
-    "render page with heading  You reached State Pension age on 6 September 2015 when you were 70 " in {
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text  You reached State Pension age on 6 September 2015 when you were 70 " in {
       assertContainsDynamicMessage(
         htmlAccountDoc,
         "[data-spec='excluded_sp__p_1a']",
@@ -581,12 +613,19 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with 'View your National Insurance record' button text" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__govukButton']",
-        "nisp.main.showyourrecord"
-      )
+    "render page with help message for National Insurance Record button" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with show your record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
 
     // No state pension age under consideration message
@@ -626,15 +665,23 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
     }
 
-    "render page with heading  You reached State Pension age on 6 September 2015 when you were 70 " in {
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text  You reached State Pension age on 6 September 2015 when you were 70 " in {
       assertContainsDynamicMessage(
         htmlAccountDoc,
         "[data-spec='excluded_sp__p_1a']",
@@ -666,20 +713,19 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with help message 'You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension.' " in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__p2']",
-        "nisp.excluded.niRecordIntro"
-      )
+    "render page with help message for National Insurance Record button" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
     }
 
-    "render page with 'View your National Insurance record' button text" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__govukButton']",
-        "nisp.main.showyourrecord"
-      )
+    "render page with show your record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
 
     // No state pension age under consideration message
@@ -722,15 +768,23 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
     }
 
-    "render page with heading  You reached State Pension age on 6 September 2015 when you were 70 " in {
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text  You reached State Pension age on 6 September 2015 when you were 70 " in {
       assertContainsDynamicMessage(
         htmlAccountDoc,
         "[data-spec='excluded_sp__p_1a']",
@@ -762,12 +816,19 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with 'View your National Insurance record' button text" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__govukButton']",
-        "nisp.main.showyourrecord"
-      )
+    "render page with help message for National Insurance Record button" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with show your record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
 
     // No state pension age under consideration message
@@ -804,12 +865,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with text 'You will reach your  State Pension age on 6 September 2015'" in {
@@ -847,12 +916,19 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with text View your National Insurance record for Dissonance" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__govukButton']",
-        "nisp.main.showyourrecord"
-      )
+    "render page with help message for National Insurance Record button for Dissonance" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with show your record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
 
     // No state pension age under consideration message
@@ -890,12 +966,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with text 'You will reach your  State Pension age on 6 September 2015'" in {
@@ -933,12 +1017,19 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with text View your National Insurance record for Dissonance" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__govukButton']",
-        "nisp.main.showyourrecord"
-      )
+    "render page with help message for National Insurance Record button for dissonance" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with show your record button dissonance" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
 
     // No state pension age under consideration message
@@ -976,12 +1067,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with text  You will reach your  State Pension age on 6 September 2015" in {
@@ -1019,20 +1118,19 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with text  You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension." in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__p2']",
-        "nisp.excluded.niRecordIntro"
-      )
+    "render page with help message for National Insurance Record button" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
     }
 
-    "render page with View your National Insurance record for Dissonance test" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__govukButton']",
-        "nisp.main.showyourrecord"
-      )
+    "render page with show your record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
 
     // state pension age under consideration message
@@ -1072,12 +1170,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with heading 'You’ll reach State Pension age on' " in {
@@ -1173,12 +1279,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with heading 'You’ll reach State Pension age on' " in {
@@ -1274,12 +1388,20 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with heading 'Your State Pension'" in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='excluded_sp__h1']",
-        "nisp.main.h1.title"
-      )
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
     }
 
     "render page with paragraph 'You’ll reach State Pension age on' " in {
@@ -1319,8 +1441,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
     }
 
     "render page with text  Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions." in {
-
-      println(s"\n\n\n\n\n\n $htmlAccountDoc \n\n\n\n\n\n\n")
       assertEqualsValue(
         htmlAccountDoc,
         "[data-spec='excluded_sp__p1']",

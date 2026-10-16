@@ -110,7 +110,7 @@
 
     @h2(
         msg = "nisp.main.h2.whenWillIReachStatePensionAge",
-        specId = Some("excluded_sp__h2")    //Test to add
+        specId = Some("excluded_sp__h2")
     )
 
     @for(
@@ -120,12 +120,12 @@
         @if(exclusion.equals(PostStatePensionAge)) {
             @p(
                 content = HtmlContent(messages("nisp.excluded.haveReached", langUtils.Dates.formatDate(date))),
-                specId = Some("excluded_sp__p_1a")  // MAY NEED AMENDING
+                specId = Some("excluded_sp__p_1a")
             )
         } else {
             @p(
                 content = HtmlContent(messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date))),
-                specId = Some("excluded_sp__p_1b")  // MAY NEED AMENDING
+                specId = Some("excluded_sp__p_1b")
             )
         }
     }

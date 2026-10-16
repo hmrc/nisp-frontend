@@ -26,6 +26,7 @@ import uk.gov.hmrc.nisp.models.Exclusion.*
 import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.services.*
 import uk.gov.hmrc.nisp.views.html.*
+//import uk.gov.hmrc.nisp.views.html.exclusions.sp.isleOfMan
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -62,6 +63,14 @@ class ExclusionController @Inject()(
           canSeeNIRecord = false,
           None
         )))
+//      case Right(Right(statePension)) if statePension. ??? =>
+//        Future.successful(Ok(excludedSp(
+//          IsleOfMan,
+//          Some(statePension.pensionAge),
+//          Some(statePension.pensionDate),
+//          canSeeNIRecord = false,
+//          None
+//        )))
       case Right(Left(statePensionExclusionFiltered: StatePensionExclusionFiltered)) =>
         if (statePensionExclusionFiltered.exclusion == Dead)
           Future.successful(Ok(excludedDead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge)))
