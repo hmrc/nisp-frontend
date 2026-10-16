@@ -73,11 +73,11 @@
         messages: Messages
 )
 
-@pensionDate = @{
+@pensionDate: String = @{
     langUtils.Dates.formatDate(statePension.pensionDate)
 }
 
-@showFull = @{
+@showFull: String = @{
     if(appConfig.class2Enabled){
         routes.MultiClassNIRecordController.showFull.url
     } else {
@@ -358,7 +358,7 @@
         }
 
         @govukButton(Button(
-            href= showFull,
+            href= Some(showFull),
             content = Text(messages("nisp.main.showyourrecord")),
             attributes = Map("data-spec" -> "state_pension__showyourrecord"),
             classes = "govuk-!-margin-top-4"
