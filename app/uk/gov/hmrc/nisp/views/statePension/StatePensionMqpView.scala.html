@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton}
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
@@ -24,7 +25,6 @@
 @import uk.gov.hmrc.nisp.views.html.includes.{NiLInks, statePensionAgeUnderConsideration}
 @import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
 @import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         main: Main,
@@ -36,6 +36,7 @@
         h2: H2,
         h3: H3,
         link: Link,
+        govukButton: GovukButton,
         govukWarningText: GovukWarningText,
         statePensionFooter: StatePensionFooter,
         printLink: PrintLink,
@@ -59,7 +60,7 @@
     langUtils.Dates.formatDate(statePension.pensionDate)
 }
 
-@showFull = @{
+@showFull: String = @{
     if(appConfig.class2Enabled){
         routes.MultiClassNIRecordController.showFull.url
     } else {
@@ -67,7 +68,7 @@
     }
 }
 
-@showGaps = @{
+@showGaps: String = @{
     if(appConfig.class2Enabled){
         routes.MultiClassNIRecordController.showGaps.url
     } else {
@@ -205,24 +206,20 @@
 
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
-                @p(
-                    content = HtmlContent(link(
-                        href = showGaps,
-                        messageKey = "nisp.main.showyourrecord",
-                        specId = Some("state_pension__mqp__cant_get_with_gaps"),
-                        classes = Some("govuk-button govuk-!-margin-top-4")
-                    ))
-                )
+                @govukButton(Button(
+                    href = Some(showGaps),
+                    content = Text(messages("nisp.main.showyourrecord")),
+                    attributes = Map("data-spec" -> "state_pension__mqp__cant_get_with_gaps"),
+                    classes = "govuk-!-margin-top-4"
+                ))
             }
             @if(mqp == CantGet) {
-                @p(
-                    content = HtmlContent(link(
-                        href = showFull,
-                        messageKey = "nisp.main.showyourrecord",
-                        specId = Some("state_pension__mqp__cant_get"),
-                        classes = Some("govuk-button govuk-!-margin-top-4")
-                    ))
-                )
+                @govukButton(Button(
+                    href = Some(showFull),
+                    content = Text(messages("nisp.main.showyourrecord")),
+                    attributes = Map("data-spec" -> "state_pension__mqp__cant_get"),
+                    classes = "govuk-!-margin-top-4"
+                ))
             }
         }
 
