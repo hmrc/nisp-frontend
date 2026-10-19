@@ -79,45 +79,19 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with message  'Please contact HMRC National Insurance helpline on 0300 200 3500.' " in {
-      assertEqualsMessage(
+    "render page with message 'Contact HMRC to find out about your State Pension forecast.'" in {
+      assertEqualsValue(
         htmlAccountDoc,
         "[data-spec='exclusions__dead__p1']",
-        "nisp.excluded.dead"
+        messages("nisp.excluded.dead", messages("nisp.excluded.dead.linktext"))
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='exclusions__dead__link1']",
+        "https://www.gov.uk/find-hmrc-contacts/income-tax-enquiries"
       )
     }
 
-    "render page with message  'opening times' " in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='exclusions__dead__p2']",
-        "nisp.excluded.dead.openingtime"
-      )
-    }
-
-    "render page with message  '8am to 8pm, Monday to Friday' " in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='exclusions__dead__ul__opening_time__li1']",
-        "nisp.excluded.dead.openingtime.weekdays"
-      )
-    }
-
-    "render page with message  '8am to 4pm, Saturday' " in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='exclusions__dead__ul__opening_time__li2']",
-        "nisp.excluded.dead.openingtime.saturday"
-      )
-    }
-
-    "render page with message  'Closed Sundays and bank holidays' " in {
-      assertEqualsMessage(
-        htmlAccountDoc,
-        "[data-spec='exclusions__dead__ul__opening_time__li3']",
-        "nisp.excluded.dead.openingtime.holidays"
-      )
-    }
   }
 
   "Exclusion Isle of Man : Can't see NI Record: State Pension Age under consideration - no flag" should {

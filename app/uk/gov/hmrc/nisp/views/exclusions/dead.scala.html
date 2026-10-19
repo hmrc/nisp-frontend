@@ -14,34 +14,28 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.P
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
+
 
 @this(
-        p: P
+        p: P,
+        link: Link
 )
 @()(
         implicit messages: Messages
 )
 
 @p(
-    content = Text(messages("nisp.excluded.dead")),
+    content = HtmlContent(messages(
+        "nisp.excluded.dead",
+        link(
+            href = "https://www.gov.uk/find-hmrc-contacts/income-tax-enquiries",
+            messageKey = "nisp.excluded.dead.linktext",
+            specId = Some("exclusions__dead__link1")
+        )
+    )),
     specId = Some("exclusions__dead__p1")
 )
 
-@p(
-    content = Text(messages("nisp.excluded.dead.openingtime")),
-    specId = Some("exclusions__dead__p2")
-)
-
-<ul class="govuk-list govuk-list--bullet" data-spec="exclusions__dead__ul__opening_time">
-    <li data-spec="exclusions__dead__ul__opening_time__li1">
-        @messages("nisp.excluded.dead.openingtime.weekdays")
-    </li>
-    <li data-spec="exclusions__dead__ul__opening_time__li2">
-        @messages("nisp.excluded.dead.openingtime.saturday")
-    </li>
-    <li data-spec="exclusions__dead__ul__opening_time__li3">
-        @messages("nisp.excluded.dead.openingtime.holidays")
-    </li>
-</ul>
 
