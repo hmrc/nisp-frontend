@@ -48,3 +48,4 @@ target/
 test-result/
 tmp/
 xunit.xml
+.metals/
