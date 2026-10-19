@@ -163,7 +163,7 @@ nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau 
 nisp.main.context.cantFillGaps.reached.p2 = Nid oes unrhyw fylchau yn eich cofnod Yswiriant Gwladol y mae angen i chi dalu amdanynt.
 
 nisp.main.context.additionalStatePension = Efallai y byddwch yn cael mwy na hyn os oes gennych hawl i daliad sydd wedi’i ddiogelu. {0}
-nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am daliadau sydd wedi’u diogelu a Phensiwn y Wladwriaeth newydd.
+nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am daliadau sydd wedi’u diogelu a Phensiwn y Wladwriaeth newydd (yn Saesneg)
 
 #**********************
 # Exclusion messages
@@ -184,7 +184,7 @@ nisp.excluded.mci.howToContact.sunday =	9am i 5pm, Dydd Sul
 nisp.excluded.mci.howToContact.bankholiday = Ar gau ar wyliau’r banc.
 nisp.excluded.mci.howToContact.link = Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)
 
-nisp.excluded.title = Rydych yn methu defnyddio’r gwasanaeth
+nisp.excluded.title = Crynodeb o’ch Pensiwn y Wladwriaeth
 
 nisp.excluded.amountdissonance = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth ar hyn o bryd ac rydym yn gweithio i gywiro hyn.
 
@@ -196,7 +196,8 @@ nisp.excluded.contactNationalInsuranceHelpline.link = cysylltwch â llinell gymo
 nisp.excluded.contactNationalInsuranceHelplineIom = I gael copi o’ch cofnod Yswiriant Gwladol y DU hyd yn hyn, {0}
 nisp.excluded.contactNationalInsuranceHelplineIom.link = cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)
 
-nisp.excluded.dead = Cysylltwch â llinell gymorth Yswiriant Gwladol CThEM ar 0300 200 1900.
+nisp.excluded.dead.linktext = Cysylltwch â CThEF
+nisp.excluded.dead = {0} i ddysgu rhagor am eich rhagolwg o’ch Pensiwn y Wladwriaeth
 nisp.excluded.dead.openingtime = Oriau agor:
 nisp.excluded.dead.openingtime.weekdays = 08:00 - 20:00, Dydd Llun - Dydd Gwener
 nisp.excluded.dead.openingtime.saturday = 08:00 - 16:00, Dydd Sadwrn
@@ -352,7 +353,7 @@ nisp.nirecord.gap.youCanPayvoluntarycontribaftercutoff = Gallwch dalu cyfraniad 
 nisp.nirecord.gap.findoutmore = Darganfyddwch fwy am <a href="{0}">gyfraniadau gwirfoddol</a>.
 nisp.nirecord.gap.latePaymentMessage = Mae’n rhy hwyr i dalu am y flwyddyn hon. Fel arfer gallwch ond talu am y 6 mlynedd diwethaf.
 nisp.nirecord.gap.underInvestigation = Nid yw’r flwyddyn hon wedi’i chynnwys yn rhagolygon eich Pensiwn y Wladwriaeth gan fod angen diweddaru eich cofnodion.
-nisp.nirecord.gap.contactHMRC = <a href="{0}">Cysylltwch â CThEF er mwyn diweddaru’r flwyddyn dreth hon</a>
+nisp.nirecord.gap.contactHMRC = <a href="{0}">Cysylltwch â CThEF er mwyn diweddaru’r flwyddyn dreth hon (yn Saesneg)</a>
 
 nisp.nirecord.youdidnotmakeanycontrib = Ni wnaethoch chi wneud unrhyw gyfraniadau flwyddyn yma
 

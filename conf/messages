@@ -184,7 +184,7 @@ nisp.excluded.mci.howToContact.sunday = 9am to 5pm Sundays
 nisp.excluded.mci.howToContact.bankholiday = Closed bank holidays.
 nisp.excluded.mci.howToContact.link = Find out about call charges (opens in a new window)
 
-nisp.excluded.title = You are unable to use this service
+nisp.excluded.title = Your State Pension summary
 
 nisp.excluded.amountdissonance = We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this.
 
@@ -196,7 +196,9 @@ nisp.excluded.contactNationalInsuranceHelpline.link = contact the National Insur
 nisp.excluded.contactNationalInsuranceHelplineIom = To get a copy of your UK National Insurance record so far, {0}
 nisp.excluded.contactNationalInsuranceHelplineIom.link = contact the National Insurance helpline (opens in new tab)
 
-nisp.excluded.dead = Please contact HMRC National Insurance helpline on 0300 200 3500.
+nisp.excluded.dead.linktext = Contact HMRC
+nisp.excluded.dead = {0} to find out about your State Pension forecast.
+
 nisp.excluded.dead.openingtime = Opening times:
 nisp.excluded.dead.openingtime.weekdays = 8am to 8pm, Monday to Friday
 nisp.excluded.dead.openingtime.saturday = 8am to 4pm, Saturday
