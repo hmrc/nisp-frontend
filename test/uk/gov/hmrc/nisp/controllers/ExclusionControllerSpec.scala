@@ -76,6 +76,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
     "We’re unable to calculate your State Pension forecast. You have paid National Insurance in the Isle of Man."
   val isleOfManMessagingNI =
     "We’re unable to show your National Insurance record as you have contributions from the Isle of Man."
+  val showNIHelpText = "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+  val showNIButton = "View your National Insurance record"
 
   val mwrreMessagingSP         = "We’re unable to calculate your State Pension forecast. You have paid a"
   val mwrreMessagingSPHref     = "href=\"https://www.gov.uk/reduced-national-insurance-married-women\""
@@ -264,6 +266,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should not include isleOfManMessagingSP
           contentAsString(result)    should not include mwrreMessagingSP
           contentAsString(result)    should not include abroadMessaging
+          contentAsString(result)    should not include showNIHelpText
+          contentAsString(result)    should not include showNIButton
         }
 
         "return only the Dead Exclusion on /exclusionni" in {
@@ -299,6 +303,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should not include isleOfManMessagingSP
           contentAsString(result)    should not include mwrreMessagingSP
           contentAsString(result)    should not include abroadMessaging
+          contentAsString(result)    should not include showNIHelpText
+          contentAsString(result)    should not include showNIButton
         }
 
         "return only the MCI Exclusion on /exclusionni" in {
@@ -335,6 +341,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should include(postSPAMessagingLinkText)
           contentAsString(result)    should include(postSPAMessagingHref2)
           contentAsString(result)    should include(postSPAMessagingText2)
+          contentAsString(result)    should include(showNIHelpText)
+          contentAsString(result)    should include(showNIButton)
           contentAsString(result)    should not include dissonanceMessaging
           contentAsString(result)    should not include isleOfManMessagingSP
           contentAsString(result)    should not include mwrreMessagingSP
@@ -372,6 +380,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should not include mciMessaging
           contentAsString(result)    should not include postSPAMessagingLinkText
           contentAsString(result)    should include(dissonanceMessaging)
+          contentAsString(result)    should include(showNIHelpText)
+          contentAsString(result)    should include(showNIButton)
           contentAsString(result)    should not include isleOfManMessagingSP
           contentAsString(result)    should not include mwrreMessagingSP
           contentAsString(result)    should not include abroadMessaging
@@ -411,6 +421,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should include(isleOfManMessagingSP)
           contentAsString(result)    should not include mwrreMessagingSP
           contentAsString(result)    should not include abroadMessaging
+          contentAsString(result)    should not include showNIHelpText
+          contentAsString(result)    should not include showNIButton
         }
 
         "return only the Isle of Man Exclusion on /exclusionni" in {
@@ -463,6 +475,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should not include postSPAMessagingText1
           contentAsString(result)    should not include dissonanceMessaging
           contentAsString(result)    should not include isleOfManMessagingSP
+          contentAsString(result)    should not include showNIHelpText
+          contentAsString(result)    should not include showNIButton
           contentAsString(result)    should include(mwrreMessagingSP)
           contentAsString(result)    should include(mwrreMessagingSPHref)
           contentAsString(result)    should include(mwrreMessagingSPLinkText)
@@ -526,6 +540,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should not include deadMessaging
           contentAsString(result)    should not include mciMessaging
           contentAsString(result)    should not include isleOfManMessagingSP
+          contentAsString(result)    should not include showNIHelpText
+          contentAsString(result)    should not include showNIButton
           contentAsString(result)    should include(mwrreMessagingSP)
           contentAsString(result)    should include(mwrreMessagingSPHref)
           contentAsString(result)    should include(mwrreMessagingSPLinkText)
@@ -579,6 +595,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should include(spaUnderConsiderationMessaging)
+          contentAsString(result)    should include(showNIHelpText)
+          contentAsString(result)    should include(showNIButton)
         }
       }
 
@@ -611,6 +629,8 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should include(spaUnderConsiderationMessaging)
+          contentAsString(result)    should not include showNIHelpText
+          contentAsString(result)    should not include showNIButton
         }
       }
 

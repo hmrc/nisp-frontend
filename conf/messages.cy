@@ -221,7 +221,7 @@ nisp.excluded.spa.linktext0 = hawlio’ch Pensiwn y Wladwriaeth ar-lein
 nisp.excluded.spa.defer = Gallwch ohirio hawlio’ch Pensiwn y Wladwriaeth. Mae hyn yn golygu y gallech gael Pensiwn y Wladwriaeth ychwanegol pan fyddwch yn ei hawlio. {0}
 nisp.excluded.spa.defer.linktext0 = Dysgwch ragor am ohirio’ch Pensiwn y Wladwriaeth
 
-nisp.excluded.niRecordIntro = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y gallech eu llenwi a'u cyfrif tuag at eich Pensiwn y Wladwriaeth.
+nisp.excluded.niRecordIntro = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y gallech eu llenwi a’u cyfrif tuag at eich Pensiwn y Wladwriaeth.
 nisp.excluded.niRecordIntroUK = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol y DU sy’n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
 nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
@@ -498,7 +498,7 @@ nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i w
 
 nisp.mqp.cantFillGapsP1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth.
 nisp.mqp.cantFillGapsP2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
-nisp.mqp.cantFillGapsP3 = Nid yw llenwi'r bylchau yn eich cofnod yn ddigon i gael Pensiwn y Wladwriaeth.
+nisp.mqp.cantFillGapsP3 = Nid yw llenwi’r bylchau yn eich cofnod yn ddigon i gael Pensiwn y Wladwriaeth.
 
 nisp.mqp.otherWays = Ffyrdd eraill i gynyddu fy incwm
 nisp.mqp.findOutAboutNI = Dysgwch am Yswiriant Gwladol.

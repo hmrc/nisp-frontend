@@ -100,12 +100,12 @@
 
     @h2(
         msg = "nisp.main.h2.whenWillIReachStatePensionAge",
-        specId = Some("excluded_sp__h2")    //Test to add
+        specId = Some("excluded_sp__h2")
     )
 
     @for(
         age  <- statePensionAge;
-        date <- statePensionAgeDate
+                date <- statePensionAgeDate
     ) {
         @if(exclusion.equals(PostStatePensionAge)) {
             @p(
@@ -123,21 +123,25 @@
     @genericPageContent
 
     @if(canSeeNIRecord) {
+
+        @p(
+            content = HtmlContent(messages("nisp.excluded.niRecordIntro")),
+            specId = Some("excluded_sp__p2")
+        )
+
         @govukButton(Button(
-            attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue"),
+            attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue", "data-spec" -> "excluded_sp__govukButton"),
             content = Text(messages("nisp.main.showyourrecord")),
-            href = Some(routes.MultiClassNIRecordController.showFull.url)
+            href = Some(routes.MultiClassNIRecordController.showFull.url),
         ))
     }
 
-
     @for(
         spaUnderConsideration <- statePensionAgeUnderConsideration;
-        date                  <- statePensionAgeDate
+                date                  <- statePensionAgeDate
     ) {
         @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
             @statePensionAgeUnderConsiderationView(langUtils.Dates.formatDate(date))
         }
     }
 }
-

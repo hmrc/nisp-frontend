@@ -132,6 +132,26 @@
 
     @genericPageContent
 
+    @if(exclusion.equals(IsleOfMan)) {
+        @p(
+            content = HtmlContent(messages(
+                "nisp.excluded.isleOfMan.sp.line2",
+                link(
+                    attrs = Map(
+                        "data-journey-click" -> "checkmystatepension:external:iom",
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
+                    fullStop = true,
+                    href = "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/",
+                    messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",
+                    specId = Some("exclusion_isleOfMan_sp__link1")
+                )
+            )),
+            specId = Some("exclusion_isleOfMan_sp__p2")
+        )
+    }
+
     @if(canSeeNIRecord) {
 
         @p(
@@ -155,4 +175,3 @@
         }
     }
 }
-

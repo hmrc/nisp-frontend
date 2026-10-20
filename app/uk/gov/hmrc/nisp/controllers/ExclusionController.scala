@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import uk.gov.hmrc.nisp.models.Exclusion.*
 import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
 import uk.gov.hmrc.nisp.services.*
 import uk.gov.hmrc.nisp.views.html.*
-//import uk.gov.hmrc.nisp.views.html.exclusions.sp.isleOfMan
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,7 +44,6 @@ class ExclusionController @Inject()(
   excludedDead: excluded_dead,
   excludedMci: excluded_mci,
   excludedNi: excluded_ni,
- // excludedIOM: isleOfMan,
   errorHandler: ErrorHandler
 )(
   implicit val executor: ExecutionContext
@@ -63,21 +61,11 @@ class ExclusionController @Inject()(
           canSeeNIRecord = false,
           None
         )))
-//      case Right(Right(statePension)) if statePension. ??? =>
-//        Future.successful(Ok(excludedSp(
-//          IsleOfMan,
-//          Some(statePension.pensionAge),
-//          Some(statePension.pensionDate),
-//          canSeeNIRecord = false,
-//          None
-//        )))
       case Right(Left(statePensionExclusionFiltered: StatePensionExclusionFiltered)) =>
         if (statePensionExclusionFiltered.exclusion == Dead)
           Future.successful(Ok(excludedDead(Exclusion.Dead, statePensionExclusionFiltered.pensionAge)))
         else if (statePensionExclusionFiltered.exclusion == ManualCorrespondenceIndicator)
           Future.successful(Ok(excludedMci(Exclusion.ManualCorrespondenceIndicator, statePensionExclusionFiltered.pensionAge)))
-        //else if (statePensionExclusionFiltered.exclusion == IsleOfMan)
-         // Future.successful(Ok(excludedIOM(Exclusion.IsleOfMan)))
         else if (statePensionExclusionFiltered.exclusion == CopeProcessingFailed)
           Future.successful(Ok(excludedCopeFailedView()))
         else {
@@ -87,7 +75,8 @@ class ExclusionController @Inject()(
                 statePensionExclusionFiltered.exclusion,
                 statePensionExclusionFiltered.pensionAge,
                 statePensionExclusionFiltered.pensionDate,
-                nationalInsurance.isRight,
+                statePensionExclusionFiltered.exclusion != IsleOfMan &&
+                  nationalInsurance.isRight,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
           }

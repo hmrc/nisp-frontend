@@ -168,6 +168,11 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_isleOfMan_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
     "render page with message  We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms." in {
       assertEqualsMessage(
         htmlAccountDoc,
@@ -219,6 +224,18 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "nisp.spa.under.consideration.detail",
         langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
     }
   }
 
@@ -278,6 +295,11 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_isleOfMan_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
     "render page with message 'For more information about the Retirement Pension scheme, visit' " in {
       assertEqualsValue(
         htmlAccountDoc,
@@ -321,6 +343,18 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "nisp.spa.under.consideration.detail",
         langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
     }
   }
 
@@ -380,6 +414,11 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_isleOfMan_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
     "render page with message 'For more information about the Retirement Pension scheme, visit' " in {
       assertEqualsValue(
         htmlAccountDoc,
@@ -425,6 +464,18 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "nisp.spa.under.consideration.detail",
         langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6))
       )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
     }
   }
 
@@ -620,7 +671,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
     }
 
-    "render page with show your record button" in {
+    "render page with view your National Insurance record button" in {
       val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
 
       button should not be empty
@@ -720,7 +771,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
     }
 
-    "render page with show your record button" in {
+    "render page with view your National Insurance record button" in {
       val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
 
       button should not be empty
@@ -823,7 +874,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
     }
 
-    "render page with show your record button" in {
+    "render page with view your National Insurance record button" in {
       val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
 
       button should not be empty
@@ -923,7 +974,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
     }
 
-    "render page with show your record button" in {
+    "render page with view your National Insurance record button" in {
       val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
 
       button should not be empty
@@ -1024,7 +1075,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
     }
 
-    "render page with show your record button dissonance" in {
+    "render page with view your National Insurance record button dissonance" in {
       val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
 
       button should not be empty
@@ -1125,7 +1176,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
     }
 
-    "render page with show your record button" in {
+    "render page with view your National Insurance record button" in {
       val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
 
       button should not be empty
@@ -1222,6 +1273,11 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_mwrre_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
     "render page with text  Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions." in {
       assertEqualsValue(
         htmlAccountDoc,
@@ -1252,6 +1308,18 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "nisp.spa.under.consideration.detail",
         langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
     }
   }
 
@@ -1362,6 +1430,18 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
     }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
+    }
   }
 
   "Exclusion Married Women: State Pension Age under consideration - true" should {
@@ -1440,6 +1520,11 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_mwrre_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
     "render page with text  Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions." in {
       assertEqualsValue(
         htmlAccountDoc,
@@ -1470,6 +1555,18 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "nisp.spa.under.consideration.detail",
         langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
     }
   }
 }
