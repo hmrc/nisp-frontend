@@ -14,19 +14,19 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.controllers.auth.{AuthenticatedRequest, NispAuthedUser}
 @import uk.gov.hmrc.nisp.controllers.routes
 @import uk.gov.hmrc.nisp.models.enums.Scenario
 @import uk.gov.hmrc.nisp.models.{SPChartModel, StatePension, StatePensionAmountMaximum}
 @import uk.gov.hmrc.nisp.utils.Constants
-@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
-@import uk.gov.hmrc.play.language.LanguageUtils
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, H1, H2, H3, Link, NispPageHeading, Span, PrintLink}
-@import uk.gov.hmrc.nisp.views.html.includes.{BarChart, NiLInks}
-@import uk.gov.hmrc.nisp.views.html.includes.statePension.{continueWorking, reached, fillGapsMQP, fillGaps, otherWaysToIncreaseIncome, statePensionAgeUnderConsideration, contractedOutPensionScheme, outsideUK}
-@import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
-@import uk.gov.hmrc.nisp.config.ApplicationConfig
 @import uk.gov.hmrc.nisp.views.Main
+@import uk.gov.hmrc.nisp.views.formatting.{NispMoney, Time}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.*
+@import uk.gov.hmrc.nisp.views.html.includes.statePension.{continueWorking, contractedOutPensionScheme, fillGaps, fillGapsMQP, otherWaysToIncreaseIncome, outsideUK, reached}
+@import uk.gov.hmrc.nisp.views.html.includes.{BarChart, NiLInks}
+@import uk.gov.hmrc.nisp.views.html.statePension.StatePensionFooter
+@import uk.gov.hmrc.play.language.LanguageUtils
 
 @this(
         main: Main,
@@ -48,7 +48,6 @@
         fillGaps: fillGaps,
         reached: reached,
         otherWaysToIncreaseIncome: otherWaysToIncreaseIncome,
-        statePensionAgeUnderConsideration: statePensionAgeUnderConsideration,
         contractedOut: contractedOutPensionScheme,
         statePensionFooter: StatePensionFooter,
         printLink: PrintLink
@@ -389,10 +388,6 @@
 
         @if(statePension.contractedOut) {
             @contractedOut()
-        }
-
-        @if(statePension.statePensionAgeUnderConsideration) {
-            @statePensionAgeUnderConsideration(langUtils.Dates.formatDate(statePension.pensionDate))
         }
 
         @statePensionFooter()
