@@ -158,10 +158,13 @@
 
     @if(canSeeNIRecord) {
 
-        @p(
+        @if(exclusion.equals(PostStatePensionAge)) {
+        } else {
+            @p(
             content = HtmlContent(messages("nisp.excluded.niRecordIntro")),
             specId = Some("excluded_sp__p2")
-        )
+            )
+        }
 
         @govukButton(Button(
             attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue", "data-spec" -> "excluded_sp__govukButton"),

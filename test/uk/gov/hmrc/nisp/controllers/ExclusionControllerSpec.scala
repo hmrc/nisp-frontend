@@ -341,7 +341,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           contentAsString(result)    should include(postSPAMessagingLinkText)
           contentAsString(result)    should include(postSPAMessagingHref2)
           contentAsString(result)    should include(postSPAMessagingText2)
-          contentAsString(result)    should include(showNIHelpText)
+          contentAsString(result)    should not include showNIHelpText
           contentAsString(result)    should include(showNIButton)
           contentAsString(result)    should not include dissonanceMessaging
           contentAsString(result)    should not include isleOfManMessagingSP

@@ -664,11 +664,9 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with help message for National Insurance Record button" in {
-      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
-
-      helpMessage.text() shouldBe
-        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    "not render page with help message for National Insurance Record button" in {
+      htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+        .isEmpty shouldBe true
     }
 
     "render page with view your National Insurance record button" in {
@@ -764,11 +762,9 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with help message for National Insurance Record button" in {
-      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
-
-      helpMessage.text() shouldBe
-        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    "not render page with help message for National Insurance Record button" in {
+      htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+        .isEmpty shouldBe true
     }
 
     "render page with view your National Insurance record button" in {
@@ -867,11 +863,9 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "render page with help message for National Insurance Record button" in {
-      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
-
-      helpMessage.text() shouldBe
-        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    "not render page with help message for National Insurance Record button" in {
+      htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+        .isEmpty shouldBe true
     }
 
     "render page with view your National Insurance record button" in {
