@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,8 @@
 @import uk.gov.hmrc.nisp.models.Exclusion._
 @import uk.gov.hmrc.nisp.views.Main
 @import uk.gov.hmrc.nisp.views.html.exclusions.sp.{amountDissonance, isleOfMan, mwrre, postStatePensionAge}
-@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, H2, Link, P, insetText}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, H2, Link, P}
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukButton
 @import uk.gov.hmrc.nisp.views.html.includes.statePensionAgeUnderConsideration
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import uk.gov.hmrc.nisp.config.ApplicationConfig
@@ -39,7 +40,7 @@
         h1: H1,
         h2: H2,
         link: Link,
-        insetText: insetText,
+        govukButton: GovukButton,
         appConfig: ApplicationConfig
 )
 
@@ -54,7 +55,7 @@
         request: ExcludedAuthenticatedRequest[?]
 )
 
-@insetContent = {
+@genericPageContent = {
     @if(exclusion.equals(PostStatePensionAge)) {
         @postStatePensionAge()
     } else {
@@ -79,7 +80,11 @@
                         "target" -> "_blank",
                         "rel" -> "noopener noreferrer"
                     ),
-                    href = "https://www.gov.uk/future-pension-centre",
+                    href = if(messages.lang.code == "cy") {
+                        "https://www.gov.uk/cysylltwch-ar-ganolfan-bensiwn-y-dyfodol"
+                    } else {
+                        "https://www.gov.uk/future-pension-centre"
+                    },
                     messageKey = "nisp.excluded.contactFuturePensionCentre.linktext",
                     specId = Some("excluded_sp__link1")
                 )
@@ -107,105 +112,65 @@
         specId = Some("excluded_sp__h1")
     )
 
+    @h2(
+        msg = "nisp.main.h2.whenWillIReachStatePensionAge",
+        specId = Some("excluded_sp__h2")
+    )
+
     @for(
         age  <- statePensionAge;
         date <- statePensionAgeDate
     ) {
         @if(exclusion.equals(PostStatePensionAge)) {
-            @h2(
-                elmId = Some("subTitle"),
-                msg = messages("nisp.excluded.haveReached", langUtils.Dates.formatDate(date)),
-                specId = Some("excluded_sp__h2_1a")
+            @p(
+                content = HtmlContent(messages("nisp.excluded.haveReached", langUtils.Dates.formatDate(date))),
+                specId = Some("excluded_sp__p_1a")
             )
         } else {
-            @h2(
-                elmId = Some("subTitle"),
-                msg = messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date)),
-                specId = Some("excluded_sp__h2_1b")
+            @p(
+                content = HtmlContent(messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date))),
+                specId = Some("excluded_sp__p_1b")
             )
         }
     }
 
-    @insetText(
-        content = HtmlContent(insetContent),
-        specId = Some("excluded_sp__inset_text1")
-    )
+    @genericPageContent
+
+    @if(exclusion.equals(IsleOfMan)) {
+        @p(
+            content = HtmlContent(messages(
+                "nisp.excluded.isleOfMan.sp.line2",
+                link(
+                    attrs = Map(
+                        "data-journey-click" -> "checkmystatepension:external:iom",
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
+                    fullStop = true,
+                    href = "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/",
+                    messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",
+                    specId = Some("exclusion_isleOfMan_sp__link1")
+                )
+            )),
+            specId = Some("exclusion_isleOfMan_sp__p2")
+        )
+    }
 
     @if(canSeeNIRecord) {
 
-        @p(
+        @if(exclusion.equals(PostStatePensionAge)) {
+        } else {
+            @p(
             content = HtmlContent(messages("nisp.excluded.niRecordIntro")),
             specId = Some("excluded_sp__p2")
-        )
-
-        <p class="govuk-body govuk-!-margin-top-4">
-            @link(
-                href = showFull,
-                messageKey = "nisp.main.showyourrecord",
-                specId = Some("excluded_sp__link2")
-            )
-        </p>
-
-    } else {
-
-        @if(exclusion.equals(IsleOfMan)) {
-
-            @p(
-                content = HtmlContent(messages(
-                    "nisp.excluded.contactNationalInsuranceHelplineIom",
-                    link(
-                        attrs = Map(
-                            "data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline",
-                            "target" -> "_blank",
-                            "rel" -> "noopener noreferrer"
-                        ),
-                        fullStop = true,
-                        href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
-                        messageKey = "nisp.excluded.contactNationalInsuranceHelplineIom.link",
-                        specId = Some("excluded_sp__link3")
-                    )
-                )),
-                specId = Some("excluded_sp__p3")
-            )
-
-        } else {
-
-            @p(
-                content = HtmlContent(messages(
-                    "nisp.excluded.contactNationalInsuranceHelpline",
-                    link(
-                        attrs = Map("data-journey-click" -> "checkmystatepension:external:nationalinsurancehelpline"),
-                        fullStop = true,
-                        href = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/national-insurance-enquiries-for-employees-and-individuals",
-                        messageKey = "nisp.excluded.contactNationalInsuranceHelpline.link",
-                        specId = Some("excluded_sp__link4")
-                    )
-                )),
-                specId = Some("excluded_sp__p4")
             )
         }
-    }
 
-    @if(exclusion.equals(MarriedWomenReducedRateElection)) {
-
-        @h2(
-            msg = "nisp.excluded.mwrre.improve",
-            elmId = Some("MarriedWomenReducedRateElection"),
-            specId = Some("excluded_sp__h2_3")
-        )
-
-        @p(
-            content = Text(messages("nisp.excluded.mwrre.futureResearch")),
-            specId = Some("excluded_sp__p5")
-        )
-
-        <p class="govuk-body govuk-!-margin-top-4">
-            @link(
-                href = routes.StatePensionController.signOut.url,
-                messageKey = "nisp.excluded.mwrre.signOut",
-                specId = Some("excluded_sp__link5")
-            )
-        </p>
+        @govukButton(Button(
+            attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue", "data-spec" -> "excluded_sp__govukButton"),
+            content = Text(messages("nisp.main.showyourrecord")),
+            href = Some(showFull),
+        ))
     }
 
     @for(
@@ -217,4 +182,3 @@
         }
     }
 }
-

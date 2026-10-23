@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  *@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
-
 @this(
         p: P,
         link: Link
@@ -23,7 +22,6 @@
 @()(
         implicit messages: Messages
 )
-
 @p(
     content = HtmlContent(messages(
         "nisp.excluded.spa",
@@ -33,21 +31,35 @@
                 "target" -> "_blank",
                 "rel" -> "noopener noreferrer"
             ),
-            comma = true,
-            href = "https://www.gov.uk/claim-state-pension-online",
+            href = if(messages.lang.code == "cy") {
+                "https://www.gov.uk/cael-eich-pensiwn-y-wladwriaeth"
+            } else {
+                "https://www.gov.uk/claim-state-pension-online"
+            },
             messageKey = "nisp.excluded.spa.linktext0",
             specId = Some("post_state_pension_age__link1"),
-        ),
+        )
+    )),
+    specId = Some("post_state_pension_age__p1")
+)
+@p(
+    content = HtmlContent(messages(
+        "nisp.excluded.spa.defer",
         link(
             attrs = Map(
                 "data-journey-click" -> "checkmystatepension:external:deferstatepension",
                 "target" -> "_blank",
                 "rel" -> "noopener noreferrer"
             ),
-            href = "https://www.gov.uk/deferring-state-pension",
-            messageKey = "nisp.excluded.spa.linktext1",
-            specId = Some("post_state_pension_age__link2"),
+            fullStop = true,
+            href = if(messages.lang.code == "cy") {
+                "https://www.gov.uk/oedi-pensiwn-wladwriaeth"
+            } else {
+                "https://www.gov.uk/deferring-state-pension"
+            },
+            messageKey = "nisp.excluded.spa.defer.linktext0",
+            specId = Some("post_state_pension_age_defer__link1"),
         )
     )),
-    specId = Some("post_state_pension_age__p1")
+    specId = Some("post_state_pension_age_defer__p1")
 )
