@@ -203,12 +203,12 @@ nisp.excluded.dead.openingtime.saturday = 08:00 - 16:00, Dydd Sadwrn
 nisp.excluded.dead.openingtime.holidays = Ar gau ar Ddydd Sul ac ar wyliau’r banc
 
 nisp.excluded.isleOfMan.sp.line1 = Ni allwn gyfrifo’ch rhagolwg Pensiwn y Wladwriaeth. Rydych wedi talu Yswiriant Gwladol yn Ynys Manaw.
-nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i
-nisp.excluded.isleOfMan.sp.line2.linktext = GOV.IM – Retirement Pension (agor mewn tab newydd)
+nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i {0}
+nisp.excluded.isleOfMan.sp.line2.linktext = Ganolfan Pensiynau Ynys Manaw (yn Saesneg)
 nisp.excluded.isleOfMan.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol oherwydd bod gennych gyfraniadau o Ynys Manaw.
 
 nisp.excluded.mwrre.sp = Ni allwn gyfrifo’ch rhagolwg Pensiwn y Wladwriaeth.Rydych wedi talu {0}
-nisp.excluded.mwrre.sp.linktext = cyfradd is o Yswiriant Gwladol fel gwraig briod
+nisp.excluded.mwrre.sp.linktext = cyfradd is o Yswiriant Gwladol fel gwraig briod (yn Saesneg)
 nisp.excluded.mwrre.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol ar hyn o bryd oherwydd eich bod wedi {0}
 nisp.excluded.mwrre.ni.link = talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)
 nisp.excluded.mwrre.signOut = Allgofnodi a gadael adborth

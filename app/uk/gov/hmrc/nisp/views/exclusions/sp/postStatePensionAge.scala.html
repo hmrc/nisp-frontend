@@ -31,7 +31,11 @@
                 "target" -> "_blank",
                 "rel" -> "noopener noreferrer"
             ),
-            href = "https://www.gov.uk/claim-state-pension-online",
+            href = if(messages.lang.code == "cy") {
+                "https://www.gov.uk/cael-eich-pensiwn-y-wladwriaeth"
+            } else {
+                "https://www.gov.uk/claim-state-pension-online"
+            },
             messageKey = "nisp.excluded.spa.linktext0",
             specId = Some("post_state_pension_age__link1"),
         )
@@ -48,7 +52,11 @@
                 "rel" -> "noopener noreferrer"
             ),
             fullStop = true,
-            href = "https://www.gov.uk/deferring-state-pension",
+            href = if(messages.lang.code == "cy") {
+                "https://www.gov.uk/oedi-pensiwn-wladwriaeth"
+            } else {
+                "https://www.gov.uk/deferring-state-pension"
+            },
             messageKey = "nisp.excluded.spa.defer.linktext0",
             specId = Some("post_state_pension_age_defer__link1"),
         )
