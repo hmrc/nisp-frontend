@@ -184,7 +184,7 @@ nisp.excluded.mci.howToContact.sunday =	9am i 5pm, Dydd Sul
 nisp.excluded.mci.howToContact.bankholiday = Ar gau ar wyliau’r banc.
 nisp.excluded.mci.howToContact.link = Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)
 
-nisp.excluded.title = Rydych yn methu defnyddio’r gwasanaeth
+nisp.excluded.title = Crynodeb o’ch Pensiwn y Wladwriaeth
 
 nisp.excluded.amountdissonance = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth ar hyn o bryd ac rydym yn gweithio i gywiro hyn.
 
@@ -196,7 +196,8 @@ nisp.excluded.contactNationalInsuranceHelpline.link = cysylltwch â llinell gymo
 nisp.excluded.contactNationalInsuranceHelplineIom = I gael copi o’ch cofnod Yswiriant Gwladol y DU hyd yn hyn, {0}
 nisp.excluded.contactNationalInsuranceHelplineIom.link = cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)
 
-nisp.excluded.dead = Cysylltwch â llinell gymorth Yswiriant Gwladol CThEM ar 0300 200 1900.
+nisp.excluded.dead.linktext = Cysylltwch â CThEF
+nisp.excluded.dead = {0} i ddysgu rhagor am eich rhagolwg o’ch Pensiwn y Wladwriaeth
 nisp.excluded.dead.openingtime = Oriau agor:
 nisp.excluded.dead.openingtime.weekdays = 08:00 - 20:00, Dydd Llun - Dydd Gwener
 nisp.excluded.dead.openingtime.saturday = 08:00 - 16:00, Dydd Sadwrn
