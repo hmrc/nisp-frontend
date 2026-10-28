@@ -186,10 +186,10 @@ nisp.excluded.mci.howToContact.link = Find out about call charges (opens in a ne
 
 nisp.excluded.title = Your State Pension summary
 
-nisp.excluded.amountdissonance = We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this.
+nisp.excluded.amountdissonance = We’re unable to calculate your State Pension forecast. We are working on fixing this.
 
-nisp.excluded.contactFuturePensionCentre = In the meantime, you can {0} to get an estimate of your State Pension, based on your current National Insurance record.
-nisp.excluded.contactFuturePensionCentre.linktext = contact the Future Pension Centre (opens in new tab)
+nisp.excluded.contactFuturePensionCentre = {0} to find out if you’ll benefit from paying voluntary contributions.
+nisp.excluded.contactFuturePensionCentre.linktext = Contact the Future Pension Centre
 
 nisp.excluded.contactNationalInsuranceHelpline = To get a copy of your National Insurance record so far, {0}
 nisp.excluded.contactNationalInsuranceHelpline.link = contact the National Insurance helpline (opens in new tab)
@@ -204,26 +204,28 @@ nisp.excluded.dead.openingtime.weekdays = 8am to 8pm, Monday to Friday
 nisp.excluded.dead.openingtime.saturday = 8am to 4pm, Saturday
 nisp.excluded.dead.openingtime.holidays = Closed Sundays and bank holidays
 
-nisp.excluded.isleOfMan.sp.line1 = We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.
-nisp.excluded.isleOfMan.sp.line2 = For more information about the Retirement Pension scheme, visit {0}
-nisp.excluded.isleOfMan.sp.line2.linktext = GOV.IM – Retirement Pension (opens in new tab)
+nisp.excluded.isleOfMan.sp.line1 = We’re unable to calculate your State Pension forecast. You have paid National Insurance in the Isle of Man.
+nisp.excluded.isleOfMan.sp.line2 = You can find out more about your Isle of Man Pension from the {0}
+nisp.excluded.isleOfMan.sp.line2.linktext = Isle of Man Pension Centre
 nisp.excluded.isleOfMan.ni = We’re unable to show your National Insurance record as you have contributions from the Isle of Man.
 
-nisp.excluded.mwrre.sp = We’re unable to calculate your State Pension forecast as you have {0}
-nisp.excluded.mwrre.sp.linktext = paid a reduced rate of National Insurance as a married woman (opens in new tab)
+nisp.excluded.mwrre.sp = We’re unable to calculate your State Pension forecast. You have paid a {0}
+nisp.excluded.mwrre.sp.linktext = reduced rate of National Insurance as a married woman
 nisp.excluded.mwrre.ni = We’re currently unable to show your National Insurance Record as you have {0}
 nisp.excluded.mwrre.ni.link = paid a reduced rate of National Insurance as a married woman (opens in new tab)
-nisp.excluded.mwrre.improve = Help us improve this service
-nisp.excluded.mwrre.futureResearch = If you would like to take part in any future research so we can find out what people in your situation would like to know, please leave your contact details when you sign out.
 nisp.excluded.mwrre.signOut = Sign out and leave feedback
 
 nisp.excluded.overseas = We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad.
 
-nisp.excluded.spa = If you have not already started {0} you can {1} and this may mean you get extra State Pension when you do want to claim it.
-nisp.excluded.spa.linktext0 = claiming your State Pension
-nisp.excluded.spa.linktext1= put off claiming your State Pension (opens in new tab)
 
-nisp.excluded.niRecordIntro = See a record of the National Insurance contributions which count towards your State Pension and check for any gaps.
+
+nisp.excluded.spa = You can {0} if you have not already claimed it.
+nisp.excluded.spa.linktext0 = claim your State Pension online
+
+nisp.excluded.spa.defer = You can delay claiming your State Pension. This means you may get extra State Pension when you do claim it. {0}
+nisp.excluded.spa.defer.linktext0 = Find out about delaying your State Pension
+
+nisp.excluded.niRecordIntro = You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension.
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
 nisp.excluded.haveReached = You reached State Pension age on {0}
 nisp.excluded.willReach = You’ll reach State Pension age on <span class="nowrap">{0}</span>
