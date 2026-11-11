@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.nisp.builders.NationalInsuranceTaxYearBuilder
 import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.controllers.MultiClassNIRecordController
+import uk.gov.hmrc.nisp.controllers.NIRecordController
 import uk.gov.hmrc.nisp.controllers.auth.*
 import uk.gov.hmrc.nisp.controllers.pertax.PertaxHelper
 import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
@@ -84,7 +84,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
     )
     .build()
 
-  lazy val controller: MultiClassNIRecordController = inject[MultiClassNIRecordController]
+  lazy val controller: NIRecordController = inject[NIRecordController]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -105,6 +105,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       .thenReturn(Future.successful(FeatureFlag(ViewPayableGapsToggle, isEnabled = false)))
     when(mockAppConfig.friendlyUsers).thenReturn(Seq())
     when(mockAppConfig.allowedUsersEndOfNino).thenReturn(Seq())
+    when(mockAppConfig.class2Enabled).thenReturn(true)
   }
 
   def generateFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(
@@ -1210,6 +1211,8 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
 
   "Render Ni Record with Single weeks in self, contribution and paid - and an abroad User" should {
 
+    when(mockAppConfig.class2Enabled).thenReturn(true)
+
     val abroadUserInjector = GuiceApplicationBuilder()
       .overrides(
         bind[StatePensionService].toInstance(mockStatePensionService),
@@ -1227,7 +1230,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       .build()
       .injector
 
-    val abroadUserController = abroadUserInjector.instanceOf[MultiClassNIRecordController]
+    val abroadUserController = abroadUserInjector.instanceOf[NIRecordController]
 
     lazy val doc           = asDocument(contentAsString(controller.showFull(generateFakeRequest)))
     lazy val abroadUserDoc = asDocument(contentAsString(abroadUserController.showFull(generateFakeRequest)))

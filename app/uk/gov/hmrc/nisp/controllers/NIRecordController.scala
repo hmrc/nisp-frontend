@@ -31,6 +31,7 @@ import uk.gov.hmrc.nisp.models.admin.{FriendlyUserFilterToggle, ViewPayableGapsT
 import uk.gov.hmrc.nisp.services.*
 import uk.gov.hmrc.nisp.utils.{Constants, DateProvider}
 import uk.gov.hmrc.nisp.views.html.{nirecordGapsAndHowToCheckThem, nirecordVoluntaryContributions, nirecordpage}
+import uk.gov.hmrc.nisp.views.html.cl2
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
 
@@ -47,6 +48,7 @@ class NIRecordController @Inject()(
                                     mcc: MessagesControllerComponents,
                                     dateProvider: DateProvider,
                                     niRecordPage: nirecordpage,
+                                    niRecordPageClass2: cl2.nirecordpage,
                                     niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
                                     nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
                                     clock: Clock
@@ -58,6 +60,8 @@ class NIRecordController @Inject()(
   override def now: () => LocalDate = () => LocalDate.now(clock)
   
   val showFullNI: Boolean = appConfig.showFullNI
+
+  val class2Enabled: Boolean = appConfig.class2Enabled
 
   def showFull: Action[AnyContent] = show(gapsOnlyView = false)
 
@@ -156,28 +160,51 @@ class NIRecordController @Inject()(
         case _ => false
       }
       val payableGapInfo = PayableGapInfo(appConfig.niRecordPayableYears)
-
+      
       Ok(
-        niRecordPage(
-          tableList = generateTableList(tableStart, tableEnd),
-          niRecord = niRecord,
-          gapsOnlyView = gapsOnlyView,
-          recordHasEnded = recordHasEnded,
-          yearsToContribute = yearsToContribute,
-          finalRelevantEndYear = finalRelevantStartYear + 1,
-          showPre1975Years = showPre1975Years(
-            niRecord.dateOfEntry,
-            authRequest.nispAuthedUser.dateOfBirth,
-            niRecord.qualifyingYearsPriorTo1975
-          ),
-          showFullNI = showFullNI,
-          currentDate = dateProvider.currentDate,
-          viewPayableGapsToggle = showViewPayableGapsButton,
-          nispModellingPayableGapsURL = appConfig.nispModellingFrontendUrl,
-          payableGapInfo = payableGapInfo,
-          niUpdateYearURL = appConfig.nationalInsuranceUpdateYearLink,
-          currentTaxYear = current
-        )
+        if (class2Enabled) {
+          niRecordPageClass2(
+            tableList = generateTableList(tableStart, tableEnd),
+            niRecord = niRecord,
+            gapsOnlyView = gapsOnlyView,
+            recordHasEnded = recordHasEnded,
+            yearsToContribute = yearsToContribute,
+            finalRelevantEndYear = finalRelevantStartYear + 1,
+            showPre1975Years = showPre1975Years(
+              niRecord.dateOfEntry,
+              authRequest.nispAuthedUser.dateOfBirth,
+              niRecord.qualifyingYearsPriorTo1975
+            ),
+            showFullNI = showFullNI,
+            currentDate = dateProvider.currentDate,
+            viewPayableGapsToggle = showViewPayableGapsButton,
+            nispModellingPayableGapsURL = appConfig.nispModellingFrontendUrl,
+            payableGapInfo = payableGapInfo,
+            niUpdateYearURL = appConfig.nationalInsuranceUpdateYearLink,
+            currentTaxYear = current
+          )
+        } else {
+          niRecordPage(
+            tableList = generateTableList(tableStart, tableEnd),
+            niRecord = niRecord,
+            gapsOnlyView = gapsOnlyView,
+            recordHasEnded = recordHasEnded,
+            yearsToContribute = yearsToContribute,
+            finalRelevantEndYear = finalRelevantStartYear + 1,
+            showPre1975Years = showPre1975Years(
+              niRecord.dateOfEntry,
+              authRequest.nispAuthedUser.dateOfBirth,
+              niRecord.qualifyingYearsPriorTo1975
+            ),
+            showFullNI = showFullNI,
+            currentDate = dateProvider.currentDate,
+            viewPayableGapsToggle = showViewPayableGapsButton,
+            nispModellingPayableGapsURL = appConfig.nispModellingFrontendUrl,
+            payableGapInfo = payableGapInfo,
+            niUpdateYearURL = appConfig.nationalInsuranceUpdateYearLink,
+            currentTaxYear = current
+          )
+        }
       )
     }
  }
