@@ -392,12 +392,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with link 'Find out about National Insurance.'" in {
+          "render page with link 'Find out about National Insurance'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni']",
-              "Find out about National Insurance."
+              "Find out about National Insurance"
             )
 
             assertLinkHasValue(
@@ -407,12 +407,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with link 'Find out how much National Insurance you pay.'" in {
+          "render page with link 'Find out how much National Insurance you pay'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni_you_pay']",
-              "Find out how much National Insurance you pay."
+              "Find out how much National Insurance you pay"
             )
 
             assertLinkHasValue(
@@ -422,12 +422,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with link 'Find out about getting National Insurance credits.'" in {
+          "render page with link 'Find out about getting National Insurance credits'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni_credits']",
-              "Find out about getting National Insurance credits."
+              "Find out about getting National Insurance credits"
             )
 
             assertLinkHasValue(
@@ -1233,12 +1233,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with link 'Find out about National Insurance.'" in {
+          "render page with link 'Find out about National Insurance'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni']",
-              "Find out about National Insurance."
+              "Find out about National Insurance"
             )
 
             assertLinkHasValue(
@@ -1248,12 +1248,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with link 'Find out how much National Insurance you pay.'" in {
+          "render page with link 'Find out how much National Insurance you pay'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni_you_pay']",
-              "Find out how much National Insurance you pay."
+              "Find out how much National Insurance you pay"
             )
 
             assertLinkHasValue(
@@ -1263,12 +1263,12 @@ class StatePensionViewSpec
             )
           }
 
-          "render page with link 'Find out about getting National Insurance credits.'" in {
+          "render page with link 'Find out about getting National Insurance credits'" in {
             mockSetup
             assertEqualsText(
               doc,
               "[data-spec='state_pension__mqp__find_out_ni_credits']",
-              "Find out about getting National Insurance credits."
+              "Find out about getting National Insurance credits"
             )
 
             assertLinkHasValue(
