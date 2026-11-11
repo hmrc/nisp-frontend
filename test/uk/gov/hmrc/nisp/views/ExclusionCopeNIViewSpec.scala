@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,19 +53,18 @@ class ExclusionCopeNIViewSpec extends HtmlSpec with Injecting {
   lazy val view: Document = asDocument(contentAsString(excludedCopeNIView(today)))
 
   "render correct h1" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope__h1']",
-      "nisp.excluded.cope.processing.ni.h1"
+      "Sorry, we are currently working on your National Insurance record"
     )
   }
 
   "render correct p tag with text" in {
-    assertContainsDynamicMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope__p2']",
-      "nisp.excluded.cope.returnDate.ni",
-      today.format(DateTimeFormatter.ofPattern("d MMMM y")).replace(" ", "&nbsp;")
+      s"Your National Insurance record will be available on ${today.format(DateTimeFormatter.ofPattern("d MMMM y"))}."
     )
   }
 }
