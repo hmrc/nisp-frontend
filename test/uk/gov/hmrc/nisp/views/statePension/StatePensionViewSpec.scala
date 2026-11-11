@@ -628,7 +628,7 @@ class StatePensionViewSpec
           }
         }
 
-        "State Pension view with MQP : No Gaps || Full Rate & Personal Max: With State Pension age under consideration message" should {
+        "State Pension view with MQP : No Gaps || Full Rate & Personal Max: with only 1 Qualifying Year" should {
           def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(statePension(
@@ -669,9 +669,6 @@ class StatePensionViewSpec
 
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           // MQP message
           "render page with text 'You have 1 qualifying year on your National Insurance record.'" in {
@@ -767,30 +764,12 @@ class StatePensionViewSpec
             )
           }
 
-          // SPA under consideration message
-          "render page with Heading 'Proposed change to your State Pension age'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "Proposed change to your State Pension age"
-            )
-          }
-
-          "render page with text 'You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year.'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year."
-            )
-          }
         }
       }
 
       "The scenario is continue working || Fill Gaps" when {
 
-        "State Pension view with MQP :  Personal Max" should {
+        "State Pension view with MQP :  Personal Max : No Qualifying Years" should {
           def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(statePension(
@@ -923,12 +902,11 @@ class StatePensionViewSpec
           }
         }
 
-        "State Pension view with MQP : Personal Max: With State Pension age under consideration message" should {
+        "State Pension view with MQP : Personal Max : With only 1 Qualifying Year" should {
           def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any())(any()))
               .thenReturn(Future.successful(Right(Right(statePension(
                 numberOfQualifyingYears = 1,
-                ageUnderConsideration = true,
                 amounts =
                   statePensionAmounts(
                     current = StatePensionAmountRegular(
@@ -963,8 +941,6 @@ class StatePensionViewSpec
 
           lazy val doc =
             asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
 
           // MQP message
           "render page with text 'You have 1 qualifying year on your National Insurance record.'" in {
@@ -1047,25 +1023,6 @@ class StatePensionViewSpec
               doc,
               "[data-spec='state_pension__gaps_to_fill_MQP__p1_plural']",
               "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
-            )
-          }
-
-          // SPA under consideration message
-          "render page with Heading 'Proposed change to your State Pension age'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "Proposed change to your State Pension age"
-            )
-          }
-
-          "render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
             )
           }
         }
@@ -1491,141 +1448,6 @@ class StatePensionViewSpec
           }
         }
 
-        "State Pension view with NON-MQP : Personal Max: With State Pension age under consideration message" should {
-
-          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
-            when(mockStatePensionService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(statePension(
-                ageUnderConsideration = true,
-                amounts =
-                  statePensionAmounts(
-                    current = StatePensionAmountRegular(
-                      weeklyAmount  = 149.71,
-                      monthlyAmount = 590.10,
-                      annualAmount  = 7081.15
-                    ),
-                    forecast = StatePensionAmountForecast(
-                      yearsToWork   = 4,
-                      weeklyAmount  = 148.71,
-                      monthlyAmount = 590.10,
-                      annualAmount  = 7081.15
-                    ),
-                    maximum = StatePensionAmountMaximum(
-                      yearsToWork   = 4,
-                      gapsToFill    = 2,
-                      weeklyAmount  = 149.71,
-                      monthlyAmount = 590.10,
-                      annualAmount  = 7081.15
-                    )
-                  )
-              )))))
-
-            when(mockNationalInsuranceService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(nationalInsuranceRecord(
-                numberOfGaps        = 2,
-                numberOfGapsPayable = 2
-              )))))
-          }
-
-          lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
-          // Bar charts - Fill gaps
-          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Current estimate based on your National Insurance record up to 5 April 2016"
-            )
-          }
-
-          "render page with current chart text '£149.71 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_current__chart1-value']",
-              "£149.71 a week"
-            )
-          }
-
-          "render page with forecast chart title 'Forecast if you contribute until '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_forecast__chart2-key']",
-              "Forecast if you contribute National Insurance until 5 April 2020"
-            )
-          }
-
-          "render page with forecast chart text '£148.71 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_forecast__chart2-value']",
-              "£148.71 a week"
-            )
-          }
-
-          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
-              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
-            )
-          }
-
-          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
-              "The most you can increase your forecast to is"
-            )
-          }
-
-          "render page with personal max chart text '£149.71 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
-              "£149.71 a week"
-            )
-          }
-
-          // Fill gaps
-          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__view_gaps__p1']",
-              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
-            )
-          }
-
-          // SPA under consideration message
-          "render page with Heading 'Proposed change to your State Pension age'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "Proposed change to your State Pension age"
-            )
-          }
-
-          "render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
-            )
-          }
-        }
-
         "State Pension view with NON-MQP : Full Rate current more than 155.65" should {
           def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any())(any()))
@@ -1740,143 +1562,6 @@ class StatePensionViewSpec
           }
         }
 
-        "State Pension view with NON-MQP : Full Rate current more than 155.65: With State Pension age under consideration message" should {
-          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
-            when(mockStatePensionService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(statePension(
-                ageUnderConsideration = true,
-                amounts =
-                  statePensionAmounts(
-                    protectedPayment = true,
-                    current = StatePensionAmountRegular(
-                      weeklyAmount  = 162.34,
-                      monthlyAmount = 590.10,
-                      annualAmount  = 7081.15
-                    ),
-                    forecast = StatePensionAmountForecast(
-                      yearsToWork     = 4,
-                      weeklyAmount    = 168.08,
-                      monthlyAmount   = 590.10,
-                      annualAmount    = 7081.15
-
-                    ),
-                    maximum = StatePensionAmountMaximum(
-                      yearsToWork    = 4,
-                      gapsToFill     = 2,
-                      weeklyAmount   = 172.71,
-                      monthlyAmount  = 590.10,
-                      annualAmount   = 7081.15
-                    )
-                  )
-              )))))
-
-            when(mockNationalInsuranceService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(nationalInsuranceRecord(
-                numberOfGaps        = 2,
-                numberOfGapsPayable = 2
-              )))))
-          }
-
-          lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
-          // Bar charts - Fill gaps
-          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Current estimate based on your National Insurance record up to 5 April 2016"
-            )
-          }
-
-          "render page with current chart text '£162.34 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_current__chart1-value']",
-              "£162.34 a week"
-            )
-          }
-
-          "render page with forecast chart title 'Forecast if you contribute National Insurance until 5 April 2020'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_forecast__chart2-key']",
-              "Forecast if you contribute National Insurance until 5 April 2020"
-            )
-          }
-
-          "render page with forecast chart text '£168.08 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_forecast__chart2-value']",
-              "£168.08 a week"
-            )
-          }
-
-          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
-              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
-            )
-          }
-
-          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
-              "The most you can increase your forecast to is"
-            )
-          }
-
-          "render page with personal max chart text '£172.71 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
-              "£172.71 a week"
-            )
-          }
-
-          // Fill gaps
-          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__view_gaps__p1']",
-              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
-            )
-          }
-
-          // SPA under consideration message
-          "render page with Heading 'Proposed change to your State Pension age'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "Proposed change to your State Pension age"
-            )
-          }
-
-          "render page with text 'You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year.'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "You’ll reach State Pension age on 7 June 2020. Under government proposals this may increase by up to a year."
-            )
-          }
-        }
-
         "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps" should {
           def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any())(any()))
@@ -1987,143 +1672,6 @@ class StatePensionViewSpec
               doc,
               "[data-spec='state_pension__view_gaps__p1']",
               "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
-            )
-          }
-        }
-
-        "State Pension view with NON-MQP :  Full Rate will reach full rate by filling gaps: With State Pension age under consideration message" should {
-          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
-            when(mockStatePensionService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(statePension(
-                pensionDate = LocalDate.of(2017, 6, 7),
-                ageUnderConsideration = true,
-                amounts =
-                  statePensionAmounts(
-                    current = StatePensionAmountRegular(
-                      weeklyAmount   = 133.71,
-                      monthlyAmount  = 590.10,
-                      annualAmount   = 7081.15
-                    ),
-                    forecast = StatePensionAmountForecast(
-                      yearsToWork    = 4,
-                      weeklyAmount   = 148.71,
-                      monthlyAmount  = 590.10,
-                      annualAmount   = 7081.15
-                    ),
-                    maximum = StatePensionAmountMaximum(
-                      yearsToWork    = 4,
-                      gapsToFill     = 2,
-                      weeklyAmount   = 149.71,
-                      monthlyAmount  = 590.10,
-                      annualAmount   = 7081.15
-                    )
-                  )
-              )))))
-
-            when(mockNationalInsuranceService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(nationalInsuranceRecord(
-                numberOfGaps          = 2,
-                numberOfGapsPayable   = 2,
-                dateOfEntry           = Some(LocalDate.of(1989, 3, 6))
-              )))))
-          }
-
-          lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-
-          lazy val abroadUserDoc =
-            asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
-          // Bar charts - Fill gaps
-          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_current__chart1-key']",
-              "Current estimate based on your National Insurance record up to 5 April 2016"
-            )
-          }
-
-          "render page with current chart text '£133.71 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_current__chart1-value']",
-              "£133.71 a week"
-            )
-          }
-
-          "render page with forecast chart title 'Forecast if you contribute until '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_forecast__chart2-key']",
-              "Forecast if you contribute National Insurance until 5 April 2020"
-            )
-          }
-
-          "render page with forecast chart text '£148.71 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_forecast__chart2-value']",
-              "£148.71 a week"
-            )
-          }
-
-          "render page with text 'You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__gaps_to_fill__p1_plural']",
-              "You have 2 gaps in your National Insurance record that you may be able to fill to increase your State Pension."
-            )
-          }
-
-          "render page with personal max chart title 'The most you can increase your forecast to is'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='fill_gaps_personal_max__chart3-key']",
-              "The most you can increase your forecast to is"
-            )
-          }
-
-          "render page with personal max chart text '£149.71 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='fill_gaps_personal_max__chart3-value']",
-              "£149.71 a week"
-            )
-          }
-
-          // Fill gaps
-          "render page with text 'You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__view_gaps__p1']",
-              "You can view your National Insurance record to check for gaps that you may be able to fill to increase your State Pension."
-            )
-          }
-
-          // SPA under consideration message
-          "render page with Heading 'Proposed change to your State Pension age'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "Proposed change to your State Pension age"
-            )
-          }
-
-          "render page with text 'You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
-            mockSetup
-            assertEqualsText(
-              abroadUserDoc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
             )
           }
         }
@@ -2246,142 +1794,6 @@ class StatePensionViewSpec
           }
         }
 
-        "State Pension view with NON-MQP : No Gaps || Full Rate & Personal Max: With State Pension age under consideration message" should {
-
-          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
-            when(mockStatePensionService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(statePension(
-                pensionDate = LocalDate.of(2022, 6, 7),
-                finalRelevantYear = "2021-22",
-                currentFullWeeklyPensionAmount = 151.65,
-                ageUnderConsideration = true,
-                amounts =
-                  statePensionAmounts(
-                    current = StatePensionAmountRegular(
-                      weeklyAmount  = 118.65,
-                      monthlyAmount = 590.10,
-                      annualAmount  = 7081.15
-                    ),
-                    forecast = StatePensionAmountForecast(
-                      yearsToWork   = 0,
-                      weeklyAmount  = 150.65,
-                      monthlyAmount = 676.80,
-                      annualAmount  = 8121.59
-                    ),
-                    maximum = StatePensionAmountMaximum(
-                      yearsToWork   = 0,
-                      gapsToFill    = 0,
-                      weeklyAmount  = 150.65,
-                      monthlyAmount = 590.10,
-                      annualAmount  = 7081.15
-                    )
-                  )
-              )))))
-
-            when(mockNationalInsuranceService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(nationalInsuranceRecord(
-                dateOfEntry = Some(LocalDate.of(1989, 3, 6)),
-              )))))
-          }
-
-          lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-
-          // Bar charts - no gaps
-          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='continue_working_current__chart1-key']",
-              "Current estimate based on your National Insurance record up to 5 April 2016"
-            )
-          }
-
-          "render page with current chart text '£150.65 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='continue_working_forecast__chart2-value']",
-              "£150.65 a week"
-            )
-          }
-
-          "render page with forecast chart title 'Forecast if you contribute until '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='continue_working_forecast__chart2-key']",
-              "Forecast if you contribute National Insurance until 5 April 2022"
-            )
-          }
-
-          "render page with forecast chart text '£150.65 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='continue_working_forecast__chart2-value']",
-              "£150.65 a week"
-            )
-          }
-
-          "render page with personal max chart title 'The most you can get is'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='continue_working_personal_max__chart3-key']",
-              "The most you can get is"
-            )
-          }
-
-          "render page with personal max chart text '£150.65 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='continue_working_personal_max__chart3-value']",
-              "£150.65 a week"
-            )
-          }
-
-          // No gaps
-          "render page with text 'You cannot increase your State Pension forecast. £150.65 a week is the most you can get.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__cant_pay_gaps__p1']",
-              "You cannot increase your State Pension forecast." +
-                " £150.65 a week is the most you can get."
-            )
-          }
-
-          "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__cant_pay_gaps__p2']",
-              "This means you are unable to pay for gaps in your National Insurance record online."
-            )
-          }
-
-          // SPA under consideration
-          "render page with Heading 'Proposed change to your State Pension age'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "Proposed change to your State Pension age"
-            )
-          }
-
-          "render page with text 'You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "You’ll reach State Pension age on 7 June 2022. Under government proposals this may increase by up to a year."
-            )
-          }
-        }
-
         "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left" should {
           def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
             when(mockStatePensionService.getSummary(any())(any()))
@@ -2497,140 +1909,6 @@ class StatePensionViewSpec
           }
         }
 
-        "State Pension view with NON-MQP : No need to fill gaps || Full Rate and Personal Max: when some one has more years left: With State Pension age under consideration message" should {
-          def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
-            when(mockStatePensionService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(statePension(
-                pensionDate = LocalDate.of(2017, 6, 7),
-                ageUnderConsideration = true,
-                amounts =
-                  statePensionAmounts(
-                    current = StatePensionAmountRegular(
-                      weeklyAmount  = 149.65,
-                      monthlyAmount = 590.10,
-                      annualAmount  = 7081.15
-                    ),
-                    forecast = StatePensionAmountForecast(
-                      yearsToWork   = 4,
-                      weeklyAmount  = 155.65,
-                      monthlyAmount = 676.80,
-                      annualAmount  = 8121.59
-                    ),
-                    maximum = StatePensionAmountMaximum(
-                      yearsToWork   = 4,
-                      gapsToFill    = 2,
-                      weeklyAmount  = 155.65,
-                      monthlyAmount = 590.10,
-                      annualAmount  = 7081.15
-                    )
-                  )
-              )))))
-
-            when(mockNationalInsuranceService.getSummary(any())(any()))
-              .thenReturn(Future.successful(Right(Right(nationalInsuranceRecord(
-                numberOfGaps = 2,
-                numberOfGapsPayable = 2,
-                dateOfEntry = Some(LocalDate.of(1989, 3, 6)),
-              )))))
-          }
-
-          lazy val doc =
-            asDocument(contentAsString(statePensionController.show()(generateFakeRequest)))
-
-          // Bar charts - no gaps
-          "render page with current chart title 'Current estimate based on your National Insurance record up to '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='continue_working_current__chart1-key']",
-              "Current estimate based on your National Insurance record up to 5 April 2016"
-            )
-          }
-
-          "render page with current chart text '£155.65 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='continue_working_forecast__chart2-value']",
-              "£155.65 a week"
-            )
-          }
-
-          "render page with forecast chart title 'Forecast if you contribute until '" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='continue_working_forecast__chart2-key']",
-              "Forecast if you contribute National Insurance until 5 April 2020"
-            )
-          }
-
-          "render page with forecast chart text '£155.65 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='continue_working_forecast__chart2-value']",
-              "£155.65 a week"
-            )
-          }
-
-          "render page with personal max chart title 'The most you can get is'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dt[data-spec='continue_working_personal_max__chart3-key']",
-              "The most you can get is"
-            )
-          }
-
-          "render page with personal max chart text '£155.65 a week'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "dd[data-spec='continue_working_personal_max__chart3-value']",
-              "£155.65 a week"
-            )
-          }
-
-          // No gaps
-          "render page with text 'You cannot increase your State Pension forecast. £155.65 a week is the most you can get.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__cant_pay_gaps__p1']",
-              "You cannot increase your State Pension forecast." +
-                " £155.65 a week is the most you can get."
-            )
-          }
-
-          "render page with text 'This means you are unable to pay for gaps in your National Insurance record online.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension__cant_pay_gaps__p2']",
-              "This means you are unable to pay for gaps in your National Insurance record online."
-            )
-          }
-
-          //  SPA under consideration
-          "render page with Heading 'Proposed change to your State Pension age'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension_age_under_consideration__h2_1']",
-              "Proposed change to your State Pension age"
-            )
-          }
-
-          "render page with text 'You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
-            mockSetup
-            assertEqualsText(
-              doc,
-              "[data-spec='state_pension_age_under_consideration__p1']",
-              "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
-            )
-          }
-        }
       }
 
       "State Pension view with NON-MQP : Reached || No Gaps || Full Rate and Personal Max" should {
@@ -2739,136 +2017,6 @@ class StatePensionViewSpec
             doc,
             "[data-spec='state_pension__additional_state_pension__link']",
             "https://www.gov.uk/government/publications/your-new-state-pension-explained"
-          )
-        }
-      }
-
-      "State Pension view with NON-MQP : Reached || No Gaps || Full Rate and Personal Max: With State Pension age under consideration message" should {
-        def mockSetup: OngoingStubbing[Future[Either[UpstreamErrorResponse, Either[StatePensionExclusionFilter, NationalInsuranceRecord]]]] = {
-          when(mockStatePensionService.getSummary(any())(any()))
-            .thenReturn(Future.successful(Right(Right(statePension(
-              pensionDate = LocalDate.of(2017, 6, 7),
-              ageUnderConsideration = true,
-              amounts =
-                statePensionAmounts(
-                  current = StatePensionAmountRegular(
-                    weeklyAmount  = 155.65,
-                    monthlyAmount = 590.10,
-                    annualAmount  = 7081.15
-                  ),
-                  forecast = StatePensionAmountForecast(
-                    yearsToWork   = 4,
-                    weeklyAmount  = 155.65,
-                    monthlyAmount = 676.80,
-                    annualAmount  = 8121.59
-                  ),
-                  maximum = StatePensionAmountMaximum(
-                    yearsToWork   = 4,
-                    gapsToFill    = 2,
-                    weeklyAmount  = 155.65,
-                    monthlyAmount = 590.10,
-                    annualAmount  = 7081.15
-                  )
-                )
-            )))))
-
-          when(mockNationalInsuranceService.getSummary(any())(any()))
-            .thenReturn(Future.successful(Right(Right(nationalInsuranceRecord(
-              dateOfEntry = Some(LocalDate.of(1989, 3, 6)),
-            )))))
-        }
-
-        lazy val abroadUserDoc =
-          asDocument(contentAsString(abroadUserController.show()(generateFakeRequest)))
-
-        // Bar charts - reached
-        "render page with forecast chart title 'Forecast if you contribute until '" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "dt[data-spec='reached__chart1-key']",
-            "Forecast if you contribute National Insurance until 5 April 2020"
-          )
-        }
-
-        "render page with forecast chart text '£155.65 a week'" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "dd[data-spec='reached__chart1-value']",
-            "£155.65 a week"
-          )
-        }
-
-        "render page with personal max chart title 'The most you can get is'" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "dt[data-spec='reached__chart2-key']",
-            "The most you can get is"
-          )
-        }
-
-        "render page with personal max chart text '£155.65 a week'" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "dd[data-spec='reached__chart2-value']",
-            "£155.65 a week"
-          )
-        }
-
-        // No gaps
-        "render page with text 'You cannot increase your State Pension forecast. £155.65 a week is the most you can get.'" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "[data-spec='state_pension__cant_pay_gaps__p1']",
-            "You cannot increase your State Pension forecast." +
-              " £155.65 a week is the most you can get."
-          )
-        }
-
-        "render page with text 'You have no gaps to pay in your National Insurance record.'" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "[data-spec='state_pension__cant_pay_gaps_reached__p2']",
-            "You have no gaps to pay in your National Insurance record."
-          )
-        }
-
-        // Additional State Pension
-        "render page with 'Additional State Pension' paragraph with link" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "[data-spec='state_pension__additional_state_pension__p1']",
-            "You may get more than this if you are entitled to a protected payment. Find out more about protected payments and the new State Pension.")
-
-          assertLinkHasValue(
-            abroadUserDoc,
-            "[data-spec='state_pension__additional_state_pension__link']",
-            "https://www.gov.uk/government/publications/your-new-state-pension-explained"
-          )
-        }
-
-        // SPA under consideration
-        "render page with Heading 'Proposed change to your State Pension age'" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "[data-spec='state_pension_age_under_consideration__h2_1']",
-            "Proposed change to your State Pension age"
-          )
-        }
-
-        "render page with text 'You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year.'" in {
-          mockSetup
-          assertEqualsText(
-            abroadUserDoc,
-            "[data-spec='state_pension_age_under_consideration__p1']",
-            "You’ll reach State Pension age on 7 June 2017. Under government proposals this may increase by up to a year."
           )
         }
       }

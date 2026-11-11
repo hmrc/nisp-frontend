@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
 import uk.gov.hmrc.nisp.errorHandler.ErrorHandler
-import uk.gov.hmrc.nisp.models.Exclusion._
+import uk.gov.hmrc.nisp.models.Exclusion.*
 import uk.gov.hmrc.nisp.models.{Exclusion, StatePensionExclusionFiltered, StatePensionExclusionFilteredWithCopeDate}
-import uk.gov.hmrc.nisp.services._
-import uk.gov.hmrc.nisp.views.html._
+import uk.gov.hmrc.nisp.services.*
+import uk.gov.hmrc.nisp.views.html.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -75,7 +75,8 @@ class ExclusionController @Inject()(
                 statePensionExclusionFiltered.exclusion,
                 statePensionExclusionFiltered.pensionAge,
                 statePensionExclusionFiltered.pensionDate,
-                nationalInsurance.isRight,
+                statePensionExclusionFiltered.exclusion != IsleOfMan &&
+                  nationalInsurance.isRight,
                 statePensionExclusionFiltered.statePensionAgeUnderConsideration
               ))
           }

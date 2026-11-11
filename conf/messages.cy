@@ -163,7 +163,7 @@ nisp.main.context.cantFillGaps.p2 = Mae hyn yn golygu na allwch dalu am fylchau 
 nisp.main.context.cantFillGaps.reached.p2 = Nid oes unrhyw fylchau yn eich cofnod Yswiriant Gwladol y mae angen i chi dalu amdanynt.
 
 nisp.main.context.additionalStatePension = Efallai y byddwch yn cael mwy na hyn os oes gennych hawl i daliad sydd wedi’i ddiogelu. {0}
-nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am daliadau sydd wedi’u diogelu a Phensiwn y Wladwriaeth newydd.
+nisp.main.context.additionalStatePension.linktext = Dysgwch ragor am daliadau sydd wedi’u diogelu a Phensiwn y Wladwriaeth newydd (yn Saesneg)
 
 #**********************
 # Exclusion messages
@@ -184,44 +184,45 @@ nisp.excluded.mci.howToContact.sunday =	9am i 5pm, Dydd Sul
 nisp.excluded.mci.howToContact.bankholiday = Ar gau ar wyliau’r banc.
 nisp.excluded.mci.howToContact.link = Darganfyddwch am gostau galwadau (agor mewn ffenestr newydd)
 
-nisp.excluded.title = Rydych yn methu defnyddio’r gwasanaeth
+nisp.excluded.title = Crynodeb o’ch Pensiwn y Wladwriaeth
 
-nisp.excluded.amountdissonance = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth ar hyn o bryd ac rydym yn gweithio i gywiro hyn.
+nisp.excluded.amountdissonance = Ni allwn gyfrifo’ch rhagolwg Pensiwn y Wladwriaeth. Rydym yn gweithio ar drwsio hyn.
 
-nisp.excluded.contactFuturePensionCentre = Yn y cyfamser, gallwch {0} i gael amcangyfrif o’ch Pensiwn y Wladwriaeth, yn seiliedig ar eich cofnod Yswiriant Gwladol presennol.
-nisp.excluded.contactFuturePensionCentre.linktext = gysylltu â Chanolfan Bensiwn y Dyfodol (agor mewn tab newydd)
+nisp.excluded.contactFuturePensionCentre = {0} i weld a fyddwch yn elwa o dalu cyfraniadau gwirfoddol.
+nisp.excluded.contactFuturePensionCentre.linktext = Cysylltwch â Chanolfan Pensiwn y Dyfodol
 
 nisp.excluded.contactNationalInsuranceHelpline = I gael copi o’ch cofnod Yswiriant Gwladol hyd yn hyn, {0}
 nisp.excluded.contactNationalInsuranceHelpline.link = cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)
 nisp.excluded.contactNationalInsuranceHelplineIom = I gael copi o’ch cofnod Yswiriant Gwladol y DU hyd yn hyn, {0}
 nisp.excluded.contactNationalInsuranceHelplineIom.link = cysylltwch â llinell gymorth Yswiriant Gwladol (agor mewn tab newydd)
 
-nisp.excluded.dead = Cysylltwch â llinell gymorth Yswiriant Gwladol CThEM ar 0300 200 1900.
+nisp.excluded.dead.linktext = Cysylltwch â CThEF
+nisp.excluded.dead = {0} i ddysgu rhagor am eich rhagolwg o’ch Pensiwn y Wladwriaeth
 nisp.excluded.dead.openingtime = Oriau agor:
 nisp.excluded.dead.openingtime.weekdays = 08:00 - 20:00, Dydd Llun - Dydd Gwener
 nisp.excluded.dead.openingtime.saturday = 08:00 - 16:00, Dydd Sadwrn
 nisp.excluded.dead.openingtime.holidays = Ar gau ar Ddydd Sul ac ar wyliau’r banc
 
-nisp.excluded.isleOfMan.sp.line1 = Rydym yn methu cyfrifo eich Pensiwn y Wladwriaeth, oherwydd bod Llywodraeth Ynys Manaw ar hyn o bryd yn ymgymryd ag adolygiad o’i gynllun Pensiwn Ymddeol. Ni fydd yn mabwysiadu’r diwygiadau newydd i Bensiwn y Wladwriaeth.
-nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i
-nisp.excluded.isleOfMan.sp.line2.linktext = GOV.IM – Retirement Pension (agor mewn tab newydd)
+nisp.excluded.isleOfMan.sp.line1 = Ni allwn gyfrifo’ch rhagolwg Pensiwn y Wladwriaeth. Rydych wedi talu Yswiriant Gwladol yn Ynys Manaw.
+nisp.excluded.isleOfMan.sp.line2 = Am fwy o wybodaeth am y gynllun Pensiwn Ymddeol, ewch i {0}
+nisp.excluded.isleOfMan.sp.line2.linktext = Ganolfan Pensiynau Ynys Manaw (yn Saesneg)
 nisp.excluded.isleOfMan.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol oherwydd bod gennych gyfraniadau o Ynys Manaw.
 
-nisp.excluded.mwrre.sp = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth oherwydd eich bod wedi {0}
-nisp.excluded.mwrre.sp.linktext = talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)
+nisp.excluded.mwrre.sp = Ni allwn gyfrifo’ch rhagolwg Pensiwn y Wladwriaeth.Rydych wedi talu {0}
+nisp.excluded.mwrre.sp.linktext = cyfradd is o Yswiriant Gwladol fel gwraig briod (yn Saesneg)
 nisp.excluded.mwrre.ni = Rydym yn methu dangos eich cofnod Yswiriant Gwladol ar hyn o bryd oherwydd eich bod wedi {0}
 nisp.excluded.mwrre.ni.link = talu cyfradd is o Yswiriant Gwladol fel dynes briod (agor mewn tab newydd)
-nisp.excluded.mwrre.improve = Helpwch ni i wella’r gwasanaeth hwn
-nisp.excluded.mwrre.futureResearch = Os hoffech gymryd rhan mewn unrhyw ymchwil yn y dyfodol i ni gael darganfod beth yr hoffai pobl yn eich amgylchiadau chi gael gwybod, a fyddech yn gadael eich manylion cyswllt pan fyddwch yn allgofnodi.
 nisp.excluded.mwrre.signOut = Allgofnodi a gadael adborth
 
 nisp.excluded.overseas = Rydym yn methu cyfrifo eich rhagolwg Pensiwn y Wladwriaeth y DU oherwydd eich bod wedi byw neu weithio dramor.
 
-nisp.excluded.spa = Os nad ydych eisoes wedi dechrau {0} gallwch {1} a gallai hyn olygu y byddech yn cael mwy o Bensiwn y Wladwriaeth pan rydych eisiau gwneud cais amdano.
-nisp.excluded.spa.linktext0 = hawlio eich Pensiwn y Wladwriaeth
-nisp.excluded.spa.linktext1 = oedi gwneud cais am eich Pensiwn y Wladwriaeth (agor mewn tab newydd)
+nisp.excluded.spa = Gallwch {0} os nad ydych eisoes wedi ei hawlio.
+nisp.excluded.spa.linktext0 = hawlio’ch Pensiwn y Wladwriaeth ar-lein
 
-nisp.excluded.niRecordIntro = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol sy’n cyfri tuag at eich Pensiwn y Wladwriaeth ac edrych am unrhyw fylchau.
+nisp.excluded.spa.defer = Gallwch ohirio hawlio’ch Pensiwn y Wladwriaeth. Mae hyn yn golygu y gallech gael Pensiwn y Wladwriaeth ychwanegol pan fyddwch yn ei hawlio. {0}
+nisp.excluded.spa.defer.linktext0 = Dysgwch ragor am ohirio’ch Pensiwn y Wladwriaeth
+
+nisp.excluded.niRecordIntro = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i wirio am fylchau y gallech eu llenwi a’u cyfrif tuag at eich Pensiwn y Wladwriaeth.
 nisp.excluded.niRecordIntroUK = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol y DU sy’n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
 nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
@@ -352,7 +353,7 @@ nisp.nirecord.gap.youCanPayvoluntarycontribaftercutoff = Gallwch dalu cyfraniad 
 nisp.nirecord.gap.findoutmore = Darganfyddwch fwy am <a href="{0}">gyfraniadau gwirfoddol</a>.
 nisp.nirecord.gap.latePaymentMessage = Mae’n rhy hwyr i dalu am y flwyddyn hon. Fel arfer gallwch ond talu am y 6 mlynedd diwethaf.
 nisp.nirecord.gap.underInvestigation = Nid yw’r flwyddyn hon wedi’i chynnwys yn rhagolygon eich Pensiwn y Wladwriaeth gan fod angen diweddaru eich cofnodion.
-nisp.nirecord.gap.contactHMRC = <a href="{0}">Cysylltwch â CThEF er mwyn diweddaru’r flwyddyn dreth hon</a>
+nisp.nirecord.gap.contactHMRC = <a href="{0}">Cysylltwch â CThEF er mwyn diweddaru’r flwyddyn dreth hon (yn Saesneg)</a>
 
 nisp.nirecord.youdidnotmakeanycontrib = Ni wnaethoch chi wneud unrhyw gyfraniadau flwyddyn yma
 
@@ -498,7 +499,7 @@ nisp.mqp.fillingGaps = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwladol i w
 
 nisp.mqp.cantFillGapsP1 = Ni allwch gynyddu’ch rhagolwg o’ch Pensiwn y Wladwriaeth.
 nisp.mqp.cantFillGapsP2 = Mae hyn yn golygu na allwch dalu am fylchau yn eich cofnod Yswiriant Gwladol ar-lein.
-nisp.mqp.cantFillGapsP3 = Nid yw llenwi'r bylchau yn eich cofnod yn ddigon i gael Pensiwn y Wladwriaeth.
+nisp.mqp.cantFillGapsP3 = Nid yw llenwi’r bylchau yn eich cofnod yn ddigon i gael Pensiwn y Wladwriaeth.
 
 nisp.mqp.otherWays = Ffyrdd eraill i gynyddu fy incwm
 nisp.mqp.findOutAboutNI = Dysgwch am Yswiriant Gwladol.
@@ -679,3 +680,26 @@ nisp.grace.period.view.p5 = Os hoffech chi lenwi bylchau a hynny dim ond o fis E
 
 nisp.grace.period.view.link.3.text = ewch yn ôl at eich cofnod Yswiriant Gwladol
 nisp.grace.period.view.link.3.url = https://www.gov.uk/pay-voluntary-class-3-national-insurance/pay-online-using-bank-account
+
+#**********************
+# NI Record Payable gaps
+#**********************
+
+nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay.p = nisp.nirecord.gapsinyourrecord.youcanusuallyonlypay.p
+
+nisp.main.context.fillGaps.yourNonPayableGaps.h2 = nisp.main.context.fillGaps.yourNonPayableGaps.h2
+
+nisp.main.context.fillGaps.yourPayableGaps.h2 = nisp.main.context.fillGaps.yourPayableGaps.h2
+nisp.main.context.fillGaps.yourPayableGaps.p = nisp.main.context.fillGaps.yourPayableGaps.p
+
+nisp.main.context.fillGaps.yourPayableGaps.table.taxYear = nisp.main.context.fillGaps.yourPayableGaps.table.taxYear
+nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus = nisp.main.context.fillGaps.yourPayableGaps.table.gapStatus
+nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount = nisp.main.context.fillGaps.yourPayableGaps.table.gapAmount
+nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil = nisp.main.context.fillGaps.yourPayableGaps.table.payableUntil
+
+nisp.nirecord.fullyear.paid = nisp.nirecord.fullyear.paid
+nisp.nirecord.fullyear.notpaid = nisp.nirecord.fullyear.notpaid
+
+nisp.main.context.fillGaps.yourNonPayableGaps.show = nisp.main.context.fillGaps.yourNonPayableGaps.show
+
+nisp.nirecord.notAvailableYet = nisp.nirecord.notAvailableYet

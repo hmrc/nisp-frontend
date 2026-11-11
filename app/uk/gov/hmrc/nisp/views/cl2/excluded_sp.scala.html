@@ -1,0 +1,170 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthenticatedRequest
+@import uk.gov.hmrc.nisp.controllers.routes
+@import uk.gov.hmrc.nisp.models.Exclusion
+@import uk.gov.hmrc.nisp.models.Exclusion._
+@import uk.gov.hmrc.nisp.views.Main
+@import uk.gov.hmrc.nisp.views.html.exclusions.sp.{amountDissonance, isleOfMan, mwrre, postStatePensionAge}
+@import uk.gov.hmrc.nisp.views.html.includes.newComponents.{H1, H2, Link, P}
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukButton
+@import uk.gov.hmrc.nisp.views.html.includes.statePensionAgeUnderConsideration
+@import uk.gov.hmrc.play.language.LanguageUtils
+
+@import java.time.LocalDate
+
+@this(
+        main: Main,
+        amountDissonance: amountDissonance,
+        isleOfMan: isleOfMan,
+        mwrre: mwrre,
+        postStatePensionAge: postStatePensionAge,
+        statePensionAgeUnderConsiderationView: statePensionAgeUnderConsideration,
+        langUtils: LanguageUtils,
+        p: P,
+        h1: H1,
+        h2: H2,
+        link: Link,
+        govukButton: GovukButton
+)
+
+@(
+        exclusion: Exclusion,
+        statePensionAge: Option[Int],
+        statePensionAgeDate: Option[LocalDate],
+        canSeeNIRecord: Boolean,
+        statePensionAgeUnderConsideration: Option[Boolean]
+)(
+        implicit messages: Messages,
+        request: ExcludedAuthenticatedRequest[?]
+)
+
+@genericPageContent = {
+    @if(exclusion.equals(PostStatePensionAge)) {
+        @postStatePensionAge()
+    } else {
+        @if(exclusion.equals(AmountDissonance)) {
+            @amountDissonance()
+        } else {
+            @if(exclusion.equals(IsleOfMan)) {
+                @isleOfMan()
+            } else {
+                @if(exclusion.equals(MarriedWomenReducedRateElection)) {
+                    @mwrre()
+                }
+            }
+        }
+
+        @p(
+            content = HtmlContent(messages(
+                "nisp.excluded.contactFuturePensionCentre",
+                link(
+                    attrs = Map(
+                        "data-journey-click" -> "checkmystatepension:external:futurepensioncentre",
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
+                    href = if(messages.lang.code == "cy")
+                        "https://www.gov.uk/cysylltwch-ar-ganolfan-bensiwn-y-dyfodol"
+                    else
+                        "https://www.gov.uk/future-pension-centre",
+                    messageKey = "nisp.excluded.contactFuturePensionCentre.linktext",
+                    specId = Some("excluded_sp__link1")
+                )
+            )),
+            specId = Some("excluded_sp__p1")
+        )
+    }
+}
+
+@main(
+    pageTitle = messages("nisp.main.title")
+) {
+
+    @h1(
+        elmId = Some("mainTitle"),
+        msg = "nisp.main.h1.title",
+        specId = Some("excluded_sp__h1")
+    )
+
+    @h2(
+        msg = "nisp.main.h2.whenWillIReachStatePensionAge",
+        specId = Some("excluded_sp__h2")
+    )
+
+    @for(
+        age  <- statePensionAge;
+        date <- statePensionAgeDate
+    ) {
+        @if(exclusion.equals(PostStatePensionAge)) {
+            @p(
+                content = HtmlContent(messages("nisp.excluded.haveReached", langUtils.Dates.formatDate(date))),
+                specId = Some("excluded_sp__p_1a")
+            )
+        } else {
+            @p(
+                content = HtmlContent(messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date))),
+                specId = Some("excluded_sp__p_1b")
+            )
+        }
+    }
+
+    @genericPageContent
+
+    @if(exclusion.equals(IsleOfMan)) {
+        @p(
+            content = HtmlContent(messages(
+                "nisp.excluded.isleOfMan.sp.line2",
+                link(
+                    attrs = Map(
+                        "data-journey-click" -> "checkmystatepension:external:iom",
+                        "target" -> "_blank",
+                        "rel" -> "noopener noreferrer"
+                    ),
+                    fullStop = true,
+                    href = "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/",
+                    messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",
+                    specId = Some("exclusion_isleOfMan_sp__link1")
+                )
+            )),
+            specId = Some("exclusion_isleOfMan_sp__p2")
+        )
+    }
+
+    @if(canSeeNIRecord) {
+
+        @p(
+            content = HtmlContent(messages("nisp.excluded.niRecordIntro")),
+            specId = Some("excluded_sp__p2")
+        )
+
+        @govukButton(Button(
+            attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue", "data-spec" -> "excluded_sp__govukButton"),
+            content = Text(messages("nisp.main.showyourrecord")),
+            href = Some(routes.MultiClassNIRecordController.showFull.url),
+        ))
+    }
+
+    @for(
+        spaUnderConsideration <- statePensionAgeUnderConsideration;
+        date                  <- statePensionAgeDate
+    ) {
+        @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
+            @statePensionAgeUnderConsiderationView(langUtils.Dates.formatDate(date))
+        }
+    }
+}

@@ -30,19 +30,6 @@
 )
 
 @p(
-    content = HtmlContent(messages(
-        "nisp.excluded.isleOfMan.sp.line2",
-        link(
-            attrs = Map(
-                "data-journey-click" -> "checkmystatepension:external:iom",
-                "target" -> "_blank",
-                "rel" -> "noopener noreferrer"
-            ),
-            fullStop = true,
-            href = "https://www.gov.im/categories/benefits-and-financial-support/pensions/",
-            messageKey = "nisp.excluded.isleOfMan.sp.line2.linktext",
-            specId = Some("exclusion_isleOfMan_sp__link1"),
-        )
-    )),
-    specId = Some("exclusion_isleOfMan_sp__p2")
+    content = HtmlContent(messages("nisp.main.context.cantFillGaps.p2")),
+    specId = Some("exclusion_isleOfMan_cant_pay_gaps_sp_p1")
 )
