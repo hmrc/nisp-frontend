@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,24 +60,24 @@ class ExclusionCopeFailedSPViewSpec extends HtmlSpec with Injecting {
     )
     .build()
 
-  val excludedCopeFailedView = inject[excluded_cope_failed_sp]
+  val excludedCopeFailedView: excluded_cope_failed_sp = inject[excluded_cope_failed_sp]
   val today: LocalDate       = LocalDate.now()
 
   lazy val view: Document = asDocument(contentAsString(excludedCopeFailedView()))
 
   "render correct h1" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope_failed__h1']",
-      "nisp.excluded.cope.failed.h1"
+      "Sorry, we cannot show your forecast online"
     )
   }
 
   "render correct h2" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope_failed__h2_1']",
-      "nisp.excluded.cope.failed.h2"
+      "Get a forecast sent to you"
     )
   }
 

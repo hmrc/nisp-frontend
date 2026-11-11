@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,18 +65,18 @@ class ExclusionCopeFailedNIViewSpec extends HtmlSpec with Injecting {
   lazy val view: Document = asDocument(contentAsString(excludedCopeFailedNIView()))
 
   "render correct h1" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope_failed__h1']",
-      "nisp.excluded.cope.failed.ni.h1"
+      "Sorry, we cannot show your National Insurance record online"
     )
   }
 
   "render correct h2" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope_failed__h2_1']",
-      "nisp.excluded.cope.failed.ni.h2"
+      "Get your record sent to you"
     )
   }
 
