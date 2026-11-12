@@ -60,22 +60,6 @@
     langUtils.Dates.formatDate(statePension.pensionDate)
 }
 
-@showFull: String = @{
-    if(appConfig.class2Enabled){
-        routes.MultiClassNIRecordController.showFull.url
-    } else {
-        routes.NIRecordController.showFull.url
-    }
-}
-
-@showGaps: String = @{
-    if(appConfig.class2Enabled){
-        routes.MultiClassNIRecordController.showGaps.url
-    } else {
-        routes.NIRecordController.showFull.url
-    }
-}
-
 @defining(Some(user)) { _ =>
     @main(
         pageTitle = messages("nisp.main.title")
@@ -207,7 +191,7 @@
         @statePension.mqpScenario.map { mqp =>
             @if(mqp == CanGetWithGaps) {
                 @govukButton(Button(
-                    href = Some(showGaps),
+                    href = Some(routes.NIRecordController.showGaps.url),
                     content = Text(messages("nisp.main.showyourrecord")),
                     attributes = Map("data-spec" -> "state_pension__mqp__cant_get_with_gaps"),
                     classes = "govuk-!-margin-top-4"
@@ -215,7 +199,7 @@
             }
             @if(mqp == CantGet) {
                 @govukButton(Button(
-                    href = Some(showFull),
+                    href = Some(routes.NIRecordController.showFull.url),
                     content = Text(messages("nisp.main.showyourrecord")),
                     attributes = Map("data-spec" -> "state_pension__mqp__cant_get"),
                     classes = "govuk-!-margin-top-4"
