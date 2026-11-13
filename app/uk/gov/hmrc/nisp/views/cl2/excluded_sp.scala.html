@@ -120,6 +120,11 @@
                 content = HtmlContent(messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date))),
                 specId = Some("excluded_sp__p_1b")
             )
+
+            @p(
+                content = HtmlContent(messages("nisp.excluded.SPA.mayChange")),
+                specId = Some("excluded__sp__p_1c")
+            )
         }
     }
 
@@ -154,17 +159,8 @@
 
         @govukButton(Button(
             attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue", "data-spec" -> "excluded_sp__govukButton"),
-            content = Text(messages("nisp.main.showyourrecord")),
+            content = HtmlContent(messages("nisp.main.showyourrecord")),
             href = Some(routes.MultiClassNIRecordController.showFull.url),
         ))
-    }
-
-    @for(
-        spaUnderConsideration <- statePensionAgeUnderConsideration;
-        date                  <- statePensionAgeDate
-    ) {
-        @if(spaUnderConsideration && (exclusion.equals(AmountDissonance) || exclusion.equals(IsleOfMan))) {
-            @statePensionAgeUnderConsiderationView(langUtils.Dates.formatDate(date))
-        }
     }
 }

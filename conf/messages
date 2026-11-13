@@ -229,6 +229,7 @@ nisp.excluded.niRecordIntro = You can view your National Insurance record to che
 nisp.excluded.niRecordIntroUK = See a record of the UK National Insurance contributions which count towards your UK State Pension and check for any gaps.
 nisp.excluded.haveReached = You reached State Pension age on {0}
 nisp.excluded.willReach = You will reach State Pension age on <span class="nowrap">{0}</span>
+nisp.excluded.SPA.mayChange = Your State Pension age and forecast are not a guarantee and are based on the current law. Your State Pension age may change in the future.
 nisp.nirecord.summary.youhave = You have:
 
 nisp.excluded.cope.processing.h1 = Sorry, we are unable to calculate your forecast at the moment

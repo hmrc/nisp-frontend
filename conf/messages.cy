@@ -226,6 +226,7 @@ nisp.excluded.niRecordIntro = Gallwch fwrw golwg dros eich cofnod Yswiriant Gwla
 nisp.excluded.niRecordIntroUK = Gweld cofnod o’r cyfraniadau Yswiriant Gwladol y DU sy’n cyfri tuag at eich Pensiwn y Wladwriaeth y DU ac edrych am unrhyw fylchau.
 nisp.excluded.haveReached = Rydych wedi cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
 nisp.excluded.willReach = Byddwch yn cyrraedd oedran Pensiwn y Wladwriaeth ar <span class="nowrap">{0}</span>
+nisp.excluded.SPA.mayChange = Nid yw eich oedran a’ch rhagolwg Pensiwn y Wladwriaeth yn warant ac maent yn seiliedig ar y gyfraith bresennol. Gall eich oedran Pensiwn y Wladwriaeth newid yn y dyfodol
 nisp.nirecord.summary.youhave = Mae gennych:
 
 nisp.excluded.cope.processing.h1 = Mae’n ddrwg gennym – ni allwn gyfrifo’ch rhagolwg ar hyn o bryd
