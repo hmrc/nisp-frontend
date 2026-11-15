@@ -133,6 +133,7 @@ nisp.main.context.fillGaps.improve.title = Gallwch wella eich rhagolwg
 nisp.main.context.fillGaps.viewGaps = Edrych ar fylchau yn eich cofnod
 nisp.main.context.fillGaps.viewGapsAndCost = Bwrw golwg ar fylchau yn eich cofnod a’r gost o’u llenwi
 nisp.main.context.fillGaps.viewPayableGaps = Bwrw golwg dros fylchau taladwy
+nisp.main.context.fillGaps.viewPayableGaps.cl2 = nisp.main.context.fillGaps.viewPayableGaps.cl2
 nisp.main.context.fillGaps.niRecordCutOff = Eich cofnod Yswiriant Gwladol cyn mis Ebrill {0}
 nisp.main.context.fillGaps.tooLate = Mae’n rhy hwyr i dalu am fylchau yn ein cofnod Yswiriant Gwladol cyn mis Ebrill {0}.
 
