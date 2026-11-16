@@ -38,22 +38,22 @@ import java.time.{Clock, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
 
 class NIRecordController @Inject()(
-                                    auditConnector: AuditConnector,
-                                    authenticate: StandardAuthJourney,
-                                    nationalInsuranceService: NationalInsuranceService,
-                                    statePensionService: StatePensionService,
-                                    appConfig: ApplicationConfig,
-                                    pertaxHelper: PertaxHelper,
-                                    mcc: MessagesControllerComponents,
-                                    dateProvider: DateProvider,
-                                    niRecordPage: nirecordpage,
-                                    niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
-                                    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
-                                    clock: Clock
-                                  )(
-                                    implicit ec: ExecutionContext,
-                                    val featureFlagService: FeatureFlagService
-                                  ) extends NispFrontendController(mcc) with I18nSupport with CurrentTaxYear {
+    auditConnector: AuditConnector,
+    authenticate: StandardAuthJourney,
+    nationalInsuranceService: NationalInsuranceService,
+    statePensionService: StatePensionService,
+    appConfig: ApplicationConfig,
+    pertaxHelper: PertaxHelper,
+    mcc: MessagesControllerComponents,
+    dateProvider: DateProvider,
+    niRecordPage: nirecordpage,
+    niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
+    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
+    clock: Clock
+  )(
+    implicit ec: ExecutionContext,
+    val featureFlagService: FeatureFlagService
+  ) extends NispFrontendController(mcc) with I18nSupport with CurrentTaxYear {
 
   override def now: () => LocalDate = () => LocalDate.now(clock)
   

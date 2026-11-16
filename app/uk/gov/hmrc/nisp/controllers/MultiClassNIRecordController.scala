@@ -39,22 +39,22 @@ import java.time.{Clock, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
 
 class MultiClassNIRecordController @Inject()(
-                                    auditConnector: AuditConnector,
-                                    authenticate: StandardAuthJourney,
-                                    nationalInsuranceService: NationalInsuranceService,
-                                    statePensionService: StatePensionService,
-                                    appConfig: ApplicationConfig,
-                                    pertaxHelper: PertaxHelper,
-                                    mcc: MessagesControllerComponents,
-                                    dateProvider: DateProvider,
-                                    niRecordPage: nirecordpage,
-                                    niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
-                                    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
-                                    clock: Clock
-                                  )(
-                                    implicit ec: ExecutionContext,
-                                    val featureFlagService: FeatureFlagService
-                                  ) extends NispFrontendController(mcc) with I18nSupport with CurrentTaxYear {
+    auditConnector: AuditConnector,
+    authenticate: StandardAuthJourney,
+    nationalInsuranceService: NationalInsuranceService,
+    statePensionService: StatePensionService,
+    appConfig: ApplicationConfig,
+    pertaxHelper: PertaxHelper,
+    mcc: MessagesControllerComponents,
+    dateProvider: DateProvider,
+    niRecordPage: nirecordpage,
+    niRecordGapsAndHowToCheckThemView: nirecordGapsAndHowToCheckThem,
+    nirecordVoluntaryContributionsView: nirecordVoluntaryContributions,
+    clock: Clock
+  )(
+    implicit ec: ExecutionContext,
+    val featureFlagService: FeatureFlagService
+  ) extends NispFrontendController(mcc) with I18nSupport with CurrentTaxYear {
 
   override def now: () => LocalDate = () => LocalDate.now(clock)
   
@@ -174,7 +174,7 @@ class MultiClassNIRecordController @Inject()(
           showFullNI = showFullNI,
           currentDate = dateProvider.currentDate,
           viewPayableGapsToggle = showViewPayableGapsButton,
-          nispModellingPayableGapsURL = appConfig.nispModellingFrontendUrl,
+          nispModellingPayableGapsURL = appConfig.nispModellingFrontendCL2Url,
           payableGapInfo = payableGapInfo,
           niUpdateYearURL = appConfig.nationalInsuranceUpdateYearLink,
           currentTaxYear = current
