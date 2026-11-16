@@ -84,6 +84,7 @@ class ApplicationConfig @Inject()(config: Configuration, servicesConfig: Service
   val friendlyUsers: Seq[String]            = config.get[Seq[String]]("allowedUsers.friendly")
   val allowedUsersEndOfNino: Seq[String]    = config.get[Seq[String]]("allowedUsers.endOfNino")
   val nispModellingFrontendUrl: String      = getString("nisp-modelling.url")
+  val nispModellingFrontendCL2Url: String   = getString("nisp-modelling.cl2Url")
 
   val citizenDetailsServiceUrl: String       = baseUrl("citizen-details")
   val identityVerificationServiceUrl: String = baseUrl("identity-verification")
