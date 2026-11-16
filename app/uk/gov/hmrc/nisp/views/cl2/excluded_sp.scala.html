@@ -108,23 +108,39 @@
 
     @for(
         age  <- statePensionAge;
-        date <- statePensionAgeDate
+                date <- statePensionAgeDate
     ) {
         @if(exclusion.equals(PostStatePensionAge)) {
             @p(
                 content = HtmlContent(messages("nisp.excluded.haveReached", langUtils.Dates.formatDate(date))),
                 specId = Some("excluded_sp__p_1a")
             )
-        } else {
-            @p(
-                content = HtmlContent(messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date))),
-                specId = Some("excluded_sp__p_1b")
-            )
+        } else if(exclusion.equals(AmountDissonance)) {
+        @p(
+            content = HtmlContent(messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date))),
+            specId = Some("excluded_sp__p_1b")
+        )
 
-            @p(
-                content = HtmlContent(messages("nisp.excluded.SPA.mayChange")),
-                specId = Some("excluded__sp__p_1c")
-            )
+        @p(
+            content = HtmlContent(messages("nisp.excluded.amountdissonance")),
+            specId = Some("exclusions__sp__amountdissonance__p1")
+        )
+
+        @p(
+            content = HtmlContent(messages("nisp.excluded.SPA.mayChange")),
+            specId = Some("excluded__sp__p_1c")
+        )
+
+        } else {
+        @p(
+            content = HtmlContent(messages("nisp.excluded.willReach", langUtils.Dates.formatDate(date))),
+            specId = Some("excluded_sp__p_1b")
+        )
+
+        @p(
+            content = HtmlContent(messages("nisp.excluded.SPA.mayChange")),
+            specId = Some("excluded__sp__p_1c")
+        )
         }
     }
 
