@@ -341,6 +341,7 @@ nisp.nirecord.gap.whenyouareclaiming.singular = Credydau Yswiriant Gwladol: <str
 nisp.nirecord.gap.whenyouareclaiming.plural= Credydau Yswiriant Gwladol: <strong>{0} o wythnosau</strong>
 nisp.nirecord.gap.whenyouareclaiming.info.singular = Efallai bod yr wythnos hon wedi cael ei ychwanegu i’ch cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun yn llawn amser neu ar wasanaeth rheithgor.
 nisp.nirecord.gap.whenyouareclaiming.info.plural = Mae’n bosibl bod y rhain wedi cael eu hychwanegu at eich cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun ar sail amser llawn neu ar wasanaeth rheithgor.
+nisp.nirecord.gap.whenyouareclaiming.info.plural.cl2 = nisp.nirecord.gap.whenyouareclaiming.info.plural.cl2
 
 nisp.nirecord.unavailableyear = Nid yw eich cofnod ar gyfer y flwyddyn hon ar gael eto
 nisp.nirecord.yourcontributionfrom = Mae gennych gyfraniadau o
