@@ -519,11 +519,11 @@
                                 @messages("nisp.nirecord.pre75Years")
                             </dt>
                             @if(niRecord.qualifyingYearsPriorTo1975 > 0) {
-                            <dd id="record-show-qualifying-years" class="govuk-summary-list__value gap-history-final-row">
+                            <dd id="record-show-qualifying-years" class="govuk-summary-list__value">
                                 @Html(messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))
                             </dd>
                             } else {
-                            <dd id="no-full-years-upto-1975" class="govuk-summary-list__value gap-history-final-row">
+                            <dd id="no-full-years-upto-1975" class="govuk-summary-list__value">
                                 @Html(messages("nisp.nirecord.pre75QualifyingYearsZero"))
                             </dd>
                             }
