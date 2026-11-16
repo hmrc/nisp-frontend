@@ -249,7 +249,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
     }
 
     "render page with text 'These may have been added to your record if you were ill/disabled...'" in {
-      doc.getElementById("added-disabled-ill-unemployed-caring").text() shouldBe "These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service."
+      doc.getElementById("added-disabled-ill-unemployed-caring").text() shouldBe "Credits may be added to your record if you were ill, disabled, unemployed, caring for someone full-time or on jury service."
     }
 
     "render page with link 'view gaps only'" in {
@@ -1147,7 +1147,7 @@ class NIRecordViewSpec extends HtmlSpec with Injecting with WireMockSupport {
       assertContainsDynamicMessageUsingClass(
         doc,
         "other-credits-reason",
-        "nisp.nirecord.gap.whenyouareclaiming.info.plural"
+        "nisp.nirecord.gap.whenyouareclaiming.info.plural.cl2"
       )
     }
 
