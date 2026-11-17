@@ -192,22 +192,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
-      )
-    }
-
     "not render View your National Insurance Record help text" in {
       htmlAccountDoc
         .select("""[data-spec="excluded_sp__p2"]""")
@@ -316,22 +300,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         htmlAccountDoc,
         "[data-spec='excluded_sp__link1']",
         "https://www.gov.uk/future-pension-centre"
-      )
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
     }
 
@@ -444,19 +412,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "[data-spec='excluded_sp__link1']",
         "https://www.gov.uk/future-pension-centre"
       )
-    }
-
-    // state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__h2_1']")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
     }
 
     "not render View your National Insurance Record help text" in {
@@ -676,19 +631,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       button.text() shouldBe "View your National Insurance record"
       button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
-      )
-    }
   }
 
   "Exclusion Post State Pension Age: State Pension Age under consideration - false" should {
@@ -779,22 +721,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       button should not be empty
       button.text() shouldBe "View your National Insurance record"
       button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
-      )
     }
   }
 
@@ -887,22 +813,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       button.text() shouldBe "View your National Insurance record"
       button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
-      )
-    }
   }
 
   "Exclusion Amount Dissonance: State Pension Age under consideration - no flag" should {
@@ -994,22 +904,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       button should not be empty
       button.text() shouldBe "View your National Insurance record"
       button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
-      )
     }
   }
 
@@ -1104,22 +998,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       button.text() shouldBe "View your National Insurance record"
       button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
-      )
-    }
   }
 
   "Exclusion Amount Dissonance: State Pension Age under consideration - true" should {
@@ -1213,20 +1091,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       button.text() shouldBe "View your National Insurance record"
       button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
-
-    // state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__h2_1']")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
-    }
-  }
 
   "Exclusion Married Women: State Pension Age under consideration - no flag" should {
     lazy val sResult        = inject[excluded_sp]
@@ -1324,22 +1188,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         htmlAccountDoc,
         "[data-spec='excluded_sp__link1']",
         "https://www.gov.uk/future-pension-centre"
-      )
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
     }
 
@@ -1453,22 +1301,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         htmlAccountDoc,
         "[data-spec='excluded_sp__link1']",
         "https://www.gov.uk/future-pension-centre"
-      )
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
     }
 
@@ -1587,22 +1419,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         htmlAccountDoc,
         "[data-spec='excluded_sp__link1']",
         "https://www.gov.uk/future-pension-centre"
-      )
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      assertPageDoesNotContainMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.title"
-      )
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertPageDoesNotContainDynamicMessage(
-        htmlAccountDoc,
-        "nisp.spa.under.consideration.detail",
-        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
       )
     }
 

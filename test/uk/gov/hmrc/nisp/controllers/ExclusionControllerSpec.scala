@@ -86,7 +86,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
   val mwrreMessagingNILinkText = "paid a reduced rate of National Insurance as a married woman (opens in new tab)"
 
   val abroadMessaging                = "We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad."
-  val spaUnderConsiderationMessaging = "Proposed change to your State Pension age"
   val spaAndForecastMayChange        = "Your State Pension age and forecast are not a guarantee and are based on the current law. Your State Pension age may change in the future."
   val copeProcessingHeader           = "Sorry, we are unable to calculate your forecast at the moment"
   val copeProcessingExtendedHeader   = "Sorry, we are still working on updates to your forecast"
@@ -601,7 +600,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should include(spaAndForecastMayChange)
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
           contentAsString(result)    should include(showNIHelpText)
           contentAsString(result)    should include(showNIButton)
         }
@@ -636,7 +634,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should include(spaAndForecastMayChange)
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
           contentAsString(result)    should not include showNIHelpText
           contentAsString(result)    should not include showNIButton
         }
@@ -675,7 +672,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should include(spaAndForecastMayChange)
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
         }
       }
 
@@ -712,7 +708,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should not include spaAndForecastMayChange
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
         }
       }
 
@@ -748,7 +743,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should not include spaAndForecastMayChange
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
         }
       }
 
@@ -780,7 +774,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
           contentAsString(result)    should include(spaAndForecastMayChange)
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
         }
       }
 
