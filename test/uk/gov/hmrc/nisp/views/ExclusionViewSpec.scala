@@ -1001,7 +1001,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
   }
 
   "Exclusion Amount Dissonance: State Pension Age under consideration - true" should {
-    lazy val sResult        = inject[excluded_sp]
+    lazy val sResult = inject[excluded_sp]
     lazy val htmlAccountDoc = asDocument(
       sResult(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(true)).toString
     )
@@ -1091,6 +1091,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       button.text() shouldBe "View your National Insurance record"
       button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
     }
+  }
 
   "Exclusion Married Women: State Pension Age under consideration - no flag" should {
     lazy val sResult        = inject[excluded_sp]
