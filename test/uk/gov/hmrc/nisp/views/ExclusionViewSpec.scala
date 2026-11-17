@@ -591,13 +591,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "not render page with State Pension age may change in the future help text" in {
-        htmlAccountDoc
-          .select("[data-spec='excluded__sp__p_1c']")
-          .isEmpty shouldBe true
-    }
-
-
     "render page with message  'You can claim your State Pension online if you have not already claimed it.' " in {
       assertEqualsValue(
         htmlAccountDoc,
@@ -681,12 +674,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         70.toString,
         null
       )
-    }
-
-    "not render page with State Pension age may change in the future help text" in {
-      htmlAccountDoc
-        .select("[data-spec='excluded__sp__p_1c']")
-        .isEmpty shouldBe true
     }
 
     "render page with message  'You can claim your State Pension online if you have not already claimed it.' " in {
@@ -774,11 +761,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    "not render page with State Pension age may change in the future help text" in {
-      htmlAccountDoc
-        .select("[data-spec='excluded__sp__p_1c']")
-        .isEmpty shouldBe true
-    }
 
     "render page with message  'You can claim your State Pension online if you have not already claimed it.' " in {
       assertEqualsValue(
