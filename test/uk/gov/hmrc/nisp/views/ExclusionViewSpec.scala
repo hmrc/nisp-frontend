@@ -68,7 +68,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
   val checkNIForGapsText  = "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
   val accountNIRButtonText  = "View your National Insurance record"
   val accountNIRUrl  = "/check-your-state-pension/account/nirecord"
-  val proposedChangeToSPAText  = "Proposed change to your State Pension age"
   val deferSPText  = "You can delay claiming your State Pension. This means you may get extra State Pension when you do claim it. Find out about delaying your State Pension."
   val deferSPLinkText  = "https://www.gov.uk/deferring-state-pension"
 
@@ -204,19 +203,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    // No state pension age under consideration message
-    "not render page with heading Proposed change to your State Pension age text" in {
-      htmlAccountDoc
-        .select("state_pension_age_under_consideration__h2_1")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text 'You will reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
-    }
-
     "not render View your National Insurance Record help text" in {
       htmlAccountDoc
         .select("""[data-spec="excluded_sp__p2"]""")
@@ -319,19 +305,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       )
     }
 
-    // No state pension age under consideration message
-    "not render page with heading Proposed change to your State Pension age text" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__h2_1']")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You will reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
-    }
-
     "not render View your National Insurance Record help text" in {
       htmlAccountDoc
         .select("""[data-spec="excluded_sp__p2"]""")
@@ -431,23 +404,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         htmlAccountDoc,
         "[data-spec='excluded_sp__link1']",
         contactFuturePensionsLink
-      )
-    }
-
-    // state pension age under consideration message
-    "render page with heading Proposed change to your State Pension age text" in {
-      assertEqualsText(
-        htmlAccountDoc,
-        "[data-spec='state_pension_age_under_consideration__h2_1']",
-        proposedChangeToSPAText
-      )
-    }
-
-    "render page with text  'You’ll reach State Pension age on 6 Sep 2019. Under government proposals this may increase by up to a year.'" in {
-      assertEqualsText(
-        htmlAccountDoc,
-        "[data-spec='state_pension_age_under_consideration__p1']",
-        "You’ll reach State Pension age on 6 September 2019. Under government proposals this may increase by up to a year."
       )
     }
 
@@ -671,19 +627,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         accountNIRUrl
       )
     }
-
-    // No state pension age under consideration message
-    "not render page with heading Proposed change to your State Pension age text" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__h2_1']")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
-    }
   }
 
   "Exclusion Post State Pension Age: State Pension Age under consideration - false" should {
@@ -778,19 +721,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "[data-spec='excluded_sp__govukButton']",
         accountNIRUrl
       )
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading Proposed change to your State Pension age text" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__h2_1']")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
     }
   }
 
@@ -887,19 +817,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         accountNIRUrl
       )
     }
-
-    // No state pension age under consideration message
-    "not render page with heading Proposed change to your State Pension age text" in {
-      htmlAccountDoc
-        .select("state_pension_age_under_consideration__h2_1")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
-    }
   }
 
   "Exclusion Amount Dissonance: State Pension Age under consideration - no flag" should {
@@ -985,19 +902,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "[data-spec='excluded_sp__govukButton']",
         accountNIRUrl
       )
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading Proposed change to your State Pension age text" in {
-      htmlAccountDoc
-        .select("state_pension_age_under_consideration__h2_1")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
     }
   }
 
@@ -1086,19 +990,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         accountNIRUrl
       )
     }
-
-    // No state pension age under consideration message
-    "not render page with heading Proposed change to your State Pension age text" in {
-      htmlAccountDoc
-        .select("state_pension_age_under_consideration__h2_1")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
-    }
   }
 
   "Exclusion Amount Dissonance: State Pension Age under consideration - true" should {
@@ -1186,23 +1077,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         accountNIRUrl
       )
     }
-
-    // state pension age under consideration message
-    "render page with heading Proposed change to your State Pension age text" in {
-      assertEqualsText(
-        htmlAccountDoc,
-        "[data-spec='state_pension_age_under_consideration__h2_1']",
-        proposedChangeToSPAText
-      )
-    }
-
-    "render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      assertEqualsText(
-        htmlAccountDoc,
-        "[data-spec='state_pension_age_under_consideration__p1']",
-        "You’ll reach State Pension age on 6 September 2015. Under government proposals this may increase by up to a year."
-      )
-    }
   }
 
   "Exclusion Married Women: State Pension Age under consideration - no flag" should {
@@ -1282,20 +1156,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         contactFuturePensionsLink
       )
     }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      htmlAccountDoc
-        .select("state_pension_age_under_consideration__h2_1")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
-    }
-
+    
     "not render View your National Insurance Record help text" in {
       htmlAccountDoc
         .select("""[data-spec="excluded_sp__p2"]""")
@@ -1383,19 +1244,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "[data-spec='excluded_sp__link1']",
         contactFuturePensionsLink
       )
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      htmlAccountDoc
-        .select("state_pension_age_under_consideration__h2_1")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
     }
 
     "not render View your National Insurance Record help text" in {
@@ -1493,19 +1341,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "[data-spec='excluded_sp__link1']",
         contactFuturePensionsLink
       )
-    }
-
-    // No state pension age under consideration message
-    "not render page with heading 'Proposed change to your State Pension age'" in {
-      htmlAccountDoc
-        .select("state_pension_age_under_consideration__h2_1")
-        .isEmpty shouldBe true
-    }
-
-    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
-      htmlAccountDoc
-        .select("[data-spec='state_pension_age_under_consideration__p1']")
-        .isEmpty shouldBe true
     }
 
     "not render View your National Insurance Record help text" in {
