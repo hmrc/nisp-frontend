@@ -15,9 +15,12 @@
  *@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
+
 @this(
         p: P,
-        link: Link
+        link: Link,
+        appConfig: ApplicationConfig
 )
 @()(
         implicit messages: Messages
@@ -28,13 +31,12 @@
         link(
             attrs = Map(
                 "data-journey-click" -> "checkmystatepension:external:claimstatepension",
-                "target" -> "_blank",
                 "rel" -> "noopener noreferrer"
             ),
             href = if(messages.lang.code == "cy")
-                "https://www.gov.uk/cael-eich-pensiwn-y-wladwriaeth"
+                appConfig.claimStatePensionOnlineLinkCy
             else
-                "https://www.gov.uk/claim-state-pension-online",
+                appConfig.claimStatePensionOnlineLink,
             messageKey = "nisp.excluded.spa.linktext0",
             specId = Some("post_state_pension_age__link1"),
         )
@@ -47,14 +49,13 @@
         link(
             attrs = Map(
                 "data-journey-click" -> "checkmystatepension:external:deferstatepension",
-                "target" -> "_blank",
                 "rel" -> "noopener noreferrer"
             ),
             fullStop = true,
             href = if(messages.lang.code == "cy") {
-                "https://www.gov.uk/oedi-pensiwn-wladwriaeth"
+                appConfig.pensionDeferralLinkCy
             } else {
-                "https://www.gov.uk/deferring-state-pension"
+                appConfig.pensionDeferralLink
             },
             messageKey = "nisp.excluded.spa.defer.linktext0",
             specId = Some("post_state_pension_age_defer__link1"),

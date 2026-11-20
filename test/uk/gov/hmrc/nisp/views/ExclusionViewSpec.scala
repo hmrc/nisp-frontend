@@ -603,7 +603,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       assertLinkHasValue(
         htmlAccountDoc,
         "[data-spec='post_state_pension_age__link1']",
-        "https://www.gov.uk/claim-state-pension-online"
+        "https://www.gov.uk/get-state-pension"
       )
       assertLinkHasValue(
         htmlAccountDoc,
@@ -688,7 +688,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       assertLinkHasValue(
         htmlAccountDoc,
         "[data-spec='post_state_pension_age__link1']",
-        "https://www.gov.uk/claim-state-pension-online"
+        "https://www.gov.uk/get-state-pension"
       )
       assertLinkHasValue(
         htmlAccountDoc,
@@ -774,7 +774,7 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
       assertLinkHasValue(
         htmlAccountDoc,
         "[data-spec='post_state_pension_age__link1']",
-        "https://www.gov.uk/claim-state-pension-online"
+        "https://www.gov.uk/get-state-pension"
       )
       assertLinkHasValue(
         htmlAccountDoc,

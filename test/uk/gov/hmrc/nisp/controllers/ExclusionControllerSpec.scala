@@ -66,7 +66,7 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
   val mciMessaging      = "We need to talk to you about an MCI error before you sign in."
 
   val postSPAMessagingText1     = "You can "
-  val postSPAMessagingHref1     = "href=\"https://www.gov.uk/claim-state-pension-online\""
+  val postSPAMessagingHref1     = "href=\"https://www.gov.uk/get-state-pension\""
   val postSPAMessagingLinkText  = "claim your State Pension online"
   val postSPAMessagingHref2     = "href=\"https://www.gov.uk/deferring-state-pension\""
   val postSPAMessagingText2     = "if you have not already claimed it."
