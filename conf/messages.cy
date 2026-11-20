@@ -133,6 +133,7 @@ nisp.main.context.fillGaps.improve.title = Gallwch wella eich rhagolwg
 nisp.main.context.fillGaps.viewGaps = Edrych ar fylchau yn eich cofnod
 nisp.main.context.fillGaps.viewGapsAndCost = Bwrw golwg ar fylchau yn eich cofnod a’r gost o’u llenwi
 nisp.main.context.fillGaps.viewPayableGaps = Bwrw golwg dros fylchau taladwy
+nisp.main.context.fillGaps.viewPayableGaps.cl2 = nisp.main.context.fillGaps.viewPayableGaps.cl2
 nisp.main.context.fillGaps.niRecordCutOff = Eich cofnod Yswiriant Gwladol cyn mis Ebrill {0}
 nisp.main.context.fillGaps.tooLate = Mae’n rhy hwyr i dalu am fylchau yn ein cofnod Yswiriant Gwladol cyn mis Ebrill {0}.
 
@@ -340,6 +341,7 @@ nisp.nirecord.gap.whenyouareclaiming.singular = Credydau Yswiriant Gwladol: <str
 nisp.nirecord.gap.whenyouareclaiming.plural= Credydau Yswiriant Gwladol: <strong>{0} o wythnosau</strong>
 nisp.nirecord.gap.whenyouareclaiming.info.singular = Efallai bod yr wythnos hon wedi cael ei ychwanegu i’ch cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun yn llawn amser neu ar wasanaeth rheithgor.
 nisp.nirecord.gap.whenyouareclaiming.info.plural = Mae’n bosibl bod y rhain wedi cael eu hychwanegu at eich cofnod os oeddech yn sâl/anabl, yn ddi-waith, yn gofalu am rywun ar sail amser llawn neu ar wasanaeth rheithgor.
+nisp.nirecord.gap.whenyouareclaiming.info.plural.cl2 = nisp.nirecord.gap.whenyouareclaiming.info.plural.cl2
 
 nisp.nirecord.unavailableyear = Nid yw eich cofnod ar gyfer y flwyddyn hon ar gael eto
 nisp.nirecord.yourcontributionfrom = Mae gennych gyfraniadau o

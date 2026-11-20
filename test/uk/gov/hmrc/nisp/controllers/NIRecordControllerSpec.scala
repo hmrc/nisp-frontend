@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nisp.controllers
 
 import org.mockito.ArgumentMatchers.{any as mockAny, eq as mockEQ}
-import org.mockito.Mockito.{reset, times, verify, when}
+import org.mockito.Mockito.{never, reset, times, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -41,6 +41,10 @@ import uk.gov.hmrc.nisp.utils.{DateProvider, UnitSpec}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time.TaxYear
+import uk.gov.hmrc.nisp.views.html.nirecordpage
+import uk.gov.hmrc.nisp.views.html.cl2.nirecordpage as NewNirecordpage
+import org.mockito.ArgumentMatchers.any
+import play.twirl.api.Html
 
 import java.time.LocalDate
 import java.util.UUID
@@ -59,6 +63,9 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
   implicit val executionContext: ExecutionContext            = ExecutionContext.global
   implicit val hc: HeaderCarrier                             = HeaderCarrier()
 
+  private val mockOldView: nirecordpage = mock[nirecordpage]
+  private val mockNewView: NewNirecordpage = mock[NewNirecordpage]
+
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockNationalInsuranceService)
@@ -68,6 +75,8 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     reset(mockAuditConnector)
     reset(mockDateProvider)
     reset(mockFeatureFlagService)
+    reset(mockOldView)
+    reset(mockNewView)
     when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
     when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
     wireMockServer.resetAll()
@@ -2076,6 +2085,216 @@ class NIRecordControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inje
     val result: Future[Result] = niRecordController.showGaps(generateFakeRequest)
 
     status(result) shouldBe SEE_OTHER
+  }
+
+  "show class 2 enabled view" in {
+
+    val statePensionResponse = StatePension(
+      LocalDate.of(2015, 4, 5),
+      StatePensionAmounts(
+        protectedPayment = false,
+        StatePensionAmountRegular(133.41, 580.1, 6961.14),
+        StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+        StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+        StatePensionAmountRegular(0, 0, 0)
+      ),
+      64,
+      LocalDate.of(2018, 7, 6),
+      "2017",
+      30,
+      pensionSharingOrder = false,
+      155.65,
+      reducedRateElection = false,
+      statePensionAgeUnderConsideration = false
+    )
+
+    val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+      40,
+      39,
+      2,
+      1,
+      Some(LocalDate.of(1973, 7, 7)),
+      homeResponsibilitiesProtection = false,
+      LocalDate.of(2016, 4, 5),
+      List(
+        NationalInsuranceTaxYear("2015", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
+        NationalInsuranceTaxYear(
+          "2014",
+          qualifying = false,
+          123,
+          1,
+          1,
+          1,
+          456.58,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          payable = false,
+          underInvestigation = false
+        ),
+        NationalInsuranceTaxYear(
+          "1999",
+          qualifying = false,
+          2,
+          5,
+          0,
+          1,
+          111.11,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          payable = false,
+          underInvestigation = false
+        )
+      ),
+      reducedRateElection = false
+    )
+
+    when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+    )
+
+    when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      Future.successful(Right(Right(statePensionResponse)))
+    )
+
+    when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
+
+    mockViewPayableGapsFeatureFlag(false)
+
+    when(mockAppConfig.class2Enabled).thenReturn(true)
+
+    when(mockNewView.apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any(), any())).thenReturn(Html(""))
+    when(mockOldView.apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any(), any())).thenReturn(Html(""))
+
+    val class2Injector = GuiceApplicationBuilder()
+      .overrides(
+        bind[AuditConnector].toInstance(mockAuditConnector),
+        bind[AuthRetrievals].to[FakeAuthAction],
+        bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+        bind[StatePensionService].toInstance(mockStatePensionService),
+        bind[ApplicationConfig].toInstance(mockAppConfig),
+        bind[PertaxHelper].toInstance(mockPertaxHelper),
+        bind[DateProvider].toInstance(mockDateProvider),
+        bind[PertaxAuthAction].to[FakePertaxAuthAction],
+        bind[GracePeriodAction].to[FakeGracePeriodAction],
+        bind[GracePeriodService].toInstance(mocGracePeriodService),
+        bind[nirecordpage].toInstance(mockOldView),
+        bind[NewNirecordpage].toInstance(mockNewView),
+        featureFlagServiceBinding
+      ).build().injector
+
+    val controller = class2Injector.instanceOf[NIRecordController]
+
+    val result = controller.showGaps(generateFakeRequest)
+    status(result) shouldBe OK
+
+    verify(mockNewView).apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any(), any())
+    verify(mockOldView, never()).apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any(), any())
+
+  }
+
+  "Do not show class 2 enabled view" in {
+
+    val statePensionResponse = StatePension(
+      LocalDate.of(2015, 4, 5),
+      StatePensionAmounts(
+        protectedPayment = false,
+        StatePensionAmountRegular(133.41, 580.1, 6961.14),
+        StatePensionAmountForecast(3, 146.76, 638.14, 7657.73),
+        StatePensionAmountMaximum(3, 2, 155.65, 676.8, 8121.59),
+        StatePensionAmountRegular(0, 0, 0)
+      ),
+      64,
+      LocalDate.of(2018, 7, 6),
+      "2017",
+      30,
+      pensionSharingOrder = false,
+      155.65,
+      reducedRateElection = false,
+      statePensionAgeUnderConsideration = false
+    )
+
+    val expectedNationalInsuranceRecord = NationalInsuranceRecord(
+      40,
+      39,
+      2,
+      1,
+      Some(LocalDate.of(1973, 7, 7)),
+      homeResponsibilitiesProtection = false,
+      LocalDate.of(2016, 4, 5),
+      List(
+        NationalInsuranceTaxYear("2015", qualifying = true, 12345.45, 0, 0, 0, 0, None, None, payable = false, underInvestigation = false),
+        NationalInsuranceTaxYear(
+          "2014",
+          qualifying = false,
+          123,
+          1,
+          1,
+          1,
+          456.58,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          payable = false,
+          underInvestigation = false
+        ),
+        NationalInsuranceTaxYear(
+          "1999",
+          qualifying = false,
+          2,
+          5,
+          0,
+          1,
+          111.11,
+          Some(LocalDate.of(2019, 4, 5)),
+          Some(LocalDate.of(2023, 4, 5)),
+          payable = false,
+          underInvestigation = false
+        )
+      ),
+      reducedRateElection = false
+    )
+
+    when(mockNationalInsuranceService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      Future.successful(Right(Right(expectedNationalInsuranceRecord)))
+    )
+
+    when(mockStatePensionService.getSummary(mockEQ(TestAccountBuilder.regularNino))(mockAny())).thenReturn(
+      Future.successful(Right(Right(statePensionResponse)))
+    )
+
+    when(mockDateProvider.currentDate).thenReturn(LocalDate.of(2016, 9, 9))
+
+    mockViewPayableGapsFeatureFlag(false)
+
+    when(mockAppConfig.class2Enabled).thenReturn(false)
+
+    when(mockNewView.apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any(), any())).thenReturn(Html(""))
+    when(mockOldView.apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any(), any())).thenReturn(Html(""))
+
+    val class2Injector = GuiceApplicationBuilder()
+      .overrides(
+        bind[AuditConnector].toInstance(mockAuditConnector),
+        bind[AuthRetrievals].to[FakeAuthAction],
+        bind[NationalInsuranceService].toInstance(mockNationalInsuranceService),
+        bind[StatePensionService].toInstance(mockStatePensionService),
+        bind[ApplicationConfig].toInstance(mockAppConfig),
+        bind[PertaxHelper].toInstance(mockPertaxHelper),
+        bind[DateProvider].toInstance(mockDateProvider),
+        bind[PertaxAuthAction].to[FakePertaxAuthAction],
+        bind[GracePeriodAction].to[FakeGracePeriodAction],
+        bind[GracePeriodService].toInstance(mocGracePeriodService),
+        bind[nirecordpage].toInstance(mockOldView),
+        bind[NewNirecordpage].toInstance(mockNewView),
+        featureFlagServiceBinding
+      ).build().injector
+
+    val controller = class2Injector.instanceOf[NIRecordController]
+
+    val result = controller.showGaps(generateFakeRequest)
+    status(result) shouldBe OK
+
+    verify(mockOldView).apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any(), any())
+    verify(mockNewView, never()).apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any(), any())
+
   }
 
   "throw an exception when the response is an exclusion without finalRelevantStartYear" in {

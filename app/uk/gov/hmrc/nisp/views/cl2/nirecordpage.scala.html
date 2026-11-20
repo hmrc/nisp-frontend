@@ -190,7 +190,7 @@
                 !(niRecord.taxYears.filter(_.taxYear.toInt > payableGapInfo.startYear - 1)).isEmpty)
             ) {
                 <table class="govuk-table govuk-!-margin-bottom-0">
-                    <caption class="govuk-table__caption govuk-table__caption--m">
+                    <caption class="govuk-table__caption govuk-table__caption--m govuk-!-padding-top-6">
                         @messages("nisp.main.context.fillGaps.yourPayableGaps.h2")
                         <p></p>
                         <p class="govuk-body"> @messages("nisp.main.context.fillGaps.yourPayableGaps.p")</p>
@@ -261,7 +261,7 @@
                 <!-- Button "View payable gaps" -->
                 @if(viewPayableGapsToggle) {
                     <a href="@nispModellingPayableGapsURL" role="button" draggable="false" class="govuk-button govuk-!-margin-top-5" data-module="govuk-button">
-                        @messages("nisp.main.context.fillGaps.viewPayableGaps")
+                        @messages("nisp.main.context.fillGaps.viewPayableGaps.cl2")
                     </a>
                 }
 
@@ -345,7 +345,7 @@
                 !(niRecord.taxYears.filter(_.taxYear.toInt > payableGapInfo.startYear - 1)).isEmpty)
             ) {
                 <table class="govuk-table govuk-!-margin-bottom-0">
-                    <caption class="govuk-table__caption govuk-table__caption--m">
+                    <caption class="govuk-table__caption govuk-table__caption--m govuk-!-padding-top-6">
                         @messages("nisp.main.context.fillGaps.yourPayableGaps.h2")
                         <p></p>
                         <p class="govuk-body"> @messages("nisp.main.context.fillGaps.yourPayableGaps.p")</p>
@@ -433,7 +433,7 @@
                 <!-- Button "View payable gaps" -->
                 @if(viewPayableGapsToggle) {
                     <a href="@nispModellingPayableGapsURL" role="button" draggable="false" class="govuk-button govuk-!-margin-top-5" data-module="govuk-button">
-                        @messages("nisp.main.context.fillGaps.viewPayableGaps")
+                        @messages("nisp.main.context.fillGaps.viewPayableGaps.cl2")
                     </a>
                 }
             }
@@ -519,11 +519,11 @@
                                 @messages("nisp.nirecord.pre75Years")
                             </dt>
                             @if(niRecord.qualifyingYearsPriorTo1975 > 0) {
-                            <dd id="record-show-qualifying-years" class="govuk-summary-list__value gap-history-final-row">
+                            <dd id="record-show-qualifying-years" class="govuk-summary-list__value">
                                 @Html(messages("nisp.nirecord.pre75QualifyingYears", niRecord.qualifyingYearsPriorTo1975))
                             </dd>
                             } else {
-                            <dd id="no-full-years-upto-1975" class="govuk-summary-list__value gap-history-final-row">
+                            <dd id="no-full-years-upto-1975" class="govuk-summary-list__value">
                                 @Html(messages("nisp.nirecord.pre75QualifyingYearsZero"))
                             </dd>
                             }
