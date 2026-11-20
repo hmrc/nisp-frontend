@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nisp.controllers
 
-import org.mockito.ArgumentMatchers.{any => mockAny, eq => mockEQ}
+import org.mockito.ArgumentMatchers.{any as mockAny, eq as mockEQ}
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -24,12 +24,12 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.nisp.controllers.auth.ExcludedAuthAction
-import uk.gov.hmrc.nisp.helpers._
-import uk.gov.hmrc.nisp.models._
+import uk.gov.hmrc.nisp.helpers.*
+import uk.gov.hmrc.nisp.models.*
 import uk.gov.hmrc.nisp.services.{NationalInsuranceService, StatePensionService}
 import uk.gov.hmrc.nisp.utils.UnitSpec
 
@@ -61,24 +61,21 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
   val testExclusionController: ExclusionController = inject[ExclusionController]
 
-  val deadMessaging = "Contact HMRC"
+  val deadMessaging     = "Contact HMRC"
   val deadMessagingText = "to find out about your State Pension forecast."
-  val mciMessaging  = "We need to talk to you about an MCI error before you sign in."
+  val mciMessaging      = "We need to talk to you about an MCI error before you sign in."
 
   val postSPAMessagingText1     = "You can "
   val postSPAMessagingHref1     = "href=\"https://www.gov.uk/claim-state-pension-online\""
-  val postSPAMessagingLinkText = "claim your State Pension online"
+  val postSPAMessagingLinkText  = "claim your State Pension online"
   val postSPAMessagingHref2     = "href=\"https://www.gov.uk/deferring-state-pension\""
   val postSPAMessagingText2     = "if you have not already claimed it."
 
-  val dissonanceMessaging  =
-    "We’re unable to calculate your State Pension forecast. We are working on fixing this."
-  val isleOfManMessagingSP =
-    "We’re unable to calculate your State Pension forecast. You have paid National Insurance in the Isle of Man."
-  val isleOfManMessagingNI =
-    "We’re unable to show your National Insurance record as you have contributions from the Isle of Man."
-  val showNIHelpText = "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
-  val showNIButton = "View your National Insurance record"
+  val dissonanceMessaging  = "We’re unable to calculate your State Pension forecast. We are working on fixing this."
+  val isleOfManMessagingSP = "We’re unable to calculate your State Pension forecast. You have paid National Insurance in the Isle of Man."
+  val isleOfManMessagingNI = "We’re unable to show your National Insurance record as you have contributions from the Isle of Man."
+  val showNIHelpText       = "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+  val showNIButton         = "View your National Insurance record"
 
   val mwrreMessagingSP         = "We’re unable to calculate your State Pension forecast. You have paid a"
   val mwrreMessagingSPHref     = "href=\"https://www.gov.uk/reduced-national-insurance-married-women\""
@@ -89,7 +86,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
   val mwrreMessagingNILinkText = "paid a reduced rate of National Insurance as a married woman (opens in new tab)"
 
   val abroadMessaging                = "We’re unable to calculate your UK State Pension forecast as you’ve lived or worked abroad."
-  val spaUnderConsiderationMessaging = "Proposed change to your State Pension age"
   val copeProcessingHeader           = "Sorry, we are unable to calculate your forecast at the moment"
   val copeProcessingExtendedHeader   = "Sorry, we are still working on updates to your forecast"
   val copeFailedHeader               = "Sorry, we cannot show your forecast online"
@@ -597,7 +593,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result)    should include(spaUnderConsiderationMessaging)
           contentAsString(result)    should include(showNIHelpText)
           contentAsString(result)    should include(showNIButton)
         }
@@ -631,7 +626,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result)    should include(spaUnderConsiderationMessaging)
           contentAsString(result)    should not include showNIHelpText
           contentAsString(result)    should not include showNIButton
         }
@@ -669,7 +663,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
         }
       }
 
@@ -705,7 +698,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
         }
       }
 
@@ -740,7 +732,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
         }
       }
 
@@ -771,7 +762,6 @@ class ExclusionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Inj
 
           val result = generateSPRequest
           redirectLocation(result) shouldBe None
-          contentAsString(result)    should not include spaUnderConsiderationMessaging
         }
       }
 

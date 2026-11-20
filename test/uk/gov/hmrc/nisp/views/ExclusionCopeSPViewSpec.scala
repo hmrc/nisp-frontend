@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,28 +53,27 @@ class ExclusionCopeSPViewSpec extends HtmlSpec with Injecting {
   lazy val view: Document = asDocument(contentAsString(excludedCopeView(today)))
 
   "render correct h1" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope__h1']",
-      "nisp.excluded.cope.processing.h1"
+      "Sorry, we are unable to calculate your forecast at the moment"
     )
   }
 
   "render correct indent-panel div with text" in {
     assert(view.getElementsByClass("govuk-inset-text").size() == 1)
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope__inset_text']",
-      "nisp.excluded.cope.processing"
+      "Our Specialist Team is checking your National Insurance record to ensure your State Pension forecast is accurate."
     )
   }
 
   "render correct p tag with text" in {
-    assertContainsDynamicMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope__p2']",
-      "nisp.excluded.cope.returnDate",
-      today.format(DateTimeFormatter.ofPattern("d MMMM y")).replace(" ", "&nbsp;")
+      s"Your State Pension forecast will be available on ${today.format(DateTimeFormatter.ofPattern("d MMMM y"))}."
     )
   }
 }

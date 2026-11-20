@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,41 +39,40 @@ class ExclusionCopeExtendedSPViewSpec extends HtmlSpec with Injecting {
   )
 
   val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
-  val today = LocalDate.now()
+  val today: LocalDate = LocalDate.now()
 
-  val excludedCopeExtendedSPView = inject[excluded_cope_extended_sp]
+  val excludedCopeExtendedSPView: excluded_cope_extended_sp = inject[excluded_cope_extended_sp]
   lazy val view: Document = asDocument(contentAsString(excludedCopeExtendedSPView(today)))
 
   "render correct h1" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope_extended__h1']",
-      "nisp.excluded.cope.extended.h1"
+      "Sorry, we are still working on updates to your forecast"
     )
   }
 
   "render specialist team paragraph" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope_extended__inset_text']",
-      "nisp.excluded.cope.extended"
+      "Our Specialist Team is checking your National Insurance record to ensure your State Pension forecast is accurate and up to date."
     )
   }
 
   "render the backlog paragraph" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope__p1']",
-      "nisp.excluded.cope.extended.backlog"
+      "Unfortunately, there is a backlog of work to manually process and it is taking longer to complete."
     )
   }
 
   "render the state pension forecast will be available paragraph" in {
-    assertContainsDynamicMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope__p2']",
-      "nisp.excluded.cope.returnDate",
-      today.format(DateTimeFormatter.ofPattern("d MMMM y")).replace(" ", "&nbsp;")
+      s"Your State Pension forecast will be available on ${today.format(DateTimeFormatter.ofPattern("d MMMM y"))}."
     )
   }
 }

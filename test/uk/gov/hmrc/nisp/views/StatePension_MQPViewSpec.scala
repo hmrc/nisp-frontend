@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,6 +119,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
   lazy val controller: StatePensionController = standardInjector.instanceOf[StatePensionController]
   lazy val abroadUserController: StatePensionController = abroadUserInjector.instanceOf[StatePensionController]
 
+  val nispMainTitle = "Your State Pension summary"
+  val nispTitleExtension = "Check your State Pension"
+
+
   "The State Pension page" when {
 
     "the user is a MQP" when {
@@ -175,12 +179,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
         "render with correct page title" in {
           mockSetup
-          assertElementContainsText(
+          assertEqualsText(
             nonForeignDoc,
             "head > title",
-            messages("nisp.main.h1.title")
+            messages(nispMainTitle)
               + Constants.titleSplitter
-              + messages("nisp.title.extension")
+              + messages(nispTitleExtension)
               + Constants.titleSplitter
               + messages("nisp.gov-uk")
           )
@@ -188,10 +192,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
         "render page with heading 'Your State Pension' " in {
           mockSetup
-          assertEqualsMessage(
+          assertEqualsText(
             nonForeignDoc,
             "[data-spec='state_pension_forecast_only__h1']",
-            "nisp.main.h1.title"
+            nispMainTitle
           )
         }
 
@@ -579,12 +583,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render with correct page title" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               nonForeignDoc,
               "head > title",
-              messages("nisp.main.h1.title")
+              messages(nispMainTitle)
                 + Constants.titleSplitter
-                + messages("nisp.title.extension")
+                + messages(nispTitleExtension)
                 + Constants.titleSplitter
                 + messages("nisp.gov-uk")
             )
@@ -592,10 +596,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with heading 'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               nonForeignDoc,
               "[data-spec='state_pension__pageheading'] [data-component='nisp_page_heading__h1']",
-              "nisp.main.h1.title"
+              nispMainTitle
             )
           }
 
@@ -1011,12 +1015,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render with correct page title" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               nonForeignDoc,
               "head > title",
-              messages("nisp.main.h1.title")
+              messages(nispMainTitle)
                 + Constants.titleSplitter
-                + messages("nisp.title.extension")
+                + messages(nispTitleExtension)
                 + Constants.titleSplitter
                 + messages("nisp.gov-uk")
             )
@@ -1024,10 +1028,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with heading 'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               nonForeignDoc,
               "[data-spec='state_pension__pageheading'] [data-component='nisp_page_heading__h1']",
-              "nisp.main.h1.title"
+              nispMainTitle
             )
           }
 
@@ -1412,12 +1416,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render with correct page title" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               nonForeignDoc,
               "head > title",
-              messages("nisp.main.h1.title")
+              messages(nispMainTitle)
                 + Constants.titleSplitter
-                + messages("nisp.title.extension")
+                + messages(nispTitleExtension)
                 + Constants.titleSplitter
                 + messages("nisp.gov-uk")
             )
@@ -1425,10 +1429,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with heading 'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               nonForeignDoc,
               "[data-spec='state_pension__pageheading'] [data-component='nisp_page_heading__h1']",
-              "nisp.main.h1.title"
+              nispMainTitle
             )
           }
 
@@ -1813,15 +1817,23 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render with correct page title" in {
             mockSetup
-            assertElementContainsText(nonForeignDoc, "head>title" ,messages("nisp.main.h1.title") + Constants.titleSplitter + messages("nisp.title.extension") + Constants.titleSplitter + messages("nisp.gov-uk"))
+            assertEqualsText(
+              nonForeignDoc,
+              "head>title",
+              messages(nispMainTitle)
+                + Constants.titleSplitter
+                + messages(nispTitleExtension)
+                + Constants.titleSplitter
+                + messages("nisp.gov-uk")
+            )
           }
 
           "render page with heading  'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               nonForeignDoc,
               "[data-spec='state_pension__pageheading'] [data-component='nisp_page_heading__h1']",
-              "nisp.main.h1.title"
+              nispMainTitle
             )
           }
 
@@ -2210,12 +2222,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render with correct page title" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               nonForeignDoc,
               "head > title",
-              messages("nisp.main.h1.title")
+              messages(nispMainTitle)
                 + Constants.titleSplitter
-                + messages("nisp.title.extension")
+                + messages(nispTitleExtension)
                 + Constants.titleSplitter
                 + messages("nisp.gov-uk")
             )
@@ -2223,10 +2235,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with heading 'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               nonForeignDoc,
               "[data-spec='state_pension_mqp__h1']",
-              "nisp.main.h1.title"
+              nispMainTitle
             )
           }
 
@@ -2567,12 +2579,12 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render with correct page title" in {
             mockSetup
-            assertElementContainsText(
+            assertEqualsText(
               nonForeignDoc,
               "head > title",
-              messages("nisp.main.h1.title")
+              messages(nispMainTitle)
                 + Constants.titleSplitter
-                + messages("nisp.title.extension")
+                + messages(nispTitleExtension)
                 + Constants.titleSplitter
                 + messages("nisp.gov-uk")
             )
@@ -2580,10 +2592,10 @@ class StatePension_MQPViewSpec extends HtmlSpec with Injecting with WireMockSupp
 
           "render page with heading 'Your State Pension' " in {
             mockSetup
-            assertEqualsMessage(
+            assertEqualsText(
               nonForeignDoc,
               "[data-spec='state_pension_mqp__h1']",
-              "nisp.main.h1.title"
+              nispMainTitle
             )
           }
 

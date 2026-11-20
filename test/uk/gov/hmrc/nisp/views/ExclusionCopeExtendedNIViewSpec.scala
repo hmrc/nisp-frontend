@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nisp.views
 
-import java.time.{Instant, LocalDate}
 import org.jsoup.nodes.Document
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.contentAsString
@@ -29,6 +28,7 @@ import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
 import uk.gov.hmrc.nisp.views.html.excluded_cope_extended_ni
 
 import java.time.format.DateTimeFormatter
+import java.time.{Instant, LocalDate}
 
 class ExclusionCopeExtendedNIViewSpec extends HtmlSpec with Injecting {
 
@@ -45,27 +45,26 @@ class ExclusionCopeExtendedNIViewSpec extends HtmlSpec with Injecting {
   lazy val view: Document = asDocument(contentAsString(excludedCopeExtendedNIView(today)))
 
   "render correct h1" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope_extended__h1']",
-      "nisp.excluded.cope.extended.ni.h1"
+      "Sorry, we are still working on your National Insurance record"
     )
   }
 
   "render the backlog paragraph" in {
-    assertEqualsMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope_extended__p1']",
-      "nisp.excluded.cope.extended.backlog"
+      "Unfortunately, there is a backlog of work to manually process and it is taking longer to complete."
     )
   }
 
   "render the national insurance will be available paragraph" in {
-    assertContainsDynamicMessage(
+    assertEqualsText(
       view,
       "[data-spec='excluded_cope__p2']",
-      "nisp.excluded.cope.returnDate.ni",
-      today.format(DateTimeFormatter.ofPattern("d MMMM y")).replace(" ", "&nbsp;")
+      s"Your National Insurance record will be available on ${today.format(DateTimeFormatter.ofPattern("d MMMM y"))}."
     )
   }
 }
