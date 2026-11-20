@@ -91,7 +91,6 @@ class ExclusionViewSpec extends HtmlSpec with Injecting {
         "https://www.gov.uk/find-hmrc-contacts/income-tax-enquiries"
       )
     }
-
   }
 
   "Exclusion Isle of Man : Can't see NI Record: State Pension Age under consideration - no flag" should {
