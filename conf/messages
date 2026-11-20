@@ -133,6 +133,7 @@ nisp.main.context.fillGaps.improve.title = You can improve your forecast
 nisp.main.context.fillGaps.viewGaps = View gaps in your record
 nisp.main.context.fillGaps.viewGapsAndCost = View gaps in your record and the costs of filling them
 nisp.main.context.fillGaps.viewPayableGaps = View payable gaps
+nisp.main.context.fillGaps.viewPayableGaps.cl2 = Check if you can pay for gaps online
 nisp.main.context.fillGaps.niRecordCutOff = Your National Insurance record before April {0}
 nisp.main.context.fillGaps.tooLate = It’s too late to pay for gaps in your National Insurance record before April {0}.
 
@@ -336,6 +337,7 @@ nisp.nirecord.gap.whenyouareclaiming.singular = National Insurance credits: <str
 nisp.nirecord.gap.whenyouareclaiming.plural= National Insurance credits: <strong>{0} weeks</strong>
 nisp.nirecord.gap.whenyouareclaiming.info.singular = This week may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.
 nisp.nirecord.gap.whenyouareclaiming.info.plural = These may have been added to your record if you were ill/disabled, unemployed, caring for someone full-time or on jury service.
+nisp.nirecord.gap.whenyouareclaiming.info.plural.cl2 = Credits may be added to your record if you were ill, disabled, unemployed, caring for someone full-time or on jury service.
 
 nisp.nirecord.unavailableyear = Your record for this year is not available yet
 nisp.nirecord.yourcontributionfrom = You have contributions from

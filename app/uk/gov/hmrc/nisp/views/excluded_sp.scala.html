@@ -87,13 +87,6 @@
     }
 }
 
-@showFull = @{
-    if(appConfig.class2Enabled){
-        routes.MultiClassNIRecordController.showFull.url
-    } else {
-        routes.NIRecordController.showFull.url
-    }
-}
 
 @main(
     pageTitle = messages("nisp.main.title")
@@ -182,7 +175,7 @@
         @govukButton(Button(
             attributes = Map("data-journey-click" -> "checkmystatepension:landing:ivcontinue", "data-spec" -> "excluded_sp__govukButton"),
             content = HtmlContent(messages("nisp.main.showyourrecord")),
-            href = Some(showFull),
+            href = Some(routes.NIRecordController.showFull.url),
         ))
     }
 }

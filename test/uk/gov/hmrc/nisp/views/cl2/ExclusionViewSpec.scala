@@ -1,0 +1,1391 @@
+/*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.nisp.views
+
+import org.mockito.Mockito.when
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.LoginTimes
+import uk.gov.hmrc.nisp.config.ApplicationConfig
+import uk.gov.hmrc.nisp.controllers.auth.{AuthDetails, ExcludedAuthenticatedRequest, NispAuthedUser}
+import uk.gov.hmrc.nisp.fixtures.NispAuthedUserFixture
+import uk.gov.hmrc.nisp.helpers.TestAccountBuilder
+import uk.gov.hmrc.nisp.models.Exclusion
+import uk.gov.hmrc.nisp.utils.Constants
+import uk.gov.hmrc.nisp.views.html.cl2.excluded_sp
+import uk.gov.hmrc.play.language.LanguageUtils
+
+import java.time.{Instant, LocalDate}
+
+class ExclusionNewViewSpec extends HtmlSpec with Injecting {
+
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+
+  implicit val fakeRequest: ExcludedAuthenticatedRequest[AnyContentAsEmpty.type] = ExcludedAuthenticatedRequest(
+    FakeRequest(),
+    TestAccountBuilder.regularNino,
+    AuthDetails(ConfidenceLevel.L200, LoginTimes(Instant.now(), None))
+  )
+  implicit val user: NispAuthedUser = NispAuthedUserFixture.user(TestAccountBuilder.regularNino)
+  lazy val langUtils: LanguageUtils = inject[LanguageUtils]
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    when(mockAppConfig.reportAProblemNonJSUrl).thenReturn("/reportAProblem")
+    when(mockAppConfig.contactFormServiceIdentifier).thenReturn("/id")
+  }
+
+  "Exclusion Isle of Man : Can't see NI Record: State Pension Age under consideration - no flag" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc =
+      asDocument(sResult(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, None).toString)
+
+    "render the UR banner" in {
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
+    }
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with heading 'You’ll reach State Pension age on 6 sep 2019' " in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_isleOfMan_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
+    "render page with message  We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms." in {
+      assertEqualsMessage(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__p1']",
+        "nisp.excluded.isleOfMan.sp.line1"
+      )
+    }
+
+    "render page with message 'For more information about the Retirement Pension scheme, visit' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__p2']",
+        messages("nisp.excluded.isleOfMan.sp.line2", messages("nisp.excluded.isleOfMan.sp.line2.linktext")) + "."
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__link1']",
+        "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/"
+      )
+    }
+
+    "render page with message 'Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions.' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
+    }
+  }
+
+  "Exclusion Isle of Man : Can't see NI Record: State Pension Age under consideration - false" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc =
+      asDocument(sResult(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, Some(false)).toString)
+
+    "render the UR banner" in {
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
+    }
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with heading 'You’ll reach State Pension age on 6 sep 2019' " in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with message 'We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.'" in {
+      assertEqualsMessage(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__p1']",
+        "nisp.excluded.isleOfMan.sp.line1"
+      )
+    }
+
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_isleOfMan_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
+    "render page with message 'For more information about the Retirement Pension scheme, visit' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__p2']",
+        messages("nisp.excluded.isleOfMan.sp.line2", messages("nisp.excluded.isleOfMan.sp.line2.linktext")) + "."
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__link1']",
+        "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/"
+      )
+    }
+
+    "render page with message 'Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions.' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
+    }
+  }
+
+  "Exclusion Isle of Man : Can't see NI Record: State Pension Age under consideration - true" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc =
+      asDocument(sResult(Exclusion.IsleOfMan, Some(40), Some(LocalDate.of(2019, 9, 6)), false, Some(true)).toString)
+
+    "render the UR banner" in {
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
+    }
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with heading 'You’ll reach State Pension age on 6 Sep 2019' " in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with message 'We’re unable to calculate your State Pension, as the Isle of Man Government is currently undertaking a review of its Retirement Pension scheme. It will not be adopting the new State Pension reforms.'" in {
+      assertEqualsMessage(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__p1']",
+        "nisp.excluded.isleOfMan.sp.line1"
+      )
+    }
+
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_isleOfMan_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
+    "render page with message 'For more information about the Retirement Pension scheme, visit' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__p2']",
+        messages("nisp.excluded.isleOfMan.sp.line2", messages("nisp.excluded.isleOfMan.sp.line2.linktext")) + "."
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='exclusion_isleOfMan_sp__link1']",
+        "https://www.gov.im/categories/benefits-and-financial-support/pensions/manx-state-pension/"
+      )
+    }
+
+    "render page with message 'Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions.' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    // state pension age under consideration message
+    "render page with heading 'Proposed change to your State Pension age'" in {
+      assertEqualsMessage(
+        htmlAccountDoc,
+        "[data-spec='state_pension_age_under_consideration__h2_1']",
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "render page with text  'You’ll reach State Pension age on 6 Sep 2019. Under government proposals this may increase by up to a year.'" in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='state_pension_age_under_consideration__p1']",
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2019, 9, 6))
+      )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
+    }
+  }
+
+  "Exclusion Post State Pension Age: State Pension Age under consideration - no flag" should {
+
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc =
+      asDocument(sResult(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, None).toString)
+
+    "render the UR banner" in {
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
+    }
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text  You reached State Pension age on 6 September 2015 when you were 70 " in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1a']",
+        "nisp.excluded.haveReached",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        70.toString,
+        null
+      )
+    }
+
+    "render page with message  'You can claim your State Pension online if you have not already claimed it.' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age__p1']",
+        messages(
+          "nisp.excluded.spa",
+          messages("nisp.excluded.spa.linktext0")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age__link1']",
+        "https://www.gov.uk/claim-state-pension-online"
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age_defer__link1']",
+        "https://www.gov.uk/deferring-state-pension"
+      )
+    }
+
+    // Changed from the original view: the help text is now rendered for PostStatePensionAge
+    "render page with help message for National Insurance Record button" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage should not be empty
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with view your National Insurance record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(htmlAccountDoc, "nisp.spa.under.consideration.title")
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+  }
+
+  "Exclusion Post State Pension Age: State Pension Age under consideration - false" should {
+
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(
+      sResult.apply(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(false)).toString
+    )
+
+    "render the UR banner" in {
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
+    }
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text  You reached State Pension age on 6 September 2015 when you were 70 " in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1a']",
+        "nisp.excluded.haveReached",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        70.toString,
+        null
+      )
+    }
+
+    "render page with message  'You can claim your State Pension online if you have not already claimed it.' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age__p1']",
+        messages(
+          "nisp.excluded.spa",
+          messages("nisp.excluded.spa.linktext0")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age__link1']",
+        "https://www.gov.uk/claim-state-pension-online"
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age_defer__link1']",
+        "https://www.gov.uk/deferring-state-pension"
+      )
+    }
+
+    "render page with help message for National Insurance Record button" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage should not be empty
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with view your National Insurance record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+  }
+
+  "Exclusion Post State Pension Age: State Pension Age under consideration - true" should {
+
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(
+      sResult(Exclusion.PostStatePensionAge, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(true)).toString
+    )
+
+    "render the UR banner" in {
+      assert(htmlAccountDoc.getElementsByClass("full-width-banner__title") != null)
+    }
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text  You reached State Pension age on 6 September 2015 when you were 70 " in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1a']",
+        "nisp.excluded.haveReached",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        70.toString,
+        null
+      )
+    }
+
+    "render page with message  'You can claim your State Pension online if you have not already claimed it.' " in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age__p1']",
+        messages(
+          "nisp.excluded.spa",
+          messages("nisp.excluded.spa.linktext0")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age__link1']",
+        "https://www.gov.uk/claim-state-pension-online"
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='post_state_pension_age_defer__link1']",
+        "https://www.gov.uk/deferring-state-pension"
+      )
+    }
+
+    "render page with help message for National Insurance Record button" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage should not be empty
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with view your National Insurance record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+  }
+
+  "Exclusion Amount Dissonance: State Pension Age under consideration - no flag" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc =
+      asDocument(sResult(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, None).toString)
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text 'You will reach your  State Pension age on 6 September 2015'" in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with text  We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this." in {
+      assertEqualsMessage(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__amountdissonance__p1']",
+        "nisp.excluded.amountdissonance"
+      )
+    }
+
+    "render page with text  Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions." in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    "render page with help message for National Insurance Record button for Dissonance" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with view your National Insurance record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+  }
+
+  "Exclusion Amount Dissonance: State Pension Age under consideration - false" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(
+      sResult(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(false)).toString
+    )
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text 'You will reach your  State Pension age on 6 September 2015'" in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with text 'We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this.'" in {
+      assertEqualsMessage(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__amountdissonance__p1']",
+        "nisp.excluded.amountdissonance"
+      )
+    }
+
+    "render page with text 'Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions.'" in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    "render page with help message for National Insurance Record button for dissonance" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with view your National Insurance record button dissonance" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+  }
+
+  "Exclusion Amount Dissonance: State Pension Age under consideration - true" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(
+      sResult(Exclusion.AmountDissonance, Some(70), Some(LocalDate.of(2015, 9, 6)), true, Some(true)).toString
+    )
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with text  You will reach your  State Pension age on 6 September 2015" in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with text  We’re unable to calculate your State Pension forecast at the moment and we’re working on fixing this." in {
+      assertEqualsMessage(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__amountdissonance__p1']",
+        "nisp.excluded.amountdissonance"
+      )
+    }
+
+    "render page with text  Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions." in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    "render page with help message for National Insurance Record button" in {
+      val helpMessage = htmlAccountDoc.select("[data-spec='excluded_sp__p2']")
+
+      helpMessage.text() shouldBe
+        "You can view your National Insurance record to check for gaps that you may be able to fill and make count towards your State Pension."
+    }
+
+    "render page with view your National Insurance record button" in {
+      val button = htmlAccountDoc.select("[data-spec='excluded_sp__govukButton']")
+
+      button should not be empty
+      button.text() shouldBe "View your National Insurance record"
+      button.attr("href") shouldBe "/check-your-state-pension/account/nirecord"
+    }
+
+    // state pension age under consideration message
+    "render page with heading 'Proposed change to your State Pension age'" in {
+      assertEqualsMessage(
+        htmlAccountDoc,
+        "[data-spec='state_pension_age_under_consideration__h2_1']",
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='state_pension_age_under_consideration__p1']",
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+  }
+
+  "Exclusion Married Women: State Pension Age under consideration - no flag" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(
+      sResult(Exclusion.MarriedWomenReducedRateElection, Some(60), Some(LocalDate.of(2015, 9, 6)), false, None).toString
+    )
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with heading 'You’ll reach State Pension age on' " in {
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        sDate,
+        null,
+        null
+      )
+    }
+
+    "render page with text - You will reach your  State Pension age on 6 September 2015" in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with text  We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman." in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__mwrre__p1']",
+        messages("nisp.excluded.mwrre.sp", messages("nisp.excluded.mwrre.sp.linktext")) + "."
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__mwrre__link1']",
+        "https://www.gov.uk/reduced-national-insurance-married-women"
+      )
+    }
+
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_mwrre_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
+    "render page with text  Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions." in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
+    }
+  }
+
+  "Exclusion Married Women: State Pension Age under consideration - false" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(
+      sResult(
+        Exclusion.MarriedWomenReducedRateElection,
+        Some(60),
+        Some(LocalDate.of(2015, 9, 6)),
+        false,
+        Some(false)
+      ).toString
+    )
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with heading 'You’ll reach State Pension age on' " in {
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        sDate,
+        null,
+        null
+      )
+    }
+
+    "render page with text 'You will reach your  State Pension age on 6 September 2015'" in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with text 'We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab).'" in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__mwrre__p1']",
+        messages("nisp.excluded.mwrre.sp", messages("nisp.excluded.mwrre.sp.linktext")) + "."
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__mwrre__link1']",
+        "https://www.gov.uk/reduced-national-insurance-married-women"
+      )
+    }
+
+    "render page with text 'Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions.'" in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
+    }
+  }
+
+  "Exclusion Married Women: State Pension Age under consideration - true" should {
+    lazy val sResult        = inject[excluded_sp]
+    lazy val htmlAccountDoc = asDocument(
+      sResult(
+        Exclusion.MarriedWomenReducedRateElection,
+        Some(60),
+        Some(LocalDate.of(2015, 9, 6)),
+        false,
+        Some(true)
+      ).toString
+    )
+
+    "render with correct page title" in {
+      assertElementContainsText(
+        htmlAccountDoc,
+        "title",
+        messages("nisp.main.h1.title") +
+          Constants.titleSplitter +
+          messages("nisp.title.extension") +
+          Constants.titleSplitter +
+          messages("nisp.gov-uk")
+      )
+    }
+
+    "render page with heading 'Your State Pension summary'" in {
+      val h1 = htmlAccountDoc.select("[data-spec='excluded_sp__h1']")
+
+      h1 should not be empty
+      h1.first().tagName() shouldBe "h1"
+      h1.text() shouldBe "Your State Pension summary"
+    }
+
+    "render page with h2 'When will I reach State Pension age?'" in {
+      val h2 = htmlAccountDoc.select("[data-spec='excluded_sp__h2']")
+
+      h2 should not be empty
+      h2.first().tagName() shouldBe "h2"
+      h2.text() shouldBe "When will I reach State Pension age?"
+    }
+
+    "render page with paragraph 'You’ll reach State Pension age on' " in {
+      val sDate = langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        sDate,
+        null,
+        null
+      )
+    }
+
+    "render page with text - You will reach your  State Pension age on 6 September 2015" in {
+      assertContainsDynamicMessage(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p_1b']",
+        "nisp.excluded.willReach",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6)),
+        null,
+        null
+      )
+    }
+
+    "render page with text  We’re unable to calculate your State Pension forecast as you have paid a reduced rate of National Insurance as a married woman (opens in new tab)." in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__mwrre__p1']",
+        messages("nisp.excluded.mwrre.sp", messages("nisp.excluded.mwrre.sp.linktext")) + "."
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='exclusions__sp__mwrre__link1']",
+        "https://www.gov.uk/reduced-national-insurance-married-women"
+      )
+    }
+
+    "render page with message unable to pay gaps information text" in {
+      htmlAccountDoc.select("[data-spec='exclusion_mwrre_cant_pay_gaps_sp_p1']").text() shouldBe
+        "This means you are unable to pay for gaps in your National Insurance record online."
+    }
+
+    "render page with text  Contact the Future Pension Centre to find out if you'll benefit from paying voluntary contributions." in {
+      assertEqualsValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__p1']",
+        messages(
+          "nisp.excluded.contactFuturePensionCentre",
+          messages("nisp.excluded.contactFuturePensionCentre.linktext")
+        )
+      )
+      assertLinkHasValue(
+        htmlAccountDoc,
+        "[data-spec='excluded_sp__link1']",
+        "https://www.gov.uk/future-pension-centre"
+      )
+    }
+
+    // No state pension age under consideration message
+    "not render page with heading 'Proposed change to your State Pension age'" in {
+      assertPageDoesNotContainMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.title"
+      )
+    }
+
+    "not render page with text  'You’ll reach State Pension age on 6 Sep 2015. Under government proposals this may increase by up to a year.'" in {
+      assertPageDoesNotContainDynamicMessage(
+        htmlAccountDoc,
+        "nisp.spa.under.consideration.detail",
+        langUtils.Dates.formatDate(LocalDate.of(2015, 9, 6))
+      )
+    }
+
+    "not render View your National Insurance Record help text" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__p2"]""")
+        .isEmpty shouldBe true
+    }
+
+    "not render View your National Insurance Record button" in {
+      htmlAccountDoc
+        .select("""[data-spec="excluded_sp__govukButton"]""")
+        .isEmpty shouldBe true
+    }
+  }
+}
