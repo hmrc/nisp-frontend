@@ -15,10 +15,12 @@
  *@
 
 @import uk.gov.hmrc.nisp.views.html.includes.newComponents.{P, Link}
+@import uk.gov.hmrc.nisp.config.ApplicationConfig
 
 @this(
         p: P,
-        link: Link
+        link: Link,
+        appConfig: ApplicationConfig
 )
 @()(
         implicit messages: Messages
@@ -30,11 +32,10 @@
         link(
             attrs = Map(
                 "data-journey-click" -> "checkmystatepension:external:mwrre",
-                "target" -> "_blank",
                 "rel" -> "noopener noreferrer"
             ),
             fullStop = true,
-            href = "https://www.gov.uk/reduced-national-insurance-married-women",
+            href = appConfig.reducedRateMarriedWomanLink,
             messageKey = "nisp.excluded.mwrre.sp.linktext",
             specId = Some("exclusions__sp__mwrre__link1")
         )
