@@ -104,7 +104,7 @@ function hideShowNonPayableGaps() {
         showHideElement.hidden = true;
     }
     if (mainElement) {
-        mainElement.className = "govuk-main-wrapper govuk-!-padding-top-0";
+        mainElement.className = "govuk-main-wrapper";
     }
 }
 
